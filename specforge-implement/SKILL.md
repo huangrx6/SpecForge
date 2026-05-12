@@ -27,8 +27,10 @@ node .specforge/tools/create-artifact.mjs implementation
 
 - `.specforge/rules/engineering.md`：沿用项目模式，不发明无依据抽象。
 - `.specforge/rules/boundaries.md`：只改批准范围内文件。
+- `.specforge/rules/api-design.md`：保持 API、SDK、事件契约一致。
 - `.specforge/rules/security.md`：敏感内容、凭据、权限相关检查。
 - `.specforge/rules/testing.md`：实现时同步考虑验证。
+- `.specforge/rules/delivery.md`：配置、运行和回滚影响。
 - `.specforge/rules/context.md`：不要加载无关历史。
 
 ## 动作

@@ -19,6 +19,7 @@ node .specforge/tools/create-artifact.mjs verification
 - `.specforge/rules/gates.md`：verification evidence。
 - `.specforge/rules/boundaries.md`：验证下游影响。
 - `.specforge/rules/security.md`：安全敏感变更需要额外检查。
+- `.specforge/rules/delivery.md`：发布、配置和运行态验证。
 
 ## 动作
 

@@ -12,6 +12,7 @@ description: 完成 SpecForge 关闭阶段；用于 verification 已通过，需
 - `.specforge/rules/gates.md`：SSoT sync 和 archive 前置。
 - `.specforge/rules/engineering.md`：长期项目事实必须回流。
 - `.specforge/rules/boundaries.md`：契约变化和下游重新验证。
+- `.specforge/rules/delivery.md`：release、rollback 和上线准备。
 - `.specforge/rules/localization.md`：关闭记录优先中文。
 
 ## 动作

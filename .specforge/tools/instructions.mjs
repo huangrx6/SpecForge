@@ -40,15 +40,15 @@ const requestedChange = argValue("--change");
 
 const rulesByArtifact = {
   intake: [".specforge/rules/context.md", ".specforge/rules/boundaries.md"],
-  requirements: [".specforge/rules/spec-quality.md", ".specforge/rules/boundaries.md"],
-  design: [".specforge/rules/engineering.md", ".specforge/rules/security.md", ".specforge/rules/boundaries.md"],
-  tasks: [".specforge/rules/artifact-graph.md", ".specforge/rules/testing.md"],
-  spec_review: [".specforge/rules/gates.md", ".specforge/rules/spec-quality.md"],
-  implementation: [".specforge/rules/engineering.md", ".specforge/rules/testing.md"],
-  code_review: [".specforge/rules/gates.md", ".specforge/rules/security.md", ".specforge/rules/testing.md"],
-  verification: [".specforge/rules/testing.md", ".specforge/rules/gates.md"],
-  ssot_sync: [".specforge/rules/artifact-graph.md", ".specforge/rules/gates.md"],
-  closure: [".specforge/rules/gates.md"],
+  requirements: [".specforge/rules/spec-quality.md", ".specforge/rules/boundaries.md", ".specforge/rules/api-design.md"],
+  design: [".specforge/rules/engineering.md", ".specforge/rules/security.md", ".specforge/rules/boundaries.md", ".specforge/rules/api-design.md", ".specforge/rules/delivery.md"],
+  tasks: [".specforge/rules/artifact-graph.md", ".specforge/rules/testing.md", ".specforge/rules/boundaries.md"],
+  spec_review: [".specforge/rules/gates.md", ".specforge/rules/review.md", ".specforge/rules/spec-quality.md"],
+  implementation: [".specforge/rules/engineering.md", ".specforge/rules/security.md", ".specforge/rules/testing.md"],
+  code_review: [".specforge/rules/gates.md", ".specforge/rules/review.md", ".specforge/rules/security.md", ".specforge/rules/testing.md"],
+  verification: [".specforge/rules/testing.md", ".specforge/rules/gates.md", ".specforge/rules/delivery.md"],
+  ssot_sync: [".specforge/rules/artifact-graph.md", ".specforge/rules/gates.md", ".specforge/rules/delivery.md"],
+  closure: [".specforge/rules/gates.md", ".specforge/rules/delivery.md"],
 };
 
 function dependencyRows(schema, states, artifact) {
