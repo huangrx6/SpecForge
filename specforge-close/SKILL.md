@@ -9,10 +9,10 @@ description: 完成 SpecForge 关闭阶段；用于 verification 已通过，需
 
 ## 关联规则
 
-- `.specforge/rules/gates.md`：SSoT sync 和 archive 前置。
-- `.specforge/rules/engineering.md`：长期项目事实必须回流。
-- `.specforge/rules/boundaries.md`：契约变化和下游重新验证。
-- `.specforge/rules/delivery.md`：release、rollback 和上线准备。
+- `.specforge/rules/gates/README.md`：SSoT sync 和 archive 前置。
+- `.specforge/rules/engineering/README.md`：长期项目知识必须回流。
+- `.specforge/rules/boundaries/README.md`：契约变化和下游重新验证。
+- `.specforge/rules/delivery/README.md`：release、rollback 和上线准备。
 - `.specforge/rules/localization.md`：关闭记录优先中文。
 
 ## 动作
@@ -23,14 +23,14 @@ description: 完成 SpecForge 关闭阶段；用于 verification 已通过，需
 node .specforge/tools/create-artifact.mjs ssot_sync
 ```
 
-2. 判断是否影响 `.specforge/project/`：
+2. 判断是否影响 `.specforge/knowledge/`：
    - 功能状态。
    - API / 数据模型。
    - 架构现状。
    - 安全模型。
    - 部署方式。
    - ADR / 长期决策。
-3. 回写受影响的 project SSoT，或明确说明不更新原因。
+3. 回写受影响的 knowledge 长期事实，或明确说明不更新原因。
 4. 批准 SSoT gate：
 
 ```bash

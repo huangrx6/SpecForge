@@ -29,11 +29,10 @@ function parseField(text, name) {
 }
 
 function gateStatus(text, gateName) {
-  const marker = `  ${gateName}:\n`;
-  const start = text.indexOf(marker);
-  if (start === -1) return "MISSING";
-  const rest = text.slice(start + marker.length);
-  const next = rest.search(/\n  [a-z_]+:\n/);
+  const markerMatch = text.match(new RegExp(`(?:^|\\r?\\n)  ${gateName}:\\r?\\n`));
+  if (!markerMatch || markerMatch.index === undefined) return "MISSING";
+  const rest = text.slice(markerMatch.index + markerMatch[0].length);
+  const next = rest.search(/\r?\n  [a-z_]+:\r?\n/);
   const block = next === -1 ? rest : rest.slice(0, next);
   return block.match(/status:\s*([A-Z_]+)/)?.[1] ?? "UNKNOWN";
 }

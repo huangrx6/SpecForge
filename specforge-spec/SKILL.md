@@ -26,12 +26,12 @@ node .specforge/tools/create-artifact.mjs spec_review
 
 ## 关联规则
 
-- `.specforge/rules/spec-quality.md`：规格质量、EARS、澄清项。
-- `.specforge/rules/boundaries.md`：范围、非目标、写入边界。
-- `.specforge/rules/api-design.md`：API、SDK、事件和跨系统契约。
-- `.specforge/rules/delivery.md`：配置、发布、回滚和运行影响。
-- `.specforge/rules/gates.md`：spec_review 门禁。
-- `.specforge/rules/testing.md`：验收标准必须可验证。
+- `.specforge/rules/spec-quality/README.md`：规格质量、EARS、澄清项。
+- `.specforge/rules/boundaries/README.md`：范围、非目标、写入边界。
+- `.specforge/rules/api-design/README.md`：API、SDK、事件和跨系统契约；按需读取 `references/`。
+- `.specforge/rules/delivery/README.md`：配置、发布、回滚和运行影响。
+- `.specforge/rules/gates/README.md`：spec_review 门禁。
+- `.specforge/rules/testing/README.md`：验收标准必须可验证。
 - `.specforge/rules/localization.md`：中文优先。
 
 ## 写作要求

@@ -110,7 +110,7 @@
       "id": "ssot_sync",
       "stage": "06-closure",
       "title": "长期知识回流",
-      "description": "确认长期项目事实已更新，或明确说明本次变更不影响 SSoT。",
+      "description": "确认长期项目知识已更新，或明确说明本次变更不影响 SSoT。",
       "outputs": [
         "06-closure/ssot-sync.md"
       ],

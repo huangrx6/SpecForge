@@ -39,16 +39,16 @@ const requestedArtifact = positionalArgs()[0];
 const requestedChange = argValue("--change");
 
 const rulesByArtifact = {
-  intake: [".specforge/rules/context.md", ".specforge/rules/boundaries.md"],
-  requirements: [".specforge/rules/spec-quality.md", ".specforge/rules/boundaries.md", ".specforge/rules/api-design.md"],
-  design: [".specforge/rules/engineering.md", ".specforge/rules/security.md", ".specforge/rules/boundaries.md", ".specforge/rules/api-design.md", ".specforge/rules/delivery.md"],
-  tasks: [".specforge/rules/artifact-graph.md", ".specforge/rules/testing.md", ".specforge/rules/boundaries.md"],
-  spec_review: [".specforge/rules/gates.md", ".specforge/rules/review.md", ".specforge/rules/spec-quality.md"],
-  implementation: [".specforge/rules/engineering.md", ".specforge/rules/security.md", ".specforge/rules/testing.md"],
-  code_review: [".specforge/rules/gates.md", ".specforge/rules/review.md", ".specforge/rules/security.md", ".specforge/rules/testing.md"],
-  verification: [".specforge/rules/testing.md", ".specforge/rules/gates.md", ".specforge/rules/delivery.md"],
-  ssot_sync: [".specforge/rules/artifact-graph.md", ".specforge/rules/gates.md", ".specforge/rules/delivery.md"],
-  closure: [".specforge/rules/gates.md", ".specforge/rules/delivery.md"],
+  intake: [".specforge/rules/context/README.md", ".specforge/rules/boundaries/README.md"],
+  requirements: [".specforge/rules/spec-quality/README.md", ".specforge/rules/boundaries/README.md", ".specforge/rules/api-design/README.md"],
+  design: [".specforge/rules/engineering/README.md", ".specforge/rules/security/README.md", ".specforge/rules/boundaries/README.md", ".specforge/rules/api-design/README.md", ".specforge/rules/delivery/README.md"],
+  tasks: [".specforge/rules/artifact-graph.md", ".specforge/rules/testing/README.md", ".specforge/rules/boundaries/README.md"],
+  spec_review: [".specforge/rules/gates/README.md", ".specforge/rules/review/README.md", ".specforge/rules/spec-quality/README.md"],
+  implementation: [".specforge/rules/engineering/README.md", ".specforge/rules/security/README.md", ".specforge/rules/testing/README.md"],
+  code_review: [".specforge/rules/gates/README.md", ".specforge/rules/review/README.md", ".specforge/rules/security/README.md", ".specforge/rules/testing/README.md"],
+  verification: [".specforge/rules/testing/README.md", ".specforge/rules/gates/README.md", ".specforge/rules/delivery/README.md"],
+  ssot_sync: [".specforge/rules/artifact-graph.md", ".specforge/rules/gates/README.md", ".specforge/rules/delivery/README.md"],
+  closure: [".specforge/rules/gates/README.md", ".specforge/rules/delivery/README.md"],
 };
 
 function dependencyRows(schema, states, artifact) {

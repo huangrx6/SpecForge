@@ -12,13 +12,12 @@ workflow:
 
 paths:
   attention: .specforge/attention.md
-  project_ssot: .specforge/project
+  knowledge: .specforge/knowledge
   registry: .specforge/registry.yaml
   changes: .specforge/changes
   active_changes: .specforge/changes/active
   archived_changes: .specforge/changes/archive
   tools: .specforge/tools
-  reference: .specforge/reference
   adapters: .specforge/adapters
 
 gates:

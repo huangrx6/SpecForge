@@ -39,22 +39,22 @@ export function localDateIso() {
 }
 
 export function getGateBlock(yaml, gateName) {
-  const marker = `  ${gateName}:\n`;
-  const start = yaml.indexOf(marker);
-  if (start === -1) return null;
-  const rest = yaml.slice(start + marker.length);
-  const nextGate = rest.search(/\n  [a-z_]+:\n/);
+  const markerMatch = yaml.match(new RegExp(`(?:^|\\r?\\n)  ${gateName}:\\r?\\n`));
+  if (!markerMatch || markerMatch.index === undefined) return null;
+  const blockStart = markerMatch.index + markerMatch[0].length;
+  const rest = yaml.slice(blockStart);
+  const nextGate = rest.search(/\r?\n  [a-z_]+:\r?\n/);
   return nextGate === -1 ? rest : rest.slice(0, nextGate);
 }
 
 function getGateBounds(yaml, gateName) {
-  const marker = `  ${gateName}:\n`;
-  const markerStart = yaml.indexOf(marker);
-  if (markerStart === -1) return null;
-  const blockStart = markerStart + marker.length;
+  const markerMatch = yaml.match(new RegExp(`(?:^|\\r?\\n)  ${gateName}:\\r?\\n`));
+  if (!markerMatch || markerMatch.index === undefined) return null;
+  const blockStart = markerMatch.index + markerMatch[0].length;
   const rest = yaml.slice(blockStart);
-  const nextGate = rest.search(/\n  [a-z_]+:\n/);
-  const blockEnd = nextGate === -1 ? yaml.length : blockStart + nextGate + 1;
+  const nextGate = rest.search(/\r?\n  [a-z_]+:\r?\n/);
+  const newlineLength = nextGate !== -1 && rest[nextGate] === "\r" && rest[nextGate + 1] === "\n" ? 2 : 1;
+  const blockEnd = nextGate === -1 ? yaml.length : blockStart + nextGate + newlineLength;
   return { blockStart, blockEnd };
 }
 
@@ -329,7 +329,7 @@ export function registrySection(registry, sectionName) {
 export function parseRegistryEntries(registry, sectionName) {
   const section = registrySection(registry, sectionName);
   const entries = [];
-  const entryPattern = /(?:^|\n)\s*-\s+id:\s*(.+)\n([\s\S]*?)(?=\n\s*-\s+id:|$)/g;
+  const entryPattern = /(?:^|\r?\n)\s*-\s+id:\s*([^\r\n]+)\r?\n([\s\S]*?)(?=\r?\n\s*-\s+id:|$)/g;
   for (const match of section.matchAll(entryPattern)) {
     const id = match[1].trim();
     const body = match[2];

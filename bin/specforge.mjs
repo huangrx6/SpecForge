@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
-import { cpSync, existsSync, mkdirSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, rmSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -40,11 +40,11 @@ function runNode(script, extraArgs, cwd = packageRoot) {
 function initProject() {
   const targetDir = resolve(option("--dir", "."));
   const force = args.includes("--force");
-  const source = join(packageRoot, "specforge-onboard/assets/starter/.specforge");
   const target = join(targetDir, ".specforge");
+  const materializer = join(packageRoot, ".specforge/tools/sync-starter-assets.mjs");
 
-  if (!existsSync(source)) {
-    console.error(`Missing starter assets: ${source}`);
+  if (!existsSync(materializer)) {
+    console.error(`Missing starter materializer: ${materializer}`);
     process.exit(1);
   }
 
@@ -56,7 +56,11 @@ function initProject() {
 
   mkdirSync(targetDir, { recursive: true });
   if (force) rmSync(target, { recursive: true, force: true });
-  cpSync(source, target, { recursive: true });
+  const materialize = spawnSync(process.execPath, [materializer, "--target", target], {
+    cwd: packageRoot,
+    stdio: "inherit",
+  });
+  if (materialize.status !== 0) process.exit(materialize.status ?? 1);
   console.log(`Initialized SpecForge at ${target}`);
 
   const doctor = join(target, "tools/doctor.mjs");

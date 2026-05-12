@@ -15,11 +15,10 @@ function parseField(text, name) {
 }
 
 function gateStatus(text, gateName) {
-  const marker = `  ${gateName}:\n`;
-  const start = text.indexOf(marker);
-  if (start === -1) return "MISSING";
-  const rest = text.slice(start + marker.length);
-  const next = rest.search(/\n  [a-z_]+:\n/);
+  const markerMatch = text.match(new RegExp(`(?:^|\\r?\\n)  ${gateName}:\\r?\\n`));
+  if (!markerMatch || markerMatch.index === undefined) return "MISSING";
+  const rest = text.slice(markerMatch.index + markerMatch[0].length);
+  const next = rest.search(/\r?\n  [a-z_]+:\r?\n/);
   const block = next === -1 ? rest : rest.slice(0, next);
   return block.match(/status:\s*([A-Z_]+)/)?.[1] ?? "UNKNOWN";
 }
@@ -40,8 +39,18 @@ function listArchivedChanges() {
     .sort();
 }
 
+function parseArgs() {
+  const args = process.argv.slice(2);
+  return {
+    json: args.includes("--json"),
+    changeName: args.find((arg) => !arg.startsWith("--")) ?? "",
+  };
+}
+
+const args = parseArgs();
+
 function resolveChangeName() {
-  const requested = process.argv[2];
+  const requested = args.changeName;
   if (requested) return requested;
   const active = listActiveChanges();
   if (active.length === 0) {
@@ -71,25 +80,41 @@ function resolveChangeBase(changeName) {
   process.exit(1);
 }
 
-function outputsExist(changeBase, outputs) {
-  return outputs.every((output) => existsSync(join(root, changeBase, output)));
+function outputsPresent(changeBase, outputs) {
+  const presence = outputs.map((output) => ({
+    output,
+    exists: existsSync(join(root, changeBase, output)),
+  }));
+  return {
+    outputs: presence,
+    any: presence.some((item) => item.exists),
+    all: presence.every((item) => item.exists),
+  };
 }
 
-function artifactState(schema, changeYaml, changeBase, artifact, states) {
-  const depsDone = artifact.requires.every((id) => states.get(id) === "done");
-  const filesExist = outputsExist(changeBase, artifact.outputs);
+function artifactState(changeYaml, changeBase, artifact, states) {
+  const missingDeps = artifact.requires.filter((id) => states.get(id)?.status !== "done");
+  const depsDone = missingDeps.length === 0;
+  const outputState = outputsPresent(changeBase, artifact.outputs);
+  const status = artifact.gate ? gateStatus(changeYaml, artifact.gate) : "";
 
   if (artifact.gate) {
-    const status = gateStatus(changeYaml, artifact.gate);
-    if (status === "APPROVED") return "done";
-    if (!depsDone) return "blocked";
-    if (!filesExist) return "ready";
-    return depsDone ? "ready" : "blocked";
+    if (!depsDone) {
+      return { status: "blocked", missingDeps, gateStatus: status, outputState };
+    }
+    if (status === "APPROVED" && outputState.all) {
+      return { status: "done", missingDeps, gateStatus: status, outputState };
+    }
+    if (outputState.any) {
+      return { status: "partial", missingDeps, gateStatus: status, outputState };
+    }
+    return { status: "ready", missingDeps, gateStatus: status, outputState };
   }
 
-  if (!depsDone) return "blocked";
-  if (filesExist) return "done";
-  return "ready";
+  if (!depsDone) return { status: "blocked", missingDeps, gateStatus: "", outputState };
+  if (outputState.all) return { status: "done", missingDeps, gateStatus: "", outputState };
+  if (outputState.any) return { status: "partial", missingDeps, gateStatus: "", outputState };
+  return { status: "ready", missingDeps, gateStatus: "", outputState };
 }
 
 if (!existsSync(schemaPath)) {
@@ -111,18 +136,60 @@ const changeYaml = read(changeYamlPath);
 const states = new Map();
 
 for (const artifact of schema.artifacts) {
-  states.set(artifact.id, artifactState(schema, changeYaml, changeBase, artifact, states));
+  states.set(artifact.id, artifactState(changeYaml, changeBase, artifact, states));
+}
+
+const artifactSummaries = schema.artifacts.map((artifact) => {
+  const state = states.get(artifact.id);
+  return {
+    id: artifact.id,
+    title: artifact.title,
+    stage: artifact.stage,
+    status: state.status,
+    requires: artifact.requires,
+    missingDeps: state.missingDeps,
+    outputs: state.outputState.outputs,
+    gate: artifact.gate ?? "",
+    gateStatus: state.gateStatus,
+  };
+});
+
+const doneCount = artifactSummaries.filter((artifact) => artifact.status === "done").length;
+const readyArtifacts = artifactSummaries.filter((artifact) => artifact.status === "ready").map((artifact) => artifact.id);
+const blockedArtifacts = artifactSummaries
+  .filter((artifact) => artifact.status === "blocked")
+  .map((artifact) => ({ id: artifact.id, missingDeps: artifact.missingDeps }));
+
+if (args.json) {
+  console.log(JSON.stringify({
+    schema: { id: schema.id, version: schema.version },
+    change: {
+      id: changeName,
+      path: changeBase,
+      stage: parseField(changeYaml, "stage"),
+    },
+    progress: {
+      done: doneCount,
+      total: artifactSummaries.length,
+    },
+    readyArtifacts,
+    blockedArtifacts,
+    artifacts: artifactSummaries,
+  }, null, 2));
+  process.exit(0);
 }
 
 console.log(`Artifact graph: ${schema.id}@${schema.version}`);
 console.log(`Change: ${changeName}`);
 console.log(`Path: ${changeBase}`);
 console.log(`Stage: ${parseField(changeYaml, "stage")}`);
+console.log(`Progress: ${doneCount}/${artifactSummaries.length} done`);
+console.log(`Ready: ${readyArtifacts.length > 0 ? readyArtifacts.join(", ") : "none"}`);
 console.log("");
 
-for (const artifact of schema.artifacts) {
-  const state = states.get(artifact.id);
+for (const artifact of artifactSummaries) {
   const deps = artifact.requires.length > 0 ? artifact.requires.join(", ") : "none";
-  const gate = artifact.gate ? `, gate=${artifact.gate}:${gateStatus(changeYaml, artifact.gate)}` : "";
-  console.log(`- ${artifact.id}: ${state} (requires=${deps}${gate})`);
+  const missing = artifact.missingDeps.length > 0 ? `, missing=${artifact.missingDeps.join(", ")}` : "";
+  const gate = artifact.gate ? `, gate=${artifact.gate}:${artifact.gateStatus}` : "";
+  console.log(`- ${artifact.id}: ${artifact.status} (requires=${deps}${missing}${gate})`);
 }

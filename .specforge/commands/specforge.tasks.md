@@ -6,8 +6,8 @@
 
 - `01-spec/requirements.md`
 - `01-spec/design.md`
-- `.specforge/rules/boundaries.md`
-- `.specforge/rules/testing.md`
+- `.specforge/rules/boundaries/README.md`
+- `.specforge/rules/testing/README.md`
 
 ## 写入
 

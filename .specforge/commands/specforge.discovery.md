@@ -5,10 +5,10 @@
 ## 读取
 
 - `.specforge/manifest.yaml`
-- `.specforge/rules/context.md`
-- `.specforge/rules/boundaries.md`
+- `.specforge/rules/context/README.md`
+- `.specforge/rules/boundaries/README.md`
 - `.specforge/registry.yaml`
-- 相关 `.specforge/project/` 文件
+- 相关 `.specforge/knowledge/` 文件
 
 ## 写入
 

@@ -11,14 +11,14 @@ description: 为新请求创建或整理 SpecForge change；用于用户提出�
 
 1. 读取 `.specforge/attention.md`。
 2. 读取 `.specforge/registry.yaml`。
-3. 读取相关 `.specforge/project/` SSoT；只读和请求相关的文件。
+3. 读取相关 `.specforge/knowledge/` 长期事实；只读和请求相关的文件。
 4. 运行 `node .specforge/tools/status.mjs`，确认 active change 数量。
 
 ## 关联规则
 
-- `.specforge/rules/context.md`：只加载必要上下文。
-- `.specforge/rules/boundaries.md`：判断范围、非目标和写入边界。
-- `.specforge/rules/spec-quality.md`：遇到歧义必须标记 `[NEEDS CLARIFICATION]`。
+- `.specforge/rules/context/README.md`：只加载必要上下文。
+- `.specforge/rules/boundaries/README.md`：判断范围、非目标和写入边界。
+- `.specforge/rules/spec-quality/README.md`：遇到歧义必须标记 `[NEEDS CLARIFICATION]`。
 - `.specforge/rules/localization.md`：面向人类的产物优先中文。
 
 ## 动作

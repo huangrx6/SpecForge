@@ -1,3 +1,4 @@
+import { spawnSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseRegistryEntries, templateByOutput } from "./lib/specforge.mjs";
@@ -6,30 +7,79 @@ const root = process.cwd();
 
 const requiredPaths = [
   ".specforge/AGENTS.md",
+  ".specforge/PROTOCOL.md",
+  ".specforge/starter.manifest.json",
   ".specforge/attention.md",
   ".specforge/manifest.yaml",
   ".specforge/workflows/lite.yaml",
   ".specforge/workflows/standard.yaml",
   ".specforge/workflows/bugfix.yaml",
   ".specforge/schemas/standard.json",
+  ".specforge/agents/README.md",
   ".specforge/agents/loading.md",
-  ".specforge/agents/roles/orchestrator.md",
-  ".specforge/agents/roles/developer.md",
-  ".specforge/agents/roles/reviewer.md",
-  ".specforge/agents/roles/qa.md",
+  ".specforge/agents/builtins/spec-orchestrator.md",
+  ".specforge/agents/builtins/codebase-explorer.md",
+  ".specforge/agents/builtins/architect-reviewer.md",
+  ".specforge/agents/builtins/code-reviewer.md",
+  ".specforge/agents/builtins/test-writer.md",
+  ".specforge/agents/builtins/security-auditor.md",
+  ".specforge/agents/builtins/debugger.md",
+  ".specforge/agents/builtins/delivery-engineer.md",
+  ".specforge/agents/builtins/knowledge-curator.md",
   ".specforge/rules/index.md",
-  ".specforge/rules/api-design.md",
-  ".specforge/rules/boundaries.md",
-  ".specforge/rules/context.md",
-  ".specforge/rules/delivery.md",
-  ".specforge/rules/engineering.md",
-  ".specforge/rules/gates.md",
+  ".specforge/rules/api-design/README.md",
+  ".specforge/rules/api-design/references/rest-patterns.md",
+  ".specforge/rules/api-design/references/openapi.md",
+  ".specforge/rules/api-design/references/graphql.md",
+  ".specforge/rules/api-design/references/rpc-sdk.md",
+  ".specforge/rules/api-design/references/events-webhooks.md",
+  ".specforge/rules/api-design/references/pagination.md",
+  ".specforge/rules/api-design/references/error-handling.md",
+  ".specforge/rules/api-design/references/security-auth.md",
+  ".specforge/rules/api-design/references/versioning.md",
+  ".specforge/rules/api-design/templates/openapi-resource.yaml",
+  ".specforge/rules/api-design/templates/problem-details.json",
+  ".specforge/rules/boundaries/README.md",
+  ".specforge/rules/boundaries/references/scope-ownership.md",
+  ".specforge/rules/boundaries/references/write-scope.md",
+  ".specforge/rules/boundaries/references/change-control.md",
+  ".specforge/rules/boundaries/references/review-verification.md",
+  ".specforge/rules/context/README.md",
+  ".specforge/rules/context/references/source-priority.md",
+  ".specforge/rules/context/references/progressive-loading.md",
+  ".specforge/rules/context/references/external-facts.md",
+  ".specforge/rules/context/references/context-hygiene.md",
+  ".specforge/rules/delivery/README.md",
+  ".specforge/rules/delivery/references/release-config.md",
+  ".specforge/rules/delivery/references/rollback-resilience.md",
+  ".specforge/rules/delivery/references/observability-launch.md",
+  ".specforge/rules/engineering/README.md",
+  ".specforge/rules/engineering/references/implementation-discipline.md",
+  ".specforge/rules/engineering/references/dependencies-config.md",
+  ".specforge/rules/engineering/references/data-migrations.md",
+  ".specforge/rules/engineering/references/reliability-observability.md",
+  ".specforge/rules/gates/README.md",
+  ".specforge/rules/gates/references/status-evidence.md",
+  ".specforge/rules/gates/references/progression-blockers.md",
+  ".specforge/rules/gates/references/automation-policy.md",
   ".specforge/rules/artifact-graph.md",
   ".specforge/rules/localization.md",
-  ".specforge/rules/review.md",
-  ".specforge/rules/security.md",
-  ".specforge/rules/spec-quality.md",
-  ".specforge/rules/testing.md",
+  ".specforge/rules/review/README.md",
+  ".specforge/rules/review/references/spec-review.md",
+  ".specforge/rules/review/references/code-review.md",
+  ".specforge/rules/review/references/findings-format.md",
+  ".specforge/rules/security/README.md",
+  ".specforge/rules/security/references/secrets-config.md",
+  ".specforge/rules/security/references/auth-access.md",
+  ".specforge/rules/security/references/input-data-logging.md",
+  ".specforge/rules/security/references/supply-chain-verification.md",
+  ".specforge/rules/spec-quality/README.md",
+  ".specforge/rules/spec-quality/references/requirements.md",
+  ".specforge/rules/spec-quality/references/design.md",
+  ".specforge/rules/spec-quality/references/tasks.md",
+  ".specforge/rules/testing/README.md",
+  ".specforge/rules/testing/references/test-strategy.md",
+  ".specforge/rules/testing/references/evidence-reporting.md",
   ".specforge/commands/specforge.discovery.md",
   ".specforge/commands/specforge.spec.md",
   ".specforge/commands/specforge.tasks.md",
@@ -65,23 +115,27 @@ const requiredPaths = [
   ".specforge/tools/status.mjs",
   ".specforge/tools/validate-structure.mjs",
   ".specforge/registry.yaml",
-  ".specforge/project/README.md",
-  ".specforge/project/constitution.md",
-  ".specforge/project/glossary.md",
-  ".specforge/project/product/vision.md",
-  ".specforge/project/product/feature-list.md",
-  ".specforge/project/product/positioning.md",
-  ".specforge/project/engineering/architecture.md",
-  ".specforge/project/engineering/project-structure.md",
-  ".specforge/project/engineering/validation-model.md",
-  ".specforge/project/decisions",
-  ".specforge/project/risks.md",
+  ".specforge/knowledge/README.md",
+  ".specforge/knowledge/product.md",
+  ".specforge/knowledge/architecture.md",
+  ".specforge/knowledge/glossary.md",
+  ".specforge/knowledge/risks.md",
+  ".specforge/knowledge/decisions",
   ".specforge/changes/inbox",
   ".specforge/changes/active",
   ".specforge/changes/archive",
-  ".specforge/reference/system-overview.md",
-  ".specforge/reference/getting-started.md",
-  ".specforge/reference/ai-usage.md",
+  ".specforge/skills/README.md",
+  ".specforge/skills/discovery/SKILL.md",
+  ".specforge/skills/requirements/SKILL.md",
+  ".specforge/skills/design/SKILL.md",
+  ".specforge/skills/task-planning/SKILL.md",
+  ".specforge/skills/spec-review/SKILL.md",
+  ".specforge/skills/implementation/SKILL.md",
+  ".specforge/skills/code-review/SKILL.md",
+  ".specforge/skills/verification/SKILL.md",
+  ".specforge/skills/ssot-sync/SKILL.md",
+  ".specforge/skills/status/SKILL.md",
+  ".specforge/skills/steering/SKILL.md",
 ];
 
 const sourceOnlyPaths = [
@@ -98,9 +152,10 @@ const sourceOnlyPaths = [
   ".specforge/adapters/README.md",
   ".specforge/adapters/codex.md",
   ".specforge/adapters/claude-code.md",
-  ".specforge/stage-guides",
+  ".specforge/skills",
   ".specforge/tools/install-agent-skills.mjs",
   ".specforge/tools/sync-codex-skills.mjs",
+  ".specforge/tools/sync-starter-assets.mjs",
   "bin/specforge.mjs",
 ];
 
@@ -124,11 +179,10 @@ function parseField(text, name) {
 }
 
 function getGateBlock(yaml, gateName) {
-  const marker = `  ${gateName}:\n`;
-  const start = yaml.indexOf(marker);
-  if (start === -1) return null;
-  const rest = yaml.slice(start + marker.length);
-  const nextGate = rest.search(/\n  [a-z_]+:\n/);
+  const markerMatch = yaml.match(new RegExp(`(?:^|\\r?\\n)  ${gateName}:\\r?\\n`));
+  if (!markerMatch || markerMatch.index === undefined) return null;
+  const rest = yaml.slice(markerMatch.index + markerMatch[0].length);
+  const nextGate = rest.search(/\r?\n  [a-z_]+:\r?\n/);
   return nextGate === -1 ? rest : rest.slice(0, nextGate);
 }
 
@@ -349,6 +403,19 @@ function validateRegistryDirectoryMatch(sectionName, kind) {
 
 validateRegistryDirectoryMatch("active", "active");
 validateRegistryDirectoryMatch("archive", "archive");
+
+if (existsSync(join(root, "specforge-onboard/assets/starter/.specforge"))) {
+  const syncCheck = spawnSync(process.execPath, [".specforge/tools/sync-starter-assets.mjs", "--check"], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  if (syncCheck.status !== 0) {
+    const output = `${syncCheck.stdout ?? ""}${syncCheck.stderr ?? ""}`
+      .split(/\r?\n/)
+      .filter((line) => line.trim().length > 0);
+    for (const line of output) errors.push(line);
+  }
+}
 
 if (errors.length > 0) {
   console.error("SpecForge validation failed.");

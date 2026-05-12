@@ -9,7 +9,7 @@
 3. 读取 `.specforge/registry.yaml`，判断是否存在 active change。
 4. 如果有 active change，先读它的 `change.yaml`。
 5. 读取 `.specforge/rules/index.md`，只加载当前任务需要的规则。
-6. 只加载当前任务需要的 workflow、command card、template 和 reference。
+6. 只加载当前任务需要的 workflow、command card、template 和 knowledge。
 
 ## 推荐 AI 入口
 
@@ -43,9 +43,8 @@ node .specforge/tools/archive-change.mjs
 | `.specforge/rules` | 稳定规则 |
 | `.specforge/templates` | 阶段产物模板 |
 | `.specforge/tools` | 初始化后可直接运行的本地命令 |
-| `.specforge/project` | 长期项目 SSoT |
+| `.specforge/knowledge` | 长期项目知识 |
 | `.specforge/changes` | inbox、active、archive change |
-| `.specforge/reference` | 使用说明和参考资料 |
 
 ## Artifact Graph
 

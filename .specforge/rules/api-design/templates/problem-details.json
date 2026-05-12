@@ -1,0 +1,16 @@
+{
+  "type": "https://api.example.com/errors/validation-error",
+  "title": "Validation Error",
+  "status": 422,
+  "detail": "One or more fields are invalid.",
+  "instance": "/requests/req_123456",
+  "code": "VALIDATION_ERROR",
+  "request_id": "req_123456",
+  "errors": [
+    {
+      "field": "email",
+      "code": "INVALID_FORMAT",
+      "message": "Email must be a valid email address."
+    }
+  ]
+}

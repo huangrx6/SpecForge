@@ -16,6 +16,8 @@
     "doctor": "node .specforge/tools/doctor.mjs",
     "validate:skills": "node .specforge/tools/validate-skills.mjs",
     "sync:codex-skills": "node .specforge/tools/sync-codex-skills.mjs",
+    "sync:starter": "node .specforge/tools/sync-starter-assets.mjs",
+    "check:starter": "node .specforge/tools/sync-starter-assets.mjs --check",
     "install:skills": "node .specforge/tools/install-agent-skills.mjs",
     "skill:add": "node bin/specforge.mjs skill add",
     "init": "node bin/specforge.mjs init"
@@ -31,6 +33,7 @@
     "specforge",
     "specforge-*",
     "README.md",
+    "CHANGELOG.md",
     "AGENTS.md",
     "CLAUDE.md"
   ]

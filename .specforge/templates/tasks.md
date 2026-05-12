@@ -21,6 +21,6 @@
   _Verification:_ 验证通过。
 
 - [ ] T003 [P2] 运行集成验证并更新 SSoT。
-  _Boundary:_ `.specforge/project`, `05-verification`, `06-closure`
+  _Boundary:_ `.specforge/knowledge`, `05-verification`, `06-closure`
   _Depends:_ T002
   _Verification:_ verification report 和 SSoT sync 完成。

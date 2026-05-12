@@ -4,7 +4,7 @@ import { basename, join } from "node:path";
 const root = process.cwd();
 const errors = [];
 
-function listSkillFiles() {
+function listRootSkillFiles() {
   return readdirSync(root, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .map((entry) => join(root, entry.name, "SKILL.md"))
@@ -13,21 +13,32 @@ function listSkillFiles() {
     .sort();
 }
 
+function listInternalSkillFiles() {
+  const skillsRoot = join(root, ".specforge/skills");
+  if (!existsSync(skillsRoot)) return [];
+  return readdirSync(skillsRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => join(skillsRoot, entry.name, "SKILL.md"))
+    .filter((file) => existsSync(file))
+    .sort();
+}
+
 function parseFrontmatter(content, file) {
-  if (!content.startsWith("---\n")) {
+  const frontmatterStart = content.match(/^\uFEFF?---\r?\n/);
+  if (!frontmatterStart) {
     errors.push(`${file}: missing YAML frontmatter`);
     return {};
   }
 
-  const end = content.indexOf("\n---", 4);
+  const end = content.search(/\r?\n---(?:\r?\n|$)/);
   if (end === -1) {
     errors.push(`${file}: unclosed YAML frontmatter`);
     return {};
   }
 
-  const block = content.slice(4, end).trim();
+  const block = content.slice(frontmatterStart[0].length, end).trim();
   const fields = {};
-  for (const line of block.split("\n")) {
+  for (const line of block.split(/\r?\n/)) {
     const match = line.match(/^([a-zA-Z0-9_-]+):\s*(.*)$/);
     if (match) fields[match[1]] = match[2].trim();
   }
@@ -54,8 +65,46 @@ function validateSkill(file) {
   }
 }
 
-const files = listSkillFiles();
+const rootSkillFiles = listRootSkillFiles();
+const internalSkillFiles = listInternalSkillFiles();
+const files = [...rootSkillFiles, ...internalSkillFiles];
 for (const file of files) validateSkill(file);
+
+const internalSkillMap = new Map([
+  ["discovery/SKILL.md", ["specforge", "specforge-intake"]],
+  ["requirements/SKILL.md", ["specforge-spec"]],
+  ["design/SKILL.md", ["specforge-spec"]],
+  ["task-planning/SKILL.md", ["specforge-spec"]],
+  ["spec-review/SKILL.md", ["specforge-review"]],
+  ["implementation/SKILL.md", ["specforge-implement"]],
+  ["code-review/SKILL.md", ["specforge-review"]],
+  ["verification/SKILL.md", ["specforge-verify"]],
+  ["ssot-sync/SKILL.md", ["specforge-close"]],
+  ["status/SKILL.md", ["specforge-doctor", "specforge-work"]],
+  ["steering/SKILL.md", ["specforge-onboard", "specforge-close"]],
+]);
+
+for (const [internalSkill, skills] of internalSkillMap) {
+  const internalSkillPath = join(root, ".specforge/skills", internalSkill);
+  if (!existsSync(internalSkillPath)) errors.push(`missing internal skill: .specforge/skills/${internalSkill}`);
+  for (const skill of skills) {
+    const skillPath = join(root, skill, "SKILL.md");
+    if (!existsSync(skillPath)) errors.push(`internal skill ${internalSkill} points to missing root skill: ${skill}`);
+  }
+}
+
+const internalSkillReadme = join(root, ".specforge/skills/README.md");
+if (!existsSync(internalSkillReadme)) {
+  errors.push("missing .specforge/skills/README.md");
+} else {
+  const readme = readFileSync(internalSkillReadme, "utf8");
+  for (const [internalSkill, skills] of internalSkillMap) {
+    if (!readme.includes(internalSkill)) errors.push(`internal skill README missing mapping for ${internalSkill}`);
+    for (const skill of skills) {
+      if (!readme.includes(skill)) errors.push(`internal skill README missing root skill mapping for ${skill}`);
+    }
+  }
+}
 
 const rootSkill = join(root, "specforge/SKILL.md");
 if (existsSync(rootSkill)) {
@@ -75,7 +124,7 @@ if (existsSync(rootSkill)) {
   }
 }
 
-for (const file of files) {
+for (const file of rootSkillFiles) {
   const content = readFileSync(file, "utf8");
   if (!content.includes(".specforge/rules/") && !file.endsWith("specforge-onboard/SKILL.md")) {
     errors.push(`${file}: missing explicit rule links`);
@@ -89,4 +138,4 @@ if (errors.length > 0) {
 }
 
 console.log("SpecForge skill validation passed.");
-console.log(`Checked ${files.length} root-level skills.`);
+console.log(`Checked ${rootSkillFiles.length} root-level skills and ${internalSkillFiles.length} internal skills.`);

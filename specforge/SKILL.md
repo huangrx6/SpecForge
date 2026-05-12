@@ -11,9 +11,8 @@ description: SpecForge 工作流根入口。用于用户只说“specforge”、
 
 1. 看是否存在 `.specforge/`。
 2. 存在时读取 `.specforge/attention.md`；缺失则提示骨架不完整，先补齐或运行 `specforge-onboard`。
-3. 读取 `.specforge/reference/system-overview.md`，只取结构速览。
-4. 运行 `node .specforge/tools/doctor.mjs`。
-5. 有 active change 时，再运行 `node .specforge/tools/instructions.mjs`。
+3. 运行 `node .specforge/tools/doctor.mjs`。
+4. 有 active change 时，再运行 `node .specforge/tools/instructions.mjs`。
 
 `specforge` 只做路由，不写规格、不实现代码、不批准 gate。
 
@@ -36,8 +35,7 @@ SpecForge 分成两层：
 ├── workflows/
 ├── templates/
 ├── tools/
-├── reference/
-├── project/
+├── knowledge/
 ├── registry.yaml
 └── changes/
 ```
@@ -56,11 +54,35 @@ SpecForge 分成两层：
 | verification 已批准，需要 SSoT sync / release / rollback / archive | `specforge-close` |
 | 用户明确说“继续做完 / 自动推进 / 不要停” | `specforge-work` |
 
+## 路由决策树
+
+1. 检查 `.specforge/` 是否存在。
+   - 不存在：路由到 `specforge-onboard`。
+2. 读取 `.specforge/registry.yaml`。
+   - 没有 active change，且用户提出新需求 / bug / 重构：路由到 `specforge-intake`。
+   - 没有 active change，且用户问状态：路由到 `specforge-doctor`。
+3. 有多个 active change。
+   - 列出 active change 的 id、title、status、path。
+   - 要求用户指定要继续哪一个，不要猜。
+4. 有一个 active change。
+   - 运行 `node .specforge/tools/instructions.mjs`。
+   - 根据 ready artifact 路由：
+     - `requirements` / `design` / `tasks` / `spec_review` → `specforge-spec`
+     - `implementation` → `specforge-implement`
+     - `code_review` → `specforge-review`
+     - `verification` → `specforge-verify`
+     - `ssot_sync` / `closure` → `specforge-close`
+5. 用户明确要求自动推进。
+   - 路由到 `specforge-work`。
+   - 仍然必须保留 doctor、instructions、gate evidence 和 verification 检查。
+
+根路由只推荐下一步，不直接替子技能写产物。
+
 ## 扫描时必须关联的规则
 
-- 状态判断：`.specforge/rules/context.md`、`.specforge/rules/artifact-graph.md`
-- 阶段推进：`.specforge/rules/gates.md`
-- 范围判断：`.specforge/rules/boundaries.md`
+- 状态判断：`.specforge/rules/context/README.md`、`.specforge/rules/artifact-graph.md`
+- 阶段推进：`.specforge/rules/gates/README.md`
+- 范围判断：`.specforge/rules/boundaries/README.md`
 
 ## 输出格式
 

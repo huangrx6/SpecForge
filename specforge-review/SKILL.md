@@ -20,13 +20,13 @@ node .specforge/tools/instructions.mjs
 
 ## 关联规则
 
-- `.specforge/rules/gates.md`：gate 状态和 evidence。
-- `.specforge/rules/review.md`：审查输出、阻断项和严重级别。
-- `.specforge/rules/boundaries.md`：范围和写入边界。
-- `.specforge/rules/spec-quality.md`：规格审查。
-- `.specforge/rules/api-design.md`：API、SDK、事件契约兼容性。
-- `.specforge/rules/security.md`：安全敏感检查。
-- `.specforge/rules/testing.md`：验证证据是否匹配风险。
+- `.specforge/rules/gates/README.md`：gate 状态和 evidence。
+- `.specforge/rules/review/README.md`：审查输出、阻断项和严重级别。
+- `.specforge/rules/boundaries/README.md`：范围和写入边界。
+- `.specforge/rules/spec-quality/README.md`：规格审查。
+- `.specforge/rules/api-design/README.md`：API、SDK、事件契约兼容性；按需读取 `references/`。
+- `.specforge/rules/security/README.md`：安全敏感检查。
+- `.specforge/rules/testing/README.md`：验证证据是否匹配风险。
 
 ## spec_review 检查
 

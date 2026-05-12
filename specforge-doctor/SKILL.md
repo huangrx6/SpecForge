@@ -25,9 +25,9 @@ node .specforge/tools/artifact-graph-status.mjs
 
 ## 关联规则
 
-- `.specforge/rules/context.md`：状态判断读取顺序。
+- `.specforge/rules/context/README.md`：状态判断读取顺序。
 - `.specforge/rules/artifact-graph.md`：ready / blocked / done。
-- `.specforge/rules/gates.md`：gate 状态解释。
+- `.specforge/rules/gates/README.md`：gate 状态解释。
 
 ## 输出
 
