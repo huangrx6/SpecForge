@@ -12,6 +12,30 @@ SpecForge 是一套面向 AI Agent 协作的软件规格驱动开发协议。
 npx skills add https://github.com/huangrx6/SpecForge
 ```
 
+指定安装目标：
+
+```bash
+# 只安装到 Codex，全局安装
+npx skills add https://github.com/huangrx6/SpecForge -g -a codex -s '*'
+
+# 只安装到 Claude Code，全局安装
+npx skills add https://github.com/huangrx6/SpecForge -g -a claude-code -s '*'
+
+# 同时安装到 Codex 和 Claude Code
+npx skills add https://github.com/huangrx6/SpecForge -g -a codex -a claude-code -s '*'
+
+# 先看这个仓库里有哪些 skill
+npx skills add https://github.com/huangrx6/SpecForge --list
+```
+
+参数说明：
+
+| 参数 | 含义 |
+|---|---|
+| `-g` / `--global` | 安装到用户级目录，不是当前项目目录 |
+| `-a` / `--agent` | 指定目标工具，比如 `codex`、`claude-code` |
+| `-s` / `--skill` | 指定安装哪些技能，`'*'` 表示全部 |
+
 本地开发或 npm 包方式：
 
 ```bash
