@@ -1,0 +1,150 @@
+{
+  "id": "standard",
+  "version": 1,
+  "description": "标准 SpecForge 变更流程：从 intake 到 SSoT 同步的 artifact 依赖图。",
+  "artifacts": [
+    {
+      "id": "intake",
+      "stage": "00-intake",
+      "title": "需求入口",
+      "description": "记录原始请求、背景、目标、边界候选和下一步路线。",
+      "outputs": [
+        "00-intake/original-request.md",
+        "00-intake/brief.md"
+      ],
+      "requires": []
+    },
+    {
+      "id": "requirements",
+      "stage": "01-spec",
+      "title": "需求规格",
+      "description": "沉淀用户可观察行为、范围边界和验收标准。",
+      "outputs": [
+        "01-spec/requirements.md"
+      ],
+      "requires": [
+        "intake"
+      ]
+    },
+    {
+      "id": "design",
+      "stage": "01-spec",
+      "title": "技术设计",
+      "description": "把需求转成责任边界、组件、接口、数据、风险和验证策略。",
+      "outputs": [
+        "01-spec/design.md"
+      ],
+      "requires": [
+        "requirements"
+      ]
+    },
+    {
+      "id": "tasks",
+      "stage": "01-spec",
+      "title": "任务拆解",
+      "description": "把设计拆成可执行、可验证、可并行判断的任务图。",
+      "outputs": [
+        "01-spec/tasks.md"
+      ],
+      "requires": [
+        "design"
+      ]
+    },
+    {
+      "id": "spec_review",
+      "stage": "02-spec-review",
+      "title": "规格审查",
+      "description": "确认需求、设计、任务和边界足以进入实现。",
+      "outputs": [
+        "02-spec-review/spec-review-v1.md"
+      ],
+      "requires": [
+        "requirements",
+        "design",
+        "tasks"
+      ],
+      "gate": "spec_review"
+    },
+    {
+      "id": "implementation",
+      "stage": "03-implementation",
+      "title": "实现记录",
+      "description": "记录实现计划、实际变更和变更文件。",
+      "outputs": [
+        "03-implementation/plan.md",
+        "03-implementation/report.md",
+        "03-implementation/changed-files.md"
+      ],
+      "requires": [
+        "spec_review"
+      ]
+    },
+    {
+      "id": "code_review",
+      "stage": "04-code-review",
+      "title": "代码审查",
+      "description": "确认实现没有偏离规格、边界、安全和工程规则。",
+      "outputs": [
+        "04-code-review/code-review-v1.md"
+      ],
+      "requires": [
+        "implementation"
+      ],
+      "gate": "code_review"
+    },
+    {
+      "id": "verification",
+      "stage": "05-verification",
+      "title": "验证证据",
+      "description": "记录测试、构建、手工验证、日志或其他可追溯证据。",
+      "outputs": [
+        "05-verification/report.md",
+        "05-verification/ci-result.md"
+      ],
+      "requires": [
+        "code_review"
+      ],
+      "gate": "verification"
+    },
+    {
+      "id": "ssot_sync",
+      "stage": "06-closure",
+      "title": "长期知识回流",
+      "description": "确认长期项目事实已更新，或明确说明本次变更不影响 SSoT。",
+      "outputs": [
+        "06-closure/ssot-sync.md"
+      ],
+      "requires": [
+        "verification"
+      ],
+      "gate": "ssot_sync"
+    },
+    {
+      "id": "closure",
+      "stage": "06-closure",
+      "title": "关闭记录",
+      "description": "记录发布、回滚和归档前结论，让变更具备可关闭证据。",
+      "outputs": [
+        "06-closure/release.md",
+        "06-closure/rollback.md"
+      ],
+      "requires": [
+        "ssot_sync"
+      ]
+    }
+  ],
+  "apply": {
+    "requires": [
+      "tasks",
+      "spec_review"
+    ],
+    "tracks": "01-spec/tasks.md"
+  },
+  "archive": {
+    "requires": [
+      "verification",
+      "ssot_sync",
+      "closure"
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+specforge:
+  version: 0.2.0
+  profile: standard
+  entry: .specforge/AGENTS.md
+
+workflow:
+  default: standard
+  available:
+    - lite
+    - standard
+    - bugfix
+
+paths:
+  attention: .specforge/attention.md
+  project_ssot: .specforge/project
+  registry: .specforge/registry.yaml
+  changes: .specforge/changes
+  active_changes: .specforge/changes/active
+  archived_changes: .specforge/changes/archive
+  tools: .specforge/tools
+  reference: .specforge/reference
+  adapters: .specforge/adapters
+
+gates:
+  spec_review: required
+  code_review: required
+  verification: required
+  ssot_sync: required

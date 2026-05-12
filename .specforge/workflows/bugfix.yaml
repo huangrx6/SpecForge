@@ -1,0 +1,17 @@
+id: bugfix
+name: 缺陷修复流程
+use_for:
+  - 可复现缺陷
+  - 回归问题
+  - 生产修复
+stages:
+  - 00-intake
+  - 01-spec
+  - 03-implementation
+  - 04-code-review
+  - 05-verification
+  - 06-closure
+required_gates:
+  code_review: true
+  verification: true
+  ssot_sync: true

@@ -1,0 +1,19 @@
+id: standard
+name: 标准变更流程
+use_for:
+  - 常规功能开发
+  - 中等规模重构
+  - 用户可见行为变更
+stages:
+  - 00-intake
+  - 01-spec
+  - 02-spec-review
+  - 03-implementation
+  - 04-code-review
+  - 05-verification
+  - 06-closure
+required_gates:
+  spec_review: true
+  code_review: true
+  verification: true
+  ssot_sync: true

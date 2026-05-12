@@ -1,0 +1,37 @@
+{
+  "name": "specforge",
+  "version": "0.2.0",
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "validate": "node .specforge/tools/validate-structure.mjs",
+    "status": "node .specforge/tools/status.mjs",
+    "graph:status": "node .specforge/tools/artifact-graph-status.mjs",
+    "new:change": "node .specforge/tools/create-change.mjs",
+    "new:artifact": "node .specforge/tools/create-artifact.mjs",
+    "instructions": "node .specforge/tools/instructions.mjs",
+    "gate": "node .specforge/tools/gate.mjs",
+    "archive": "node .specforge/tools/archive-change.mjs",
+    "selftest": "node .specforge/tools/self-test.mjs",
+    "doctor": "node .specforge/tools/doctor.mjs",
+    "validate:skills": "node .specforge/tools/validate-skills.mjs",
+    "sync:codex-skills": "node .specforge/tools/sync-codex-skills.mjs",
+    "install:skills": "node .specforge/tools/install-agent-skills.mjs",
+    "skill:add": "node bin/specforge.mjs skill add",
+    "init": "node bin/specforge.mjs init"
+  },
+  "license": "MIT",
+  "description": "SpecForge: repository-native Spec-Driven Development workflow for AI agents.",
+  "bin": {
+    "specforge": "bin/specforge.mjs"
+  },
+  "files": [
+    "bin",
+    ".specforge",
+    "specforge",
+    "specforge-*",
+    "README.md",
+    "AGENTS.md",
+    "CLAUDE.md"
+  ]
+}

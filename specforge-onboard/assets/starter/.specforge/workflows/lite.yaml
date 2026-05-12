@@ -1,0 +1,15 @@
+id: lite
+name: 轻量变更流程
+use_for:
+  - 小型文案修改
+  - 低风险 UI 调整
+  - 小型内部修复
+stages:
+  - 00-intake
+  - 01-spec
+  - 03-implementation
+  - 05-verification
+  - 06-closure
+required_gates:
+  verification: true
+  ssot_sync: true
