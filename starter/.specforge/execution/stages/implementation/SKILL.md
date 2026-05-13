@@ -33,11 +33,17 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
 
 ## 执行流程
 
-1. 先写 implementation plan，确认任务顺序和写入范围。
-2. 按任务逐项实现，保持小步可审查。
-3. 遇到任务外需求、边界扩大或设计不成立，停止并回到 spec。
-4. 同步维护 changed-files 和 implementation report。
-5. 能运行的局部验证先运行，不能运行时写明原因。
+1. **先写 implementation plan**，确认任务顺序和写入范围。
+2. **新项目必须先执行脚手架初始化**（参考 `engineering/references/project-scaffolding.md`），验证开发服务器可正常冒烟启动后，才开始写业务代码。
+3. **实现 UI 前先读取 design 中批准的 UI 产物**：
+   - Figma Frame：优先使用 `figma-implement-design` Skill，按 Frame、Token 和组件约束实现。
+   - Pencil 原型：读取导出截图和 `design.md` 中的页面/状态矩阵，以原型为布局和交互参照实现。
+   - HTML mockup：以 `01-spec/ui-mockup.html` 为视觉和结构参照实现。
+4. 按任务逐项实现，保持小步可审查。
+5. 遇到任务外需求、边界扩大或设计不成立，停止并回到 spec。
+6. 同步维护 changed-files 和 implementation report。
+7. **每个实现阶段结束后，必须执行启动验证清单**（参考 `engineering/references/startup-validation.md`），并将验证结果写入 implementation report。
+8. 能运行的局部验证先运行，不能运行时写明原因。
 
 ## 停止条件
 

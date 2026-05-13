@@ -68,3 +68,21 @@
 - 有新 UI 但没有视觉方向和交互状态。
 - 有编辑器、图表、富文本、拖拽等复杂控件但没有技术选择和备选方案。
 - 用户没有确认关键体验选择，却进入 implementation。
+
+## UI 设计产出选择
+
+UI 设计工具选择发生在 design 阶段，而不是 onboard 阶段。onboard 只负责安装 SpecForge 骨架；具体使用 Figma、Pencil 还是 HTML mockup，应根据本次 change 的 UI 复杂度、现有设计资产和用户可用工具决定。
+
+可选路径：
+
+| 路径 | 适用场景 | 必交证据 |
+|---|---|---|
+| Figma MCP | 已有团队设计稿、设计系统、组件映射或需要高保真还原 | Figma Frame URL、关键 Token / 组件约束 |
+| Pencil MCP | 需要本地、低成本、Agent 可直接产出的线框或交互原型 | `01-spec/ui-wireframe.pen` 和导出截图 |
+| HTML mockup | 无设计工具，或需要浏览器 / Playwright 直接验证 | `01-spec/ui-mockup.html` |
+
+详细接入和产出规则参考：
+
+```
+.specforge/policy/rules/experience-design/references/ui-mockup-protocol.md
+```

@@ -26,6 +26,8 @@
 | 新增依赖、配置项、环境差异、外部服务接入 | `references/dependencies-config.md` |
 | schema 变化、迁移、兼容、回滚 | `references/data-migrations.md` |
 | 错误处理、日志、指标、追踪、运行时可靠性 | `references/reliability-observability.md` |
+| **新项目初始化、框架脚手架、骨架冒烟** | **`references/project-scaffolding.md`** |
+| **开发环境启动验证、端口/依赖/迁移检查** | **`references/startup-validation.md`** |
 
 ## 核心原则
 

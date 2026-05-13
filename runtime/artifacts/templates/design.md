@@ -43,6 +43,22 @@
 ## 4. 体验设计 (Experience Design)
 > 有用户可见页面时必须填写；无 UI 变更时写明 N/A 和理由。涉及页面时读取 `.specforge/policy/rules/experience-design/README.md`。
 
+### UI Artifact Decision
+| 产出通道 | 是否采用 | 证据路径/链接 | 选择理由 | 用户确认记录 |
+|---|---|---|---|---|
+| Figma MCP | | | | |
+| Pencil MCP | | | | |
+| HTML mockup | | | | |
+
+### Pencil Execution Record
+> 仅选择 Pencil MCP 时填写；否则写 N/A。
+
+- **`.pen` 文件**：
+- **导出截图**：
+- **PENCIL_PLAN 摘要**：
+- **采用的设计系统 / 第三方 skill**：
+- **截图自检结论**：
+
 ### Page Map
 | 页面/路由 | 使用者 | 核心任务 | 入口 | 出口/下一步 |
 |---|---|---|---|---|
@@ -54,7 +70,7 @@
 ```
 
 ### Wireframe / Prototype
-- **线稿或原型链接**：
+- **线稿或原型链接**：Figma Frame URL / `01-spec/ui-wireframe.pen` + screenshot / `01-spec/ui-mockup.html`
 - **低保真结构说明**：
 
 ### Visual Direction
