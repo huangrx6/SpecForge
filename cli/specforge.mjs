@@ -17,10 +17,10 @@ Usage:
   specforge doctor [--dir <path>]
 
 Examples:
-  node cli/specforge.mjs skill add --target codex --apply
-  node cli/specforge.mjs skill add --target all --apply --prune-legacy
-  node cli/specforge.mjs init --dir .
-  node cli/specforge.mjs doctor --dir .
+  npx github:huangrx6/SpecForge skill add --target codex --apply
+  npx github:huangrx6/SpecForge skill add --target all --apply --prune-legacy
+  npx github:huangrx6/SpecForge init --dir .
+  npx github:huangrx6/SpecForge doctor --dir .
 `);
 }
 

@@ -11,18 +11,18 @@ description: 将新仓库或已有仓库接入 SpecForge；初始化唯一项目
 
 本技能需要先安装到 AI 工具。当前不要使用 `npx specforge ...`：npm registry 上的 `specforge` 包不是本仓库发行版，命令集不兼容。
 
-推荐从本仓库源码安装：
+推荐从 GitHub 安装最新版：
 
 ```bash
-node cli/specforge.mjs skill add --target codex --apply
-node cli/specforge.mjs skill add --target claude-code --apply
-node cli/specforge.mjs skill add --target cc-switch --apply
+npx github:huangrx6/SpecForge skill add --target codex --apply
+npx github:huangrx6/SpecForge skill add --target claude-code --apply
+npx github:huangrx6/SpecForge skill add --target cc-switch --apply
 ```
 
 也可以一次性安装到所有目标：
 
 ```bash
-node cli/specforge.mjs skill add --target all --apply --prune-legacy
+npx github:huangrx6/SpecForge skill add --target all --apply --prune-legacy
 ```
 
 ## 内部技能母本
@@ -33,7 +33,7 @@ node cli/specforge.mjs skill add --target all --apply --prune-legacy
 
 - 项目接入后只新增或补齐 `.specforge/`。
 - 不创建根 `specs/`、根 `scripts/`，也不强制修改业务项目 `package.json`。
-- 初始化素材来自 CLI 生成的唯一 starter 快照：源码仓库中的 `starter/.specforge/`。
+- 初始化素材来自 CLI 生成的唯一 starter 快照：GitHub 发行包中的 `starter/.specforge/`。
 - 项目内命令直接运行 `node .specforge/execution/tools/<name>.mjs`。
 - 已有 `.specforge/workspace/knowledge/`、`.specforge/workspace/changes/`、`.specforge/registry.yaml` 不覆盖。
 
@@ -78,7 +78,7 @@ onboard 只应创建或补齐 `.specforge/`。不要在业务项目根目录额�
 
 ## Starter 来源与预判方式
 
-唯一 starter 快照位于源码仓库：
+唯一 starter 快照位于 GitHub 仓库：
 
 ```text
 starter/.specforge/
@@ -86,13 +86,13 @@ starter/.specforge/
 
 用户或维护者可以在运行 onboard 前直接查看这个目录，预判会生成哪些文件。`starter/.specforge/` 是隐藏目录；如果普通目录列表看起来为空，使用 `ls -la starter` 或 `find starter -maxdepth 2` 查看。
 
-初始化业务项目时优先调用本仓库 CLI：
+初始化业务项目时优先调用 GitHub 版 CLI：
 
 ```bash
-node /path/to/SpecForge/cli/specforge.mjs init --dir .
+npx github:huangrx6/SpecForge init --dir .
 ```
 
-在本机维护 SpecForge 源码仓库时，可运行：
+只有在明确处于 SpecForge 源码仓库维护场景时，才使用本地源码 CLI：
 
 ```bash
 node cli/specforge.mjs init --dir /path/to/project
@@ -137,11 +137,11 @@ manifest 会复制 policy、artifacts、execution 等静态资产，并生成空
 执行：
 
 ```bash
-node /path/to/SpecForge/cli/specforge.mjs init --dir .
+npx github:huangrx6/SpecForge init --dir .
 node .specforge/execution/tools/doctor.mjs
 ```
 
-如果当前就在 SpecForge 源码仓库中测试本地版本，改用：
+不要在普通业务项目中搜索 `/Users/.../workspace/specforge` 或其他个人目录来寻找 CLI。只有用户明确说“用本地 SpecForge 源码版本测试”时，才改用：
 
 ```bash
 node cli/specforge.mjs init --dir /path/to/project
