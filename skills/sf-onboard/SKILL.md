@@ -9,15 +9,17 @@ description: 将新仓库或已有仓库接入 SpecForge；初始化唯一项目
 
 ## 前置关系
 
-本技能需要先安装到 AI 工具。推荐从 npm 或 GitHub 使用 CLI：
+本技能需要先安装到 AI 工具。当前不要使用 `npx specforge ...`：npm registry 上的 `specforge` 包不是本仓库发行版，命令集不兼容。
+
+推荐从本仓库源码安装：
 
 ```bash
-npx specforge skill add --target codex --apply
-npx specforge skill add --target claude-code --apply
-npx specforge skill add --target cc-switch --apply
+node cli/specforge.mjs skill add --target codex --apply
+node cli/specforge.mjs skill add --target claude-code --apply
+node cli/specforge.mjs skill add --target cc-switch --apply
 ```
 
-本地源码维护时也可以运行：
+也可以一次性安装到所有目标：
 
 ```bash
 node cli/specforge.mjs skill add --target all --apply --prune-legacy
@@ -84,13 +86,13 @@ starter/.specforge/
 
 用户或维护者可以在运行 onboard 前直接查看这个目录，预判会生成哪些文件。`starter/.specforge/` 是隐藏目录；如果普通目录列表看起来为空，使用 `ls -la starter` 或 `find starter -maxdepth 2` 查看。
 
-初始化业务项目时优先调用 CLI：
+初始化业务项目时优先调用本仓库 CLI：
 
 ```bash
-npx specforge init --dir .
+node /path/to/SpecForge/cli/specforge.mjs init --dir .
 ```
 
-在 SpecForge 源码仓库维护时，可运行：
+在本机维护 SpecForge 源码仓库时，可运行：
 
 ```bash
 node cli/specforge.mjs init --dir /path/to/project
@@ -135,7 +137,7 @@ manifest 会复制 policy、artifacts、execution 等静态资产，并生成空
 执行：
 
 ```bash
-npx specforge init --dir .
+node /path/to/SpecForge/cli/specforge.mjs init --dir .
 node .specforge/execution/tools/doctor.mjs
 ```
 
