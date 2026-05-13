@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "description": "SpecForge starter 生成清单。runtime/ 是源码母本；starter/ 是按本清单生成的业务项目 .specforge 快照。",
+  "copy": [
+    { "from": "AGENTS.md", "to": "AGENTS.md" },
+    { "from": "PROTOCOL.md", "to": "PROTOCOL.md" },
+    { "from": "attention.md", "to": "attention.md" },
+    { "from": "manifest.yaml", "to": "manifest.yaml" },
+    { "from": "starter.manifest.json", "to": "starter.manifest.json" },
+    { "from": "execution/hooks", "to": "execution/hooks" },
+    { "from": "execution/stages", "to": "execution/stages" },
+    { "from": "policy/rules", "to": "policy/rules" },
+    { "from": "policy/tech-profiles", "to": "policy/tech-profiles" },
+    { "from": "policy/workflows", "to": "policy/workflows" },
+    { "from": "artifacts/schemas", "to": "artifacts/schemas" },
+    { "from": "artifacts/templates", "to": "artifacts/templates" },
+    { "from": "execution/tools/archive-change.mjs", "to": "execution/tools/archive-change.mjs" },
+    { "from": "execution/tools/artifact-graph-status.md", "to": "execution/tools/artifact-graph-status.md" },
+    { "from": "execution/tools/artifact-graph-status.mjs", "to": "execution/tools/artifact-graph-status.mjs" },
+    { "from": "execution/tools/create-artifact.mjs", "to": "execution/tools/create-artifact.mjs" },
+    { "from": "execution/tools/create-change.mjs", "to": "execution/tools/create-change.mjs" },
+    { "from": "execution/tools/doctor.mjs", "to": "execution/tools/doctor.mjs" },
+    { "from": "execution/tools/gate.mjs", "to": "execution/tools/gate.mjs" },
+    { "from": "execution/tools/instructions.mjs", "to": "execution/tools/instructions.mjs" },
+    { "from": "execution/tools/self-test.mjs", "to": "execution/tools/self-test.mjs" },
+    { "from": "execution/tools/status.mjs", "to": "execution/tools/status.mjs" },
+    { "from": "execution/tools/validate-structure.mjs", "to": "execution/tools/validate-structure.mjs" },
+    { "from": "execution/tools/lib", "to": "execution/tools/lib" }
+  ],
+  "directories": [
+    "workspace/changes/inbox",
+    "workspace/changes/active",
+    "workspace/changes/archive",
+    "workspace/knowledge/decisions"
+  ],
+  "files": {
+    "registry.yaml": "active: []\nblocked: []\narchive: []\n",
+    "workspace/changes/inbox/.gitkeep": "",
+    "workspace/changes/active/.gitkeep": "",
+    "workspace/changes/archive/.gitkeep": "",
+    "workspace/knowledge/README.md": "# 项目知识库\n\n这里只记录跨 change 长期有效的事实。临时讨论、实现过程和验证证据放在 `.specforge/workspace/changes/`。\n",
+    "workspace/knowledge/product.md": "# 产品事实\n\n暂无。\n",
+    "workspace/knowledge/architecture.md": "# 架构事实\n\n暂无。\n",
+    "workspace/knowledge/glossary.md": "# 术语表\n\n暂无。\n",
+    "workspace/knowledge/risks.md": "# 风险与技术债\n\n暂无。\n",
+    "workspace/knowledge/decisions/.gitkeep": ""
+  }
+}

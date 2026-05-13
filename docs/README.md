@@ -1,0 +1,44 @@
+# SpecForge
+
+SpecForge 是仓库原生的规范驱动开发协议，以 Agent Skills + 项目内 `.specforge/` runtime 的形式工作。
+
+## 目录结构
+
+```text
+skills/      Agent 入口技能：sf-router / sf-*
+runtime/     SpecForge 源码母本：规则、模板、工具、阶段行为和自举 workspace
+starter/     业务项目初始化时写入 `.specforge/` 的唯一快照，内容在隐藏目录 `starter/.specforge/`
+docs/        维护者文档、适配器说明和 legacy 资料
+cli/         npm / GitHub CLI 入口
+```
+
+源码仓库里的母本叫 `runtime/`，业务项目里生成的运行时仍叫 `.specforge/`。这能区分“我在维护 SpecForge 产品本体”和“我在某个业务项目里使用 SpecForge”。
+
+## 常用命令
+
+```bash
+npm run doctor
+npm run validate
+npm run sync:starter
+node cli/specforge.mjs skill add --target all --apply --prune-legacy
+node cli/specforge.mjs init --dir /path/to/project
+```
+
+## 技能
+
+新入口统一使用 `sf` 前缀：
+
+| Skill | 用途 |
+|---|---|
+| `sf-router` | 根路由，判断当前状态和下一步；输入 `sf` 前缀时用于发现所有技能 |
+| `sf-onboard` | 初始化业务项目 `.specforge/` |
+| `sf-intake` | 创建或整理 change |
+| `sf-spec` | 生成 requirements / design / tasks / spec_review |
+| `sf-implement` | 按已批准 tasks 实现 |
+| `sf-review` | 执行 spec_review / code_review gate |
+| `sf-verify` | 收集验证证据 |
+| `sf-close` | SSoT sync、release、rollback、archive |
+| `sf-doctor` | 健康检查 |
+| `sf-work` | 自动推进但不跳过 gate |
+
+更多维护者说明见 [docs/README.md](/Users/huangrx6/workspace/specforge/docs/README.md)。
