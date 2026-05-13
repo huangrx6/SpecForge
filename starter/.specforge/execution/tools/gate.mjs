@@ -2,32 +2,44 @@ import {
   artifactById,
   exists,
   gateStatus,
-  layout,
   loadSchema,
   parseField,
   readText,
   resolveChange,
+  runHook,
   updateChangeStage,
   updateGate,
 } from "./lib/specforge.mjs";
-import { pathToFileURL } from "node:url";
 
 const args = process.argv.slice(2);
-const gateName = args.find((arg) => !arg.startsWith("--"));
-const status = args.find((arg, index) => index > 0 && !arg.startsWith("--"));
 
 function argValue(name) {
   const index = args.indexOf(name);
   return index === -1 ? undefined : args[index + 1];
 }
 
+function positionalArgs() {
+  const values = [];
+  const optionsWithValues = new Set(["--change", "--evidence"]);
+  for (let i = 0; i < args.length; i += 1) {
+    const arg = args[i];
+    if (arg.startsWith("--")) {
+      if (optionsWithValues.has(arg)) i += 1;
+      continue;
+    }
+    values.push(arg);
+  }
+  return values;
+}
+
+const [gateName, status] = positionalArgs();
 const requestedChange = argValue("--change");
 const evidence = argValue("--evidence");
 const validStatuses = new Set(["APPROVED", "REQUEST_CHANGES", "REJECTED", "PENDING"]);
 const strictHooks = args.includes("--strict-hooks");
 
 if (!gateName || !status || !validStatuses.has(status)) {
-  console.error("Usage: node .specforge/execution/tools/gate.mjs <gate> <APPROVED|REQUEST_CHANGES|REJECTED|PENDING> --evidence <path> [--change <id>]");
+  console.error("Usage: node .specforge/execution/tools/gate.mjs <gate> <APPROVED|REQUEST_CHANGES|REJECTED|PENDING> --evidence <path> [--change <id>] [--strict-hooks]");
   process.exit(1);
 }
 
@@ -68,15 +80,4 @@ try {
 } catch (error) {
   console.error(error.message);
   process.exit(1);
-}
-
-async function runHook(name, payload) {
-  const candidates = [...new Set([`${layout.projectHooks}/${name}.mjs`, `${layout.hooks}/${name}.mjs`])];
-  for (const candidate of candidates) {
-    if (!exists(candidate)) continue;
-    const mod = await import(pathToFileURL(`${process.cwd()}/${candidate}`).href);
-    if (typeof mod.run !== "function") return { ok: true };
-    return await mod.run(payload);
-  }
-  return { ok: true };
 }

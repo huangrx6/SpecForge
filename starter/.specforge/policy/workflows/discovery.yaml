@@ -1,0 +1,13 @@
+id: discovery
+name: 探索与调研流程 (Discovery / Spike)
+description: 纯研究性任务。不产生产品代码实现，输出探索简报(Brief)或架构决策(ADR)，用于论证可行性。
+use_for:
+  - 新技术栈预研 (Spike)
+  - 第三方 API 可行性测试
+  - 遗留黑盒系统逆向分析
+stages:
+  - 00-intake
+  - 01-spec (Research/Design)
+  - 06-closure
+required_gates:
+  ssot_sync: true

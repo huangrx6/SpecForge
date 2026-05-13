@@ -1,6 +1,6 @@
 ---
 name: sf-spec
-description: 生成或更新 SpecForge change 的 requirements、design、tasks 和 spec_review；用于 active change 处于 01-spec 或 02-spec-review 阶段时。
+description: 【兼容入口】生成或更新 SpecForge change 的 requirements、design、tasks 和 spec_review；新项目推荐使用拆分后的 sf-requirements / sf-design / sf-tasking / sf-spec-review。
 ---
 
 # sf-spec
@@ -46,6 +46,7 @@ node .specforge/execution/tools/create-artifact.mjs spec_review
 - `.specforge/policy/rules/delivery/README.md`：配置、发布、回滚和运行影响。
 - `.specforge/policy/rules/gates/README.md`：spec_review 门禁。
 - `.specforge/policy/rules/testing/README.md`：验收标准必须可验证。
+- `.specforge/policy/tech-profiles/README.md`：技术选型维度、数据库选择矩阵和 profile selection 写法；按需读取具体 profile。
 - `.specforge/policy/rules/localization.md`：中文优先。
 
 ## 写作要求
@@ -65,7 +66,7 @@ node .specforge/execution/tools/create-artifact.mjs spec_review
 - 追踪每条需求对应的设计决策。
 - 建立分析上下文包，说明设计如何来自代码探索、外部研究和用户澄清。
 - 有用户可见页面时必须包含页面地图、用户流程、线稿 / 原型、视觉方向和交互状态。
-- 技术栈、组件库、编辑器、内容渲染和测试方案必须引用 `.specforge/policy/tech-profiles/` 或说明偏离理由。
+- 技术栈、组件库、数据库、编辑器、内容渲染和测试方案必须引用 `.specforge/policy/tech-profiles/` 或说明偏离理由。
 - 明确允许写入范围和禁止范围。
 - 写清接口、数据、风险和验证策略。
 

@@ -61,7 +61,7 @@ onboard 完成后，业务项目内会拥有这些类别的文件：
 | `.specforge/registry.yaml` | active / blocked / archive change 索引 |
 | `.specforge/policy/rules/` | 稳定流程、边界、测试、安全和 review 规则 |
 | `.specforge/policy/tech-profiles/` | 可组合技术栈 profile，用于 design 阶段选型 |
-| `.specforge/policy/workflows/` | lite / standard / bugfix workflow 描述 |
+| `.specforge/policy/workflows/` | lite / feature / standard / bugfix / refactor / discovery workflow 描述 |
 | `.specforge/artifacts/schemas/` | artifact graph schema |
 | `.specforge/artifacts/templates/` | 各阶段产物模板 |
 | `.specforge/execution/tools/` | 本地 runtime 命令 |

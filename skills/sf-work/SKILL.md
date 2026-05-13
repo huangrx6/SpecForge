@@ -29,10 +29,16 @@ node .specforge/execution/tools/doctor.mjs
 
 1. 运行 `node .specforge/execution/tools/instructions.mjs`。
 2. 对 ready artifact 调用对应子技能：
-   - spec 阶段：`sf-spec`
+   - requirements：`sf-requirements`
+   - gap_report：`sf-discovery`
+   - research：`sf-discovery`
+   - design：`sf-design`
+   - tasks：`sf-tasking`
+   - spec_review：`sf-spec-review`
    - implementation：`sf-implement`
-   - review：`sf-review`
+   - code_review：`sf-code-review`
    - verification：`sf-verify`
+   - ssot_sync：`sf-close`
    - closure：`sf-close`
 3. 每完成一个 gate 或阶段后再次运行 doctor。
 4. 所有 artifact done 后归档。

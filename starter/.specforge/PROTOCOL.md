@@ -41,9 +41,26 @@ CHG-20260512-008-codex-skill-sync-and-validation
 node .specforge/execution/tools/create-change.mjs "变更标题"
 ```
 
-## 标准变更目录
+## Workflow 变体
 
-标准 workflow 会渐进创建 artifact。新 change 初始只包含 `change.yaml` 和 intake 输出。
+| Workflow | 路径 | 用途 |
+|---|---|---|
+| `feature` | requirements -> design -> tasks -> spec_review -> implementation -> code_review -> verification -> ssot_sync -> closure | 新增用户能力和产品功能扩展 |
+| `standard` | requirements -> design -> tasks -> spec_review -> implementation -> code_review -> verification -> ssot_sync -> closure | 通用标准变更和兼容默认流 |
+| `lite` | requirements -> tasks -> implementation -> code_review -> verification -> ssot_sync -> closure | 边界明确的小改动 |
+| `bugfix` | gap_report -> tasks -> implementation -> code_review -> verification -> ssot_sync -> closure | 缺陷、回归和漏洞修复 |
+| `refactor` | design -> tasks -> spec_review -> implementation -> code_review -> verification -> ssot_sync -> closure | 行为不变的技术债治理 |
+| `discovery` | research -> ssot_sync -> closure | 纯预研、Spike 和黑盒理解 |
+
+创建指定 workflow 的 change 时使用：
+
+```bash
+node .specforge/execution/tools/create-change.mjs --workflow feature "变更标题"
+```
+
+## 变更目录
+
+workflow 会按 schema 渐进创建 artifact。新 change 初始只包含 `change.yaml` 和 intake 输出；下方是 superset 视图，实际产物以 `.specforge/artifacts/schemas/<workflow>.json` 为准。
 
 ```text
 .specforge/workspace/changes/active/<change-id>/
@@ -52,6 +69,8 @@ node .specforge/execution/tools/create-change.mjs "变更标题"
 │   ├── original-request.md
 │   └── brief.md
 ├── 01-spec/
+│   ├── gap-report.md
+│   ├── research.md
 │   ├── requirements.md
 │   ├── design.md
 │   └── tasks.md
@@ -72,7 +91,7 @@ node .specforge/execution/tools/create-change.mjs "变更标题"
     └── rollback.md
 ```
 
-权威 artifact 列表和依赖关系在 `.specforge/artifacts/schemas/standard.json` 中声明；上面的目录树只是便于人阅读的视图。
+权威 artifact 列表和依赖关系在 `.specforge/artifacts/schemas/<workflow>.json` 中声明；上面的目录树只是便于人阅读的视图。
 
 ## change.yaml 必需结构
 
@@ -124,7 +143,7 @@ gates:
 PENDING | APPROVED | REQUEST_CHANGES | REJECTED | SKIPPED
 ```
 
-只有 workflow 允许该门禁可选，并且证据写清跳过原因时，`SKIPPED` 才合法。
+不适用于当前 workflow 的 gate 应写为 `required: false` 和 `SKIPPED`。只有 workflow 允许该门禁可选，并且证据写清跳过原因时，`SKIPPED` 才合法。
 
 ## Artifact 完成条件
 
@@ -145,6 +164,7 @@ node .specforge/execution/tools/instructions.mjs -- apply
 | 技能 | 读取 | 写入 |
 |---|---|---|
 | `sf-intake` | 用户请求、knowledge、registry | `change.yaml`、`00-intake/original-request.md`、`00-intake/brief.md` |
+| `sf-discovery` | intake、analysis rules、代码探索、外部研究 | `00-intake/brief.md`、`01-spec/gap-report.md` 或 `01-spec/research.md` |
 | `sf-spec` | intake、rules、knowledge | `01-spec/requirements.md`、`01-spec/design.md`、`01-spec/tasks.md`、`02-spec-review/spec-review-v1.md` |
 | `sf-review` | spec 或 implementation artifacts | `02-spec-review/spec-review-v1.md` 或 `04-code-review/code-review-v1.md`，然后更新门禁 |
 | `sf-implement` | 已批准的 spec 和 tasks | 业务代码、`03-implementation/*`、task 勾选状态 |

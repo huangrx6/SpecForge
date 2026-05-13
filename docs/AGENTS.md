@@ -52,9 +52,12 @@ node cli/specforge.mjs skill add --target all --apply --prune-legacy
 ## 工作流
 
 ```text
-intake -> requirements -> design -> tasks -> spec_review gate
--> implementation -> code_review gate -> verification gate
--> ssot_sync gate -> closure -> archive
+feature:   intake -> requirements -> design -> tasks -> spec_review -> implementation -> code_review -> verification -> ssot_sync -> closure
+standard:  intake -> requirements -> design -> tasks -> spec_review -> implementation -> code_review -> verification -> ssot_sync -> closure
+lite:      intake -> requirements -> tasks -> implementation -> code_review -> verification -> ssot_sync -> closure
+bugfix:    intake -> gap_report -> tasks -> implementation -> code_review -> verification -> ssot_sync -> closure
+refactor:  intake -> design -> tasks -> spec_review -> implementation -> code_review -> verification -> ssot_sync -> closure
+discovery: intake -> research -> ssot_sync -> closure
 ```
 
 必需 gate 必须有 evidence 文件，不能只靠聊天口头认可。

@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { pathToFileURL } from "node:url";
 
 export const root = process.cwd();
 
@@ -63,6 +64,17 @@ export function abs(relativePath) {
 
 export function exists(relativePath) {
   return existsSync(abs(relativePath));
+}
+
+export async function runHook(name, payload = {}) {
+  const candidates = [...new Set([`${layout.projectHooks}/${name}.mjs`, `${layout.hooks}/${name}.mjs`])];
+  for (const candidate of candidates) {
+    if (!exists(candidate)) continue;
+    const mod = await import(pathToFileURL(abs(candidate)).href);
+    if (typeof mod.run !== "function") return { ok: true };
+    return await mod.run(payload);
+  }
+  return { ok: true };
 }
 
 export function readText(relativePath) {
@@ -261,6 +273,8 @@ export const templateByOutput = new Map([
   ["01-spec/requirements.md", "requirements.md"],
   ["01-spec/design.md", "design.md"],
   ["01-spec/tasks.md", "tasks.md"],
+  ["01-spec/gap-report.md", "gap-report.md"],
+  ["01-spec/research.md", "research.md"],
   ["02-spec-review/spec-review-v1.md", "spec-review.md"],
   ["03-implementation/plan.md", "implementation-plan.md"],
   ["03-implementation/report.md", "implementation-report.md"],
@@ -310,6 +324,14 @@ export function validateSchema(schema, schemaName = schema.id ?? "schema") {
     for (const dep of artifact.requires ?? []) {
       if (!ids.has(dep)) errors.push(`${schemaName}: artifact ${artifact.id} has unknown dependency ${dep}`);
     }
+  }
+
+  for (const dep of schema.apply?.requires ?? []) {
+    if (!ids.has(dep)) errors.push(`${schemaName}: apply has unknown dependency ${dep}`);
+  }
+
+  for (const dep of schema.archive?.requires ?? []) {
+    if (!ids.has(dep)) errors.push(`${schemaName}: archive has unknown dependency ${dep}`);
   }
 
   const visiting = new Set();

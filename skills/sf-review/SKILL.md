@@ -1,6 +1,6 @@
 ---
 name: sf-review
-description: 执行 SpecForge 的 spec_review 或 code_review gate；用于 ready artifact 是 spec_review/code_review，或用户要求审查当前 change 时。
+description: 【兼容入口】执行 SpecForge 的 spec_review 或 code_review gate；新项目推荐使用拆分后的 sf-spec-review / sf-code-review。
 ---
 
 # sf-review

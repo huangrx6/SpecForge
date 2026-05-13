@@ -1,0 +1,122 @@
+{
+  "id": "lite",
+  "version": 1,
+  "description": "轻量级流程，跳过 design 和 spec_review，适合小改动。",
+  "artifacts": [
+    {
+      "id": "intake",
+      "stage": "00-intake",
+      "title": "需求入口",
+      "description": "记录请求背景",
+      "outputs": [
+        "00-intake/original-request.md",
+        "00-intake/brief.md"
+      ],
+      "requires": []
+    },
+    {
+      "id": "requirements",
+      "stage": "01-spec",
+      "title": "需求规格",
+      "description": "简要行为边界",
+      "outputs": [
+        "01-spec/requirements.md"
+      ],
+      "requires": [
+        "intake"
+      ]
+    },
+    {
+      "id": "tasks",
+      "stage": "01-spec",
+      "title": "任务拆解",
+      "description": "直接基于需求拆分任务",
+      "outputs": [
+        "01-spec/tasks.md"
+      ],
+      "requires": [
+        "requirements"
+      ]
+    },
+    {
+      "id": "implementation",
+      "stage": "03-implementation",
+      "title": "实现记录",
+      "description": "记录变更",
+      "outputs": [
+        "03-implementation/plan.md",
+        "03-implementation/report.md",
+        "03-implementation/changed-files.md"
+      ],
+      "requires": [
+        "tasks"
+      ]
+    },
+    {
+      "id": "code_review",
+      "stage": "04-code-review",
+      "title": "代码审查",
+      "description": "确认代码质量",
+      "outputs": [
+        "04-code-review/code-review-v1.md"
+      ],
+      "requires": [
+        "implementation"
+      ],
+      "gate": "code_review"
+    },
+    {
+      "id": "verification",
+      "stage": "05-verification",
+      "title": "验证证据",
+      "description": "确认有效性",
+      "outputs": [
+        "05-verification/report.md",
+        "05-verification/ci-result.md"
+      ],
+      "requires": [
+        "code_review"
+      ],
+      "gate": "verification"
+    },
+    {
+      "id": "ssot_sync",
+      "stage": "06-closure",
+      "title": "知识回流",
+      "description": "更新长期知识",
+      "outputs": [
+        "06-closure/ssot-sync.md"
+      ],
+      "requires": [
+        "verification"
+      ],
+      "gate": "ssot_sync"
+    },
+    {
+      "id": "closure",
+      "stage": "06-closure",
+      "title": "关闭记录",
+      "description": "归档",
+      "outputs": [
+        "06-closure/release.md",
+        "06-closure/rollback.md"
+      ],
+      "requires": [
+        "ssot_sync"
+      ]
+    }
+  ],
+  "apply": {
+    "requires": [
+      "tasks"
+    ],
+    "tracks": "01-spec/tasks.md"
+  },
+  "archive": {
+    "requires": [
+      "verification",
+      "ssot_sync",
+      "closure"
+    ]
+  }
+}

@@ -13,9 +13,9 @@ Each hook exports both `run(payload)` and a default function. Returning `{ ok: f
 
 ## Hooks
 
-- `pre-gate.mjs`: before a gate update.
-- `post-gate.mjs`: after a gate update.
-- `pre-implement.mjs`: before implementation starts.
-- `post-implement.mjs`: after implementation evidence is written.
-- `pre-close.mjs`: before closure / archive.
-- `on-close.mjs`: after closure / archive.
+- `pre-gate.mjs`: called by `tools/gate.mjs` before a gate update.
+- `post-gate.mjs`: called by `tools/gate.mjs` after a gate update.
+- `pre-implement.mjs`: reserved for implementation runners before implementation starts.
+- `post-implement.mjs`: reserved for implementation runners after implementation evidence is written.
+- `pre-close.mjs`: called by `tools/archive-change.mjs` before archive.
+- `on-close.mjs`: called by `tools/archive-change.mjs` after archive.

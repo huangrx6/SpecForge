@@ -51,6 +51,7 @@ function listChanges(label, relativeRoot, absoluteRoot) {
     console.log(`- ${field(yaml, "id")}`);
     console.log(`  title: ${field(yaml, "title")}`);
     console.log(`  type: ${field(yaml, "type")}`);
+    console.log(`  workflow: ${field(yaml, "workflow") || "standard"}`);
     console.log(`  stage: ${field(yaml, "stage")}`);
     console.log(`  gates: spec=${gateStatus(yaml, "spec_review")}, code=${gateStatus(yaml, "code_review")}, verification=${gateStatus(yaml, "verification")}, ssot=${gateStatus(yaml, "ssot_sync")}`);
   }

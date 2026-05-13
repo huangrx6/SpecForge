@@ -1,12 +1,13 @@
 id: bugfix
-name: 缺陷修复流程
+name: 缺陷修复流程 (Bugfix)
+description: 专门针对线上或测试阶段的 Bug。引入 Gap Report 阶段分析根本原因，跳过冗长的产品需求期，强制代码和验证门禁。
 use_for:
-  - 可复现缺陷
-  - 回归问题
-  - 生产修复
+  - 线上缺陷热修复 (Hotfix)
+  - QA 回归测试出的 Bug
+  - 安全漏洞紧急修复
 stages:
   - 00-intake
-  - 01-spec
+  - 01-spec (Gap Analysis)
   - 03-implementation
   - 04-code-review
   - 05-verification

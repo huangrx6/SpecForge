@@ -33,7 +33,7 @@ node .specforge/execution/tools/doctor.mjs
 - gate 状态和证据路径。
 - artifact graph：done、ready、blocked、partial。
 - 当前 blocker 和 owner。
-- 建议路由到哪个根级 `specforge-*` 技能。
+- 建议路由到哪个根级 `sf-*` 技能。
 
 ## 判断规则
 

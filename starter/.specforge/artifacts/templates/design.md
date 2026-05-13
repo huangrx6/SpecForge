@@ -1,88 +1,137 @@
-# Design
+# 技术设计 (Technical Design)
 
-## 摘要
+## 0. 设计摘要 (Design Summary)
+- **设计结论**：
+- **本次 change 范围**：
+- **关键风险**：
+- **明确不做**：
 
-## 分析上下文包
+## 1. 需求追踪与分析上下文 (Requirements Trace & Context)
 
-- 需求理解摘要：
-- 代码库约束：
-- 外部资料结论：
-- 用户确认的取舍：
-- 仍需防守的假设：
+### Requirements Trace
+| 需求/约束 | 来源 (brief / requirements / clarification / research) | 设计响应 | 验证钩子 |
+|---|---|---|---|
+| | | | |
 
-## 技术栈决策
+### Analysis Context Package
+- **已确认的用户澄清**：
+- **引用的探索/研究证据**：
+- **默认假设**：
+- **仍未解决但不阻塞的开放问题**：
 
-| 领域 | 选择 | 对齐 profile | 备选方案 | 理由 |
+## 2. Tech Profile Selection
+> 写入前读取 `.specforge/policy/tech-profiles/README.md` 和本次涉及的具体 profile；不适用的维度也要说明跳过理由。
+
+| 维度 | 选型 | Profile 路径 | 适用性/跳过理由 | 选用理由 | 验证方式 |
+|---|---|---|---|---|---|
+| Frontend | | | | | |
+| Backend | | | | | |
+| Database | | | | | |
+| Component / UI | | | | | |
+| Content / Editor | | | | | |
+| Markdown / Rich Text | | | | | |
+| Charts / Visualization | | | | | |
+| Testing | | | | | |
+| Runtime / Infrastructure | | | | | |
+| Security / Observability | | | | | |
+
+## 3. Profile Deviations
+| 维度/Profile | 偏离内容 | 偏离原因 | 风险 | 防护/验证 |
 |---|---|---|---|---|
+| | | | | |
 
-## 需求追踪
+## 4. 体验设计 (Experience Design)
+> 有用户可见页面时必须填写；无 UI 变更时写明 N/A 和理由。涉及页面时读取 `.specforge/policy/rules/experience-design/README.md`。
 
-| Requirement | Design Decision |
-|---|---|
-
-## 边界承诺
-
-### 允许写入范围
-
-### 禁止范围
-
-### 上游契约
-
-### 下游重新验证
-
-## 影响区域
-
-## 页面地图
-
-| 页面 | 路径 | 用户目标 | 入口 | 主要状态 |
+### Page Map
+| 页面/路由 | 使用者 | 核心任务 | 入口 | 出口/下一步 |
 |---|---|---|---|---|
+| | | | | |
 
-## 用户流程
-
-```mermaid
-flowchart LR
-  A["用户目标"] --> B["关键操作"]
-  B --> C["结果"]
+### User Flow
+```text
+入口 -> 关键操作 -> 系统反馈 -> 成功/失败出口
 ```
 
-## 线稿 / 原型
+### Wireframe / Prototype
+- **线稿或原型链接**：
+- **低保真结构说明**：
 
-| 页面 | 结构草图或原型链接 | 说明 |
+### Visual Direction
+- **主题与品牌语气**：
+- **颜色/密度/信息层级**：
+- **组件库或设计系统约束**：
+
+### Interaction State Matrix
+| 界面/组件 | Loading | Empty | Error | Permission | Success | Notes |
+|---|---|---|---|---|---|---|
+| | | | | | | |
+
+## 5. 目标架构与边界承诺 (Architecture & Boundary Commitment)
+- **目标架构**：
+- **责任边界**：
+- **核心数据流**：
+
+| 允许修改 | 禁止修改 | 原因 |
 |---|---|---|
+| | | |
 
-## 视觉方向
+## 6. 领域模型与业务边界 (Domain Design)
+> 涉及领域建模时读取 `.specforge/execution/stages/design/domain-design.md`。
 
-- 主题关键词：
-- 主色：
-- 辅助色：
-- 背景色：
-- 文本色：
-- 字体倾向：
-- 布局密度：
-- 暗色模式：
+- **核心实体与聚合根**：
+- **状态机与流转**：
+- **限界上下文交互**：
+- **业务不变量**：
 
-## 组件与交互状态
+## 7. 接口与契约 (API & Contracts)
+> 涉及 API、SDK、事件或跨系统契约时读取 `.specforge/execution/stages/design/api-design.md` 和 `.specforge/policy/rules/api-design/README.md`。
 
-| 组件 / 页面 | loading | empty | error | success | disabled | destructive confirmation | mobile |
-|---|---|---|---|---|---|---|---|
+| 调用方 | 提供方 | 接口/事件名称 | 协议 | 认证/权限 | 兼容性策略 |
+|---|---|---|---|---|---|
+| | | | | | |
 
-## 数据和 API 变化
+## 8. 数据存储与迁移 (Data, Storage & Migration)
+> 涉及 DB / Schema / 索引 / 迁移时读取 `.specforge/execution/stages/design/data-design.md`。
 
-## 文件结构计划
+- **关键表结构/Schema**：
+- **索引策略**：
+- **缓存与一致性设计**：
+- **迁移/回填方案**：
+- **备份与恢复影响**：
 
-| Path | Ownership | Notes |
-|---|---|---|
+## 9. 权限、配置与外部集成影响 (Permission, Config & Integration Impact)
+| 影响面 | 变化内容 | 风险 | 验证方式 |
+|---|---|---|---|
+| Permission / Auth | | | |
+| Config / Env | | | |
+| Queue / Job | | | |
+| Cache | | | |
+| External Integration | | | |
 
-## 流程
+## 10. 非功能性约束 (NFRs)
+> 涉及安全、可观测性、部署或可靠性时读取 `.specforge/execution/stages/design/nfr-design.md`。
 
-```mermaid
-flowchart LR
-  A["输入"] --> B["处理"]
-  B --> C["输出"]
-```
+- **安全与鉴权 (Security)**：
+- **性能与并发 (Performance)**：
+- **可观测性 (Observability)**：
+- **可靠性与降级 (Reliability / Degradation)**：
+- **发布、回滚与运行影响 (Delivery / Rollback)**：
 
-## 验证策略
+## 11. 影响模块与代码结构规划 (Impacted Modules & File Structure)
+| 模块/路径 | 职责定位 | 变更类型 | 注意事项 |
+|---|---|---|---|
+| | | | |
 
-## 风险
+## 12. 失败模式与回滚策略 (Failure Modes & Rollback)
+| 失败模式 | 触发条件 | 检测方式 | 缓解/降级 | 回滚方式 |
+|---|---|---|---|---|
+| | | | | |
 
-## 备选方案
+## 13. 验证策略 (Validation Strategy)
+| 验证层级 | 命令/证据 | 覆盖目标 | 通过标准 |
+|---|---|---|---|
+| Unit | | | |
+| Integration | | | |
+| E2E / Manual | | | |
+| Regression | | | |

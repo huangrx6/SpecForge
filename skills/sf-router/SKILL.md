@@ -53,12 +53,20 @@ SpecForge 分成两层：
 | 仓库没有 `.specforge/` | `sf-onboard` |
 | 问“现在到哪一步 / 健康状态 / 能不能继续” | `sf-doctor` |
 | 提出新需求、新 bug、重构想法，且没有 active change | `sf-intake` |
-| active change 下一步是 requirements / design / tasks / spec_review | `sf-spec` |
+| active change 需要深度分析 / brief 不足以支撑 requirements | `sf-discovery` |
+| active change 下一步是 gap_report / research | `sf-discovery` |
+| active change 是产品型，需要对齐产品目标和功能边界 | `sf-prd` |
+| active change 下一步是 requirements | `sf-requirements` |
+| active change 下一步是 design | `sf-design` |
+| active change 下一步是 tasks | `sf-tasking` |
+| active change 下一步是 spec_review gate | `sf-spec-review` |
 | spec_review 已批准，准备写代码 | `sf-implement` |
-| 下一步是 spec_review 或 code_review gate | `sf-review` |
+| 下一步是 code_review gate | `sf-code-review` |
 | code_review 已批准，需要测试和证据 | `sf-verify` |
 | verification 已批准，需要 SSoT sync / release / rollback / archive | `sf-close` |
 | 用户明确说“继续做完 / 自动推进 / 不要停” | `sf-work` |
+| （兼容）active change 下一步是 requirements / design / tasks / spec_review | `sf-spec` |
+| （兼容）下一步是 spec_review 或 code_review gate | `sf-review` |
 
 ## 路由决策树
 
@@ -73,9 +81,14 @@ SpecForge 分成两层：
 4. 有一个 active change。
    - 运行 `node .specforge/execution/tools/instructions.mjs`。
    - 根据 ready artifact 路由：
-     - `requirements` / `design` / `tasks` / `spec_review` → `sf-spec`
+     - `requirements` → `sf-requirements`
+     - `gap_report` → `sf-discovery`
+     - `research` → `sf-discovery`
+     - `design` → `sf-design`
+     - `tasks` → `sf-tasking`
+     - `spec_review` → `sf-spec-review`
      - `implementation` → `sf-implement`
-     - `code_review` → `sf-review`
+     - `code_review` → `sf-code-review`
      - `verification` → `sf-verify`
      - `ssot_sync` / `closure` → `sf-close`
 5. 用户明确要求自动推进。

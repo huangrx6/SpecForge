@@ -24,6 +24,7 @@
 | 阶段推进、批准或拒绝 gate | `gates/README.md`、`review/README.md` |
 | 需求、设计、任务编写 | `spec-quality/README.md`、`boundaries/README.md` |
 | API、SDK、事件、集成契约 | `api-design/README.md`、`security/README.md`、`testing/README.md` |
+| 领域建模、数据设计、API 契约、NFR 设计 | `engineering/README.md`、`api-design/README.md`、`security/README.md`、`delivery/README.md` |
 | 安全敏感变更 | `security/README.md`、`review/README.md`、`testing/README.md` |
 | 测试计划、验证和证据 | `testing/README.md`、`gates/README.md` |
 | 发布、配置、回滚、运维证据 | `delivery/README.md`、`security/README.md` |

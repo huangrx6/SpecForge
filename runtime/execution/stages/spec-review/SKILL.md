@@ -16,6 +16,7 @@ description: SpecForge 内部规格审查技能。用于 01-spec 完成后审查
 - `.specforge/policy/rules/analysis-workflow/README.md`
 - `.specforge/policy/rules/review/README.md`
 - `.specforge/policy/rules/spec-quality/README.md`
+- `.specforge/policy/tech-profiles/README.md`
 - 产品 / 页面 / 全栈应用读取 `.specforge/policy/rules/product-discovery/README.md` 和 `.specforge/policy/rules/experience-design/README.md`
 - `.specforge/policy/rules/gates/README.md`
 
@@ -31,7 +32,7 @@ description: SpecForge 内部规格审查技能。用于 01-spec 完成后审查
 - 产品 / 功能候选是否已展开，MVP 组合是否有用户确认或明确默认假设。
 - design 是否覆盖需求、边界、风险和验证策略。
 - 用户可见页面是否有页面地图、用户流程、线稿 / 原型、视觉方向和交互状态。
-- 技术栈、组件库、编辑器、数据层和测试方案是否引用 profile 或写清偏离理由。
+- 技术栈、组件库、编辑器、数据层和测试方案是否引用 profile 或写清偏离理由；涉及持久化时是否选择了数据库 profile。
 - tasks 是否可执行、可排序、可验证。
 - API、数据、权限、配置、发布影响是否写清。
 - 是否存在范围膨胀、未决方案或隐藏风险。
@@ -54,6 +55,7 @@ description: SpecForge 内部规格审查技能。用于 01-spec 完成后审查
 - 用户可见页面没有体验设计证据。
 - 管理后台、HTML 渲染、外部发布、数据迁移或权限相关风险只被默认处理，没有确认和验证策略。
 - 关键技术栈或组件选择没有 profile、备选方案或取舍理由。
+- 设计包含数据库、缓存、搜索或文件存储，但没有数据库 / 存储 profile 选择、偏离说明或迁移验证计划。
 
 ## 输出要求
 

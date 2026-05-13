@@ -1,6 +1,6 @@
 ---
 name: sf-close
-description: 完成 SpecForge 关闭阶段；用于 verification 已通过，需要 SSoT sync、release、rollback 和 archive 时。
+description: 完成 SpecForge 关闭阶段；用于当前 workflow 已到 ssot_sync / closure，需要 SSoT sync、release、rollback 和 archive 时。
 ---
 
 # sf-close

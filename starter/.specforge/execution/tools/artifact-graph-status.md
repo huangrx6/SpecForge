@@ -1,23 +1,25 @@
 # artifact-graph-status.mjs
 
-`artifact-graph-status.mjs` 根据 `.specforge/artifacts/schemas/standard.json` 展示某个 change 的 artifact graph 状态。它不是简单“打印阶段”，而是回答哪些 artifact 已完成、哪些可继续、哪些被依赖或 gate 阻塞。
+`artifact-graph-status.mjs` 根据当前 change 的 `workflow` 字段自动加载对应 schema，展示 artifact graph 状态。它不是简单“打印阶段”，而是回答哪些 artifact 已完成、哪些可继续、哪些被依赖或 gate 阻塞。
 
 ## 用法
 
 ```bash
 node .specforge/execution/tools/artifact-graph-status.mjs
 node .specforge/execution/tools/artifact-graph-status.mjs CHG-20260512-008-codex-skill-sync-and-validation
+node .specforge/execution/tools/artifact-graph-status.mjs --change CHG-20260512-008-codex-skill-sync-and-validation
 node .specforge/execution/tools/artifact-graph-status.mjs --json
 node .specforge/execution/tools/artifact-graph-status.mjs CHG-20260512-008-codex-skill-sync-and-validation --json
 ```
 
-不传 change id 时，工具会优先使用唯一 active change。如果没有 active change，则回退到最新 archived change，方便在安静仓库里检查 graph。
+不传 change id 时，工具会优先使用唯一 active change。如果没有 active change，则回退到最新 archived change，方便在安静仓库里检查 graph。多个 active change 同时存在时必须显式传 `--change <id>` 或位置参数。
 
 ## 输出内容
 
 命令会输出：
 
 - workflow schema id 和版本。
+- change 生命周期（active / archive，JSON 模式）。
 - change id 和路径。
 - `change.yaml` 中记录的当前 stage。
 - `done / total` 进度。

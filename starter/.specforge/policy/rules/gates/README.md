@@ -20,10 +20,12 @@
 
 | Gate | 适用范围 | Evidence |
 |---|---|---|
-| `spec_review` | standard、偏企业级变更 | `02-spec-review/spec-review-v1.md` |
-| `code_review` | standard、bugfix、安全敏感变更 | `04-code-review/code-review-v1.md` |
-| `verification` | 所有变更 | `05-verification/report.md` 或 `ci-result.md` |
-| `ssot_sync` | 所有 closed changes | `06-closure/ssot-sync.md` |
+| `spec_review` | `feature`、`standard`、`refactor`，以及高风险方案评审 | `02-spec-review/spec-review-v1.md` |
+| `code_review` | `feature`、`standard`、`lite`、`bugfix`、`refactor`，以及任何写代码的变更 | `04-code-review/code-review-v1.md` |
+| `verification` | 所有写代码或改变运行结果的变更 | `05-verification/report.md` 或 `ci-result.md` |
+| `ssot_sync` | 所有 closed changes，包括纯 discovery | `06-closure/ssot-sync.md` |
+
+是否 required 以当前 change 的 workflow schema 为准；`change.yaml` 中不适用的 gate 应标为 `required: false` 和 `SKIPPED`，不能显示成永远 pending 的假阻塞。
 
 ## 核心原则
 

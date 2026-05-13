@@ -16,14 +16,17 @@
 ## 工作流状态机
 
 ```text
-intake -> requirements -> design -> tasks -> spec_review gate
--> implementation -> code_review gate -> verification gate
--> ssot_sync gate -> closure -> archive
+feature:   intake -> requirements -> design -> tasks -> spec_review -> implementation -> code_review -> verification -> ssot_sync -> closure
+standard:  intake -> requirements -> design -> tasks -> spec_review -> implementation -> code_review -> verification -> ssot_sync -> closure
+lite:      intake -> requirements -> tasks -> implementation -> code_review -> verification -> ssot_sync -> closure
+bugfix:    intake -> gap_report -> tasks -> implementation -> code_review -> verification -> ssot_sync -> closure
+refactor:  intake -> design -> tasks -> spec_review -> implementation -> code_review -> verification -> ssot_sync -> closure
+discovery: intake -> research -> ssot_sync -> closure
 ```
 
 ## 门禁纪律
 
-必需门禁记录在 `change.yaml` 中，并且必须绑定证据文件：
+必需门禁由当前 workflow schema 决定，记录在 `change.yaml` 中，并且必须绑定证据文件：
 
 - `spec_review`：`02-spec-review/spec-review-v1.md`
 - `code_review`：`04-code-review/code-review-v1.md`

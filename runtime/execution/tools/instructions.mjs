@@ -40,15 +40,76 @@ const requestedArtifact = positionalArgs()[0];
 const requestedChange = argValue("--change");
 
 const rule = (path) => `${layout.rules}/${path}`;
+const stageSkill = (path) => `${layout.stages}/${path}`;
+
+const stageSkillByArtifact = {
+  intake: stageSkill("discovery/SKILL.md"),
+  gap_report: stageSkill("gap-report/SKILL.md"),
+  research: stageSkill("research/SKILL.md"),
+  requirements: stageSkill("requirements/SKILL.md"),
+  design: stageSkill("design/SKILL.md"),
+  tasks: stageSkill("task-planning/SKILL.md"),
+  spec_review: stageSkill("spec-review/SKILL.md"),
+  implementation: stageSkill("implementation/SKILL.md"),
+  code_review: stageSkill("code-review/SKILL.md"),
+  verification: stageSkill("verification/SKILL.md"),
+  ssot_sync: stageSkill("ssot-sync/SKILL.md"),
+};
+
+const contextByArtifact = {
+  design: [`${layout.techProfiles}/README.md`],
+  spec_review: [`${layout.techProfiles}/README.md`],
+};
+
 const rulesByArtifact = {
-  intake: [rule("context/README.md"), rule("boundaries/README.md")],
-  requirements: [rule("spec-quality/README.md"), rule("boundaries/README.md"), rule("api-design/README.md")],
-  design: [rule("engineering/README.md"), rule("security/README.md"), rule("boundaries/README.md"), rule("api-design/README.md"), rule("delivery/README.md")],
+  intake: [rule("context/README.md"), rule("boundaries/README.md"), rule("analysis-workflow/README.md")],
+  gap_report: [rule("engineering/README.md"), rule("testing/README.md"), rule("analysis-workflow/README.md")],
+  research: [rule("engineering/README.md"), rule("analysis-workflow/README.md")],
+  requirements: [
+    rule("spec-quality/README.md"),
+    rule("analysis-workflow/README.md"),
+    rule("boundaries/README.md"),
+    rule("product-discovery/README.md"),
+    rule("testing/README.md"),
+  ],
+  design: [
+    rule("engineering/README.md"),
+    rule("analysis-workflow/README.md"),
+    rule("security/README.md"),
+    rule("boundaries/README.md"),
+    rule("api-design/README.md"),
+    rule("delivery/README.md"),
+    rule("experience-design/README.md"),
+    rule("testing/README.md"),
+  ],
   tasks: [rule("artifact-graph.md"), rule("testing/README.md"), rule("boundaries/README.md")],
-  spec_review: [rule("gates/README.md"), rule("review/README.md"), rule("spec-quality/README.md")],
-  implementation: [rule("engineering/README.md"), rule("security/README.md"), rule("testing/README.md")],
-  code_review: [rule("gates/README.md"), rule("review/README.md"), rule("security/README.md"), rule("testing/README.md")],
-  verification: [rule("testing/README.md"), rule("gates/README.md"), rule("delivery/README.md")],
+  spec_review: [
+    rule("gates/README.md"),
+    rule("review/README.md"),
+    rule("spec-quality/README.md"),
+    rule("analysis-workflow/README.md"),
+    rule("product-discovery/README.md"),
+    rule("experience-design/README.md"),
+    rule("security/README.md"),
+    rule("testing/README.md"),
+  ],
+  implementation: [
+    rule("engineering/README.md"),
+    rule("security/README.md"),
+    rule("testing/README.md"),
+    rule("boundaries/README.md"),
+    rule("api-design/README.md"),
+    rule("delivery/README.md"),
+  ],
+  code_review: [
+    rule("gates/README.md"),
+    rule("review/README.md"),
+    rule("security/README.md"),
+    rule("testing/README.md"),
+    rule("engineering/README.md"),
+    rule("boundaries/README.md"),
+  ],
+  verification: [rule("testing/README.md"), rule("gates/README.md"), rule("delivery/README.md"), rule("security/README.md")],
   ssot_sync: [rule("artifact-graph.md"), rule("gates/README.md"), rule("delivery/README.md")],
   closure: [rule("gates/README.md"), rule("delivery/README.md")],
 };
@@ -155,6 +216,8 @@ try {
       dependencies: dependencyRows(schema, states, artifact),
       outputs: outputRows(artifact),
       rules: rulesByArtifact[artifact.id] ?? [rule("index.md")],
+      stage_skill: stageSkillByArtifact[artifact.id] ?? null,
+      context: contextByArtifact[artifact.id] ?? [],
     },
     next_ready: schema.artifacts
       .filter((item) => states.get(item.id) === "ready")
@@ -172,6 +235,16 @@ try {
     console.log(`State: ${states.get(artifact.id)}`);
     console.log(artifact.description);
     console.log("");
+    if (payload.artifact.stage_skill) {
+      console.log("Read stage skill:");
+      console.log(`- ${payload.artifact.stage_skill}`);
+      console.log("");
+    }
+    if (payload.artifact.context.length > 0) {
+      console.log("Read context:");
+      for (const file of payload.artifact.context) console.log(`- ${file}`);
+      console.log("");
+    }
     console.log("Read rules:");
     for (const rule of payload.artifact.rules) console.log(`- ${rule}`);
     console.log("");

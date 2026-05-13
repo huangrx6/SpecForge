@@ -1,0 +1,56 @@
+---
+name: sf-requirements
+description: 生成或更新 SpecForge change 的 requirements；用于 active change 处于 01-spec 阶段且 ready artifact 为 requirements 时。
+---
+
+# sf-requirements
+
+把 brief（和可选的 PRD）升级为可测试、可审查的需求规格。它不写设计，不写实现。
+
+## 启动
+
+运行：
+
+```bash
+node .specforge/execution/tools/instructions.mjs
+```
+
+确认 ready artifact 包含 `requirements`，再：
+
+```bash
+node .specforge/execution/tools/create-artifact.mjs requirements
+```
+
+## 内部技能母本
+
+写 requirements 前，读取 `.specforge/execution/stages/requirements/SKILL.md`。需求质量标准、停止条件和完成标准以内置母本为准。
+
+## 关联规则
+
+- `.specforge/policy/rules/spec-quality/README.md`：规格质量、EARS 格式、澄清项。
+- `.specforge/policy/rules/analysis-workflow/README.md`：需求必须有 intake 分析证据支撑。
+- `.specforge/policy/rules/product-discovery/README.md`：产品类需求必须记录功能候选和用户确认。
+- `.specforge/policy/rules/boundaries/README.md`：范围、非目标和写入边界。
+- `.specforge/policy/rules/testing/README.md`：验收标准必须可验证。
+- `.specforge/policy/rules/localization.md`：中文优先。
+
+## 写作要求
+
+- 写用户可观察行为，不写实现细节。
+- 从 brief 的分析证据包追溯需求来源；复杂需求不能丢失代码探索、外部研究和用户澄清结论。
+- 产品类需求必须记录功能候选、MVP 选择、明确延后项和用户确认。
+- 必须包含范围、非目标、依赖和验收标准。
+- 适合时使用 EARS：
+  - `WHEN <event>, THE SYSTEM SHALL <response>.`
+  - `IF <condition>, THE SYSTEM SHALL <response>.`
+
+## 完成标准
+
+- `requirements.md` 可以独立支撑 design。
+- 所有未决问题都显式标记 `[NEEDS CLARIFICATION]`。
+- 下一步路由到 `sf-design`。
+
+## 不做
+
+- 不写设计方案。
+- 不把未澄清需求包装成已批准规格。

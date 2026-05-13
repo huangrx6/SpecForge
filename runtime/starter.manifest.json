@@ -7,6 +7,7 @@
     { "from": "attention.md", "to": "attention.md" },
     { "from": "manifest.yaml", "to": "manifest.yaml" },
     { "from": "starter.manifest.json", "to": "starter.manifest.json" },
+    { "from": "execution/commands", "to": "execution/commands" },
     { "from": "execution/hooks", "to": "execution/hooks" },
     { "from": "execution/stages", "to": "execution/stages" },
     { "from": "policy/rules", "to": "policy/rules" },

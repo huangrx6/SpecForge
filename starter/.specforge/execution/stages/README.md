@@ -24,17 +24,21 @@ description: <说明此技能做什么，以及什么时候使用>
 
 | 内部技能 | 入口技能 |
 |---|---|
-| `discovery/SKILL.md` | `sf`、`sf-intake` |
-| `requirements/SKILL.md` | `sf-spec` |
-| `design/SKILL.md` | `sf-spec` |
-| `task-planning/SKILL.md` | `sf-spec` |
-| `spec-review/SKILL.md` | `sf-review` |
+| `discovery/SKILL.md` | `sf`、`sf-intake`、`sf-discovery` |
+| `gap-report/SKILL.md` | `sf-spec`（兼容）、`sf-discovery` |
+| `research/SKILL.md` | `sf-spec`（兼容）、`sf-discovery` |
+| `requirements/SKILL.md` | `sf-spec`（兼容）、`sf-requirements` |
+| `design/SKILL.md` | `sf-spec`（兼容）、`sf-design` |
+| `task-planning/SKILL.md` | `sf-spec`（兼容）、`sf-tasking` |
+| `spec-review/SKILL.md` | `sf-review`（兼容）、`sf-spec-review` |
 | `implementation/SKILL.md` | `sf-implement` |
-| `code-review/SKILL.md` | `sf-review` |
+| `code-review/SKILL.md` | `sf-review`（兼容）、`sf-code-review` |
 | `verification/SKILL.md` | `sf-verify` |
 | `ssot-sync/SKILL.md` | `sf-close` |
 | `status/SKILL.md` | `sf-doctor`、`sf-work` |
 | `steering/SKILL.md` | `sf-onboard`、`sf-close` |
+
+> `sf-prd` 不对应固定的内部 stage 技能母本；它直接在 `discovery/SKILL.md` 的候选功能池章节和 `product-discovery` 规则基础上生成 PRD。
 
 ## 维护规则
 
@@ -46,7 +50,8 @@ description: <说明此技能做什么，以及什么时候使用>
 ## 验证命令
 
 ```bash
-npm run sync:starter
-npm run validate:skills
-npm run doctor
+node runtime/execution/tools/sync-starter-assets.mjs
+node runtime/execution/tools/validate-skills.mjs
+node runtime/execution/tools/validate-structure.mjs
+node .specforge/execution/tools/doctor.mjs
 ```

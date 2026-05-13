@@ -19,7 +19,11 @@
 ## 规格重量
 
 - 小变更可以走 lite workflow 或直接实现。
-- 中等变更应成为一个 standard change。
+- 新增功能和产品能力扩展应优先走 feature workflow。
+- 无法归入 feature / bugfix / refactor / discovery 但仍需完整规格的中等变更，应成为一个 standard change。
+- 缺陷修复走 bugfix workflow，先写根因和回归验证。
+- 行为不变的技术债治理走 refactor workflow，重点审查技术设计和回归风险。
+- 纯预研走 discovery workflow，只沉淀 research 和长期知识，不承诺实现。
 - 大变更应拆成多个 change，并明确契约。
 
 如果规格显得很重，先判断是不是变更本身太大。

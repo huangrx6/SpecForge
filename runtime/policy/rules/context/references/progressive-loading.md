@@ -38,7 +38,7 @@ Kiro 的 specs 把 requirements、design、tasks 作为结构化阶段产物；O
 | 任务规模 | 默认策略 |
 |---|---|
 | 小 | lite workflow 或直接实现 |
-| 中 | standard workflow，完整 requirements / design / tasks / review / verification |
+| 中 | feature 或 standard workflow，完整 requirements / design / tasks / review / verification |
 | 大 | 先 discovery，再拆 change 或 initiative |
 
 ## 代码阅读策略

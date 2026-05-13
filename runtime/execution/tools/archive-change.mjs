@@ -10,6 +10,7 @@ import {
   readText,
   removeRegistryEntry,
   resolveChange,
+  runHook,
   updateChangeStatus,
   writeText,
 } from "./lib/specforge.mjs";
@@ -24,6 +25,7 @@ function argValue(name) {
 try {
   const requestedChange = argValue("--change");
   const dryRun = args.includes("--dry-run");
+  const strictHooks = args.includes("--strict-hooks");
   const change = resolveChange({ change: requestedChange, activeOnly: true });
   const yaml = readText(`${change.base}/change.yaml`);
   const workflow = parseField(yaml, "workflow") || "standard";
@@ -52,6 +54,12 @@ try {
     process.exit(0);
   }
 
+  const payload = { change: change.name, changeBase: change.base, archiveBase, workflow };
+  const preHook = await runHook("pre-close", payload);
+  if (preHook && preHook.ok === false) {
+    throw new Error(`pre-close hook blocked archive: ${preHook.message ?? "no message"}`);
+  }
+
   updateChangeStatus(change.base, "ARCHIVED");
   const archivedYaml = readText(`${change.base}/change.yaml`);
   movePath(change.base, archiveBase);
@@ -61,6 +69,13 @@ try {
   registry = normalizeEmptyActive(registry);
   registry = appendArchiveRegistryEntry(registry, makeArchiveRegistryEntry(change.name, archivedYaml, archiveBase));
   writeText(layout.registry, `${registry.trimEnd()}\n`);
+
+  const postHook = await runHook("on-close", { ...payload, changeBase: archiveBase });
+  if (postHook && postHook.ok === false) {
+    const message = `on-close hook failed: ${postHook.message ?? "no message"}`;
+    if (strictHooks) throw new Error(message);
+    console.error(message);
+  }
 
   console.log(`Archived ${change.name}`);
   console.log(archiveBase);

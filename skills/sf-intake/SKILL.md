@@ -32,13 +32,13 @@ description: 为新请求创建或整理 SpecForge change；用于用户提出�
 1. 没有 active change 时创建：
 
 ```bash
-node .specforge/execution/tools/create-change.mjs "Change title"
+node .specforge/execution/tools/create-change.mjs --workflow <workflow> "Change title"
 ```
 
 2. 写清：
    - `00-intake/original-request.md`
    - `00-intake/brief.md`
-3. 判断 workflow：`lite`、`standard`、`bugfix`。
+3. 判断 workflow：`lite`、`feature`、`standard`、`bugfix`、`refactor`、`discovery`。
 4. 在 brief 中写：
    - 背景和目标。
    - 分析深度、代码库探索、外部研究或跳过理由、澄清记录和分析综合。
@@ -60,7 +60,7 @@ node .specforge/execution/tools/create-change.mjs "Change title"
 
 - change 已进入 `.specforge/workspace/changes/active/`。
 - brief 足以支撑 requirements。
-- 下一步明确路由到 `sf-spec`，或因澄清项暂停。
+- 下一步明确路由到 `sf-requirements` / `sf-design` / `sf-discovery` / `sf-spec`，或因澄清项暂停。
 
 ## 不做
 

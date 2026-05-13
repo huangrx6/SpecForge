@@ -27,9 +27,22 @@ Discovery 是新工作的分诊入口，只负责判断路线和创建可恢复�
 7. 对产品、页面、全栈应用或复杂功能，生成候选功能池，按 `MVP / 可选增强 / 后续版本` 分组，并给出推荐组合。
 8. 先汇总“已明确 / 待确认 / 可能遗漏”，再向用户澄清关键问题并记录答案。
 9. 明确哪些选择已由用户确认，哪些只是 Agent 默认假设。
-10. 选择 workflow：`lite`、`standard` 或 `bugfix`。
-11. 没有 active change 时，运行 `node .specforge/execution/tools/create-change.mjs "变更标题"`。
+10. 选择 workflow：`lite`、`feature`、`standard`、`bugfix`、`refactor` 或 `discovery`。
+11. 没有 active change 时，运行 `node .specforge/execution/tools/create-change.mjs --workflow <workflow> "变更标题"`。
 12. 写入 `00-intake/original-request.md` 和 `00-intake/brief.md`。
+
+## Workflow 分流
+
+| Workflow | 何时选择 | 下一步 artifact |
+|---|---|---|
+| `lite` | 边界清楚、低风险、无需设计评审的小改动 | `requirements` |
+| `feature` | 新增用户能力、产品功能扩展、需要功能候选和体验/技术设计的新功能 | `requirements` |
+| `standard` | 无法归入 feature / bugfix / refactor / discovery，但仍需要完整规格和双门禁的通用标准变更 | `requirements` |
+| `bugfix` | 缺陷、回归、安全漏洞或线上异常修复 | `gap_report` |
+| `refactor` | 行为不变的结构调整、解耦、依赖升级、性能重构 | `design` |
+| `discovery` | 纯预研、Spike、可行性验证、黑盒系统理解，不承诺实现 | `research` |
+
+`feature` 是新增功能的首选 workflow；不要再把新增功能默认塞进 `standard`。`refactor` 不跳业务分析，它跳过的是终端用户需求规格；brief 仍必须说明重构动机、现状证据、风险和成功判据。`discovery` 不写实现任务；如果研究结果需要落地，应关闭 discovery change 后新开 feature / standard / refactor / bugfix change。
 
 ## 路由结果
 

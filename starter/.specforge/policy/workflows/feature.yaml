@@ -1,0 +1,20 @@
+id: feature
+name: 新功能研发流程 (Feature)
+description: 专为新增产品级功能设计。包含完整的产品规格探索、体验设计与技术架构门禁。
+use_for:
+  - 全新的产品页面或能力
+  - 核心业务流扩展
+  - 涉及交互界面大改
+stages:
+  - 00-intake
+  - 01-spec
+  - 02-spec-review
+  - 03-implementation
+  - 04-code-review
+  - 05-verification
+  - 06-closure
+required_gates:
+  spec_review: true
+  code_review: true
+  verification: true
+  ssot_sync: true
