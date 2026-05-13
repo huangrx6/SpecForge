@@ -5,6 +5,10 @@ description: 完成 SpecForge 关闭阶段；用于当前 workflow 已到 ssot_s
 
 # sf-close
 
+## 运行目录
+
+执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
+
 关闭 change：同步长期知识、写发布和回滚记录、归档。它是防止文档过期的最后一道门。
 
 ## 内部技能母本

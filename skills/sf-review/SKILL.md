@@ -5,6 +5,10 @@ description: 【兼容入口】执行 SpecForge 的 spec_review 或 code_review 
 
 # sf-review
 
+## 运行目录
+
+执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
+
 执行门禁审查。审查是 gate，不是顺手补实现。
 
 ## 判定 review 类型

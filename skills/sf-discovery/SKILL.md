@@ -5,6 +5,10 @@ description: 对新请求执行深度探索、缺陷根因分析或预研；用�
 
 # sf-discovery
 
+## 运行目录
+
+执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
+
 把原始诉求升级为有分析证据支撑的 brief，或生成 bugfix 的 `gap_report`、discovery workflow 的 `research`。它不写业务实现代码。
 
 ## 启动

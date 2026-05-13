@@ -5,6 +5,10 @@ description: SpecForge 一键推进模式；用于用户明确要求“继续做
 
 # sf-work
 
+## 运行目录
+
+执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
+
 一键推进模式。它不是跳过流程，而是自动循环调用正确的 `sf-*` 子技能。
 
 ## 启动

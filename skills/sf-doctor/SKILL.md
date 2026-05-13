@@ -5,6 +5,10 @@ description: 检查 SpecForge 仓库健康度；用于用户问当前状态、�
 
 # sf-doctor
 
+## 运行目录
+
+执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
+
 检查项目状态并给出下一步，不修改产物。
 
 ## 启动

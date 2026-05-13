@@ -5,6 +5,10 @@ description: 执行 SpecForge spec_review gate；用于 requirements、design、
 
 # sf-spec-review
 
+## 运行目录
+
+执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
+
 审查 requirements、design、tasks 是否足以进入 implementation。审查是 gate，不是润色文档。
 
 ## 启动

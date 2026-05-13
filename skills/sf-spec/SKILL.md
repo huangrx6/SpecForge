@@ -5,6 +5,10 @@ description: 【兼容入口】生成或更新 SpecForge change 的 requirements
 
 # sf-spec
 
+## 运行目录
+
+执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
+
 把 intake 变成可审查、可实现、可验证的规格。它不写业务代码。
 
 ## 启动

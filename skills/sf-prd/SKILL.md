@@ -5,6 +5,10 @@ description: 生成或更新产品需求文档（PRD）；用于产品型 change
 
 # sf-prd
 
+## 运行目录
+
+执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
+
 把 brief 的分析结论升级为可对齐产品与工程的 PRD。它的受众是产品决策者和工程负责人，不是实现者。
 
 ## 启动

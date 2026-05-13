@@ -5,6 +5,10 @@ description: 将新仓库或已有仓库接入 SpecForge；初始化唯一项目
 
 # sf-onboard
 
+## 运行目录
+
+开始 onboard 前，先确认当前目录是要接入 SpecForge 的业务项目根。若当前在 `frontend/`、`backend/` 等子目录，先回到仓库根；不要在子目录里初始化 `.specforge/`，除非用户明确说明该子目录就是独立项目。
+
 本技能把业务仓库接入 SpecForge。它只做两件事：搭骨架、归旧档。骨架完成后其他 `sf-*` 技能才能运行。
 
 ## 前置关系

@@ -5,6 +5,10 @@ description: 为新请求创建或整理 SpecForge change；用于用户提出�
 
 # sf-intake
 
+## 运行目录
+
+执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
+
 把用户的原始诉求变成一个可推进的 active change。它负责 intake，不负责写完整规格或实现代码。
 
 ## 启动扫描

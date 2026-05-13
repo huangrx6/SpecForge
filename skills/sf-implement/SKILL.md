@@ -5,6 +5,10 @@ description: 根据已批准的 SpecForge tasks 执行实现；用于 spec_revie
 
 # sf-implement
 
+## 运行目录
+
+执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
+
 按照已批准 tasks 实现代码，并留下 implementation evidence。本技能不批准自己的 code_review gate。
 
 ## 启动

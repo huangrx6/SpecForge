@@ -5,6 +5,10 @@ description: SpecForge 工作流根入口。用于用户只说“sf”、询问�
 
 # sf-router
 
+## 运行目录
+
+执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
+
 ## 启动必读
 
 开始任何判断前，先检查当前仓库是否接入 SpecForge：

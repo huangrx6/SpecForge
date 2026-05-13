@@ -5,6 +5,10 @@ description: 生成或更新 SpecForge change 的系统设计文档；用于 act
 
 # sf-design
 
+## 运行目录
+
+执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
+
 把已收敛需求转成可实现、可审查、可验证的技术设计。设计是一个整体：领域、数据、API 和流程必须在同一上下文中对齐，非功能关切以约束形式注入而不是单独生成。
 
 ## 启动

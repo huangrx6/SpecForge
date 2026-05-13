@@ -5,6 +5,10 @@ description: 生成或更新 SpecForge change 的 tasks；用于 active change �
 
 # sf-tasking
 
+## 运行目录
+
+执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
+
 把 design 拆成可执行任务图。任务不是待办愿望，而是实现者可以逐项完成、审查者可以逐项核对的工作单元。
 
 ## 启动
