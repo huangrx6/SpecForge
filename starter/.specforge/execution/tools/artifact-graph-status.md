@@ -1,27 +1,28 @@
 # artifact-graph-status.mjs
 
-`artifact-graph-status.mjs` 根据当前 change 的 `workflow` 字段自动加载对应 schema，展示 artifact graph 状态。它不是简单“打印阶段”，而是回答哪些 artifact 已完成、哪些可继续、哪些被依赖或 gate 阻塞。
+`artifact-graph-status.mjs` 根据当前 work item 的 `workflow` 和 `components` 自动加载有效 schema，展示 artifact graph 状态。它不是简单“打印阶段”，而是回答哪些 artifact 已完成、哪些可继续、哪些被依赖或 gate 阻塞。
 
 ## 用法
 
 ```bash
 node .specforge/execution/tools/artifact-graph-status.mjs
-node .specforge/execution/tools/artifact-graph-status.mjs CHG-20260512-008-codex-skill-sync-and-validation
-node .specforge/execution/tools/artifact-graph-status.mjs --change CHG-20260512-008-codex-skill-sync-and-validation
+node .specforge/execution/tools/artifact-graph-status.mjs WI-20260512-008-codex-skill-sync-and-validation
+node .specforge/execution/tools/artifact-graph-status.mjs --work-item WI-20260512-008-codex-skill-sync-and-validation
 node .specforge/execution/tools/artifact-graph-status.mjs --json
-node .specforge/execution/tools/artifact-graph-status.mjs CHG-20260512-008-codex-skill-sync-and-validation --json
+node .specforge/execution/tools/artifact-graph-status.mjs WI-20260512-008-codex-skill-sync-and-validation --json
 ```
 
-不传 change id 时，工具会优先使用唯一 active change。如果没有 active change，则回退到最新 archived change，方便在安静仓库里检查 graph。多个 active change 同时存在时必须显式传 `--change <id>` 或位置参数。
+不传 work item id 时，工具会使用唯一 active work item。多个 active work item 同时存在时必须显式传 `--work-item <id>` 或位置参数。
 
 ## 输出内容
 
 命令会输出：
 
 - workflow schema id 和版本。
-- change 生命周期（active / archive，JSON 模式）。
-- change id 和路径。
-- `change.yaml` 中记录的当前 stage。
+- components flags（如 `has_ui=false` 会跳过 UI 设计 artifact）。
+- work item 生命周期（active / archive，JSON 模式）。
+- work item id 和路径。
+- `work-item.yaml` 中记录的当前 stage。
 - `done / total` 进度。
 - 当前 ready artifact。
 - 每个 artifact 的状态：`done`、`ready`、`blocked` 或 `partial`。
@@ -31,15 +32,15 @@ node .specforge/execution/tools/artifact-graph-status.mjs CHG-20260512-008-codex
 
 ```text
 Artifact graph: standard@1
-Change: CHG-20260512-008-codex-skill-sync-and-validation
-Path: .specforge/workspace/changes/archive/CHG-20260512-008-codex-skill-sync-and-validation
+Work item: WI-20260512-008-codex-skill-sync-and-validation
+Path: .specforge/workspace/work-items/active/WI-20260512-008-codex-skill-sync-and-validation
 Stage: 06-closure
 Progress: 10/10 done
 Ready: none
 
 - intake: done (requires=none)
 - requirements: done (requires=intake)
-- spec_review: done (requires=requirements, design, tasks, gate=spec_review:APPROVED)
+- spec_review: done (requires=requirements, ui_design, technical_design, tasks, gate=spec_review:APPROVED)
 ```
 
 JSON 模式适合 Agent 或脚本消费，会提供：

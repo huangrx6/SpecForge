@@ -14,8 +14,8 @@ SpecForge 采用“渐进加载、按阶段加载、以事实源优先级解决�
 
 遇到下面任一情况，必须读取本入口：
 
-- 进入仓库、恢复一个 active change。
-- 生成 requirements / design / tasks。
+- 进入仓库、恢复一个 active work item。
+- 生成 requirements / 适用的 ui_design / technical_design / tasks。
 - 需要决定是否读取 knowledge、rules、archive 或外部资料。
 - 做 review / verify，需要核对证据和事实来源。
 - 任务出现上下文冲突、版本敏感事实或“该不该继续读”的判断。
@@ -35,7 +35,7 @@ SpecForge 采用“渐进加载、按阶段加载、以事实源优先级解决�
 
 - 更多上下文不一定更好，相关上下文才更好。
 - 低优先级资料不得覆盖高优先级事实。
-- 当前 change 优先于历史 archive，knowledge 优先于旧实现记录。
+- 当前 work item 优先于历史 archive，knowledge 优先于旧实现记录。
 - 按 artifact 和当前阶段加载，而不是一次性把全部 rules、templates 和 archive 都塞进上下文。
 - 涉及外部框架、SDK、协议或版本敏感事实时，必须查当前官方资料。
 - 长期可复用事实应沉淀到 `.specforge/workspace/knowledge/`；临时推理不应伪装成 SSoT。
@@ -45,7 +45,7 @@ SpecForge 采用“渐进加载、按阶段加载、以事实源优先级解决�
 | 层级 | 作用 |
 |---|---|
 | 指令层 | 系统、开发者、用户当前要求 |
-| 工作流层 | 当前 change、artifact、gate、rules、templates |
+| 工作流层 | 当前 work item、artifact、gate、rules、templates |
 | 项目事实层 | `.specforge/workspace/knowledge/`、架构、产品、决策、风险 |
 | 外部事实层 | 官方文档、标准、版本说明、可信来源 |
 
@@ -56,7 +56,7 @@ Kiro 的 steering 和 OpenSpec 的指令模型都偏向“持久项目知识 + �
 进入任务时，优先按这条路径走：
 
 1. 读取当前请求和更高优先级指令。
-2. 读取 SpecForge 入口和当前 change 控制面。
+2. 读取 SpecForge 入口和当前 work item 控制面。
 3. 识别当前 artifact。
 4. 只加载该 artifact 所需 rules、templates 和 knowledge。
 5. 只有在事实不够或版本敏感时，才扩展到外部资料或历史 archive。

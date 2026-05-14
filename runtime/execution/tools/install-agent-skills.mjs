@@ -20,6 +20,9 @@ const pruneLegacy = args.includes("--prune-legacy");
 
 const legacySkillNames = [
   "sf",
+  "sf-design",
+  "sf-review",
+  "sf-spec",
   "specforge",
   "specforge-close",
   "specforge-doctor",

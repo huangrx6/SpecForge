@@ -1,6 +1,6 @@
 ---
 name: requirements
-description: SpecForge 内部需求技能。用于为 change 生成清晰、可测试的功能需求、非功能需求、范围边界、不在范围内和验收标准。
+description: SpecForge 内部需求技能。用于为 work item 生成清晰、可测试的功能需求、非功能需求、范围边界、不在范围内和验收标准。
 ---
 
 # Requirements Skill
@@ -11,6 +11,7 @@ description: SpecForge 内部需求技能。用于为 change 生成清晰、可�
 
 - `00-intake/original-request.md`
 - `00-intake/brief.md`
+- `00-intake/prd.md`（存在时，作为产品意图输入，不是可测试需求的替代品）
 - `.specforge/policy/rules/analysis-workflow/README.md`
 - `.specforge/policy/rules/spec-quality/README.md`
 - `.specforge/policy/rules/boundaries/README.md`
@@ -25,12 +26,13 @@ description: SpecForge 内部需求技能。用于为 change 生成清晰、可�
 
 1. 提炼用户目标和业务结果。
 2. 整理 intake 证据包：需求理解、代码库探索、外部研究 / 跳过理由、用户澄清和分析综合。
-3. 从 brief 的候选功能池中整理用户已确认的 MVP、明确延后项和 Agent 默认假设。
-4. 如果候选功能没有经过用户确认，先列出选择问题，不要把默认 MVP 伪装成已确认需求。
-5. 拆成功能需求、非功能需求、约束和非目标。
-6. 为每条需求补可验证验收标准。
-7. 标出依赖、重新验证触发条件和已知歧义。
-8. 避免写文件名、类名、数据库字段等实现细节，除非用户请求本身就是契约变更。
+3. 若存在 PRD，先提取产品目标、用户画像、核心场景和成功指标，再转译成系统可观察行为；不要原样复制 PRD。
+4. 从 brief 的候选功能池中整理用户已确认的 MVP、明确延后项和 Agent 默认假设。
+5. 如果候选功能没有经过用户确认，先列出选择问题，不要把默认 MVP 伪装成已确认需求。
+6. 拆成功能需求、非功能需求、约束和非目标。
+7. 为每条需求补可验证验收标准。
+8. 标出依赖、重新验证触发条件和已知歧义。
+9. 避免写文件名、类名、数据库字段等实现细节，除非用户请求本身就是契约变更。
 
 ## 质量标准
 

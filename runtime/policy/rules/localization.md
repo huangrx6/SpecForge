@@ -6,7 +6,7 @@ SpecForge 的默认读者是中文工程协作场景。除代码标识符、命�
 
 - `.specforge/` 中的规则、技能、模板说明。
 - `.specforge/workspace/knowledge/` 中的长期知识。
-- `.specforge/workspace/changes/` 中的变更产物。
+- `.specforge/workspace/work-items/` 中的 work item 产物。
 - `docs/` 中的研究、架构和使用文档。
 
 ## 保留英文的情况
@@ -38,7 +38,7 @@ SpecForge 的默认读者是中文工程协作场景。除代码标识符、命�
 | artifact | 产物 |
 | gate | 门禁 |
 | workflow | 工作流 |
-| change | 变更 |
+| work item | 工作项 |
 | requirement | 需求 |
 | design | 设计 |
 | task | 任务 |

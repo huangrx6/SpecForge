@@ -1,13 +1,14 @@
 import {
   artifactById,
+  effectiveSchema,
   exists,
   gateStatus,
   loadSchema,
   parseField,
   readText,
-  resolveChange,
+  resolveWorkItem,
   runHook,
-  updateChangeStage,
+  updateWorkItemStage,
   updateGate,
 } from "./lib/specforge.mjs";
 
@@ -20,7 +21,7 @@ function argValue(name) {
 
 function positionalArgs() {
   const values = [];
-  const optionsWithValues = new Set(["--change", "--evidence"]);
+  const optionsWithValues = new Set(["--work-item", "--evidence"]);
   for (let i = 0; i < args.length; i += 1) {
     const arg = args[i];
     if (arg.startsWith("--")) {
@@ -33,40 +34,40 @@ function positionalArgs() {
 }
 
 const [gateName, status] = positionalArgs();
-const requestedChange = argValue("--change");
+const requestedWorkItem = argValue("--work-item");
 const evidence = argValue("--evidence");
 const validStatuses = new Set(["APPROVED", "REQUEST_CHANGES", "REJECTED", "PENDING"]);
 const strictHooks = args.includes("--strict-hooks");
 
 if (!gateName || !status || !validStatuses.has(status)) {
-  console.error("Usage: node .specforge/execution/tools/gate.mjs <gate> <APPROVED|REQUEST_CHANGES|REJECTED|PENDING> --evidence <path> [--change <id>] [--strict-hooks]");
+  console.error("Usage: node .specforge/execution/tools/gate.mjs <gate> <APPROVED|REQUEST_CHANGES|REJECTED|PENDING> --evidence <path> [--work-item <id>] [--strict-hooks]");
   process.exit(1);
 }
 
 try {
-  const change = resolveChange({ change: requestedChange, activeOnly: true });
-  const changeYaml = readText(`${change.base}/change.yaml`);
-  const workflow = parseField(changeYaml, "workflow") || "standard";
-  const schema = loadSchema(workflow);
+  const workItem = resolveWorkItem({ workItem: requestedWorkItem, activeOnly: true });
+  const workItemYaml = readText(`${workItem.base}/work-item.yaml`);
+  const workflow = parseField(workItemYaml, "workflow") || "standard";
+  const schema = effectiveSchema(loadSchema(workflow), workItemYaml);
   const artifact = schema.artifacts.find((item) => item.gate === gateName);
 
   if (!artifact) throw new Error(`Unknown gate for workflow ${workflow}: ${gateName}`);
   if (status === "APPROVED") {
     if (!evidence) throw new Error("APPROVED gate requires --evidence <path>.");
-    if (!exists(`${change.base}/${evidence}`)) throw new Error(`Evidence does not exist: ${evidence}`);
+    if (!exists(`${workItem.base}/${evidence}`)) throw new Error(`Evidence does not exist: ${evidence}`);
   }
 
   const gateArtifact = artifactById(schema, artifact.id);
-  const payload = { change: change.name, changeBase: change.base, gate: gateName, status, evidence };
+  const payload = { workItem: workItem.name, workItemBase: workItem.base, gate: gateName, status, evidence };
   const preHook = await runHook("pre-gate", payload);
   if (preHook && preHook.ok === false) {
     throw new Error(`pre-gate hook blocked gate update: ${preHook.message ?? "no message"}`);
   }
 
-  updateGate(change.base, gateName, status, status === "APPROVED" ? evidence : null);
-  updateChangeStage(change.base, gateArtifact.stage);
+  updateGate(workItem.base, gateName, status, status === "APPROVED" ? evidence : null);
+  updateWorkItemStage(workItem.base, gateArtifact.stage);
 
-  const updatedYaml = readText(`${change.base}/change.yaml`);
+  const updatedYaml = readText(`${workItem.base}/work-item.yaml`);
   const postHook = await runHook("post-gate", payload);
   if (postHook && postHook.ok === false) {
     const message = `post-gate hook failed: ${postHook.message ?? "no message"}`;
@@ -75,7 +76,7 @@ try {
   }
 
   console.log(`Gate updated: ${gateName} = ${gateStatus(updatedYaml, gateName)}`);
-  console.log(`Change: ${change.name}`);
+  console.log(`Work item: ${workItem.name}`);
   console.log(`Stage: ${gateArtifact.stage}`);
 } catch (error) {
   console.error(error.message);

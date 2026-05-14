@@ -28,11 +28,37 @@ Artifact Graph 的状态判断必须基于四类事实，不得只看目录名�
 | 事实源 | 作用 |
 |---|---|
 | `.specforge/artifacts/schemas/<workflow>.json` | 声明 artifact、依赖、gate、apply、archive 条件 |
-| `change.yaml` | 记录当前 change 的 workflow、stage、gate 状态与证据 |
-| change 目录中的实际产物 | 判断输出文件是否存在、是否部分缺失 |
+| `work-item.yaml` | 记录当前 work item 的 workflow、components、stage、gate 状态与证据 |
+| work item 目录中的实际产物 | 判断输出文件是否存在、是否部分缺失 |
 | `.specforge/registry.yaml` | 作为 active / blocked / archive 的索引，不承担细粒度事实 |
 
-其中 schema 是图结构真相，change 目录是产物真相，`change.yaml` 是流程元数据真相。
+其中 schema 是图结构真相，work item 目录是产物真相，`work-item.yaml` 是流程元数据真相。
+
+## Workflow 与 Components
+
+Workflow 只决定工作的大类，components 决定条件阶段是否进入当前 work item 的有效图。
+
+例如 `feature` 和 `standard` 都是完整规格流程，但不是每个功能都同时需要 UI design 和 technical design。`work-item.yaml` 中的 `components` 会被 graph 工具读取，用来过滤 schema 中带 `condition` 的 artifact：
+
+```yaml
+workflow: feature
+components:
+  needs_research: false
+  has_ui: true
+  has_api: true
+  has_db: false
+  has_domain: false
+```
+
+规则：
+
+- `true`：明确包含对应影响面。
+- `false`：明确无对应影响面，可跳过绑定该 flag 的条件 artifact。
+- `auto` 或缺失：保守包含，直到 intake / brief 有足够证据改为 `false`。
+- `needs_research` 默认 `false`；只有需要在 requirements 前沉淀外部官方资料、PoC 或方案调研时才改为 `true`。
+- 如果一个 artifact 依赖了被跳过的条件 artifact，图计算会继承被跳过 artifact 的上游依赖，避免 tasks 等下游阶段在 requirements 完成前过早解锁。
+
+这使 SpecForge 不需要为“有 UI / 无 UI / 有 API / 有 DB / 有领域模型”的每一种组合单独维护一个 workflow schema。
 
 ## 状态模型
 
@@ -88,6 +114,7 @@ Artifact Graph 的状态判断必须基于四类事实，不得只看目录名�
 - `outputs`：一个或多个产物路径。
 - `requires`：依赖 artifact。
 - `gate`：如果该 artifact 承担门禁，必须绑定 gate 名。
+- `condition`：可选。声明 artifact 受哪个 component flag 控制，如 `"has_ui"` 或 `{ "any": ["has_api", "has_db"] }`。
 
 新增 artifact 时，必须同步：
 
@@ -120,7 +147,7 @@ Artifact Graph 引擎或脚本至少应支持：
    - schema 中该 artifact 的模板和说明
    - 依赖 artifact 的内容
    - 当前项目 rules
-   - change 级元数据
+   - work item 级元数据
 4. artifact 完成后重新计算图状态。
 
 不要一次性把所有阶段模板、全部规则和全部历史内容塞给 Agent。Artifact Graph 的价值之一，就是把上下文约束在“当前可行动作”附近。这个设计与 OpenSpec 的 artifact-driven 指令生成思路一致。
@@ -138,12 +165,12 @@ SpecForge 是规范驱动，但不应假装理解永远线性增长。
 
 ## registry 规则
 
-- `active` 只保存正在推进的 change。
-- `blocked` 保存被外部依赖、决策或失败 gate 阻断的 change。
-- `archive` 保存已关闭 change。
-- 同一个 change 只能出现在一个分区。
+- `active` 只保存正在推进的 work item。
+- `blocked` 保存被外部依赖、决策或失败 gate 阻断的 work item。
+- `archive` 保存已关闭 work item。
+- 同一个 work item 只能出现在一个分区。
 - 移动 active 到 archive 时，必须同步路径、状态和关闭原因。
-- registry 是索引，不是事实全文；具体状态仍以 change 目录、schema 和 `change.yaml` 为准。
+- registry 是索引，不是事实全文；具体状态仍以 work item 目录、schema 和 `work-item.yaml` 为准。
 
 ## 归档规则
 
@@ -162,7 +189,7 @@ SpecForge 是规范驱动，但不应假装理解永远线性增长。
 |---|---|
 | `artifact-graph-status.mjs` | 展示 progress、ready、blocked、partial、gate 状态，支持机器读取 |
 | `instructions.mjs` | 基于 ready artifact 生成下一步最小上下文 |
-| `status.mjs` | 面向用户汇总 change 级状态 |
+| `status.mjs` | 面向用户汇总 work item 级状态 |
 | `doctor.mjs` | 检查图状态和结构一致性 |
 | `validate-structure.mjs` | 校验 schema、依赖、归档证据、starter 一致性 |
 
@@ -188,5 +215,5 @@ SpecForge 是规范驱动，但不应假装理解永远线性增长。
 优先级中：
 
 - 支持更多 workflow schema。
-- 支持 change 级 schema override。
-- 支持图可视化和多 change 总览。
+- 支持 work item 级 schema override。
+- 支持图可视化和多 work item 总览。

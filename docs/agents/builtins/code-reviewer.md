@@ -7,14 +7,15 @@ description: 用于审查实现是否符合已批准 spec、边界、工程规�
 
 ## 职责
 
-- 对照 requirements、design、tasks 和 changed-files 审查实现。
+- 对照 requirements、适用的 ui_design / technical_design、tasks 和 changed-files 审查实现。
 - 优先发现 bug、回归、安全风险、边界违规和缺失测试。
 - 给出可执行 findings。
 
 ## 读取
 
 - `01-spec/requirements.md`
-- `01-spec/design.md`
+- `01-spec/ui-design.md`（存在时）
+- `01-spec/technical-design.md`（存在时）
 - `01-spec/tasks.md`
 - `03-implementation/changed-files.md`
 - 相关 diff、测试和代码上下文

@@ -1,6 +1,6 @@
 ---
 name: sf-onboard
-description: 将新仓库或已有仓库接入 SpecForge；初始化唯一项目目录 .specforge/，复制规范、模板和工具，并建立空 registry、knowledge 与 changes 工作区。
+description: 将新仓库或已有仓库接入 SpecForge；初始化唯一项目目录 .specforge/，复制规范、模板和工具，并建立空 registry、knowledge 与 work items 工作区。
 ---
 
 # sf-onboard
@@ -39,7 +39,7 @@ npx github:huangrx6/SpecForge skill add --target all --apply --prune-legacy
 - 不创建根 `specs/`、根 `scripts/`，也不强制修改业务项目 `package.json`。
 - 初始化素材来自 CLI 生成的唯一 starter 快照：GitHub 发行包中的 `starter/.specforge/`。
 - 项目内命令直接运行 `node .specforge/execution/tools/<name>.mjs`。
-- 已有 `.specforge/workspace/knowledge/`、`.specforge/workspace/changes/`、`.specforge/registry.yaml` 不覆盖。
+- 已有 `.specforge/workspace/knowledge/`、`.specforge/workspace/work-items/`、`.specforge/registry.yaml` 不覆盖。
 
 ## 标准骨架
 
@@ -64,9 +64,9 @@ onboard 完成后，业务项目内会拥有这些类别的文件：
 | `.specforge/AGENTS.md` | 项目内 Agent 入口和加载顺序 |
 | `.specforge/attention.md` | 每次进入项目都应先看的短注意事项 |
 | `.specforge/manifest.yaml` | SpecForge 版本、workflow、路径和 gate 策略 |
-| `.specforge/registry.yaml` | active / blocked / archive change 索引 |
+| `.specforge/registry.yaml` | active / blocked / archive work item 索引 |
 | `.specforge/policy/rules/` | 稳定流程、边界、测试、安全和 review 规则 |
-| `.specforge/policy/tech-profiles/` | 可组合技术栈 profile，用于 design 阶段选型 |
+| `.specforge/policy/tech-profiles/` | 可组合技术栈 profile，用于 technical_design 阶段选型 |
 | `.specforge/policy/workflows/` | lite / feature / standard / bugfix / refactor / discovery workflow 描述 |
 | `.specforge/artifacts/schemas/` | artifact graph schema |
 | `.specforge/artifacts/templates/` | 各阶段产物模板 |
@@ -74,9 +74,9 @@ onboard 完成后，业务项目内会拥有这些类别的文件：
 | `.specforge/execution/hooks/` | 默认 noop 生命周期钩子，业务项目可覆盖 |
 | `.specforge/execution/stages/` | 阶段行为母本，供 Agent 运行时读取 |
 | `.specforge/workspace/knowledge/` | 轻量长期知识库：产品、架构、术语、风险、决策 |
-| `.specforge/workspace/changes/inbox/` | 暂存请求 |
-| `.specforge/workspace/changes/active/` | 正在推进的 change |
-| `.specforge/workspace/changes/archive/` | 已关闭 change，只读历史证据 |
+| `.specforge/workspace/work-items/inbox/` | 暂存请求 |
+| `.specforge/workspace/work-items/active/` | 正在推进的 work item |
+| `.specforge/workspace/work-items/archive/` | 已关闭 work item，只读历史证据 |
 
 onboard 只应创建或补齐 `.specforge/`。不要在业务项目根目录额外创建 `specs/`、`scripts/` 或强制修改 `package.json`。
 
@@ -113,14 +113,14 @@ node runtime/execution/tools/sync-starter-assets.mjs
 node runtime/execution/tools/sync-starter-assets.mjs --check
 ```
 
-manifest 会复制 policy、artifacts、execution 等静态资产，并生成空 registry、空 changes 工作区和轻量 knowledge 占位。`.specforge/workspace/knowledge/`、`.specforge/workspace/changes/` 和 `.specforge/registry.yaml` 属于项目事实或动态证据，不会从源码仓库原样同步到 starter。
+manifest 会复制 policy、artifacts、execution 等静态资产，并生成空 registry、空 work-items 工作区和轻量 knowledge 占位。`.specforge/workspace/knowledge/`、`.specforge/workspace/work-items/` 和 `.specforge/registry.yaml` 属于项目事实或动态证据，不会从源码仓库原样同步到 starter。
 
 ## 已有项目的覆盖规则
 
 | 已存在内容 | onboard 行为 |
 |---|---|
 | `.specforge/workspace/knowledge/` | 保留，不覆盖长期项目知识 |
-| `.specforge/workspace/changes/` | 保留，不覆盖 active / archive evidence |
+| `.specforge/workspace/work-items/` | 保留，不覆盖 active / archive evidence |
 | `.specforge/registry.yaml` | 保留，不重建索引 |
 | `.specforge/policy/rules/` | 可用 starter 补齐或刷新稳定规则 |
 | `.specforge/artifacts/templates/` | 可用 starter 补齐或刷新模板 |
@@ -132,7 +132,7 @@ manifest 会复制 policy、artifacts、execution 等静态资产，并生成空
 ## 启动扫描
 
 1. 检查 `.specforge/` 是否存在。
-2. Glob 全仓库 Markdown 文档，排除 `.git/`、`node_modules/`、`.specforge/workspace/changes/archive/`。
+2. Glob 全仓库 Markdown 文档，排除 `.git/`、`node_modules/`、`.specforge/workspace/work-items/archive/`。
 3. 检查是否有旧版根 `specs/` 或根 `scripts/`。
 4. 汇报走空仓库路径还是迁移路径。
 
@@ -168,7 +168,7 @@ node cli/specforge.mjs init --dir /path/to/project
 - 中/低置信度必须问用户。
 - 不移动、不删除用户未确认的文件。
 - `.specforge/policy/rules/`、`.specforge/artifacts/templates/`、`.specforge/execution/tools/` 可用 starter 刷新。
-- `.specforge/workspace/knowledge/`、`.specforge/workspace/changes/`、`.specforge/registry.yaml` 保留已有内容。
+- `.specforge/workspace/knowledge/`、`.specforge/workspace/work-items/`、`.specforge/registry.yaml` 保留已有内容。
 
 ## 关联规则
 
@@ -180,7 +180,7 @@ node cli/specforge.mjs init --dir /path/to/project
 
 - `.specforge/attention.md` 存在。
 - `.specforge/registry.yaml` 存在。
-- `.specforge/workspace/knowledge/`、`.specforge/workspace/changes/`、`.specforge/execution/tools/` 存在。
+- `.specforge/workspace/knowledge/`、`.specforge/workspace/work-items/`、`.specforge/execution/tools/` 存在。
 - `node .specforge/execution/tools/doctor.mjs` 通过。
 
 ## 不做

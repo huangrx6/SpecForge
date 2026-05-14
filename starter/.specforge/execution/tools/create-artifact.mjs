@@ -1,14 +1,15 @@
 import {
   artifactById,
   computeArtifactStates,
+  effectiveSchema,
   exists,
   loadSchema,
   nextReadyArtifact,
   parseField,
   readText,
   renderOutput,
-  resolveChange,
-  updateChangeStage,
+  resolveWorkItem,
+  updateWorkItemStage,
   writeText,
 } from "./lib/specforge.mjs";
 
@@ -26,7 +27,7 @@ function positionalArgs() {
   for (let i = 0; i < args.length; i += 1) {
     const arg = args[i];
     if (arg.startsWith("--")) {
-      if (["--change"].includes(arg)) i += 1;
+      if (["--work-item"].includes(arg)) i += 1;
       continue;
     }
     values.push(arg);
@@ -34,15 +35,15 @@ function positionalArgs() {
   return values;
 }
 
-const requestedChange = argValue("--change");
+const requestedWorkItem = argValue("--work-item");
 const artifactId = positionalArgs()[0];
 
 try {
-  const change = resolveChange({ change: requestedChange, activeOnly: true });
-  const changeYaml = readText(`${change.base}/change.yaml`);
-  const workflow = parseField(changeYaml, "workflow") || "standard";
-  const schema = loadSchema(workflow);
-  const states = computeArtifactStates(schema, changeYaml, change.base);
+  const workItem = resolveWorkItem({ workItem: requestedWorkItem, activeOnly: true });
+  const workItemYaml = readText(`${workItem.base}/work-item.yaml`);
+  const workflow = parseField(workItemYaml, "workflow") || "standard";
+  const schema = effectiveSchema(loadSchema(workflow), workItemYaml);
+  const states = computeArtifactStates(schema, workItemYaml, workItem.base);
   const artifact = artifactId ? artifactById(schema, artifactId) : nextReadyArtifact(schema, states);
 
   if (!artifact) throw new Error(artifactId ? `Unknown artifact: ${artifactId}` : "No ready artifact found.");
@@ -59,7 +60,7 @@ try {
 
   const planned = [];
   for (const output of artifact.outputs) {
-    if (exists(`${change.base}/${output}`) && !force) {
+    if (exists(`${workItem.base}/${output}`) && !force) {
       planned.push({ output, action: "skip" });
       continue;
     }
@@ -74,10 +75,10 @@ try {
 
   for (const item of planned) {
     if (item.action === "skip") continue;
-    writeText(`${change.base}/${item.output}`, renderOutput(item.output));
+    writeText(`${workItem.base}/${item.output}`, renderOutput(item.output));
   }
 
-  updateChangeStage(change.base, artifact.stage);
+  updateWorkItemStage(workItem.base, artifact.stage);
 
   console.log(`Artifact ready: ${artifact.id}`);
   for (const item of planned) console.log(`- ${item.action}: ${item.output}`);

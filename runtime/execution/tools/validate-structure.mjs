@@ -1,7 +1,7 @@
 import { spawnSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { layout, parseRegistryEntries, parseField, templateByOutput, validateSchema } from "./lib/specforge.mjs";
+import { effectiveSchema, layout, parseRegistryEntries, parseField, templateByOutput, validateSchema } from "./lib/specforge.mjs";
 
 const root = process.cwd();
 const errors = [];
@@ -14,13 +14,12 @@ const sourceRequiredPaths = [
   "skills/sf-discovery/SKILL.md",
   "skills/sf-prd/SKILL.md",
   "skills/sf-requirements/SKILL.md",
-  "skills/sf-design/SKILL.md",
+  "skills/sf-ui-design/SKILL.md",
+  "skills/sf-tech-design/SKILL.md",
   "skills/sf-tasking/SKILL.md",
   "skills/sf-spec-review/SKILL.md",
-  "skills/sf-spec/SKILL.md",
   "skills/sf-implement/SKILL.md",
   "skills/sf-code-review/SKILL.md",
-  "skills/sf-review/SKILL.md",
   "skills/sf-verify/SKILL.md",
   "skills/sf-close/SKILL.md",
   "skills/sf-doctor/SKILL.md",
@@ -35,6 +34,12 @@ const sourceRequiredPaths = [
   "runtime/policy/rules/analysis-workflow/README.md",
   "runtime/policy/rules/product-discovery/README.md",
   "runtime/policy/rules/experience-design/README.md",
+  "runtime/policy/rules/experience-design/references/ui-mockup-protocol.md",
+  "runtime/policy/rules/experience-design/references/visual-style.md",
+  "runtime/policy/rules/experience-design/references/pencil.md",
+  "runtime/policy/rules/experience-design/references/figma.md",
+  "runtime/policy/rules/experience-design/references/html-mockup.md",
+  "runtime/policy/rules/experience-design/references/ascii-mockup.md",
   "runtime/policy/tech-profiles/README.md",
   "runtime/policy/tech-profiles/database/rdbms-postgresql.md",
   "runtime/policy/tech-profiles/database/rdbms-mysql.md",
@@ -52,12 +57,13 @@ const sourceRequiredPaths = [
   "runtime/artifacts/schemas/refactor.json",
   "runtime/artifacts/schemas/discovery.json",
   "runtime/artifacts/templates/brief.md",
-  "runtime/artifacts/templates/change.yaml",
+  "runtime/artifacts/templates/work-item.yaml",
   "runtime/artifacts/templates/original-request.md",
   "runtime/artifacts/templates/gap-report.md",
   "runtime/artifacts/templates/research.md",
   "runtime/artifacts/templates/requirements.md",
-  "runtime/artifacts/templates/design.md",
+  "runtime/artifacts/templates/ui-design.md",
+  "runtime/artifacts/templates/technical-design.md",
   "runtime/artifacts/templates/tasks.md",
   "runtime/artifacts/templates/spec-review.md",
   "runtime/artifacts/templates/implementation-plan.md",
@@ -72,13 +78,14 @@ const sourceRequiredPaths = [
   "runtime/execution/stages/README.md",
   "runtime/execution/stages/discovery/SKILL.md",
   "runtime/execution/stages/requirements/SKILL.md",
-  "runtime/execution/stages/design/SKILL.md",
+  "runtime/execution/stages/ui-design/SKILL.md",
+  "runtime/execution/stages/technical-design/SKILL.md",
   "runtime/execution/stages/gap-report/SKILL.md",
   "runtime/execution/stages/research/SKILL.md",
-  "runtime/execution/stages/design/domain-design.md",
-  "runtime/execution/stages/design/api-design.md",
-  "runtime/execution/stages/design/data-design.md",
-  "runtime/execution/stages/design/nfr-design.md",
+  "runtime/execution/stages/technical-design/domain-design.md",
+  "runtime/execution/stages/technical-design/api-design.md",
+  "runtime/execution/stages/technical-design/data-design.md",
+  "runtime/execution/stages/technical-design/nfr-design.md",
   "runtime/execution/stages/task-planning/SKILL.md",
   "runtime/execution/stages/spec-review/SKILL.md",
   "runtime/execution/stages/implementation/SKILL.md",
@@ -88,10 +95,10 @@ const sourceRequiredPaths = [
   "runtime/execution/stages/status/SKILL.md",
   "runtime/execution/stages/steering/SKILL.md",
   "runtime/execution/tools/lib/specforge.mjs",
-  "runtime/execution/tools/archive-change.mjs",
+  "runtime/execution/tools/archive-work-item.mjs",
   "runtime/execution/tools/artifact-graph-status.md",
   "runtime/execution/tools/artifact-graph-status.mjs",
-  "runtime/execution/tools/create-change.mjs",
+  "runtime/execution/tools/create-work-item.mjs",
   "runtime/execution/tools/create-artifact.mjs",
   "runtime/execution/tools/instructions.mjs",
   "runtime/execution/tools/gate.mjs",
@@ -112,11 +119,12 @@ const sourceRequiredPaths = [
   "runtime/execution/hooks/on-close.mjs",
   "runtime/execution/commands/sf-status.md",
   "runtime/execution/commands/sf-next.md",
-  "runtime/execution/commands/sf-review.md",
+  "runtime/execution/commands/sf-spec-review.md",
+  "runtime/execution/commands/sf-code-review.md",
   "runtime/workspace/knowledge/README.md",
-  "runtime/workspace/changes/inbox",
-  "runtime/workspace/changes/active",
-  "runtime/workspace/changes/archive",
+  "runtime/workspace/work-items/inbox",
+  "runtime/workspace/work-items/active",
+  "runtime/workspace/work-items/archive",
   "starter/README.md",
   "starter/.specforge/AGENTS.md",
   "starter/.specforge/policy/rules/index.md",
@@ -125,9 +133,12 @@ const sourceRequiredPaths = [
   "starter/.specforge/policy/tech-profiles/database/rdbms-mysql.md",
   "starter/.specforge/policy/tech-profiles/database/embedded-sqlite.md",
   "starter/.specforge/artifacts/templates/requirements.md",
+  "starter/.specforge/artifacts/templates/ui-design.md",
+  "starter/.specforge/artifacts/templates/technical-design.md",
   "starter/.specforge/artifacts/templates/gap-report.md",
   "starter/.specforge/artifacts/templates/research.md",
   "starter/.specforge/execution/tools/doctor.mjs",
+  "starter/.specforge/execution/tools/create-work-item.mjs",
   "docs/README.md",
   "docs/AGENTS.md",
   "docs/CLAUDE.md",
@@ -141,6 +152,13 @@ const projectRequiredPaths = [
   ".specforge/manifest.yaml",
   ".specforge/registry.yaml",
   ".specforge/policy/rules/index.md",
+  ".specforge/policy/rules/experience-design/README.md",
+  ".specforge/policy/rules/experience-design/references/ui-mockup-protocol.md",
+  ".specforge/policy/rules/experience-design/references/visual-style.md",
+  ".specforge/policy/rules/experience-design/references/pencil.md",
+  ".specforge/policy/rules/experience-design/references/figma.md",
+  ".specforge/policy/rules/experience-design/references/html-mockup.md",
+  ".specforge/policy/rules/experience-design/references/ascii-mockup.md",
   ".specforge/policy/tech-profiles/README.md",
   ".specforge/policy/tech-profiles/database/rdbms-postgresql.md",
   ".specforge/policy/tech-profiles/database/rdbms-mysql.md",
@@ -158,10 +176,11 @@ const projectRequiredPaths = [
   ".specforge/artifacts/schemas/refactor.json",
   ".specforge/artifacts/schemas/discovery.json",
   ".specforge/artifacts/templates/brief.md",
-  ".specforge/artifacts/templates/change.yaml",
+  ".specforge/artifacts/templates/work-item.yaml",
   ".specforge/artifacts/templates/original-request.md",
   ".specforge/artifacts/templates/requirements.md",
-  ".specforge/artifacts/templates/design.md",
+  ".specforge/artifacts/templates/ui-design.md",
+  ".specforge/artifacts/templates/technical-design.md",
   ".specforge/artifacts/templates/tasks.md",
   ".specforge/artifacts/templates/gap-report.md",
   ".specforge/artifacts/templates/research.md",
@@ -178,13 +197,14 @@ const projectRequiredPaths = [
   ".specforge/execution/stages/README.md",
   ".specforge/execution/stages/discovery/SKILL.md",
   ".specforge/execution/stages/requirements/SKILL.md",
-  ".specforge/execution/stages/design/SKILL.md",
+  ".specforge/execution/stages/ui-design/SKILL.md",
+  ".specforge/execution/stages/technical-design/SKILL.md",
   ".specforge/execution/stages/gap-report/SKILL.md",
   ".specforge/execution/stages/research/SKILL.md",
-  ".specforge/execution/stages/design/domain-design.md",
-  ".specforge/execution/stages/design/api-design.md",
-  ".specforge/execution/stages/design/data-design.md",
-  ".specforge/execution/stages/design/nfr-design.md",
+  ".specforge/execution/stages/technical-design/domain-design.md",
+  ".specforge/execution/stages/technical-design/api-design.md",
+  ".specforge/execution/stages/technical-design/data-design.md",
+  ".specforge/execution/stages/technical-design/nfr-design.md",
   ".specforge/execution/stages/task-planning/SKILL.md",
   ".specforge/execution/stages/spec-review/SKILL.md",
   ".specforge/execution/stages/implementation/SKILL.md",
@@ -193,11 +213,11 @@ const projectRequiredPaths = [
   ".specforge/execution/stages/ssot-sync/SKILL.md",
   ".specforge/execution/stages/status/SKILL.md",
   ".specforge/execution/stages/steering/SKILL.md",
-  ".specforge/execution/tools/archive-change.mjs",
+  ".specforge/execution/tools/archive-work-item.mjs",
   ".specforge/execution/tools/artifact-graph-status.md",
   ".specforge/execution/tools/artifact-graph-status.mjs",
   ".specforge/execution/tools/create-artifact.mjs",
-  ".specforge/execution/tools/create-change.mjs",
+  ".specforge/execution/tools/create-work-item.mjs",
   ".specforge/execution/tools/doctor.mjs",
   ".specforge/execution/tools/gate.mjs",
   ".specforge/execution/tools/instructions.mjs",
@@ -214,10 +234,11 @@ const projectRequiredPaths = [
   ".specforge/execution/hooks/on-close.mjs",
   ".specforge/execution/commands/sf-status.md",
   ".specforge/execution/commands/sf-next.md",
-  ".specforge/execution/commands/sf-review.md",
-  ".specforge/workspace/changes/inbox",
-  ".specforge/workspace/changes/active",
-  ".specforge/workspace/changes/archive",
+  ".specforge/execution/commands/sf-spec-review.md",
+  ".specforge/execution/commands/sf-code-review.md",
+  ".specforge/workspace/work-items/inbox",
+  ".specforge/workspace/work-items/active",
+  ".specforge/workspace/work-items/archive",
 ];
 
 const requiredPaths = layout.kind === "source" ? sourceRequiredPaths : projectRequiredPaths;
@@ -264,6 +285,16 @@ function anyOutputExists(relativeBase, outputs) {
   return outputs.some((output) => exists(`${relativeBase}/${output}`));
 }
 
+function artifactOutputsComplete(relativeBase, artifact) {
+  return outputsExist(relativeBase, artifact.outputs);
+}
+
+function artifactOutputsPartial(relativeBase, artifact) {
+  const hasAny = anyOutputExists(relativeBase, artifact.outputs);
+  const hasAll = outputsExist(relativeBase, artifact.outputs);
+  return hasAny && !hasAll;
+}
+
 function validateGates(relativeBase, yaml, schema, requireApproved) {
   for (const artifact of schema.artifacts.filter((item) => item.gate)) {
     const block = getGateBlock(yaml, artifact.gate);
@@ -287,33 +318,34 @@ function validateGates(relativeBase, yaml, schema, requireApproved) {
   }
 }
 
-function validateChange(relativeBase, lifecycle) {
-  if (!exists(`${relativeBase}/change.yaml`)) {
-    errors.push(`${relativeBase}: missing change.yaml`);
+function validateWorkItem(relativeBase, lifecycle) {
+  if (!exists(`${relativeBase}/work-item.yaml`)) {
+    errors.push(`${relativeBase}: missing work-item.yaml`);
     return;
   }
 
-  const yaml = read(`${relativeBase}/change.yaml`);
+  const yaml = read(`${relativeBase}/work-item.yaml`);
   const workflow = parseField(yaml, "workflow") || "standard";
   const status = parseField(yaml, "status");
   const stage = parseField(yaml, "stage");
   const id = parseField(yaml, "id");
-  const schema = loadSchema(workflow);
-  if (!schema) return;
+  const rawSchema = loadSchema(workflow);
+  if (!rawSchema) return;
+  const schema = effectiveSchema(rawSchema, yaml);
 
-  if (!relativeBase.endsWith(id)) errors.push(`${relativeBase}: change.yaml id does not match directory name ${id}`);
+  if (!relativeBase.endsWith(id)) errors.push(`${relativeBase}: work-item.yaml id does not match directory name ${id}`);
   const stageSet = new Set(schema.artifacts.map((artifact) => artifact.stage));
   if (!stageSet.has(stage)) errors.push(`${relativeBase}: unknown stage ${stage}`);
 
   const isArchived = lifecycle === "archive" || status === "ARCHIVED";
-  if (lifecycle === "active" && status === "ARCHIVED") errors.push(`${relativeBase}: active change must not have ARCHIVED status`);
-  if (lifecycle === "archive" && status !== "ARCHIVED") errors.push(`${relativeBase}: archived change must have ARCHIVED status`);
+  if (lifecycle === "active" && status === "ARCHIVED") errors.push(`${relativeBase}: active work item must not have ARCHIVED status`);
+  if (lifecycle === "archive" && status !== "ARCHIVED") errors.push(`${relativeBase}: archived work item must have ARCHIVED status`);
 
   for (const artifact of schema.artifacts) {
-    const hasAny = anyOutputExists(relativeBase, artifact.outputs);
-    const hasAll = outputsExist(relativeBase, artifact.outputs);
-    if (isArchived && !hasAll) errors.push(`${relativeBase}: archived change missing artifact ${artifact.id}`);
-    else if (hasAny && !hasAll) errors.push(`${relativeBase}: partially written artifact ${artifact.id}`);
+    const hasAll = artifactOutputsComplete(relativeBase, artifact);
+    const hasPartial = artifactOutputsPartial(relativeBase, artifact);
+    if (isArchived && id.startsWith("WI-") && !hasAll) errors.push(`${relativeBase}: archived work item missing artifact ${artifact.id}`);
+    else if (hasPartial && !hasAll) errors.push(`${relativeBase}: partially written artifact ${artifact.id}`);
   }
 
   validateGates(relativeBase, yaml, schema, isArchived);
@@ -339,10 +371,10 @@ for (const workflowId of workflowIds) {
 }
 
 for (const kind of ["active", "archive"]) {
-  const changesRoot = `${layout.changes}/${kind}`;
-  if (!exists(changesRoot)) continue;
-  for (const entry of readdirSync(join(root, changesRoot), { withFileTypes: true })) {
-    if (entry.isDirectory() && entry.name.startsWith("CHG-")) validateChange(`${changesRoot}/${entry.name}`, kind);
+  const workItemsRoot = `${layout.workItems}/${kind}`;
+  if (!exists(workItemsRoot)) continue;
+  for (const entry of readdirSync(join(root, workItemsRoot), { withFileTypes: true })) {
+    if (entry.isDirectory() && entry.name.startsWith("WI-")) validateWorkItem(`${workItemsRoot}/${entry.name}`, kind);
   }
 }
 
@@ -361,7 +393,7 @@ for (const [sectionName, kind] of [["active", "active"], ["archive", "archive"]]
   for (const entry of entries) {
     if (seen.has(entry.id)) errors.push(`registry ${sectionName} has duplicate id: ${entry.id}`);
     seen.add(entry.id);
-    const expectedPath = `${layout.changes}/${kind}/${entry.id}`;
+    const expectedPath = `${layout.workItems}/${kind}/${entry.id}`;
     if (!entry.path.includes(expectedSegment)) {
       errors.push(`registry ${sectionName} entry points to wrong lifecycle path: ${entry.path}`);
     }
@@ -370,10 +402,10 @@ for (const [sectionName, kind] of [["active", "active"], ["archive", "archive"]]
     }
   }
 
-  const directory = join(root, layout.changes, kind);
+  const directory = join(root, layout.workItems, kind);
   if (existsSync(directory)) {
     for (const entry of readdirSync(directory, { withFileTypes: true })) {
-      if (entry.isDirectory() && entry.name.startsWith("CHG-") && !seen.has(entry.name)) {
+      if (entry.isDirectory() && entry.name.startsWith("WI-") && !seen.has(entry.name)) {
         errors.push(`registry ${sectionName} missing directory entry: ${entry.name}`);
       }
     }
@@ -404,4 +436,4 @@ if (errors.length > 0) {
 }
 
 console.log("SpecForge validation passed.");
-console.log(`Checked ${requiredPaths.length} required paths for ${layout.kind} layout, workflow schema, registry paths, and change evidence.`);
+console.log(`Checked ${requiredPaths.length} required paths for ${layout.kind} layout, workflow schema, registry paths, and work item evidence.`);

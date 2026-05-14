@@ -114,7 +114,7 @@ SDK 变更必须同步：
 
 ## 验证证据
 
-RPC / SDK 相关 change 的 verification 应优先包含：
+RPC / SDK 相关 work item 的 verification 应优先包含：
 
 - proto / IDL 兼容检查。
 - 生成代码 diff。

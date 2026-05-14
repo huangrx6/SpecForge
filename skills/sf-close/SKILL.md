@@ -9,7 +9,7 @@ description: 完成 SpecForge 关闭阶段；用于当前 workflow 已到 ssot_s
 
 执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
 
-关闭 change：同步长期知识、写发布和回滚记录、归档。它是防止文档过期的最后一道门。
+关闭 work item：同步长期知识、写发布和回滚记录、归档。它是防止文档过期的最后一道门。
 
 ## 内部技能母本
 
@@ -54,7 +54,7 @@ node .specforge/execution/tools/create-artifact.mjs closure
 ```
 
 6. 写 `release.md` 和 `rollback.md`。
-7. 如果当前仓库是 SpecForge 本体，且本次 change 修改了 `runtime/execution/stages/**` 或 `skills/sf*/SKILL.md`，归档前同步已安装技能副本并把结果写入 closure evidence：
+7. 如果当前仓库是 SpecForge 本体，且本次 work item 修改了 `runtime/execution/stages/**` 或 `skills/sf*/SKILL.md`，归档前同步已安装技能副本并把结果写入 closure evidence：
 
 ```bash
 node cli/specforge.mjs skill add --target all --apply --prune-legacy
@@ -69,7 +69,7 @@ node .specforge/execution/tools/doctor.mjs
 9. 归档：
 
 ```bash
-node .specforge/execution/tools/archive-change.mjs
+node .specforge/execution/tools/archive-work-item.mjs
 ```
 
 ## 完成标准
@@ -82,4 +82,4 @@ node .specforge/execution/tools/archive-change.mjs
 ## 不做
 
 - 不在 SSoT 未同步时 archive。
-- 不把动态 change 内容复制进规则目录。
+- 不把动态 work item 内容复制进规则目录。

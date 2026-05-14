@@ -29,6 +29,17 @@
 
 ### 重新验证触发条件
 
+## 影响面确认
+
+| 影响面 | 是否纳入本 work item | 对应设计产物 | 验收影响 |
+|---|---|---|---|
+| UI / UX | yes / no | `ui-design.md` / N/A | |
+| Frontend engineering | yes / no | `technical-design.md` / N/A | |
+| Backend / API | yes / no | `technical-design.md` / N/A | |
+| Data / DB | yes / no | `technical-design.md` / N/A | |
+| Auth / Security | yes / no | `technical-design.md` / N/A | |
+| Delivery / Runtime | yes / no | `technical-design.md` / N/A | |
+
 ## 待澄清项
 
 - [NEEDS CLARIFICATION: question]

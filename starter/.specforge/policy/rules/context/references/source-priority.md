@@ -8,10 +8,10 @@
 |---|---|---|
 | 1 | 当前用户指令、系统 / 开发者指令 | 当前任务最高约束 |
 | 2 | `.specforge/AGENTS.md`、`manifest.yaml` | SpecForge 加载协议和路径约定 |
-| 3 | 当前 `change.yaml` 和 active change 产物 | 当前工作状态、gate 和证据 |
+| 3 | 当前 `work-item.yaml` 和 active work item 产物 | 当前工作状态、gate 和证据 |
 | 4 | `.specforge/workspace/knowledge/` | 长期项目知识和 SSoT |
 | 5 | `.specforge/policy/rules/`、workflow、schema | 长期流程和工程规则 |
-| 6 | archived change | 历史原因、回归背景、决策证据 |
+| 6 | archived work item | 历史原因、回归背景、决策证据 |
 | 7 | 外部官方文档 | 版本敏感事实、第三方 API、工具行为 |
 
 说明：
@@ -31,24 +31,24 @@
 
 ## archive 的边界
 
-archived change 只适合：
+archived work item 只适合：
 
 - 解释“为什么当时这么做”。
 - 追溯旧决策。
 - 做回归背景比对。
 - 用户明确要求查历史。
 
-archived change 不适合：
+archived work item 不适合：
 
 - 直接当作当前系统真相。
 - 覆盖 `.specforge/workspace/knowledge/`。
-- 覆盖现行 design / requirements。
+- 覆盖现行 requirements / ui_design / technical_design。
 
-## SSoT 和 change 的关系
+## SSoT 和 work item 的关系
 
 - `.specforge/workspace/knowledge/` 记录长期有效事实。
-- active change 记录“正在变化中的事实”。
-- closure 阶段通过 `ssot-sync` 决定哪些 change 内容应回流 SSoT。
+- active work item 记录“正在变化中的事实”。
+- closure 阶段通过 `ssot-sync` 决定哪些 work item 内容应回流 SSoT。
 
 ## Review Checklist
 

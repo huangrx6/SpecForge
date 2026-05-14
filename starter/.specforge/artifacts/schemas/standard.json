@@ -15,6 +15,19 @@
       "requires": []
     },
     {
+      "id": "research",
+      "stage": "01-spec",
+      "title": "外部研究",
+      "description": "当 intake 标记 needs_research 时，先沉淀官方资料、第三方约束、PoC 或方案调研，再进入 requirements。",
+      "condition": "needs_research",
+      "outputs": [
+        "01-spec/research.md"
+      ],
+      "requires": [
+        "intake"
+      ]
+    },
+    {
       "id": "requirements",
       "stage": "01-spec",
       "title": "需求规格",
@@ -23,16 +36,42 @@
         "01-spec/requirements.md"
       ],
       "requires": [
-        "intake"
+        "intake",
+        "research"
       ]
     },
     {
-      "id": "design",
+      "id": "ui_design",
       "stage": "01-spec",
-      "title": "技术设计",
-      "description": "把需求转成责任边界、组件、接口、数据、风险和验证策略。",
+      "title": "体验与界面设计",
+      "description": "把 UI/UX 影响转成视觉风格确认、页面地图、用户流程、交互状态和可验收原型；无 UI 影响时写明 N/A 和理由。",
+      "condition": "has_ui",
       "outputs": [
-        "01-spec/design.md"
+        "01-spec/ui-design.md"
+      ],
+      "requires": [
+        "requirements"
+      ]
+    },
+    {
+      "id": "technical_design",
+      "stage": "01-spec",
+      "title": "技术架构设计",
+      "description": "把技术影响转成前后端架构、接口、数据、权限、配置、NFR、失败模式和验证策略。",
+      "condition": {
+        "any": [
+          "has_api",
+          "has_db",
+          "has_domain",
+          "has_nfr",
+          "has_security",
+          "has_integration",
+          "has_infra",
+          "has_background_job"
+        ]
+      },
+      "outputs": [
+        "01-spec/technical-design.md"
       ],
       "requires": [
         "requirements"
@@ -47,7 +86,8 @@
         "01-spec/tasks.md"
       ],
       "requires": [
-        "design"
+        "ui_design",
+        "technical_design"
       ]
     },
     {
@@ -60,7 +100,8 @@
       ],
       "requires": [
         "requirements",
-        "design",
+        "ui_design",
+        "technical_design",
         "tasks"
       ],
       "gate": "spec_review"

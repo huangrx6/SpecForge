@@ -15,7 +15,7 @@
 1. 读取根 `AGENTS.md` 或 `.specforge/AGENTS.md`。
 2. 读取 `.specforge/manifest.yaml`。
 3. 读取 `.specforge/registry.yaml`。
-4. 如果有 active change，读取对应 `change.yaml`。
+4. 如果有 active work item，读取对应 `work-item.yaml`。
 5. 根据当前 artifact 加载 rules、templates 和必要 SSoT。
 
 ## 按阶段加载
@@ -24,22 +24,23 @@
 |---|---|
 | intake | 上下文入口、边界入口、registry、knowledge |
 | requirements | spec-quality、boundaries、相关项目事实 |
-| design | engineering、security、boundaries、API 规则、delivery |
+| ui_design | experience-design、product context、UI 原型协议 |
+| technical_design | engineering、security、boundaries、API 规则、delivery、tech-profiles |
 | tasks | artifact graph、testing、boundaries |
-| implementation | requirements、design、tasks、工程 / 安全 / 测试规则、目标代码 |
+| implementation | requirements、ui-design、technical-design、tasks、工程 / 安全 / 测试规则、目标代码 |
 | review | review、gates、changed-files、相关验证证据 |
 | verification | testing、gates、实现产物、外部执行结果 |
 | closure | delivery、gates、knowledge、release / rollback / sync |
 
-Kiro 的 specs 把 requirements、design、tasks 作为结构化阶段产物；OpenSpec 也要求每个 artifact 为下一个 artifact 提供上下文。SpecForge 的阶段加载应沿用这条路，尽量只读当前阶段真正需要的东西。
+Kiro 的 specs 把 requirements、design、tasks 作为结构化阶段产物；SpecForge 在此基础上把 design 拆成 `ui_design` 和 `technical_design`。OpenSpec 也要求每个 artifact 为下一个 artifact 提供上下文。SpecForge 的阶段加载应沿用这条路，尽量只读当前阶段真正需要的东西。
 
 ## 上下文预算
 
 | 任务规模 | 默认策略 |
 |---|---|
 | 小 | lite workflow 或直接实现 |
-| 中 | feature 或 standard workflow，完整 requirements / design / tasks / review / verification |
-| 大 | 先 discovery，再拆 change 或 initiative |
+| 中 | feature 或 standard workflow，requirements / 适用的 ui_design / technical_design / tasks / review / verification |
+| 大 | 先 discovery，再拆 work item 或 initiative |
 
 ## 代码阅读策略
 

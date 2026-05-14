@@ -7,15 +7,15 @@
 | 类型 | 去向 |
 |---|---|
 | 长期稳定事实 | `.specforge/workspace/knowledge/` 或稳定 rule |
-| change 专属事实 | 当前 active change 产物 |
-| 一次性调研或推理 | 当前会话或当前 change，除非已经被验证并需要长期保留 |
+| work item 专属事实 | 当前 active work item 产物 |
+| 一次性调研或推理 | 当前会话或当前 work item，除非已经被验证并需要长期保留 |
 
 ## 什么时候沉淀
 
 适合沉淀：
 
 - 重复会影响后续决策的项目事实。
-- 多个 change 都会用到的工程约束。
+- 多个 work item 都会用到的工程约束。
 - 已拍板的技术决策。
 - 已验证的契约和长期行为。
 

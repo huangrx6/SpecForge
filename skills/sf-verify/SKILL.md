@@ -60,9 +60,9 @@ node .specforge/execution/tools/gate.mjs verification APPROVED --evidence 05-ver
 
 ## 验证范围
 
-`sf-verify` 负责收集和记录足以支撑当前 change 验收标准的证据。默认优先级：
+`sf-verify` 负责收集和记录足以支撑当前 work item 验收标准的证据。默认优先级：
 
-1. 与本次 change 直接相关的单元测试、集成测试、lint、typecheck 或构建命令。
+1. 与本次 work item 直接相关的单元测试、集成测试、lint、typecheck 或构建命令。
 2. 设计和 tasks 中声明的验证策略。
 3. 项目已有 CI 输出、日志、截图或手工验证记录。
 4. 当命令无法运行时，记录无法运行的原因、影响、替代证据和剩余风险。
@@ -87,7 +87,7 @@ node .specforge/execution/tools/gate.mjs verification APPROVED --evidence 05-ver
 ## verify 与 gate 的分工
 
 - `sf-verify` 负责选择验证方式、运行或收集证据、写 `05-verification/report.md` 和 `05-verification/ci-result.md`。
-- `gate.mjs` 只负责把已经完成的审查结论写回 `change.yaml`，并强制 `APPROVED` 必须绑定已存在的 evidence 文件。
+- `gate.mjs` 只负责把已经完成的审查结论写回 `work-item.yaml`，并强制 `APPROVED` 必须绑定已存在的 evidence 文件。
 - 没有验证报告时，不调用 `gate.mjs verification APPROVED`。
 - 测试失败时，不批准 verification gate；应回到 implementation 或 review。
 

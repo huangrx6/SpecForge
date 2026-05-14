@@ -9,7 +9,7 @@
 遇到下面任一情况，必须读取本入口：
 
 - 新增、修改或废弃接口、SDK、事件、Webhook、消息格式。
-- `requirements.md` 或 `design.md` 里出现跨系统调用。
+- `requirements.md` 或 `technical-design.md` 里出现跨系统调用。
 - 任务涉及 OpenAPI、GraphQL schema、proto、IDL、客户端 SDK、接口文档。
 - 代码审查发现实现改变了请求、响应、错误、权限、分页或版本语义。
 
@@ -45,7 +45,7 @@ API 设计不要从“列接口”开始。按下面顺序推进：
 | 产物 | API 设计职责 |
 |---|---|
 | `requirements.md` | 写用户可观察行为、调用方、范围、非目标、验收标准 |
-| `design.md` | 写资源模型、契约边界、权限、错误模型、版本策略、验证策略 |
+| `technical-design.md` | 写资源模型、契约边界、权限、错误模型、版本策略、验证策略 |
 | `tasks.md` | 把 API、schema、测试、文档、SDK、迁移拆成可执行任务 |
 | `spec-review-v1.md` | 审查契约是否足以让实现方和调用方独立工作 |
 | `changed-files.md` | 记录 OpenAPI / schema / SDK / 文档 / 代码是否一致 |

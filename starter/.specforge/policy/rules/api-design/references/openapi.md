@@ -82,7 +82,7 @@ verification 至少记录一种证据：
 
 ## SpecForge 落点
 
-- `design.md`：写 OpenAPI 文件路径、维护方式、lint / mock 命令。
+- `technical-design.md`：写 OpenAPI 文件路径、维护方式、lint / mock 命令。
 - `tasks.md`：把 schema、operation、错误响应、示例、测试拆成任务。
 - `verification/report.md`：记录 lint、mock、contract test 或人工校验结果。
 - `ssot-sync.md`：同步长期 API 契约事实。

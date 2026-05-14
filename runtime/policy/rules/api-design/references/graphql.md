@@ -138,7 +138,7 @@ type CreateOrderPayload {
 
 ## SpecForge 落点
 
-- `design.md`：写 schema 片段、resolver 边界、复杂度策略、错误设计。
+- `technical-design.md`：写 schema 片段、resolver 边界、复杂度策略、错误设计。
 - `tasks.md`：拆 schema、resolver、权限、复杂度、测试任务。
 - `verification/report.md`：记录 schema lint、典型 query、复杂度保护和权限验证。
 

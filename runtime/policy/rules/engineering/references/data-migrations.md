@@ -2,9 +2,9 @@
 
 本参考用于持久化数据、schema、迁移脚本和回滚路径。
 
-## design 必答项
+## technical_design 必答项
 
-涉及持久化数据时，design 必须写清：
+涉及持久化数据时，`technical-design.md` 必须写清：
 
 - schema 变化。
 - 数据迁移和回滚。
@@ -44,7 +44,7 @@
 - 旧数据读取验证。
 - 旧客户端或旧接口兼容验证。
 
-## 何时拆 change
+## 何时拆 work item
 
 以下情况通常应拆分：
 

@@ -70,7 +70,7 @@ typecheck -> lint -> unit/component -> build -> selected e2e
 
 ## Design 必填问题
 
-- 本次 change 的 P0 用户路径是什么？
+- 本次 work item 的 P0 用户路径是什么？
 - 哪些逻辑用单测覆盖，哪些交互用组件测试覆盖，哪些流程用 E2E 覆盖？
 - 测试数据怎么创建和清理？
 - 是否需要登录态、权限、上传、第三方回调或时间控制？

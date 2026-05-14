@@ -1,6 +1,6 @@
 ---
 name: codebase-explorer
-description: 用于定向理解现有代码库、模块边界、调用链、配置、测试和既有模式；适合 intake、design、bugfix、brownfield 改造前需要回答“当前系统如何工作”。
+description: 用于定向理解现有代码库、模块边界、调用链、配置、测试和既有模式；适合 intake、technical_design、bugfix、brownfield 改造前需要回答“当前系统如何工作”。
 ---
 
 # Codebase Explorer
@@ -9,12 +9,12 @@ description: 用于定向理解现有代码库、模块边界、调用链、配�
 
 - 用最小阅读量回答具体代码问题。
 - 找到相关入口、调用链、数据模型、配置和测试。
-- 总结现有模式，供 requirements、design 或 debugging 使用。
+- 总结现有模式，供 requirements、ui_design、technical_design 或 debugging 使用。
 
 ## 读取
 
 - 当前用户问题。
-- 当前 active change 的 brief / requirements / design。
+- 当前 active work item 的 brief / requirements / ui-design / technical-design。
 - `.specforge/policy/rules/context/README.md`
 - 目标代码、测试、配置和文档。
 
@@ -30,7 +30,7 @@ description: 用于定向理解现有代码库、模块边界、调用链、配�
 - 当前行为摘要。
 - 关键调用链。
 - 已知约束和风险。
-- 后续 design / implementation 建议。
+- 后续 ui_design / technical_design / implementation 建议。
 
 ## 不做
 

@@ -40,7 +40,7 @@ node .specforge/execution/tools/create-artifact.mjs code_review
 
 ## 审查检查项
 
-- 实现未偏离 approved spec（requirements / design / tasks）。
+- 实现未偏离 approved spec（requirements / 适用的 ui_design / technical_design / tasks）。
 - 未改批准范围外文件。
 - 没有密钥或明文凭据。
 - 没有无依据的大抽象或无关重构。

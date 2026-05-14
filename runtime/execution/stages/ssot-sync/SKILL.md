@@ -1,16 +1,17 @@
 ---
 name: ssot-sync
-description: SpecForge 内部 SSoT 同步技能。用于 closure 前判断 change 是否影响 .specforge/workspace/knowledge 长期项目知识，并更新或说明不更新原因。
+description: SpecForge 内部 SSoT 同步技能。用于 closure 前判断 work item 是否影响 .specforge/workspace/knowledge 长期项目知识，并更新或说明不更新原因。
 ---
 
 # SSoT Sync Skill
 
-本技能在 closure 前判断 change 是否影响长期项目知识，并更新 `.specforge/workspace/knowledge/` 或说明不需要更新。它是防止“代码已变、知识库过期”的收口步骤。
+本技能在 closure 前判断 work item 是否影响长期项目知识，并更新 `.specforge/workspace/knowledge/` 或说明不需要更新。它是防止“代码已变、知识库过期”的收口步骤。
 
 ## 读取
 
 - `01-spec/requirements.md`
-- `01-spec/design.md`
+- `01-spec/ui-design.md`（存在时）
+- `01-spec/technical-design.md`（存在时）
 - `03-implementation/report.md`
 - `05-verification/report.md`
 - `.specforge/workspace/knowledge/`
@@ -50,5 +51,5 @@ description: SpecForge 内部 SSoT 同步技能。用于 closure 前判断 chang
 ## 完成标准
 
 - `ssot-sync.md` 存在。
-- knowledge 更新与 change 证据一致。
+- knowledge 更新与 work item 证据一致。
 - `ssot_sync` gate 可以被批准或有明确阻断原因。

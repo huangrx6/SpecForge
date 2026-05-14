@@ -36,7 +36,8 @@ node .specforge/execution/tools/doctor.mjs
    - requirements：`sf-requirements`
    - gap_report：`sf-discovery`
    - research：`sf-discovery`
-   - design：`sf-design`
+   - ui_design：`sf-ui-design`
+   - technical_design：`sf-tech-design`
    - tasks：`sf-tasking`
    - spec_review：`sf-spec-review`
    - implementation：`sf-implement`
@@ -68,9 +69,9 @@ node .specforge/execution/tools/gate.mjs <gate> APPROVED --evidence <path>
 ## 必须暂停
 
 - 出现 `[NEEDS CLARIFICATION]`。
-- 当前 change 是 `standard` / `deep` 但 brief 缺少代码探索、外部研究 / 跳过理由、澄清记录或分析综合。
+- 当前 work item 是 `standard` / `deep` 但 brief 缺少代码探索、外部研究 / 跳过理由、澄清记录或分析综合。
 - 产品、页面、全栈应用的功能候选池或 MVP 组合尚未被用户确认。
-- 有用户可见页面但缺少页面地图、线稿 / 原型、视觉方向或交互状态。
+- 有用户可见页面但缺少页面地图、线稿 / 原型、视觉风格确认或交互状态。
 - 技术栈、组件库、编辑器、数据层或测试方案没有 profile / 取舍理由。
 - gate 需要用户判断。
 - doctor、validate、selftest 失败。
@@ -79,7 +80,7 @@ node .specforge/execution/tools/gate.mjs <gate> APPROVED --evidence <path>
 
 ## 完成标准
 
-- change 归档。
+- work item 归档。
 - `node .specforge/execution/tools/validate-structure.mjs` 通过。
 - 最终说明完成了哪些 artifact、哪些 gate、验证结果。
 

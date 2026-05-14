@@ -6,12 +6,12 @@
 
 优先小而完整的变更：
 
-- 一个 change 解决一个主要问题。
+- 一个 work item 解决一个主要问题。
 - diff 应能被 reviewer 在合理时间内理解。
-- 大 change 必须在 design 中写清拆分失败的原因和 review 策略。
+- 大 work item 必须在 `technical-design.md` 中写清拆分失败的原因和 review 策略。
 - 实现中发现任务过大，应暂停并更新 `tasks.md`，不要继续堆叠修改。
 
-Google 的工程实践指出，小 change 更容易审查、更不容易引入 bug，也更容易回滚。
+Google 的工程实践指出，小而完整的代码变更更容易审查、更不容易引入 bug，也更容易回滚；在 SpecForge 中对应到 work item 粒度。
 
 ## 拆分优先级
 
@@ -22,7 +22,7 @@ Google 的工程实践指出，小 change 更容易审查、更不容易引入 b
 - 依赖升级。
 - 大面积格式化或机械替换。
 
-小范围局部清理可以伴随当前 change，但前提是：
+小范围局部清理可以伴随当前 work item，但前提是：
 
 - 它是当前实现的直接前置。
 - 不增加理解负担。

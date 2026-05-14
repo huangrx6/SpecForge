@@ -16,7 +16,7 @@ description: SpecForge 工作流根入口。用于用户只说“sf”、询问�
 1. 看是否存在 `.specforge/`。
 2. 存在时读取 `.specforge/attention.md`；缺失则提示骨架不完整，先补齐或运行 `sf-onboard`。
 3. 运行 `node .specforge/execution/tools/doctor.mjs`。
-4. 有 active change 时，再运行 `node .specforge/execution/tools/instructions.mjs`。
+4. 有 active work item 时，再运行 `node .specforge/execution/tools/instructions.mjs`。
 
 `sf-router` 只做路由，不写规格、不实现代码、不批准 gate。
 
@@ -32,7 +32,7 @@ SpecForge 分成两层：
 
 ```text
 全局技能：sf-router / sf-*     负责让 AI 工具知道怎么工作
-项目目录：.specforge/          保存规则、模板、tools、项目事实和 change
+项目目录：.specforge/          保存规则、模板、tools、项目事实和 work item
 ```
 
 在 Agent 技能列表里输入 `sf` 前缀，应能看到 `sf-router` 和所有 `sf-*` 生命周期技能。
@@ -56,39 +56,39 @@ SpecForge 分成两层：
 |---|---|
 | 仓库没有 `.specforge/` | `sf-onboard` |
 | 问“现在到哪一步 / 健康状态 / 能不能继续” | `sf-doctor` |
-| 提出新需求、新 bug、重构想法，且没有 active change | `sf-intake` |
-| active change 需要深度分析 / brief 不足以支撑 requirements | `sf-discovery` |
-| active change 下一步是 gap_report / research | `sf-discovery` |
-| active change 是产品型，需要对齐产品目标和功能边界 | `sf-prd` |
-| active change 下一步是 requirements | `sf-requirements` |
-| active change 下一步是 design | `sf-design` |
-| active change 下一步是 tasks | `sf-tasking` |
-| active change 下一步是 spec_review gate | `sf-spec-review` |
+| 提出新需求、新 bug、重构想法，且没有 active work item | `sf-intake` |
+| active work item 需要深度分析 / brief 不足以支撑 requirements | `sf-discovery` |
+| active work item 下一步是 gap_report / research | `sf-discovery` |
+| active work item 是产品型，需要对齐产品目标和功能边界 | `sf-prd` |
+| active work item 下一步是 requirements | `sf-requirements` |
+| active work item 下一步是 ui_design | `sf-ui-design` |
+| active work item 下一步是 technical_design | `sf-tech-design` |
+| active work item 下一步是 tasks | `sf-tasking` |
+| active work item 下一步是 spec_review gate | `sf-spec-review` |
 | spec_review 已批准，准备写代码 | `sf-implement` |
 | 下一步是 code_review gate | `sf-code-review` |
 | code_review 已批准，需要测试和证据 | `sf-verify` |
 | verification 已批准，需要 SSoT sync / release / rollback / archive | `sf-close` |
 | 用户明确说“继续做完 / 自动推进 / 不要停” | `sf-work` |
-| （兼容）active change 下一步是 requirements / design / tasks / spec_review | `sf-spec` |
-| （兼容）下一步是 spec_review 或 code_review gate | `sf-review` |
 
 ## 路由决策树
 
 1. 检查 `.specforge/` 是否存在。
    - 不存在：路由到 `sf-onboard`。
 2. 读取 `.specforge/registry.yaml`。
-   - 没有 active change，且用户提出新需求 / bug / 重构：路由到 `sf-intake`。
-   - 没有 active change，且用户问状态：路由到 `sf-doctor`。
-3. 有多个 active change。
-   - 列出 active change 的 id、title、status、path。
+   - 没有 active work item，且用户提出新需求 / bug / 重构：路由到 `sf-intake`。
+   - 没有 active work item，且用户问状态：路由到 `sf-doctor`。
+3. 有多个 active work item。
+   - 列出 active work item 的 id、title、status、path。
    - 要求用户指定要继续哪一个，不要猜。
-4. 有一个 active change。
+4. 有一个 active work item。
    - 运行 `node .specforge/execution/tools/instructions.mjs`。
    - 根据 ready artifact 路由：
      - `requirements` → `sf-requirements`
      - `gap_report` → `sf-discovery`
      - `research` → `sf-discovery`
-     - `design` → `sf-design`
+     - `ui_design` → `sf-ui-design`
+     - `technical_design` → `sf-tech-design`
      - `tasks` → `sf-tasking`
      - `spec_review` → `sf-spec-review`
      - `implementation` → `sf-implement`
@@ -112,13 +112,13 @@ SpecForge 分成两层：
 只输出：
 
 - 当前仓库是否接入 SpecForge。
-- active change、stage、gate 状态。
+- active work item、stage、gate 状态。
 - 建议路由到哪个 `sf-*`。
 - 一句话原因。
 
 ## 不做
 
-- 不直接写 requirements / design / tasks。
+- 不直接写 requirements / ui_design / technical_design / tasks。
 - 不直接实现代码。
 - 不批准 gate。
 - 不把动态资产写到 `.specforge/` 之外。

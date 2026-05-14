@@ -127,7 +127,7 @@ Webhook 和外部事件至少要考虑：
 ## SpecForge 落点
 
 - `requirements.md`：写清谁订阅、为什么订阅、业务成功标准。
-- `design.md`：写 envelope、schema、投递语义、签名、失败补偿。
+- `technical-design.md`：写 envelope、schema、投递语义、签名、失败补偿。
 - `tasks.md`：拆 producer、consumer、schema、重放、监控、测试任务。
 - `verification/report.md`：记录重复投递、重试、签名、死信、回放验证。
 

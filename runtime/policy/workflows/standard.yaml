@@ -1,13 +1,16 @@
 id: standard
 name: 标准变更流程 (Standard)
-description: 通用标准流程，用于无法归入 feature / bugfix / refactor / discovery 但仍需要完整需求、设计、任务和双门禁的变更；保留为兼容默认流。
+description: 通用标准流程，用于无法归入 feature / bugfix / refactor / discovery 但仍需要完整需求、影响面设计、任务和双门禁的变更；保留为兼容默认流。
 use_for:
   - 通用复杂变更
   - 跨模块的大型联动
   - 涉及安全、金钱、敏感数据流的改动
 stages:
   - 00-intake
-  - 01-spec
+  - 01-spec (Research, if needs_research)
+  - 01-spec (Requirements)
+  - 01-spec (UI Design, if applicable)
+  - 01-spec (Technical Design, if applicable)
   - 02-spec-review
   - 03-implementation
   - 04-code-review

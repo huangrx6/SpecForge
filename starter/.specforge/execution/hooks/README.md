@@ -17,5 +17,5 @@ Each hook exports both `run(payload)` and a default function. Returning `{ ok: f
 - `post-gate.mjs`: called by `tools/gate.mjs` after a gate update.
 - `pre-implement.mjs`: reserved for implementation runners before implementation starts.
 - `post-implement.mjs`: reserved for implementation runners after implementation evidence is written.
-- `pre-close.mjs`: called by `tools/archive-change.mjs` before archive.
-- `on-close.mjs`: called by `tools/archive-change.mjs` after archive.
+- `pre-close.mjs`: called by `tools/archive-work-item.mjs` before archive.
+- `on-close.mjs`: called by `tools/archive-work-item.mjs` after archive.

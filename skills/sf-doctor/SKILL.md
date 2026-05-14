@@ -40,7 +40,7 @@ node .specforge/execution/tools/artifact-graph-status.mjs
 ## 输出
 
 - 是否接入 SpecForge。
-- active change 数量。
+- active work item 数量。
 - 当前 stage。
 - gate 状态。
 - ready artifact 或 blocker。

@@ -27,7 +27,7 @@ description: SpecForge 内部预研技能。执行架构论证、API可行性测
 4. 提供多个技术或架构路径的横向对比，覆盖实施成本、迁移、运维和回滚。
 5. 评估 License / Security / Operations / Performance / Vendor Lock-in / Migration 风险。
 6. 做出最终决策：`ADOPT`、`REJECT`、`DEFER` 或 `SPLIT`。
-7. 给出后续 workflow 路由；需要落地时关闭 discovery change 后新开 feature / standard / refactor / bugfix change。
+7. 给出后续 workflow 路由；需要落地时关闭 discovery work item 后新开 feature / standard / refactor / bugfix work item。
 
 ## 必含章节
 
@@ -50,4 +50,4 @@ description: SpecForge 内部预研技能。执行架构论证、API可行性测
 ## 完成标准
 
 - 输出了足够支撑未来 Feature 开发的确定性结论。
-- 不承诺在当前 discovery change 中直接实现生产代码。
+- 不承诺在当前 discovery work item 中直接实现生产代码。

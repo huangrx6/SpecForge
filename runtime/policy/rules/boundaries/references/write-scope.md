@@ -10,7 +10,8 @@
 |---|---|
 | `brief.md` | 边界候选 |
 | `requirements.md` | 范围和非目标基本明确 |
-| `design.md` | 写入范围和影响面固化 |
+| `ui-design.md` | 用户可见页面、状态和交互影响面固化 |
+| `technical-design.md` | 写入范围、技术影响面和回滚边界固化 |
 | `spec_review` | 通过后默认边界冻结 |
 | `implementation` | 越界必须暂停并回到 spec |
 
@@ -18,7 +19,7 @@
 
 ## 写入范围格式
 
-`design.md` 必须写清：
+`technical-design.md` 必须写清：
 
 - 允许新增、修改、删除的目录或模块。
 - 允许修改但需要特别审查的文件。
@@ -33,13 +34,13 @@
 | 可写 | `src/auth/**` | 本次登录能力实现区 |
 | 可写但高风险 | `db/migrations/**` | 需要同步回滚和验证 |
 | 只读 | `src/billing/**` | 仅用于理解集成契约 |
-| 禁止 | `deploy/prod/**` | 当前 change 不处理部署 |
+| 禁止 | `deploy/prod/**` | 当前 work item 不处理部署 |
 
 ## 什么算越界
 
 下面这些通常算越界：
 
-- 修改了 design 未批准的模块。
+- 修改了 `technical-design.md` 未批准的模块。
 - 增加了新的用户目标。
 - 顺手抽公共组件或重构相邻模块。
 - 改了长期契约，却没有更新 spec。
@@ -71,5 +72,5 @@
 
 - `changed-files.md` 是否落在批准范围内。
 - 是否出现“只顺手一下”的修改。
-- 高风险路径是否在 design 中提前声明。
+- 高风险路径是否在 `technical-design.md` 中提前声明。
 - 若超出范围，是否已经更新 spec 并重新审查。

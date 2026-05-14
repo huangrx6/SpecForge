@@ -5,7 +5,7 @@
 ## 自动推进前
 
 - 先运行 doctor / status。
-- 明确当前 active change。
+- 明确当前 active work item。
 - 明确当前 ready artifact。
 
 ## 自动推进中

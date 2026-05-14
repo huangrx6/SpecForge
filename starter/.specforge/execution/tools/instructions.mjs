@@ -1,6 +1,7 @@
 import {
   artifactById,
   computeArtifactStates,
+  effectiveSchema,
   exists,
   gateEvidence,
   gateStatus,
@@ -10,7 +11,7 @@ import {
   parseField,
   parseTasks,
   readText,
-  resolveChange,
+  resolveWorkItem,
   templateByOutput,
 } from "./lib/specforge.mjs";
 
@@ -37,7 +38,7 @@ function positionalArgs() {
 }
 
 const requestedArtifact = positionalArgs()[0];
-const requestedChange = argValue("--change");
+const requestedWorkItem = argValue("--work-item");
 
 const rule = (path) => `${layout.rules}/${path}`;
 const stageSkill = (path) => `${layout.stages}/${path}`;
@@ -47,7 +48,8 @@ const stageSkillByArtifact = {
   gap_report: stageSkill("gap-report/SKILL.md"),
   research: stageSkill("research/SKILL.md"),
   requirements: stageSkill("requirements/SKILL.md"),
-  design: stageSkill("design/SKILL.md"),
+  ui_design: stageSkill("ui-design/SKILL.md"),
+  technical_design: stageSkill("technical-design/SKILL.md"),
   tasks: stageSkill("task-planning/SKILL.md"),
   spec_review: stageSkill("spec-review/SKILL.md"),
   implementation: stageSkill("implementation/SKILL.md"),
@@ -57,7 +59,7 @@ const stageSkillByArtifact = {
 };
 
 const contextByArtifact = {
-  design: [`${layout.techProfiles}/README.md`],
+  technical_design: [`${layout.techProfiles}/README.md`],
   spec_review: [`${layout.techProfiles}/README.md`],
 };
 
@@ -72,14 +74,20 @@ const rulesByArtifact = {
     rule("product-discovery/README.md"),
     rule("testing/README.md"),
   ],
-  design: [
+  ui_design: [
+    rule("experience-design/README.md"),
+    rule("product-discovery/README.md"),
+    rule("analysis-workflow/README.md"),
+    rule("boundaries/README.md"),
+    rule("testing/README.md"),
+  ],
+  technical_design: [
     rule("engineering/README.md"),
     rule("analysis-workflow/README.md"),
     rule("security/README.md"),
     rule("boundaries/README.md"),
     rule("api-design/README.md"),
     rule("delivery/README.md"),
-    rule("experience-design/README.md"),
     rule("testing/README.md"),
   ],
   tasks: [rule("artifact-graph.md"), rule("testing/README.md"), rule("boundaries/README.md")],
@@ -122,7 +130,7 @@ function dependencyRows(schema, states, artifact) {
       state: states.get(id),
       outputs: dep.outputs.map((output) => ({
         path: output,
-        exists: exists(`${change.base}/${output}`),
+        exists: exists(`${workItem.base}/${output}`),
       })),
     };
   });
@@ -132,33 +140,33 @@ function outputRows(artifact) {
   return artifact.outputs.map((output) => ({
     path: output,
     template: templateByOutput.get(output) ?? null,
-    exists: exists(`${change.base}/${output}`),
+    exists: exists(`${workItem.base}/${output}`),
   }));
 }
 
-let change;
+let workItem;
 
 try {
-  change = resolveChange({
-    change: requestedChange,
+  workItem = resolveWorkItem({
+    workItem: requestedWorkItem,
     activeOnly: false,
-    defaultToLatestArchive: !requestedChange,
+    defaultToLatestArchive: false,
   });
 
-  const changeYaml = readText(`${change.base}/change.yaml`);
-  const workflow = parseField(changeYaml, "workflow") || "standard";
-  const schema = loadSchema(workflow);
-  const states = computeArtifactStates(schema, changeYaml, change.base);
+  const workItemYaml = readText(`${workItem.base}/work-item.yaml`);
+  const workflow = parseField(workItemYaml, "workflow") || "standard";
+  const schema = effectiveSchema(loadSchema(workflow), workItemYaml);
+  const states = computeArtifactStates(schema, workItemYaml, workItem.base);
 
   if (applyMode) {
     const required = schema.apply?.requires ?? [];
     const blocked = required.filter((id) => states.get(id) !== "done");
     const tracks = schema.apply?.tracks;
-    const tasks = tracks && exists(`${change.base}/${tracks}`) ? parseTasks(readText(`${change.base}/${tracks}`)) : [];
+    const tasks = tracks && exists(`${workItem.base}/${tracks}`) ? parseTasks(readText(`${workItem.base}/${tracks}`)) : [];
     const payload = {
       mode: "apply",
-      change: change.name,
-      path: change.base,
+      work_item: workItem.name,
+      path: workItem.base,
       ready: blocked.length === 0,
       required: required.map((id) => ({ id, state: states.get(id) })),
       blocked_by: blocked,
@@ -170,13 +178,13 @@ try {
       },
       context_files: schema.artifacts
         .flatMap((artifact) => artifact.outputs)
-        .filter((output) => exists(`${change.base}/${output}`)),
+        .filter((output) => exists(`${workItem.base}/${output}`)),
     };
 
     if (json) {
       console.log(JSON.stringify(payload, null, 2));
     } else {
-      console.log(`Apply instructions for ${payload.change}`);
+      console.log(`Apply instructions for ${payload.work_item}`);
       console.log(`Path: ${payload.path}`);
       console.log(`Ready: ${payload.ready ? "yes" : "no"}`);
       if (blocked.length > 0) console.log(`Blocked by: ${blocked.join(", ")}`);
@@ -196,10 +204,11 @@ try {
 
   const payload = {
     mode: "artifact",
-    change: change.name,
-    path: change.base,
+    work_item: workItem.name,
+    path: workItem.base,
     workflow: `${schema.id}@${schema.version}`,
-    current_stage: parseField(changeYaml, "stage"),
+    components: schema.components ?? {},
+    current_stage: parseField(workItemYaml, "stage"),
     artifact: {
       id: artifact.id,
       title: artifact.title,
@@ -209,8 +218,8 @@ try {
       gate: artifact.gate
         ? {
             name: artifact.gate,
-            status: gateStatus(changeYaml, artifact.gate),
-            evidence: gateEvidence(changeYaml, artifact.gate),
+            status: gateStatus(workItemYaml, artifact.gate),
+            evidence: gateEvidence(workItemYaml, artifact.gate),
           }
         : null,
       dependencies: dependencyRows(schema, states, artifact),
@@ -227,8 +236,12 @@ try {
   if (json) {
     console.log(JSON.stringify(payload, null, 2));
   } else {
-    console.log(`Instructions for ${payload.change}`);
+    console.log(`Instructions for ${payload.work_item}`);
     console.log(`Workflow: ${payload.workflow}`);
+    const componentEntries = Object.entries(payload.components);
+    if (componentEntries.length > 0) {
+      console.log(`Components: ${componentEntries.map(([key, value]) => `${key}=${value}`).join(", ")}`);
+    }
     console.log(`Current stage: ${payload.current_stage}`);
     console.log("");
     console.log(`${artifact.id}: ${artifact.title}`);

@@ -1,12 +1,12 @@
 # 规则索引
 
-规则层保存长期有效的工程约束。它不记录某个 change 的临时状态，也不替代 `requirements.md`、`design.md` 或 `tasks.md`。Agent 进入项目后，应按任务类型加载必要规则，并在产物中留下已遵守或偏离规则的证据。
+规则层保存长期有效的工程约束。它不记录某个 work item 的临时状态，也不替代 `requirements.md`、`ui-design.md`、`technical-design.md` 或 `tasks.md`。Agent 进入项目后，应按任务类型加载必要规则，并在产物中留下已遵守或偏离规则的证据。
 
 ## 加载原则
 
-- 先读 `.specforge/AGENTS.md`、`.specforge/manifest.yaml`、`.specforge/registry.yaml` 和当前 `change.yaml`。
+- 先读 `.specforge/AGENTS.md`、`.specforge/manifest.yaml`、`.specforge/registry.yaml` 和当前 `work-item.yaml`。
 - 再根据本索引加载规则。不要一次性把全部规则塞进上下文。
-- 如果规则和当前项目知识冲突，优先以 `.specforge/workspace/knowledge/` 的长期事实为准，并在当前 change 中记录冲突。
+- 如果规则和当前项目知识冲突，优先以 `.specforge/workspace/knowledge/` 的长期事实为准，并在当前 work item 中记录冲突。
 - 如果规则和用户明确指令冲突，先遵守更高优先级指令，并在产物里写清偏离原因。
 - 涉及外部框架、SDK、API 或安全标准时，必须查当前官方文档。
 
@@ -16,13 +16,13 @@
 |---|---|
 | 通用工程改动 | `engineering/README.md` |
 | 复杂需求分析、代码探索、外部研究、计划确认 | `analysis-workflow/README.md` |
-| 范围界定、拆分 change | `boundaries/README.md`、`spec-quality/README.md` |
+| 范围界定、拆分 work item | `boundaries/README.md`、`spec-quality/README.md` |
 | 产品发现、功能候选、MVP 选择 | `product-discovery/README.md` |
 | 页面、后台、应用体验设计 | `experience-design/README.md` |
 | 加载上下文、控制 token | `context/README.md` |
 | 判断流程状态、读产物依赖 | `artifact-graph.md` |
 | 阶段推进、批准或拒绝 gate | `gates/README.md`、`review/README.md` |
-| 需求、设计、任务编写 | `spec-quality/README.md`、`boundaries/README.md` |
+| 需求、UI 设计、技术设计、任务编写 | `spec-quality/README.md`、`boundaries/README.md` |
 | API、SDK、事件、集成契约 | `api-design/README.md`、`security/README.md`、`testing/README.md` |
 | 领域建模、数据设计、API 契约、NFR 设计 | `engineering/README.md`、`api-design/README.md`、`security/README.md`、`delivery/README.md` |
 | 安全敏感变更 | `security/README.md`、`review/README.md`、`testing/README.md` |
@@ -39,7 +39,7 @@
 | `boundaries/README.md` | 边界治理入口；细节按需读取 `boundaries/references/` |
 | `context/README.md` | 上下文治理入口；细节按需读取 `context/references/` |
 | `product-discovery/README.md` | 产品发现入口；候选功能、MVP 选择和用户确认 |
-| `experience-design/README.md` | 体验设计入口；页面地图、线稿、视觉方向和交互状态 |
+| `experience-design/README.md` | 体验设计入口；视觉风格确认、页面地图、线稿和交互状态 |
 | `artifact-graph.md` | schema、artifact、gate、registry、archive 的状态判断 |
 | `gates/README.md` | 门禁入口；细节按需读取 `gates/references/` |
 | `review/README.md` | 审查入口；细节按需读取 `review/references/` |

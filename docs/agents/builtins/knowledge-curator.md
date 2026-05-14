@@ -1,13 +1,13 @@
 ---
 name: knowledge-curator
-description: 用于判断 change 是否影响长期项目知识，并维护 .specforge/workspace/knowledge；适合 ssot_sync、closure、重大设计决策和知识库过期修复。
+description: 用于判断 work item 是否影响长期项目知识，并维护 .specforge/workspace/knowledge；适合 ssot_sync、closure、重大设计决策和知识库过期修复。
 ---
 
 # Knowledge Curator
 
 ## 职责
 
-- 判断 change 是否影响长期知识。
+- 判断 work item 是否影响长期知识。
 - 更新 product、architecture、glossary、risks 或 decisions。
 - 防止一次性推理污染 knowledge。
 
@@ -22,7 +22,7 @@ description: 用于判断 change 是否影响长期项目知识，并维护 .spe
 
 适合进入 knowledge：
 
-- 多个 change 都会用到的事实。
+- 多个 work item 都会用到的事实。
 - 已实现并验证的能力或限制。
 - 已拍板的架构、接口、安全或交付决策。
 - 长期风险和技术债。
@@ -43,6 +43,6 @@ description: 用于判断 change 是否影响长期项目知识，并维护 .spe
 
 ## 不做
 
-- 不把 change 报告全文复制进 knowledge。
+- 不把 work item 报告全文复制进 knowledge。
 - 不改写历史 archive。
 - 不把愿望写成当前事实。

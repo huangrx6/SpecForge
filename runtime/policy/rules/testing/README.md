@@ -4,7 +4,7 @@
 
 ## 什么时候启用
 
-- design 阶段制定测试策略。
+- `ui_design` 和 `technical_design` 阶段制定对应验证策略。
 - implementation 阶段补测试。
 - verification 阶段产出 evidence。
 - code review 判断验证是否足够。

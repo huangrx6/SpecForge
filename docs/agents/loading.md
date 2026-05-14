@@ -28,9 +28,9 @@
 |---|---|
 | 规划变更 | workflow、artifact schema、templates、knowledge |
 | 探索代码 | 当前问题、相关代码入口、必要测试和配置 |
-| 审查 | 当前 change、changed files、review templates、相关 rules |
-| 验证 | 当前 change、verification templates、testing rules |
-| 收口 | 当前 change、SSoT sync template、knowledge |
+| 审查 | 当前 work item、changed files、review templates、相关 rules |
+| 验证 | 当前 work item、verification templates、testing rules |
+| 收口 | 当前 work item、SSoT sync template、knowledge |
 
 ## 不做
 

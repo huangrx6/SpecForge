@@ -11,7 +11,7 @@ description: SpecForge 内部 steering 技能。用于大型或 brownfield 变�
 
 - 当前代码库入口、目录结构、配置和核心模块。
 - 现有 `.specforge/workspace/knowledge/`。
-- 必要时读取相关 active / archived changes。
+- 必要时读取相关 active / archived work items。
 - `.specforge/policy/rules/context/README.md`
 - `.specforge/policy/rules/boundaries/README.md`
 
@@ -28,7 +28,7 @@ description: SpecForge 内部 steering 技能。用于大型或 brownfield 变�
 1. 先从 manifest、registry 和 knowledge 判断已有事实。
 2. 用 `rg` 定位代码入口、路由、配置、数据模型、测试和部署文件。
 3. 只记录经过代码或用户确认的事实。
-4. 把猜测、计划和未确认建议留在当前 change，不写入 knowledge。
+4. 把猜测、计划和未确认建议留在当前 work item，不写入 knowledge。
 5. 如果发现 knowledge 与代码冲突，记录冲突和采用依据。
 
 ## 适用场景

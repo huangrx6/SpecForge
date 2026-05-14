@@ -5,7 +5,7 @@ import { pathToFileURL } from "node:url";
 export const root = process.cwd();
 
 function hasSourceRuntime() {
-  return existsSync(join(root, "runtime/manifest.yaml")) && existsSync(join(root, "runtime/workspace/changes"));
+  return existsSync(join(root, "runtime/manifest.yaml")) && existsSync(join(root, "runtime/workspace/work-items"));
 }
 
 export const layout = hasSourceRuntime()
@@ -13,7 +13,7 @@ export const layout = hasSourceRuntime()
       kind: "source",
       runtime: "runtime",
       workspace: "runtime/workspace",
-      changes: "runtime/workspace/changes",
+      workItems: "runtime/workspace/work-items",
       registry: "runtime/registry.yaml",
       schemas: "runtime/artifacts/schemas",
       templates: "runtime/artifacts/templates",
@@ -33,7 +33,7 @@ export const layout = hasSourceRuntime()
       kind: "project",
       runtime: ".specforge",
       workspace: ".specforge/workspace",
-      changes: ".specforge/workspace/changes",
+      workItems: ".specforge/workspace/work-items",
       registry: ".specforge/registry.yaml",
       schemas: ".specforge/artifacts/schemas",
       templates: ".specforge/artifacts/templates",
@@ -96,6 +96,84 @@ export function parseField(text, name) {
   return text.match(new RegExp(`^${name}:\\s*(.+)$`, "m"))?.[1]?.trim() ?? "";
 }
 
+export function parseComponents(text) {
+  const marker = text.match(/(?:^|\r?\n)components:\r?\n/);
+  if (!marker || marker.index === undefined) return {};
+
+  const start = marker.index + marker[0].length;
+  const rest = text.slice(start);
+  const end = rest.search(/\r?\n\S/);
+  const block = end === -1 ? rest : rest.slice(0, end);
+  const components = {};
+
+  for (const line of block.split(/\r?\n/)) {
+    const match = line.match(/^\s{2}([A-Za-z0-9_-]+):\s*(.+?)\s*(?:#.*)?$/);
+    if (!match) continue;
+    components[match[1]] = match[2].trim();
+  }
+
+  return components;
+}
+
+function normalizeComponentValue(value, name = "") {
+  const fallback = name.startsWith("needs_") ? "false" : "auto";
+  const normalized = String(value ?? fallback).trim().toLowerCase();
+  if (["true", "yes", "y", "1", "on"].includes(normalized)) return "true";
+  if (["false", "no", "n", "0", "off", "none", "skip", "skipped"].includes(normalized)) return "false";
+  return "auto";
+}
+
+export function componentEnabled(components, name) {
+  return normalizeComponentValue(components?.[name], name) !== "false";
+}
+
+export function conditionSatisfied(condition, components = {}) {
+  if (!condition) return true;
+  if (typeof condition === "string") return componentEnabled(components, condition);
+  if (Array.isArray(condition)) return condition.every((name) => componentEnabled(components, name));
+  if (condition.flag) return componentEnabled(components, condition.flag);
+  if (Array.isArray(condition.any)) return condition.any.some((name) => componentEnabled(components, name));
+  if (Array.isArray(condition.all)) return condition.all.every((name) => componentEnabled(components, name));
+  if (Array.isArray(condition.none)) return condition.none.every((name) => !componentEnabled(components, name));
+  return true;
+}
+
+export function effectiveSchema(schema, workItemYaml = "") {
+  const components = parseComponents(workItemYaml);
+  const artifacts = schema.artifacts.filter((artifact) => conditionSatisfied(artifact.condition, components));
+  const ids = new Set(artifacts.map((artifact) => artifact.id));
+  const byId = new Map(schema.artifacts.map((artifact) => [artifact.id, artifact]));
+
+  function effectiveRequires(requires = [], ownerId, stack = []) {
+    const result = [];
+    for (const dep of requires) {
+      if (dep === ownerId) continue;
+      if (ids.has(dep)) {
+        result.push(dep);
+        continue;
+      }
+      const skipped = byId.get(dep);
+      if (!skipped || stack.includes(dep)) continue;
+      result.push(...effectiveRequires(skipped.requires ?? [], ownerId, [...stack, dep]));
+    }
+    return [...new Set(result)];
+  }
+
+  const clone = JSON.parse(JSON.stringify(schema));
+  clone.components = components;
+  clone.artifacts = artifacts.map((artifact) => ({
+    ...JSON.parse(JSON.stringify(artifact)),
+    requires: effectiveRequires(artifact.requires ?? [], artifact.id),
+  }));
+  if (clone.apply) {
+    clone.apply.requires = effectiveRequires(clone.apply.requires ?? [], "__apply__");
+  }
+  if (clone.archive) {
+    clone.archive.requires = effectiveRequires(clone.archive.requires ?? [], "__archive__");
+  }
+  return clone;
+}
+
 export function localDateIso() {
   const now = new Date();
   const yyyy = String(now.getFullYear());
@@ -137,11 +215,11 @@ export function gateEvidence(yaml, gateName) {
   return evidence && evidence !== "null" ? evidence : null;
 }
 
-export function updateGate(changeBase, gateName, status, evidence) {
-  const changePath = `${changeBase}/change.yaml`;
-  let yaml = readText(changePath);
+export function updateGate(workItemBase, gateName, status, evidence) {
+  const workItemPath = `${workItemBase}/work-item.yaml`;
+  let yaml = readText(workItemPath);
   const bounds = getGateBounds(yaml, gateName);
-  if (!bounds) throw new Error(`Missing gate in change.yaml: ${gateName}`);
+  if (!bounds) throw new Error(`Missing gate in work-item.yaml: ${gateName}`);
 
   let block = yaml.slice(bounds.blockStart, bounds.blockEnd);
   block = block.replace(/^    status:\s*.+$/m, `    status: ${status}`);
@@ -149,67 +227,67 @@ export function updateGate(changeBase, gateName, status, evidence) {
 
   yaml = `${yaml.slice(0, bounds.blockStart)}${block}${yaml.slice(bounds.blockEnd)}`;
   yaml = yaml.replace(/^updated_at:\s*.+$/m, `updated_at: ${localDateIso()}`);
-  writeText(changePath, yaml);
+  writeText(workItemPath, yaml);
 }
 
-export function updateChangeStage(changeBase, stage) {
-  const changePath = `${changeBase}/change.yaml`;
-  let yaml = readText(changePath);
+export function updateWorkItemStage(workItemBase, stage) {
+  const workItemPath = `${workItemBase}/work-item.yaml`;
+  let yaml = readText(workItemPath);
   yaml = yaml.replace(/^stage:\s*.+$/m, `stage: ${stage}`);
   yaml = yaml.replace(/^updated_at:\s*.+$/m, `updated_at: ${localDateIso()}`);
-  writeText(changePath, yaml);
+  writeText(workItemPath, yaml);
 }
 
-export function updateChangeStatus(changeBase, status) {
-  const changePath = `${changeBase}/change.yaml`;
-  let yaml = readText(changePath);
+export function updateWorkItemStatus(workItemBase, status) {
+  const workItemPath = `${workItemBase}/work-item.yaml`;
+  let yaml = readText(workItemPath);
   yaml = yaml.replace(/^status:\s*.+$/m, `status: ${status}`);
   yaml = yaml.replace(/^updated_at:\s*.+$/m, `updated_at: ${localDateIso()}`);
-  writeText(changePath, yaml);
+  writeText(workItemPath, yaml);
 }
 
-export function listChanges(kind) {
-  const dir = `${layout.changes}/${kind}`;
+export function listWorkItems(kind) {
+  const dir = `${layout.workItems}/${kind}`;
   if (!exists(dir)) return [];
   return readdirSync(abs(dir), { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && entry.name.startsWith("CHG-"))
+    .filter((entry) => entry.isDirectory() && entry.name.startsWith("WI-"))
     .map((entry) => entry.name)
     .sort();
 }
 
-export function resolveChange(options = {}) {
-  const { change, activeOnly = false, defaultToLatestArchive = false } = options;
+export function resolveWorkItem(options = {}) {
+  const { workItem, activeOnly = false, defaultToLatestArchive = false } = options;
 
-  if (change) {
-    const activeBase = `${layout.changes}/active/${change}`;
-    if (exists(`${activeBase}/change.yaml`)) return { name: change, base: activeBase, lifecycle: "active" };
+  if (workItem) {
+    const activeBase = `${layout.workItems}/active/${workItem}`;
+    if (exists(`${activeBase}/work-item.yaml`)) return { name: workItem, base: activeBase, lifecycle: "active" };
 
-    const archiveBase = `${layout.changes}/archive/${change}`;
-    if (!activeOnly && exists(`${archiveBase}/change.yaml`)) {
-      return { name: change, base: archiveBase, lifecycle: "archive" };
+    const archiveBase = `${layout.workItems}/archive/${workItem}`;
+    if (!activeOnly && exists(`${archiveBase}/work-item.yaml`)) {
+      return { name: workItem, base: archiveBase, lifecycle: "archive" };
     }
 
-    throw new Error(activeOnly ? `Active change not found: ${change}` : `Change not found: ${change}`);
+    throw new Error(activeOnly ? `Active work item not found: ${workItem}` : `Work item not found: ${workItem}`);
   }
 
-  const active = listChanges("active");
+  const active = listWorkItems("active");
   if (active.length === 1) {
     const name = active[0];
-    return { name, base: `${layout.changes}/active/${name}`, lifecycle: "active" };
+    return { name, base: `${layout.workItems}/active/${name}`, lifecycle: "active" };
   }
   if (active.length > 1) {
-    throw new Error(`Multiple active changes found. Pass --change <id>:\n${active.map((item) => `- ${item}`).join("\n")}`);
+    throw new Error(`Multiple active work items found. Pass --work-item <id>:\n${active.map((item) => `- ${item}`).join("\n")}`);
   }
 
   if (!activeOnly && defaultToLatestArchive) {
-    const archived = listChanges("archive");
+    const archived = listWorkItems("archive");
     if (archived.length > 0) {
       const name = archived[archived.length - 1];
-      return { name, base: `${layout.changes}/archive/${name}`, lifecycle: "archive" };
+      return { name, base: `${layout.workItems}/archive/${name}`, lifecycle: "archive" };
     }
   }
 
-  throw new Error(activeOnly ? "No active changes found." : "No active changes found.");
+  throw new Error(activeOnly ? "No active work items found." : "No active work items found.");
 }
 
 export function loadSchema(workflow = "standard") {
@@ -222,21 +300,21 @@ export function artifactById(schema, artifactId) {
   return schema.artifacts.find((artifact) => artifact.id === artifactId);
 }
 
-export function outputsExist(changeBase, outputs) {
-  return outputs.every((output) => exists(`${changeBase}/${output}`));
+export function outputsExist(workItemBase, outputs) {
+  return outputs.every((output) => exists(`${workItemBase}/${output}`));
 }
 
-export function anyOutputExists(changeBase, outputs) {
-  return outputs.some((output) => exists(`${changeBase}/${output}`));
+export function anyOutputExists(workItemBase, outputs) {
+  return outputs.some((output) => exists(`${workItemBase}/${output}`));
 }
 
-export function computeArtifactStates(schema, changeYaml, changeBase) {
+export function computeArtifactStates(schema, workItemYaml, workItemBase) {
   const states = new Map();
 
   for (const artifact of schema.artifacts) {
     const depsDone = artifact.requires.every((id) => states.get(id) === "done");
-    const hasAny = anyOutputExists(changeBase, artifact.outputs);
-    const hasAll = outputsExist(changeBase, artifact.outputs);
+    const hasAny = anyOutputExists(workItemBase, artifact.outputs);
+    const hasAll = outputsExist(workItemBase, artifact.outputs);
 
     if (!depsDone) {
       states.set(artifact.id, hasAny && !hasAll ? "partial" : "blocked");
@@ -244,7 +322,7 @@ export function computeArtifactStates(schema, changeYaml, changeBase) {
     }
 
     if (artifact.gate) {
-      const status = gateStatus(changeYaml, artifact.gate);
+      const status = gateStatus(workItemYaml, artifact.gate);
       if (status === "APPROVED" && hasAll) {
         states.set(artifact.id, "done");
       } else if (hasAny && !hasAll) {
@@ -271,7 +349,8 @@ export const templateByOutput = new Map([
   ["00-intake/original-request.md", "original-request.md"],
   ["00-intake/brief.md", "brief.md"],
   ["01-spec/requirements.md", "requirements.md"],
-  ["01-spec/design.md", "design.md"],
+  ["01-spec/ui-design.md", "ui-design.md"],
+  ["01-spec/technical-design.md", "technical-design.md"],
   ["01-spec/tasks.md", "tasks.md"],
   ["01-spec/gap-report.md", "gap-report.md"],
   ["01-spec/research.md", "research.md"],
@@ -314,6 +393,18 @@ export function validateSchema(schema, schemaName = schema.id ?? "schema") {
     }
     if (!Array.isArray(artifact.requires)) {
       errors.push(`${schemaName}: artifact ${artifact.id} requires must be an array`);
+    }
+    if (artifact.condition !== undefined) {
+      const condition = artifact.condition;
+      const valid =
+        typeof condition === "string" ||
+        (condition &&
+          typeof condition === "object" &&
+          (typeof condition.flag === "string" ||
+            Array.isArray(condition.any) ||
+            Array.isArray(condition.all) ||
+            Array.isArray(condition.none)));
+      if (!valid) errors.push(`${schemaName}: artifact ${artifact.id} condition must be a flag string or condition object`);
     }
     for (const output of artifact.outputs ?? []) {
       if (!templateByOutput.has(output)) errors.push(`${schemaName}: output has no template mapping: ${output}`);

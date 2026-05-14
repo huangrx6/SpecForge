@@ -22,7 +22,7 @@
 - 每个 agent 只处理自己的职责，不替代 gate。
 - agent 输出是建议或证据，最终状态仍由 `.specforge/execution/tools/gate.mjs` 写入。
 - 不要为普通小改动强行启动多个 agent。
-- 不要把 archived change 默认交给 agent 读取，除非任务需要历史背景。
+- 不要把 archived work item 默认交给 agent 读取，除非任务需要历史背景。
 
 ## 文件结构
 

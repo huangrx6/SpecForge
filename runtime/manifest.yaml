@@ -17,9 +17,9 @@ paths:
   attention: .specforge/attention.md
   knowledge: .specforge/workspace/knowledge
   registry: .specforge/registry.yaml
-  changes: .specforge/workspace/changes
-  active_changes: .specforge/workspace/changes/active
-  archived_changes: .specforge/workspace/changes/archive
+  work_items: .specforge/workspace/work-items
+  active_work_items: .specforge/workspace/work-items/active
+  archived_work_items: .specforge/workspace/work-items/archive
   rules: .specforge/policy/rules
   tech_profiles: .specforge/policy/tech-profiles
   tools: .specforge/execution/tools

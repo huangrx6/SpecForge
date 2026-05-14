@@ -21,7 +21,7 @@
 ## 核心原则
 
 - 默认最小权限、最小暴露、最小保留。
-- 安全敏感 change 不允许跳过 code review 和 verification。
+- 安全敏感 work item 不允许跳过 code review 和 verification。
 - 对安全有影响的长期决策必须记录到 `.specforge/workspace/knowledge/decisions/`。
 - 发现 secret 泄露，不是删掉文件就结束，必须轮换并评估历史影响。
 

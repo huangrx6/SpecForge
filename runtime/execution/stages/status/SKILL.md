@@ -1,6 +1,6 @@
 ---
 name: status
-description: SpecForge 内部状态技能。用于汇总 active changes、stage、gate、artifact graph、blockers 和建议下一步。
+description: SpecForge 内部状态技能。用于汇总 active work items、stage、gate、artifact graph、blockers 和建议下一步。
 ---
 
 # Status Skill
@@ -11,7 +11,7 @@ description: SpecForge 内部状态技能。用于汇总 active changes、stage�
 
 - `.specforge/manifest.yaml`
 - `.specforge/registry.yaml`
-- `.specforge/workspace/changes/active/*/change.yaml`
+- `.specforge/workspace/work-items/active/*/work-item.yaml`
 - `.specforge/artifacts/schemas/<workflow>.json`
 - gate evidence files
 - `.specforge/policy/rules/context/README.md`
@@ -28,7 +28,7 @@ node .specforge/execution/tools/doctor.mjs
 
 ## 输出内容
 
-- active change 数量和路径。
+- active work item 数量和路径。
 - 当前 stage、workflow、status。
 - gate 状态和证据路径。
 - artifact graph：done、ready、blocked、partial。
@@ -37,9 +37,9 @@ node .specforge/execution/tools/doctor.mjs
 
 ## 判断规则
 
-- 多个 active change 时，不猜测用户要继续哪一个。
+- 多个 active work item 时，不猜测用户要继续哪一个。
 - gate 缺证据时，状态视为 blocked。
-- archived change 只在用户要求历史时读取。
+- archived work item 只在用户要求历史时读取。
 - 下一步必须是可执行动作。
 
 ## 完成标准

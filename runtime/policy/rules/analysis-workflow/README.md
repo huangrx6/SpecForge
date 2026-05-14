@@ -45,7 +45,7 @@
 - 安全、权限、部署、合规或生产风险。
 - 仓库内示例不足以支撑方案。
 
-优先官方文档、标准、项目 README / release notes。研究结论应进入 `brief.md` 或 `design.md`，不要大段复制资料。
+优先官方文档、标准、项目 README / release notes。研究结论应进入 `brief.md`、`ui-design.md` 或 `technical-design.md`，不要大段复制资料。
 
 ## 计划确认
 

@@ -23,9 +23,9 @@
 | `spec_review` | `feature`、`standard`、`refactor`，以及高风险方案评审 | `02-spec-review/spec-review-v1.md` |
 | `code_review` | `feature`、`standard`、`lite`、`bugfix`、`refactor`，以及任何写代码的变更 | `04-code-review/code-review-v1.md` |
 | `verification` | 所有写代码或改变运行结果的变更 | `05-verification/report.md` 或 `ci-result.md` |
-| `ssot_sync` | 所有 closed changes，包括纯 discovery | `06-closure/ssot-sync.md` |
+| `ssot_sync` | 所有 closed work items，包括纯 discovery | `06-closure/ssot-sync.md` |
 
-是否 required 以当前 change 的 workflow schema 为准；`change.yaml` 中不适用的 gate 应标为 `required: false` 和 `SKIPPED`，不能显示成永远 pending 的假阻塞。
+是否 required 以当前 work item 的有效 workflow schema 为准；有效 schema = workflow schema 经过 `work-item.yaml` 的 `components` 条件过滤后得到的图。`work-item.yaml` 中不适用的 gate 应标为 `required: false` 和 `SKIPPED`，不能显示成永远 pending 的假阻塞。
 
 ## 核心原则
 

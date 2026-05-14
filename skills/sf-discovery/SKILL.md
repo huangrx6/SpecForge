@@ -14,7 +14,7 @@ description: 对新请求执行深度探索、缺陷根因分析或预研；用�
 ## 启动
 
 1. 读取 `.specforge/attention.md`。
-2. 读取 `.specforge/registry.yaml`，确认当前 active change。
+2. 读取 `.specforge/registry.yaml`，确认当前 active work item。
 3. 读取 `00-intake/original-request.md` 和已有 `brief.md`（如存在）。
 4. 运行 `node .specforge/execution/tools/doctor.mjs`。
 5. 运行 `node .specforge/execution/tools/instructions.mjs` 判断当前 ready artifact。

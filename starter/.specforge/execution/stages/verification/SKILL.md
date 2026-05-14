@@ -1,16 +1,17 @@
 ---
 name: verification
-description: SpecForge 内部验证技能。用于证明 change 可工作，记录 verification report、CI result、evidence links 和 known gaps。
+description: SpecForge 内部验证技能。用于证明 work item 可工作，记录 verification report、CI result、evidence links 和 known gaps。
 ---
 
 # Verification Skill
 
-本技能证明 change 可工作，并留下可追溯验证证据。验证不等于“跑一下测试”，而是让风险和证据匹配。
+本技能证明 work item 可工作，并留下可追溯验证证据。验证不等于“跑一下测试”，而是让风险和证据匹配。
 
 ## 读取
 
 - `01-spec/requirements.md`
-- `01-spec/design.md`
+- `01-spec/ui-design.md`（存在时）
+- `01-spec/technical-design.md`（存在时）
 - `01-spec/tasks.md`
 - `03-implementation/report.md`
 - `04-code-review/code-review-v1.md`
@@ -26,7 +27,7 @@ description: SpecForge 内部验证技能。用于证明 change 可工作，记�
 
 ## 验证流程
 
-1. 根据 requirements 和 design 列出必须验证的行为。
+1. 根据 requirements、适用的 ui design / technical design 和 tasks 列出必须验证的行为。
 2. **构建"页面×操作×角色"验证矩阵**（适用于包含 UI 的变更）：
    - 枚举所有页面/路由（如：登录页、列表页、详情页、新建页、编辑页）。
    - 枚举每个页面的核心操作（如：正常提交、校验失败、权限不足、空数据、网络超时）。

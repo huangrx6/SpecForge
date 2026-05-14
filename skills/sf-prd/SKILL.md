@@ -1,6 +1,6 @@
 ---
 name: sf-prd
-description: 生成或更新产品需求文档（PRD）；用于产品型 change 需要在 requirements 前明确产品目标、用户画像、核心场景、成功指标和功能边界时。
+description: 生成或更新产品需求文档（PRD）；用于产品型 work item 需要在 requirements 前明确产品目标、用户画像、核心场景、成功指标和功能边界时。
 ---
 
 # sf-prd
@@ -10,6 +10,8 @@ description: 生成或更新产品需求文档（PRD）；用于产品型 change
 执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
 
 把 brief 的分析结论升级为可对齐产品与工程的 PRD。它的受众是产品决策者和工程负责人，不是实现者。
+
+`sf-prd` 是 requirements 之前的产品澄清产物，不是 artifact graph 的固定阶段，也不替代 `sf-requirements`。PRD 回答“为什么做、给谁做、第一版做哪些价值”，requirements 回答“系统必须表现出哪些可测试行为”。
 
 ## 启动
 
@@ -56,5 +58,6 @@ description: 生成或更新产品需求文档（PRD）；用于产品型 change
 ## 不做
 
 - 不写技术方案。
+- 不写接口契约、错误处理、边界条件或工程实现细节；这些进入 requirements / technical_design。
 - 不替用户做产品决策。
 - 不把延后功能列入 MVP。

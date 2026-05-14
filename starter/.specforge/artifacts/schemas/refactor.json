@@ -1,7 +1,7 @@
 {
   "id": "refactor",
   "version": 1,
-  "description": "重构流程，跳过业务需求(Requirements)，专注技术设计(Design)和实施。",
+  "description": "重构流程，跳过业务需求(Requirements)，专注 technical_design 和实施。",
   "artifacts": [
     {
       "id": "intake",
@@ -15,12 +15,12 @@
       "requires": []
     },
     {
-      "id": "design",
+      "id": "technical_design",
       "stage": "01-spec",
       "title": "技术设计",
       "description": "重构的架构与解耦方案",
       "outputs": [
-        "01-spec/design.md"
+        "01-spec/technical-design.md"
       ],
       "requires": [
         "intake"
@@ -35,7 +35,7 @@
         "01-spec/tasks.md"
       ],
       "requires": [
-        "design"
+        "technical_design"
       ]
     },
     {
@@ -47,7 +47,7 @@
         "02-spec-review/spec-review-v1.md"
       ],
       "requires": [
-        "design",
+        "technical_design",
         "tasks"
       ],
       "gate": "spec_review"

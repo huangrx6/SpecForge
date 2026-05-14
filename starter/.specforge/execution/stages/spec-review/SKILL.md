@@ -1,17 +1,18 @@
 ---
 name: spec-review
-description: SpecForge 内部规格审查技能。用于 01-spec 完成后审查 requirements、design、tasks 是否足以进入 implementation。
+description: SpecForge 内部规格审查技能。用于 01-spec 完成后审查 requirements、适用的 ui_design / technical_design、tasks 是否足以进入 implementation。
 ---
 
 # Spec Review Skill
 
-本技能审查 requirements、design 和 tasks 是否足以进入 implementation。审查不是润色文档，而是判断实现是否已经有安全边界和可验证计划。
+本技能审查 requirements、适用的 UI design、适用的 technical design 和 tasks 是否足以进入 implementation。审查不是润色文档，而是判断实现是否已经有体验证据、技术边界和可验证计划。
 
 ## 读取
 
 - `00-intake/brief.md`
 - `01-spec/requirements.md`
-- `01-spec/design.md`
+- `01-spec/ui-design.md`（存在时）
+- `01-spec/technical-design.md`（存在时）
 - `01-spec/tasks.md`
 - `.specforge/policy/rules/analysis-workflow/README.md`
 - `.specforge/policy/rules/review/README.md`
@@ -30,13 +31,14 @@ description: SpecForge 内部规格审查技能。用于 01-spec 完成后审查
 - requirements 是否可测试。
 - 分析深度是否匹配复杂度；代码库探索、外部研究 / 跳过理由、澄清记录和分析综合是否足够。
 - 产品 / 功能候选是否已展开，MVP 组合是否有用户确认或明确默认假设。
-- design 是否覆盖需求、边界、风险和验证策略。
-- 用户可见页面是否有页面地图、用户流程、线稿 / 原型、视觉方向和交互状态。
-- 若有 UI 变更：是否提供至少一种可验收 UI 产物，并已获得用户确认：
+- ui_design 是否覆盖用户可见页面、流程、原型证据、视觉风格确认和交互状态；无 UI 影响时 N/A 是否可信。
+- technical_design 是否覆盖技术影响面、边界、风险、API、数据、权限、配置、NFR 和验证策略；被 components 合法跳过时是否有 intake 依据。
+- 若有 UI 变更：是否先确认视觉风格或明确沿用现有设计系统，再提供至少一种可验收 UI 产物：
   - Figma Frame 链接（适合已有团队设计稿、设计系统或后续通过 `figma-implement-design` 驱动实现）。
-  - Pencil 原型文件 `01-spec/ui-wireframe.pen` 及导出截图（适合本地、低成本、Agent 可直接产出的线框/原型；复杂页面还应记录 PENCIL_PLAN 摘要和采用的设计系统 skill）。
+  - Pencil 原型文件 `01-spec/ui-mockup.pen` 及导出截图 `01-spec/ui-mockup-export/*.png`（适合本地、低成本、Agent 可直接产出的线框 / 原型；复杂页面还应记录 PENCIL_PLAN 摘要和采用的设计系统 skill）。
   - `01-spec/ui-mockup.html` 静态原型（适合无设计工具或需要浏览器直接验证）。
-  三者都缺失时，Gate 不可批准。
+  - ASCII / Markdown 线稿（仅适合 1-2 个简单页面；复杂 UI 不能只用 ASCII）。
+  视觉风格确认或 UI 证据缺失时，Gate 不可批准。
 - 技术栈、组件库、编辑器、数据层和测试方案是否引用 profile 或写清偏离理由；涉及持久化时是否选择了数据库 profile。
 - tasks 是否可执行、可排序、可验证。
 - API、数据、权限、配置、发布影响是否写清。
@@ -57,7 +59,8 @@ description: SpecForge 内部规格审查技能。用于 01-spec 完成后审查
 - 产品 / 页面 / 全栈应用没有功能候选池和用户选择记录。
 - `standard` / `deep` 没有代码库探索证据；`deep` 没有外部研究证据或合理跳过理由。
 - 计划、设计或任务不能追溯到用户澄清、代码探索或外部研究结论。
-- 用户可见页面没有体验设计证据。
+- 用户可见页面没有视觉风格确认、体验设计证据或可信的 N/A 说明。
+- 技术影响面存在但 components 跳过了 technical_design，或 technical_design 对 API、数据、权限、配置、NFR 风险只写默认处理。
 - 管理后台、HTML 渲染、外部发布、数据迁移或权限相关风险只被默认处理，没有确认和验证策略。
 - 关键技术栈或组件选择没有 profile、备选方案或取舍理由。
 - 设计包含数据库、缓存、搜索或文件存储，但没有数据库 / 存储 profile 选择、偏离说明或迁移验证计划。

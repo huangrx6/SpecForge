@@ -1,14 +1,15 @@
 import {
   computeArtifactStates,
+  effectiveSchema,
   exists,
   gateEvidence,
   gateStatus,
   layout,
-  listChanges,
+  listWorkItems,
   loadSchema,
   parseField,
   readText,
-  resolveChange,
+  resolveWorkItem,
 } from "./lib/specforge.mjs";
 
 const args = process.argv.slice(2);
@@ -20,7 +21,7 @@ function argValue(name) {
 
 function positionalArgs() {
   const values = [];
-  const optionsWithValues = new Set(["--change"]);
+  const optionsWithValues = new Set(["--work-item"]);
   for (let i = 0; i < args.length; i += 1) {
     const arg = args[i];
     if (arg.startsWith("--")) {
@@ -33,29 +34,29 @@ function positionalArgs() {
 }
 
 function printNoChanges() {
-  console.log("Artifact graph: no changes yet.");
-  console.log("Create the first change with:");
-  console.log(`node ${layout.tools}/create-change.mjs "Change title"`);
+  console.log("Artifact graph: no work items yet.");
+  console.log("Create the first work item with:");
+  console.log(`node ${layout.tools}/create-work-item.mjs "Work item title"`);
 }
 
 const json = args.includes("--json");
-const requestedChange = argValue("--change") ?? positionalArgs()[0];
+const requestedWorkItem = argValue("--work-item") ?? positionalArgs()[0];
 
 try {
-  if (!requestedChange && listChanges("active").length === 0 && listChanges("archive").length === 0) {
+  if (!requestedWorkItem && listWorkItems("active").length === 0) {
     printNoChanges();
     process.exit(0);
   }
 
-  const change = resolveChange({
-    change: requestedChange,
+  const workItem = resolveWorkItem({
+    workItem: requestedWorkItem,
     activeOnly: false,
-    defaultToLatestArchive: !requestedChange,
+    defaultToLatestArchive: false,
   });
-  const changeYaml = readText(`${change.base}/change.yaml`);
-  const workflow = parseField(changeYaml, "workflow") || "standard";
-  const schema = loadSchema(workflow);
-  const states = computeArtifactStates(schema, changeYaml, change.base);
+  const workItemYaml = readText(`${workItem.base}/work-item.yaml`);
+  const workflow = parseField(workItemYaml, "workflow") || "standard";
+  const schema = effectiveSchema(loadSchema(workflow), workItemYaml);
+  const states = computeArtifactStates(schema, workItemYaml, workItem.base);
 
   const artifactSummaries = schema.artifacts.map((artifact) => {
     const missingDeps = artifact.requires.filter((id) => states.get(id) !== "done");
@@ -68,11 +69,11 @@ try {
       missingDeps,
       outputs: artifact.outputs.map((output) => ({
         output,
-        exists: exists(`${change.base}/${output}`),
+        exists: exists(`${workItem.base}/${output}`),
       })),
       gate: artifact.gate ?? "",
-      gateStatus: artifact.gate ? gateStatus(changeYaml, artifact.gate) : "",
-      gateEvidence: artifact.gate ? gateEvidence(changeYaml, artifact.gate) : null,
+      gateStatus: artifact.gate ? gateStatus(workItemYaml, artifact.gate) : "",
+      gateEvidence: artifact.gate ? gateEvidence(workItemYaml, artifact.gate) : null,
     };
   });
 
@@ -87,11 +88,12 @@ try {
       JSON.stringify(
         {
           schema: { id: schema.id, version: schema.version },
-          change: {
-            id: change.name,
-            path: change.base,
-            lifecycle: change.lifecycle,
-            stage: parseField(changeYaml, "stage"),
+          components: schema.components ?? {},
+          work_item: {
+            id: workItem.name,
+            path: workItem.base,
+            lifecycle: workItem.lifecycle,
+            stage: parseField(workItemYaml, "stage"),
           },
           progress: {
             done: doneCount,
@@ -109,9 +111,13 @@ try {
   }
 
   console.log(`Artifact graph: ${schema.id}@${schema.version}`);
-  console.log(`Change: ${change.name}`);
-  console.log(`Path: ${change.base}`);
-  console.log(`Stage: ${parseField(changeYaml, "stage")}`);
+  const componentEntries = Object.entries(schema.components ?? {});
+  if (componentEntries.length > 0) {
+    console.log(`Components: ${componentEntries.map(([key, value]) => `${key}=${value}`).join(", ")}`);
+  }
+  console.log(`Work item: ${workItem.name}`);
+  console.log(`Path: ${workItem.base}`);
+  console.log(`Stage: ${parseField(workItemYaml, "stage")}`);
   console.log(`Progress: ${doneCount}/${artifactSummaries.length} done`);
   console.log(`Ready: ${readyArtifacts.length > 0 ? readyArtifacts.join(", ") : "none"}`);
   console.log("");

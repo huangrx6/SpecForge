@@ -8,7 +8,8 @@
 |---|---|
 | `brief.md` | 候选边界、owner 候选和 workflow 路由 |
 | `requirements.md` | 范围、非目标、依赖、影响面、验收边界 |
-| `design.md` | 边界承诺、写入范围、契约影响、回滚与验证边界 |
+| `ui-design.md` | UI 范围、页面状态、交互边界和体验验证要求 |
+| `technical-design.md` | 边界承诺、写入范围、契约影响、回滚与验证边界 |
 | `tasks.md` | 任务级 `_Boundary:_`、`_Depends:_`、`_Evidence:_` |
 | `spec-review-v1.md` | 审查边界是否足以开始实现 |
 | `code-review-v1.md` | 审查是否发生越界实现 |
@@ -20,7 +21,7 @@
 审查时重点标记：
 
 - 未更新规格就编辑批准范围外的文件。
-- 给本变更增加属于其他 change 的责任。
+- 给本 work item 增加属于其他 work item 的责任。
 - 把上游缺陷隐藏在下游补丁里。
 - 创建没有明确 owner 的共享抽象。
 - 契约变化后没有重新验证下游依赖。
@@ -36,7 +37,8 @@
 | 证据 | 必须确认 |
 |---|---|
 | `requirements.md` | 是否有范围、非目标、依赖、影响面 |
-| `design.md` | 是否有写入范围、契约影响、回滚和验证边界 |
+| `ui-design.md` | 是否有页面 / 状态 / 角色覆盖和体验证据 |
+| `technical-design.md` | 是否有写入范围、契约影响、回滚和验证边界 |
 | `tasks.md` | 是否有任务依赖、任务边界和完成证据 |
 | `changed-files.md` | 是否和批准的写入范围一致 |
 | `verification/report.md` | 是否覆盖被影响的边界 |
@@ -48,7 +50,7 @@
 - 非目标是否足以阻止 scope creep。
 - owner 是否明确。
 - 依赖和下游影响是否写清。
-- 是否存在尚未承认的第二个 change。
+- 是否存在尚未承认的第二个 work item。
 
 ## code review 关注点
 

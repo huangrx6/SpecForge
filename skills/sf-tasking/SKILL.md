@@ -1,6 +1,6 @@
 ---
 name: sf-tasking
-description: 生成或更新 SpecForge change 的 tasks；用于 active change 处于 01-spec 阶段且 ready artifact 为 tasks 时。
+description: 生成或更新 SpecForge work item 的 tasks；用于 requirements 和适用的 ui_design / technical_design 完成后，ready artifact 为 tasks 时。
 ---
 
 # sf-tasking
@@ -9,7 +9,7 @@ description: 生成或更新 SpecForge change 的 tasks；用于 active change �
 
 执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
 
-把 design 拆成可执行任务图。任务不是待办愿望，而是实现者可以逐项完成、审查者可以逐项核对的工作单元。
+把 requirements、适用的 UI design 和适用的 technical design 拆成可执行任务图。任务不是待办愿望，而是实现者可以逐项完成、审查者可以逐项核对的工作单元。
 
 ## 启动
 
@@ -39,7 +39,7 @@ node .specforge/execution/tools/create-artifact.mjs tasks
 ## 拆解要求
 
 - 每个任务必须有 `_Boundary:_`、`_Depends:_`、`_Verification:_`。
-- 任务必须能追溯到 requirements / design / 分析证据，不要凭实现冲动新增范围。
+- 任务必须能追溯到 requirements / 适用的 ui_design / 适用的 technical_design / 分析证据，不要凭实现冲动新增范围。
 - 任务应小到可以一次聚焦完成。
 - 先列契约任务（API、schema、类型、配置、迁移），再列实现任务，再列验证任务。
 - 数据迁移、权限、安全、发布任务必须单独列出。
@@ -53,4 +53,4 @@ node .specforge/execution/tools/create-artifact.mjs tasks
 ## 不做
 
 - 不写业务代码。
-- 不发明超出 design 边界的新任务。
+- 不发明超出 ui_design 或 technical_design 边界的新任务。

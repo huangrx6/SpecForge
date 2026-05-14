@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: SpecForge 内部代码审查技能。用于 implementation 完成后，对照已批准 requirements、design、tasks、边界和验证证据判断 code_review gate。
+description: SpecForge 内部代码审查技能。用于 implementation 完成后，对照已批准 requirements、适用的 ui_design / technical_design、tasks、边界和验证证据判断 code_review gate。
 ---
 
 # Code Review Skill
@@ -10,7 +10,8 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
 ## 读取
 
 - `01-spec/requirements.md`
-- `01-spec/design.md`
+- `01-spec/ui-design.md`（存在时）
+- `01-spec/technical-design.md`（存在时）
 - `01-spec/tasks.md`
 - `03-implementation/report.md`
 - `03-implementation/changed-files.md`
@@ -27,7 +28,7 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
 
 ## 审查重点
 
-- 实现是否满足 requirements、design、tasks。
+- 实现是否满足 requirements、适用的 ui_design / technical_design、tasks。
 - 是否存在边界违规或未经批准的重构。
 - 是否引入安全、权限、数据、配置或可观测性风险。
 - 是否有缺失测试或验证证据。

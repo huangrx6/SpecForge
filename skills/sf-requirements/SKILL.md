@@ -1,6 +1,6 @@
 ---
 name: sf-requirements
-description: 生成或更新 SpecForge change 的 requirements；用于 active change 处于 01-spec 阶段且 ready artifact 为 requirements 时。
+description: 生成或更新 SpecForge work item 的 requirements；用于 active work item 处于 01-spec 阶段且 ready artifact 为 requirements 时。
 ---
 
 # sf-requirements
@@ -10,6 +10,8 @@ description: 生成或更新 SpecForge change 的 requirements；用于 active c
 执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
 
 把 brief（和可选的 PRD）升级为可测试、可审查的需求规格。它不写设计，不写实现。
+
+如果存在 `00-intake/prd.md`，把它当作产品意图输入：保留产品目标和用户价值，但必须进一步落成可验证行为、边界、错误处理和验收标准。不要把 PRD 原样复制成 requirements。
 
 ## 启动
 
@@ -50,9 +52,11 @@ node .specforge/execution/tools/create-artifact.mjs requirements
 
 ## 完成标准
 
-- `requirements.md` 可以独立支撑 design。
+- `requirements.md` 可以独立支撑后续影响面判断。
+- 涉及用户可见页面、交互、视觉或原型时，下一步路由到 `sf-ui-design`。
+- 涉及前端工程、后端、API、数据、权限、配置、任务或 NFR 时，下一步路由到 `sf-tech-design`。
+- 同时涉及 UI 和技术实现时，先 `sf-ui-design`，再 `sf-tech-design`，由 `instructions.mjs` 的 ready artifact 决定实际顺序。
 - 所有未决问题都显式标记 `[NEEDS CLARIFICATION]`。
-- 下一步路由到 `sf-design`。
 
 ## 不做
 

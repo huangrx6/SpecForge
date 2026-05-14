@@ -1,6 +1,6 @@
 # 项目知识库
 
-这里记录跨 change 长期有效的事实。不要把一次性的讨论、实现过程、评审记录或验证证据放进这里；这些内容属于 `.specforge/workspace/changes/`。
+这里记录跨 work item 长期有效的事实。不要把一次性的讨论、实现过程、评审记录或验证证据放进这里；这些内容属于 `.specforge/workspace/work-items/`。
 
 默认只保留最小骨架：
 

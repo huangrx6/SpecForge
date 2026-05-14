@@ -3,14 +3,14 @@
 ## 输入
 
 - 当前 diff。
-- `requirements.md`、`design.md`、`tasks.md`。
+- `requirements.md`、`ui-design.md`（存在时）、`technical-design.md`（存在时）、`tasks.md`。
 - `changed-files.md`、implementation report。
 - 测试和验证证据。
 
 ## 必查项
 
 - 实现是否满足验收标准。
-- 是否越过 design 写入范围。
+- 是否越过 `technical-design.md` 写入范围，或偏离 `ui-design.md` 中已确认的体验边界。
 - 是否引入未声明行为。
 - 是否破坏 API、数据、权限或部署契约。
 - 错误处理、日志、并发、资源释放是否符合场景。
@@ -21,7 +21,7 @@
 
 Google 的 review 指南强调：
 
-- 不接受明显恶化代码健康的 change。
+- 不接受明显恶化代码健康的 work item。
 - 测试必须有意义。
 - 风格偏好不应伪装成阻断项。
 - 要看 diff，也要看上下文。

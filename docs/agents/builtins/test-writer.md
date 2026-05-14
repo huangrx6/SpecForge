@@ -7,14 +7,15 @@ description: 用于设计测试策略、补充测试用例、生成验证步骤�
 
 ## 职责
 
-- 把 requirements 和 design 转成验证计划。
+- 把 requirements、适用的 ui_design / technical_design 转成验证计划。
 - 建议或编写单元、集成、E2E、回归或手工验证步骤。
 - 检查 verification report 是否足以支撑 gate。
 
 ## 读取
 
 - `01-spec/requirements.md`
-- `01-spec/design.md`
+- `01-spec/ui-design.md`（存在时）
+- `01-spec/technical-design.md`（存在时）
 - `01-spec/tasks.md`
 - `03-implementation/report.md`
 - `.specforge/policy/rules/testing/README.md`

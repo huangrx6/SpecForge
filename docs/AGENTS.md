@@ -6,7 +6,7 @@ SpecForge 当前源码结构以五个顶层目录为主：
 skills/      可安装 Agent skills，入口名为 sf-router / sf-*
 runtime/     源码母本，包含 policy / artifacts / execution / workspace
 starter/     业务项目 `.specforge/` 的生成快照
-docs/        维护者文档、适配器说明、legacy 资料
+docs/        维护者文档、适配器说明、历史资料
 cli/         `specforge` CLI 入口
 ```
 
@@ -18,7 +18,7 @@ cli/         `specforge` CLI 入口
 - `runtime/policy/rules/` 和 `runtime/policy/tech-profiles/` 是稳定规则与技术栈卡片。
 - `runtime/artifacts/schemas/` 和 `runtime/artifacts/templates/` 定义 artifact graph 与产物模板。
 - `runtime/execution/tools/` 是本地命令层。
-- `runtime/workspace/changes/` 保存 SpecForge 本仓库自举 change 证据。
+- `runtime/workspace/work-items/` 保存 SpecForge 本仓库自举 work item 证据。
 - `starter/` 是生成产物，不是源码母本；修改 runtime 后运行 `npm run sync:starter`。
 
 框架改动后建议运行：
@@ -52,11 +52,11 @@ node cli/specforge.mjs skill add --target all --apply --prune-legacy
 ## 工作流
 
 ```text
-feature:   intake -> requirements -> design -> tasks -> spec_review -> implementation -> code_review -> verification -> ssot_sync -> closure
-standard:  intake -> requirements -> design -> tasks -> spec_review -> implementation -> code_review -> verification -> ssot_sync -> closure
+standard:  intake -> [research if needs_research] -> requirements -> [ui_design if has_ui] -> [technical_design if technical components] -> tasks -> spec_review -> implementation -> code_review -> verification -> ssot_sync -> closure
+feature:   intake -> [research if needs_research] -> requirements -> [ui_design if has_ui] -> [technical_design if technical components] -> tasks -> spec_review -> implementation -> code_review -> verification -> ssot_sync -> closure
 lite:      intake -> requirements -> tasks -> implementation -> code_review -> verification -> ssot_sync -> closure
 bugfix:    intake -> gap_report -> tasks -> implementation -> code_review -> verification -> ssot_sync -> closure
-refactor:  intake -> design -> tasks -> spec_review -> implementation -> code_review -> verification -> ssot_sync -> closure
+refactor:  intake -> technical_design -> tasks -> spec_review -> implementation -> code_review -> verification -> ssot_sync -> closure
 discovery: intake -> research -> ssot_sync -> closure
 ```
 

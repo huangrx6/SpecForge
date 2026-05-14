@@ -3,8 +3,8 @@ import { join } from "node:path";
 import { layout } from "./lib/specforge.mjs";
 
 const root = process.cwd();
-const activeRoot = join(root, layout.changes, "active");
-const archiveRoot = join(root, layout.changes, "archive");
+const activeRoot = join(root, layout.workItems, "active");
+const archiveRoot = join(root, layout.workItems, "archive");
 
 function read(relativePath) {
   return readFileSync(join(root, relativePath), "utf8");
@@ -23,28 +23,28 @@ function gateStatus(text, gateName) {
   return block.match(/status:\s*([A-Z_]+)/)?.[1] ?? "unknown";
 }
 
-function listChanges(label, relativeRoot, absoluteRoot) {
+function listWorkItems(label, relativeRoot, absoluteRoot) {
   console.log(label);
   if (!existsSync(absoluteRoot)) {
     console.log("- missing directory");
     console.log("");
     return;
   }
-  const changes = readdirSync(absoluteRoot, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && entry.name.startsWith("CHG-"))
+  const workItems = readdirSync(absoluteRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && entry.name.startsWith("WI-"))
     .map((entry) => entry.name)
     .sort();
 
-  if (changes.length === 0) {
+  if (workItems.length === 0) {
     console.log("- none");
     console.log("");
     return;
   }
 
-  for (const change of changes) {
-    const yamlPath = `${relativeRoot}/${change}/change.yaml`;
+  for (const workItem of workItems) {
+    const yamlPath = `${relativeRoot}/${workItem}/work-item.yaml`;
     if (!existsSync(join(root, yamlPath))) {
-      console.log(`- ${change}: missing change.yaml`);
+      console.log(`- ${workItem}: missing work-item.yaml`);
       continue;
     }
     const yaml = read(yamlPath);
@@ -61,5 +61,5 @@ function listChanges(label, relativeRoot, absoluteRoot) {
 console.log("SpecForge Status");
 console.log("");
 
-listChanges("Active changes", `${layout.changes}/active`, activeRoot);
-listChanges("Archived changes", `${layout.changes}/archive`, archiveRoot);
+listWorkItems("Active work items", `${layout.workItems}/active`, activeRoot);
+listWorkItems("Archived work items", `${layout.workItems}/archive`, archiveRoot);
