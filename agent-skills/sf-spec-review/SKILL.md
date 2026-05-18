@@ -73,8 +73,11 @@ node .specforge/core/scripts/create-artifact.mjs spec_review
    - 有 UI 影响时，必须有页面地图、用户流程、风格确认、原型证据和交互状态矩阵。
    - ASCII 只能支撑简单 UI；复杂流程必须有 Pencil、Figma 或 HTML mockup 证据。
 5. **技术设计质量**
-   - technical_design 覆盖前端 / 后端 / API / 数据 / 权限 / 配置 / NFR 的实际影响面。
-   - 技术栈、组件库、编辑器、数据库 / 数据层和测试方案有 profile 或取舍理由。
+   - technical_design 必须填写 `## 0. 影响面与读取计划`，并与 `work.yaml` 的 components、requirements 影响面和 tasks 验证计划一致。
+   - 每个影响面只能是 `yes` / `no` / `unknown`。`unknown` 若会改变架构、数据、安全、成本、外部契约或上线风险，必须退回 `sf-tech-design` 或更早阶段澄清，不得批准。
+   - `yes` 影响面必须写清触发证据、读取的子模块 / profile，并在对应技术章节有设计响应和验证钩子。
+   - `no` 影响面必须有可信 N/A 理由；不得用空表格、默认处理或“暂不考虑”掩盖真实风险。
+   - 技术栈、组件库、编辑器、数据库 / 数据层和测试方案有 profile 或取舍理由；纯后端不强制前端 profile，纯前端不强制数据库 profile。
    - API、安全、可靠性、可观测性或交付影响存在时，必须写规则主基准采用点、偏离理由和验证证据。
 6. **任务可执行性**
    - tasks 可排序、可实施、可验证。
@@ -104,6 +107,7 @@ node .specforge/core/scripts/gate.mjs spec_review REQUEST_CHANGES
 - `REQUEST_CHANGES` / `REJECTED` 时 gate 状态已更新，evidence 保持 `null`。
 - `REQUEST_CHANGES` 必须指出回到哪个 artifact（requirements / 适用的 ui_design / technical_design / tasks）。
 - 所有 P0 / P1 finding 必须解决后才可批准。
+- technical_design 影响面矩阵缺失、不完整，或关键 `unknown` 未闭环时，必须 `REQUEST_CHANGES`。
 
 ## 不做
 

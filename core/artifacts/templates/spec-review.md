@@ -32,7 +32,29 @@ Status: PENDING
 |---|---|---|---|---|---|
 | | | | | | |
 
-## 4. Gate Checklist
+## 4. Technical Design Impact Review
+
+> 仅在 `technical_design` 为 required 时填写；否则写 N/A 和跳过依据。审查目标是确认 `technical-design.md#0. 影响面与读取计划` 与 requirements、components flags、profiles 和任务验证计划一致。
+
+| Impact area | Component / requirement signal | tech-design status | Read module / profile | Section evidence | Review result |
+|---|---|---|---|---|---|
+| Frontend engineering | | yes / no / unknown / N/A | | `01-spec/technical-design.md#7` / N/A | pass / fail / N/A |
+| Backend engineering | | yes / no / unknown / N/A | | `01-spec/technical-design.md#8` / N/A | pass / fail / N/A |
+| Domain model / state machine | | yes / no / unknown / N/A | | `01-spec/technical-design.md#9` / N/A | pass / fail / N/A |
+| API / SDK / Events | | yes / no / unknown / N/A | | `01-spec/technical-design.md#10` / N/A | pass / fail / N/A |
+| Data / DB / Migration | | yes / no / unknown / N/A | | `01-spec/technical-design.md#11` / N/A | pass / fail / N/A |
+| Auth / Permission / Security | | yes / no / unknown / N/A | | `01-spec/technical-design.md#12` / `#13` / N/A | pass / fail / N/A |
+| Config / Env / Delivery | | yes / no / unknown / N/A | | `01-spec/technical-design.md#12` / `#14` / N/A | pass / fail / N/A |
+| Jobs / Queue / Scheduler | | yes / no / unknown / N/A | | `01-spec/technical-design.md#12` / N/A | pass / fail / N/A |
+| Observability / Reliability | | yes / no / unknown / N/A | | `01-spec/technical-design.md#13` / `#14` / `#15` / N/A | pass / fail / N/A |
+
+### Unknown Review
+
+| Unknown item | Risk type | Blocking? | Decision / return path |
+|---|---|---|---|
+| | architecture / data / security / cost / external_contract / delivery / reliability / other | yes / no | |
+
+## 5. Gate Checklist
 
 | Area | Result | Evidence / Notes |
 |---|---|---|
@@ -41,31 +63,34 @@ Status: PENDING
 | Requirements are testable and unambiguous | pass / fail | |
 | Product choices, MVP, non-goals and open questions are resolved | pass / fail | |
 | UI design covers style, page map, flows, prototype evidence and states | pass / fail / N/A | |
-| Technical design covers architecture, API, data, permissions, config, NFR and verification | pass / fail / N/A | |
+| Technical design impact/read plan is complete and aligned | pass / fail / N/A | |
+| No blocking technical `unknown` remains | pass / fail / N/A | |
+| `yes` technical impacts have matching design section, profile and verification | pass / fail / N/A | |
+| `no` technical impacts have credible N/A reasons | pass / fail / N/A | |
 | Rule baselines and profile selections are adopted or deviations explained | pass / fail / N/A | |
 | Tasks are ordered, bounded and verifiable | pass / fail | |
 | Testing, startup validation, rollback / observability tasks are present when applicable | pass / fail / N/A | |
 | No hidden scope expansion or unresolved blockers remain | pass / fail | |
 
-## Findings
+## 6. Findings
 
 | Severity | Finding | Evidence | Required fix | Return to |
 |---|---|---|---|---|
 | P0 / P1 / P2 | | | | sf-requirements / sf-ui-design / sf-tech-design / sf-tasking |
 
-## Residual Risks
+## 7. Residual Risks
 
 -
 
-## Required Follow-up
+## 8. Required Follow-up
 
 -
 
-## Decision
+## 9. Decision
 
 可选值：APPROVED, REQUEST_CHANGES, REJECTED.
 
-## Gate Update
+## 10. Gate Update
 
 APPROVED 时执行：
 

@@ -79,10 +79,19 @@ description: SpecForge 内部规格审查技能。用于 01-spec 完成后审查
 
 ### 5. Technical Design
 
-- technical_design 是否覆盖技术影响面、边界、风险、API、数据、权限、配置、NFR 和验证策略；被 components 合法跳过时是否有 intake 依据。
-- 技术栈、组件库、编辑器、数据层和测试方案是否引用 profile 或写清偏离理由；涉及持久化时是否选择了数据库 profile。
+- technical_design 是否存在 `## 0. 影响面与读取计划`，并用 `yes` / `no` / `unknown` 明确每个工程影响面。
+- 影响面矩阵是否与 `work.yaml` components、requirements 影响面、tasks 验证计划一致；被 components 合法跳过时是否有 intake / requirements 依据。
+- `yes` 影响面是否写清触发证据、读取的子模块 / profile，并在对应章节有设计响应：
+  - `Frontend engineering` -> `Frontend Engineering Design`
+  - `Backend engineering` -> `Backend Engineering Design`
+  - `Domain model / state machine` -> `Domain Model / State Machine`
+  - `API / SDK / Events` -> `API / Contracts`
+  - `Data / DB / Migration` -> `Data, Storage & Migration`
+  - `Auth / Permission / Security`、`Config / Env / Delivery`、`Jobs / Queue / Scheduler`、`Observability / Reliability` -> `Permission, Config, Jobs & Integration Impact`、`NFRs`、`失败模式与回滚策略`、`技术验证策略`
+- `no` 影响面是否有可信 N/A 理由，且没有与 requirements、代码探索或 tasks 冲突。
+- `unknown` 是否已被处理；凡会改变架构、数据、安全、成本、外部契约、发布或可靠性风险的 `unknown`，不得批准。
+- 技术栈、组件库、编辑器、数据层和测试方案是否引用 profile 或写清偏离理由；纯后端不强制前端 profile，纯前端不强制数据库 profile，涉及持久化时必须选择数据库 / 存储 profile。
 - API、安全、可靠性、可观测性或交付影响存在时，technical_design 是否引用对应规则入口的主基准，并写清采用点、偏离理由和验证证据。
-- API、数据、权限、配置、发布影响是否写清。
 
 ### 6. Tasks
 
@@ -108,6 +117,9 @@ description: SpecForge 内部规格审查技能。用于 01-spec 完成后审查
 - 计划、设计或任务不能追溯到用户澄清、代码探索或外部研究结论。
 - 用户可见页面没有视觉风格确认、体验设计证据或可信的 N/A 说明。
 - 技术影响面存在但 components 跳过了 technical_design，或 technical_design 对 API、数据、权限、配置、NFR 风险只写默认处理。
+- technical_design 缺少 `## 0. 影响面与读取计划`，或影响面矩阵未覆盖全部工程影响面。
+- 存在会影响架构、数据、安全、成本、外部契约、发布或可靠性的 `unknown`，但没有澄清结论、取舍理由和验证计划。
+- `yes` 影响面没有对应子模块 / profile / 设计章节 / 验证钩子；`no` 影响面没有可信 N/A 理由。
 - 管理后台、HTML 渲染、外部发布、数据迁移或权限相关风险只被默认处理，没有确认和验证策略。
 - 关键技术栈或组件选择没有 profile、备选方案或取舍理由。
 - 涉及 API、安全、可靠性或可观测性，却没有规则主基准采用点或可信 N/A 说明。
