@@ -43,7 +43,7 @@ node .specforge/core/scripts/create-artifact.mjs implementation
 
 1. 读取 `work.yaml`、`01-spec/tasks.md`、适用的 `requirements.md` / `gap-report.md` / `ui-design.md` / `technical-design.md`。
 2. 运行 `git status --short --untracked-files=all`，识别已有未提交和未追踪改动；不要覆盖或回滚不属于本次 work item 的用户改动。
-3. 从 tasks 建立执行计划：任务 -> 批次 -> 写入边界 -> 预期文件 -> 验证方式。
+3. 从 tasks 建立执行计划：任务 -> 批次 -> `_Impact:_` -> 写入边界 -> 预期文件 -> 验证方式。
 4. 从 `technical-design.md#0. 影响面与读取计划` 建立实现影响面对账：
    - `yes`：列出预计代码 / 配置 / 文档变更、关联任务和快速验证。
    - `no`：确认不写相关区域；若实现中发现必须修改，停止回到 `sf-tech-design` 或 `sf-spec-review`。

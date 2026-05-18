@@ -55,8 +55,9 @@ node .specforge/core/scripts/create-artifact.mjs tasks
 
 ## 拆解要求
 
-- 每个任务必须有 `_Trace:_`、`_Boundary:_`、`_Depends:_`、`_Verification:_`。
+- 每个任务必须有 `_Trace:_`、`_Impact:_`、`_Boundary:_`、`_Depends:_`、`_Verification:_`。
 - 任务必须能追溯到 requirements / gap_report / ui_design / technical_design / research，不要凭实现冲动新增范围。
+- 读取 `technical-design.md#0. 影响面与读取计划` 后，必须把每个 `yes` 影响面映射到实现任务和验证任务；`no` 写 N/A 理由；关键 `unknown` 不能进入 tasks，必须退回澄清。
 - 任务应小到一次实现或一次 review 可以聚焦完成。
 - 先列契约任务（API、schema、类型、配置、迁移、权限、提示词 / 评估集），再列实现任务，再列验证任务。
 - 新项目或新前端 / 后端子项目必须先列脚手架和启动冒烟任务，不能一个个手写骨架文件。
@@ -69,12 +70,15 @@ node .specforge/core/scripts/create-artifact.mjs tasks
 - 上游 artifact 不足以拆任务，比如 API 契约、UI 状态、数据库迁移或权限边界缺失。
 - 任务会扩大已确认范围。
 - tasks 无法映射到验收标准或验证证据。
+- technical_design 中存在会影响架构、数据、安全、成本、外部契约、发布或可靠性的 `unknown`。
+- technical_design 的 `yes` 影响面无法拆出实现任务或验证任务。
 - 存在未决产品问题、设计问题或技术方案选择，应该回到 `sf-requirements`、`sf-ui-design` 或 `sf-tech-design`。
 
 ## 完成标准
 
 - `01-spec/tasks.md` 能驱动 implementation，不需要实现者重新猜范围。
 - 每个任务都有追踪来源、边界、依赖和验证。
+- 每个 technical_design `yes` 影响面都有任务承接；`no` / N/A 有可信理由；无关键 `unknown` 留给 implementation。
 - 并行波次不会让多个任务同时写同一核心文件或共享未完成契约。
 - 测试、启动验证、回滚 / 观察和安全验证在适用时单独列出。
 - 下一步路由到 `sf-spec-review`，以 `instructions.mjs` 为准。

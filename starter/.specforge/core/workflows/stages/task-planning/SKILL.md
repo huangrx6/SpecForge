@@ -43,18 +43,20 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 ## 拆解流程
 
 1. **建立覆盖矩阵**：列出所有来源需求、决策、风险和验收标准，确认每项至少有实现任务和验证任务。
-2. **先列契约任务**：API、schema、类型、配置、迁移、权限、提示词、评估集、feature flag、环境变量。
-3. **再列基础任务**：新项目脚手架、开发服务器冒烟、目录结构、共享客户端、测试基线。
-4. **再列实现任务**：按模块、层次、用户路径或状态机拆分。
-5. **再列验证任务**：单元、集成、契约、E2E、页面 × 操作 × 角色矩阵、启动验证、回归验证、人工证据。
-6. **最后列运行任务**：配置、迁移、回滚、可观测性、告警、发布检查和 Wiki 回写提示。
-7. 标注依赖关系和并行波次。
+2. **建立技术影响面任务覆盖**：读取 `technical-design.md#0. 影响面与读取计划`，把每个 `yes` 影响面映射到实现任务和验证任务；`no` 写 N/A 理由；关键 `unknown` 退回澄清。
+3. **先列契约任务**：API、schema、类型、配置、迁移、权限、提示词、评估集、feature flag、环境变量。
+4. **再列基础任务**：新项目脚手架、开发服务器冒烟、目录结构、共享客户端、测试基线。
+5. **再列实现任务**：按模块、层次、用户路径或状态机拆分。
+6. **再列验证任务**：单元、集成、契约、E2E、页面 × 操作 × 角色矩阵、启动验证、回归验证、人工证据。
+7. **最后列运行任务**：配置、迁移、回滚、可观测性、告警、发布检查和 Wiki 回写提示。
+8. 标注依赖关系和并行波次。
 
 ## 任务格式要求
 
 每个任务必须包含：
 
 - `_Trace:_` 指向 requirements / gap_report / ui_design / technical_design / research 的具体条目或章节。
+- `_Impact:_` 写适用的 technical_design 影响面；纯产品 / bugfix 无技术设计时写 N/A。
 - `_Boundary:_` 明确允许写入的目录、模块或文件类别。
 - `_Depends:_` 写任务依赖；没有依赖写 `none`。
 - `_Verification:_` 写可执行命令、测试类型、人工检查或后续 verification 证据。
@@ -90,6 +92,8 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 - 适用的 ui_design / technical_design 不足以拆任务，且不是被 components 合法跳过。
 - bugfix / issue 缺少根因、修复策略或回归测试方向。
 - refactor 缺少行为不变边界或回归验证策略。
+- technical_design 中存在会影响架构、数据、安全、成本、外部契约、发布或可靠性的 `unknown`。
+- technical_design 的 `yes` 影响面缺少实现任务或验证任务承接。
 - 任务会扩大写入范围。
 - 验收标准没有验证任务承接。
 - 存在未解决的契约、数据迁移、安全或发布风险。
@@ -98,5 +102,6 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 
 - tasks 能驱动 implementation。
 - 每个任务都有追踪来源、边界、依赖、验证和必要风险说明。
+- 每个 technical_design `yes` 影响面都有任务承接；`no` / N/A 有可信理由；无关键 `unknown` 留到实现阶段。
 - reviewer 可以用 tasks 判断实现是否完整。
 - verification 可以直接从 tasks 列出验证矩阵。

@@ -42,7 +42,7 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
    - `node .specforge/core/scripts/instructions.mjs apply` 必须显示 ready。
    - 运行 `git status --short --untracked-files=all`，识别本次工作前已有改动；不要覆盖或回滚无关改动。
 2. **先写 implementation plan**
-   - 从 tasks 提取批次、依赖、`_Boundary:_`、`_Verification:_`、风险和预计变更文件。
+   - 从 tasks 提取批次、依赖、`_Impact:_`、`_Boundary:_`、`_Verification:_`、风险和预计变更文件。
    - 从 `technical-design.md#0. 影响面与读取计划` 提取 `yes` / `no` / `unknown`，形成实现影响面对账计划。
    - 如果任务边界不足以指导写入，停止回到 `sf-tasking` 或 `sf-spec-review`。
    - 如果影响面仍有会改变架构、数据、安全、成本、外部契约、发布或可靠性的 `unknown`，停止回到 `sf-tech-design` 或 `sf-spec-review`。
