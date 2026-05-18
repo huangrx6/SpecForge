@@ -10,9 +10,12 @@ description: SpecForge 内部 Wiki 同步技能。用于 closure 前判断 work 
 ## 读取
 
 - `01-spec/requirements.md`
+- `00-intake/prd.md`（存在时）
 - `01-spec/ui-design.md`（存在时）
 - `01-spec/technical-design.md`（存在时）
+- `02-spec-review/spec-review-v1.md`（存在时）
 - `03-implementation/report.md`
+- `04-code-review/code-review-v1.md`
 - `05-verification/report.md`
 - `.specforge/wiki/`
 - `.specforge/core/standards/wiki.md`
@@ -52,11 +55,21 @@ description: SpecForge 内部 Wiki 同步技能。用于 closure 前判断 work 
 
 不进入 wiki 的内容：一次性调试记录、命令长日志、截图、未批准草稿、只对本 work item 有意义的实现备注。
 
+## 回写流程
+
+1. **收集候选事实**：从 PRD / requirements / technical_design / implementation report / verification report 提取长期有效事实。
+2. **判定写入目标**：使用“判断维度”表选择唯一目标文件；一个知识项只维护一个 current 文件。
+3. **对照现有 wiki**：读取目标文件和 `index.md`，判断是更新当前事实、补充新章节，还是写 N/A。
+4. **处理冲突**：如果 artifact 与现有 wiki 冲突，以已批准并验证的最新 work item 为准；同时在 `decisions.md` 或目标文件中保留必要决策理由。
+5. **刷新元数据**：每个更新文件都刷新 frontmatter 的 `last_updated`、`source_work` 和 `status: current`。
+6. **同步索引**：新增或重命名 wiki 文件后更新 `index.md`；不得产生重复 current 条目。
+
 ## 输出要求
 
 - 明确“影响”或“不影响”。
 - 列出更新文件。
 - 每个更新的 wiki 文件必须保持 `status: current`，除非被明确替代。
+- 同一知识项不得存在多个 current 文件；不得创建日期版、work item 版或 v2 版 wiki。
 - 说明没有更新的理由。
 - 写明契约变化、下游重新验证要求和来源证据。
 - 更新 `.specforge/wiki/index.md` 的当前知识项、摘要和最后同步时间。
@@ -67,6 +80,7 @@ description: SpecForge 内部 Wiki 同步技能。用于 closure 前判断 work 
 - 无法判断长期影响。
 - 需要更新 wiki 但缺少事实证据。
 - 发现 wiki 与代码 / 验证证据冲突，且无法判断哪个为准。
+- 会产生重复 current wiki 文件，或无法把新事实合并到唯一目标文件。
 
 ## 完成标准
 

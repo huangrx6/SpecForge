@@ -6,6 +6,12 @@
 
 `.specforge/wiki/` 保存当前项目长期事实，不保存一次性过程记录。每一项知识使用一个单文件，文件名要见名知意。
 
+核心约束：
+
+- 一个知识项只有一个当前文件，使用 `status: current` 标识。
+- 不创建按日期、版本号或 work item 命名的 wiki 文件。
+- 事实变化时更新原文件；历史原因只在必要时写入 `decisions.md` 或目标文件的“决策背景”。
+
 ## 默认知识项
 
 | 文件 | 内容 |
@@ -53,6 +59,17 @@
 - 每个文件必须有 frontmatter：`title`、`kind`、`owner`、`last_updated`、`source_work`、`status`。
 - `index.md` 必须列出当前知识项，新增按需文件后同步索引。
 
+frontmatter 语义：
+
+| 字段 | 要求 |
+|---|---|
+| `title` | 人可读标题 |
+| `kind` | `project` / `product-rules` / `architecture` / `module` / `api` / `design-system` / `data` / `operations` / `decisions` / `glossary` / `risks` |
+| `owner` | 维护责任人；未知写 `TBD` |
+| `last_updated` | 最近一次事实更新时间，格式 `YYYY-MM-DD` |
+| `source_work` | 最近一次事实来源 work item id 或 `bootstrap` |
+| `status` | 当前有效文件写 `current`；被替代文件不得继续作为 current 出现在索引 |
+
 ## 回写矩阵
 
 | 来源变化 | 写入位置 | 不写入位置 |
@@ -62,6 +79,7 @@
 | technical design 形成长期架构 / API / 数据 / 运维事实 | `architecture.md`、`api-<domain>.md`、`data-model.md`、`operations.md` | 不复制临时实现计划 |
 | implementation 发现真实结构与设计不同 | 对应事实文件 + `decisions.md` | 不复制 commit diff |
 | verification 暴露系统性风险或测试缺口 | `risks.md`、`operations.md` | 不复制完整测试日志 |
+| close 形成发布 / 回滚 / 运行注意事项 | `operations.md`、`risks.md` | 不复制 release / rollback 全文 |
 
 ## Gate 标准
 

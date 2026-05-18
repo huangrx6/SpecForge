@@ -63,14 +63,18 @@ node .specforge/core/scripts/sync-wiki.mjs
 
 1. 读取 active 或指定 archived work 的最终产物：
    - `00-intake/brief.md`
+   - `00-intake/prd.md`（存在时）
    - `01-spec/requirements.md`
    - `01-spec/ui-design.md`（存在时）
    - `01-spec/technical-design.md`（存在时）
+   - `02-spec-review/spec-review-v1.md`（存在时）
    - `03-implementation/report.md`
+   - `04-code-review/code-review-v1.md`
    - `05-verification/report.md`
 2. 先做“是否回写”判断：
    - 只影响一次性实现、临时日志、测试输出：写 N/A 理由，不更新 wiki。
    - 改变长期产品、架构、接口、数据、运行、设计系统、术语、风险：必须更新对应 wiki 文件。
+   - 参考 implementation report 的 Wiki 回写提示、verification 的已知缺口和 technical_design 的影响面，不只凭主观判断。
 3. 判断哪些事实长期有效：
    - 产品规则、角色、权限、审批、状态机。
    - 架构、模块边界、技术栈、依赖关系。
@@ -80,7 +84,7 @@ node .specforge/core/scripts/sync-wiki.mjs
    - UI 设计系统、组件用法、token、风格方向。
    - Figma MCP / Pencil MCP / DESIGN.md 中已经稳定为项目规则的设计系统约定。
    - 决策、术语、风险、技术债。
-4. 更新对应 `.specforge/wiki/*.md` 文件。事实变化时更新原文件，不新建 v2 文件；确需新增时按 `module-<name>.md`、`api-<domain>.md`、`design-system.md` 这类见名知意的短名。
+4. 更新对应 `.specforge/wiki/*.md` 文件。每个知识项只保留一个当前文件；事实变化时更新原文件，不新建 v2、日期版或 work item 版文件。确需新增时按 `module-<name>.md`、`api-<domain>.md`、`design-system.md` 这类见名知意的短名。
 5. 每个更新文件都保留并刷新 frontmatter：`title`、`kind`、`owner`、`last_updated`、`source_work`、`status`。
 6. 更新 `.specforge/wiki/index.md` 的当前文件索引、摘要和最后同步时间。
 7. 在 `06-close/wiki-sync.md` 中记录：
@@ -104,6 +108,7 @@ node .specforge/core/scripts/gate.mjs wiki_sync REQUEST_CHANGES
 
 - 每个被更新的 wiki 文件都有 frontmatter：`title`、`kind`、`owner`、`last_updated`、`source_work`、`status`。
 - 同一知识项只有一个 `status: current` 文件。
+- wiki 只包含当前事实；被替代的旧事实已更新或移入 `decisions.md` 的决策背景，不保留重复 current 文件。
 - `index.md` 已反映最新 current 文件列表。
 - `06-close/wiki-sync.md` 已写明更新或不更新原因。
 - `wiki_sync` gate 状态与证据一致。

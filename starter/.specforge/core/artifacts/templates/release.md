@@ -23,21 +23,38 @@
 |---|---|---|
 | verification gate 已批准 | 是 / 否 | |
 | wiki_sync gate 已批准 | 是 / 否 | |
+| verification 残余风险已进入观察点 | 是 / 否 / N/A | |
+| rollback 触发条件已覆盖关键风险 | 是 / 否 / N/A | |
 | doctor 通过 | 是 / 否 | |
 | release / rollback 已填写 | 是 / 否 | |
 
-## 4. 发布步骤
+## 4. 证据引用
+
+| 证据 | 路径 / 链接 | 结论 |
+|---|---|---|
+| verification report | `05-verification/report.md` | |
+| wiki sync | `06-close/wiki-sync.md` | |
+| implementation report | `03-implementation/report.md` | |
+| code review | `04-code-review/code-review-v1.md` | |
+
+## 5. 发布步骤
 
 > 不涉及生产发布时写 N/A 理由。
 
 1. 
 
-## 5. 发布后观察
+## 6. 发布后观察
 
 | 观察项 | 方法 | 预期 | 负责人 |
 |---|---|---|---|
 | 日志 / 指标 / trace / 业务数据 | | | |
 
-## 6. 备注
+## 7. 不涉及生产发布的说明
+
+| 原因 | 交付状态 | 后续触发条件 |
+|---|---|---|
+| | 已交付 / 待发布 / N/A | |
+
+## 8. 备注
 
 - 

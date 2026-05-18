@@ -62,6 +62,7 @@ node .specforge/core/scripts/create-artifact.mjs closure
    - release 写交付摘要、发布步骤、发布前检查、发布后观察。
    - rollback 写触发条件、回滚步骤、数据 / 配置回退、回滚后验证。
    - 不涉及生产发布也必须写 N/A 理由。
+   - release / rollback 必须引用 verification、wiki_sync、implementation report 中的证据和残余风险；不能凭空声明可发布或可回滚。
 7. 如果当前仓库是 SpecForge 本体，且本次 work item 修改了 `core/workflows/stages/**` 或 `agent-skills/sf*/SKILL.md`，只在 release 备注中提示“需要用户另行决定是否同步安装到 Codex / Claude Code / cc-switch”，不要自动执行安装命令。
 
 8. 归档前检查：
@@ -81,6 +82,7 @@ node .specforge/core/scripts/archive-work.mjs
 
 - `wiki-sync.md`、`release.md`、`rollback.md` 都存在。
 - wiki_sync gate 为 `APPROVED`。
+- verification 残余风险、release 观察点、rollback 触发条件三者已对齐。
 - doctor 和 archive dry-run 通过。
 - archive 成功，registry 已更新。
 
