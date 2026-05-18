@@ -12,6 +12,7 @@ Status: PENDING
 | 日期 | |
 | 上游 spec gate | APPROVED / SKIPPED / N/A |
 | Diff 基准 / 命令 | |
+| 真实状态命令 | `git status --short --untracked-files=all` |
 
 ## 2. 输入证据
 
@@ -33,6 +34,16 @@ Status: PENDING
 |---|---|---|---|---|
 | | | | yes / no | |
 
+### Diff 对账
+
+| 检查项 | 结果 | 证据 / 备注 |
+|---|---|---|
+| `git status --short --untracked-files=all` 已检查 | pass / fail | |
+| `git diff --name-only` 与 `changed-files.md` 一致 | pass / fail | |
+| 未追踪文件已登记或排除 | pass / fail / N/A | |
+| 登记但无真实 diff 的文件已有解释 | pass / fail / N/A | |
+| 批准边界外偏离已在 implementation report 中说明 | pass / fail / N/A | |
+
 ## 4. 任务覆盖
 
 | 任务 | 预期结果 | 实现证据 | 验证证据 | 状态 |
@@ -45,7 +56,23 @@ Status: PENDING
 |---|---|---|---|
 | | | | |
 
-## 6. 风险检查
+## 6. Technical Design 影响面实现审查
+
+> 仅在 `technical-design.md` 适用时填写；否则写 N/A。检查 `technical-design.md#0. 影响面与读取计划` 中每个影响面是否被正确实现、跳过或退回。
+
+| 影响面 | Approved status | 预期实现 / N/A 理由 | 真实 diff / 证据 | 验证证据 | 结论 |
+|---|---|---|---|---|---|
+| Frontend engineering | yes / no / unknown / N/A | | | | pass / fail / N/A |
+| Backend engineering | yes / no / unknown / N/A | | | | pass / fail / N/A |
+| Domain model / state machine | yes / no / unknown / N/A | | | | pass / fail / N/A |
+| API / SDK / Events | yes / no / unknown / N/A | | | | pass / fail / N/A |
+| Data / DB / Migration | yes / no / unknown / N/A | | | | pass / fail / N/A |
+| Auth / Permission / Security | yes / no / unknown / N/A | | | | pass / fail / N/A |
+| Config / Env / Delivery | yes / no / unknown / N/A | | | | pass / fail / N/A |
+| Jobs / Queue / Scheduler | yes / no / unknown / N/A | | | | pass / fail / N/A |
+| Observability / Reliability | yes / no / unknown / N/A | | | | pass / fail / N/A |
+
+## 7. 风险检查
 
 | 领域 | 结果 | 证据 / 备注 |
 |---|---|---|
@@ -61,29 +88,29 @@ Status: PENDING
 | 测试和启动验证 | pass / fail | |
 | Wiki 影响识别 | pass / fail / N/A | |
 
-## 问题列表
+## 8. 问题列表
 
 | 等级 | 位置 | 问题 | 影响 | 建议修复 | 需要补充的证据 |
 |---|---|---|---|---|---|
 | P0 / P1 / P2 / P3 | file:line / artifact section | | | | |
 
-## 残余风险
+## 9. 残余风险
 
 -
 
-## 验证提示
+## 10. 验证提示
 
 -
 
-## Wiki 影响
+## 11. Wiki 影响
 
 -
 
-## 决策
+## 12. 决策
 
 可选值：APPROVED, REQUEST_CHANGES, REJECTED.
 
-## Gate 更新
+## 13. Gate 更新
 
 APPROVED 时执行：
 

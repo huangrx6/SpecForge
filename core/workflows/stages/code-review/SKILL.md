@@ -19,7 +19,7 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
 - `02-spec-review/spec-review-v1.md`（存在且 required 时）
 - `03-implementation/report.md`
 - `03-implementation/changed-files.md`
-- 当前 git diff、changed file list、测试输出或验证证据
+- 当前 `git status --short --untracked-files=all`、`git diff --name-only`、`git diff --stat`、关键文件 diff、测试输出或验证证据
 - `.specforge/core/standards/engineering.md`
 - `.specforge/core/standards/workflow.md`
 
@@ -34,18 +34,26 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
    - 若 workflow 有 required `spec_review`，必须已 `APPROVED`。
    - `implementation` artifact 必须完成：`plan.md`、`report.md`、`changed-files.md`。
 2. **收集真实 diff**
-   - 读取 `git diff --name-only`、`git diff --stat` 和关键文件 diff。
+   - 读取 `git status --short --untracked-files=all`、`git diff --name-only`、`git diff --stat` 和关键文件 diff。
    - 对比 `03-implementation/changed-files.md`，发现未登记变更或登记但无 diff 的项。
 3. **建立任务覆盖矩阵**
    - 每个 `tasks.md` 任务检查状态、相关文件、实现证据和验证证据。
    - 未完成任务不能靠口头说明通过。
-4. **对照 approved spec**
+4. **三向对账**
+   - 每个真实 diff 文件必须能追溯到 approved spec、`tasks.md` 的 `_Boundary:_` 或 implementation report 中的批准偏离说明。
+   - 每个完成任务必须能追溯到至少一个真实变更或可信 N/A，以及至少一个验证证据或可信 deferred 理由。
+   - `changed-files.md`、implementation report、真实 git diff 三者不一致时，先记 finding，不允许靠口头解释通过。
+5. **对照 approved spec**
    - feature / standard / lite：对照 requirements、适用 ui_design、technical_design。
    - bugfix / issue：对照 gap_report 的根因、修复策略和回归测试。
    - refactor：对照 technical_design 的行为不变边界和回归策略。
-5. **审查工程风险**
+6. **对照 technical-design 影响面**
+   - `yes` 影响面必须有对应代码 / 配置 / 文档变更和验证证据；若实现阶段决定不做，必须在 implementation report 中写明偏离、风险和退回路径。
+   - `no` 影响面不得出现未经批准的真实 diff；例如 technical design 判定无数据影响，却新增 migration、schema、ORM model 或持久化字段。
+   - `unknown` 不得直接落地实现；凡在 code review 才发现的架构、数据、安全、成本、外部契约、发布或可靠性未知项，必须退回 spec。
+7. **审查工程风险**
    - 安全、权限、输入校验、日志脱敏、secret、错误处理、并发、幂等、兼容性、配置默认值、新依赖、迁移和回滚。
-6. **审查验证证据**
+8. **审查验证证据**
    - 验证是否覆盖正常、异常、边界、权限和回归路径。
    - UI 变更是否覆盖页面 × 操作 × 角色矩阵或有等价人工证据。
    - 启动、配置、迁移、回滚、可观测性在适用时是否已有证据或明确留给 verification。
@@ -55,6 +63,9 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
 以下情况不得批准：
 
 - 真实 diff 超出 tasks 边界，且没有 approved spec 依据。
+- 真实 diff、changed-files、implementation report 三者不一致，且缺少可信解释。
+- technical_design 中为 `no` 的影响面出现未经批准的代码改动，或 `unknown` 被直接实现。
+- technical_design 中为 `yes` 的影响面缺少实现证据、验证证据或明确偏离说明。
 - tasks 中 P0 / P1 / 核心任务未实现，或 implementation report 与实际 diff 不一致。
 - required 测试、启动验证、迁移、权限或安全证据缺失。
 - 引入 secret、敏感日志、越权路径、危险默认配置或未受控外部调用。

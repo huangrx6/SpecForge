@@ -50,7 +50,7 @@ node .specforge/core/scripts/create-artifact.mjs code_review
 
 - `03-implementation/report.md`
 - `03-implementation/changed-files.md`
-- 当前 git diff / changed files
+- 当前 `git status --short --untracked-files=all`、`git diff --name-only`、`git diff --stat` 和关键文件 diff
 - 已记录的测试、启动验证、迁移、回滚或人工验证证据
 
 ## 审查检查项
@@ -63,19 +63,25 @@ node .specforge/core/scripts/create-artifact.mjs code_review
 2. **任务覆盖**
    - `tasks.md` 中每个完成任务是否有代码变更或明确 N/A。
    - 每个 `_Verification:_` 是否有对应测试、命令、截图、日志或人工证据。
-3. **范围和边界**
+3. **三向对账**
+   - 每个真实 diff 文件都能追溯到 `tasks.md` 的 `_Boundary:_`、approved requirements / gap_report / ui_design / technical_design 或明确 N/A。
+   - `03-implementation/changed-files.md` 必须覆盖真实 diff；未登记文件、登记但无 diff、未追踪文件都要解释。
+   - implementation report 的“偏离与补偿”必须覆盖所有批准边界外的实现偏差。
+4. **范围和边界**
    - 真实 diff 是否都能追溯到 `_Boundary:_` 或 approved spec。
    - 是否混入无关重构、格式化、依赖升级或大范围目录整理。
-4. **规格一致性**
+5. **规格一致性**
    - 实现是否满足 requirements / gap_report / ui_design / technical_design。
    - UI 状态、API 契约、权限、数据迁移、后台任务、可观测性是否与设计一致。
-5. **工程风险**
+   - technical_design 的 `yes` 影响面必须有对应代码 / 配置 / 文档变更和验证证据；`no` 影响面不得出现未经批准的真实 diff。
+   - technical_design 的 `unknown` 若在 spec_review 已批准后仍以代码方式落地，必须视为范围偏离。
+6. **工程风险**
    - 安全、权限、输入校验、日志脱敏、secret、错误处理、并发、幂等、兼容性、配置默认值是否安全。
    - 新依赖、新脚手架、新环境变量是否有说明和验证。
-6. **测试和运行证据**
+7. **测试和运行证据**
    - 测试覆盖是否匹配风险，不只测 happy path。
    - 启动验证、迁移 / 回滚、观察点在适用时是否执行或安排。
-7. **Wiki 影响**
+8. **Wiki 影响**
    - API、数据模型、配置、运行方式、产品规则或术语变化是否在 report 中标记给 `sf-wiki`。
 
 ## Finding 分级
