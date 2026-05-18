@@ -20,6 +20,8 @@ description: SpecForge 工作流根入口。用于用户只说“sf”、询问�
 
 `sf-router` 只做路由，不写规格、不实现代码、不批准 gate。用户只说“继续”时，默认路由到当前 ready artifact 对应的单个 `sf-*` 技能；只有用户明确说“继续做完 / 自动推进 / 不要停”时，才路由到 `sf-work`。
 
+路由判断必须以当前文件和工具输出为准，不以聊天记忆为准。遇到 gate `REQUEST_CHANGES`、关键 `unknown`、缺 evidence 或多个 active work item 时，先输出阻断和目标技能，不自动推进。
+
 ## 内部技能母本
 
 - 状态判断优先读取 `.specforge/core/workflows/stages/status/SKILL.md`。
@@ -85,6 +87,7 @@ SpecForge 分成两层：
 | 下一步是 wiki_sync | `sf-wiki` |
 | 下一步是 closure，或 wiki_sync 已批准后需要 release / rollback / archive | `sf-close` |
 | 用户明确说“继续做完 / 自动推进 / 不要停” | `sf-work` |
+| 任一 gate 为 `REQUEST_CHANGES` / `REJECTED` | 读取对应 review/report，路由回负责修复的 `sf-*` |
 
 ## 路由决策树
 
@@ -99,7 +102,14 @@ SpecForge 分成两层：
 4. 有一个 active work item。
    - 读取 `00-intake/brief.md` 和可选 `00-intake/prd.md`。
    - 运行 `node .specforge/core/scripts/instructions.mjs`。
+   - 先检查 gate 状态：
+     - `spec_review=REQUEST_CHANGES/REJECTED`：读取 `02-spec-review/spec-review-v1.md` 的 `Return to`，路由到 `sf-requirements` / `sf-ui-design` / `sf-tech-design` / `sf-tasking`；无法判断时路由到 `sf-spec-review` 解释阻断。
+     - `code_review=REQUEST_CHANGES/REJECTED`：路由到 `sf-implement`；如果 finding 指向 spec 缺口，再按 review 的 return path 路由。
+     - `verification=REQUEST_CHANGES/REJECTED`：优先路由到 `sf-implement` 修复；若只是缺证据且实现未变，路由到 `sf-verify` 重跑验证。
+     - `wiki_sync=REQUEST_CHANGES/REJECTED`：路由到 `sf-wiki`。
    - 如果 ready artifact 是 `requirements`，但 `brief.md#PRD 决策` 标记 `PRD required: yes` 或表格中 `PRD required | yes`，且 `00-intake/prd.md` 不存在、`Decision Status` 不是 `approved-for-requirements`，或仍有 `[NEEDS PRODUCT DECISION]`，先路由到 `sf-prd`，不要直接进入 `sf-requirements`。
+   - 如果 ready artifact 是 `implementation`，但 `01-spec/tasks.md` 缺少 `_Impact:_` 或 `technical-design.md#0` 仍有关键 `unknown`，先路由到 `sf-tasking` 或 `sf-tech-design`，不要进入 `sf-implement`。
+   - 如果 ready artifact 是 `closure`，但 `06-close/wiki-sync.md` 未证明唯一 current wiki、release / rollback 未覆盖 verification 残余风险，路由到 `sf-close` 并标明阻断点。
    - 根据 ready artifact 路由：
      - `requirements` → `sf-requirements`
      - `gap_report` → `sf-discovery`
@@ -137,6 +147,7 @@ SpecForge 分成两层：
 - 建议路由到哪个 `sf-*`。
 - 一句话原因。
 - 如果存在阻断，列出阻断 artifact / gate / 缺失 evidence。
+- 如果是 `REQUEST_CHANGES`，列出应回到的 artifact / `sf-*` 技能，不要说“继续下一步”。
 
 ## 不做
 

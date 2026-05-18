@@ -36,17 +36,21 @@ node .specforge/core/scripts/doctor.mjs
 - 当前 blocker 和 owner。
 - 建议路由到哪个根级 `sf-*` 技能。
 - 如果是 requirements ready，说明是否需要先走 `sf-prd`。
+- 如果任一 gate 为 `REQUEST_CHANGES` / `REJECTED`，说明应回到哪个 artifact / `sf-*` 技能。
 - 如果是 closure ready，说明 release / rollback / archive 前置。
 
 ## 判断规则
 
 - 多个 active work item 时，不猜测用户要继续哪一个。
 - gate 缺证据时，状态视为 blocked。
+- gate 为 `REQUEST_CHANGES` / `REJECTED` 时，不推荐下游 artifact；先推荐修复路径。
 - archived work item 只在用户要求历史时读取。
 - 下一步必须是可执行动作。
 - 用户只说“继续”时推荐当前 ready artifact 对应的单个 `sf-*` 技能。
 - 用户明确说“自动推进 / 继续做完 / 不要停”时推荐 `sf-work`。
 - 没有 ready artifact 时，输出 artifact graph 和阻断原因，不猜。
+- implementation ready 但 tasks 缺 `_Impact:_`、technical_design 有关键 `unknown`、或前序 evidence 不完整时，推荐回到对应设计 / tasking 阶段。
+- closure ready 时，release / rollback 必须对齐 verification 残余风险和 wiki_sync 证据；否则推荐 `sf-close` 修补收口材料。
 
 ## 完成标准
 
