@@ -22,7 +22,23 @@
 |---|---|---|---|---|
 | | | | | |
 
-## 4. 启动与运行基线
+## 4. Technical Design 影响面实现对账
+
+> 仅在 `technical-design.md` 适用时填写；否则写 N/A。`yes` 必须有实现和验证；`no` 不应出现未经批准的真实 diff；`unknown` 必须退回澄清，不能直接实现。
+
+| 影响面 | Approved status | 实际处理 | 关联文件 / 任务 | 快速验证 | 偏离 / 备注 |
+|---|---|---|---|---|---|
+| Frontend engineering | yes / no / unknown / N/A | | | | |
+| Backend engineering | yes / no / unknown / N/A | | | | |
+| Domain model / state machine | yes / no / unknown / N/A | | | | |
+| API / SDK / Events | yes / no / unknown / N/A | | | | |
+| Data / DB / Migration | yes / no / unknown / N/A | | | | |
+| Auth / Permission / Security | yes / no / unknown / N/A | | | | |
+| Config / Env / Delivery | yes / no / unknown / N/A | | | | |
+| Jobs / Queue / Scheduler | yes / no / unknown / N/A | | | | |
+| Observability / Reliability | yes / no / unknown / N/A | | | | |
+
+## 5. 启动与运行基线
 
 | 检查项 | 命令 / 方法 | 结果 | 备注 |
 |---|---|---|---|
@@ -32,7 +48,7 @@
 | 数据库迁移 / 回滚 | | 通过 / 失败 / 未运行 / N/A | |
 | 冒烟验证 / 健康检查 | | 通过 / 失败 / 未运行 / N/A | |
 
-## 5. 验证记录
+## 6. 验证记录
 
 | 验证类型 | 命令 / 方法 | 结果 | 覆盖任务 |
 |---|---|---|---|
@@ -43,7 +59,7 @@
 | 安全 / 权限 | | 通过 / 失败 / 未运行 / N/A | |
 | 迁移 / 回滚 | | 通过 / 失败 / 未运行 / N/A | |
 
-## 6. Figma / UI 实现备注
+## 7. Figma / UI 实现备注
 
 > 无 Figma / UI 实现可写 N/A。
 
@@ -57,33 +73,48 @@
 | 与 Figma 偏离 | |
 | 待 verification 视觉证据 | |
 
-## 7. 与规格的对应关系
+## 8. 与规格的对应关系
 
 | 来源项 | 来源产物 | 实现位置 | 验证方式 |
 |---|---|---|---|
 | REQ / GAP / UI / TD / TASK | | | |
 
-## 8. 偏离与补偿
+## 9. 偏离与补偿
 
 | 偏离项 | 原因 | 风险 | 补偿验证 / 后续处理 |
 |---|---|---|---|
 | | | | |
 
-## 9. 真实 Diff 对账
+## 10. 真实 Diff 对账
 
 | 检查项 | 结果 | 备注 |
 |---|---|---|
+| `git status --short --untracked-files=all` 已检查 | 是 / 否 | |
 | `git diff --name-only` 已与 changed-files 对齐 | 是 / 否 | |
+| `git diff --stat` 已与变更摘要对齐 | 是 / 否 | |
+| 未追踪文件已登记或排除 | 是 / 否 / N/A | |
+| 登记但无真实 diff 的文件已有解释 | 是 / 否 / N/A | |
 | 无批准范围外文件改动 | 是 / 否 | |
 | 未完成 task 已写明原因 | 是 / 否 | |
 
-## 10. 审查提示
+## 11. Code Review 准备清单
+
+| 检查项 | 结果 | 备注 |
+|---|---|---|
+| 每个完成 task 有实现证据 | 是 / 否 | |
+| 每个完成 task 有验证证据或可信 N/A | 是 / 否 | |
+| 每个真实 diff 文件在 changed-files 中登记 | 是 / 否 | |
+| technical_design `yes` 影响面均已实现或记录偏离 | 是 / 否 / N/A | |
+| technical_design `no` 影响面无未经批准改动 | 是 / 否 / N/A | |
+| 没有直接实现 unresolved `unknown` | 是 / 否 / N/A | |
+
+## 12. 审查提示
 
 - 重点审查：
 - 已知风险：
 - 需要 reviewer 特别确认：
 
-## 11. Wiki 回写提示
+## 13. Wiki 回写提示
 
 | 长期事实 | 建议 wiki 文件 | 原因 |
 |---|---|---|
