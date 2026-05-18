@@ -19,7 +19,7 @@ description: 用于审查实现是否符合已批准 spec、边界、工程规�
 - `01-spec/tasks.md`
 - `03-implementation/changed-files.md`
 - 相关 diff、测试和代码上下文
-- `.specforge/policy/rules/review/README.md`
+- `.specforge/core/standards/engineering.md`
 
 ## 输出格式
 

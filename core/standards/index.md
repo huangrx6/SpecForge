@@ -1,0 +1,52 @@
+# 标准索引
+
+`standards/` 是 SpecForge 的唯一规范层。这里不再区分“内部规则 / 外部规范”，每个领域只保留一份当前可执行的标准，并在标准中吸收权威来源。
+
+## 目录原则
+
+- 少文件：优先合并成稳定入口，避免为了一个小检查项新增目录。
+- 一事一责：流程、产品、设计、工程、Wiki 分开。
+- 可执行：每条标准都要能落到 artifact、gate、tasks 或 verification evidence。
+- 可偏离：项目事实优先于通用标准，但偏离必须写清理由和验证补偿。
+- 按需加载：Agent 只读当前阶段需要的标准，不全量加载。
+
+## 加载地图
+
+| 标准 | 什么时候读 | 主要回答 |
+|---|---|---|
+| `workflow.md` | intake、路由、gate、scope、上下文控制、关闭归档 | 当前到哪一步、能不能前进、边界在哪里 |
+| `product.md` | PRD、requirements、research、功能澄清、验收标准 | 用户到底要什么，哪些能力进入 MVP，如何验收 |
+| `design.md` | UI / UX、页面、交互、视觉风格、原型证据 | 用户看见什么，怎么操作，状态是否完整 |
+| `engineering.md` | technical design、implementation、review、verification | 工程上怎么做才可靠、安全、可维护、可验证 |
+| `wiki.md` | wiki sync、close、长期知识回写 | 哪些事实要沉淀，写到哪，何时更新 |
+
+## 阶段到标准
+
+| 阶段 / artifact | 必读标准 |
+|---|---|
+| intake / brief | `workflow.md`、`product.md` |
+| prd | `product.md`、`workflow.md` |
+| research / gap_report | `product.md`、`engineering.md`、`workflow.md` |
+| requirements | `product.md`、`workflow.md` |
+| ui_design | `design.md`、`product.md`、`workflow.md` |
+| technical_design | `engineering.md`、`workflow.md` |
+| tasks | `workflow.md`、`engineering.md` |
+| spec_review | `workflow.md`、`product.md`、`design.md`、`engineering.md` |
+| implementation | `engineering.md`、`workflow.md` |
+| code_review | `engineering.md`、`workflow.md` |
+| verification | `engineering.md`、`workflow.md` |
+| wiki_sync / closure | `wiki.md`、`workflow.md` |
+
+## 领域主基准与官方入口
+
+AI 后续先读本目录的本地标准；需要细则、版本敏感事实或用户要求来源时，再打开官方入口查当前原文。
+
+| 领域 | 本地入口 | 主基准 | 官方入口 |
+|---|---|---|---|
+| Code review | `engineering.md` | Google Engineering Practices | https://google.github.io/eng-practices/review/ |
+| REST API | `engineering.md` | Microsoft REST API Guidelines | https://github.com/microsoft/api-guidelines |
+| Security | `engineering.md` | OWASP ASVS | https://owasp.org/www-project-application-security-verification-standard/ |
+| Delivery / Reliability | `engineering.md` | AWS Well-Architected Framework | https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html |
+| Observability | `engineering.md` | OpenTelemetry Semantic Conventions | https://opentelemetry.io/docs/specs/semconv/ |
+
+这些主基准已经吸收到对应标准里；不要再新增平行的“规范合集”目录。

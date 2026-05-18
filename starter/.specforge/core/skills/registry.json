@@ -1,0 +1,640 @@
+{
+  "version": 1,
+  "description": "SpecForge 托管的已审查第三方 skill 快照。它们是参考能力，不是工作流阶段。",
+  "skills": [
+    {
+      "id": "frontend-design",
+      "name": "frontend-design",
+      "role": "风格启发",
+      "trust": "Anthropic 官方",
+      "risk": "低",
+      "source": {
+        "type": "github-raw",
+        "repo": "anthropics/skills",
+        "path": "skills/frontend-design/SKILL.md",
+        "url": "https://github.com/anthropics/skills/tree/main/skills/frontend-design",
+        "rawUrl": "https://raw.githubusercontent.com/anthropics/skills/main/skills/frontend-design/SKILL.md"
+      },
+      "trigger": "当有 UI 影响的 work item 尚无明确视觉方向，需要 5 个有区分度的风格候选或更强审美判断时使用。",
+      "normalizeTo": [
+        "01-spec/ui-design.md#Visual Style Brief",
+        "01-spec/ui-design.md#Style Candidates"
+      ],
+      "doNotUseFor": [
+        "原型证据",
+        "API 设计",
+        "数据库设计",
+        "替代用户确认"
+      ]
+    },
+    {
+      "id": "getdesign",
+      "name": "getdesign",
+      "role": "风格参考提取",
+      "trust": "社区 registry",
+      "risk": "中",
+      "source": {
+        "type": "https",
+        "repo": "claudskills/getdesign",
+        "path": "SKILL.md",
+        "url": "https://claudskills.com/skills/getdesign/",
+        "rawUrl": "https://claudskills.com/skills/getdesign/SKILL.md"
+      },
+      "trigger": "当用户提供公开产品 URL、getdesign.md 参考、截图风格目标，或要求提取品牌 / 设计 token 形成 design.md / style brief 时使用。",
+      "normalizeTo": [
+        "01-spec/ui-design.md#Visual Style Brief",
+        ".specforge/wiki/design-system.md",
+        "DESIGN.md"
+      ],
+      "doNotUseFor": [
+        "复制品牌资产",
+        "原型证据",
+        "在受监管项目中进行未经审查的外部联网调用"
+      ]
+    },
+    {
+      "id": "design-md",
+      "name": "design-md",
+      "role": "设计系统 fallback",
+      "trust": "Google Labs Code 官方",
+      "risk": "中",
+      "source": {
+        "type": "github-raw",
+        "repo": "google-labs-code/stitch-skills",
+        "path": "skills/design-md/SKILL.md",
+        "url": "https://github.com/google-labs-code/stitch-skills/tree/main/skills/design-md",
+        "rawUrl": "https://raw.githubusercontent.com/google-labs-code/stitch-skills/main/skills/design-md/SKILL.md"
+      },
+      "trigger": "当 Figma / Pencil 不可用，但项目在 UI 实现前需要可复用 DESIGN.md 或 wiki 设计系统条目时使用。",
+      "normalizeTo": [
+        ".specforge/wiki/design-system.md",
+        "DESIGN.md",
+        "01-spec/ui-design.md#Design System Notes"
+      ],
+      "doNotUseFor": [
+        "替代页面地图",
+        "替代状态矩阵",
+        "替代原型证据"
+      ]
+    },
+    {
+      "id": "web-design-guidelines",
+      "name": "web-design-guidelines",
+      "role": "UI 审查",
+      "trust": "Vercel 官方",
+      "risk": "中",
+      "source": {
+        "type": "github-raw",
+        "repo": "vercel-labs/agent-skills",
+        "path": "skills/web-design-guidelines/SKILL.md",
+        "url": "https://github.com/vercel-labs/agent-skills/tree/main/skills/web-design-guidelines",
+        "rawUrl": "https://raw.githubusercontent.com/vercel-labs/agent-skills/main/skills/web-design-guidelines/SKILL.md"
+      },
+      "trigger": "当已有 UI 原型或实现后使用，尤其适合在 spec_review、code_review 或 verification 前审查可访问性、UX、表单、动效、性能、导航和状态处理。",
+      "normalizeTo": [
+        "02-review/ui-review.md",
+        "04-verification/visual-verification.md",
+        "04-verification/verification-report.md#UI Coverage"
+      ],
+      "doNotUseFor": [
+        "初始风格发散",
+        "产品需求",
+        "替代人工确认"
+      ]
+    },
+    {
+      "id": "to-prd",
+      "name": "to-prd",
+      "role": "PRD 合成主参考",
+      "trust": "高星社区来源",
+      "risk": "低",
+      "source": {
+        "type": "github-raw",
+        "repo": "mattpocock/skills",
+        "path": "skills/engineering/to-prd/SKILL.md",
+        "url": "https://github.com/mattpocock/skills/tree/main/skills/engineering/to-prd",
+        "rawUrl": "https://raw.githubusercontent.com/mattpocock/skills/main/skills/engineering/to-prd/SKILL.md"
+      },
+      "trigger": "当对话和代码库上下文已经足够丰富，可以在不做大范围 discovery 的情况下合成 PRD 时使用；重点借鉴其 repo 感知、领域词汇、用户故事覆盖、deep module 思考和非目标纪律。",
+      "normalizeTo": [
+        "00-intake/prd.md#Executive Summary",
+        "00-intake/prd.md#User Stories & Acceptance Criteria",
+        "00-intake/prd.md#Scope & MVP Decision",
+        "00-intake/prd.md#Handoff To Requirements"
+      ],
+      "doNotUseFor": [
+        "发布 GitHub issue",
+        "跳过 SpecForge brief",
+        "替代 sf-requirements",
+        "把技术设计细节写进 PRD"
+      ]
+    },
+    {
+      "id": "write-a-prd",
+      "name": "write-a-prd",
+      "role": "深度 PRD 访谈",
+      "trust": "高星社区来源，固定历史快照",
+      "risk": "低",
+      "source": {
+        "type": "github-raw",
+        "repo": "mattpocock/skills",
+        "path": "write-a-prd/SKILL.md",
+        "ref": "d1beb4fe61574b3325ed96cd0d9a31966d31a02a",
+        "note": "该 skill 已在 2026-04-17 从 main 改名 / 删除并转向 to-prd；SpecForge 固定最后一个已审查快照，用于保留深度访谈模式。",
+        "url": "https://github.com/mattpocock/skills/blob/d1beb4fe61574b3325ed96cd0d9a31966d31a02a/write-a-prd/SKILL.md",
+        "rawUrl": "https://raw.githubusercontent.com/mattpocock/skills/d1beb4fe61574b3325ed96cd0d9a31966d31a02a/write-a-prd/SKILL.md"
+      },
+      "trigger": "当产品想法足够重要或模糊，需要在 PRD 批准前进行持续访谈、逐分支决策澄清、代码库验证和模块 / 测试思考时使用。",
+      "normalizeTo": [
+        "00-intake/prd.md#Product Interview Evidence",
+        "00-intake/prd.md#Open Questions & Decisions",
+        "00-intake/prd.md#Scope & MVP Decision",
+        "00-intake/prd.md#Handoff To Requirements"
+      ],
+      "doNotUseFor": [
+        "单轮无限追问",
+        "发布 GitHub issue",
+        "在产品决策前强行推进技术决策",
+        "跳过用户确认"
+      ]
+    },
+    {
+      "id": "write-spec",
+      "name": "write-spec",
+      "role": "PRD 结构和指标检查",
+      "trust": "Anthropic 官方",
+      "risk": "低",
+      "source": {
+        "type": "github-raw",
+        "repo": "anthropics/knowledge-work-plugins",
+        "path": "product-management/skills/write-spec/SKILL.md",
+        "url": "https://github.com/anthropics/knowledge-work-plugins/tree/main/product-management/skills/write-spec",
+        "rawUrl": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/main/product-management/skills/write-spec/SKILL.md"
+      },
+      "trigger": "用于检查标准 PRD 结构、目标 / 非目标、分阶段范围、成功指标、验收标准、风险以及上线 / 回滚完整性。",
+      "normalizeTo": [
+        "00-intake/prd.md#Background & Product Goals",
+        "00-intake/prd.md#Metrics, Evaluation & Analytics",
+        "00-intake/prd.md#Constraints, Dependencies & Risks",
+        "00-intake/prd.md#Rollout & Roadmap"
+      ],
+      "doNotUseFor": [
+        "替代 SpecForge artifact 模板",
+        "绕过自适应访谈",
+        "编写实现任务"
+      ]
+    },
+    {
+      "id": "user-story-writing",
+      "name": "user-story-writing",
+      "role": "Requirements 用户故事与验收标准参考",
+      "trust": "社区来源，MIT 许可，已做静态审查",
+      "risk": "低",
+      "source": {
+        "type": "github-raw",
+        "repo": "aj-geddes/useful-ai-prompts",
+        "path": "skills/user-story-writing/SKILL.md",
+        "url": "https://github.com/aj-geddes/useful-ai-prompts/tree/main/skills/user-story-writing",
+        "rawUrl": "https://raw.githubusercontent.com/aj-geddes/useful-ai-prompts/main/skills/user-story-writing/SKILL.md",
+        "files": [
+          {
+            "path": "references/story-refinement-process.md",
+            "rawUrl": "https://raw.githubusercontent.com/aj-geddes/useful-ai-prompts/main/skills/user-story-writing/references/story-refinement-process.md"
+          },
+          {
+            "path": "references/acceptance-criteria-examples.md",
+            "rawUrl": "https://raw.githubusercontent.com/aj-geddes/useful-ai-prompts/main/skills/user-story-writing/references/acceptance-criteria-examples.md"
+          },
+          {
+            "path": "references/story-splitting.md",
+            "rawUrl": "https://raw.githubusercontent.com/aj-geddes/useful-ai-prompts/main/skills/user-story-writing/references/story-splitting.md"
+          },
+          {
+            "path": "references/story-estimation.md",
+            "rawUrl": "https://raw.githubusercontent.com/aj-geddes/useful-ai-prompts/main/skills/user-story-writing/references/story-estimation.md"
+          }
+        ]
+      },
+      "trigger": "当 requirements 需要把 PRD / brief 转成用户故事、Given/When/Then 验收标准、INVEST 检查、故事拆分或 Definition of Done 时参考。",
+      "normalizeTo": [
+        "01-spec/requirements.md#目标用户与场景",
+        "01-spec/requirements.md#功能需求",
+        "01-spec/requirements.md#验收标准",
+        "01-spec/requirements.md#重新验证触发条件"
+      ],
+      "doNotUseFor": [
+        "替代 sf-prd",
+        "把故事点或 Sprint 信息写成强制交付承诺",
+        "把外部模板原样复制为 requirements",
+        "替代用户确认范围"
+      ]
+    },
+    {
+      "id": "product-brainstorming",
+      "name": "product-brainstorming",
+      "role": "自适应产品思考",
+      "trust": "Anthropic 官方",
+      "risk": "低",
+      "source": {
+        "type": "github-raw",
+        "repo": "anthropics/knowledge-work-plugins",
+        "path": "product-management/skills/product-brainstorming/SKILL.md",
+        "url": "https://github.com/anthropics/knowledge-work-plugins/tree/main/product-management/skills/product-brainstorming",
+        "rawUrl": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/main/product-management/skills/product-brainstorming/SKILL.md"
+      },
+      "trigger": "当需求描述宽泛、过早偏向某个方案，或访谈容易变成固定问卷时，在写 PRD 前使用；借鉴其问题探索、方案发散、假设测试和收敛模式。",
+      "normalizeTo": [
+        "00-intake/prd.md#Product Interview Evidence",
+        "00-intake/prd.md#Scope & MVP Decision",
+        "00-intake/brief.md#Feature Candidates"
+      ],
+      "doNotUseFor": [
+        "直接生成最终 PRD",
+        "在没有用户选择时创建臆测功能",
+        "跳过 MVP 边界"
+      ]
+    },
+    {
+      "id": "user-research",
+      "name": "user-research",
+      "role": "研究计划和洞察",
+      "trust": "Anthropic 官方",
+      "risk": "低",
+      "source": {
+        "type": "github-raw",
+        "repo": "anthropics/knowledge-work-plugins",
+        "path": "design/skills/user-research/SKILL.md",
+        "url": "https://github.com/anthropics/knowledge-work-plugins/tree/main/design/skills/user-research",
+        "rawUrl": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/main/design/skills/user-research/SKILL.md"
+      },
+      "trigger": "当目标用户、工作流、可用性风险、采纳风险或证据质量较弱，PRD 需要研究计划、访谈指南、问卷、可用性测试计划或综合结构时使用。",
+      "normalizeTo": [
+        "00-intake/prd.md#Users, Personas & Scenarios",
+        "00-intake/prd.md#Product Interview Evidence",
+        ".specforge/wiki/product-rules.md"
+      ],
+      "doNotUseFor": [
+        "把未实际收集的研究写成事实",
+        "不必要地阻塞低风险内部工具",
+        "编写最终 UI 设计"
+      ]
+    },
+    {
+      "id": "competitive-intelligence",
+      "name": "competitive-intelligence",
+      "role": "市场和竞品研究",
+      "trust": "Anthropic 官方",
+      "risk": "中",
+      "source": {
+        "type": "github-raw",
+        "repo": "anthropics/knowledge-work-plugins",
+        "path": "sales/skills/competitive-intelligence/SKILL.md",
+        "url": "https://github.com/anthropics/knowledge-work-plugins/tree/main/sales/skills/competitive-intelligence",
+        "rawUrl": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/main/sales/skills/competitive-intelligence/SKILL.md"
+      },
+      "trigger": "仅当 PRD 决策依赖竞品定位、价格、近期发布、市场替代方案或差异化主张，并且需要有来源的外部调研时使用。",
+      "normalizeTo": [
+        "00-intake/prd.md#Background & Product Goals",
+        "00-intake/prd.md#Constraints, Dependencies & Risks",
+        ".specforge/wiki/product-rules.md"
+      ],
+      "doNotUseFor": [
+        "把交互式 battlecard 写进 work item",
+        "无来源的竞品判断",
+        "替代产品发现",
+        "未记录来源日期和置信度的网络调研"
+      ]
+    },
+    {
+      "id": "playwright-skill",
+      "name": "playwright-skill",
+      "role": "浏览器 E2E 验证",
+      "trust": "高星社区来源，MIT 许可，已做静态审查",
+      "risk": "中",
+      "source": {
+        "type": "github-raw",
+        "repo": "lackeyjb/playwright-skill",
+        "path": "skills/playwright-skill/SKILL.md",
+        "url": "https://github.com/lackeyjb/playwright-skill/tree/main/skills/playwright-skill",
+        "rawUrl": "https://raw.githubusercontent.com/lackeyjb/playwright-skill/main/skills/playwright-skill/SKILL.md",
+        "files": [
+          {
+            "path": "API_REFERENCE.md",
+            "rawUrl": "https://raw.githubusercontent.com/lackeyjb/playwright-skill/main/skills/playwright-skill/API_REFERENCE.md"
+          },
+          {
+            "path": "package.json",
+            "rawUrl": "https://raw.githubusercontent.com/lackeyjb/playwright-skill/main/skills/playwright-skill/package.json"
+          },
+          {
+            "path": "run.js",
+            "rawUrl": "https://raw.githubusercontent.com/lackeyjb/playwright-skill/main/skills/playwright-skill/run.js"
+          },
+          {
+            "path": "lib/helpers.js",
+            "rawUrl": "https://raw.githubusercontent.com/lackeyjb/playwright-skill/main/skills/playwright-skill/lib/helpers.js"
+          }
+        ]
+      },
+      "trigger": "当 verification 需要可重复的浏览器 E2E、页面流程、截图证据、角色矩阵或 UI 回归验证时使用。",
+      "normalizeTo": [
+        "05-verification/report.md#UI 页面 × 操作 × 角色 × 状态矩阵",
+        "05-verification/report.md#业务闭环与异常态",
+        "05-verification/evidence/"
+      ],
+      "doNotUseFor": [
+        "替代 requirements 验收标准",
+        "在未隔离测试数据的生产环境执行破坏性操作",
+        "绕过 SpecForge verification report",
+        "保存 Cookie、token、密码或其他敏感数据"
+      ]
+    },
+    {
+      "id": "browser-testing-with-devtools",
+      "name": "browser-testing-with-devtools",
+      "role": "Chrome DevTools 调试验证",
+      "trust": "高星社区来源，MIT 许可，已做静态审查",
+      "risk": "中",
+      "source": {
+        "type": "github-raw",
+        "repo": "addyosmani/agent-skills",
+        "path": "skills/browser-testing-with-devtools/SKILL.md",
+        "url": "https://github.com/addyosmani/agent-skills/tree/main/skills/browser-testing-with-devtools",
+        "rawUrl": "https://raw.githubusercontent.com/addyosmani/agent-skills/main/skills/browser-testing-with-devtools/SKILL.md"
+      },
+      "trigger": "当 code_review 或 verification 需要真实浏览器调试、console / network / DOM / accessibility / performance 证据，或定位启动与 UI 运行问题时使用。",
+      "normalizeTo": [
+        "04-code-review/code-review-v1.md#Verification Notes",
+        "05-verification/report.md#命令执行记录",
+        "05-verification/report.md#UI 页面 × 操作 × 角色 × 状态矩阵",
+        "05-verification/evidence/"
+      ],
+      "doNotUseFor": [
+        "替代 Playwright 的可重复 E2E 测试",
+        "读取或导出用户 Cookie、token、密码、localStorage 敏感数据",
+        "在浏览器中执行破坏性生产操作",
+        "绕过 SpecForge code_review / verification gate"
+      ]
+    },
+    {
+      "id": "pencil",
+      "name": "pencil",
+      "role": "Pencil 原型读写参考",
+      "trust": "社区来源，已做静态审查",
+      "risk": "中",
+      "source": {
+        "type": "github-raw",
+        "repo": "partme-ai/full-stack-skills",
+        "path": "skills/pencil-skills/pencil/SKILL.md",
+        "url": "https://github.com/partme-ai/full-stack-skills/tree/main/skills/pencil-skills/pencil",
+        "rawUrl": "https://raw.githubusercontent.com/partme-ai/full-stack-skills/main/skills/pencil-skills/pencil/SKILL.md"
+      },
+      "trigger": "当 ui_design 已选择 Pencil，或需要通过 Pencil MCP 读取 / 修改 .pen 原型、生成截图、检查布局问题时使用。",
+      "normalizeTo": [
+        "01-spec/ui-design.md#UI Artifact Decision",
+        "01-spec/ui-design.md#Wireframe / Prototype Evidence",
+        "01-spec/ui-mockup.pen",
+        "01-spec/ui-mockup-export/"
+      ],
+      "doNotUseFor": [
+        "替代视觉风格确认",
+        "替代 Figma 设计系统协作",
+        "用普通文件读取方式解析 .pen 加密内容",
+        "不导出 PNG 截图就通过 spec_review"
+      ]
+    },
+    {
+      "id": "figma",
+      "name": "figma",
+      "role": "Figma MCP 基础参考",
+      "trust": "OpenAI 官方 curated skill",
+      "risk": "中",
+      "source": {
+        "type": "github-raw",
+        "repo": "openai/skills",
+        "path": "skills/.curated/figma/SKILL.md",
+        "url": "https://github.com/openai/skills/tree/main/skills/.curated/figma",
+        "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma/SKILL.md",
+        "files": [
+          {
+            "path": "references/figma-mcp-config.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma/references/figma-mcp-config.md"
+          },
+          {
+            "path": "references/figma-tools-and-prompts.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma/references/figma-tools-and-prompts.md"
+          }
+        ]
+      },
+      "trigger": "当用户提供 Figma URL、node id，或需要确认 Figma MCP 配置、读取设计上下文、截图、变量和资产时使用。",
+      "normalizeTo": [
+        "01-spec/ui-design.md#UI Artifact Decision",
+        "01-spec/ui-design.md#Wireframe / Prototype Evidence",
+        "01-spec/ui-mockup-export/"
+      ],
+      "doNotUseFor": [
+        "替代用户确认视觉风格",
+        "替代页面状态矩阵",
+        "把 Figma MCP 输出当成项目最终代码",
+        "使用 nexu-io/open-design 的 figma-extract 默认路径"
+      ]
+    },
+    {
+      "id": "figma-use",
+      "name": "figma-use",
+      "role": "Figma 画布写入",
+      "trust": "OpenAI 官方 curated skill",
+      "risk": "中",
+      "source": {
+        "type": "github-raw",
+        "repo": "openai/skills",
+        "path": "skills/.curated/figma-use/SKILL.md",
+        "url": "https://github.com/openai/skills/tree/main/skills/.curated/figma-use",
+        "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/SKILL.md",
+        "files": [
+          {
+            "path": "references/api-reference.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/api-reference.md"
+          },
+          {
+            "path": "references/common-patterns.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/common-patterns.md"
+          },
+          {
+            "path": "references/component-patterns.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/component-patterns.md"
+          },
+          {
+            "path": "references/effect-style-patterns.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/effect-style-patterns.md"
+          },
+          {
+            "path": "references/gotchas.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/gotchas.md"
+          },
+          {
+            "path": "references/plugin-api-patterns.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/plugin-api-patterns.md"
+          },
+          {
+            "path": "references/plugin-api-standalone.index.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/plugin-api-standalone.index.md"
+          },
+          {
+            "path": "references/plugin-api-standalone.d.ts",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/plugin-api-standalone.d.ts"
+          },
+          {
+            "path": "references/text-style-patterns.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/text-style-patterns.md"
+          },
+          {
+            "path": "references/validation-and-recovery.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/validation-and-recovery.md"
+          },
+          {
+            "path": "references/variable-patterns.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/variable-patterns.md"
+          },
+          {
+            "path": "references/working-with-design-systems/wwds.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/working-with-design-systems/wwds.md"
+          },
+          {
+            "path": "references/working-with-design-systems/wwds-components.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/working-with-design-systems/wwds-components.md"
+          },
+          {
+            "path": "references/working-with-design-systems/wwds-components--creating.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/working-with-design-systems/wwds-components--creating.md"
+          },
+          {
+            "path": "references/working-with-design-systems/wwds-components--using.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/working-with-design-systems/wwds-components--using.md"
+          },
+          {
+            "path": "references/working-with-design-systems/wwds-effect-styles.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/working-with-design-systems/wwds-effect-styles.md"
+          },
+          {
+            "path": "references/working-with-design-systems/wwds-text-styles.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/working-with-design-systems/wwds-text-styles.md"
+          },
+          {
+            "path": "references/working-with-design-systems/wwds-variables.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/working-with-design-systems/wwds-variables.md"
+          },
+          {
+            "path": "references/working-with-design-systems/wwds-variables--creating.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/working-with-design-systems/wwds-variables--creating.md"
+          },
+          {
+            "path": "references/working-with-design-systems/wwds-variables--using.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-use/references/working-with-design-systems/wwds-variables--using.md"
+          }
+        ]
+      },
+      "trigger": "当 ui_design 选择 Figma 且需要在 Figma 画布中创建、修改、检查页面 / 组件 / token / 变量时使用；必须先读后写、小步执行并返回节点 ID。",
+      "normalizeTo": [
+        "01-spec/ui-design.md#UI Artifact Decision",
+        "01-spec/ui-design.md#Wireframe / Prototype Evidence",
+        "01-spec/ui-mockup-export/"
+      ],
+      "doNotUseFor": [
+        "未连接 Figma MCP 时强行执行",
+        "一次性大脚本批量改完整文件",
+        "替代用户确认视觉风格",
+        "绕过截图备份和权限验证"
+      ]
+    },
+    {
+      "id": "figma-generate-design",
+      "name": "figma-generate-design",
+      "role": "Figma 页面生成",
+      "trust": "OpenAI 官方 curated skill",
+      "risk": "中",
+      "source": {
+        "type": "github-raw",
+        "repo": "openai/skills",
+        "path": "skills/.curated/figma-generate-design/SKILL.md",
+        "url": "https://github.com/openai/skills/tree/main/skills/.curated/figma-generate-design",
+        "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-generate-design/SKILL.md"
+      },
+      "trigger": "当需要把描述、已有页面或代码里的 UI 结构生成 / 更新为 Figma screen，且可复用 Figma 设计系统组件时使用。",
+      "normalizeTo": [
+        "01-spec/ui-design.md#Wireframe / Prototype Evidence",
+        "01-spec/ui-design.md#Design System Notes",
+        "01-spec/ui-mockup-export/"
+      ],
+      "doNotUseFor": [
+        "替代 figma-use 的底层规则",
+        "没有设计系统组件时硬画一堆不受控 primitives",
+        "替代 HTML / Pencil / ASCII 降级方案",
+        "把生成的 Figma 当作已通过用户确认"
+      ]
+    },
+    {
+      "id": "figma-implement-design",
+      "name": "figma-implement-design",
+      "role": "Figma 到代码实现",
+      "trust": "OpenAI 官方 curated skill",
+      "risk": "中",
+      "source": {
+        "type": "github-raw",
+        "repo": "openai/skills",
+        "path": "skills/.curated/figma-implement-design/SKILL.md",
+        "url": "https://github.com/openai/skills/tree/main/skills/.curated/figma-implement-design",
+        "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-implement-design/SKILL.md"
+      },
+      "trigger": "当 implementation 需要从已批准 Figma Frame 生成或还原前端代码，并对齐项目组件、token 和路由约定时使用。",
+      "normalizeTo": [
+        "03-implementation/report.md#Figma Implementation Notes",
+        "05-verification/report.md#浏览器运行诊断",
+        "05-verification/evidence/"
+      ],
+      "doNotUseFor": [
+        "替代 ui-design approval",
+        "把 Figma MCP React/Tailwind 输出原样提交",
+        "引入新图标包替代 Figma assets",
+        "忽略项目现有组件库和设计 token"
+      ]
+    },
+    {
+      "id": "figma-create-design-system-rules",
+      "name": "figma-create-design-system-rules",
+      "role": "Figma 设计系统规则沉淀",
+      "trust": "OpenAI 官方 curated skill",
+      "risk": "中",
+      "source": {
+        "type": "github-raw",
+        "repo": "openai/skills",
+        "path": "skills/.curated/figma-create-design-system-rules/SKILL.md",
+        "url": "https://github.com/openai/skills/tree/main/skills/.curated/figma-create-design-system-rules",
+        "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-create-design-system-rules/SKILL.md",
+        "files": [
+          {
+            "path": "references/rule-template.md",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-create-design-system-rules/references/rule-template.md"
+          },
+          {
+            "path": "scripts/check_agents_md.sh",
+            "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-create-design-system-rules/scripts/check_agents_md.sh"
+          }
+        ]
+      },
+      "trigger": "当项目已有 Figma 设计系统或组件库，需要把 Figma-to-code 约定沉淀为项目 wiki / AGENTS.md / CLAUDE.md 规则时使用。",
+      "normalizeTo": [
+        ".specforge/wiki/design-system.md",
+        ".specforge/wiki/architecture.md",
+        "AGENTS.md",
+        "CLAUDE.md"
+      ],
+      "doNotUseFor": [
+        "替代单个 work item 的 ui-design.md",
+        "把工具生成规则不经审查直接覆盖项目根文件",
+        "没有项目组件和 token 证据时编造设计系统",
+        "替代 sf-wiki 的长期知识回写"
+      ]
+    }
+  ]
+}

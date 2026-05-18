@@ -1,0 +1,40 @@
+{
+  "id": "user-story-writing",
+  "name": "user-story-writing",
+  "role": "Requirements 用户故事与验收标准参考",
+  "trust": "社区来源，MIT 许可，已做静态审查",
+  "risk": "低",
+  "source": {
+    "type": "github-raw",
+    "repo": "aj-geddes/useful-ai-prompts",
+    "path": "skills/user-story-writing/SKILL.md",
+    "url": "https://github.com/aj-geddes/useful-ai-prompts/tree/main/skills/user-story-writing",
+    "rawUrl": "https://raw.githubusercontent.com/aj-geddes/useful-ai-prompts/main/skills/user-story-writing/SKILL.md",
+    "files": [
+      {
+        "path": "references/story-refinement-process.md",
+        "rawUrl": "https://raw.githubusercontent.com/aj-geddes/useful-ai-prompts/main/skills/user-story-writing/references/story-refinement-process.md"
+      },
+      {
+        "path": "references/acceptance-criteria-examples.md",
+        "rawUrl": "https://raw.githubusercontent.com/aj-geddes/useful-ai-prompts/main/skills/user-story-writing/references/acceptance-criteria-examples.md"
+      },
+      {
+        "path": "references/story-splitting.md",
+        "rawUrl": "https://raw.githubusercontent.com/aj-geddes/useful-ai-prompts/main/skills/user-story-writing/references/story-splitting.md"
+      },
+      {
+        "path": "references/story-estimation.md",
+        "rawUrl": "https://raw.githubusercontent.com/aj-geddes/useful-ai-prompts/main/skills/user-story-writing/references/story-estimation.md"
+      }
+    ]
+  },
+  "trigger": "当 requirements 需要把 PRD / brief 转成用户故事、Given/When/Then 验收标准、INVEST 检查、故事拆分或 Definition of Done 时参考。",
+  "normalizeTo": [
+    "01-spec/requirements.md#目标用户与场景",
+    "01-spec/requirements.md#功能需求",
+    "01-spec/requirements.md#验收标准",
+    "01-spec/requirements.md#重新验证触发条件"
+  ],
+  "updatedAt": "2026-05-18T00:00:00.000Z"
+}

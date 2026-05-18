@@ -1,0 +1,89 @@
+{
+  "version": 2,
+  "description": "SpecForge starter 生成清单。core/ 是源码母本；starter/ 是按本清单生成的业务项目 .specforge 快照。",
+  "copy": [
+    {
+      "from": "AGENTS.md",
+      "to": "AGENTS.md"
+    },
+    {
+      "from": "manifest.yaml",
+      "to": "manifest.yaml"
+    },
+    {
+      "from": "starter.manifest.json",
+      "to": "core/starter.manifest.json"
+    },
+    {
+      "from": "artifacts/schemas",
+      "to": "core/artifacts/schemas"
+    },
+    {
+      "from": "artifacts/templates",
+      "to": "core/artifacts/templates"
+    },
+    {
+      "from": "commands",
+      "to": "core/commands"
+    },
+    {
+      "from": "hooks/events",
+      "to": "core/hooks/events"
+    },
+    {
+      "from": "hooks/packs",
+      "to": "core/hooks/packs"
+    },
+    {
+      "from": "profiles",
+      "to": "core/profiles"
+    },
+    {
+      "from": "standards",
+      "to": "core/standards"
+    },
+    {
+      "from": "scripts",
+      "to": "core/scripts"
+    },
+    {
+      "from": "skills",
+      "to": "core/skills"
+    },
+    {
+      "from": "workflows/definitions",
+      "to": "core/workflows/definitions"
+    },
+    {
+      "from": "workflows/stages",
+      "to": "core/workflows/stages"
+    }
+  ],
+  "directories": [
+    "hooks/local",
+    "logs",
+    "work/inbox",
+    "work/active",
+    "work/archive",
+    "wiki"
+  ],
+  "files": {
+    "project.yaml": "name: TBD\nprofile: standard\nwiki:\n  mode: item-files\n  index: .specforge/wiki/index.md\nwork:\n  id_format: YYYYMMDD-kind-NNN-short-title\n",
+    "registry.yaml": "active: []\nblocked: []\narchive: []\n",
+    "hooks/README.md": "# Project Hooks\n\n项目自定义 hook 放在 `hooks/local/`。默认事件实现位于 `core/hooks/events/`，可选集成位于 `core/hooks/packs/`。\n",
+    "hooks/config.yaml": "enabled: []\n",
+    "hooks/local/.gitkeep": "",
+    "work/inbox/.gitkeep": "",
+    "work/active/.gitkeep": "",
+    "work/archive/.gitkeep": "",
+    "wiki/index.md": "---\ntitle: Wiki Index\nkind: index\nowner: TBD\nlast_updated: YYYY-MM-DD\nsource_work: bootstrap\nstatus: current\n---\n\n# Wiki Index\n\n## 当前项目摘要\n\n暂无。\n\n## 当前知识项\n\n- [项目概览](project-overview.md)\n- [产品规则](product-rules.md)\n- [架构概览](architecture.md)\n- [数据模型](data-model.md)\n- [运行与运维](operations.md)\n- [决策记录](decisions.md)\n- [术语表](glossary.md)\n- [风险与技术债](risks.md)\n",
+    "wiki/project-overview.md": "---\ntitle: 项目概览\nkind: project\nowner: TBD\nlast_updated: YYYY-MM-DD\nsource_work: bootstrap\nstatus: current\n---\n\n# 项目概览\n\n暂无。\n",
+    "wiki/product-rules.md": "---\ntitle: 产品规则\nkind: product-rules\nowner: TBD\nlast_updated: YYYY-MM-DD\nsource_work: bootstrap\nstatus: current\n---\n\n# 产品规则\n\n暂无。\n",
+    "wiki/architecture.md": "---\ntitle: 架构概览\nkind: architecture\nowner: TBD\nlast_updated: YYYY-MM-DD\nsource_work: bootstrap\nstatus: current\n---\n\n# 架构概览\n\n暂无。\n",
+    "wiki/data-model.md": "---\ntitle: 数据模型\nkind: data\nowner: TBD\nlast_updated: YYYY-MM-DD\nsource_work: bootstrap\nstatus: current\n---\n\n# 数据模型\n\n暂无。\n",
+    "wiki/operations.md": "---\ntitle: 运行与运维\nkind: operations\nowner: TBD\nlast_updated: YYYY-MM-DD\nsource_work: bootstrap\nstatus: current\n---\n\n# 运行与运维\n\n暂无。\n",
+    "wiki/decisions.md": "---\ntitle: 决策记录\nkind: decisions\nowner: TBD\nlast_updated: YYYY-MM-DD\nsource_work: bootstrap\nstatus: current\n---\n\n# 决策记录\n\n暂无。\n",
+    "wiki/glossary.md": "---\ntitle: 术语表\nkind: glossary\nowner: TBD\nlast_updated: YYYY-MM-DD\nsource_work: bootstrap\nstatus: current\n---\n\n# 术语表\n\n暂无。\n",
+    "wiki/risks.md": "---\ntitle: 风险与技术债\nkind: risks\nowner: TBD\nlast_updated: YYYY-MM-DD\nsource_work: bootstrap\nstatus: current\n---\n\n# 风险与技术债\n\n暂无。\n"
+  }
+}

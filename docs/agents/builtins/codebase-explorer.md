@@ -15,7 +15,7 @@ description: 用于定向理解现有代码库、模块边界、调用链、配�
 
 - 当前用户问题。
 - 当前 active work item 的 brief / requirements / ui-design / technical-design。
-- `.specforge/policy/rules/context/README.md`
+- `.specforge/core/standards/workflow.md`
 - 目标代码、测试、配置和文档。
 
 ## 工作方式

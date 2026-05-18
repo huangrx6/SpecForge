@@ -12,13 +12,13 @@ function usage() {
   console.log(`SpecForge CLI
 
 Usage:
-  specforge skill add [--target codex|claude-code|cc-switch|agents|all] [--apply] [--prune-legacy]
+  specforge skill add [--target codex|claude-code|cc-switch|agents|all] [--apply]
   specforge init [--dir <path>] [--force]
   specforge doctor [--dir <path>]
 
 Examples:
   npx github:huangrx6/SpecForge skill add --target codex --apply
-  npx github:huangrx6/SpecForge skill add --target all --apply --prune-legacy
+  npx github:huangrx6/SpecForge skill add --target all --apply
   npx github:huangrx6/SpecForge init --dir .
   npx github:huangrx6/SpecForge doctor --dir .
 `);
@@ -41,7 +41,7 @@ function initProject() {
   const targetDir = resolve(option("--dir", "."));
   const force = args.includes("--force");
   const target = join(targetDir, ".specforge");
-  const materializer = join(packageRoot, "runtime/execution/tools/sync-starter-assets.mjs");
+  const materializer = join(packageRoot, "core/scripts/sync-starter.mjs");
 
   if (!existsSync(materializer)) {
     console.error(`Missing starter materializer: ${materializer}`);
@@ -63,7 +63,7 @@ function initProject() {
   if (materialize.status !== 0) process.exit(materialize.status ?? 1);
   console.log(`Initialized SpecForge at ${target}`);
 
-  const doctor = join(target, "execution/tools/doctor.mjs");
+  const doctor = join(target, "core/scripts/doctor.mjs");
   const result = spawnSync(process.execPath, [doctor], {
     cwd: targetDir,
     stdio: "inherit",
@@ -73,7 +73,7 @@ function initProject() {
 
 function doctor() {
   const targetDir = resolve(option("--dir", "."));
-  const doctorPath = join(targetDir, ".specforge/execution/tools/doctor.mjs");
+  const doctorPath = join(targetDir, ".specforge/core/scripts/doctor.mjs");
   if (!existsSync(doctorPath)) {
     console.error(`Missing SpecForge doctor: ${doctorPath}`);
     process.exit(1);
@@ -89,7 +89,7 @@ if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
 const [command, subcommand] = args;
 
 if (command === "skill" && subcommand === "add") {
-  const tool = join(packageRoot, "runtime/execution/tools/install-agent-skills.mjs");
+  const tool = join(packageRoot, "core/scripts/install-agent-skills.mjs");
   runNode(tool, args.slice(2), packageRoot);
 } else if (command === "init") {
   initProject();

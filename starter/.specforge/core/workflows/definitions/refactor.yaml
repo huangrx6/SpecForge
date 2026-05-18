@@ -1,0 +1,20 @@
+id: refactor
+name: 工程重构流程 (Refactor)
+description: 面向消除技术债。不涉及终端用户可见的业务需求(Requirements)，重点侧重于技术架构设计(Technical Design)与代码实现审查。
+use_for:
+  - 代码坏味道清理与架构解耦
+  - 依赖库大版本升级
+  - 性能优化与存储介质迁移
+stages:
+  - 00-intake
+  - 01-spec (Technical Design Only)
+  - 02-spec-review
+  - 03-implementation
+  - 04-code-review
+  - 05-verification
+  - 06-close
+required_gates:
+  spec_review: true
+  code_review: true
+  verification: true
+  wiki_sync: true

@@ -1,0 +1,76 @@
+---
+name: wiki-sync
+description: SpecForge 内部 Wiki 同步技能。用于 closure 前判断 work item 是否影响 .specforge/wiki 长期项目知识，并更新或说明不更新原因。
+---
+
+# Wiki Sync Skill
+
+本技能在 closure 前判断 work item 是否影响长期项目知识，并更新 `.specforge/wiki/` 或说明不需要更新。它是防止“代码已变、知识库过期”的收口步骤。Wiki 只保存当前事实，不保存过程流水账。
+
+## 读取
+
+- `01-spec/requirements.md`
+- `01-spec/ui-design.md`（存在时）
+- `01-spec/technical-design.md`（存在时）
+- `03-implementation/report.md`
+- `05-verification/report.md`
+- `.specforge/wiki/`
+- `.specforge/core/standards/wiki.md`
+- `.specforge/core/standards/engineering.md`
+- `.specforge/core/standards/workflow.md`
+
+## 写入
+
+- `06-close/wiki-sync.md`
+- 必要时更新 `.specforge/wiki/project-overview.md`
+- 必要时更新 `.specforge/wiki/product-rules.md`
+- 必要时更新 `.specforge/wiki/architecture.md`
+- 必要时更新 `.specforge/wiki/module-<name>.md`
+- 必要时更新 `.specforge/wiki/api-<domain>.md`
+- 必要时更新 `.specforge/wiki/design-system.md`
+- 必要时更新 `.specforge/wiki/data-model.md`
+- 必要时更新 `.specforge/wiki/operations.md`
+- 必要时更新 `.specforge/wiki/decisions.md`
+- 必要时更新 `.specforge/wiki/glossary.md`
+- 必要时更新 `.specforge/wiki/risks.md`
+- 每次更新后同步 `.specforge/wiki/index.md`
+
+## 判断维度
+
+| 变化类型 | 目标文件 |
+|---|---|
+| 项目目标、用户、整体状态 | `project-overview.md` |
+| 产品规则、角色、权限、审批、状态机 | `product-rules.md` |
+| 架构、模块边界、技术栈、关键数据流 | `architecture.md` 或 `module-<name>.md` |
+| API、事件、Webhook、SDK 契约 | `api-<domain>.md` |
+| 核心实体、表、关系、状态、迁移注意事项 | `data-model.md` |
+| 环境、配置、启动、任务、发布、回滚、观测 | `operations.md` |
+| 稳定 UI 组件、token、设计系统、风格规则 | `design-system.md` |
+| 长期架构 / 产品 / 技术决策 | `decisions.md` |
+| 术语、缩写、领域语言 | `glossary.md` |
+| 已知风险、技术债、后续事项 | `risks.md` |
+
+不进入 wiki 的内容：一次性调试记录、命令长日志、截图、未批准草稿、只对本 work item 有意义的实现备注。
+
+## 输出要求
+
+- 明确“影响”或“不影响”。
+- 列出更新文件。
+- 每个更新的 wiki 文件必须保持 `status: current`，除非被明确替代。
+- 说明没有更新的理由。
+- 写明契约变化、下游重新验证要求和来源证据。
+- 更新 `.specforge/wiki/index.md` 的当前知识项、摘要和最后同步时间。
+
+## 停止条件
+
+- verification 未批准。
+- 无法判断长期影响。
+- 需要更新 wiki 但缺少事实证据。
+- 发现 wiki 与代码 / 验证证据冲突，且无法判断哪个为准。
+
+## 完成标准
+
+- `wiki-sync.md` 存在。
+- wiki 更新与 work item 证据一致。
+- `index.md` 已列出所有 current 知识项和最后同步时间。
+- `wiki_sync` gate 可以被批准或有明确阻断原因。

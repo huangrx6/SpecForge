@@ -1,0 +1,52 @@
+id: YYYYMMDD-kind-NNN-short-title
+kind: feat
+title: Work Item Title
+type: FEATURE
+workflow: feature
+
+components:
+  # auto = keep the conservative workflow default; set false in intake to skip optional artifacts.
+  has_ui: auto
+  has_api: auto
+  has_db: auto
+  has_domain: auto
+  has_ai: auto
+  has_nfr: auto
+  has_security: auto
+  has_integration: auto
+  has_infra: auto
+  has_background_job: auto
+  needs_research: false
+
+status: ACTIVE
+stage: 00-intake
+
+created_at: YYYY-MM-DD
+updated_at: YYYY-MM-DD
+
+paths:
+  intake: 00-intake
+  spec: 01-spec
+  spec_review: 02-spec-review
+  implementation: 03-implementation
+  code_review: 04-code-review
+  verification: 05-verification
+  closure: 06-close
+
+gates:
+  spec_review:
+    required: true
+    status: PENDING
+    evidence: null
+  code_review:
+    required: true
+    status: PENDING
+    evidence: null
+  verification:
+    required: true
+    status: PENDING
+    evidence: null
+  wiki_sync:
+    required: true
+    status: PENDING
+    evidence: null

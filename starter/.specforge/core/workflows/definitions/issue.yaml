@@ -1,0 +1,19 @@
+id: issue
+name: 问题处置流程 (Issue)
+description: 用于尚未完全定性为 bug 的异常、告警、线上问题或技术问题。先做现象复现、影响面和根因假设，再决定修复任务与验证证据。
+use_for:
+  - 用户反馈的异常现象
+  - 监控告警或任务失败
+  - 需要排查但未确认根因的问题
+  - 可能演化为 bugfix / refactor / ops 的技术问题
+stages:
+  - 00-intake
+  - 01-spec (Issue Triage / Gap Analysis)
+  - 03-implementation
+  - 04-code-review
+  - 05-verification
+  - 06-close
+required_gates:
+  code_review: true
+  verification: true
+  wiki_sync: true

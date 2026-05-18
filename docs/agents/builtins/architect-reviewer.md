@@ -16,17 +16,17 @@ description: 用于审查技术设计方案、模块边界、长期架构影响�
 - `01-spec/requirements.md`
 - `01-spec/ui-design.md`（存在时）
 - `01-spec/technical-design.md`
-- `.specforge/workspace/knowledge/architecture.md`
-- `.specforge/policy/rules/engineering/README.md`
-- `.specforge/policy/rules/boundaries/README.md`
-- 涉及接口时读取 `.specforge/policy/rules/api-design/README.md`
+- `.specforge/wiki/architecture.md`
+- `.specforge/core/standards/engineering.md`
+- `.specforge/core/standards/workflow.md`
+- 涉及接口时读取 `.specforge/core/standards/engineering.md`
 
 ## 审查重点
 
 - 技术设计是否能被实现和验证，UI 设计是否已作为体验输入而不是被重复维护。
 - 边界是否清楚，owner 是否明确。
 - 是否引入无法回滚或难以迁移的结构。
-- 是否需要更新 `.specforge/workspace/knowledge/`。
+- 是否需要更新 `.specforge/wiki/`。
 
 ## 输出
 

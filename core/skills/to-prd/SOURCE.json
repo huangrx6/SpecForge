@@ -1,0 +1,22 @@
+{
+  "id": "to-prd",
+  "name": "to-prd",
+  "role": "PRD 合成主参考",
+  "trust": "高星社区来源",
+  "risk": "低",
+  "source": {
+    "type": "github-raw",
+    "repo": "mattpocock/skills",
+    "path": "skills/engineering/to-prd/SKILL.md",
+    "url": "https://github.com/mattpocock/skills/tree/main/skills/engineering/to-prd",
+    "rawUrl": "https://raw.githubusercontent.com/mattpocock/skills/main/skills/engineering/to-prd/SKILL.md"
+  },
+  "trigger": "当对话和代码库上下文已经足够丰富，可以在不做大范围 discovery 的情况下合成 PRD 时使用；重点借鉴其 repo 感知、领域词汇、用户故事覆盖、deep module 思考和非目标纪律。",
+  "normalizeTo": [
+    "00-intake/prd.md#Executive Summary",
+    "00-intake/prd.md#User Stories & Acceptance Criteria",
+    "00-intake/prd.md#Scope & MVP Decision",
+    "00-intake/prd.md#Handoff To Requirements"
+  ],
+  "updatedAt": "2026-05-18T05:24:02.350Z"
+}

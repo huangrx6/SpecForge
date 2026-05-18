@@ -5,7 +5,7 @@
 在 SpecForge 源码仓库执行：
 
 ```bash
-node cli/specforge.mjs skill add --target codex --apply --prune-legacy
+node cli/specforge.mjs skill add --target codex --apply
 ```
 
 默认安装到：

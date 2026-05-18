@@ -1,0 +1,22 @@
+{
+  "id": "write-spec",
+  "name": "write-spec",
+  "role": "PRD 结构和指标检查",
+  "trust": "Anthropic 官方",
+  "risk": "低",
+  "source": {
+    "type": "github-raw",
+    "repo": "anthropics/knowledge-work-plugins",
+    "path": "product-management/skills/write-spec/SKILL.md",
+    "url": "https://github.com/anthropics/knowledge-work-plugins/tree/main/product-management/skills/write-spec",
+    "rawUrl": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/main/product-management/skills/write-spec/SKILL.md"
+  },
+  "trigger": "用于检查标准 PRD 结构、目标 / 非目标、分阶段范围、成功指标、验收标准、风险以及上线 / 回滚完整性。",
+  "normalizeTo": [
+    "00-intake/prd.md#Background & Product Goals",
+    "00-intake/prd.md#Metrics, Evaluation & Analytics",
+    "00-intake/prd.md#Constraints, Dependencies & Risks",
+    "00-intake/prd.md#Rollout & Roadmap"
+  ],
+  "updatedAt": "2026-05-18T05:24:02.984Z"
+}

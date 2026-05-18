@@ -1,0 +1,20 @@
+{
+  "id": "frontend-design",
+  "name": "frontend-design",
+  "role": "风格启发",
+  "trust": "Anthropic 官方",
+  "risk": "低",
+  "source": {
+    "type": "github-raw",
+    "repo": "anthropics/skills",
+    "path": "skills/frontend-design/SKILL.md",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/frontend-design",
+    "rawUrl": "https://raw.githubusercontent.com/anthropics/skills/main/skills/frontend-design/SKILL.md"
+  },
+  "trigger": "当有 UI 影响的 work item 尚无明确视觉方向，需要 5 个有区分度的风格候选或更强审美判断时使用。",
+  "normalizeTo": [
+    "01-spec/ui-design.md#Visual Style Brief",
+    "01-spec/ui-design.md#Style Candidates"
+  ],
+  "updatedAt": "2026-05-18T05:24:00.121Z"
+}

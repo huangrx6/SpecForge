@@ -1,6 +1,6 @@
 ---
 name: delivery-engineer
-description: 用于检查构建、CI、配置、部署、回滚、发布说明和上线观察；适合 verification、ssot_sync、closure、发布风险评估。
+description: 用于检查构建、CI、配置、部署、回滚、发布说明和上线观察；适合 verification、wiki_sync、closure、发布风险评估。
 ---
 
 # Delivery Engineer
@@ -15,9 +15,9 @@ description: 用于检查构建、CI、配置、部署、回滚、发布说明�
 
 - `05-verification/report.md`
 - `05-verification/ci-result.md`
-- `06-closure/release.md`
-- `06-closure/rollback.md`
-- `.specforge/policy/rules/delivery/README.md`
+- `06-close/release.md`
+- `06-close/rollback.md`
+- `.specforge/core/standards/engineering.md`
 - 构建、部署、环境和 CI 配置。
 
 ## 审查重点

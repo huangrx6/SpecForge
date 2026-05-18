@@ -1,0 +1,21 @@
+{
+  "id": "product-brainstorming",
+  "name": "product-brainstorming",
+  "role": "自适应产品思考",
+  "trust": "Anthropic 官方",
+  "risk": "低",
+  "source": {
+    "type": "github-raw",
+    "repo": "anthropics/knowledge-work-plugins",
+    "path": "product-management/skills/product-brainstorming/SKILL.md",
+    "url": "https://github.com/anthropics/knowledge-work-plugins/tree/main/product-management/skills/product-brainstorming",
+    "rawUrl": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/main/product-management/skills/product-brainstorming/SKILL.md"
+  },
+  "trigger": "当需求描述宽泛、过早偏向某个方案，或访谈容易变成固定问卷时，在写 PRD 前使用；借鉴其问题探索、方案发散、假设测试和收敛模式。",
+  "normalizeTo": [
+    "00-intake/prd.md#Product Interview Evidence",
+    "00-intake/prd.md#Scope & MVP Decision",
+    "00-intake/brief.md#Feature Candidates"
+  ],
+  "updatedAt": "2026-05-18T05:24:03.318Z"
+}

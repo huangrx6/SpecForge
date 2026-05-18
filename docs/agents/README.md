@@ -14,13 +14,13 @@
 | `security-auditor` | design / review / verify | 审查权限、密钥、输入、数据和供应链风险 |
 | `debugger` | verify / bugfix | 定位失败根因，提出最小修复路径 |
 | `delivery-engineer` | verify / closure | 检查 CI、配置、发布、回滚和上线观察 |
-| `knowledge-curator` | closure | 判断长期知识是否需要回流 |
+| `wiki-curator` | closure | 判断 wiki 长期事实是否需要回流 |
 
 ## 使用原则
 
 - 只在角色能明显降低上下文污染、审查风险或专业盲区时使用。
 - 每个 agent 只处理自己的职责，不替代 gate。
-- agent 输出是建议或证据，最终状态仍由 `.specforge/execution/tools/gate.mjs` 写入。
+- agent 输出是建议或证据，最终状态仍由 `.specforge/core/scripts/gate.mjs` 写入。
 - 不要为普通小改动强行启动多个 agent。
 - 不要把 archived work item 默认交给 agent 读取，除非任务需要历史背景。
 
@@ -39,7 +39,7 @@ agents/
     ├── security-auditor.md
     ├── debugger.md
     ├── delivery-engineer.md
-    └── knowledge-curator.md
+    └── wiki-curator.md
 ```
 
-如果后续要增加前端、后端、数据库等专项 agent，先确认对应 rules 已存在，再加入 builtins；否则容易变成泛泛专家名片。
+如果后续要增加前端、后端、数据库等专项 agent，先确认对应 standards 已存在，再加入 builtins；否则容易变成泛泛专家名片。

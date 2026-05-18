@@ -16,8 +16,8 @@ description: 用于定位测试失败、运行时异常、回归、CI 失败或�
 - 错误日志、测试输出、CI 摘要。
 - 相关 changed-files。
 - requirements、design 和当前实现。
-- `.specforge/policy/rules/context/README.md`
-- `.specforge/policy/rules/testing/README.md`
+- `.specforge/core/standards/workflow.md`
+- `.specforge/core/standards/engineering.md`
 
 ## 工作方式
 

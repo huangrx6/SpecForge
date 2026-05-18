@@ -1,0 +1,122 @@
+{
+  "id": "issue",
+  "version": 1,
+  "description": "问题处置流程，适用于尚未完全定性为 bug 的异常、告警、线上问题或技术问题。",
+  "artifacts": [
+    {
+      "id": "intake",
+      "stage": "00-intake",
+      "title": "问题入口",
+      "description": "记录问题现象、触发环境、影响范围、复现线索和初步优先级。",
+      "outputs": [
+        "00-intake/original-request.md",
+        "00-intake/brief.md"
+      ],
+      "requires": []
+    },
+    {
+      "id": "gap_report",
+      "stage": "01-spec",
+      "title": "问题排查与根因分析",
+      "description": "复现问题，区分症状、根因假设、规格缺口、影响面和修复路径。",
+      "outputs": [
+        "01-spec/gap-report.md"
+      ],
+      "requires": [
+        "intake"
+      ]
+    },
+    {
+      "id": "tasks",
+      "stage": "01-spec",
+      "title": "处置任务",
+      "description": "把修复、验证、回归和监控补充拆成可执行任务。",
+      "outputs": [
+        "01-spec/tasks.md"
+      ],
+      "requires": [
+        "gap_report"
+      ]
+    },
+    {
+      "id": "implementation",
+      "stage": "03-implementation",
+      "title": "实现记录",
+      "description": "记录实际修复、配置、脚本或处置变更。",
+      "outputs": [
+        "03-implementation/plan.md",
+        "03-implementation/report.md",
+        "03-implementation/changed-files.md"
+      ],
+      "requires": [
+        "tasks"
+      ]
+    },
+    {
+      "id": "code_review",
+      "stage": "04-code-review",
+      "title": "代码审查",
+      "description": "确认处置没有引入新的风险或偏离根因分析。",
+      "outputs": [
+        "04-code-review/code-review-v1.md"
+      ],
+      "requires": [
+        "implementation"
+      ],
+      "gate": "code_review"
+    },
+    {
+      "id": "verification",
+      "stage": "05-verification",
+      "title": "验证证据",
+      "description": "复测问题是否消失，记录回归覆盖、异常路径和监控观察。",
+      "outputs": [
+        "05-verification/report.md",
+        "05-verification/ci-result.md"
+      ],
+      "requires": [
+        "code_review"
+      ],
+      "gate": "verification"
+    },
+    {
+      "id": "wiki_sync",
+      "stage": "06-close",
+      "title": "知识回流",
+      "description": "把长期有效的排障经验、运行约束或架构事实写回 Wiki；无长期知识时说明 N/A。",
+      "outputs": [
+        "06-close/wiki-sync.md"
+      ],
+      "requires": [
+        "verification"
+      ],
+      "gate": "wiki_sync"
+    },
+    {
+      "id": "closure",
+      "stage": "06-close",
+      "title": "关闭记录",
+      "description": "记录处置结论、上线/发布说明、回滚或恢复路径。",
+      "outputs": [
+        "06-close/release.md",
+        "06-close/rollback.md"
+      ],
+      "requires": [
+        "wiki_sync"
+      ]
+    }
+  ],
+  "apply": {
+    "requires": [
+      "tasks"
+    ],
+    "tracks": "01-spec/tasks.md"
+  },
+  "archive": {
+    "requires": [
+      "verification",
+      "wiki_sync",
+      "closure"
+    ]
+  }
+}

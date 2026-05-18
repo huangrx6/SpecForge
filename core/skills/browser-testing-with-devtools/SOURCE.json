@@ -1,0 +1,22 @@
+{
+  "id": "browser-testing-with-devtools",
+  "name": "browser-testing-with-devtools",
+  "role": "Chrome DevTools 调试验证",
+  "trust": "高星社区来源，MIT 许可，已做静态审查",
+  "risk": "中",
+  "source": {
+    "type": "github-raw",
+    "repo": "addyosmani/agent-skills",
+    "path": "skills/browser-testing-with-devtools/SKILL.md",
+    "url": "https://github.com/addyosmani/agent-skills/tree/main/skills/browser-testing-with-devtools",
+    "rawUrl": "https://raw.githubusercontent.com/addyosmani/agent-skills/main/skills/browser-testing-with-devtools/SKILL.md"
+  },
+  "trigger": "当 code_review 或 verification 需要真实浏览器调试、console / network / DOM / accessibility / performance 证据，或定位启动与 UI 运行问题时使用。",
+  "normalizeTo": [
+    "04-code-review/code-review-v1.md#Verification Notes",
+    "05-verification/report.md#命令执行记录",
+    "05-verification/report.md#UI 页面 × 操作 × 角色 × 状态矩阵",
+    "05-verification/evidence/"
+  ],
+  "updatedAt": "2026-05-18T10:53:22.235Z"
+}

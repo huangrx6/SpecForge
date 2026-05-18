@@ -1,4 +1,0 @@
-# Changed Files
-
-| File | Reason |
-|---|---|

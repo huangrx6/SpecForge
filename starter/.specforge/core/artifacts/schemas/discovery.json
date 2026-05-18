@@ -1,0 +1,66 @@
+{
+  "id": "discovery",
+  "version": 1,
+  "description": "探索与技术预研流程，仅输出研究成果，不实施代码。",
+  "artifacts": [
+    {
+      "id": "intake",
+      "stage": "00-intake",
+      "title": "预研入口",
+      "description": "记录调研目标",
+      "outputs": [
+        "00-intake/original-request.md",
+        "00-intake/brief.md"
+      ],
+      "requires": []
+    },
+    {
+      "id": "research",
+      "stage": "01-spec",
+      "title": "调研报告",
+      "description": "实验记录与可行性分析",
+      "outputs": [
+        "01-spec/research.md"
+      ],
+      "requires": [
+        "intake"
+      ]
+    },
+    {
+      "id": "wiki_sync",
+      "stage": "06-close",
+      "title": "知识回流",
+      "description": "提炼入项目知识库",
+      "outputs": [
+        "06-close/wiki-sync.md"
+      ],
+      "requires": [
+        "research"
+      ],
+      "gate": "wiki_sync"
+    },
+    {
+      "id": "closure",
+      "stage": "06-close",
+      "title": "关闭记录",
+      "description": "归档",
+      "outputs": [
+        "06-close/release.md",
+        "06-close/rollback.md"
+      ],
+      "requires": [
+        "wiki_sync"
+      ]
+    }
+  ],
+  "apply": {
+    "requires": [],
+    "tracks": null
+  },
+  "archive": {
+    "requires": [
+      "wiki_sync",
+      "closure"
+    ]
+  }
+}

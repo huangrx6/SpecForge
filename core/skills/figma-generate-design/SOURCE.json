@@ -1,0 +1,21 @@
+{
+  "id": "figma-generate-design",
+  "name": "figma-generate-design",
+  "role": "Figma 页面生成",
+  "trust": "OpenAI 官方 curated skill",
+  "risk": "中",
+  "source": {
+    "type": "github-raw",
+    "repo": "openai/skills",
+    "path": "skills/.curated/figma-generate-design/SKILL.md",
+    "url": "https://github.com/openai/skills/tree/main/skills/.curated/figma-generate-design",
+    "rawUrl": "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/figma-generate-design/SKILL.md"
+  },
+  "trigger": "当需要把描述、已有页面或代码里的 UI 结构生成 / 更新为 Figma screen，且可复用 Figma 设计系统组件时使用。",
+  "normalizeTo": [
+    "01-spec/ui-design.md#Wireframe / Prototype Evidence",
+    "01-spec/ui-design.md#Design System Notes",
+    "01-spec/ui-mockup-export/"
+  ],
+  "updatedAt": "2026-05-18T12:07:53.383Z"
+}

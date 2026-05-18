@@ -16,10 +16,10 @@ description: 用于判断 SpecForge 当前状态、选择下一步技能、保�
 
 - `.specforge/manifest.yaml`
 - `.specforge/registry.yaml`
-- active work item 的 `work-item.yaml`
-- `node .specforge/execution/tools/status.mjs`
-- `node .specforge/execution/tools/instructions.mjs`
-- `.specforge/policy/rules/gates/README.md`
+- active work item 的 `work.yaml`
+- `node .specforge/core/scripts/status.mjs`
+- `node .specforge/core/scripts/instructions.mjs`
+- `.specforge/core/standards/workflow.md`
 
 ## 输出
 

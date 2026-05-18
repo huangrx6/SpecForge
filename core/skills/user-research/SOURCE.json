@@ -1,0 +1,21 @@
+{
+  "id": "user-research",
+  "name": "user-research",
+  "role": "研究计划和洞察",
+  "trust": "Anthropic 官方",
+  "risk": "低",
+  "source": {
+    "type": "github-raw",
+    "repo": "anthropics/knowledge-work-plugins",
+    "path": "design/skills/user-research/SKILL.md",
+    "url": "https://github.com/anthropics/knowledge-work-plugins/tree/main/design/skills/user-research",
+    "rawUrl": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/main/design/skills/user-research/SKILL.md"
+  },
+  "trigger": "当目标用户、工作流、可用性风险、采纳风险或证据质量较弱，PRD 需要研究计划、访谈指南、问卷、可用性测试计划或综合结构时使用。",
+  "normalizeTo": [
+    "00-intake/prd.md#Users, Personas & Scenarios",
+    "00-intake/prd.md#Product Interview Evidence",
+    ".specforge/wiki/product-rules.md"
+  ],
+  "updatedAt": "2026-05-18T05:24:03.616Z"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "competitive-intelligence",
+  "name": "competitive-intelligence",
+  "role": "市场和竞品研究",
+  "trust": "Anthropic 官方",
+  "risk": "中",
+  "source": {
+    "type": "github-raw",
+    "repo": "anthropics/knowledge-work-plugins",
+    "path": "sales/skills/competitive-intelligence/SKILL.md",
+    "url": "https://github.com/anthropics/knowledge-work-plugins/tree/main/sales/skills/competitive-intelligence",
+    "rawUrl": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/main/sales/skills/competitive-intelligence/SKILL.md"
+  },
+  "trigger": "仅当 PRD 决策依赖竞品定位、价格、近期发布、市场替代方案或差异化主张，并且需要有来源的外部调研时使用。",
+  "normalizeTo": [
+    "00-intake/prd.md#Background & Product Goals",
+    "00-intake/prd.md#Constraints, Dependencies & Risks",
+    ".specforge/wiki/product-rules.md"
+  ],
+  "updatedAt": "2026-05-18T05:24:03.964Z"
+}

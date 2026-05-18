@@ -14,8 +14,8 @@ description: 用于审查认证、授权、密钥、输入校验、个人数据�
 ## 读取
 
 - requirements、technical-design、changed-files、verification report。
-- `.specforge/policy/rules/security/README.md`
-- `.specforge/policy/rules/api-design/README.md`
+- `.specforge/core/standards/engineering.md`
+- `.specforge/core/standards/engineering.md`
 - 相关依赖、配置、CI 和环境变量说明。
 
 ## 审查重点

@@ -18,7 +18,7 @@ description: 用于设计测试策略、补充测试用例、生成验证步骤�
 - `01-spec/technical-design.md`（存在时）
 - `01-spec/tasks.md`
 - `03-implementation/report.md`
-- `.specforge/policy/rules/testing/README.md`
+- `.specforge/core/standards/engineering.md`
 
 ## 输出
 

@@ -1,0 +1,21 @@
+{
+  "id": "design-md",
+  "name": "design-md",
+  "role": "设计系统 fallback",
+  "trust": "Google Labs Code 官方",
+  "risk": "中",
+  "source": {
+    "type": "github-raw",
+    "repo": "google-labs-code/stitch-skills",
+    "path": "skills/design-md/SKILL.md",
+    "url": "https://github.com/google-labs-code/stitch-skills/tree/main/skills/design-md",
+    "rawUrl": "https://raw.githubusercontent.com/google-labs-code/stitch-skills/main/skills/design-md/SKILL.md"
+  },
+  "trigger": "当 Figma / Pencil 不可用，但项目在 UI 实现前需要可复用 DESIGN.md 或 wiki 设计系统条目时使用。",
+  "normalizeTo": [
+    ".specforge/wiki/design-system.md",
+    "DESIGN.md",
+    "01-spec/ui-design.md#Design System Notes"
+  ],
+  "updatedAt": "2026-05-18T05:24:01.794Z"
+}

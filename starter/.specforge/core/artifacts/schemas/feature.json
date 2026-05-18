@@ -1,0 +1,192 @@
+{
+  "id": "feature",
+  "version": 1,
+  "description": "标准的新功能流程，强调整体的发现、设计与验证。",
+  "artifacts": [
+    {
+      "id": "intake",
+      "stage": "00-intake",
+      "title": "需求入口",
+      "description": "记录请求背景",
+      "outputs": [
+        "00-intake/original-request.md",
+        "00-intake/brief.md"
+      ],
+      "requires": []
+    },
+    {
+      "id": "research",
+      "stage": "01-spec",
+      "title": "外部研究",
+      "description": "当 intake 标记 needs_research 时，先沉淀官方资料、第三方约束、PoC 或方案调研，再进入 requirements。",
+      "condition": "needs_research",
+      "outputs": [
+        "01-spec/research.md"
+      ],
+      "requires": [
+        "intake"
+      ]
+    },
+    {
+      "id": "requirements",
+      "stage": "01-spec",
+      "title": "需求规格",
+      "description": "沉淀业务边界与功能列表",
+      "outputs": [
+        "01-spec/requirements.md"
+      ],
+      "requires": [
+        "intake",
+        "research"
+      ]
+    },
+    {
+      "id": "ui_design",
+      "stage": "01-spec",
+      "title": "体验与界面设计",
+      "description": "面向用户可见页面、视觉风格确认、流程、交互状态和原型证据；无 UI 影响时写明 N/A 和理由。",
+      "condition": "has_ui",
+      "outputs": [
+        "01-spec/ui-design.md"
+      ],
+      "requires": [
+        "requirements"
+      ]
+    },
+    {
+      "id": "technical_design",
+      "stage": "01-spec",
+      "title": "技术架构设计",
+      "description": "前端架构、后端架构、API、数据、权限、配置、NFR 与验证策略；无技术影响时写明 N/A 和理由。",
+      "condition": {
+        "any": [
+          "has_api",
+          "has_db",
+          "has_domain",
+          "has_ai",
+          "has_nfr",
+          "has_security",
+          "has_integration",
+          "has_infra",
+          "has_background_job"
+        ]
+      },
+      "outputs": [
+        "01-spec/technical-design.md"
+      ],
+      "requires": [
+        "requirements"
+      ]
+    },
+    {
+      "id": "tasks",
+      "stage": "01-spec",
+      "title": "任务拆解",
+      "description": "开发任务流",
+      "outputs": [
+        "01-spec/tasks.md"
+      ],
+      "requires": [
+        "ui_design",
+        "technical_design"
+      ]
+    },
+    {
+      "id": "spec_review",
+      "stage": "02-spec-review",
+      "title": "规格审查",
+      "description": "确认架构和需求的合理性",
+      "outputs": [
+        "02-spec-review/spec-review-v1.md"
+      ],
+      "requires": [
+        "requirements",
+        "ui_design",
+        "technical_design",
+        "tasks"
+      ],
+      "gate": "spec_review"
+    },
+    {
+      "id": "implementation",
+      "stage": "03-implementation",
+      "title": "实现记录",
+      "description": "代码编写日志",
+      "outputs": [
+        "03-implementation/plan.md",
+        "03-implementation/report.md",
+        "03-implementation/changed-files.md"
+      ],
+      "requires": [
+        "spec_review"
+      ]
+    },
+    {
+      "id": "code_review",
+      "stage": "04-code-review",
+      "title": "代码审查",
+      "description": "安全与规范门禁",
+      "outputs": [
+        "04-code-review/code-review-v1.md"
+      ],
+      "requires": [
+        "implementation"
+      ],
+      "gate": "code_review"
+    },
+    {
+      "id": "verification",
+      "stage": "05-verification",
+      "title": "验证证据",
+      "description": "验收测试报告",
+      "outputs": [
+        "05-verification/report.md",
+        "05-verification/ci-result.md"
+      ],
+      "requires": [
+        "code_review"
+      ],
+      "gate": "verification"
+    },
+    {
+      "id": "wiki_sync",
+      "stage": "06-close",
+      "title": "长期知识回流",
+      "description": "更新长期知识",
+      "outputs": [
+        "06-close/wiki-sync.md"
+      ],
+      "requires": [
+        "verification"
+      ],
+      "gate": "wiki_sync"
+    },
+    {
+      "id": "closure",
+      "stage": "06-close",
+      "title": "关闭记录",
+      "description": "归档与上线",
+      "outputs": [
+        "06-close/release.md",
+        "06-close/rollback.md"
+      ],
+      "requires": [
+        "wiki_sync"
+      ]
+    }
+  ],
+  "apply": {
+    "requires": [
+      "tasks",
+      "spec_review"
+    ],
+    "tracks": "01-spec/tasks.md"
+  },
+  "archive": {
+    "requires": [
+      "verification",
+      "wiki_sync",
+      "closure"
+    ]
+  }
+}

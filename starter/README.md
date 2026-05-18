@@ -10,8 +10,8 @@ Inspect it with:
 find starter/.specforge -maxdepth 2 -print
 ```
 
-Do not edit this snapshot by hand. Update `runtime/` or
-`runtime/starter.manifest.json`, then run:
+Do not edit this snapshot by hand. Update `core/` or
+`core/starter.manifest.json`, then run:
 
 ```bash
 npm run sync:starter

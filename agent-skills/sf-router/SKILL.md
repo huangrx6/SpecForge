@@ -1,0 +1,146 @@
+---
+name: sf-router
+description: SpecForge 工作流根入口。用于用户只说“sf”、询问当前到哪一步、提出新需求、说继续、想自动推进或不知道该用哪个 SpecForge 能力时；本技能只扫描仓库、判断状态并路由到一个 sf-* 子技能。
+---
+
+# sf-router
+
+## 运行目录
+
+执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
+
+## 启动必读
+
+开始任何判断前，先检查当前仓库是否接入 SpecForge：
+
+1. 看是否存在 `.specforge/`。
+2. 存在时读取 `.specforge/AGENTS.md`；缺失则提示骨架不完整，先补齐或运行 `sf-onboard`。
+3. 运行 `node .specforge/core/scripts/doctor.mjs`。
+4. 有 active work item 时，再运行 `node .specforge/core/scripts/instructions.mjs`。
+
+`sf-router` 只做路由，不写规格、不实现代码、不批准 gate。用户只说“继续”时，默认路由到当前 ready artifact 对应的单个 `sf-*` 技能；只有用户明确说“继续做完 / 自动推进 / 不要停”时，才路由到 `sf-work`。
+
+## 内部技能母本
+
+- 状态判断优先读取 `.specforge/core/workflows/stages/status/SKILL.md`。
+- 新请求分诊或 discovery 判断优先读取 `.specforge/core/workflows/stages/discovery/SKILL.md`。
+- 根级 skill 只负责扫描和路由；阶段行为以对应内部 skill 为准。
+
+## 体系速读
+
+SpecForge 分成两层：
+
+```text
+全局技能：sf-router / sf-*     负责让 AI 工具知道怎么工作
+项目目录：.specforge/          保存 core、wiki、hooks、项目事实和 work item
+```
+
+在 Agent 技能列表里输入 `sf` 前缀，应能看到 `sf-router` 和所有 `sf-*` 生命周期技能。
+
+项目接入后只落一个目录：
+
+```text
+.specforge/
+├── AGENTS.md
+├── manifest.yaml
+├── registry.yaml
+├── core/
+│   ├── standards/
+│   ├── profiles/
+│   ├── workflows/
+│   ├── artifacts/
+│   ├── scripts/
+│   ├── skills/
+│   ├── hooks/
+│   └── commands/
+├── hooks/
+│   └── local/
+├── wiki/
+└── work/
+    ├── inbox/
+    ├── active/
+    └── archive/
+```
+
+## 场景路由表
+
+| 用户说什么 / 当前状态 | 路由到 |
+|---|---|
+| 仓库没有 `.specforge/` | `sf-onboard` |
+| 问“现在到哪一步 / 健康状态 / 能不能继续” | `sf-doctor` |
+| 提出新需求、新 issue、新 bug、重构想法，且没有 active work item | `sf-intake` |
+| 只有一个 active work item，用户只说“继续 / 下一步” | 运行 `instructions.mjs` 后按 ready artifact 路由 |
+| active work item 需要深度分析 / brief 不足以支撑 requirements | `sf-discovery` |
+| active work item 下一步是 gap_report / research | `sf-discovery` |
+| active work item 是产品型，需要对齐产品目标和功能边界 | `sf-prd` |
+| active work item 下一步是 requirements | `sf-requirements` |
+| active work item 下一步是 ui_design | `sf-ui-design` |
+| active work item 下一步是 technical_design | `sf-tech-design` |
+| active work item 下一步是 tasks | `sf-tasking` |
+| active work item 下一步是 spec_review gate | `sf-spec-review` |
+| spec_review 已批准，准备写代码 | `sf-implement` |
+| 下一步是 code_review gate | `sf-code-review` |
+| code_review 已批准，需要测试和证据 | `sf-verify` |
+| 用户要求“更新 wiki / 回写知识库 / 同步长期事实” | `sf-wiki` |
+| 下一步是 wiki_sync | `sf-wiki` |
+| 下一步是 closure，或 wiki_sync 已批准后需要 release / rollback / archive | `sf-close` |
+| 用户明确说“继续做完 / 自动推进 / 不要停” | `sf-work` |
+
+## 路由决策树
+
+1. 检查 `.specforge/` 是否存在。
+   - 不存在：路由到 `sf-onboard`。
+2. 读取 `.specforge/registry.yaml`。
+   - 没有 active work item，且用户提出新需求 / bug / 重构：路由到 `sf-intake`。
+   - 没有 active work item，且用户问状态：路由到 `sf-doctor`。
+3. 有多个 active work item。
+   - 列出 active work item 的 id、title、status、path。
+   - 要求用户指定要继续哪一个，不要猜。
+4. 有一个 active work item。
+   - 读取 `00-intake/brief.md` 和可选 `00-intake/prd.md`。
+   - 运行 `node .specforge/core/scripts/instructions.mjs`。
+   - 如果 ready artifact 是 `requirements`，但 `brief.md#PRD 决策` 标记 `PRD required: yes` 或表格中 `PRD required | yes`，且 `00-intake/prd.md` 不存在、`Decision Status` 不是 `approved-for-requirements`，或仍有 `[NEEDS PRODUCT DECISION]`，先路由到 `sf-prd`，不要直接进入 `sf-requirements`。
+   - 根据 ready artifact 路由：
+     - `requirements` → `sf-requirements`
+     - `gap_report` → `sf-discovery`
+     - `research` → `sf-discovery`
+     - `ui_design` → `sf-ui-design`
+     - `technical_design` → `sf-tech-design`
+     - `tasks` → `sf-tasking`
+     - `spec_review` → `sf-spec-review`
+     - `implementation` → `sf-implement`
+     - `code_review` → `sf-code-review`
+     - `verification` → `sf-verify`
+     - `wiki_sync` → `sf-wiki`
+     - `closure` → `sf-close`
+   - 如果没有 ready artifact，运行 `node .specforge/core/scripts/artifact-graph-status.mjs` 并路由到 `sf-doctor` 解释状态。
+5. 用户明确要求自动推进。
+   - 路由到 `sf-work`。
+   - 仍然必须保留 doctor、instructions、gate evidence 和 verification 检查。
+
+根路由只推荐下一步，不直接替子技能写产物。
+
+## 扫描时必须关联的标准
+
+- 状态判断：`.specforge/core/standards/workflow.md`
+- 产品 / PRD 分流：`.specforge/core/standards/product.md`
+- UI 分流：`.specforge/core/standards/design.md`
+- 技术 / 实现 / 验证分流：`.specforge/core/standards/engineering.md`
+- Wiki / close 分流：`.specforge/core/standards/wiki.md`
+
+## 输出格式
+
+只输出：
+
+- 当前仓库是否接入 SpecForge。
+- active work item、stage、gate 状态。
+- 建议路由到哪个 `sf-*`。
+- 一句话原因。
+- 如果存在阻断，列出阻断 artifact / gate / 缺失 evidence。
+
+## 不做
+
+- 不直接写 requirements / ui_design / technical_design / tasks。
+- 不直接实现代码。
+- 不批准 gate。
+- 不把动态资产写到 `.specforge/` 之外。
