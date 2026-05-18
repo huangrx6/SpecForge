@@ -33,10 +33,12 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 .specforge/core/workflows/stages/technical-design/SKILL.md
 ```
 
-按需读取内部设计子模块：
+先做影响面判断，再按需读取内部设计子模块。不要为了“完整”一次性读取所有子模块。
 
 | 设计维度 | 子模块 |
 |---|---|
+| 前端工程、路由、组件边界、状态、API client、构建 | `.specforge/core/workflows/stages/technical-design/frontend-design.md` |
+| 后端模块、服务边界、后台任务、并发、幂等 | `.specforge/core/workflows/stages/technical-design/backend-design.md` |
 | 领域模型、实体与边界上下文 | `.specforge/core/workflows/stages/technical-design/domain-design.md` |
 | API 契约、SDK、事件、跨系统接口 | `.specforge/core/workflows/stages/technical-design/api-design.md` |
 | DB / Schema / 索引 / 迁移 | `.specforge/core/workflows/stages/technical-design/data-design.md` |
@@ -58,6 +60,20 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 3. 采用点必须具体到本次设计，例如资源建模、错误响应、对象级授权、可观测性字段、回滚策略。
 4. 如果项目已有模式和规则主基准不同，优先项目事实，并在 `规则基准与偏离` 中写偏离理由。
 5. 不要另起并行规范章节或堆多个候选规范。
+
+## 执行顺序
+
+1. 读取 requirements、可选 `ui-design.md`、wiki 和现有代码结构，判断本次是否真的有技术影响。
+2. 填写 `technical-design.md#0. 影响面与读取计划`：
+   - 每个影响面用 `yes / no / unknown`。
+   - `unknown` 如果会改变架构、数据、安全或上线风险，必须暂停澄清。
+   - 只列本次读取的子模块和 profile。
+3. 按影响面读取子模块和 profile：
+   - 只有 `has_ui` 不等于需要前端工程设计；纯视觉或纯文案 UI 可以 N/A。
+   - 有 API 不等于必须有新后端模块；可能只是前端调用现有接口。
+   - 有数据展示不等于必须有 DB 设计；只有持久化、索引、迁移、生命周期变化才读 data-design。
+4. 写技术设计时，每个不涉及的章节保留一行 N/A 理由，不写空表。
+5. 输出必须能直接支持 `sf-tasking`：每个技术决策都要能拆成任务、验证或明确 N/A。
 
 ## 完成标准
 
