@@ -43,11 +43,13 @@ node .specforge/core/scripts/artifact-graph-status.mjs
 - gate 状态。
 - ready artifact 或 blocker。
 - 下一步建议路由到哪个子技能。
+- `Route` / `Reason` / `Blockers` 必须优先引用脚本输出；不要只根据聊天上下文猜下一步。
 
 ## 完成标准
 
 - doctor 通过时，给出下一步子技能。
 - doctor 失败时，列失败项和修复方向。
+- 如果 doctor 通过但 status 显示 blocker，说明这是流程阻断而不是仓库损坏，按 blocker 的 route 返回修正。
 
 ## 不做
 

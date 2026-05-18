@@ -27,6 +27,14 @@ node .specforge/core/scripts/instructions.mjs
 node .specforge/core/scripts/doctor.mjs
 ```
 
+机器消费或二次分析时使用 JSON：
+
+```bash
+node .specforge/core/scripts/status.mjs --json
+node .specforge/core/scripts/artifact-graph-status.mjs --json
+node .specforge/core/scripts/instructions.mjs --json
+```
+
 ## 输出内容
 
 - active work item 数量和路径。
@@ -44,6 +52,7 @@ node .specforge/core/scripts/doctor.mjs
 - 多个 active work item 时，不猜测用户要继续哪一个。
 - gate 缺证据时，状态视为 blocked。
 - gate 为 `REQUEST_CHANGES` / `REJECTED` 时，不推荐下游 artifact；先推荐修复路径。
+- `status.mjs`、`artifact-graph-status.mjs`、`instructions.mjs` 的 route / blocker 来自同一诊断逻辑；如果脚本输出与聊天记忆冲突，以脚本输出为准。
 - archived work item 只在用户要求历史时读取。
 - 下一步必须是可执行动作。
 - 用户只说“继续”时推荐当前 ready artifact 对应的单个 `sf-*` 技能。

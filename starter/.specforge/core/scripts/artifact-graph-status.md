@@ -25,6 +25,7 @@ node .specforge/core/scripts/artifact-graph-status.mjs 20260518-feat-001-意图�
 - `work.yaml` 中记录的当前 stage。
 - `done / total` 进度。
 - 当前 ready artifact。
+- 建议 route、原因和阻断项；如果 gate 退回、PRD 未完成、technical design 有 `unknown`、tasks 缺 `_Impact:_`，会优先显示这些阻断。
 - 每个 artifact 的状态：`done`、`ready`、`blocked` 或 `partial`。
 - 每个 artifact 的依赖、缺失依赖，以及相关 gate 状态。
 
@@ -37,6 +38,8 @@ Path: .specforge/work/active/20260518-feat-001-意图识别审批
 Stage: 06-close
 Progress: 10/10 done
 Ready: none
+Route: sf-doctor
+Reason: 没有 ready artifact，需查看 artifact graph 的阻断依赖。
 
 - intake: done (requires=none)
 - requirements: done (requires=intake)
@@ -46,6 +49,8 @@ Ready: none
 JSON 模式适合 Agent 或脚本消费，会提供：
 
 - `progress`
+- `route` / `route_reason`
+- `blockers`
 - `readyArtifacts`
 - `blockedArtifacts`
 - `artifacts[].missingDeps`

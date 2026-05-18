@@ -14,6 +14,7 @@ import {
   resolveWorkItem,
   templateByOutput,
 } from "./lib/specforge.mjs";
+import { diagnoseWorkItem, diagnoseWorkspace } from "./lib/diagnostics.mjs";
 
 const args = process.argv.slice(2);
 const json = args.includes("--json");
@@ -105,6 +106,38 @@ function outputRows(artifact) {
 let workItem;
 
 try {
+  if (!requestedWorkItem) {
+    const workspaceDiagnosis = diagnoseWorkspace();
+    if (!workspaceDiagnosis.work_item) {
+      const payload = {
+        mode: "workspace",
+        route: workspaceDiagnosis.route,
+        reason: workspaceDiagnosis.route_reason,
+        active_count: workspaceDiagnosis.active_count,
+        active_items: workspaceDiagnosis.active_items,
+        blockers: workspaceDiagnosis.blockers,
+      };
+
+      if (json) {
+        console.log(JSON.stringify(payload, null, 2));
+      } else {
+        console.log("Instructions unavailable");
+        console.log(`Active work items: ${payload.active_count}`);
+        if (payload.active_items.length > 0) {
+          for (const item of payload.active_items) console.log(`- ${item.id}: ${item.path}`);
+        }
+        console.log(`Route: ${payload.route}`);
+        console.log(`Reason: ${payload.reason}`);
+        if (payload.blockers.length > 0) {
+          console.log("");
+          console.log("Blockers:");
+          for (const blocker of payload.blockers) console.log(`- [${blocker.severity}] ${blocker.message}`);
+        }
+      }
+      process.exit(0);
+    }
+  }
+
   workItem = resolveWorkItem({
     workItem: requestedWorkItem,
     activeOnly: false,
@@ -115,6 +148,39 @@ try {
   const workflow = parseField(workItemYaml, "workflow") || "standard";
   const schema = effectiveSchema(loadSchema(workflow), workItemYaml);
   const states = computeArtifactStates(schema, workItemYaml, workItem.base);
+  const diagnosis = diagnoseWorkItem({ workItem: workItem.name, activeOnly: false });
+
+  if (!requestedArtifact && !applyMode && diagnosis.blockers.length > 0) {
+    const payload = {
+      mode: "blocked",
+      work_item: workItem.name,
+      path: workItem.base,
+      workflow: `${schema.id}@${schema.version}`,
+      current_stage: parseField(workItemYaml, "stage"),
+      ready_artifact: diagnosis.ready_artifact,
+      route: diagnosis.route,
+      reason: diagnosis.route_reason,
+      blockers: diagnosis.blockers,
+    };
+
+    if (json) {
+      console.log(JSON.stringify(payload, null, 2));
+    } else {
+      console.log(`Instructions blocked for ${payload.work_item}`);
+      console.log(`Workflow: ${payload.workflow}`);
+      console.log(`Current stage: ${payload.current_stage}`);
+      console.log(`Ready artifact: ${payload.ready_artifact ?? "none"}`);
+      console.log(`Route: ${payload.route}`);
+      console.log(`Reason: ${payload.reason}`);
+      console.log("");
+      console.log("Blockers:");
+      for (const blocker of payload.blockers) {
+        console.log(`- [${blocker.severity}] ${blocker.message}`);
+        console.log(`  owner: ${blocker.owner_artifact}`);
+      }
+    }
+    process.exit(0);
+  }
 
   if (applyMode) {
     const required = schema.apply?.requires ?? [];
@@ -134,6 +200,8 @@ try {
         done: tasks.filter((task) => task.done).length,
         pending: tasks.filter((task) => !task.done).map((task) => task.title),
       },
+      route: diagnosis.route,
+      blockers: diagnosis.blockers,
       context_files: schema.artifacts
         .flatMap((artifact) => artifact.outputs)
         .filter((output) => exists(`${workItem.base}/${output}`)),
@@ -146,6 +214,10 @@ try {
       console.log(`Path: ${payload.path}`);
       console.log(`Ready: ${payload.ready ? "yes" : "no"}`);
       if (blocked.length > 0) console.log(`Blocked by: ${blocked.join(", ")}`);
+      if (payload.blockers.length > 0) {
+        console.log("Diagnostic blockers:");
+        for (const blocker of payload.blockers) console.log(`- [${blocker.severity}] ${blocker.message} -> ${blocker.route}`);
+      }
       console.log(`Tasks: ${payload.task_progress.done}/${payload.task_progress.total} done`);
       for (const task of payload.task_progress.pending) console.log(`- [ ] ${task}`);
       console.log("");

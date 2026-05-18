@@ -6,6 +6,7 @@ const checks = [
   { name: "selftest", command: ["node", `${layout.tools}/self-test.mjs`] },
   { name: "validate", command: ["node", `${layout.tools}/validate-structure.mjs`] },
   { name: "status", command: ["node", `${layout.tools}/status.mjs`] },
+  { name: "instructions", command: ["node", `${layout.tools}/instructions.mjs`] },
   { name: "graph", command: ["node", `${layout.tools}/artifact-graph-status.mjs`] },
 ];
 

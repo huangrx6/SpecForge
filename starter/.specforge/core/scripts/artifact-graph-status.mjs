@@ -11,6 +11,7 @@ import {
   readText,
   resolveWorkItem,
 } from "./lib/specforge.mjs";
+import { diagnoseWorkItem } from "./lib/diagnostics.mjs";
 
 const args = process.argv.slice(2);
 
@@ -53,6 +54,7 @@ try {
     activeOnly: false,
     defaultToLatestArchive: false,
   });
+  const diagnosis = diagnoseWorkItem({ workItem: workItem.name, activeOnly: false });
   const workItemYaml = readText(`${workItem.base}/work.yaml`);
   const workflow = parseField(workItemYaml, "workflow") || "standard";
   const schema = effectiveSchema(loadSchema(workflow), workItemYaml);
@@ -99,6 +101,9 @@ try {
             done: doneCount,
             total: artifactSummaries.length,
           },
+          route: diagnosis.route,
+          route_reason: diagnosis.route_reason,
+          blockers: diagnosis.blockers,
           readyArtifacts,
           blockedArtifacts,
           artifacts: artifactSummaries,
@@ -120,6 +125,12 @@ try {
   console.log(`Stage: ${parseField(workItemYaml, "stage")}`);
   console.log(`Progress: ${doneCount}/${artifactSummaries.length} done`);
   console.log(`Ready: ${readyArtifacts.length > 0 ? readyArtifacts.join(", ") : "none"}`);
+  console.log(`Route: ${diagnosis.route}`);
+  console.log(`Reason: ${diagnosis.route_reason}`);
+  if (diagnosis.blockers.length > 0) {
+    console.log("Blockers:");
+    for (const blocker of diagnosis.blockers) console.log(`- [${blocker.severity}] ${blocker.message} -> ${blocker.route}`);
+  }
   console.log("");
 
   for (const artifact of artifactSummaries) {
