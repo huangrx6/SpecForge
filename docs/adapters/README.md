@@ -10,10 +10,16 @@ SpecForge 分成两类安装：
 ## 通用安装器
 
 ```bash
-node .specforge/core/scripts/install-agent-skills.mjs --target codex --apply
-node .specforge/core/scripts/install-agent-skills.mjs --target claude-code --apply
-node .specforge/core/scripts/install-agent-skills.mjs --target cc-switch --apply
-node .specforge/core/scripts/install-agent-skills.mjs --target all --apply
+npx github:huangrx6/SpecForge skill add --target codex --apply
+npx github:huangrx6/SpecForge skill add --target claude-code --apply
+npx github:huangrx6/SpecForge skill add --target cc-switch --apply
+npx github:huangrx6/SpecForge skill add --target all --apply
 ```
 
 默认是 dry-run；只有加 `--apply` 才写入。
+
+源码仓库维护者也可以使用本地 CLI：
+
+```bash
+node cli/specforge.mjs skill add --target all --apply
+```

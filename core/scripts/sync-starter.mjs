@@ -83,7 +83,7 @@ function materialize(destinationRoot) {
   for (const [file, content] of Object.entries(manifest.files ?? {})) write(file, content, destinationRoot);
   write(
     "GENERATED.md",
-    `# 生成产物\n\n此目录由 \`${layout.starterManifest}\` 生成，不是源码母本。\n\n不要手工修改本目录内容。需要更新 starter 时，修改 \`core/\` 母本或 \`${layout.starterManifest}\`，然后运行：\n\n\`\`\`bash\nnode ${layout.tools}/sync-starter.mjs\nnode ${layout.tools}/sync-starter.mjs --check\n\`\`\`\n`,
+    "# 生成产物\n\n此目录由 SpecForge CLI 根据源码仓库的 `core/starter.manifest.json` 生成，不是源码母本。\n\n业务项目中不要手工修改 `.specforge/core/`。需要升级 SpecForge 运行时，请重新执行官方初始化或升级流程。\n\n维护 SpecForge 源码仓库时，修改 `core/` 母本或 `core/starter.manifest.json` 后，在源码仓库运行：\n\n```bash\nnode core/scripts/sync-starter.mjs\nnode core/scripts/sync-starter.mjs --check\n```\n",
     destinationRoot,
   );
 }

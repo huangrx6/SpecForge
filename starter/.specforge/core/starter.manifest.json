@@ -31,10 +31,6 @@
       "to": "core/hooks/events"
     },
     {
-      "from": "hooks/packs",
-      "to": "core/hooks/packs"
-    },
-    {
       "from": "profiles",
       "to": "core/profiles"
     },
@@ -43,8 +39,64 @@
       "to": "core/standards"
     },
     {
-      "from": "scripts",
-      "to": "core/scripts"
+      "from": "scripts/lib/specforge.mjs",
+      "to": "core/scripts/lib/specforge.mjs"
+    },
+    {
+      "from": "scripts/lib/diagnostics.mjs",
+      "to": "core/scripts/lib/diagnostics.mjs"
+    },
+    {
+      "from": "scripts/archive-work.mjs",
+      "to": "core/scripts/archive-work.mjs"
+    },
+    {
+      "from": "scripts/artifact-graph-status.mjs",
+      "to": "core/scripts/artifact-graph-status.mjs"
+    },
+    {
+      "from": "scripts/create-artifact.mjs",
+      "to": "core/scripts/create-artifact.mjs"
+    },
+    {
+      "from": "scripts/create-work.mjs",
+      "to": "core/scripts/create-work.mjs"
+    },
+    {
+      "from": "scripts/doctor.mjs",
+      "to": "core/scripts/doctor.mjs"
+    },
+    {
+      "from": "scripts/gate.mjs",
+      "to": "core/scripts/gate.mjs"
+    },
+    {
+      "from": "scripts/instructions.mjs",
+      "to": "core/scripts/instructions.mjs"
+    },
+    {
+      "from": "scripts/self-test.mjs",
+      "to": "core/scripts/self-test.mjs"
+    },
+    {
+      "from": "scripts/status.mjs",
+      "to": "core/scripts/status.mjs"
+    },
+    {
+      "from": "scripts/sync-wiki.mjs",
+      "to": "core/scripts/sync-wiki.mjs"
+    },
+    {
+      "from": "scripts/update-skills.mjs",
+      "to": "core/scripts/update-skills.mjs"
+    },
+    {
+      "from": "scripts/validate-external-skills.mjs",
+      "to": "core/scripts/validate-external-skills.mjs"
+    },
+    {
+      "from": "scripts/validate-structure.mjs",
+      "to": "core/scripts/validate-structure.mjs"
     },
     {
       "from": "skills",
@@ -61,7 +113,6 @@
   ],
   "directories": [
     "hooks/local",
-    "logs",
     "work/inbox",
     "work/active",
     "work/archive",
@@ -70,8 +121,7 @@
   "files": {
     "project.yaml": "name: TBD\nprofile: standard\nwiki:\n  mode: item-files\n  index: .specforge/wiki/index.md\nwork:\n  id_format: YYYYMMDD-kind-NNN-short-title\n",
     "registry.yaml": "active: []\nblocked: []\narchive: []\n",
-    "hooks/README.md": "# Project Hooks\n\n项目自定义 hook 放在 `hooks/local/`。默认事件实现位于 `core/hooks/events/`，可选集成位于 `core/hooks/packs/`。\n",
-    "hooks/config.yaml": "enabled: []\n",
+    "hooks/README.md": "# Project Hooks\n\n项目自定义 hook 放在 `hooks/local/`。默认事件实现位于 `core/hooks/events/`。\n",
     "hooks/local/.gitkeep": "",
     "work/inbox/.gitkeep": "",
     "work/active/.gitkeep": "",

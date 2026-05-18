@@ -16,7 +16,6 @@
     "doctor": "node core/scripts/doctor.mjs",
     "validate:skills": "node core/scripts/validate-skills.mjs",
     "validate:external-skills": "node core/scripts/validate-external-skills.mjs",
-    "sync:codex-skills": "node core/scripts/sync-codex-skills.mjs",
     "sync:starter": "node core/scripts/sync-starter.mjs",
     "sync:wiki": "node core/scripts/sync-wiki.mjs",
     "update:skills": "node core/scripts/update-skills.mjs --all",

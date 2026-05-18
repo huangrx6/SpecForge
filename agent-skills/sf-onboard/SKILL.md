@@ -124,7 +124,7 @@ node core/scripts/sync-starter.mjs
 node core/scripts/sync-starter.mjs --check
 ```
 
-manifest 会复制 core/standards、core/artifacts、core/workflows、core/scripts、core/hooks 等静态资产，并生成空 registry、空 work 工作区和轻量 wiki 占位。`.specforge/wiki/`、`.specforge/work/`、`.specforge/hooks/local/` 和 `.specforge/registry.yaml` 属于项目事实或动态证据，不会从源码仓库原样同步到 starter。
+manifest 会复制 core/standards、core/artifacts、core/workflows、必要运行时 scripts、core/hooks 等静态资产，并生成空 registry、空 work 工作区和轻量 wiki 占位。`.specforge/wiki/`、`.specforge/work/`、`.specforge/hooks/local/` 和 `.specforge/registry.yaml` 属于项目事实或动态证据，不会从源码仓库原样同步到 starter。
 
 ## 已有项目的覆盖规则
 
