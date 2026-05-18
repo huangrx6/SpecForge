@@ -12,6 +12,8 @@ import {
   readText,
   resolveWorkItem,
 } from "./specforge.mjs";
+import { readdirSync, statSync } from "node:fs";
+import { join } from "node:path";
 
 export const routeByArtifact = {
   intake: "sf-intake",
@@ -36,8 +38,86 @@ const gateReturnRoute = {
   wiki_sync: "sf-wiki",
 };
 
+const sourceExtensions = new Set([
+  ".c",
+  ".cc",
+  ".cjs",
+  ".cpp",
+  ".cs",
+  ".dart",
+  ".ex",
+  ".exs",
+  ".go",
+  ".java",
+  ".js",
+  ".jsx",
+  ".kt",
+  ".mjs",
+  ".php",
+  ".py",
+  ".rb",
+  ".rs",
+  ".scala",
+  ".swift",
+  ".ts",
+  ".tsx",
+  ".vue",
+]);
+
+const ignoredCodeDirs = new Set([
+  ".git",
+  ".specforge",
+  ".claude",
+  ".next",
+  ".nuxt",
+  ".venv",
+  "build",
+  "coverage",
+  "dist",
+  "node_modules",
+  "target",
+]);
+
 function safeRead(relativePath) {
   return exists(relativePath) ? readText(relativePath) : "";
+}
+
+function wikiBaselineMissing() {
+  const overview = safeRead(`${layout.workspace}/wiki/project-overview.md`);
+  const architecture = safeRead(`${layout.workspace}/wiki/architecture.md`);
+  return /暂无/.test(overview) || /暂无/.test(architecture) || !overview || !architecture;
+}
+
+function repositoryHasSourceCode(limit = 3000) {
+  if (layout.kind !== "project") return false;
+  let scanned = 0;
+
+  function walk(relativeDirectory) {
+    if (scanned >= limit) return false;
+    let entries = [];
+    try {
+      entries = readdirSync(join(process.cwd(), relativeDirectory), { withFileTypes: true });
+    } catch {
+      return false;
+    }
+
+    for (const entry of entries) {
+      if (ignoredCodeDirs.has(entry.name)) continue;
+      const relativePath = relativeDirectory ? `${relativeDirectory}/${entry.name}` : entry.name;
+      if (entry.isDirectory()) {
+        if (walk(relativePath)) return true;
+        continue;
+      }
+      if (!entry.isFile()) continue;
+      scanned += 1;
+      const dotIndex = entry.name.lastIndexOf(".");
+      const ext = dotIndex === -1 ? "" : entry.name.slice(dotIndex).toLowerCase();
+      if (sourceExtensions.has(ext) && statSync(join(process.cwd(), relativePath)).size > 0) return true;
+    }
+    return false;
+  }
+
+  return walk("");
 }
 
 function prdRequired(workItemBase) {
@@ -251,6 +331,19 @@ export function diagnoseWorkspace() {
   const archive = listWorkItems("archive");
 
   if (active.length === 0) {
+    if (repositoryHasSourceCode() && wikiBaselineMissing()) {
+      return {
+        workspace_kind: layout.kind,
+        active_count: 0,
+        active_items: [],
+        archive_count: archive.length,
+        route: "sf-steering",
+        route_reason: "当前没有 active work item，但这是已有代码项目且 wiki 基线仍为空；应先建立项目画像。",
+        blockers: [],
+        work_item: null,
+      };
+    }
+
     return {
       workspace_kind: layout.kind,
       active_count: 0,

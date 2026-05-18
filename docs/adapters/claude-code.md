@@ -32,5 +32,6 @@ node cli/specforge.mjs skill add --target claude-code --path /path/to/skills --a
 安装后进入业务项目：
 
 - 初始化：`sf-onboard`
+- 存量项目画像：`sf-steering`
 - 路由和状态：`sf`
 - 自动推进：`sf-work`

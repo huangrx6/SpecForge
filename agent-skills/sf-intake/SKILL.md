@@ -17,6 +17,7 @@ description: 为新请求创建或整理 SpecForge work item；用于用户提�
 2. 读取 `.specforge/registry.yaml`。
 3. 读取相关 `.specforge/wiki/` 长期事实；只读和请求相关的文件。
 4. 运行 `node .specforge/core/scripts/status.mjs`，确认 active work item 数量。
+5. 如果是已有代码项目或用户请求触碰既有模块，运行 `node .specforge/core/scripts/codebase-map.mjs --json`，判断 wiki 是否已有足够项目画像。
 
 ## 内部技能母本
 
@@ -39,9 +40,27 @@ description: 为新请求创建或整理 SpecForge work item；用于用户提�
    - 同时包含新增功能 + bugfix + 重构 + 预研时，优先拆成多个 work item。
    - 只有同一个交付目标下的前后端 / UI / 数据 / 测试，才保留在同一个 work item。
 3. **选择 work item kind 和 workflow。**
-4. **决定是否需要 PRD。**
-5. **校准 components flags。**
-6. **写 brief，并明确下一步路由。**
+4. **是否需要先做存量项目理解。**
+5. **决定是否需要 PRD。**
+6. **校准 components flags。**
+7. **写 brief，并明确下一步路由。**
+
+## 存量项目前置判断
+
+如果仓库已有业务代码，但 `.specforge/wiki/project-overview.md` 或 `.specforge/wiki/architecture.md` 仍是空模板、明显过期，或没有覆盖本次请求涉及的模块/API/数据域，先路由到 `sf-steering`。不要在缺少项目画像的情况下直接写 requirements 或开始 bugfix。
+
+可直接继续 intake 的情况：
+
+- 本次是空仓库新建项目。
+- wiki 已能说明相关模块职责、入口、API、数据和运行方式。
+- 用户请求是完全独立的新模块，且 brief 中明确不会触碰既有代码。
+
+必须先 `sf-steering` 的情况：
+
+- 大型或多模块存量项目首次接入。
+- 用户只说“在现有系统里加一个功能 / 修一个问题”，但未指定相关模块。
+- 需求涉及权限、审批、数据迁移、定时任务、第三方集成或生产运行链路，而 wiki 没有对应事实。
+- `codebase-map.mjs` 显示 `scale=large` 或 `truncated=true`，且没有目标模块。
 
 ## Workflow 分类表
 
@@ -124,6 +143,7 @@ node .specforge/core/scripts/create-work.mjs --workflow feature --has-ui true --
 - 有多个 active work item，且用户未指定要继续哪一个。
 - 需求边界不清，无法判断是 bugfix、feature、refactor、discovery、lite 或 standard。
 - 产品 / 页面 / 全栈应用的 MVP 功能组合尚未确认，且无法安全默认。
+- 已有代码项目缺少 wiki 基线，无法判断本次请求会影响哪些模块、API、数据或运行路径。
 - 产品型 work item 需要 PRD，但缺少会改变 PRD 的核心决策，且不能写成安全默认假设。
 - `standard` / `deep` 缺少代码库探索证据或明确跳过原因。
 - `deep` 缺少外部研究证据或明确跳过原因。

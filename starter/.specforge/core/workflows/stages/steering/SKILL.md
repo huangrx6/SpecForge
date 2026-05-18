@@ -1,57 +1,129 @@
 ---
 name: steering
-description: SpecForge 内部 steering 技能。用于大型或 brownfield 变更前刷新 .specforge/wiki 下的长期项目上下文和架构现实。
+description: SpecForge 内部 steering 技能。用于存量项目、大型代码库或 wiki 过期时建立项目画像、刷新长期上下文，并为后续 work item 提供代码事实基线。
 ---
 
 # Steering Skill
 
-本技能用于大型变更、brownfield 项目接入或长期知识过期时，刷新 `.specforge/wiki/`。它描述当前现实，不写未来愿望。
+本技能用于理解已有项目。它解决的问题不是“这次需求怎么做”，而是“这个项目现在真实长什么样”。结果写入 `.specforge/wiki/`，供后续 `sf-intake`、`sf-requirements`、`sf-tech-design`、`sf-implement` 和 `sf-code-review` 复用。
 
-## 读取
+## 核心原则
 
-- 当前代码库入口、目录结构、配置和核心模块。
-- 现有 `.specforge/wiki/`。
-- 必要时读取相关 active / archived work items。
-- `.specforge/core/standards/workflow.md`
-- `.specforge/core/standards/workflow.md`
+1. **先建地图，再读细节**：先运行代码地图脚本识别语言、目录、入口、API、数据、测试和部署候选，再分模块阅读。
+2. **分层理解，不读全仓**：大型项目不能把所有文件塞进上下文；只读取当前层级和目标模块需要的文件。
+3. **当前事实优先**：wiki 写当前代码和配置可证明的事实，不写愿望、猜测或过期历史。
+4. **任务上下文最小化**：后续每个 work item 只加载相关 wiki 和相关文件，不重复扫描全仓库。
+5. **未知显式记录**：业务含义、权限规则、上线流程无法从代码确认时，写入 `risks.md` 或询问用户。
 
-## 写入
+## 必跑命令
 
-- `.specforge/wiki/project-overview.md`
-- `.specforge/wiki/product-rules.md`
-- `.specforge/wiki/architecture.md`
-- `.specforge/wiki/module-<name>.md`（需要模块级说明时）
-- `.specforge/wiki/api-<domain>.md`（需要接口域说明时）
-- `.specforge/wiki/data-model.md`
-- `.specforge/wiki/operations.md`
-- `.specforge/wiki/decisions.md`
-- `.specforge/wiki/glossary.md`
-- `.specforge/wiki/risks.md`
-- `.specforge/wiki/index.md`
+```bash
+node .specforge/core/scripts/codebase-map.mjs --json
+```
 
-## 工作流程
+维护 SpecForge 源码仓库时使用：
 
-1. 先从 manifest、registry 和 wiki 判断已有事实。
-2. 用 `rg` 定位代码入口、路由、配置、数据模型、测试和部署文件。
-3. 只记录经过代码或用户确认的事实。
-4. 把猜测、计划和未确认建议留在当前 work item，不写入 wiki。
-5. 如果发现 wiki 与代码冲突，记录冲突和采用依据。
+```bash
+node core/scripts/codebase-map.mjs --json
+```
 
-## 适用场景
+代码地图输出只提供候选，不直接等于结论。重要结论必须继续读取文件或由用户确认。
 
-- 新业务项目接入 SpecForge。
-- 大型功能前需要恢复架构上下文。
-- 项目已长期演进，wiki 明显过期。
-- closure 时发现长期知识缺失。
+## 规模判断
+
+| 规模 | 判断信号 | 策略 |
+|---|---|---|
+| small | 少量源码文件，入口清楚 | 可一次性读入口、配置、核心模块、测试和部署 |
+| medium | 多模块或多技术栈，但目录边界清楚 | 按模块分批：入口 → API → 数据 → 测试 → 运维 |
+| large | 源码文件很多、单体遗留、多服务、多语言或扫描被截断 | 不读全仓；先生成模块地图，再只深入目标模块和上下游 |
+
+## 推荐流程
+
+### 1. 仓库地图层
+
+读取 `codebase-map.mjs --json` 输出，记录：
+
+- `scale`、`source_files`、`languages`
+- `source_roots`
+- `manifests` 和关键 package / build 配置
+- `candidates.entries`
+- `candidates.api`
+- `candidates.data`
+- `candidates.tests`
+- `candidates.operations`
+
+如果 `scale=large` 或 `truncated=true`，先向用户确认目标业务域或优先模块；不要自行展开全仓。
+
+### 2. 模块事实层
+
+按模块读取最小文件集：
+
+- 模块入口：路由、controller、service、command、job、page、app entry。
+- 公共契约：API、DTO、事件、SDK、schema。
+- 领域规则：状态机、权限、审批流、核心校验。
+- 数据：model、migration、repository、索引、数据生命周期。
+- 测试：unit、integration、e2e、fixture。
+- 运行：环境变量、启动命令、CI、部署描述。
+
+### 3. 关系层
+
+只记录能证明的关系：
+
+- 模块调用关系。
+- API 请求链路。
+- 数据读写路径。
+- 后台任务、队列、定时任务。
+- 第三方集成和鉴权边界。
+- 错误处理、日志、监控、告警入口。
+
+### 4. Wiki 基线层
+
+把稳定事实写入 `.specforge/wiki/`：
+
+| 文件 | 内容 |
+|---|---|
+| `project-overview.md` | 项目目标、主要用户、核心能力、明确边界 |
+| `architecture.md` | 架构形态、模块/服务划分、入口、依赖、关键链路 |
+| `module-<name>.md` | 模块职责、入口文件、上下游、测试和风险 |
+| `api-<domain>.md` | API 域、路由、鉴权、请求响应、错误约定 |
+| `data-model.md` | 数据库、核心表/模型、迁移、索引、生命周期 |
+| `operations.md` | 本地启动、构建、测试、部署、CI、环境变量 |
+| `decisions.md` | 已确认的长期决策 |
+| `glossary.md` | 领域术语、缩写、系统内命名 |
+| `risks.md` | 技术债、未知区、冲突事实、待用户确认项 |
+| `index.md` | 当前 wiki 索引和摘要 |
+
+Wiki 中每一项保持单文件、当前态。不要创建 `architecture-v2.md`、`module-x-20260518.md` 这类过程文件。
+
+## 外部工具参考策略
+
+可参考成熟工具的思想，但不要把它们的输出原样变成 SpecForge 事实：
+
+| 工具思路 | 可借鉴点 | SpecForge 落地 |
+|---|---|---|
+| Aider repo map | 用 Tree-sitter / 符号 / 依赖关系在 token 预算内选上下文 | `codebase-map` 先给粗地图；后续按模块选文件 |
+| Repomix / Gitingest | 生成 prompt-friendly 代码包和 token 分布 | 只用于小范围模块包，不用于全仓长期事实 |
+| CodeGraphContext / repowise | 图谱、MCP、依赖、调用和文档层 | 大项目可作为外部检索证据，结果归一到 wiki |
+| RepoAgent | 自动生成和维护仓库文档 | 可借鉴“先全局结构，再增量维护”的机制 |
+
+## 与 work item 的关系
+
+- 刚 onboard 的已有项目：先 `sf-steering` 建立 wiki 基线，再 `sf-intake` 创建新 work item。
+- 已有明确需求：`sf-steering` 可用 `change-focused` 模式只理解相关模块，然后把结果交给 `sf-intake`。
+- 已有 bug：`sf-steering` 可用 `bug-focused` 模式理解复现路径和调用链，然后由 `sf-intake` 创建 `bugfix` 或 `issue`。
+- close 前发现 wiki 缺失：由 `sf-wiki` 或 `sf-close` 读取本技能，补齐当前事实。
 
 ## 停止条件
 
-- 代码事实不足以支持结论。
-- 需要用户确认业务含义。
-- 发现历史记录和当前实现冲突但无法判断。
+- 大项目缺目标模块或业务域，继续扫描会变成无边界探索。
+- 现有文档和当前代码冲突，无法判断哪个代表当前事实。
+- 需要业务 owner 确认领域术语、权限、审批或上线规则。
+- 找到敏感配置、生产数据或安全风险，不应继续暴露细节。
 
 ## 完成标准
 
-- wiki 只记录长期有效事实。
-- 架构边界清楚到可以被 specs 引用。
-- 未确认内容没有混进 wiki。
+- 代码库规模和技术栈判断清楚。
+- 至少更新 `project-overview.md` 和 `architecture.md`。
+- 对大型项目，至少建立目标模块的 `module-<name>.md`。
+- 后续 work item 能引用 wiki 中的模块、API、数据和运行事实。
+- 未确认内容没有混进 wiki 当前事实。

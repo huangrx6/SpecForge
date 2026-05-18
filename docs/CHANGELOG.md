@@ -9,6 +9,7 @@ SpecForge 在 1.0 之前按 semver 思路管理版本：小版本仍可能调整
 - work item 命名改为 `YYYYMMDD-kind-NNN-short-title`，支持 `feat`、`bugfix`、`issue`、`refactor` 等类型。
 - 新增 `issue` workflow，用于尚未完全定性的异常、告警或问题排查。
 - 新增 `sf-wiki`，把长期项目事实按 wiki 单文件条目维护。
+- 新增 `sf-steering` 和 `codebase-map.mjs`，用于存量项目接入后先建立项目画像和大型代码库上下文基线。
 
 ## 0.2.0
 

@@ -90,7 +90,7 @@ const stageSkillMap = new Map([
   ["gap-report/SKILL.md", ["sf-discovery"]],
   ["research/SKILL.md", ["sf-discovery"]],
   ["status/SKILL.md", ["sf-doctor", "sf-work"]],
-  ["steering/SKILL.md", ["sf-onboard", "sf-close"]],
+  ["steering/SKILL.md", ["sf-steering", "sf-onboard", "sf-intake", "sf-wiki", "sf-close"]],
 ]);
 
 for (const [stageSkill, skills] of stageSkillMap) {
@@ -117,6 +117,7 @@ if (existsSync(rootSkill)) {
   const rootContent = readFileSync(rootSkill, "utf8");
   for (const required of [
     "sf-onboard",
+    "sf-steering",
     "sf-intake",
     "sf-discovery",
     "sf-prd",

@@ -11,6 +11,8 @@ description: 更新 SpecForge 项目 Wiki；用于用户要求“回写知识库
 
 `sf-wiki` 只维护项目当前事实，不复制 work item 过程流水账。Wiki 是项目长期记忆，不是 work item 的第二份报告。
 
+如果用户的目标是“先理解整个存量项目 / 建立项目画像 / 扫描大型代码库”，优先路由到 `sf-steering`。`sf-wiki` 主要负责把已经完成的 work item 或已确认事实同步成当前 wiki；`sf-steering` 负责从现有代码中建立基线。
+
 ## 启动
 
 ```bash

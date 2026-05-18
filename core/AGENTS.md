@@ -8,6 +8,7 @@
 - 机器可读配置以 `.specforge/manifest.yaml` 为准；work item 索引以 `.specforge/registry.yaml` 为准。
 - 动态 work item 证据只放在 `.specforge/work/` 下，长期事实只放在 `.specforge/wiki/` 下。
 - 常用健康检查命令：`node .specforge/core/scripts/doctor.mjs`。
+- 存量项目或大型代码库接入后，先运行 `node .specforge/core/scripts/codebase-map.mjs --json` 并通过 `sf-steering` 建立 wiki 基线。
 - 项目级特殊约束可以追加到本节；不要把未经用户确认的业务事实写成硬约束。
 
 ## 加载顺序
@@ -18,8 +19,9 @@
 4. 自动推进或高风险操作前，运行 `node .specforge/core/scripts/doctor.mjs`。
 5. 运行 `node .specforge/core/scripts/instructions.mjs` 判断下一个 ready artifact。
 6. 如果 ready artifact 是 `requirements`，但 active work 的 `00-intake/brief.md#PRD 决策` 标记需要 PRD 且 `00-intake/prd.md` 还未完成，先执行 `sf-prd`。
-7. 如果 ready artifact 是 `technical_design`、`spec_review` 或 `code_review`，并涉及 API、安全、可靠性、可观测性或交付影响，读取对应标准入口；每个入口已内嵌唯一主基准。
-8. 只加载当前 artifact 需要的 standards、templates、profiles 和 wiki。
+7. 如果是已有代码项目且 wiki 仍是空模板或缺少相关模块事实，先执行 `sf-steering`，再创建或推进 work item。
+8. 如果 ready artifact 是 `technical_design`、`spec_review` 或 `code_review`，并涉及 API、安全、可靠性、可观测性或交付影响，读取对应标准入口；每个入口已内嵌唯一主基准。
+9. 只加载当前 artifact 需要的 standards、templates、profiles 和 wiki。
 
 ## 状态传递协议
 
@@ -88,6 +90,7 @@ node .specforge/core/scripts/artifact-graph-status.mjs
 
 | 技能 | 写入 |
 |---|---|
+| `sf-steering` | `.specforge/wiki/*.md` 中的项目画像、架构、模块、API、数据、运行和风险事实 |
 | `sf-intake` | `work.yaml`、`00-intake/original-request.md`、`00-intake/brief.md` |
 | `sf-prd` | `00-intake/prd.md` |
 | `sf-discovery` | `00-intake/brief.md`、`01-spec/gap-report.md` 或 `01-spec/research.md` |

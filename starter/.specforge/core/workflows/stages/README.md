@@ -38,7 +38,7 @@ description: <说明此技能做什么，以及什么时候使用>
 | `wiki-sync/SKILL.md` | `sf-wiki`、`sf-close` |
 | `closure/SKILL.md` | `sf-close` |
 | `status/SKILL.md` | `sf-doctor`、`sf-work` |
-| `steering/SKILL.md` | `sf-onboard`、`sf-close` |
+| `steering/SKILL.md` | `sf-steering`、`sf-onboard`、`sf-intake`、`sf-wiki`、`sf-close` |
 
 > `sf-prd` 不对应固定的内部 stage 技能母本；它直接在 `discovery/SKILL.md` 的候选功能池章节和 `product-discovery` 规则基础上生成 PRD。
 

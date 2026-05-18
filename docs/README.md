@@ -33,6 +33,7 @@ node cli/specforge.mjs init --dir /path/to/project
 |---|---|
 | `sf-router` | 根路由，判断当前状态和下一步；输入 `sf` 前缀时用于发现所有技能 |
 | `sf-onboard` | 初始化业务项目 `.specforge/` |
+| `sf-steering` | 理解存量项目和大型代码库，建立 `.specforge/wiki/` 项目画像 |
 | `sf-intake` | 创建或整理 work item，并按 feature / bugfix / issue / refactor / discovery / lite / standard 分流 |
 | `sf-requirements` | 生成 requirements |
 | `sf-ui-design` | 生成 UI design、页面流程、原型证据 |

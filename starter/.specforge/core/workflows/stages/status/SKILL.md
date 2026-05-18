@@ -17,6 +17,7 @@ description: SpecForge 内部状态技能。用于汇总 active work items、sta
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/product.md`（PRD 分流时）
 - `.specforge/core/standards/wiki.md`（wiki_sync / closure 时）
+- `.specforge/core/scripts/codebase-map.mjs` 输出（无 active work 且已有代码、wiki 为空时）
 
 ## 推荐命令
 
@@ -25,6 +26,7 @@ node .specforge/core/scripts/status.mjs
 node .specforge/core/scripts/artifact-graph-status.mjs
 node .specforge/core/scripts/instructions.mjs
 node .specforge/core/scripts/doctor.mjs
+node .specforge/core/scripts/codebase-map.mjs --json
 ```
 
 机器消费或二次分析时使用 JSON：
@@ -50,6 +52,7 @@ node .specforge/core/scripts/instructions.mjs --json
 ## 判断规则
 
 - 多个 active work item 时，不猜测用户要继续哪一个。
+- 没有 active work item、仓库已有代码且 wiki 基线为空时，推荐 `sf-steering`，先建立存量项目画像。
 - gate 缺证据时，状态视为 blocked。
 - gate 为 `REQUEST_CHANGES` / `REJECTED` 时，不推荐下游 artifact；先推荐修复路径。
 - `status.mjs`、`artifact-graph-status.mjs`、`instructions.mjs` 的 route / blocker 来自同一诊断逻辑；如果脚本输出与聊天记忆冲突，以脚本输出为准。

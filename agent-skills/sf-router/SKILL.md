@@ -70,6 +70,7 @@ SpecForge 分成两层：
 |---|---|
 | 仓库没有 `.specforge/` | `sf-onboard` |
 | 问“现在到哪一步 / 健康状态 / 能不能继续” | `sf-doctor` |
+| 用户要求“理解项目 / 扫描项目 / 项目画像 / 架构地图 / 存量项目基线” | `sf-steering` |
 | 提出新需求、新 issue、新 bug、重构想法，且没有 active work item | `sf-intake` |
 | 只有一个 active work item，用户只说“继续 / 下一步” | 运行 `instructions.mjs` 后按 ready artifact 路由 |
 | active work item 需要深度分析 / brief 不足以支撑 requirements | `sf-discovery` |
@@ -94,6 +95,7 @@ SpecForge 分成两层：
 1. 检查 `.specforge/` 是否存在。
    - 不存在：路由到 `sf-onboard`。
 2. 读取 `.specforge/registry.yaml`。
+   - 用户明确要求理解存量项目、刷新项目画像或补齐大型代码库上下文：路由到 `sf-steering`。
    - 没有 active work item，且用户提出新需求 / bug / 重构：路由到 `sf-intake`。
    - 没有 active work item，且用户问状态：路由到 `sf-doctor`。
 3. 有多个 active work item。
