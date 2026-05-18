@@ -59,7 +59,8 @@ node .specforge/core/scripts/create-artifact.mjs verification
 2. code review 的 residual risks / verification notes。
 3. requirements / gap_report 的验收、回归和失败模式。
 4. ui_design 的页面 × 操作 × 角色 × 状态矩阵。
-5. technical_design 的 API、数据、权限、安全、配置、启动、回滚、可观测性和 NFR。
+5. code review 中 Technical Design 影响面实现审查的所有 `yes` / residual risk 项。
+6. technical_design 的 API、数据、权限、安全、配置、启动、回滚、可观测性和 NFR。
 
 ## 测试边界决策表
 
@@ -96,20 +97,21 @@ node .specforge/core/scripts/create-artifact.mjs verification
 
 1. 建立验证覆盖矩阵：来源规格 / 任务 / 代码审查备注 -> 验证方式 -> 证据。
 2. 运行可用命令，记录命令、时间、结果和输出摘要。
-3. 有 UI 时构建页面 × 操作 × 角色 × 状态矩阵；不能只测 happy path。
-4. 有浏览器 UI 时，优先用 Playwright 形成可重复证据；定位运行时问题时再用 DevTools 记录 console / network / DOM 发现。
-5. 有业务闭环时验证完整流程和异常分支。
-6. 有 API / 数据 / 权限 / 安全 / 配置 / 启动 / 回滚 / 可观测性影响时，逐项记录证据或 N/A 理由。
-7. 写入：
+3. 先建立风险驱动验证计划：每个高风险影响面至少有一个强证据；弱证据或跳过项必须写明影响、owner 和重新验证触发条件。
+4. 有 UI 时构建页面 × 操作 × 角色 × 状态矩阵；不能只测 happy path，也不能只验证一个角色或一个视口。
+5. 有浏览器 UI 时，优先用 Playwright 形成可重复证据；定位运行时问题时再用 DevTools 记录 console / network / DOM 发现。
+6. 有业务闭环时验证完整流程和异常分支。
+7. 有 API / 数据 / 权限 / 安全 / 配置 / 启动 / 回滚 / 可观测性影响时，按 technical_design 影响面逐项记录证据或 N/A 理由。
+8. 写入：
    - `05-verification/report.md`
    - `05-verification/ci-result.md`
-8. 验证通过后：
+9. 验证通过后：
 
 ```bash
 node .specforge/core/scripts/gate.mjs verification APPROVED --evidence 05-verification/report.md
 ```
 
-9. 验证失败或缺证据时，更新 gate 状态但不带 evidence：
+10. 验证失败或缺证据时，更新 gate 状态但不带 evidence：
 
 ```bash
 node .specforge/core/scripts/gate.mjs verification REQUEST_CHANGES
@@ -129,6 +131,7 @@ node .specforge/core/scripts/gate.mjs verification REQUEST_CHANGES
 - code review 未批准。
 - 阻断测试失败。
 - 关键验收标准没有验证证据。
+- code review 标记的 technical_design `yes` 影响面没有对应验证证据或可信跳过说明。
 - 缺少运行环境且没有替代验证方案。
 - 发现实现偏离 spec。
 - 安全、权限、数据迁移、回滚或生产风险缺少证据。
