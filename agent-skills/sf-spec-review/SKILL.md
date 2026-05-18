@@ -81,6 +81,8 @@ node .specforge/core/scripts/create-artifact.mjs spec_review
    - API、安全、可靠性、可观测性或交付影响存在时，必须写规则主基准采用点、偏离理由和验证证据。
 6. **任务可执行性**
    - tasks 可排序、可实施、可验证。
+   - 每个任务必须保留 `_Trace:_`、`_Impact:_`、`_Boundary:_`、`_Depends:_`、`_Verification:_`。
+   - `_Impact:_` 必须与 technical_design 影响面矩阵一致；technical_design `yes` 影响面必须有任务承接，`no` 影响面不得出现实现任务。
    - tasks 必须包含测试、启动验证、迁移 / 回滚 / 观察任务中适用的部分。
 
 ## 动作

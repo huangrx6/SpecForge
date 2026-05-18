@@ -67,6 +67,7 @@ Status: PENDING
 | No blocking technical `unknown` remains | pass / fail / N/A | |
 | `yes` technical impacts have matching design section, profile and verification | pass / fail / N/A | |
 | `no` technical impacts have credible N/A reasons | pass / fail / N/A | |
+| Tasks include `_Impact:_` and align with technical impact matrix | pass / fail / N/A | |
 | Rule baselines and profile selections are adopted or deviations explained | pass / fail / N/A | |
 | Tasks are ordered, bounded and verifiable | pass / fail | |
 | Testing, startup validation, rollback / observability tasks are present when applicable | pass / fail / N/A | |

@@ -62,6 +62,7 @@ node .specforge/core/scripts/create-artifact.mjs code_review
    - implementation report、changed-files 是否存在且与真实 diff 一致。
 2. **任务覆盖**
    - `tasks.md` 中每个完成任务是否有代码变更或明确 N/A。
+   - 每个完成任务的 `_Impact:_` 是否与真实 diff 和 implementation report 的 technical_design 影响面对账一致。
    - 每个 `_Verification:_` 是否有对应测试、命令、截图、日志或人工证据。
 3. **三向对账**
    - 每个真实 diff 文件都能追溯到 `tasks.md` 的 `_Boundary:_`、approved requirements / gap_report / ui_design / technical_design 或明确 N/A。

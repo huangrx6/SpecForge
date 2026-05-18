@@ -38,6 +38,7 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
    - 对比 `03-implementation/changed-files.md`，发现未登记变更或登记但无 diff 的项。
 3. **建立任务覆盖矩阵**
    - 每个 `tasks.md` 任务检查状态、相关文件、实现证据和验证证据。
+   - 每个完成任务的 `_Impact:_` 必须与真实 diff 和 implementation report 的 technical_design 影响面对账一致。
    - 未完成任务不能靠口头说明通过。
 4. **三向对账**
    - 每个真实 diff 文件必须能追溯到 approved spec、`tasks.md` 的 `_Boundary:_` 或 implementation report 中的批准偏离说明。
@@ -67,6 +68,7 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
 - technical_design 中为 `no` 的影响面出现未经批准的代码改动，或 `unknown` 被直接实现。
 - technical_design 中为 `yes` 的影响面缺少实现证据、验证证据或明确偏离说明。
 - tasks 中 P0 / P1 / 核心任务未实现，或 implementation report 与实际 diff 不一致。
+- 完成任务的 `_Impact:_` 与真实 diff 或 implementation report 的影响面对账冲突。
 - required 测试、启动验证、迁移、权限或安全证据缺失。
 - 引入 secret、敏感日志、越权路径、危险默认配置或未受控外部调用。
 - API、数据模型、配置、权限、后台任务或 UI 状态偏离 approved design。

@@ -96,6 +96,8 @@ description: SpecForge 内部规格审查技能。用于 01-spec 完成后审查
 ### 6. Tasks
 
 - tasks 是否可执行、可排序、可验证。
+- 每个任务是否保留 `_Trace:_`、`_Impact:_`、`_Boundary:_`、`_Depends:_`、`_Verification:_`。
+- `_Impact:_` 是否与 technical_design 影响面矩阵一致；technical_design `yes` 影响面是否都有任务承接，`no` 影响面是否没有被拆出实现任务。
 - tasks 是否覆盖测试、启动验证、迁移 / 回滚 / 观察等适用验证任务。
 - 是否存在范围膨胀、未决方案或隐藏风险。
 
@@ -124,6 +126,7 @@ description: SpecForge 内部规格审查技能。用于 01-spec 完成后审查
 - 关键技术栈或组件选择没有 profile、备选方案或取舍理由。
 - 涉及 API、安全、可靠性或可观测性，却没有规则主基准采用点或可信 N/A 说明。
 - 设计包含数据库、缓存、搜索或文件存储，但没有数据库 / 存储 profile 选择、偏离说明或迁移验证计划。
+- tasks 缺少 `_Impact:_`，或 `_Impact:_` 与 technical_design 影响面矩阵冲突。
 - tasks 没有覆盖测试、启动验证、回滚 / 观察等适用验证任务。
 
 ## Findings 分级
