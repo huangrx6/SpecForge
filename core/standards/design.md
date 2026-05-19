@@ -34,7 +34,7 @@ Style brief 至少包含：产品气质、布局密度、主色或 token、组�
 
 工具补充规则：
 
-- 选择 Pencil 时，可参考 `core/skills/pencil` 的 MCP 操作流程；Pencil 产物必须包含 `.pen` 源文件和可离线查看的 PNG。
+- 选择 Pencil 时，可参考 `core/skills/pencil` 的 MCP 操作流程；Pencil 产物必须包含 `.pen` 源文件和可离线查看的 PNG。空 `.pen` / 空画布只能读取一次，确认没有节点后必须直接 `batch_design` 创建第一屏；禁止反复 `batch_get` 或 `find_empty_space_on_canvas`。
 - 选择 Figma 时，优先使用 Figma 官方 MCP / OpenAI curated Figma skills：`figma` 负责读上下文和截图，`figma-use` 负责画布写入，`figma-generate-design` 负责生成 screen，`figma-create-design-system-rules` 负责长期规则沉淀。不要把 `figma-extract` 作为默认 Figma 路径。
 - 选择 HTML mockup 时，设计阶段只负责原型文件；verification 阶段再用 Playwright 或 DevTools 记录实际浏览器证据。
 - 外部 skill 只提供能力或检查清单，不能替代本标准里的页面地图、状态矩阵和 requirements 追踪。
@@ -67,3 +67,4 @@ Style brief 至少包含：产品气质、布局密度、主色或 token、组�
 - 原型只覆盖 happy path。
 - 设计功能超出 requirements。
 - UI 证据无法被 reviewer 查看。
+- Pencil MCP 在空画布上重复读取而没有进入创建步骤；必须改为 `batch_design` 创建或降级 HTML mockup。

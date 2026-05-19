@@ -52,6 +52,8 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
 5. 第三方 skill 先按 `.specforge/core/skills/ORCHESTRATION.md` 选择和归一化，只作为输入能力，不直接成为 SpecForge 产物：
    - `frontend-design` / `getdesign`：只用于风格候选和 style brief。
    - `pencil`：只在本次选择 Pencil 原型通道时读取，用于 MCP 操作、`.pen` 读写、布局检查和截图导出。
+     - 如果 `.pen` 是空文件或空画布，最多执行一次读取；确认没有节点后必须立即 `batch_design` 创建第一屏。
+     - 禁止 `batch_get` / `find_empty_space_on_canvas` / `batch_get` 这类空读循环；连续创建失败时降级到 HTML mockup。
    - `design-md`：只用于 DESIGN.md / wiki 设计系统 fallback，不替代页面流程和状态矩阵。
    - `web-design-guidelines`：只用于 UI review / verification，不用于初始风格生成。
 6. Figma 通道优先 Figma 官方 MCP / OpenAI curated Figma skills，不要默认使用 `nexu-io/open-design` 的 `figma-extract`：

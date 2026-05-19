@@ -75,7 +75,7 @@ UI 归一化规则：
 - 风格 skill 只负责探索和语言，不替代页面地图、用户流程、状态矩阵和原型证据。
 - Figma / Pencil / HTML / ASCII 才是原型证据；每个关键状态必须有独立截图、Frame 或线稿。
 - 使用 Figma 时优先官方 MCP / OpenAI curated skills，不默认使用 `figma-extract`。
-- 使用 Pencil 时保留 `.pen` 源文件，并导出 `ui-mockup-export/` 截图。
+- 使用 Pencil 时保留 `.pen` 源文件，并导出 `ui-mockup-export/` 截图；空画布读取最多一次，确认空后必须 `batch_design` 创建第一屏，不能循环 `batch_get`。
 
 ## Implementation 编排
 

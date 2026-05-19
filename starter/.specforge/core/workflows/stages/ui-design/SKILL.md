@@ -45,6 +45,8 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
    - Design.md fallback：当 Figma / Pencil 不可用、但项目需要稳定视觉语言时，可用 `core/skills/design-md` 的结构生成 DESIGN.md 或 wiki 设计系统；它不替代原型证据。
 6. **按通道加载外部 skill。**
    - Pencil：读取 `core/skills/pencil/SKILL.md`，只把 MCP 操作计划、布局检查和截图结果归一到 `ui-design.md`；不要用普通文件读取 `.pen`。
+     - 空 `.pen` / 空画布最多读取一次。确认为空后必须立即 `batch_design` 创建第一屏，不能继续 `batch_get` 或 `find_empty_space_on_canvas`。
+     - 若 Pencil 创建连续失败 2 次，降级为 `ui-mockup.html`，并在 `ui-design.md` 写明降级原因和剩余风险。
    - Figma：优先 Figma 官方 MCP / OpenAI curated Figma skills；不要默认接入 `nexu-io/open-design` 的 `figma-extract`。
      - 读设计上下文 / 截图 / 变量：`core/skills/figma`
      - 写 Figma 画布：先读 `core/skills/figma-use`
@@ -52,7 +54,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
      - 设计系统规则沉淀：`core/skills/figma-create-design-system-rules`
    - HTML：需要浏览器预览时，后续 verification 可使用 `playwright-skill` 或 DevTools，但 UI design 阶段只记录预览路径和预期状态。
 7. **产出并链接证据。**
-   - Pencil 使用 `01-spec/ui-mockup.pen` 和 `01-spec/ui-mockup-export/*.png`，并在 `ui-design.md` 写明使用的 MCP 操作摘要和截图自检。
+   - Pencil 使用 `01-spec/ui-mockup.pen` 和 `01-spec/ui-mockup-export/*.png`，并在 `ui-design.md` 写明使用的 MCP 操作摘要、空画布处理结果和截图自检。
    - Figma 使用文件 / Frame URL，并导出关键截图到 `01-spec/ui-mockup-export/`。
    - HTML 使用 `01-spec/ui-mockup.html`。
    - ASCII 直接嵌入 `ui-design.md`。
@@ -73,6 +75,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - 有 UI 变更但没有任何可验收 UI 产物或明确降级理由。
 - 原型与 requirements 的角色、流程、审批、权限或异常态不一致。
 - 需要 Figma / Pencil 工具但当前不可用，且没有 HTML / ASCII 降级方案。
+- Pencil MCP 出现重复读取空画布、没有进入 `batch_design` 创建步骤；此时必须中断 Pencil 通道并改用 HTML mockup 或重新开始一次明确的 Pencil 创建任务。
 
 ## 完成标准
 
