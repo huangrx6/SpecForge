@@ -26,13 +26,31 @@ node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/codebase-index.mjs --json
 ```
 
+正式建立项目画像时，先生成可审查的中间证据报告：
+
+```bash
+node .specforge/core/scripts/codebase-index.mjs --write-report
+```
+
+有 active work item 时，默认写入：
+
+```text
+.specforge/work/active/<work-item>/00-steering/codebase-intelligence.md
+```
+
+没有 active work item 时，默认写入：
+
+```text
+.specforge/work/inbox/codebase-intelligence.md
+```
+
 读取内部阶段母本：
 
 ```text
 .specforge/core/workflows/stages/steering/SKILL.md
 ```
 
-`codebase-index.mjs` 会检测 code intelligence provider，并在内部运行 `codebase-map.mjs` 生成 bootstrap map。`codebase-map.mjs` 只是 fallback scanner，不等于符号级理解。结论必须来自代码、配置、测试、CI、现有文档、provider 查询结果或用户确认。
+`codebase-index.mjs` 会检测 code intelligence provider，并在内部运行 `codebase-map.mjs` 生成 bootstrap map，还会输出 `normalized_context` 和 provider 执行 / 查询计划。`codebase-map.mjs` 只是 fallback scanner，不等于符号级理解。结论必须来自代码、配置、测试、CI、现有文档、provider 查询结果或用户确认。
 
 ## 工作模式
 
@@ -60,6 +78,8 @@ node .specforge/core/scripts/codebase-index.mjs --json
 成熟开源工具的做法可以作为参考：Aider 的 repo map、Repomix/Gitingest 的代码打包、CodeGraphContext / codebase-memory-mcp 的图谱与 MCP 检索、RepoAgent 的文档生成。但在 SpecForge 中，外部工具输出只能作为证据来源，最终必须改写成 `.specforge/wiki/*.md` 的当前事实。
 
 ## 写入 wiki
+
+先读取 `codebase-intelligence.md` 报告，再把其中已验证的当前事实归一写入 wiki。不要把 provider 原始输出、Repomix 包或报告全文直接复制进 wiki。
 
 根据实际发现更新这些文件；不需要的文件保持不动：
 
@@ -91,6 +111,7 @@ Wiki 只保留当前事实。不要按日期、版本或 work item 复制多份�
 - 本次选择的模式。
 - 代码库规模判断：small / medium / large。
 - 已更新的 wiki 文件。
+- codebase intelligence 证据报告路径。
 - 已确认的关键模块和入口。
 - 尚未确认的业务含义或风险。
 - 下一步建议路由：通常是 `sf-intake`；如果用户只是要求项目画像，则停在这里。

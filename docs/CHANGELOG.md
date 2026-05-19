@@ -11,6 +11,7 @@ SpecForge 在 1.0 之前按 semver 思路管理版本：小版本仍可能调整
 - 新增 `sf-wiki`，把长期项目事实按 wiki 单文件条目维护。
 - 新增 `sf-steering`，用于存量项目接入后先建立项目画像和上下文基线。
 - `codebase-map.mjs` 降级为 bootstrap / fallback scanner；新增 `codebase-index.mjs` 和 `code-intelligence.md`，用于检测 code intelligence provider 并约束 large codebase 的处理边界。
+- `codebase-index.mjs` 支持 `--write-report` 生成 `codebase-intelligence.md` 中间证据，并输出 `normalized_context`、provider plan 与可选 provider execution 结果。
 - Agent skill 安装器新增 `trae-cn` 目标，并支持 `--scope user|project`，可安装到 Trae CN 的 `~/.trae-cn/skills` 或项目 `.trae/skills`。
 
 ## 0.2.0

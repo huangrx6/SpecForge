@@ -21,15 +21,17 @@ description: SpecForge 内部 steering 技能。用于存量项目、大型代�
 
 ```bash
 node .specforge/core/scripts/codebase-index.mjs --json
+node .specforge/core/scripts/codebase-index.mjs --write-report
 ```
 
 维护 SpecForge 源码仓库时使用：
 
 ```bash
 node core/scripts/codebase-index.mjs --json
+node core/scripts/codebase-index.mjs --write-report --report /tmp/specforge-codebase-intelligence.md
 ```
 
-`codebase-index.mjs` 会检测 code intelligence provider，并在内部运行 `codebase-map.mjs` 生成 bootstrap map。`codebase-map.mjs` 是 fallback scanner，只提供候选，不直接等于结论。重要结论必须继续读取文件、查询 provider 或由用户确认。
+`codebase-index.mjs` 会检测 code intelligence provider，并在内部运行 `codebase-map.mjs` 生成 bootstrap map，输出 `normalized_context`、provider plan 和可审查 Markdown report。`codebase-map.mjs` 是 fallback scanner，只提供候选，不直接等于结论。重要结论必须继续读取文件、查询 provider 或由用户确认。
 
 ## 规模判断
 
@@ -46,6 +48,8 @@ node core/scripts/codebase-index.mjs --json
 读取 `codebase-index.mjs --json` 输出，记录：
 
 - `status`、`selected_provider`、`providers`
+- `normalized_context`
+- `provider_plan`、`provider_execution`
 - `bootstrap.scale`、`bootstrap.source_files`、`bootstrap.languages`
 - `bootstrap.source_roots`
 - `bootstrap.manifests` 和关键 package / build 配置
@@ -67,6 +71,17 @@ node core/scripts/codebase-index.mjs --json
 | `rg` | 在已限定范围内验证事实 |
 
 Provider 输出只能作为证据来源，必须归一成 wiki 当前事实。
+
+### 1.6 中间证据报告
+
+`codebase-index.mjs --write-report` 默认写入：
+
+| 情况 | 路径 |
+|---|---|
+| 有 active work item | `.specforge/work/active/<work-item>/00-steering/codebase-intelligence.md` |
+| 没有 active work item | `.specforge/work/inbox/codebase-intelligence.md` |
+
+这个报告是 steering 的中间证据，不是长期 wiki。它用于记录 provider、扫描范围、模块候选、入口候选、风险和 wiki 回写计划。
 
 ### 2. 模块事实层
 
@@ -92,7 +107,7 @@ Provider 输出只能作为证据来源，必须归一成 wiki 当前事实。
 
 ### 4. Wiki 基线层
 
-把稳定事实写入 `.specforge/wiki/`：
+先读取 `codebase-intelligence.md` 中间证据，再把稳定事实写入 `.specforge/wiki/`：
 
 | 文件 | 内容 |
 |---|---|

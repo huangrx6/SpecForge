@@ -27,7 +27,28 @@ SpecForge 的统一入口是：
 node .specforge/core/scripts/codebase-index.mjs --json
 ```
 
-该脚本负责检测本机 provider、运行 bootstrap map，并输出 normalized decision payload。它不会把第三方工具输出原样写入 wiki。
+该脚本负责检测本机 provider、运行 bootstrap map，并输出 normalized decision payload。正式 steering 时同时生成中间证据报告：
+
+```bash
+node .specforge/core/scripts/codebase-index.mjs --write-report
+```
+
+报告默认写入 active work item 的 `00-steering/codebase-intelligence.md`；没有 active work item 时写入 `.specforge/work/inbox/codebase-intelligence.md`。它不会把第三方工具输出原样写入 wiki。
+
+## Provider 执行编排
+
+`codebase-index.mjs` 默认只做检测、规划和归一化，不主动执行第三方 provider。需要执行时显式加：
+
+```bash
+node .specforge/core/scripts/codebase-index.mjs --provider repomix --module src/orders --execute-provider --write-report
+```
+
+执行规则：
+
+- Repomix 只能在显式 `--module` 或 `--focus` 限定范围后执行。
+- Graph / MCP provider 由 Agent runtime 查询，本地 wrapper 只输出查询计划。
+- Provider 原始输出只能作为证据，不能直接粘贴进 wiki。
+- `normalized_context` 是后续 wiki 回写的输入边界。
 
 ## 规模策略
 

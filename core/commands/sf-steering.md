@@ -4,6 +4,7 @@
 
 ```bash
 node .specforge/core/scripts/codebase-index.mjs --json
+node .specforge/core/scripts/codebase-index.mjs --write-report
 ```
 
 然后读取：

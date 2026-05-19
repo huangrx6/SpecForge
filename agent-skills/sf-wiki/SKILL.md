@@ -69,6 +69,7 @@ node .specforge/core/scripts/sync-wiki.mjs
    - `01-spec/requirements.md`
    - `01-spec/ui-design.md`（存在时）
    - `01-spec/technical-design.md`（存在时）
+   - `00-steering/codebase-intelligence.md`（存在时）
    - `02-spec-review/spec-review-v1.md`（存在时）
    - `03-implementation/report.md`
    - `04-code-review/code-review-v1.md`
@@ -80,6 +81,7 @@ node .specforge/core/scripts/sync-wiki.mjs
 3. 判断哪些事实长期有效：
    - 产品规则、角色、权限、审批、状态机。
    - 架构、模块边界、技术栈、依赖关系。
+   - codebase intelligence 报告中已被代码 / 配置 / provider 查询证实的模块、入口和风险。
    - API、事件、Webhook、SDK 契约语义。
    - 数据模型、字段语义、生命周期、迁移注意事项。
    - 部署、启动、配置、任务调度、监控、回滚。
