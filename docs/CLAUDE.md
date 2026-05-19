@@ -8,7 +8,7 @@ SpecForge 新入口技能统一使用 `sf-router` 和 `sf-*` 前缀。
 npm run doctor
 npm run instructions
 npm run gate -- spec_review APPROVED --evidence 02-spec-review/spec-review-v1.md
-node cli/specforge.mjs skill add --target all --apply
+node cli/specforge.mjs skill add --target all --scope user --apply
 ```
 
 维护约定：

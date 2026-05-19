@@ -110,7 +110,7 @@ Gate artifact 允许自动生成草稿，但不允许“空模板批准”。批
 - doctor、validate、selftest 失败。
 - 变更触及生产发布、安全、权限、数据迁移或高风险外部影响。
 - 需要安装依赖、访问网络、执行破坏性命令但未获确认。
-- `sf-close` 提示需要同步安装到 Codex / Claude Code / cc-switch；该动作必须单独等待用户明确要求。
+- `sf-close` 提示需要同步安装到 Codex / Claude Code / cc-switch / Trae CN；该动作必须单独等待用户明确要求。
 
 ## 完成标准
 

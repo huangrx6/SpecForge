@@ -3,7 +3,7 @@
 用于存量项目或大型代码库接入后建立项目画像。
 
 ```bash
-node .specforge/core/scripts/codebase-map.mjs --json
+node .specforge/core/scripts/codebase-index.mjs --json
 ```
 
 然后读取：

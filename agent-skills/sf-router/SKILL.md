@@ -33,7 +33,7 @@ description: SpecForge 工作流根入口。用于用户只说“sf”、询问�
 SpecForge 分成两层：
 
 ```text
-全局技能：sf-router / sf-*     负责让 AI 工具知道怎么工作
+AI 工具技能：sf-router / sf-*  负责让 AI 工具知道怎么工作，可 user scope 或 project scope 安装
 项目目录：.specforge/          保存 core、wiki、hooks、项目事实和 work item
 ```
 

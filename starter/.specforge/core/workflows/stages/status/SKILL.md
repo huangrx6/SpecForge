@@ -17,7 +17,7 @@ description: SpecForge 内部状态技能。用于汇总 active work items、sta
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/product.md`（PRD 分流时）
 - `.specforge/core/standards/wiki.md`（wiki_sync / closure 时）
-- `.specforge/core/scripts/codebase-map.mjs` 输出（无 active work 且已有代码、wiki 为空时）
+- `.specforge/core/scripts/codebase-index.mjs` 输出（无 active work 且已有代码、wiki 为空时）
 
 ## 推荐命令
 
@@ -26,7 +26,7 @@ node .specforge/core/scripts/status.mjs
 node .specforge/core/scripts/artifact-graph-status.mjs
 node .specforge/core/scripts/instructions.mjs
 node .specforge/core/scripts/doctor.mjs
-node .specforge/core/scripts/codebase-map.mjs --json
+node .specforge/core/scripts/codebase-index.mjs --json
 ```
 
 机器消费或二次分析时使用 JSON：

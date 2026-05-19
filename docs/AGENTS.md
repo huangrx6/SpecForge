@@ -29,7 +29,8 @@ npm run validate:skills
 npm run validate:external-skills
 npm run validate
 npm run doctor
-node cli/specforge.mjs skill add --target all --apply
+npm run codebase:index -- --json
+node cli/specforge.mjs skill add --target all --scope user --apply
 ```
 
 ## 在业务项目中使用时

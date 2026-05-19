@@ -20,19 +20,28 @@ const allSkills = args.includes("--all");
 const targetAliases = {
   codex: {
     label: "Codex",
-    path: join(homedir(), ".codex/skills"),
+    userPath: join(homedir(), ".codex/skills"),
+    projectPath: (projectRoot) => join(projectRoot, ".agents/skills"),
   },
   "claude-code": {
     label: "Claude Code",
-    path: join(homedir(), ".claude/skills"),
+    userPath: join(homedir(), ".claude/skills"),
+    projectPath: (projectRoot) => join(projectRoot, ".claude/skills"),
   },
   "cc-switch": {
     label: "Claude Code / cc-switch",
-    path: join(homedir(), ".cc-switch/skills"),
+    userPath: join(homedir(), ".cc-switch/skills"),
+    projectPath: (projectRoot) => join(projectRoot, ".claude/skills"),
   },
   agents: {
     label: "Agents",
-    path: join(homedir(), ".agents/skills"),
+    userPath: join(homedir(), ".agents/skills"),
+    projectPath: (projectRoot) => join(projectRoot, ".agents/skills"),
+  },
+  "trae-cn": {
+    label: "Trae CN",
+    userPath: join(homedir(), ".trae-cn/skills"),
+    projectPath: (projectRoot) => join(projectRoot, ".trae/skills"),
   },
 };
 
@@ -47,9 +56,21 @@ function selectedTargets() {
   return raw.split(",").map((item) => item.trim()).filter(Boolean);
 }
 
+function installScope() {
+  const raw = readOption("--scope") ?? "user";
+  if (!["user", "project"].includes(raw)) {
+    throw new Error(`Unknown scope "${raw}". Known scopes: user, project.`);
+  }
+  return raw;
+}
+
+function projectRoot() {
+  return resolve(readOption("--project-dir") ?? ".");
+}
+
 function requestedSkills() {
   const values = [];
-  const optionsWithValues = new Set(["--target", "--targets", "--path"]);
+  const optionsWithValues = new Set(["--target", "--targets", "--path", "--scope", "--project-dir"]);
   for (let i = 0; i < args.length; i += 1) {
     const arg = args[i];
     if (arg.startsWith("--")) {
@@ -61,15 +82,23 @@ function requestedSkills() {
   return values;
 }
 
-function targetPath(name) {
+function validateOptions(targets) {
   const custom = readOption("--path");
-  if (custom && selectedTargets().length === 1) return resolve(custom);
+  if (custom && targets.length !== 1) {
+    throw new Error("Use --path with exactly one --target. Multiple targets need their standard directories.");
+  }
+}
+
+function targetPath(name, scope) {
+  const custom = readOption("--path");
+  if (custom) return resolve(custom);
   const config = targetAliases[name];
   if (!config) {
     const known = Object.keys(targetAliases).join(", ");
     throw new Error(`Unknown target "${name}". Known targets: ${known}. Use --path with one known target for custom location.`);
   }
-  return config.path;
+  if (scope === "project") return config.projectPath(projectRoot());
+  return config.userPath;
 }
 
 function listSkills() {
@@ -105,6 +134,9 @@ function copySkill(skillName, targetRoot) {
 function main() {
   const skills = listSkills();
   const targets = selectedTargets();
+  const scope = installScope();
+  const project = projectRoot();
+  validateOptions(targets);
 
   if (skills.length === 0) {
     console.error("No skills found. Expected directories like agent-skills/sf-router/SKILL.md.");
@@ -113,13 +145,24 @@ function main() {
 
   console.log(`SpecForge agent skill install ${apply ? "(apply)" : "(dry-run)"}`);
   console.log(`Skills: ${allSkills ? "all agent-skills/* SKILL.md directories" : "sf-router + sf-*"}`);
+  console.log(`Scope: ${readOption("--path") ? "custom path" : scope}`);
+  if (scope === "project" && !readOption("--path")) console.log(`Project root: ${project}`);
   console.log("");
 
+  const handledDestinations = new Set();
   for (const targetName of targets) {
     const config = targetAliases[targetName];
-    const destination = targetPath(targetName);
+    const destination = targetPath(targetName, scope);
+    const normalizedDestination = resolve(destination);
     console.log(`## ${config?.label ?? targetName}`);
     console.log(`Target: ${destination}`);
+
+    if (handledDestinations.has(normalizedDestination)) {
+      console.log("- skip: target directory already handled by another selected target");
+      console.log("");
+      continue;
+    }
+    handledDestinations.add(normalizedDestination);
 
     for (const skill of skills) {
       const result = copySkill(skill, destination);
@@ -134,4 +177,9 @@ function main() {
   }
 }
 
-main();
+try {
+  main();
+} catch (error) {
+  console.error(error.message);
+  process.exit(1);
+}

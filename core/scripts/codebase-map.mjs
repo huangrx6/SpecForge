@@ -284,6 +284,13 @@ const sourceRoots = topEntries(
 );
 
 const result = {
+  kind: "specforge_bootstrap_codebase_map",
+  role: "fallback_scanner",
+  limitations: [
+    "does_not_build_symbol_graph",
+    "does_not_resolve_call_chains",
+    "does_not_replace_code_intelligence_provider",
+  ],
   root,
   scanned_files: state.files.length,
   truncated: state.truncated,
@@ -326,7 +333,8 @@ function printList(title, items, render = (item) => `- ${item}`) {
 if (asJson) {
   console.log(JSON.stringify(result, null, 2));
 } else {
-  console.log("SpecForge Codebase Map");
+  console.log("SpecForge Bootstrap Codebase Map");
+  console.log("Role: fallback scanner; use codebase-index.mjs for provider-aware code intelligence.");
   console.log("");
   console.log(`Root: ${result.root}`);
   console.log(`Scale: ${result.scale}`);

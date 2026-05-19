@@ -9,7 +9,9 @@ description: SpecForge 内部 steering 技能。用于存量项目、大型代�
 
 ## 核心原则
 
-1. **先建地图，再读细节**：先运行代码地图脚本识别语言、目录、入口、API、数据、测试和部署候选，再分模块阅读。
+本阶段必须读取 `.specforge/core/standards/code-intelligence.md` 和 `.specforge/core/standards/wiki.md`。
+
+1. **先选 provider，再读细节**：先运行 `codebase-index.mjs` 判断规模和可用 provider，再分模块阅读。
 2. **分层理解，不读全仓**：大型项目不能把所有文件塞进上下文；只读取当前层级和目标模块需要的文件。
 3. **当前事实优先**：wiki 写当前代码和配置可证明的事实，不写愿望、猜测或过期历史。
 4. **任务上下文最小化**：后续每个 work item 只加载相关 wiki 和相关文件，不重复扫描全仓库。
@@ -18,41 +20,53 @@ description: SpecForge 内部 steering 技能。用于存量项目、大型代�
 ## 必跑命令
 
 ```bash
-node .specforge/core/scripts/codebase-map.mjs --json
+node .specforge/core/scripts/codebase-index.mjs --json
 ```
 
 维护 SpecForge 源码仓库时使用：
 
 ```bash
-node core/scripts/codebase-map.mjs --json
+node core/scripts/codebase-index.mjs --json
 ```
 
-代码地图输出只提供候选，不直接等于结论。重要结论必须继续读取文件或由用户确认。
+`codebase-index.mjs` 会检测 code intelligence provider，并在内部运行 `codebase-map.mjs` 生成 bootstrap map。`codebase-map.mjs` 是 fallback scanner，只提供候选，不直接等于结论。重要结论必须继续读取文件、查询 provider 或由用户确认。
 
 ## 规模判断
 
 | 规模 | 判断信号 | 策略 |
 |---|---|---|
 | small | 少量源码文件，入口清楚 | 可一次性读入口、配置、核心模块、测试和部署 |
-| medium | 多模块或多技术栈，但目录边界清楚 | 按模块分批：入口 → API → 数据 → 测试 → 运维 |
-| large | 源码文件很多、单体遗留、多服务、多语言或扫描被截断 | 不读全仓；先生成模块地图，再只深入目标模块和上下游 |
+| medium | 多模块或多技术栈，但目录边界清楚 | bootstrap map + `rg`；有明确模块时用 Repomix 打包模块上下文；可选图谱 provider |
+| large | 源码文件很多、单体遗留、多服务、多语言或扫描被截断 | 必须优先使用图谱 / MCP / SCIP 类 provider；无 provider 且无目标模块时暂停 |
 
 ## 推荐流程
 
 ### 1. 仓库地图层
 
-读取 `codebase-map.mjs --json` 输出，记录：
+读取 `codebase-index.mjs --json` 输出，记录：
 
-- `scale`、`source_files`、`languages`
-- `source_roots`
-- `manifests` 和关键 package / build 配置
-- `candidates.entries`
-- `candidates.api`
-- `candidates.data`
-- `candidates.tests`
-- `candidates.operations`
+- `status`、`selected_provider`、`providers`
+- `bootstrap.scale`、`bootstrap.source_files`、`bootstrap.languages`
+- `bootstrap.source_roots`
+- `bootstrap.manifests` 和关键 package / build 配置
+- `bootstrap.candidates.entries`
+- `bootstrap.candidates.api`
+- `bootstrap.candidates.data`
+- `bootstrap.candidates.tests`
+- `bootstrap.candidates.operations`
 
-如果 `scale=large` 或 `truncated=true`，先向用户确认目标业务域或优先模块；不要自行展开全仓。
+如果 `status=blocked_large_without_provider`，先向用户确认是否安装 codebase-memory-mcp / CodeGraphContext，或让用户指定目标业务域、优先模块、报错路径；不要自行展开全仓。
+
+### 1.5 Provider 决策层
+
+| provider 类型 | 用法 |
+|---|---|
+| codebase-memory-mcp / CodeGraphContext | 查询模块、符号、调用链、依赖、入口、影响面；大型项目优先 |
+| Repomix | 只在目标模块已限定时生成 context 包；不打包全仓 |
+| `codebase-map.mjs` | bootstrap / fallback，提供粗地图和候选路径 |
+| `rg` | 在已限定范围内验证事实 |
+
+Provider 输出只能作为证据来源，必须归一成 wiki 当前事实。
 
 ### 2. 模块事实层
 
@@ -103,7 +117,7 @@ Wiki 中每一项保持单文件、当前态。不要创建 `architecture-v2.md`
 |---|---|---|
 | Aider repo map | 用 Tree-sitter / 符号 / 依赖关系在 token 预算内选上下文 | `codebase-map` 先给粗地图；后续按模块选文件 |
 | Repomix / Gitingest | 生成 prompt-friendly 代码包和 token 分布 | 只用于小范围模块包，不用于全仓长期事实 |
-| CodeGraphContext / repowise | 图谱、MCP、依赖、调用和文档层 | 大项目可作为外部检索证据，结果归一到 wiki |
+| CodeGraphContext / codebase-memory-mcp | 图谱、MCP、依赖、调用和文档层 | 大项目首选，结果归一到 wiki |
 | RepoAgent | 自动生成和维护仓库文档 | 可借鉴“先全局结构，再增量维护”的机制 |
 
 ## 与 work item 的关系
@@ -115,7 +129,7 @@ Wiki 中每一项保持单文件、当前态。不要创建 `architecture-v2.md`
 
 ## 停止条件
 
-- 大项目缺目标模块或业务域，继续扫描会变成无边界探索。
+- 大项目缺图谱 / MCP / SCIP 类 provider，且用户没有提供目标模块或业务域，继续扫描会变成无边界探索。
 - 现有文档和当前代码冲突，无法判断哪个代表当前事实。
 - 需要业务 owner 确认领域术语、权限、审批或上线规则。
 - 找到敏感配置、生产数据或安全风险，不应继续暴露细节。

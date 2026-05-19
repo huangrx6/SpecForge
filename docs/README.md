@@ -21,7 +21,9 @@ npm run doctor
 npm run validate
 npm run validate:external-skills
 npm run sync:starter
-node cli/specforge.mjs skill add --target all --apply
+npm run codebase:index -- --json
+node cli/specforge.mjs skill add --target all --scope user --apply
+node cli/specforge.mjs skill add --target trae-cn --scope project --project-dir /path/to/project --apply
 node cli/specforge.mjs init --dir /path/to/project
 ```
 

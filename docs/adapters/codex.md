@@ -1,17 +1,27 @@
 # Codex 适配
 
-## 安装全局技能
+## 安装技能
 
 在 SpecForge 源码仓库执行：
 
 ```bash
-node cli/specforge.mjs skill add --target codex --apply
+node cli/specforge.mjs skill add --target codex --scope user --apply
 ```
 
-默认安装到：
+用户级安装到：
 
 ```text
 ~/.codex/skills/
+```
+
+项目级安装到：
+
+```bash
+node cli/specforge.mjs skill add --target codex --scope project --project-dir /path/to/project --apply
+```
+
+```text
+/path/to/project/.agents/skills/
 ```
 
 安装范围默认只包含：

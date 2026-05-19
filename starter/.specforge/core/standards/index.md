@@ -5,7 +5,7 @@
 ## 目录原则
 
 - 少文件：优先合并成稳定入口，避免为了一个小检查项新增目录。
-- 一事一责：流程、产品、设计、工程、Wiki 分开。
+- 一事一责：流程、产品、设计、工程、代码智能、Wiki 分开。
 - 可执行：每条标准都要能落到 artifact、gate、tasks 或 verification evidence。
 - 可偏离：项目事实优先于通用标准，但偏离必须写清理由和验证补偿。
 - 按需加载：Agent 只读当前阶段需要的标准，不全量加载。
@@ -18,6 +18,7 @@
 | `product.md` | PRD、requirements、research、功能澄清、验收标准 | 用户到底要什么，哪些能力进入 MVP，如何验收 |
 | `design.md` | UI / UX、页面、交互、视觉风格、原型证据 | 用户看见什么，怎么操作，状态是否完整 |
 | `engineering.md` | technical design、implementation、review、verification | 工程上怎么做才可靠、安全、可维护、可验证 |
+| `code-intelligence.md` | 存量项目、老项目、大型代码库理解、项目画像 | 该用哪个 provider，什么时候暂停，如何把代码事实归一到 wiki |
 | `wiki.md` | wiki sync、close、长期知识回写 | 哪些事实要沉淀，写到哪，何时更新 |
 
 ## 阶段到标准
@@ -27,6 +28,7 @@
 | intake / brief | `workflow.md`、`product.md` |
 | prd | `product.md`、`workflow.md` |
 | research / gap_report | `product.md`、`engineering.md`、`workflow.md` |
+| steering / 存量项目画像 | `code-intelligence.md`、`wiki.md`、`workflow.md` |
 | requirements | `product.md`、`workflow.md` |
 | ui_design | `design.md`、`product.md`、`workflow.md` |
 | technical_design | `engineering.md`、`workflow.md` |
@@ -48,5 +50,6 @@ AI 后续先读本目录的本地标准；需要细则、版本敏感事实或�
 | Security | `engineering.md` | OWASP ASVS | https://owasp.org/www-project-application-security-verification-standard/ |
 | Delivery / Reliability | `engineering.md` | AWS Well-Architected Framework | https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html |
 | Observability | `engineering.md` | OpenTelemetry Semantic Conventions | https://opentelemetry.io/docs/specs/semconv/ |
+| Code intelligence | `code-intelligence.md` | SCIP / MCP graph indexing patterns | https://github.com/sourcegraph/scip |
 
 这些主基准已经吸收到对应标准里；不要再新增平行的“规范合集”目录。

@@ -67,6 +67,10 @@
       "to": "core/scripts/codebase-map.mjs"
     },
     {
+      "from": "scripts/codebase-index.mjs",
+      "to": "core/scripts/codebase-index.mjs"
+    },
+    {
       "from": "scripts/doctor.mjs",
       "to": "core/scripts/doctor.mjs"
     },

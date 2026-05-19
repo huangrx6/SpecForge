@@ -8,7 +8,7 @@
 - 机器可读配置以 `.specforge/manifest.yaml` 为准；work item 索引以 `.specforge/registry.yaml` 为准。
 - 动态 work item 证据只放在 `.specforge/work/` 下，长期事实只放在 `.specforge/wiki/` 下。
 - 常用健康检查命令：`node .specforge/core/scripts/doctor.mjs`。
-- 存量项目或大型代码库接入后，先运行 `node .specforge/core/scripts/codebase-map.mjs --json` 并通过 `sf-steering` 建立 wiki 基线。
+- 存量项目或大型代码库接入后，先运行 `node .specforge/core/scripts/codebase-index.mjs --json` 并通过 `sf-steering` 建立 wiki 基线；`codebase-map.mjs` 只是 bootstrap / fallback scanner。
 - 项目级特殊约束可以追加到本节；不要把未经用户确认的业务事实写成硬约束。
 
 ## 加载顺序

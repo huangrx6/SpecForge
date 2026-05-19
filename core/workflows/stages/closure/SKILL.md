@@ -82,6 +82,6 @@ description: SpecForge 内部关闭技能。用于 wiki_sync 已批准后，写 
 
 ## 不做
 
-- 不自动安装或同步 Agent 技能到 Codex / Claude Code / cc-switch；如需安装，必须由用户单独明确要求。
+- 不自动安装或同步 Agent 技能到 Codex / Claude Code / cc-switch / Trae CN；如需安装，必须由用户单独明确要求。
 - 不用 release / rollback 替代 verification evidence。
 - 不在 wiki_sync 未批准时归档。

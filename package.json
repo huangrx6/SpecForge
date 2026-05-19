@@ -13,6 +13,7 @@
     "gate": "node core/scripts/gate.mjs",
     "archive": "node core/scripts/archive-work.mjs",
     "codebase:map": "node core/scripts/codebase-map.mjs",
+    "codebase:index": "node core/scripts/codebase-index.mjs",
     "selftest": "node core/scripts/self-test.mjs",
     "doctor": "node core/scripts/doctor.mjs",
     "validate:skills": "node core/scripts/validate-skills.mjs",
@@ -22,7 +23,7 @@
     "update:skills": "node core/scripts/update-skills.mjs --all",
     "check:skills": "node core/scripts/update-skills.mjs --check --all",
     "check:starter": "node core/scripts/sync-starter.mjs --check",
-    "install:skills": "node cli/specforge.mjs skill add --target all --apply",
+    "install:skills": "node cli/specforge.mjs skill add --target all --scope user --apply",
     "skill:add": "node cli/specforge.mjs skill add",
     "init": "node cli/specforge.mjs init"
   },

@@ -18,15 +18,24 @@ description: 将新仓库或已有仓库接入 SpecForge；初始化唯一项目
 推荐从 GitHub 安装最新版：
 
 ```bash
-npx github:huangrx6/SpecForge skill add --target codex --apply
-npx github:huangrx6/SpecForge skill add --target claude-code --apply
-npx github:huangrx6/SpecForge skill add --target cc-switch --apply
+npx github:huangrx6/SpecForge skill add --target codex --scope user --apply
+npx github:huangrx6/SpecForge skill add --target claude-code --scope user --apply
+npx github:huangrx6/SpecForge skill add --target cc-switch --scope user --apply
+npx github:huangrx6/SpecForge skill add --target trae-cn --scope user --apply
 ```
 
 也可以一次性安装到所有目标：
 
 ```bash
-npx github:huangrx6/SpecForge skill add --target all --apply
+npx github:huangrx6/SpecForge skill add --target all --scope user --apply
+```
+
+如果只希望当前业务项目可见，使用项目级安装：
+
+```bash
+npx github:huangrx6/SpecForge skill add --target trae-cn --scope project --project-dir . --apply
+npx github:huangrx6/SpecForge skill add --target codex --scope project --project-dir . --apply
+npx github:huangrx6/SpecForge skill add --target claude-code --scope project --project-dir . --apply
 ```
 
 ## 内部技能母本
@@ -40,7 +49,7 @@ npx github:huangrx6/SpecForge skill add --target all --apply
 - 初始化素材来自 CLI 生成的唯一 starter 快照：GitHub 发行包中的 `starter/.specforge/`。
 - 项目内命令直接运行 `node .specforge/core/scripts/<name>.mjs`。
 - 已有 `.specforge/wiki/`、`.specforge/work/`、`.specforge/registry.yaml` 不覆盖。
-- 已有业务代码的项目，onboard 后不直接开始需求实现；先运行代码地图并路由到 `sf-steering`。
+- 已有业务代码的项目，onboard 后不直接开始需求实现；先运行 `codebase-index.mjs` 并路由到 `sf-steering`。
 
 ## 标准骨架
 
@@ -146,7 +155,7 @@ manifest 会复制 core/standards、core/artifacts、core/workflows、必要运�
 1. 检查 `.specforge/` 是否存在。
 2. Glob 全仓库 Markdown 文档，排除 `.git/`、`node_modules/`、`.specforge/work/archive/`。
 3. 检查是否有旧版根 `specs/` 或根 `scripts/`。
-4. 如果 `.specforge/` 已存在，运行 `node .specforge/core/scripts/codebase-map.mjs --json` 判断是否已有业务代码。
+4. 如果 `.specforge/` 已存在，运行 `node .specforge/core/scripts/codebase-index.mjs --json` 判断是否已有业务代码和 provider 支撑。
 5. 汇报走空仓库路径、存量项目路径还是迁移路径。
 
 ## 空仓库路径
@@ -156,7 +165,7 @@ manifest 会复制 core/standards、core/artifacts、core/workflows、必要运�
 ```bash
 npx github:huangrx6/SpecForge init --dir .
 node .specforge/core/scripts/doctor.mjs
-node .specforge/core/scripts/codebase-map.mjs --json
+node .specforge/core/scripts/codebase-index.mjs --json
 ```
 
 不要在普通业务项目中搜索 `/Users/.../workspace/specforge` 或其他个人目录来寻找 CLI。只有用户明确说“用本地 SpecForge 源码版本测试”时，才改用：
@@ -167,7 +176,7 @@ node cli/specforge.mjs init --dir /path/to/project
 
 只允许根据用户已给出的项目信息补充 `.specforge/AGENTS.md` 的项目约束段，不要凭空补业务事实。
 
-如果 `codebase-map.mjs` 显示 `has_codebase: true`，说明这不是纯空仓库，而是已有项目接入。此时输出下一步为 `sf-steering`，先建立 `.specforge/wiki/` 项目画像，不要直接进入 `sf-intake`。
+如果 `codebase-index.mjs` 的 `bootstrap.has_codebase: true`，说明这不是纯空仓库，而是已有项目接入。此时输出下一步为 `sf-steering`，先建立 `.specforge/wiki/` 项目画像，不要直接进入 `sf-intake`。
 
 ## 迁移路径
 
@@ -185,7 +194,7 @@ node cli/specforge.mjs init --dir /path/to/project
 - 不移动、不删除用户未确认的文件。
 - `.specforge/core/standards/`、`.specforge/core/artifacts/templates/`、`.specforge/core/scripts/` 可用 starter 刷新。
 - `.specforge/wiki/`、`.specforge/work/`、`.specforge/registry.yaml` 保留已有内容。
-- 迁移后运行 `node .specforge/core/scripts/codebase-map.mjs --json`；只要仓库已有业务代码，就把下一步路由到 `sf-steering`。
+- 迁移后运行 `node .specforge/core/scripts/codebase-index.mjs --json`；只要仓库已有业务代码，就把下一步路由到 `sf-steering`。
 
 ## 关联标准
 
@@ -202,5 +211,5 @@ node cli/specforge.mjs init --dir /path/to/project
 ## 不做
 
 - 不在项目根目录创建 `specs/` 或 `scripts/`。
-- 不把全局 skill 文件复制进业务项目。
+- 不在 onboard 过程中自动安装或同步 AI 工具技能；项目级技能安装必须由用户单独明确要求。
 - 不替用户迁移低置信度文档。
