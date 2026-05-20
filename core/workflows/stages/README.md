@@ -24,6 +24,7 @@ description: <说明此技能做什么，以及什么时候使用>
 
 | 内部技能 | 入口技能 |
 |---|---|
+| `brainstorm/SKILL.md` | `sf-brainstorm`、`sf-intake`、`sf-prd`、`sf-requirements`、`sf-ui-design`、`sf-tech-design` |
 | `discovery/SKILL.md` | `sf`、`sf-intake`、`sf-discovery` |
 | `gap-report/SKILL.md` | `sf-discovery` |
 | `research/SKILL.md` | `sf-discovery` |
@@ -40,7 +41,7 @@ description: <说明此技能做什么，以及什么时候使用>
 | `status/SKILL.md` | `sf-doctor`、`sf-work` |
 | `steering/SKILL.md` | `sf-steering`、`sf-onboard`、`sf-intake`、`sf-wiki`、`sf-close` |
 
-> `sf-prd` 不对应固定的内部 stage 技能母本；它直接在 `discovery/SKILL.md` 的候选功能池章节和 `product-discovery` 规则基础上生成 PRD。
+> `brainstorm` 是 graph 外阶段：它可以生成 `00-intake/brainstorm.md` 并回写 brief，但不强制每个 work item 都经过它。`sf-prd` 不对应固定的内部 stage 技能母本；它读取 brief / brainstorm 的已确认选择后生成 PRD。
 
 ## 维护规则
 

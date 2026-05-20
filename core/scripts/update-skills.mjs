@@ -13,7 +13,7 @@ function usage() {
   return [
     "用法：",
     `  node ${layout.tools}/update-skills.mjs --all`,
-    `  node ${layout.tools}/update-skills.mjs --skill frontend-design`,
+    `  node ${layout.tools}/update-skills.mjs --skill pencil`,
     `  node ${layout.tools}/update-skills.mjs --check --all`,
     `  node ${layout.tools}/update-skills.mjs --list`,
   ].join("\n");

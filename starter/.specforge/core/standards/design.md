@@ -1,6 +1,6 @@
 # 体验设计标准
 
-本标准回答：有 UI 变化时，怎样确认风格、页面、流程、状态和原型证据；无 UI 变化时如何写 N/A。
+本标准回答：有 UI 变化时，怎样确认风格、页面、流程、状态和 Pencil 原型证据；无 UI 变化时如何写 N/A。
 
 ## UI 影响判断
 
@@ -18,36 +18,41 @@
 
 - 沿用现有设计系统或组件库。
 - 用户选择风格方向或参考产品。
-- Agent 给出 3-5 个候选风格并说明适用场景，由用户选择。
+- Agent 给出 2-3 个候选体验方向并说明适用场景、风险和推荐项；复杂场景可扩展到 5 个。
 - 低风险内部工具可使用默认假设，但必须写入 style brief。
 
-Style brief 至少包含：产品气质、布局密度、主色或 token、组件库、禁用风格、参考来源。
+Style brief 至少包含：产品气质、布局密度、主色或 token、组件形态、禁用风格、参考来源。
+
+## Pencil 是唯一正式原型通道
+
+SpecForge UI design 阶段只接受 Pencil 作为正式原型证据：
+
+| 产物 | 要求 |
+|---|---|
+| `01-spec/ui-design.md` | 页面地图、用户流程、Visual Style Brief、状态矩阵、验证策略 |
+| `01-spec/ui-mockup.pen` | Pencil 源文件 |
+| `01-spec/ui-mockup-export/*.png` | 关键页面和关键状态截图 |
+
+Figma、HTML、ASCII、竞品截图、公开网站和第三方设计 skill 只能作为参考输入。它们的价值必须转译为 Visual Style Brief、页面规则、状态矩阵和 Pencil 原型，不能替代 Pencil 产物。
+
+Pencil 操作规则：
+
+- 可参考 `core/skills/pencil` 的 MCP 操作流程。
+- 不要用普通文件读取 `.pen`。
+- 空 `.pen` / 空画布只能读取一次；确认没有节点后必须直接创建第一屏。
+- 禁止反复 `batch_get` 或 `find_empty_space_on_canvas`。
+- Pencil 连续创建失败 2 次时，停止并记录阻断原因；不要降级为 HTML / ASCII 当正式证据。
 
 ## 视觉质量门禁
 
-UI design 不是“控件摆上去就算完成”。有 UI 影响时，除非用户明确只要低保真线稿，否则必须留下可审查的视觉质量证据：
+UI design 不是“控件摆上去就算完成”。有 UI 影响时，必须留下可审查的视觉质量证据：
 
 - 用户提供示例设计、截图、规范或参考产品时，先提取设计语言：信息密度、布局网格、导航模式、颜色 token、字体层级、按钮 / 表单 / 表格形态、空 / 错误 / 成功反馈方式。
 - 原型必须体现 Visual Style Brief，而不是默认灰白表单、无层级卡片堆叠或通用后台模板。
 - 对复杂后台、审批流、上传 / 配置 / 执行类工具，必须至少覆盖关键列表页、详情 / 配置页、错误态或审批态；不能只画一个 happy path 页面。
-- Pencil / Figma / HTML 原型必须有截图或可视证据；HTML 原型优先用浏览器 / Playwright 截图自检。
-- 在 `ui-design.md` 中记录一次 UI guideline / design review：列出发现的问题、修改动作和最终结论。没有自检迭代的 UI 证据不能视为完成。
-
-## 原型工具选择
-
-| 工具 | 使用场景 | 交付要求 |
-|---|---|---|
-| Pencil | 本地、低成本、需要 AI 可读写原型 | `.pen` 源文件 + 导出 PNG |
-| Figma | 已有设计系统、需要设计师协作或高保真标注 | Frame 链接 + 截图备份 |
-| HTML mockup | 需要浏览器直接预览、快速可点击原型 | `ui-mockup.html`，不依赖业务构建 |
-| ASCII | 1-2 个简单页面或临时布局说明 | 内嵌 `ui-design.md`，复杂 UI 不可单独使用 |
-
-工具补充规则：
-
-- 选择 Pencil 时，可参考 `core/skills/pencil` 的 MCP 操作流程；Pencil 产物必须包含 `.pen` 源文件和可离线查看的 PNG。空 `.pen` / 空画布只能读取一次，确认没有节点后必须直接 `batch_design` 创建第一屏；禁止反复 `batch_get` 或 `find_empty_space_on_canvas`。
-- 选择 Figma 时，优先使用 Figma 官方 MCP / OpenAI curated Figma skills：`figma` 负责读上下文和截图，`figma-use` 负责画布写入，`figma-generate-design` 负责生成 screen，`figma-create-design-system-rules` 负责长期规则沉淀。不要把 `figma-extract` 作为默认 Figma 路径。
-- 选择 HTML mockup 时，设计阶段只负责原型文件；verification 阶段再用 Playwright 或 DevTools 记录实际浏览器证据。
-- 外部 skill 只提供能力或检查清单，不能替代本标准里的页面地图、状态矩阵和 requirements 追踪。
+- Pencil 原型必须有导出截图。
+- 在 `ui-design.md` 中记录一次 UI guideline / design review：列出发现的问题、修改动作和最终结论。
+- 没有自检迭代的 UI 证据不能视为完成。
 
 ## UI Design 必须包含
 
@@ -55,7 +60,7 @@ UI design 不是“控件摆上去就算完成”。有 UI 影响时，除非用
 - 页面地图：入口、跳转、返回路径。
 - 用户流程：正常路径和异常出口。
 - Visual Style Brief 和参考设计语言归一化。
-- 原型证据：Pencil / Figma / HTML / ASCII 至少一种。
+- Pencil 原型证据：`.pen` 源文件和 PNG 导出截图。
 - 视觉质量自检和至少一轮修正记录。
 - 交互状态矩阵：默认、空、加载、成功、错误、禁用、边界值、移动端、无障碍。
 - 与 requirements 的追踪关系。
@@ -78,7 +83,7 @@ UI design 不是“控件摆上去就算完成”。有 UI 影响时，除非用
 - 有复杂流程但没有页面地图和状态矩阵。
 - 原型只覆盖 happy path。
 - UI 原型只有控件堆叠，没有视觉层级、信息密度、状态反馈或参考设计语言落地。
-- 有可视原型但没有截图级质量自检和修正记录。
+- 有 Pencil 原型但没有截图级质量自检和修正记录。
 - 设计功能超出 requirements。
 - UI 证据无法被 reviewer 查看。
-- Pencil MCP 在空画布上重复读取而没有进入创建步骤；必须改为 `batch_design` 创建或降级 HTML mockup。
+- Pencil MCP 在空画布上重复读取而没有进入创建步骤。

@@ -8,6 +8,8 @@
 - Last Updated:
 - Assumptions:
   - A1:
+- Brainstorm Evidence:
+  - `00-intake/brainstorm.md` / N/A:
 - External Skill Inputs:
   - skill / trigger / normalized_to / notes:
 
@@ -40,9 +42,11 @@
 | Lens | Confirmed Facts | Open Decisions | Default Assumption |
 |---|---|---|---|
 
-## 6. User Stories & Acceptance Criteria
+## 6. User Stories & Acceptance Seeds
 
-| ID | User Story | Acceptance Criteria | Priority |
+> PRD 只写验收种子，不写最终 AC 编号。最终可测试验收标准由 `sf-requirements` 转写。
+
+| ID | User Story | Acceptance Seed | Priority |
 |---|---|---|---|
 
 ## 7. Core User Flows
@@ -96,3 +100,8 @@ Exceptions:
 - Recommended components flags:
 - Notes for ui_design:
 - Notes for technical_design:
+
+## PRD Boundary Notes
+
+- Do not write final requirement IDs, API fields, database fields, file paths, component splits, test commands, or implementation tasks here.
+- Any technical or UI note above is a constraint seed only; `sf-requirements`, `sf-ui-design`, and `sf-tech-design` own the final detailed artifacts.

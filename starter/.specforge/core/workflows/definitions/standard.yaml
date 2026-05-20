@@ -1,12 +1,13 @@
 id: standard
 name: 标准变更流程 (Standard)
-description: 通用标准流程，用于无法归入 feature / bugfix / issue / refactor / discovery 但仍需要完整需求、影响面设计、任务和双门禁的变更；intake 可按需触发 graph 外 PRD。
+description: 通用标准流程，用于无法归入 feature / bugfix / issue / refactor / discovery 但仍需要完整需求、影响面设计、任务和双门禁的变更；intake 可按需触发 graph 外 brainstorm / PRD。
 use_for:
   - 通用复杂变更
   - 跨模块的大型联动
   - 涉及安全、金钱、敏感数据流的改动
 stages:
   - 00-intake
+  - 00-intake (Brainstorm, if decisions need user tradeoff)
   - 00-intake (PRD, if brief requires)
   - 01-spec (Research, if needs_research)
   - 01-spec (Requirements)

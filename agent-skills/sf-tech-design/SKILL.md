@@ -77,6 +77,8 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 
 需要确认时，先输出“技术选型与依赖确认卡”，本轮停在确认卡；不要继续展开架构、API、数据、NFR 等详细 technical design，也不要进入 tasking / implementation：
 
+如果候选方案不仅是依赖确认，而是会改变产品边界、体验方式、成本模型、上线策略或长期架构方向，先路由到 `sf-brainstorm`，让用户完成方案取舍并写入 `00-intake/brainstorm.md`，再回到 `sf-tech-design` 定稿。
+
 ```markdown
 ## 技术选型与依赖确认
 
@@ -101,6 +103,22 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 ```
 
 未经确认的关键技术选择写成 `[NEEDS TECH DECISION]`；未经确认的新增依赖写成 `[NEEDS DEPENDENCY DECISION]`。二者都不得进入 `sf-tasking`、`sf-spec-review` approval 或 `sf-implement`。
+
+## 当前版本事实检查
+
+技术设计不能只靠记忆。以下情况必须查询当前官方资料或读取项目锁文件 / manifest：
+
+- 新增或替换框架、SDK、云服务、数据库、部署平台、AI provider、模型、测试工具或安全相关依赖。
+- 用户要求“最新版本”“当前推荐”“现在怎么做”。
+- 技术选择会影响成本、上线、兼容性、安全或长期维护。
+
+写入 `technical-design.md#1` 或 `#5`：
+
+| 项 | 版本 / 事实 | 来源 | 日期 | 对设计的影响 |
+|---|---|---|---|---|
+| | | 官方文档 / lockfile / package manifest / wiki | | |
+
+如果沿用现有项目版本，可以用 lockfile、package manifest、代码入口或 wiki 作为证据；如果无法确认，必须写风险并暂停关键决策。
 
 ## 执行顺序
 

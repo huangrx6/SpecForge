@@ -27,27 +27,42 @@ node cli/specforge.mjs skill add --target trae-cn --scope project --project-dir 
 node cli/specforge.mjs init --dir /path/to/project
 ```
 
-## 技能
+## 技能分类导航
 
-新入口统一使用 `sf` 前缀：
+新入口统一使用 `sf` 前缀，并根据其在工作生命周期中的地位分为三大类：
+
+### 1. 核心技能 (每个工作项的生命周期必经之路)
 
 | Skill | 用途 |
 |---|---|
-| `sf-router` | 根路由，判断当前状态和下一步；输入 `sf` 前缀时用于发现所有技能 |
-| `sf-onboard` | 初始化业务项目 `.specforge/` |
-| `sf-steering` | 理解存量项目和大型代码库，建立 `.specforge/wiki/` 项目画像 |
-| `sf-intake` | 创建或整理 work item，并按 feature / bugfix / issue / refactor / discovery / lite / standard 分流 |
-| `sf-requirements` | 生成 requirements |
-| `sf-ui-design` | 生成 UI design、页面流程、原型证据 |
-| `sf-tech-design` | 生成 technical design、前后端架构、API、数据和 NFR |
-| `sf-tasking` | 生成 tasks |
-| `sf-spec-review` | 执行 spec_review gate |
-| `sf-implement` | 按已批准 tasks 实现 |
-| `sf-code-review` | 执行 code_review gate |
-| `sf-verify` | 收集验证证据 |
-| `sf-wiki` | 手动或关闭前回写 `.specforge/wiki/*.md` |
-| `sf-close` | release、rollback、archive |
-| `sf-doctor` | 健康检查 |
-| `sf-work` | 自动推进但不跳过 gate |
+| `sf-intake` | 接单并初始化工作项 (生成 `work.yaml` 与 brief) |
+| `sf-brainstorm` | 对模糊产品、UI、AI 或技术方向做用户参与式头脑风暴，并落档取舍证据 |
+| `sf-requirements` | 生成需求规格书 (requirements) |
+| `sf-implement` | 按已批准的 tasks 拆分逐步编写代码实现 |
+| `sf-verify` | 通过单元测试/集成测试或 E2E 收集验证证据 |
+| `sf-close` | 进行 release/rollback，归档工作项并清理分支 |
 
-更多维护者说明见 [docs/README.md](/Users/huangrx6/workspace/specforge/docs/README.md)。
+### 2. 辅助技能 (按阶段或业务特性按需触发)
+
+| Skill | 用途 |
+|---|---|
+| `sf-prd` | 当 brief 决策需要时，进行 Socratic 访谈并生成 PRD |
+| `sf-discovery` | 需求前置调研，解决未知不确定性 |
+| `sf-ui-design` | 设计 UI 交互原型、页面流，并生成 ui-design 证据 |
+| `sf-tech-design` | 生成 technical-design，进行架构、数据模型、API 等详细技术设计 |
+| `sf-tasking` | 将复杂的设计或需求拆解为具体的 tasks 任务清单 |
+| `sf-spec-review` | 在实现前对设计规格做严格把关 (执行 spec_review gate) |
+| `sf-code-review` | 在实现后对代码成果做严格审查 (执行 code_review gate) |
+| `sf-wiki` | 手动或关闭前自动将重要事实回写沉淀至项目 wiki 库 |
+
+### 3. 系统维护技能 (维护与诊断)
+
+| Skill | 用途 |
+|---|---|
+| `sf-router` | 根路由，自动判断当前状态和指引下一步行为 |
+| `sf-work` | 工作项自动管理与生命周期推进工具 |
+| `sf-doctor` | 对项目 `.specforge` 配置与状态进行全面健康诊断 |
+| `sf-onboard` | 针对新项目或已有项目初始化接入配置 |
+| `sf-steering` | 用于对未知的大型/存量代码库进行首次基线画像扫描 |
+
+更多维护者说明在本目录及 `docs/adapters/`、`docs/agents/` 中维护。

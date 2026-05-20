@@ -71,12 +71,13 @@ node .specforge/core/scripts/create-artifact.mjs code_review
 4. **范围和边界**
    - 真实 diff 是否都能追溯到 `_Boundary:_` 或 approved spec。
    - 是否混入无关重构、格式化、依赖升级或大范围目录整理。
-5. **规格一致性**
+5. **Spec Compliance Review 先行**
    - 实现是否满足 requirements / gap_report / ui_design / technical_design。
    - UI 状态、API 契约、权限、数据迁移、后台任务、可观测性是否与设计一致。
    - technical_design 的 `yes` 影响面必须有对应代码 / 配置 / 文档变更和验证证据；`no` 影响面不得出现未经批准的真实 diff。
    - technical_design 的 `unknown` 若在 spec_review 已批准后仍以代码方式落地，必须视为范围偏离。
-6. **工程风险**
+   - 若存在规格偏离，先给 P0 / P1 finding 和 return path，不用代码风格建议冲淡主要风险。
+6. **Code Quality / Risk Review**
    - 安全、权限、输入校验、日志脱敏、secret、错误处理、并发、幂等、兼容性、配置默认值是否安全。
    - 新依赖、新脚手架、新环境变量是否有说明和验证。
 7. **测试和运行证据**

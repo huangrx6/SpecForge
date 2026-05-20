@@ -1,12 +1,13 @@
 id: feature
 name: 新功能研发流程 (Feature)
-description: 专为新增产品级功能设计。intake 阶段先判断是否需要 graph 外 PRD；PRD 完成或明确跳过后，再进入 requirements，并按影响面拆分体验设计与技术架构设计。
+description: 专为新增产品级功能设计。intake 阶段先判断是否需要 graph 外 brainstorm / PRD；用户取舍和 PRD 完成或明确跳过后，再进入 requirements，并按影响面拆分体验设计与技术架构设计。
 use_for:
   - 全新的产品页面或能力
   - 核心业务流扩展
   - 涉及交互界面大改
 stages:
   - 00-intake
+  - 00-intake (Brainstorm, if decisions need user tradeoff)
   - 00-intake (PRD, if brief requires)
   - 01-spec (Research, if needs_research)
   - 01-spec (Requirements)

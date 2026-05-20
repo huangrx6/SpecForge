@@ -348,6 +348,7 @@ export function computeArtifactStates(schema, workItemYaml, workItemBase) {
 export const templateByOutput = new Map([
   ["00-intake/original-request.md", "original-request.md"],
   ["00-intake/brief.md", "brief.md"],
+  ["00-intake/brainstorm.md", "brainstorm.md"],
   ["01-spec/requirements.md", "requirements.md"],
   ["01-spec/ui-design.md", "ui-design.md"],
   ["01-spec/technical-design.md", "technical-design.md"],

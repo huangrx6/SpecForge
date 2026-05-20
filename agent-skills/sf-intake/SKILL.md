@@ -9,7 +9,7 @@ description: 为新请求创建或整理 SpecForge work item；用于用户提�
 
 执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
 
-把用户的原始诉求变成一个可推进的 active work item。`sf-intake` 是分诊入口：判断 work item 类型、workflow、是否需要 PRD、是否需要 research、影响面 flags、是否需要拆分。它负责 intake，不负责写完整 PRD、requirements、设计或实现代码。
+把用户的原始诉求变成一个可推进的 active work item。`sf-intake` 是分诊入口：判断 work item 类型、workflow、是否需要 PRD、是否需要 research、影响面 flags、是否需要拆分，并识别是否需要进入 `sf-brainstorm`。它负责 intake，不负责写完整 PRD、requirements、设计或实现代码。
 
 ## 启动扫描
 
@@ -21,7 +21,7 @@ description: 为新请求创建或整理 SpecForge work item；用于用户提�
 
 ## 内部技能母本
 
-开始整理 intake 前，读取 `.specforge/core/workflows/stages/discovery/SKILL.md`。本根级 skill 只保留入口动作；discovery 的输入、输出、停止条件和完成标准以内置母本为准。
+开始整理 intake 前，读取 `.specforge/core/workflows/stages/discovery/SKILL.md`。如果需求需要用户参与式取舍，再读取 `.specforge/core/workflows/stages/brainstorm/SKILL.md` 并路由到 `sf-brainstorm`。本根级 skill 只保留入口动作；discovery / brainstorm 的输入、输出、停止条件和完成标准以内置母本为准。
 
 ## 关联标准
 
@@ -46,6 +46,17 @@ description: 为新请求创建或整理 SpecForge work item；用于用户提�
 5. **决定是否需要 PRD。**
 6. **校准 components flags。**
 7. **写 brief，并明确下一步路由。**
+
+## Brainstorm 分流规则
+
+模糊需求、产品型功能、页面 / 全栈应用、AI 能力、运营后台、多角色流程、审批 / 权限 / 数据生命周期相关需求，都不能只由 Agent 自己推理后进入 requirements。先路由到 `sf-brainstorm` 做一轮轻量但真实的用户参与式 brainstorm：
+
+- 先列 `已明确 / 高影响未知 / 可安全默认`。
+- 给出 2-3 个互斥方案或 MVP 组合，每个写价值、成本、风险、推荐项和不推荐原因。
+- 一轮只问会改变方向的问题；优先给选项和取舍，不用长问卷拷问用户。
+- 需要竞品、政策、版本、框架 / SDK、AI 能力或安全事实时，先查当前可靠来源；技术类优先官方资料。
+- 用户没有确认核心方向、MVP 或关键边界前，不把 Agent 推荐方案写成“已确认”。
+- Brainstorm 落档到 `00-intake/brainstorm.md`，再同步回 `brief.md` 的候选功能池、用户选择和 PRD 决策。
 
 ## 存量项目前置判断
 
@@ -120,7 +131,7 @@ node .specforge/core/scripts/create-work.mjs --workflow bugfix --kind bugfix --p
 - `PRD depth: N/A / prd-lite / prd-standard / prd-deep`
 - `Reason`
 - `Blocking product decisions`
-- `Next route: sf-prd / sf-requirements / sf-discovery / sf-tech-design`
+- `Next route: sf-brainstorm / sf-prd / sf-requirements / sf-discovery / sf-tech-design`
 
 ## 动作
 
@@ -161,7 +172,7 @@ node .specforge/core/scripts/create-work.mjs --workflow issue --kind issue --par
    - 背景和目标。
    - PRD 决策：是否需要 PRD、深度、原因和下一步。
    - 分析深度、代码库探索、外部研究或跳过理由、澄清记录和分析综合。
-   - 候选功能池、推荐 MVP、用户已确认选择和明确延后项。
+   - 候选功能池、推荐 MVP、用户已确认选择和明确延后项；需要 brainstorm 时引用 `00-intake/brainstorm.md`。
    - 本次负责 / 不负责。
    - 影响面矩阵：UI、frontend、backend、API、data、AI、integration、security、delivery、tests。
    - 依赖、风险、澄清项。
@@ -183,7 +194,7 @@ node .specforge/core/scripts/create-work.mjs --workflow issue --kind issue --par
 - brief 足以支撑 PRD 或 requirements。
 - PRD 决策清楚：需要就路由到 `sf-prd`，不需要就写明跳过理由。
 - `work.yaml` 的 `workflow` 和 `components` 已与 brief 影响面矩阵一致；不适用的 UI / 技术设计阶段已明确标成 `false`，不确定的保持 `auto`。
-- 下一步明确路由到 `sf-prd` / `sf-requirements` / `sf-discovery` / `sf-tech-design`，或因澄清项暂停。
+- 下一步明确路由到 `sf-brainstorm` / `sf-prd` / `sf-requirements` / `sf-discovery` / `sf-tech-design`，或因澄清项暂停。
 
 ## 不做
 

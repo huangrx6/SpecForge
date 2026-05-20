@@ -27,7 +27,7 @@
 
 ## PRD 决策
 
-> PRD 是 graph 外产品澄清产物。需要 PRD 时，下一步应路由到 `sf-prd`；不需要时必须写清跳过理由。
+> Brainstorm / PRD 是 graph 外澄清产物。需要用户参与式取舍时，下一步应先路由到 `sf-brainstorm`；需要 PRD 时再路由到 `sf-prd`；不需要时必须写清跳过理由。
 
 | 项 | 结论 | 理由 / 证据 |
 |---|---|---|
@@ -35,7 +35,7 @@
 | PRD depth | N/A / prd-lite / prd-standard / prd-deep | |
 | 跳过 PRD 的理由 | N/A / bugfix / issue / refactor / discovery / lite / 已有等价规格 / 目标足够明确 | |
 | 阻塞产品决策 | none / [NEEDS PRODUCT DECISION: question] | |
-| 下一步路由 | sf-prd / sf-requirements / sf-discovery / sf-tech-design | |
+| 下一步路由 | sf-brainstorm / sf-prd / sf-requirements / sf-discovery / sf-tech-design | |
 
 ## 分析深度
 

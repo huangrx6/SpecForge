@@ -14,7 +14,7 @@
   "trigger": "当对话和代码库上下文已经足够丰富，可以在不做大范围 discovery 的情况下合成 PRD 时使用；重点借鉴其 repo 感知、领域词汇、用户故事覆盖、deep module 思考和非目标纪律。",
   "normalizeTo": [
     "00-intake/prd.md#Executive Summary",
-    "00-intake/prd.md#User Stories & Acceptance Criteria",
+    "00-intake/prd.md#User Stories & Acceptance Seeds",
     "00-intake/prd.md#Scope & MVP Decision",
     "00-intake/prd.md#Handoff To Requirements"
   ],

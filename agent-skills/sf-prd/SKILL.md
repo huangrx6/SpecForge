@@ -11,7 +11,7 @@ description: 生成或更新产品需求文档（PRD）；用于产品型 work i
 
 把 brief 的分析结论升级为可对齐产品、设计与工程的 PRD。它的受众是产品决策者、业务负责人、设计负责人和工程负责人，不是实现者。
 
-`sf-prd` 是 requirements 之前的产品澄清产物，不是 artifact graph 的固定阶段，也不替代 `sf-requirements`。PRD 回答“为什么做、给谁做、第一版做哪些价值”，requirements 回答“系统必须表现出哪些可测试行为”。
+`sf-prd` 是 requirements 之前的产品澄清产物，不是 artifact graph 的固定阶段，也不替代 `sf-requirements`。PRD 回答“为什么做、给谁做、第一版交付哪些价值、哪些先不做”，requirements 回答“系统必须表现出哪些可测试行为、边界和验收标准”。
 
 PRD 不是固定问卷。它是一份产品决策文档：先识别当前需求最可能出错的决策点，再用少量高价值问题、候选功能池和可防守假设，把模糊想法推进到可进入 requirements 的状态。
 
@@ -27,6 +27,7 @@ node .specforge/core/scripts/doctor.mjs
 2. 找到唯一 active work item，读取：
    - `00-intake/original-request.md`
    - `00-intake/brief.md`
+   - `00-intake/brainstorm.md`（如果存在）
    - 已存在的 `00-intake/prd.md`（如果是更新 PRD）
    - `.specforge/core/artifacts/templates/prd.md`
    - `.specforge/wiki/` 中与产品、用户、业务、竞品、设计系统或既有架构相关的长期事实。
@@ -34,7 +35,7 @@ node .specforge/core/scripts/doctor.mjs
 
 ## 内部技能母本
 
-写 PRD 前，读取 `.specforge/core/workflows/stages/discovery/SKILL.md` 中关于候选功能池和用户确认的章节，确保 PRD 的功能边界已经过用户选择，不是 Agent 单方面假设。
+写 PRD 前，读取 `.specforge/core/workflows/stages/brainstorm/SKILL.md` 和 `.specforge/core/workflows/stages/discovery/SKILL.md` 中关于候选功能池和用户确认的章节，确保 PRD 的功能边界已经过用户选择，不是 Agent 单方面假设。
 
 ## 关联标准
 
@@ -65,16 +66,12 @@ node .specforge/core/scripts/doctor.mjs
 
 #### 触发选择
 
-每次最多选择 2-3 个第三方 PRD skill，除非用户明确要求深度研究：
+当前只保留 2 个 PRD 相关第三方 skill：
 
 | 第三方 skill | 什么时候参考 | 必须归一化到 |
 |---|---|---|
 | `to-prd` | 上下文已经较完整，需要把对话和代码库现状合成 PRD | `Executive Summary`、`User Stories`、`Scope & MVP`、`Handoff To Requirements` |
-| `write-a-prd` | 高风险或模糊需求，需要持续访谈、代码库验证、模块与测试思考 | `Product Interview Evidence`、`Open Questions & Decisions`、`Scope & MVP` |
-| `write-spec` | 需要检查目标 / 非目标 / 指标 / 风险 / phased rollout 是否完整 | `Background & Product Goals`、`Metrics`、`Risks`、`Rollout` |
 | `product-brainstorming` | 问题空间还散、用户给的是方案而不是问题、访谈维度容易僵化 | 候选功能池、访谈镜头、MVP 取舍 |
-| `user-research` | 用户、场景、工作流或可用性风险不清，需要研究计划或访谈指南 | `Users, Personas & Scenarios`、`Product Interview Evidence` |
-| `competitive-intelligence` | PRD 决策依赖竞品、市场替代方案、价格、定位或差异化 | `Background`、`Risks`、wiki product rules，必须有来源日期 |
 
 #### 归一化规则
 
@@ -94,7 +91,7 @@ node .specforge/core/scripts/doctor.mjs
 
 1. 先列出 `已确认事实 / 高影响未知 / 可默认假设`。
 2. 从下方“访谈镜头”中按需选择 3-6 个镜头，不要全量展开。
-3. 为每个高影响未知给出 2-4 个互斥选项、推荐项和取舍影响；用户可以直接选，也可以补充。
+3. 为每个高影响未知给出 2-4 个互斥选项、推荐项和取舍影响；如果问题需要多方案取舍，先路由到 `sf-brainstorm` 并落档 `00-intake/brainstorm.md`。
 4. 一轮最多问 5 个问题；复杂需求可以多轮，但每轮都要解释“为什么这些问题会改变 PRD”。
 5. 低风险未知可以写入 Assumption Ledger，不阻塞；高风险未知必须暂停。
 
@@ -165,8 +162,8 @@ node .specforge/core/scripts/doctor.mjs
 | Lens | Confirmed Facts | Open Decisions | Default Assumption |
 |---|---|---|---|
 
-## 6. User Stories & Acceptance Criteria
-| ID | User Story | Acceptance Criteria | Priority |
+## 6. User Stories & Acceptance Seeds
+| ID | User Story | Acceptance Seed | Priority |
 |---|---|---|---|
 
 ## 7. Core User Flows
@@ -214,6 +211,7 @@ node .specforge/core/scripts/doctor.mjs
 ### 6. 与 SpecForge 后续阶段衔接
 
 - `Requirements seeds` 写可转译为 `sf-requirements` 的行为候选，不写 EARS 规格全文。
+- PRD 中的 `Acceptance Seed` 只是验收种子，不是最终 AC 编号；最终验收标准必须由 `sf-requirements` 重新转写为可观察行为、边界值、异常态和验证方式。
 - `Recommended components flags` 只记录建议；如果 PRD 明确改变影响面，再同步更新 `work.yaml` 的 `components` 并说明原因。
 - `Notes for ui_design` 只写页面范围、体验目标、风格偏好和必须覆盖的状态。
 - `Notes for technical_design` 只写业务约束、集成边界、数据/权限/审批等产品层约束，不写架构方案。
@@ -247,6 +245,7 @@ PRD 完成后，回写或补充 `00-intake/brief.md` 中的这些章节：
 - 每个非目标都应解释为什么现在不做。
 - 不知道的约束写 `TBD`，不要编造技术栈、预算、外部依赖或上线日期。
 - PRD 可以记录已知硬约束，例如“必须使用现有 SSO”，但不得展开接口契约、数据库表结构或实现方案。
+- PRD 不写最终需求编号、API 字段、数据库字段、文件路径、组件拆分、测试命令或实现任务。
 
 **表达示例：**
 
@@ -261,6 +260,7 @@ PRD 完成后，回写或补充 `00-intake/brief.md` 中的这些章节：
 - 目标用户、核心问题或 MVP 功能边界无法从 brief / 用户回答中确认。
 - 成功指标完全缺失，且无法安全给出默认指标。
 - 存在产品方向冲突、角色权限冲突、合规 / 数据风险或 AI 质量目标冲突，需要用户或业务负责人决策。
+- 需要多方案取舍但缺少 `brainstorm.md` 或用户确认记录。
 - 用户要求 PRD 直接替代 requirements / UI design / technical design。
 
 ## 完成标准
@@ -276,5 +276,6 @@ PRD 完成后，回写或补充 `00-intake/brief.md` 中的这些章节：
 
 - 不写技术方案。
 - 不写接口契约、错误处理、边界条件或工程实现细节；这些进入 requirements / technical_design。
+- 不把用户故事里的验收种子包装成最终 requirements；必须交给 `sf-requirements` 转译。
 - 不替用户做关键产品决策；可以给推荐方案，但要标明假设并等待确认。
 - 不把延后功能列入 MVP。

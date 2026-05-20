@@ -55,14 +55,16 @@ node .specforge/core/scripts/create-artifact.mjs tasks
 
 ## 拆解要求
 
-- 每个任务必须有 `_Trace:_`、`_Impact:_`、`_Boundary:_`、`_Depends:_`、`_Verification:_`。
+- 每个任务必须有 `_Trace:_`、`_Impact:_`、`_Files:_`、`_Boundary:_`、`_Depends:_`、`_Verification:_`、`_Rollback:_`，有测试设计时还要有 `_TestCase:_`。
 - 任务必须能追溯到 requirements / gap_report / ui_design / technical_design / research，不要凭实现冲动新增范围。
 - 读取 `technical-design.md#0. 影响面与读取计划` 后，必须把每个 `yes` 影响面映射到实现任务和验证任务；`no` 写 N/A 理由；关键 `unknown` 不能进入 tasks，必须退回澄清。
-- 任务应小到一次实现或一次 review 可以聚焦完成。
+- 任务应小到一次实现或一次 review 可以聚焦完成；如果一个任务同时改多个主要模块、多个页面或多个风险面，继续拆。
+- `_Files:_` 写预期写入文件、目录或模块类别；如果实现者需要重新猜主要文件，说明任务还不够细。
+- `_Rollback:_` 写撤回方式、feature flag、迁移补偿、配置回退或“不适用及理由”；数据、权限、发布和依赖任务不得留空。
 - 先列契约任务（API、schema、类型、配置、迁移、权限、提示词 / 评估集），再列实现任务，再列验证任务。
 - 新项目或新前端 / 后端子项目必须先列脚手架和启动冒烟任务，不能一个个手写骨架文件。
 - UI 任务必须覆盖页面、组件、状态和原型证据；不能只写“实现页面”。
-- 有浏览器流程、上传、提交、审批、下载、权限或错误提示时，必须单独列 Playwright E2E 用例编写与执行任务；单元测试任务不能替代。
+- 有浏览器流程、上传、提交、审批、下载、权限或错误提示时，必须单独列 `05-verification/test-cases.md` 用例编写、Playwright 自动执行和证据登记任务；单元测试任务不能替代。
 - 数据迁移、权限、安全、发布、回滚、可观测性任务必须单独列出。
 - 每个验收标准至少能映射到一个实现任务和一个验证任务。
 
@@ -74,15 +76,16 @@ node .specforge/core/scripts/create-artifact.mjs tasks
 - technical_design 中仍有 `[NEEDS TECH DECISION]` 或 `[NEEDS DEPENDENCY DECISION]`，说明关键技术选型或新增依赖尚未确认。
 - technical_design 中存在会影响架构、数据、安全、成本、外部契约、发布或可靠性的 `unknown`。
 - technical_design 的 `yes` 影响面无法拆出实现任务或验证任务。
-- 存在未决产品问题、设计问题或技术方案选择，应该回到 `sf-requirements`、`sf-ui-design` 或 `sf-tech-design`。
+- 存在未决产品取舍、设计方向或技术方案选择，应该先回到 `sf-brainstorm`；如果只是规格表达不完整，再回到 `sf-requirements`、`sf-ui-design` 或 `sf-tech-design`。
 
 ## 完成标准
 
 - `01-spec/tasks.md` 能驱动 implementation，不需要实现者重新猜范围。
-- 每个任务都有追踪来源、边界、依赖和验证。
+- 每个任务都有追踪来源、影响面、预期文件边界、依赖、验证和回滚提示。
 - 每个 technical_design `yes` 影响面都有任务承接；`no` / N/A 有可信理由；无关键 `unknown` 留给 implementation。
 - 并行波次不会让多个任务同时写同一核心文件或共享未完成契约。
 - 测试、启动验证、回滚 / 观察和安全验证在适用时单独列出。
+- `tasks.md` 能直接生成 verification 测试用例矩阵，不需要验证阶段重新猜边界。
 - 下一步路由到 `sf-spec-review`，以 `instructions.mjs` 为准。
 
 ## 不做

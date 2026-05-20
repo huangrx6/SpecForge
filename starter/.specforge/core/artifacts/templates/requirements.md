@@ -5,7 +5,7 @@
 | 项 | 内容 |
 |---|---|
 | 来源 artifact | `original-request.md` / `brief.md` / `prd.md` / `research.md` |
-| 参考第三方 skill | N/A / `user-story-writing` / `write-spec` |
+| 参考第三方 skill | N/A / `user-story-writing` |
 | 归一化说明 | 第三方输出已转写为 SpecForge 需求；未直接复制外部模板 |
 | 影响面 flags 校准 | `has_ui` / `has_api` / `has_db` / `has_domain` / `needs_research` |
 
@@ -30,8 +30,18 @@
 
 ## PRD / Brief 追溯
 
-| 已确认目标 / 用户故事 / MVP 能力 | Requirements 覆盖位置 | 状态 |
+| 已确认目标 / 用户故事 / MVP 能力 / 验收种子 | Requirements 覆盖位置 | 转译结果 | 状态 |
+|---|---|---|---|
+
+## PRD 转译边界
+
+| PRD 项 | 本文处理方式 | 说明 |
 |---|---|---|
+| 产品目标 / KPI | REQ / NFR / 产品指标保留 | |
+| 用户故事 | REQ / 场景 / 非目标 | |
+| Acceptance Seed | AC / NFR / 待澄清 | |
+| UI notes | 影响面 flag / `ui-design.md` 输入 | 不展开 UI 方案 |
+| Technical notes | 影响面 flag / `technical-design.md` 输入 | 不展开 API / DB / 文件路径 |
 
 ## 边界
 
@@ -75,6 +85,12 @@
 | ID | 需求 | 来源 | 优先级 | 验收标准 |
 |---|---|---|---|---|
 | REQ-001 | WHEN ..., THE SYSTEM SHALL ... | PRD / brief / user clarification | MUST / SHOULD / COULD | AC-001 |
+
+## 行为覆盖矩阵
+
+| REQ | 正常路径 | 失败 / 空状态 | 边界值 | 权限差异 | 对应 AC |
+|---|---|---|---|---|---|
+| REQ-001 | | | | | AC-001 |
 
 ## 非功能需求
 

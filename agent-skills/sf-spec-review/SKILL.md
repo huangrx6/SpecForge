@@ -1,6 +1,6 @@
 ---
 name: sf-spec-review
-description: 执行 SpecForge spec_review gate；用于 requirements、适用的 ui_design / technical_design、tasks 完成后，审查规格是否足以进入 implementation 时。
+description: 审查 SpecForge 规格；用于随时 review 已存在的 PRD、requirements、ui_design、technical_design、tasks 等 spec，或在 ready artifact 为 spec_review 时执行实现前 gate。
 ---
 
 # sf-spec-review
@@ -9,18 +9,23 @@ description: 执行 SpecForge spec_review gate；用于 requirements、适用的
 
 执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
 
-审查 requirements、适用的 UI design、适用的 technical design、tasks 是否足以进入 implementation。审查是 gate，不是润色文档；目标是阻止不完整、不可测试、不可实现或风险未闭环的 spec 进入代码阶段。
+`sf-spec-review` 有两种模式：
+
+- **Artifact Review**：只要某个 spec 已存在，就可以审查它。适合用户说“看下 requirements 有没有问题”“review UI 设计”“tasks 拆得细不细”。不要求所有前置完成，不更新 gate。
+- **Gate Review**：ready artifact 为 `spec_review` 时，审查完整 spec 包是否足以进入 implementation，并更新 `spec_review` gate。
 
 ## 启动
 
-运行：
+先运行：
 
 ```bash
 node .specforge/core/scripts/artifact-graph-status.mjs
 node .specforge/core/scripts/instructions.mjs
 ```
 
-确认 ready artifact 为 `spec_review`，再生成审查产物：
+如果用户明确要求 review 某个已有 artifact，进入 Artifact Review；否则只有 ready artifact 为 `spec_review` 时进入 Gate Review。
+
+Gate Review 需要生成审查产物：
 
 ```bash
 node .specforge/core/scripts/create-artifact.mjs spec_review
@@ -28,17 +33,59 @@ node .specforge/core/scripts/create-artifact.mjs spec_review
 
 ## 内部技能母本
 
-执行 spec_review 前，读取 `.specforge/core/workflows/stages/spec-review/SKILL.md`。审查重点、阻断规则、状态定义和完成标准以内置母本为准。
+执行前读取：
+
+```text
+.specforge/core/workflows/stages/spec-review/SKILL.md
+```
+
+审查范围、阻断规则、finding 分级和完成标准以内置母本为准。
 
 ## 关联标准
 
 - `.specforge/core/standards/workflow.md`：gate 状态、scope、evidence 和推进边界。
-- `.specforge/core/standards/product.md`：requirements、PRD、候选功能、澄清和验收标准。
-- `.specforge/core/standards/design.md`：UI 风格、原型证据、页面流程和状态矩阵。
+- `.specforge/core/standards/product.md`：PRD、requirements、候选功能、澄清和验收标准。
+- `.specforge/core/standards/design.md`：Pencil 原型、UI 风格、页面流程和状态矩阵。
 - `.specforge/core/standards/engineering.md`：technical design、API、安全、测试、交付和 review 标准。
 - `.specforge/core/profiles/README.md`：技术选型、数据库选择矩阵和 profile 偏离规则。
 
-## 先计算必审范围
+## Artifact Review
+
+Artifact Review 可审查以下任意已存在产物：
+
+- `00-intake/brief.md`
+- `00-intake/prd.md`
+- `01-spec/requirements.md`
+- `01-spec/ui-design.md`
+- `01-spec/technical-design.md`
+- `01-spec/tasks.md`
+- `01-spec/gap-report.md`
+- `01-spec/research.md`
+
+写入建议路径：
+
+```text
+02-spec-review/<artifact>-review-v<N>.md
+```
+
+例如：
+
+```text
+02-spec-review/requirements-review-v1.md
+02-spec-review/ui-design-review-v1.md
+02-spec-review/technical-design-review-v1.md
+02-spec-review/tasks-review-v1.md
+```
+
+Artifact Review 输出必须包含：
+
+- Review scope
+- 可进入下一阶段 / 需要修改 / 方向错误
+- Findings，按 `P0 / P1 / P2 / P3` 排序
+- Return to：应回到哪个 artifact 和哪个 `sf-*`；用户取舍未确认时优先回到 `sf-brainstorm`
+- 不更新 gate 的说明
+
+## Gate Review
 
 不要凭“文件存在”决定审查范围。先读取 active work item 的 `work.yaml`，结合当前 workflow schema 和 `components` flags 判断哪些 artifact 对本次 gate 是必需的。
 
@@ -50,76 +97,40 @@ node .specforge/core/scripts/create-artifact.mjs spec_review
 | `has_ui` 不是明确 `false` | `ui-design.md` |
 | `has_api` / `has_db` / `has_domain` / `has_ai` / `has_nfr` / `has_security` / `has_integration` / `has_infra` / `has_background_job` 任一不是明确 `false` | `technical-design.md` |
 | `refactor` | `technical-design.md`、`tasks.md` |
-| workflow schema 不包含 `spec_review` | 不执行本技能，路由回 `sf-router` 或 `sf-doctor` |
+| workflow schema 不包含 `spec_review` | 不执行 Gate Review，路由回 `sf-router` 或 `sf-doctor` |
 
-`auto` 是保守值，视为“需要审查”。只有明确 `false` 且 brief / requirements 能证明不涉及时，才允许跳过对应 artifact。
+## 审查重点
 
-## 审查检查项
+1. PRD / requirements 边界是否清楚：PRD 负责产品决策，requirements 负责可测试行为。
+2. UI 是否固定归一为 Pencil：有 UI 影响时必须有 Visual Style Brief、Pencil `.pen`、导出截图、状态矩阵和视觉质量修正记录。
+3. Tech design 是否经过问答确认：关键技术、新增依赖、版本、SDK、部署和测试栈不能由 AI 静默决定。
+4. Tasks 是否细：每个任务都要有 trace、impact、boundary、depends、verification，且验证任务独立存在。
+5. 浏览器流程是否有 Playwright 用例、自动操作执行和证据登记要求。
 
-按顺序检查，前一层断链时不要跳过：
+## Gate 动作
 
-1. **Workflow 与 components 一致性**
-   - workflow 是否匹配 work item 类型。
-   - components flags 是否与 brief / requirements 的影响面一致。
-   - optional artifact 的跳过理由是否可信。
-2. **需求追踪链**
-   - 原始请求、brief / PRD、requirements、ui_design、technical_design、tasks 之间是否可追踪。
-   - 每个需求都有验收标准和至少一个任务 / 验证路径。
-3. **产品和需求质量**
-   - requirements 可测试、无歧义、边界和非目标明确。
-   - 产品 / 功能候选已展开，MVP 组合有用户确认或明确默认假设。
-   - `[NEEDS CLARIFICATION]`、`[NEEDS PRODUCT DECISION]`、`TBD` 不得残留在关键路径。
-4. **UI 设计质量**
-   - 有 UI 影响时，必须有页面地图、用户流程、风格确认、原型证据和交互状态矩阵。
-   - 用户提供示例设计、截图、规范或参考产品时，必须有参考设计语言提取和落地说明。
-   - 有 Pencil / Figma / HTML 可视原型时，必须有视觉质量 review、截图级证据和修正记录；默认控件堆叠不能通过。
-   - ASCII 只能支撑简单 UI；复杂流程必须有 Pencil、Figma 或 HTML mockup 证据。
-5. **技术设计质量**
-   - technical_design 必须填写 `## 0. 影响面与读取计划`，并与 `work.yaml` 的 components、requirements 影响面和 tasks 验证计划一致。
-   - 每个影响面只能是 `yes` / `no` / `unknown`。`unknown` 若会改变架构、数据、安全、成本、外部契约或上线风险，必须退回 `sf-tech-design` 或更早阶段澄清，不得批准。
-   - `yes` 影响面必须写清触发证据、读取的子模块 / profile，并在对应技术章节有设计响应和验证钩子。
-   - `no` 影响面必须有可信 N/A 理由；不得用空表格、默认处理或“暂不考虑”掩盖真实风险。
-   - 技术栈、组件库、编辑器、数据库 / 数据层和测试方案有 profile 或取舍理由；纯后端不强制前端 profile，纯前端不强制数据库 profile。
-   - 新项目、空仓库、技术栈缺失，新增 / 替换关键技术，或新增直接依赖时，`technical-design.md#1. 技术选型与依赖确认` 必须记录用户确认、用户授权默认、已确认脚手架或可信的“沿用现有栈”证据；只有 Agent 推荐、profile 选择和依赖说明不算确认。
-   - technical_design 不得残留 `[NEEDS TECH DECISION]` 或 `[NEEDS DEPENDENCY DECISION]`。
-   - API、安全、可靠性、可观测性或交付影响存在时，必须写规则主基准采用点、偏离理由和验证证据。
-6. **任务可执行性**
-   - tasks 可排序、可实施、可验证。
-   - 每个任务必须保留 `_Trace:_`、`_Impact:_`、`_Boundary:_`、`_Depends:_`、`_Verification:_`。
-   - `_Impact:_` 必须与 technical_design 影响面矩阵一致；technical_design `yes` 影响面必须有任务承接，`no` 影响面不得出现实现任务。
-   - tasks 必须包含测试、启动验证、迁移 / 回滚 / 观察任务中适用的部分。
-   - 有页面操作、上传、提交、审批、下载、权限或错误提示的浏览器流程时，tasks 必须包含 Playwright E2E 用例编写、真实浏览器自动操作执行和证据登记；只列单元测试、组件测试、手工验证或 DevTools 检查不得批准。
+写 `02-spec-review/spec-review-v1.md`，包含审查矩阵、追踪矩阵和 findings。
 
-## 动作
-
-1. 生成 / 更新 `02-spec-review/spec-review-v1.md`。
-2. 写审查矩阵、追踪矩阵和 findings。findings 按 `P0 / P1 / P2` 排序，每条指向具体文件或章节。
-3. 决策为 `APPROVED` / `REQUEST_CHANGES` / `REJECTED`。
-4. `APPROVED` 时更新 gate：
+`APPROVED` 时：
 
 ```bash
 node .specforge/core/scripts/gate.mjs spec_review APPROVED --evidence 02-spec-review/spec-review-v1.md
 ```
 
-5. `REQUEST_CHANGES` 或 `REJECTED` 时，更新 gate 状态但不带 evidence；在 review 文件中写清回到哪个 artifact 和哪个 `sf-*` 技能修。
+`REQUEST_CHANGES` 或 `REJECTED` 时：
 
 ```bash
 node .specforge/core/scripts/gate.mjs spec_review REQUEST_CHANGES
+node .specforge/core/scripts/gate.mjs spec_review REJECTED
 ```
 
 ## 完成标准
 
-- `spec-review-v1.md` 有明确 decision。
-- `APPROVED` 时 gate 状态与 evidence 路径一致。
-- `REQUEST_CHANGES` / `REJECTED` 时 gate 状态已更新，evidence 保持 `null`。
-- `REQUEST_CHANGES` 必须指出回到哪个 artifact（requirements / 适用的 ui_design / technical_design / tasks）。
-- 所有 P0 / P1 finding 必须解决后才可批准。
-- technical_design 影响面矩阵缺失、不完整，或关键 `unknown` 未闭环时，必须 `REQUEST_CHANGES`。
-- 新项目、关键技术变更或新增依赖缺少确认来源时，必须 `REQUEST_CHANGES` 回到 `sf-tech-design`。
-- 有浏览器流程但缺少 Playwright E2E 用例 / 执行 / 证据任务时，必须 `REQUEST_CHANGES` 回到 `sf-tasking`。
+- Artifact Review：review 文件存在，不更新 gate，明确返回路径。
+- Gate Review：`spec-review-v1.md` 有明确 decision；`APPROVED` 时 gate 状态与 evidence 路径一致；未批准时 gate evidence 保持 `null`。
 
 ## 不做
 
-- 不用空泛"看起来没问题"批准 gate。
+- 不用空泛“看起来没问题”批准 gate。
 - 不在 review 阶段顺手补实现。
 - 不替前序阶段大段重写 requirements、ui_design、technical_design 或 tasks；只给出明确退回路径。

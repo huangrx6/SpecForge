@@ -11,7 +11,7 @@
 不适用：
 
 - 单机嵌入式或本地文件型应用，优先看 `database/embedded-sqlite`。
-- 团队和既有系统主要围绕 MySQL 生态建设，且没有 PostgreSQL 特有需求时，优先评估 `database/rdbms-mysql`。
+- 团队和既有系统主要围绕其他关系型数据库生态建设，且没有 PostgreSQL 特有需求时，优先沿用现有栈并在 technical design 中说明偏离本 profile 的理由。
 - 需求没有持久化或只是静态配置时，不要为了完整性引入数据库。
 
 ## 默认组合

@@ -1,93 +1,82 @@
 ---
 name: ui-design
-description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成或确认视觉风格、页面地图、用户流程、交互状态和 Pencil / Figma / HTML / ASCII 原型证据。
+description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成或确认视觉风格、页面地图、用户流程、交互状态和固定 Pencil 原型证据。
 ---
 
 # UI Design Skill
 
-本技能只处理用户可见体验，不处理后端架构、API、数据库或部署方案。若本 work item 不涉及 UI，写一个明确的 N/A 结论，说明为什么跳过以及后续如何验证“无 UI 影响”。
+本技能只处理用户可见体验，不处理后端架构、API、数据库或部署方案。SpecForge 的默认且唯一 UI 原型通道是 **Pencil**：有 UI 影响时，必须产出 `01-spec/ui-mockup.pen` 和导出截图；Figma、HTML、ASCII、设计类第三方 skill 只能作为参考输入，不能作为本阶段的正式交付通道。
+
+若本 work item 不涉及 UI，写一个明确的 N/A 结论，说明为什么跳过以及后续如何验证“无 UI 影响”。
 
 ## 读取
 
 - `00-intake/brief.md`
+- `00-intake/prd.md`（存在时）
 - `01-spec/requirements.md`
 - `.specforge/core/standards/product.md`
 - `.specforge/core/standards/design.md`
-- `.specforge/core/skills/README.md`
-- `.specforge/core/skills/registry.json`
 - `.specforge/core/standards/workflow.md`
-- `.specforge/core/standards/engineering.md`
-- 现有页面、设计系统、Figma / Pencil / 截图 / 参考产品（如 brief 或用户提供）
+- 现有页面、组件库、设计系统、Pencil 文件、截图、参考产品或用户提供的设计资料
+- 需要操作 Pencil 时读取 `core/skills/pencil/SKILL.md`
+- 做视觉质量审查时读取项目设计系统或 `core/skills/web-design-guidelines`（如果存在）
 
 ## 写入
 
 - `01-spec/ui-design.md`
-- 可选 UI 证据：
-  - `01-spec/ui-mockup.pen`
-  - `01-spec/ui-mockup-export/*.png`
-  - `01-spec/ui-mockup.html`
+- `01-spec/ui-mockup.pen`
+- `01-spec/ui-mockup-export/*.png`
+
+## 设计原则
+
+- **先讨论，再画图。** 没有视觉方向、页面范围和关键流程确认时，不创建随意原型。
+- **Pencil 是唯一正式原型证据。** 参考 Figma、截图、HTML 或竞品时，必须把设计语言转译到 `ui-design.md` 和 Pencil 原型。
+- **不要给用户丢 5 种工具。** 工具不让用户选，体验方向让用户选。
+- **设计要像真实产品。** 后台和工具类界面优先信息密度、扫描效率、稳定布局和状态反馈；不要用营销页式大卡片、空泛 hero、默认控件堆叠来糊弄 UI 设计。
+- **实现阶段不得重新发明视觉风格。** `ui-design.md` 和 Pencil 截图是后续实现与验证的依据。
 
 ## 设计流程
 
-1. **判断 UI 影响。** 检查页面、组件、路由、视觉状态、角色视图、响应式、可访问性和用户操作流。
-2. **无 UI 影响时写 N/A。** 说明影响面、跳过理由、验证方式；不要继续生成风格或原型。
-3. **确认视觉风格。**
-   - 若项目已有设计系统、品牌手册、Figma 文件或组件库规范，引用它并写明沿用范围。
-   - 若没有现成约束，必须先向用户提出 **5 个**风格方向，或让用户提供参考产品 / 截图 / getdesign.md 风格对象。
-   - 若需要灵感，可以参考 `core/skills/frontend-design` 或 `core/skills/getdesign`，但必须把结果转译成 SpecForge 的 `Visual Style Brief`，不能直接粘贴第三方 skill 输出。
-   - 用户提供示例设计、截图、规范或参考产品时，先提取设计语言，再做页面方案；不要只把参考资料作为附件列出。
-   - 若用户暂不确认，且 UI 风险低，可以写默认假设，但必须记录可逆性和待确认点。
-4. **建立页面地图、用户流程和页面 × 状态矩阵。** 角色视图分开写，不能只写 happy path。
-5. **选择 UI 产物通道。**
-   - Pencil：本地、可入库、Agent 可直接生成或修改中保真原型。
-   - Figma：已有团队设计稿、设计系统、设计师协作或需要高保真还原。
-   - HTML mockup：需要浏览器直接预览、Playwright 验证或无设计工具可用。
-   - ASCII：1-2 个简单页面的轻量线稿；复杂 UI 不能只用 ASCII 作为最终证据。
-   - Design.md fallback：当 Figma / Pencil 不可用、但项目需要稳定视觉语言时，可用 `core/skills/design-md` 的结构生成 DESIGN.md 或 wiki 设计系统；它不替代原型证据。
-6. **按通道加载外部 skill。**
-   - Pencil：读取 `core/skills/pencil/SKILL.md`，只把 MCP 操作计划、布局检查和截图结果归一到 `ui-design.md`；不要用普通文件读取 `.pen`。
-     - 空 `.pen` / 空画布最多读取一次。确认为空后必须立即 `batch_design` 创建第一屏，不能继续 `batch_get` 或 `find_empty_space_on_canvas`。
-     - 若 Pencil 创建连续失败 2 次，降级为 `ui-mockup.html`，并在 `ui-design.md` 写明降级原因和剩余风险。
-   - Figma：优先 Figma 官方 MCP / OpenAI curated Figma skills；不要默认接入 `nexu-io/open-design` 的 `figma-extract`。
-     - 读设计上下文 / 截图 / 变量：`core/skills/figma`
-     - 写 Figma 画布：先读 `core/skills/figma-use`
-     - 生成完整 screen：配合 `core/skills/figma-generate-design`
-     - 设计系统规则沉淀：`core/skills/figma-create-design-system-rules`
-   - HTML：需要浏览器预览时，后续 verification 可使用 `playwright-skill` 或 DevTools，但 UI design 阶段只记录预览路径和预期状态。
-7. **产出并链接证据。**
-   - Pencil 使用 `01-spec/ui-mockup.pen` 和 `01-spec/ui-mockup-export/*.png`，并在 `ui-design.md` 写明使用的 MCP 操作摘要、空画布处理结果和截图自检。
-   - Figma 使用文件 / Frame URL，并导出关键截图到 `01-spec/ui-mockup-export/`。
-   - HTML 使用 `01-spec/ui-mockup.html`。
-   - ASCII 直接嵌入 `ui-design.md`。
-8. **执行视觉质量自检并修一轮。**
-   - 对 Pencil / Figma / HTML 产物，必须有截图或可查看证据。
-   - 使用 `core/skills/web-design-guidelines`、已选风格 brief 或项目设计系统做 review，至少检查信息层级、间距、对齐、密度、颜色、组件一致性、状态反馈和可访问性。
-   - 发现问题后先修原型，再把 review 发现和修正结果写入 `ui-design.md`；不要把“后续实现时优化 UI”当成通过条件。
-9. **写 UI 验证策略。** 覆盖截图、页面流程、角色权限、响应式、异常态和无障碍。
-
-## 风格澄清最低标准
-
-有 UI 影响且没有现成设计系统时，`ui-design.md` 必须记录：
-
-- 给用户的 5 个候选方向，以及用户选择或默认采用的风格方向。
-- 参考来源（产品、截图、Figma、Pencil、getdesign.md 风格对象等）。
-- 信息密度、色彩气质、组件形态、排版倾向、动效范围。
-- 不采用的方向，尤其是会干扰业务效率的视觉套路。
+1. **判断 UI 影响。**
+   - 检查页面、组件、路由、视觉状态、角色视图、响应式、可访问性和用户操作流。
+   - 无 UI 影响时写 N/A、跳过理由和验证方式；不要继续生成风格或原型。
+2. **做 UI 设计访谈。**
+   - 先列 `已确认 / 高影响未知 / 可安全默认`。
+   - 没有现成设计系统时，给用户 2-3 个互斥体验方向，写清适合点、风险和推荐项；复杂项目可以扩展到 5 个方向，但不要机械凑数。
+   - 一轮只问会改变 UI 的关键问题，例如信息密度、主流程、角色差异、表单复杂度、错误反馈、数据展示方式。
+   - 用户暂不确认且 UI 风险低时，可以写默认假设，但必须记录可逆性和待确认点。
+3. **提取参考设计语言。**
+   - 若有现有设计系统、品牌手册、页面、Pencil、Figma、截图或参考产品，提取可执行规则：布局、导航、密度、色彩、字体、表格、表单、反馈、空态和错误态。
+   - 不要只贴链接；每个参考都要写“采用什么、不采用什么、如何落地”。
+4. **建立体验规格。**
+   - 页面地图、入口出口、角色流程、主路径、异常路径。
+   - 页面 × 状态矩阵：default、loading、empty、error、permission、disabled、success、boundary、responsive、a11y。
+   - 明确不做项，防止实现阶段扩大 UI 范围。
+5. **创建或更新 Pencil 原型。**
+   - 读取 `core/skills/pencil/SKILL.md`。
+   - 输出 `01-spec/ui-mockup.pen`。
+   - 导出关键页面截图到 `01-spec/ui-mockup-export/`。
+   - 空 `.pen` / 空画布最多读取一次。确认为空后必须立即创建第一屏，不能陷入空读循环。
+   - Pencil 创建连续失败 2 次时，停止并写阻断原因；不要降级成 HTML / ASCII 作为正式 UI 证据。
+6. **执行视觉质量自检并修一轮。**
+   - 必须基于截图检查信息层级、间距、对齐、密度、颜色、组件一致性、状态反馈、响应式和可访问性基础。
+   - 发现问题先修 Pencil，再把 review 发现和修正结果写入 `ui-design.md`。
+   - “实现时再优化 UI”不是通过条件。
+7. **写 UI 验证策略。**
+   - 明确 Playwright 后续要覆盖的页面、操作、角色、状态、截图和失败路径。
 
 ## 停止条件
 
 - 用户可见体验的关键风格、页面范围或角色流程尚未确认，且默认假设风险高。
-- 有 UI 变更但没有任何可验收 UI 产物或明确降级理由。
-- 有可视原型但没有截图级质量自检、问题修正记录，或原型明显只是默认控件堆叠。
+- 有 UI 变更但没有 Pencil `.pen`、导出截图或明确 Pencil 阻断原因。
+- Pencil 原型只是默认控件堆叠，没有参考设计语言、状态矩阵或视觉质量自检。
 - 原型与 requirements 的角色、流程、审批、权限或异常态不一致。
-- 需要 Figma / Pencil 工具但当前不可用，且没有 HTML / ASCII 降级方案。
-- Pencil MCP 出现重复读取空画布、没有进入 `batch_design` 创建步骤；此时必须中断 Pencil 通道并改用 HTML mockup 或重新开始一次明确的 Pencil 创建任务。
+- 设计需要改变产品范围或技术能力，但没有回到 PRD / requirements / technical design。
 
 ## 完成标准
 
 - `ui-design.md` 能让 reviewer 判断 UI 是否满足需求。
-- 有 UI 变更时，存在 style brief、参考设计语言归一化、工具选择记录、至少一种可验收 UI 证据，以及视觉质量自检 / 修正记录。
-- 状态矩阵覆盖 loading、empty、error、permission、success、disabled、边界值和响应式适用性。
-- 如果执行 UI review 或 verification，优先参考 `core/skills/web-design-guidelines`，并把发现归一为 SpecForge review / verification 记录。
+- 有 UI 变更时，存在 Visual Style Brief、页面地图、流程、状态矩阵、Pencil `.pen`、导出截图和视觉质量修正记录。
+- 无 UI 影响时，N/A 理由和验证方式清楚。
 - 实现者能据此实现页面结构和交互状态。
-- `technical-design.md` 可只引用本文件的 UI 结论，不重复写视觉和交互细节。
+- `technical-design.md` 只引用本文件的 UI 结论，不重复维护视觉和交互细节。

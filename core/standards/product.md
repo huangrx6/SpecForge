@@ -7,8 +7,26 @@
 | 产物 | 作用 | 不做什么 |
 |---|---|---|
 | `brief.md` | 保留原始请求、分类 workflow、记录范围和 PRD 决策 | 不展开完整需求 |
+| `brainstorm.md` | 记录用户参与式发散、当前事实、方案对比、取舍和已确认选择 | 不替用户拍板，不写最终规格 |
 | `prd.md` | 产品问题、用户、候选能力、MVP、指标、路线图 | 不写接口和实现细节 |
 | `requirements.md` | 可测试行为、用户故事、验收标准、边界、异常 | 不做技术选型 |
+
+## Brainstorm 决策
+
+需要 brainstorm 的情况：
+
+- 用户想法仍模糊，或明确要求“先讨论 / 头脑风暴 / 帮我想想”。
+- 产品型功能、页面体验、AI 能力、多角色流程、审批/权限/数据生命周期尚未确认核心方向。
+- PRD、requirements、UI design 或 technical_design 中存在会改变范围、体验或架构的未决选择。
+- 技术路线、依赖版本、模型能力、外部服务、安全策略或部署成本需要用户取舍。
+
+可以跳过 brainstorm 的情况：
+
+- 用户已经给出明确方案、范围、非目标和验收标准。
+- bugfix、issue、低风险 lite change 或纯 refactor 没有产品/体验/技术路线取舍。
+- 只是补全文案、格式或已批准 spec 的机械拆解。
+
+Brainstorm 是 graph 外阶段；需要时写入 `00-intake/brainstorm.md` 并同步 `brief.md`，不强制每个 work item 都经过。
 
 ## PRD 决策
 

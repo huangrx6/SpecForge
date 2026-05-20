@@ -1,6 +1,6 @@
 ---
 name: sf-ui-design
-description: 生成或更新 SpecForge work item 的 UI design；用于 ready artifact 为 ui_design，或需求涉及页面、交互、视觉风格、Figma/Pencil/HTML/ASCII 原型证据时。
+description: 生成或更新 SpecForge work item 的 UI design；用于 ready artifact 为 ui_design，或需求涉及页面、交互、视觉风格、状态矩阵和 Pencil 原型证据时。
 ---
 
 # sf-ui-design
@@ -10,6 +10,8 @@ description: 生成或更新 SpecForge work item 的 UI design；用于 ready ar
 执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
 
 把 requirements 中的用户可见体验转成可审查的 UI 设计证据。它不写技术架构、不写 API、不写数据库设计。
+
+SpecForge 固定使用 **Pencil** 做正式 UI 原型。Figma、HTML、ASCII、截图、竞品和第三方设计 skill 只能作为参考输入；最终必须归一为 `01-spec/ui-design.md`、`01-spec/ui-mockup.pen` 和 `01-spec/ui-mockup-export/*.png`。
 
 ## 启动
 
@@ -36,51 +38,35 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
 ## 关联标准
 
 - `.specforge/core/standards/product.md`：页面和流程必须追溯到已确认需求。
-- `.specforge/core/standards/design.md`：视觉风格、页面地图、用户流程、状态矩阵和 Pencil / Figma / HTML / ASCII 证据。
-- `.specforge/core/skills/ORCHESTRATION.md`：第三方 UI skill、Figma / Pencil / HTML / ASCII 的编排顺序和写回规则。
-- `.specforge/core/skills/README.md`：第三方 UI skill 的触发、用途和归一化要求。
-- `.specforge/core/skills/registry.json`：已安装第三方 UI skill 的来源和更新信息。
+- `.specforge/core/standards/design.md`：视觉风格、页面地图、用户流程、状态矩阵和 Pencil 证据。
 - `.specforge/core/standards/workflow.md`：UI 范围、非目标和 gate 边界。
 - `.specforge/core/standards/engineering.md`：UI 验证矩阵和 evidence 要求。
+- `core/skills/pencil/SKILL.md`：Pencil 文件创建、修改、导出和截图自检。
 
 ## 执行要点
 
-1. 先判断是否有 UI 影响；没有时写 N/A 和验证方式。
-2. 有 UI 影响时，先确认视觉风格，再选择原型工具。没有现成设计系统时，向用户给出 **5 个**候选方向或让用户提供参考产品。
-3. 用户提供示例设计、截图、规范或参考产品时，必须先提取设计语言并写入 Visual Style Brief，再做页面方案。
-4. 写页面地图、角色流程、状态矩阵和原型证据。
-5. 复杂 UI 优先 Pencil 或 Figma；需要浏览器确认时用 HTML mockup；简单页面可用 ASCII。
-6. 第三方 skill 先按 `.specforge/core/skills/ORCHESTRATION.md` 选择和归一化，只作为输入能力，不直接成为 SpecForge 产物：
-   - `frontend-design` / `getdesign`：只用于风格候选和 style brief。
-   - `pencil`：只在本次选择 Pencil 原型通道时读取，用于 MCP 操作、`.pen` 读写、布局检查和截图导出。
-     - 如果 `.pen` 是空文件或空画布，最多执行一次读取；确认没有节点后必须立即 `batch_design` 创建第一屏。
-     - 禁止 `batch_get` / `find_empty_space_on_canvas` / `batch_get` 这类空读循环；连续创建失败时降级到 HTML mockup。
-   - `design-md`：只用于 DESIGN.md / wiki 设计系统 fallback，不替代页面流程和状态矩阵。
-   - `web-design-guidelines`：只用于 UI review / verification，不用于初始风格生成。
-7. Figma 通道优先 Figma 官方 MCP / OpenAI curated Figma skills，不要默认使用 `nexu-io/open-design` 的 `figma-extract`：
-   - `figma`：读取 design context、screenshot、变量、资产。
-   - `figma-use`：写入或修改 Figma 画布，必须先读后写、小步执行、返回节点 ID。
-   - `figma-generate-design`：从描述、现有页面或代码结构生成 Figma screen。
-   - `figma-create-design-system-rules`：把稳定设计系统规则沉淀到 wiki / AGENTS / CLAUDE。
-8. 有可视原型时必须做一次视觉质量自检并修正：
-   - Pencil / Figma / HTML 需要截图或可查看证据。
-   - 使用 `web-design-guidelines`、项目设计系统或选定风格 brief 检查信息层级、间距、密度、颜色、组件一致性、状态反馈和可访问性。
-   - 记录发现、修改动作和最终结论；不能把“实现时再优化 UI”当成通过。
-
-## UI 工具选择规则
-
-| 情况 | 首选通道 | 辅助 skill / 能力 | 归一化要求 |
-|---|---|---|---|
-| 本地、低成本、需要 Agent 直接维护原型 | Pencil | `core/skills/pencil` | `.pen` + 导出 PNG + `ui-design.md` 证据 |
-| 已有团队 Figma、设计系统或需要高保真协作 | Figma | `figma` / `figma-use` / `figma-generate-design` | Frame 链接 + 截图备份 + 权限验证 |
-| 无设计工具但需要浏览器可预览 | HTML mockup | 浏览器 / Playwright 验证 | `ui-mockup.html` + 截图或预览结果 |
-| 1-2 个简单页面快速对齐布局 | ASCII | 无 | 内嵌 `ui-design.md`，复杂 UI 不可单独使用 |
+1. 先判断是否有 UI 影响；没有时写 N/A、理由和验证方式。
+2. 有 UI 影响时，先做 UI 设计访谈，再画原型：
+   - 列出 `已确认 / 高影响未知 / 可安全默认`。
+   - 没有现成设计系统时，给 2-3 个互斥体验方向，写推荐项和取舍；如果会影响信息架构、核心流程或视觉方向，先路由到 `sf-brainstorm` 等用户确认后再画 Pencil。
+   - 每轮只问会改变 UI 的关键问题，避免把用户拖进工具选择。
+3. 用户提供示例设计、截图、规范、Figma 或参考产品时，必须先提取设计语言并写入 Visual Style Brief，再做页面方案。
+4. 写页面地图、角色流程、状态矩阵、明确不做项和 UI 验证策略。
+5. 使用 Pencil 创建或更新原型：
+   - 输出 `01-spec/ui-mockup.pen`。
+   - 导出关键截图到 `01-spec/ui-mockup-export/`。
+   - 空 `.pen` / 空画布最多读取一次；确认空后立即创建第一屏，禁止空读循环。
+   - Pencil 连续创建失败 2 次时停止并记录阻断原因，不把 HTML / ASCII 当正式替代。
+6. 有 Pencil 截图后必须做视觉质量 review 并修一轮：
+   - 检查信息层级、间距、对齐、密度、色彩、组件一致性、状态反馈、响应式和可访问性。
+   - 记录发现、修改动作和最终结论。
 
 ## 完成标准
 
 - `01-spec/ui-design.md` 存在。
-- 有 UI 影响时，包含 5 个候选方向、style brief、用户确认或默认假设。
-- 有 UI 影响时，至少提供 Figma Frame + 截图、Pencil `.pen` + 截图、`ui-mockup.html` 或 ASCII 线稿中的一种可验收证据；复杂 UI 不能只用 ASCII。
+- 有 UI 影响时，包含 Visual Style Brief、体验方向确认或默认假设、页面地图、流程、状态矩阵。
+- 如果体验方向曾经进入 brainstorm，`ui-design.md` 必须引用 `00-intake/brainstorm.md` 的用户确认。
+- 有 UI 影响时，存在 `01-spec/ui-mockup.pen` 和 `01-spec/ui-mockup-export/*.png`，或明确 Pencil 阻断原因。
 - 有可视原型时，包含视觉质量 review、截图级证据和至少一轮修正记录。
 - 无 UI 影响时，明确写出 N/A、理由和验证方式。
 - 下一步路由到 `sf-tech-design` 或 `sf-tasking`，以 `instructions.mjs` 为准。
@@ -89,4 +75,5 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
 
 - 不写业务代码。
 - 不把前后端架构、API、数据迁移写进 UI design。
+- 不让用户选择 Figma / HTML / ASCII / Pencil 等工具通道；工具固定为 Pencil。
 - 不在 implementation 阶段重新发明视觉风格。
