@@ -102,6 +102,22 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 
 未经确认的关键技术选择写成 `[NEEDS TECH DECISION]`；未经确认的新增依赖写成 `[NEEDS DEPENDENCY DECISION]`。二者都不得进入 `sf-tasking`、`sf-spec-review` approval 或 `sf-implement`。
 
+## 当前版本事实检查
+
+技术设计不能只靠记忆。以下情况必须查询当前官方资料或读取项目锁文件 / manifest：
+
+- 新增或替换框架、SDK、云服务、数据库、部署平台、AI provider、模型、测试工具或安全相关依赖。
+- 用户要求“最新版本”“当前推荐”“现在怎么做”。
+- 技术选择会影响成本、上线、兼容性、安全或长期维护。
+
+写入 `technical-design.md#1` 或 `#5`：
+
+| 项 | 版本 / 事实 | 来源 | 日期 | 对设计的影响 |
+|---|---|---|---|---|
+| | | 官方文档 / lockfile / package manifest / wiki | | |
+
+如果沿用现有项目版本，可以用 lockfile、package manifest、代码入口或 wiki 作为证据；如果无法确认，必须写风险并暂停关键决策。
+
 ## 执行顺序
 
 1. 读取 requirements、可选 `ui-design.md`、wiki 和现有代码结构，判断本次是否真的有技术影响。

@@ -55,10 +55,10 @@ src/
 
 ## UI 与体验规则
 
-- 新页面必须配合 `experience-design` 规则产出页面地图、状态矩阵和移动端布局。
+- 新页面必须配合 `core/standards/design.md` 产出页面地图、状态矩阵和移动端布局。
 - 表格、筛选、长表单、批量操作、删除确认必须写出 loading / empty / error / disabled / success 状态。
 - Tailwind 类名合并统一使用 `cn()`，内部使用 `clsx` + `tailwind-merge`。
-- 复杂控件必须显式选择 profile：Markdown / 富文本看 `content/`，图表看后续 visualization profile 或在 design 中补充。
+- 复杂控件必须显式说明选择：Markdown / 富文本、图表、上传、拖拽等专项能力在 technical design 中写清依赖、风险和验证方式。
 
 ## 构建与部署
 

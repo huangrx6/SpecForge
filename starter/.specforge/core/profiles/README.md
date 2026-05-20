@@ -26,7 +26,7 @@ profiles/
 
 1. 先判断本次是否真的需要 profile；纯文案、纯配置、小 bugfix 可写 N/A。
 2. 主栈只在受影响时选择：Frontend、Backend、Database。
-3. 横向能力按需选择：内容编辑、文件处理、AI 调用、任务调度、可观测性、测试、安全等。
+3. 横向能力按需选择；当前内置能力卡只保留 `capabilities/processing-ai-jobs`，其他专项能力在 technical design 中写明选择理由和待补 profile。
 4. 如果项目已有技术栈，以 `.specforge/wiki/architecture.md` 为准；profile 只用于确认是否沿用或偏离。
 5. 使用 profile 之外的关键技术，必须写偏离原因、风险和验证方式。
 
@@ -34,10 +34,10 @@ profiles/
 
 | 目录 | 放什么 | 不放什么 |
 |---|---|---|
-| `frontend/` | React / Vue / Next 等前端主栈 | UI 设计规则、视觉风格 |
-| `backend/` | FastAPI / Spring Boot / Go / Next API 等后端主栈 | API 质量标准 |
-| `database/` | PostgreSQL / MySQL / SQLite 等存储选择 | 具体项目表结构 |
-| `capabilities/` | 可组合能力：内容编辑、架构模式、安全、测试、观测、任务、AI | 长篇规范、一次性实现计划 |
+| `frontend/` | React / Vite / Next 等前端主栈 | UI 设计规则、视觉风格 |
+| `backend/` | FastAPI / Next API 等后端主栈 | API 质量标准 |
+| `database/` | PostgreSQL / SQLite 等存储选择 | 具体项目表结构 |
+| `capabilities/` | 可组合能力卡；当前保留 AI / 后台处理任务 | 长篇规范、一次性实现计划 |
 
 ## 维护规则
 

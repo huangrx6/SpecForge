@@ -5,7 +5,7 @@ description: SpecForge 内部 discovery / intake 路由技能。用于将原始�
 
 # Discovery Skill
 
-Discovery 是新工作的分诊入口，只负责判断路线和创建可恢复的 intake 证据，不直接写完整 PRD、requirements、设计或实现代码。
+Discovery 是新工作的分诊入口，也是协作式问题澄清入口。它负责把模糊诉求变成可推进的 work item：判断路线、识别缺口、做必要代码库 / 外部研究、和用户一起完成关键取舍，并创建可恢复的 intake 证据。它不直接写完整 PRD、requirements、设计或实现代码。
 
 ## 读取
 
@@ -24,15 +24,21 @@ Discovery 是新工作的分诊入口，只负责判断路线和创建可恢复�
 4. 按深度执行代码库探索；绿地项目也要记录“无既有实现”和项目规范。
 5. 判断风险等级：安全、数据迁移、生产发布、权限、外部依赖、跨模块契约。
 6. 需要新框架、第三方库、部署、安全或版本敏感事实时执行外部官方资料研究；不触发时写明跳过理由。
-7. 对产品、页面、全栈应用或复杂功能，生成候选功能池，按 `MVP / 可选增强 / 后续版本` 分组，并给出推荐组合。
-8. 先汇总“已明确 / 待确认 / 可能遗漏”，再向用户澄清关键问题并记录答案。
-9. 明确哪些选择已由用户确认，哪些只是 Agent 默认假设。
-10. 判断是否需要 PRD，并写入 `brief.md#PRD 决策`。PRD 是 graph 外产品澄清产物；需要时下一步路由到 `sf-prd`，不需要时写清跳过理由。
-11. 选择 workflow：`lite`、`feature`、`standard`、`bugfix`、`issue`、`refactor` 或 `discovery`，并写出影响面矩阵。
-12. 根据影响面设置 `components` flags：`has_ui`、`has_api`、`has_db`、`has_domain`、`has_ai`、`has_nfr`、`has_security`、`has_integration`、`has_infra`、`has_background_job`、`needs_research`。纯预研使用 `discovery` workflow，不用在 feature / standard 内模拟 discovery 阶段。
-13. 没有 active work item 时，运行 `node .specforge/core/scripts/create-work.mjs --workflow <workflow> "工作项标题"`，已确定的影响面可用 `--has-ui false`、`--has-api true` 等参数写入。
-14. 如果 work item 已存在，根据 brief 的影响面矩阵同步更新 `work.yaml` 的 `components`；明确无 UI 或无技术影响时写 `false`，不确定时保留 `auto`。
-15. 写入 `00-intake/original-request.md` 和 `00-intake/brief.md`。
+7. 对产品、页面、全栈应用或复杂功能，先进入协作式 brainstorm：
+   - 先复述问题空间和目标，不急着定方案。
+   - 生成 2-3 个互斥方案或 MVP 组合，写清价值、成本、风险、推荐项和不推荐项。
+   - 一次只问会改变方向的关键问题；优先给可选项和取舍影响。
+   - 用户没有确认 MVP / 核心方向前，不把默认方案写成已批准。
+8. 需要新领域知识、竞品、政策、框架 / SDK / 版本事实、AI 能力边界、部署 / 安全事实时，必须查当前可靠来源；技术类优先官方文档，产品/竞品类记录来源日期和结论。若跳过外部研究，写明为什么对本次决策无影响。
+9. 对产品、页面、全栈应用或复杂功能，生成候选功能池，按 `MVP / 可选增强 / 后续版本` 分组，并给出推荐组合。
+10. 先汇总“已明确 / 待确认 / 可能遗漏”，再向用户澄清关键问题并记录答案。
+11. 明确哪些选择已由用户确认，哪些只是 Agent 默认假设。
+12. 判断是否需要 PRD，并写入 `brief.md#PRD 决策`。PRD 是 graph 外产品澄清产物；需要时下一步路由到 `sf-prd`，不需要时写清跳过理由。
+13. 选择 workflow：`lite`、`feature`、`standard`、`bugfix`、`issue`、`refactor` 或 `discovery`，并写出影响面矩阵。
+14. 根据影响面设置 `components` flags：`has_ui`、`has_api`、`has_db`、`has_domain`、`has_ai`、`has_nfr`、`has_security`、`has_integration`、`has_infra`、`has_background_job`、`needs_research`。纯预研使用 `discovery` workflow，不用在 feature / standard 内模拟 discovery 阶段。
+15. 没有 active work item 时，运行 `node .specforge/core/scripts/create-work.mjs --workflow <workflow> "工作项标题"`，已确定的影响面可用 `--has-ui false`、`--has-api true` 等参数写入。
+16. 如果 work item 已存在，根据 brief 的影响面矩阵同步更新 `work.yaml` 的 `components`；明确无 UI 或无技术影响时写 `false`，不确定时保留 `auto`。
+17. 写入 `00-intake/original-request.md` 和 `00-intake/brief.md`。
 
 ## Workflow 分流
 
@@ -93,6 +99,7 @@ PRD 决策只写在 `brief.md`，不修改 artifact graph。需要 PRD 时，下
 - 多个 active work item，用户未指定目标。
 - 请求边界无法判断。
 - 产品 / 页面 / 全栈应用的 MVP 功能组合尚未被用户确认，且复杂度超过简单小改。
+- 需要 brainstorm 的需求尚未完成用户参与式取舍，却试图直接进入 PRD / requirements。
 - PRD 决策不清，导致后续无法判断应进 `sf-prd` 还是 `sf-requirements`。
 - `standard` / `deep` 缺少代码库探索证据或明确跳过原因。
 - `deep` 缺少外部研究证据或明确跳过原因。

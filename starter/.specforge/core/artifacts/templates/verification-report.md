@@ -26,6 +26,14 @@
 |---|---|---|---|---|---|
 | | requirements / technical-design / code-review | high / medium / low | unit / integration / contract / e2e / manual / startup / migration / rollback / observability | | pass / fail / skipped |
 
+## 3.1 测试用例索引
+
+> 执行验证前必须先创建或更新 `05-verification/test-cases.md`。这里登记摘要，不替代完整用例。
+
+| 用例 ID | 来源 | 类型 | 风险等级 | 自动化方式 | 结果 | 证据 |
+|---|---|---|---|---|---|---|
+| TC-001 | REQ / TASK / REVIEW | unit / integration / contract / playwright / startup / manual | high / medium / low | command / Playwright / manual | pass / fail / skipped | |
+
 ### Technical Design 影响面验证
 
 > 仅在 `technical-design.md` 适用时填写；否则写 N/A。来源为 code review 的 Technical Design 影响面实现审查和 `technical-design.md#0. 影响面与读取计划`。
@@ -91,7 +99,7 @@
 | 工具 | 覆盖目标 | 关键发现 | 证据路径 / 摘要 | 结果 |
 |---|---|---|---|---|
 | playwright-skill | E2E / screenshot / responsive / role matrix | | | 通过 / 失败 / N/A |
-| browser-testing-with-devtools | console / network / DOM / a11y / performance | | | 通过 / 失败 / N/A |
+| Playwright trace / console / network | console / network / DOM / a11y / performance | | | 通过 / 失败 / N/A |
 
 安全记录：
 

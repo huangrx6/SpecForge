@@ -42,14 +42,14 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 
 ## 拆解流程
 
-1. **建立覆盖矩阵**：列出所有来源需求、决策、风险和验收标准，确认每项至少有实现任务和验证任务。
+1. **建立来源审计矩阵**：列出所有来源需求、决策、风险和验收标准，确认每项至少有实现任务和验证任务。来源必须包含适用的 `GOAL / PRD / REQ / UI / TECH / RESEARCH / CONTEXT`，不能只写“见上游文档”。
 2. **建立技术影响面任务覆盖**：读取 `technical-design.md#0. 影响面与读取计划`，把每个 `yes` 影响面映射到实现任务和验证任务；`no` 写 N/A 理由；关键 `unknown` 退回澄清。
-3. **先列契约任务**：API、schema、类型、配置、迁移、权限、提示词、评估集、feature flag、环境变量。
+3. **先列失败优先 / 契约任务**：API、schema、类型、配置、迁移、权限、提示词、评估集、feature flag、环境变量。行为变更优先设计能先失败的测试或检查。
 4. **再列基础任务**：新项目脚手架、开发服务器冒烟、目录结构、共享客户端、测试基线。
-5. **再列实现任务**：按模块、层次、用户路径或状态机拆分。
+5. **再列实现任务**：按模块、层次、用户路径或状态机拆分。每个任务应小到一次实现和一次 review 可以聚焦完成。
 6. **再列验证任务**：单元、集成、契约、E2E、页面 × 操作 × 角色矩阵、启动验证、回归验证、人工证据。
 7. **最后列运行任务**：配置、迁移、回滚、可观测性、告警、发布检查和 Wiki 回写提示。
-8. 标注依赖关系和并行波次。
+8. 标注依赖关系和并行波次。并行任务必须有不同主要写入边界。
 
 ## 任务格式要求
 
@@ -57,10 +57,13 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 
 - `_Trace:_` 指向 requirements / gap_report / ui_design / technical_design / research 的具体条目或章节。
 - `_Impact:_` 写适用的 technical_design 影响面；纯产品 / bugfix 无技术设计时写 N/A。
+- `_Files:_` 写预计写入的文件、目录或模块类别；不能只写“相关文件”。
 - `_Boundary:_` 明确允许写入的目录、模块或文件类别。
 - `_Depends:_` 写任务依赖；没有依赖写 `none`。
 - `_Verification:_` 写可执行命令、测试类型、人工检查或后续 verification 证据。
+- `_Rollback:_` 写撤回、补偿、配置回退、feature flag 或 N/A 理由。
 - `_Risk:_` 对数据、安全、权限、发布、并发、AI 质量或外部集成风险写明防护。
+- `_TestCase:_` 写对应测试用例编号；无测试用例时写为什么 N/A。
 
 任务描述要具体，不写“处理相关逻辑”“完善页面”“补充测试”这类空话。
 
@@ -72,6 +75,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 - `technical-design.md` 残留 `[NEEDS TECH DECISION]` 或 `[NEEDS DEPENDENCY DECISION]` 时停止，退回 `sf-tech-design` 确认选型或新增依赖，不生成任务。
 - UI 状态、API 契约、数据迁移、权限、安全、发布任务必须单独列出。
 - 有浏览器流程、上传、提交、审批、下载、权限或错误提示时，必须列出 Playwright E2E 用例设计、脚本执行和证据登记任务；不能只列单元测试或人工验证。
+- 有 UI / 浏览器流程时，必须先生成 `05-verification/test-cases.md` 的测试用例任务，再生成执行任务；执行任务要覆盖成功、失败、权限、边界和响应式中适用项。
 - 对多个 agent / worker 友好的任务，要明确“谁拥有哪些文件或模块”。
 
 ## 必含任务类型
@@ -104,6 +108,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 
 - tasks 能驱动 implementation。
 - 每个任务都有追踪来源、边界、依赖、验证和必要风险说明。
+- 每个任务都有预期写入文件边界和回滚提示；数据、权限、发布、依赖和迁移任务的回滚不能为空。
 - 每个 technical_design `yes` 影响面都有任务承接；`no` / N/A 有可信理由；无关键 `unknown` 留到实现阶段。
 - reviewer 可以用 tasks 判断实现是否完整。
 - verification 可以直接从 tasks 列出验证矩阵。

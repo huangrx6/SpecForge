@@ -59,6 +59,14 @@
 |---|---|---|---|---|---|---|
 | | runtime / dev / SDK / plugin / scaffold-bundled | | | | | |
 
+### 当前版本事实
+
+> 新增 / 替换框架、SDK、云服务、数据库、部署平台、AI provider、测试工具或安全相关依赖时必填。沿用现有项目时写 lockfile / manifest / wiki 证据。
+
+| 项 | 版本 / 事实 | 来源 | 日期 | 对设计的影响 |
+|---|---|---|---|---|
+| | | 官方文档 / lockfile / package manifest / wiki | | |
+
 ### 最终选型与依赖
 
 | 维度 | 最终选择 | 确认来源 | profile / 规则入口 | 回退或替换成本 |

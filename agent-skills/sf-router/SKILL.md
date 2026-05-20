@@ -72,6 +72,7 @@ AI 工具技能：sf-router / sf-*  负责让 AI 工具知道怎么工作，可 
 | 问“现在到哪一步 / 健康状态 / 能不能继续” | `sf-doctor` |
 | 用户要求“理解项目 / 扫描项目 / 项目画像 / 架构地图 / 存量项目基线” | `sf-steering` |
 | 提出新需求、新 issue、新 bug、重构想法，且没有 active work item | `sf-intake` |
+| 用户要求 review / 检查任一已有 spec、需求、PRD、UI design、tech design 或 tasks | `sf-spec-review` 的 Artifact Review 模式 |
 | 只有一个 active work item，用户只说“继续 / 下一步” | 运行 `instructions.mjs` 后按 ready artifact 路由 |
 | active work item 需要深度分析 / brief 不足以支撑 requirements | `sf-discovery` |
 | active work item 下一步是 gap_report / research | `sf-discovery` |
@@ -105,7 +106,7 @@ AI 工具技能：sf-router / sf-*  负责让 AI 工具知道怎么工作，可 
    - 读取 `00-intake/brief.md` 和可选 `00-intake/prd.md`。
    - 运行 `node .specforge/core/scripts/instructions.mjs`。
    - 先检查 gate 状态：
-     - `spec_review=REQUEST_CHANGES/REJECTED`：读取 `02-spec-review/spec-review-v1.md` 的 `Return to`，路由到 `sf-requirements` / `sf-ui-design` / `sf-tech-design` / `sf-tasking`；无法判断时路由到 `sf-spec-review` 解释阻断。
+     - `spec_review=REQUEST_CHANGES/REJECTED`：读取 `02-spec-review/spec-review-v1.md` 的 `Return to`，路由到 `sf-prd` / `sf-requirements` / `sf-ui-design` / `sf-tech-design` / `sf-tasking`；无法判断时路由到 `sf-spec-review` 解释阻断。
      - `code_review=REQUEST_CHANGES/REJECTED`：路由到 `sf-implement`；如果 finding 指向 spec 缺口，再按 review 的 return path 路由。
      - `verification=REQUEST_CHANGES/REJECTED`：优先路由到 `sf-implement` 修复；若只是缺证据且实现未变，路由到 `sf-verify` 重跑验证。
      - `wiki_sync=REQUEST_CHANGES/REJECTED`：路由到 `sf-wiki`。
@@ -132,6 +133,12 @@ AI 工具技能：sf-router / sf-*  负责让 AI 工具知道怎么工作，可 
    - 仍然必须保留 doctor、instructions、gate evidence 和 verification 检查。
 
 根路由只推荐下一步，不直接替子技能写产物。
+
+## Spec Review 随时调用规则
+
+`sf-spec-review` 不只属于最终 gate。只要用户要求审查任何已有 spec artifact，就路由到 `sf-spec-review` 的 Artifact Review 模式；不要因为 `requirements`、`ui_design`、`technical_design` 或 `tasks` 尚未全部完成而拒绝审查。
+
+Artifact Review 不更新 gate，也不要求 ready artifact 为 `spec_review`。只有 ready artifact 是 `spec_review` 或用户明确要求执行 gate 时，才进入 Gate Review 并更新 `spec_review` gate。
 
 ## 扫描时必须关联的标准
 

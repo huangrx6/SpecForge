@@ -9,7 +9,7 @@ description: 为新请求创建或整理 SpecForge work item；用于用户提�
 
 执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
 
-把用户的原始诉求变成一个可推进的 active work item。`sf-intake` 是分诊入口：判断 work item 类型、workflow、是否需要 PRD、是否需要 research、影响面 flags、是否需要拆分。它负责 intake，不负责写完整 PRD、requirements、设计或实现代码。
+把用户的原始诉求变成一个可推进的 active work item。`sf-intake` 是分诊入口，也是协作式 brainstorm 入口：判断 work item 类型、workflow、是否需要 PRD、是否需要 research、影响面 flags、是否需要拆分，并和用户完成会改变方向的关键取舍。它负责 intake，不负责写完整 PRD、requirements、设计或实现代码。
 
 ## 启动扫描
 
@@ -46,6 +46,16 @@ description: 为新请求创建或整理 SpecForge work item；用于用户提�
 5. **决定是否需要 PRD。**
 6. **校准 components flags。**
 7. **写 brief，并明确下一步路由。**
+
+## 协作式 Brainstorm 规则
+
+模糊需求、产品型功能、页面 / 全栈应用、AI 能力、运营后台、多角色流程、审批 / 权限 / 数据生命周期相关需求，都不能只由 Agent 自己推理后进入 requirements。先做一轮轻量但真实的 brainstorm：
+
+- 先列 `已明确 / 高影响未知 / 可安全默认`。
+- 给出 2-3 个互斥方案或 MVP 组合，每个写价值、成本、风险、推荐项和不推荐原因。
+- 一轮只问会改变方向的问题；优先给选项和取舍，不用长问卷拷问用户。
+- 需要竞品、政策、版本、框架 / SDK、AI 能力或安全事实时，先查当前可靠来源；技术类优先官方资料。
+- 用户没有确认核心方向、MVP 或关键边界前，不把 Agent 推荐方案写成“已确认”。
 
 ## 存量项目前置判断
 

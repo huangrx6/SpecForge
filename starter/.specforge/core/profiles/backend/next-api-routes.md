@@ -10,7 +10,7 @@
 不适用：
 
 - 长时间运行任务、队列消费者、WebSocket 心跳、视频/大文件转码、重计算任务。
-- 高并发独立业务核心服务；这类场景应选 Go / Spring Boot / FastAPI 等后端 profile。
+- 高并发独立业务核心服务；这类场景应选独立后端服务 profile，例如 `backend/python-fastapi`，或在 technical design 中新增并确认合适 profile。
 
 ## 默认组合
 

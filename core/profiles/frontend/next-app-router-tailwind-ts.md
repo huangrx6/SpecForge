@@ -78,7 +78,7 @@ src/
 - 内容页必须说明 title、description、Open Graph、canonical、sitemap / robots 策略。
 - 图片使用框架图片优化能力或明确 CDN 策略，避免无尺寸图片导致布局偏移。
 - 字体加载必须考虑 CLS。
-- 文档、知识库、内容发布或后台编辑类项目必须额外选择合适的 `content/*` profile。
+- 文档、知识库、内容发布或后台编辑类项目必须在 technical design 中额外说明内容模型、编辑器依赖、预览、发布和回滚策略。
 
 ## 测试与交付
 
