@@ -14,6 +14,10 @@ SpecForge 在 1.0 之前按 semver 思路管理版本：小版本仍可能调整
 - `codebase-index.mjs` 支持 `--write-report` 生成 `codebase-intelligence.md` 中间证据，并输出 `normalized_context`、provider plan 与可选 provider execution 结果。
 - Agent skill 安装器新增 `trae-cn` 目标，并支持 `--scope user|project`，可安装到 Trae CN 的 `~/.trae-cn/skills` 或项目 `.trae/skills`。
 - Pencil UI 原型规则新增空画布反循环保护：空 `.pen` 只读一次，之后必须 `batch_design` 创建第一屏或降级 HTML mockup。
+- 技术设计新增技术选型与依赖确认门禁：新项目、关键技术变更或新增直接依赖必须先让用户确认；`[NEEDS TECH DECISION]` / `[NEEDS DEPENDENCY DECISION]` 会阻断 tasking / review / implementation。
+- `sf-intake` 明确 completed / archived work item 不再复开；围绕已完成初始需求继续讨论遗漏、缺陷、UI 或测试问题时，必须创建带 `relations.parent` / `relations.relation` 的 follow-up work item。
+- UI 设计新增视觉质量门禁：用户提供示例、截图、规范或参考产品时，必须提取设计语言，产出可视证据，完成截图级 review 和至少一轮修正，默认控件堆叠不可通过 spec review。
+- 浏览器流程验证升级为 Playwright E2E 必需项：上传、提交、审批、下载、权限和错误提示等路径必须先写用例，再执行真实浏览器自动操作并保存证据；单元测试、手工验证或 DevTools 检查不能替代。
 
 ## 0.2.0
 

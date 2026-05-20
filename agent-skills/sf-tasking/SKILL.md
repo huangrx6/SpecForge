@@ -62,6 +62,7 @@ node .specforge/core/scripts/create-artifact.mjs tasks
 - 先列契约任务（API、schema、类型、配置、迁移、权限、提示词 / 评估集），再列实现任务，再列验证任务。
 - 新项目或新前端 / 后端子项目必须先列脚手架和启动冒烟任务，不能一个个手写骨架文件。
 - UI 任务必须覆盖页面、组件、状态和原型证据；不能只写“实现页面”。
+- 有浏览器流程、上传、提交、审批、下载、权限或错误提示时，必须单独列 Playwright E2E 用例编写与执行任务；单元测试任务不能替代。
 - 数据迁移、权限、安全、发布、回滚、可观测性任务必须单独列出。
 - 每个验收标准至少能映射到一个实现任务和一个验证任务。
 
@@ -70,6 +71,7 @@ node .specforge/core/scripts/create-artifact.mjs tasks
 - 上游 artifact 不足以拆任务，比如 API 契约、UI 状态、数据库迁移或权限边界缺失。
 - 任务会扩大已确认范围。
 - tasks 无法映射到验收标准或验证证据。
+- technical_design 中仍有 `[NEEDS TECH DECISION]` 或 `[NEEDS DEPENDENCY DECISION]`，说明关键技术选型或新增依赖尚未确认。
 - technical_design 中存在会影响架构、数据、安全、成本、外部契约、发布或可靠性的 `unknown`。
 - technical_design 的 `yes` 影响面无法拆出实现任务或验证任务。
 - 存在未决产品问题、设计问题或技术方案选择，应该回到 `sf-requirements`、`sf-ui-design` 或 `sf-tech-design`。

@@ -71,6 +71,8 @@ node .specforge/core/scripts/create-artifact.mjs spec_review
    - `[NEEDS CLARIFICATION]`、`[NEEDS PRODUCT DECISION]`、`TBD` 不得残留在关键路径。
 4. **UI 设计质量**
    - 有 UI 影响时，必须有页面地图、用户流程、风格确认、原型证据和交互状态矩阵。
+   - 用户提供示例设计、截图、规范或参考产品时，必须有参考设计语言提取和落地说明。
+   - 有 Pencil / Figma / HTML 可视原型时，必须有视觉质量 review、截图级证据和修正记录；默认控件堆叠不能通过。
    - ASCII 只能支撑简单 UI；复杂流程必须有 Pencil、Figma 或 HTML mockup 证据。
 5. **技术设计质量**
    - technical_design 必须填写 `## 0. 影响面与读取计划`，并与 `work.yaml` 的 components、requirements 影响面和 tasks 验证计划一致。
@@ -78,12 +80,15 @@ node .specforge/core/scripts/create-artifact.mjs spec_review
    - `yes` 影响面必须写清触发证据、读取的子模块 / profile，并在对应技术章节有设计响应和验证钩子。
    - `no` 影响面必须有可信 N/A 理由；不得用空表格、默认处理或“暂不考虑”掩盖真实风险。
    - 技术栈、组件库、编辑器、数据库 / 数据层和测试方案有 profile 或取舍理由；纯后端不强制前端 profile，纯前端不强制数据库 profile。
+   - 新项目、空仓库、技术栈缺失，新增 / 替换关键技术，或新增直接依赖时，`technical-design.md#1. 技术选型与依赖确认` 必须记录用户确认、用户授权默认、已确认脚手架或可信的“沿用现有栈”证据；只有 Agent 推荐、profile 选择和依赖说明不算确认。
+   - technical_design 不得残留 `[NEEDS TECH DECISION]` 或 `[NEEDS DEPENDENCY DECISION]`。
    - API、安全、可靠性、可观测性或交付影响存在时，必须写规则主基准采用点、偏离理由和验证证据。
 6. **任务可执行性**
    - tasks 可排序、可实施、可验证。
    - 每个任务必须保留 `_Trace:_`、`_Impact:_`、`_Boundary:_`、`_Depends:_`、`_Verification:_`。
    - `_Impact:_` 必须与 technical_design 影响面矩阵一致；technical_design `yes` 影响面必须有任务承接，`no` 影响面不得出现实现任务。
    - tasks 必须包含测试、启动验证、迁移 / 回滚 / 观察任务中适用的部分。
+   - 有页面操作、上传、提交、审批、下载、权限或错误提示的浏览器流程时，tasks 必须包含 Playwright E2E 用例编写、真实浏览器自动操作执行和证据登记；只列单元测试、组件测试、手工验证或 DevTools 检查不得批准。
 
 ## 动作
 
@@ -110,6 +115,8 @@ node .specforge/core/scripts/gate.mjs spec_review REQUEST_CHANGES
 - `REQUEST_CHANGES` 必须指出回到哪个 artifact（requirements / 适用的 ui_design / technical_design / tasks）。
 - 所有 P0 / P1 finding 必须解决后才可批准。
 - technical_design 影响面矩阵缺失、不完整，或关键 `unknown` 未闭环时，必须 `REQUEST_CHANGES`。
+- 新项目、关键技术变更或新增依赖缺少确认来源时，必须 `REQUEST_CHANGES` 回到 `sf-tech-design`。
+- 有浏览器流程但缺少 Playwright E2E 用例 / 执行 / 证据任务时，必须 `REQUEST_CHANGES` 回到 `sf-tasking`。
 
 ## 不做
 

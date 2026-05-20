@@ -52,7 +52,7 @@
   _Boundary:_ `path/or/module`
   _Depends:_ none
   _Verification:_ 契约测试、类型检查或预期失败用例能证明当前缺口存在。
-  _Risk:_ 
+  _Risk:_
 
 - [ ] T002 [W0][启动] 建立或验证项目脚手架与本地启动基线。
   _Trace:_ TD / engineering startup requirement / N/A
@@ -60,7 +60,7 @@
   _Boundary:_ `package.json`, build config, app entry, dev server config
   _Depends:_ none
   _Verification:_ 本地安装、构建或 dev server 冒烟命令可运行；若不适用写 N/A 理由。
-  _Risk:_ 
+  _Risk:_
 
 ### W1 - 核心实现
 
@@ -70,7 +70,7 @@
   _Boundary:_ `path/or/module`
   _Depends:_ T001
   _Verification:_ T001 中定义的验证从失败变为通过。
-  _Risk:_ 
+  _Risk:_
 
 - [ ] T004 [W1][UI] 实现 UI 页面、组件和状态覆盖。
   _Trace:_ UI section / REQ section / N/A
@@ -78,7 +78,7 @@
   _Boundary:_ `frontend/path/or/components`
   _Depends:_ T001, T003
   _Verification:_ 页面、操作、角色、空 / 加载 / 错误 / 禁用 / 边界状态可检查；无 UI 时写 N/A。
-  _Risk:_ 
+  _Risk:_
 
 - [ ] T005 [W1][数据-安全-运行] 实现数据、权限、安全、配置或运行支持。
   _Trace:_ TD data/security/NFR section / N/A
@@ -86,7 +86,7 @@
   _Boundary:_ migrations, auth modules, config, jobs, observability
   _Depends:_ T001
   _Verification:_ 迁移、权限、安全、配置、后台任务或可观测性验证通过；不适用项写 N/A。
-  _Risk:_ 
+  _Risk:_
 
 ### W2 - 验证与关闭提示
 
@@ -95,24 +95,32 @@
   _Impact:_ all applicable yes impacts
   _Boundary:_ tests, fixtures, mocks, e2e specs
   _Depends:_ T003, T004, T005
-  _Verification:_ 单元、集成、契约、E2E 或等价证据覆盖正常、异常、边界和权限路径。
-  _Risk:_ 
+  _Verification:_ 单元、集成、契约、E2E 或等价证据覆盖正常、异常、边界和权限路径；有浏览器流程时必须包含 Playwright 自动操作用例。
+  _Risk:_
 
-- [ ] T007 [W2][运行] 执行启动验证、回滚检查和观察点确认。
+- [ ] T007 [W2][Playwright] 编写并执行浏览器 E2E 用例。
+  _Trace:_ UI state matrix / acceptance criteria / approval-upload-download flows / N/A
+  _Impact:_ Frontend engineering / API / Permission / N/A
+  _Boundary:_ e2e specs or `/tmp/playwright-test-*.js`, fixtures, test evidence
+  _Depends:_ T004, T005
+  _Verification:_ Playwright 自动点击、填写、上传、提交、审批 / 下载中适用流程，并断言成功和关键失败态；无浏览器流程时写 N/A。
+  _Risk:_
+
+- [ ] T008 [W2][运行] 执行启动验证、回滚检查和观察点确认。
   _Trace:_ TD NFR / engineering startup and rollback requirements / N/A
   _Impact:_ Config / Env / Delivery / Observability / Reliability / N/A
   _Boundary:_ commands, config docs, observability notes
-  _Depends:_ T006
+  _Depends:_ T006, T007
   _Verification:_ dev server / service 启动、配置、迁移、回滚或观察命令有记录；不适用项写 N/A。
-  _Risk:_ 
+  _Risk:_
 
-- [ ] T008 [W2][Wiki提示] 标记 close 阶段需要回写的长期事实。
+- [ ] T009 [W2][Wiki提示] 标记 close 阶段需要回写的长期事实。
   _Trace:_ architecture / product / data / operations change / N/A
   _Impact:_ long-term wiki facts / N/A
   _Boundary:_ 仅在 `03-implementation/report.md` 记录提示；实际 wiki 写入留给 `sf-wiki`
   _Depends:_ T006
   _Verification:_ implementation report 列出需要回写或明确 N/A；不提前写 closure artifact。
-  _Risk:_ 
+  _Risk:_
 
 ## 6. 验证计划
 
@@ -128,7 +136,7 @@
 
 ## 7. 不在范围
 
-- 
+-
 
 ## 8. 未决问题
 

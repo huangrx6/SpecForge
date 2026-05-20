@@ -38,15 +38,15 @@ Status: PENDING
 
 | Impact area | Component / requirement signal | tech-design status | Read module / profile | Section evidence | Review result |
 |---|---|---|---|---|---|
-| Frontend engineering | | yes / no / unknown / N/A | | `01-spec/technical-design.md#7` / N/A | pass / fail / N/A |
-| Backend engineering | | yes / no / unknown / N/A | | `01-spec/technical-design.md#8` / N/A | pass / fail / N/A |
-| Domain model / state machine | | yes / no / unknown / N/A | | `01-spec/technical-design.md#9` / N/A | pass / fail / N/A |
-| API / SDK / Events | | yes / no / unknown / N/A | | `01-spec/technical-design.md#10` / N/A | pass / fail / N/A |
-| Data / DB / Migration | | yes / no / unknown / N/A | | `01-spec/technical-design.md#11` / N/A | pass / fail / N/A |
-| Auth / Permission / Security | | yes / no / unknown / N/A | | `01-spec/technical-design.md#12` / `#13` / N/A | pass / fail / N/A |
-| Config / Env / Delivery | | yes / no / unknown / N/A | | `01-spec/technical-design.md#12` / `#14` / N/A | pass / fail / N/A |
-| Jobs / Queue / Scheduler | | yes / no / unknown / N/A | | `01-spec/technical-design.md#12` / N/A | pass / fail / N/A |
-| Observability / Reliability | | yes / no / unknown / N/A | | `01-spec/technical-design.md#13` / `#14` / `#15` / N/A | pass / fail / N/A |
+| Frontend engineering | | yes / no / unknown / N/A | | `01-spec/technical-design.md#8` / N/A | pass / fail / N/A |
+| Backend engineering | | yes / no / unknown / N/A | | `01-spec/technical-design.md#9` / N/A | pass / fail / N/A |
+| Domain model / state machine | | yes / no / unknown / N/A | | `01-spec/technical-design.md#10` / N/A | pass / fail / N/A |
+| API / SDK / Events | | yes / no / unknown / N/A | | `01-spec/technical-design.md#11` / N/A | pass / fail / N/A |
+| Data / DB / Migration | | yes / no / unknown / N/A | | `01-spec/technical-design.md#12` / N/A | pass / fail / N/A |
+| Auth / Permission / Security | | yes / no / unknown / N/A | | `01-spec/technical-design.md#13` / `#14` / N/A | pass / fail / N/A |
+| Config / Env / Delivery | | yes / no / unknown / N/A | | `01-spec/technical-design.md#13` / `#15` / N/A | pass / fail / N/A |
+| Jobs / Queue / Scheduler | | yes / no / unknown / N/A | | `01-spec/technical-design.md#13` / N/A | pass / fail / N/A |
+| Observability / Reliability | | yes / no / unknown / N/A | | `01-spec/technical-design.md#14` / `#15` / `#16` / N/A | pass / fail / N/A |
 
 ### Unknown Review
 
@@ -63,11 +63,14 @@ Status: PENDING
 | Requirements are testable and unambiguous | pass / fail | |
 | Product choices, MVP, non-goals and open questions are resolved | pass / fail | |
 | UI design covers style, page map, flows, prototype evidence and states | pass / fail / N/A | |
+| UI visual quality review, screenshot/frame evidence and one fix pass are present | pass / fail / N/A | |
 | Technical design impact/read plan is complete and aligned | pass / fail / N/A | |
+| Key technical selections and new direct dependencies are confirmed, delegated, scaffold-confirmed, or explicitly existing-stack | pass / fail / N/A | `technical-design.md#1` |
 | No blocking technical `unknown` remains | pass / fail / N/A | |
 | `yes` technical impacts have matching design section, profile and verification | pass / fail / N/A | |
 | `no` technical impacts have credible N/A reasons | pass / fail / N/A | |
 | Tasks include `_Impact:_` and align with technical impact matrix | pass / fail / N/A | |
+| Browser-facing flows include Playwright E2E case and execution tasks | pass / fail / N/A | |
 | Rule baselines and profile selections are adopted or deviations explained | pass / fail / N/A | |
 | Tasks are ordered, bounded and verifiable | pass / fail | |
 | Testing, startup validation, rollback / observability tasks are present when applicable | pass / fail / N/A | |

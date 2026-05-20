@@ -4,6 +4,10 @@ title: Work Item Title
 type: FEATURE
 workflow: feature
 
+relations:
+  parent: null
+  relation: root
+
 components:
   # auto = keep the conservative workflow default; set false in intake to skip optional artifacts.
   has_ui: auto

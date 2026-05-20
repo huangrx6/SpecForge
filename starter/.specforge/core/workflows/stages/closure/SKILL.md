@@ -79,6 +79,7 @@ description: SpecForge 内部关闭技能。用于 wiki_sync 已批准后，写 
 - 归档前 doctor 和 archive dry-run 通过。
 - archive 成功，work item 从 active 移到 archive。
 - registry 中 active / archive 状态正确。
+- 关闭后发现的缺陷、遗漏、体验问题或测试漏测，不重新打开本 work item；通过 `sf-intake` 新建 follow-up work item，并用 `relations.parent` 关联本 work item id。
 
 ## 不做
 

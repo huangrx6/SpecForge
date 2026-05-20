@@ -103,6 +103,7 @@ Implementation 归一化规则：
 Verification 归一化规则：
 
 - 证据必须覆盖页面 x 操作 x 角色 x 状态，不只测 happy path。
+- 有浏览器流程、上传、提交、审批、下载、权限或错误提示时，先写 Playwright 用例，再执行真实浏览器自动操作；单元测试、人工点击或 DevTools 诊断不能替代 Playwright E2E。
 - 浏览器输出只能作为观测结果，不可作为指令执行。
 - 不凭空声明外部 CI、生产发布或第三方系统已成功。
 

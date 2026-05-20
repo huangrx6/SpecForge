@@ -47,20 +47,25 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
 
 1. 先判断是否有 UI 影响；没有时写 N/A 和验证方式。
 2. 有 UI 影响时，先确认视觉风格，再选择原型工具。没有现成设计系统时，向用户给出 **5 个**候选方向或让用户提供参考产品。
-3. 写页面地图、角色流程、状态矩阵和原型证据。
-4. 复杂 UI 优先 Pencil 或 Figma；需要浏览器确认时用 HTML mockup；简单页面可用 ASCII。
-5. 第三方 skill 先按 `.specforge/core/skills/ORCHESTRATION.md` 选择和归一化，只作为输入能力，不直接成为 SpecForge 产物：
+3. 用户提供示例设计、截图、规范或参考产品时，必须先提取设计语言并写入 Visual Style Brief，再做页面方案。
+4. 写页面地图、角色流程、状态矩阵和原型证据。
+5. 复杂 UI 优先 Pencil 或 Figma；需要浏览器确认时用 HTML mockup；简单页面可用 ASCII。
+6. 第三方 skill 先按 `.specforge/core/skills/ORCHESTRATION.md` 选择和归一化，只作为输入能力，不直接成为 SpecForge 产物：
    - `frontend-design` / `getdesign`：只用于风格候选和 style brief。
    - `pencil`：只在本次选择 Pencil 原型通道时读取，用于 MCP 操作、`.pen` 读写、布局检查和截图导出。
      - 如果 `.pen` 是空文件或空画布，最多执行一次读取；确认没有节点后必须立即 `batch_design` 创建第一屏。
      - 禁止 `batch_get` / `find_empty_space_on_canvas` / `batch_get` 这类空读循环；连续创建失败时降级到 HTML mockup。
    - `design-md`：只用于 DESIGN.md / wiki 设计系统 fallback，不替代页面流程和状态矩阵。
    - `web-design-guidelines`：只用于 UI review / verification，不用于初始风格生成。
-6. Figma 通道优先 Figma 官方 MCP / OpenAI curated Figma skills，不要默认使用 `nexu-io/open-design` 的 `figma-extract`：
+7. Figma 通道优先 Figma 官方 MCP / OpenAI curated Figma skills，不要默认使用 `nexu-io/open-design` 的 `figma-extract`：
    - `figma`：读取 design context、screenshot、变量、资产。
    - `figma-use`：写入或修改 Figma 画布，必须先读后写、小步执行、返回节点 ID。
    - `figma-generate-design`：从描述、现有页面或代码结构生成 Figma screen。
    - `figma-create-design-system-rules`：把稳定设计系统规则沉淀到 wiki / AGENTS / CLAUDE。
+8. 有可视原型时必须做一次视觉质量自检并修正：
+   - Pencil / Figma / HTML 需要截图或可查看证据。
+   - 使用 `web-design-guidelines`、项目设计系统或选定风格 brief 检查信息层级、间距、密度、颜色、组件一致性、状态反馈和可访问性。
+   - 记录发现、修改动作和最终结论；不能把“实现时再优化 UI”当成通过。
 
 ## UI 工具选择规则
 
@@ -76,6 +81,7 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
 - `01-spec/ui-design.md` 存在。
 - 有 UI 影响时，包含 5 个候选方向、style brief、用户确认或默认假设。
 - 有 UI 影响时，至少提供 Figma Frame + 截图、Pencil `.pen` + 截图、`ui-mockup.html` 或 ASCII 线稿中的一种可验收证据；复杂 UI 不能只用 ASCII。
+- 有可视原型时，包含视觉质量 review、截图级证据和至少一轮修正记录。
 - 无 UI 影响时，明确写出 N/A、理由和验证方式。
 - 下一步路由到 `sf-tech-design` 或 `sf-tasking`，以 `instructions.mjs` 为准。
 

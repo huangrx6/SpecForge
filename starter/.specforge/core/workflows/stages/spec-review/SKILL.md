@@ -70,12 +70,14 @@ description: SpecForge 内部规格审查技能。用于 01-spec 完成后审查
 ### 4. UI Design
 
 - ui_design 是否覆盖用户可见页面、流程、原型证据、视觉风格确认和交互状态；无 UI 影响时 N/A 是否可信。
+- 用户提供示例设计、截图、规范或参考产品时，ui_design 是否提取并落地参考设计语言，而不是只记录来源。
 - 若有 UI 变更：是否先确认视觉风格或明确沿用现有设计系统，再提供至少一种可验收 UI 产物：
   - Figma Frame 链接（适合已有团队设计稿、设计系统或后续通过 `figma-implement-design` 驱动实现）。
   - Pencil 原型文件 `01-spec/ui-mockup.pen` 及导出截图 `01-spec/ui-mockup-export/*.png`（适合本地、低成本、Agent 可直接产出的线框 / 原型；复杂页面还应记录 PENCIL_PLAN 摘要和采用的设计系统 skill）。
   - `01-spec/ui-mockup.html` 静态原型（适合无设计工具或需要浏览器直接验证）。
   - ASCII / Markdown 线稿（仅适合 1-2 个简单页面；复杂 UI 不能只用 ASCII）。
 - 视觉风格确认或 UI 证据缺失时，Gate 不可批准。
+- 有可视原型但缺少视觉质量 review、截图级证据或修正记录时，Gate 不可批准。
 
 ### 5. Technical Design
 
@@ -91,6 +93,7 @@ description: SpecForge 内部规格审查技能。用于 01-spec 完成后审查
 - `no` 影响面是否有可信 N/A 理由，且没有与 requirements、代码探索或 tasks 冲突。
 - `unknown` 是否已被处理；凡会改变架构、数据、安全、成本、外部契约、发布或可靠性风险的 `unknown`，不得批准。
 - 技术栈、组件库、编辑器、数据层和测试方案是否引用 profile 或写清偏离理由；纯后端不强制前端 profile，纯前端不强制数据库 profile，涉及持久化时必须选择数据库 / 存储 profile。
+- 新项目、空仓库、技术栈缺失，新增 / 替换关键技术，或新增直接依赖时，`technical-design.md#1. 技术选型与依赖确认` 是否记录用户确认、用户授权默认、已确认脚手架，或可信的“沿用现有栈”证据；只有 profile、依赖说明和推荐理由不等于用户确认。
 - API、安全、可靠性、可观测性或交付影响存在时，technical_design 是否引用对应规则入口的主基准，并写清采用点、偏离理由和验证证据。
 
 ### 6. Tasks
@@ -99,6 +102,7 @@ description: SpecForge 内部规格审查技能。用于 01-spec 完成后审查
 - 每个任务是否保留 `_Trace:_`、`_Impact:_`、`_Boundary:_`、`_Depends:_`、`_Verification:_`。
 - `_Impact:_` 是否与 technical_design 影响面矩阵一致；technical_design `yes` 影响面是否都有任务承接，`no` 影响面是否没有被拆出实现任务。
 - tasks 是否覆盖测试、启动验证、迁移 / 回滚 / 观察等适用验证任务。
+- 有页面操作、上传、提交、审批、下载、权限或错误提示的浏览器流程时，tasks 是否包含 Playwright E2E 用例编写、真实浏览器自动操作执行和证据登记；只列单元测试、组件测试、手工验证或 DevTools 检查不能批准。
 - 是否存在范围膨胀、未决方案或隐藏风险。
 
 ## 状态规则
@@ -118,16 +122,19 @@ description: SpecForge 内部规格审查技能。用于 01-spec 完成后审查
 - `standard` / `deep` 没有代码库探索证据；`deep` 没有外部研究证据或合理跳过理由。
 - 计划、设计或任务不能追溯到用户澄清、代码探索或外部研究结论。
 - 用户可见页面没有视觉风格确认、体验设计证据或可信的 N/A 说明。
+- UI 原型只是默认控件堆叠、没有参考设计语言落地、没有视觉质量 review 或截图级证据。
 - 技术影响面存在但 components 跳过了 technical_design，或 technical_design 对 API、数据、权限、配置、NFR 风险只写默认处理。
 - technical_design 缺少 `## 0. 影响面与读取计划`，或影响面矩阵未覆盖全部工程影响面。
 - 存在会影响架构、数据、安全、成本、外部契约、发布或可靠性的 `unknown`，但没有澄清结论、取舍理由和验证计划。
 - `yes` 影响面没有对应子模块 / profile / 设计章节 / 验证钩子；`no` 影响面没有可信 N/A 理由。
 - 管理后台、HTML 渲染、外部发布、数据迁移或权限相关风险只被默认处理，没有确认和验证策略。
+- 新项目、关键技术变更或新增依赖缺少确认来源，或仍残留 `[NEEDS TECH DECISION]` / `[NEEDS DEPENDENCY DECISION]`。
 - 关键技术栈或组件选择没有 profile、备选方案或取舍理由。
 - 涉及 API、安全、可靠性或可观测性，却没有规则主基准采用点或可信 N/A 说明。
 - 设计包含数据库、缓存、搜索或文件存储，但没有数据库 / 存储 profile 选择、偏离说明或迁移验证计划。
 - tasks 缺少 `_Impact:_`，或 `_Impact:_` 与 technical_design 影响面矩阵冲突。
 - tasks 没有覆盖测试、启动验证、回滚 / 观察等适用验证任务。
+- 有浏览器流程、上传、提交、审批、下载、权限或错误提示，但 tasks / verification plan 没有 Playwright E2E 用例和自动化执行证据要求。
 
 ## Findings 分级
 

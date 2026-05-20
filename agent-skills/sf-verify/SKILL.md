@@ -69,7 +69,7 @@ node .specforge/core/scripts/create-artifact.mjs verification
 | 单元测试 | 是 | 纯函数、组件、小型业务规则、bugfix 回归 |
 | 集成测试 | 是 | 数据库、缓存、消息队列、外部服务适配、配置组合 |
 | 契约测试 | 是 | API、SDK、RPC、事件、Webhook 或公共接口变化 |
-| E2E 测试 | 条件属于 | 关键用户路径、权限链路、跨系统流程；如果项目未配置 E2E，记录未覆盖原因 |
+| E2E 测试 | 是 | 有浏览器页面流程、上传、提交、审批、下载、权限、路由跳转或错误提示时必须执行 Playwright 自动化 |
 | lint / typecheck / build | 是 | 代码、模板、CLI 或类型相关变更 |
 | 启动验证 | 是 | 新项目、新服务、构建链、配置、端口、环境变量变化 |
 | 手工验证 | 是 | UI、部署环境、第三方系统、一次性运维或无法自动化的场景 |
@@ -99,7 +99,10 @@ node .specforge/core/scripts/create-artifact.mjs verification
 2. 运行可用命令，记录命令、时间、结果和输出摘要。
 3. 先建立风险驱动验证计划：每个高风险影响面至少有一个强证据；弱证据或跳过项必须写明影响、owner 和重新验证触发条件。
 4. 有 UI 时构建页面 × 操作 × 角色 × 状态矩阵；不能只测 happy path，也不能只验证一个角色或一个视口。
-5. 有浏览器 UI 时，优先用 Playwright 形成可重复证据；定位运行时问题时再用 DevTools 记录 console / network / DOM 发现。
+5. 有浏览器 UI / 页面流程时，先写 Playwright 测试用例矩阵，再用 Playwright 自动操作页面形成可重复证据；定位运行时问题时再用 DevTools 记录 console / network / DOM 发现。
+   - 必须真实执行点击、输入、上传文件、提交、审批、下载或权限切换等用户操作中适用的部分。
+   - 必须断言 UI 文案、按钮状态、页面跳转、列表刷新、错误提示和关键网络响应中适用的部分。
+   - 项目没有 Playwright 配置时，使用 `core/skills/playwright-skill` 临时脚本或同等 Playwright 脚本；不能因此跳过。
 6. 有业务闭环时验证完整流程和异常分支。
 7. 有 API / 数据 / 权限 / 安全 / 配置 / 启动 / 回滚 / 可观测性影响时，按 technical_design 影响面逐项记录证据或 N/A 理由。
 8. 写入：
@@ -132,6 +135,8 @@ node .specforge/core/scripts/gate.mjs verification REQUEST_CHANGES
 - 阻断测试失败。
 - 关键验收标准没有验证证据。
 - code review 标记的 technical_design `yes` 影响面没有对应验证证据或可信跳过说明。
+- 有浏览器流程但没有 Playwright 用例、自动操作脚本、执行命令和结果证据。
+- 涉及上传、提交审批、下载、权限或错误提示时，Playwright 未覆盖成功路径和至少一个关键失败路径。
 - 缺少运行环境且没有替代验证方案。
 - 发现实现偏离 spec。
 - 安全、权限、数据迁移、回滚或生产风险缺少证据。

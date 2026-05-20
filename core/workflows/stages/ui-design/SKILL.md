@@ -35,6 +35,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
    - 若项目已有设计系统、品牌手册、Figma 文件或组件库规范，引用它并写明沿用范围。
    - 若没有现成约束，必须先向用户提出 **5 个**风格方向，或让用户提供参考产品 / 截图 / getdesign.md 风格对象。
    - 若需要灵感，可以参考 `core/skills/frontend-design` 或 `core/skills/getdesign`，但必须把结果转译成 SpecForge 的 `Visual Style Brief`，不能直接粘贴第三方 skill 输出。
+   - 用户提供示例设计、截图、规范或参考产品时，先提取设计语言，再做页面方案；不要只把参考资料作为附件列出。
    - 若用户暂不确认，且 UI 风险低，可以写默认假设，但必须记录可逆性和待确认点。
 4. **建立页面地图、用户流程和页面 × 状态矩阵。** 角色视图分开写，不能只写 happy path。
 5. **选择 UI 产物通道。**
@@ -58,7 +59,11 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
    - Figma 使用文件 / Frame URL，并导出关键截图到 `01-spec/ui-mockup-export/`。
    - HTML 使用 `01-spec/ui-mockup.html`。
    - ASCII 直接嵌入 `ui-design.md`。
-8. **写 UI 验证策略。** 覆盖截图、页面流程、角色权限、响应式、异常态和无障碍。
+8. **执行视觉质量自检并修一轮。**
+   - 对 Pencil / Figma / HTML 产物，必须有截图或可查看证据。
+   - 使用 `core/skills/web-design-guidelines`、已选风格 brief 或项目设计系统做 review，至少检查信息层级、间距、对齐、密度、颜色、组件一致性、状态反馈和可访问性。
+   - 发现问题后先修原型，再把 review 发现和修正结果写入 `ui-design.md`；不要把“后续实现时优化 UI”当成通过条件。
+9. **写 UI 验证策略。** 覆盖截图、页面流程、角色权限、响应式、异常态和无障碍。
 
 ## 风格澄清最低标准
 
@@ -73,6 +78,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 
 - 用户可见体验的关键风格、页面范围或角色流程尚未确认，且默认假设风险高。
 - 有 UI 变更但没有任何可验收 UI 产物或明确降级理由。
+- 有可视原型但没有截图级质量自检、问题修正记录，或原型明显只是默认控件堆叠。
 - 原型与 requirements 的角色、流程、审批、权限或异常态不一致。
 - 需要 Figma / Pencil 工具但当前不可用，且没有 HTML / ASCII 降级方案。
 - Pencil MCP 出现重复读取空画布、没有进入 `batch_design` 创建步骤；此时必须中断 Pencil 通道并改用 HTML mockup 或重新开始一次明确的 Pencil 创建任务。
@@ -80,7 +86,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 ## 完成标准
 
 - `ui-design.md` 能让 reviewer 判断 UI 是否满足需求。
-- 有 UI 变更时，存在 style brief、工具选择记录和至少一种可验收 UI 证据。
+- 有 UI 变更时，存在 style brief、参考设计语言归一化、工具选择记录、至少一种可验收 UI 证据，以及视觉质量自检 / 修正记录。
 - 状态矩阵覆盖 loading、empty、error、permission、success、disabled、边界值和响应式适用性。
 - 如果执行 UI review 或 verification，优先参考 `core/skills/web-design-guidelines`，并把发现归一为 SpecForge review / verification 记录。
 - 实现者能据此实现页面结构和交互状态。

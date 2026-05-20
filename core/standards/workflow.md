@@ -18,6 +18,8 @@
 - 每个 work item 必须有明确范围、非目标、写入边界和验证边界。
 - 如果实现需要扩大写入范围，先停下更新 spec 或询问用户。
 - 不把行为变更、重构、依赖升级、格式化清理混成一个 work item，除非 spec 明确批准。
+- 已关闭、已归档或所有 required gate 已完成的 work item 是历史证据；后续发现的缺陷、遗漏、体验问题或测试漏测必须新建 follow-up work item，不继续修改旧 scope。
+- follow-up work item 应在 `work.yaml#relations.parent` 记录来源 work item id，并用 `relations.relation` 标明 `follow_up`、`bugfix`、`issue` 或 `split_from`。
 
 ## Workflow 选择
 

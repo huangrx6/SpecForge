@@ -45,6 +45,7 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
    - 从 tasks 提取批次、依赖、`_Impact:_`、`_Boundary:_`、`_Verification:_`、风险和预计变更文件。
    - 从 `technical-design.md#0. 影响面与读取计划` 提取 `yes` / `no` / `unknown`，形成实现影响面对账计划。
    - 如果任务边界不足以指导写入，停止回到 `sf-tasking` 或 `sf-spec-review`。
+   - 如果 `technical-design.md` 仍有 `[NEEDS TECH DECISION]` 或 `[NEEDS DEPENDENCY DECISION]`，停止回到 `sf-tech-design` 确认技术选型或新增依赖。
    - 如果影响面仍有会改变架构、数据、安全、成本、外部契约、发布或可靠性的 `unknown`，停止回到 `sf-tech-design` 或 `sf-spec-review`。
 3. **新项目必须先执行脚手架初始化**
    - 根据 `technical-design.md` 的 Tech Profile Selection 和项目 wiki 选择脚手架命令。
@@ -57,10 +58,12 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
    - Pencil 原型：读取导出截图和 `ui-design.md` 中的页面/状态矩阵，以原型为布局和交互参照实现。
    - HTML mockup：以 `01-spec/ui-mockup.html` 为视觉和结构参照实现。
    - ASCII 线稿：仅作为简单页面结构参照；复杂 UI 若只有 ASCII，先回到 `sf-ui-design` 补充可审查原型。
+   - 为 Playwright E2E 保留稳定可访问选择器：优先 role、label、可见文本；必要时补 `data-testid`。不能为了测试绕过真实用户路径。
 5. **实现技术变更前先读取 `technical-design.md`**，按其中的前后端边界、API、数据、权限、配置、NFR 和验证策略执行。
    - `yes` 影响面：必须落到代码 / 配置 / 文档变更、关联任务和快速验证。
    - `no` 影响面：不得出现未经批准的真实 diff；发现必须修改时停止退回 spec。
    - `unknown` 影响面：不得以实现代替澄清。
+   - `[NEEDS TECH DECISION]` / `[NEEDS DEPENDENCY DECISION]`：不得以实现代替用户确认。
 6. **按任务逐项实现，保持小步可审查**
    - 优先从 W0 的契约、脚手架、失败优先验证开始。
    - 每个 task 只改 `_Boundary:_` 允许的文件；确需越界时停止并回到 spec。
@@ -81,6 +84,7 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
 - tasks 的 `_Boundary:_` 或 `_Verification:_` 不足以指导实现。
 - 发现设计错误、需求矛盾或 UI 原型 / technical design 缺失。
 - technical_design 影响面仍有关键 `unknown`，或实现需要修改被批准为 `no` 的影响面。
+- technical_design 仍残留 `[NEEDS TECH DECISION]` 或 `[NEEDS DEPENDENCY DECISION]`。
 - 涉及安全、权限、数据迁移、AI 调用、外部集成、生产配置或发布风险但缺少验证计划。
 - 既不能运行关键验证，也没有可接受的替代证据。
 

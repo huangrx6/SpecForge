@@ -29,6 +29,8 @@ function positionalArgs() {
     "--has-infra",
     "--has-background-job",
     "--needs-research",
+    "--parent",
+    "--relation",
   ]);
   for (let i = 0; i < args.length; i += 1) {
     const arg = args[i];
@@ -79,10 +81,12 @@ const defaultTypeByWorkflow = {
 const kind = argValue("--kind") ?? defaultKindByWorkflow[workflow] ?? "feat";
 const type = argValue("--type") ?? defaultTypeByWorkflow[workflow] ?? "FEATURE";
 const shortTitle = argValue("--short-title");
+const parent = argValue("--parent") ?? "null";
+const relation = argValue("--relation") ?? "root";
 const title = positionalArgs().join(" ").trim();
 
 if (!title) {
-  console.error('Usage: node .specforge/core/scripts/create-work.mjs [--kind feat|bugfix|issue|refactor|research|chore|docs|ops] [--workflow feature|standard|lite|bugfix|issue|refactor|discovery] [--short-title 短标题] "Work item title"');
+  console.error('Usage: node .specforge/core/scripts/create-work.mjs [--kind feat|bugfix|issue|refactor|research|chore|docs|ops] [--workflow feature|standard|lite|bugfix|issue|refactor|discovery] [--short-title 短标题] [--parent <work-id>] [--relation follow_up|bugfix|issue|split_from] "Work item title"');
   console.error("Default workflow is feature. Use --workflow explicitly for bugfix, issue, refactor, discovery, lite, or standard work.");
   process.exit(1);
 }
@@ -138,6 +142,14 @@ function renderWorkItemYaml({ id, title, type, workflow, date, schema }) {
     .replace(/^kind:\s*.+$/m, `kind: ${kind}`)
     .replace(/^type:\s*.+$/m, `type: ${type}`)
     .replace(/^workflow:\s*.+$/m, `workflow: ${workflow}`);
+
+  if (!/^relations:\s*$/m.test(content)) {
+    content = content.replace(/^workflow:\s*.+$/m, `$&\n\nrelations:\n  parent: null\n  relation: root`);
+  }
+
+  content = content
+    .replace(/^(  parent:)\s+.+$/m, `$1 ${parent}`)
+    .replace(/^(  relation:)\s+.+$/m, `$1 ${relation}`);
 
   for (const [component, option] of componentOptionMap) {
     const value = argValue(option);

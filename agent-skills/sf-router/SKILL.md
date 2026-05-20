@@ -110,6 +110,7 @@ AI 工具技能：sf-router / sf-*  负责让 AI 工具知道怎么工作，可 
      - `verification=REQUEST_CHANGES/REJECTED`：优先路由到 `sf-implement` 修复；若只是缺证据且实现未变，路由到 `sf-verify` 重跑验证。
      - `wiki_sync=REQUEST_CHANGES/REJECTED`：路由到 `sf-wiki`。
    - 如果 ready artifact 是 `requirements`，但 `brief.md#PRD 决策` 标记 `PRD required: yes` 或表格中 `PRD required | yes`，且 `00-intake/prd.md` 不存在、`Decision Status` 不是 `approved-for-requirements`，或仍有 `[NEEDS PRODUCT DECISION]`，先路由到 `sf-prd`，不要直接进入 `sf-requirements`。
+   - 如果 ready artifact 是 `tasks` / `spec_review` / `implementation`，但 `technical-design.md` 仍有 `[NEEDS TECH DECISION]` 或 `[NEEDS DEPENDENCY DECISION]`，先路由到 `sf-tech-design` 确认技术选型或新增依赖。
    - 如果 ready artifact 是 `implementation`，但 `01-spec/tasks.md` 缺少 `_Impact:_` 或 `technical-design.md#0` 仍有关键 `unknown`，先路由到 `sf-tasking` 或 `sf-tech-design`，不要进入 `sf-implement`。
    - 如果 ready artifact 是 `closure`，但 `06-close/wiki-sync.md` 未证明唯一 current wiki、release / rollback 未覆盖 verification 残余风险，路由到 `sf-close` 并标明阻断点。
    - 根据 ready artifact 路由：

@@ -72,6 +72,22 @@
 
 > 使用 Playwright 或 DevTools 时必填；无浏览器行为可写 N/A。
 
+### Playwright E2E 用例与执行
+
+> 有浏览器页面流程、上传、提交、审批、下载、权限、路由跳转或错误提示时必填。先写用例，再执行自动化；单元测试不能替代本节。
+
+| 用例 ID | 页面 / 流程 | 角色 | 前置数据 | 自动化步骤 | 断言 | 覆盖状态 | 结果 | 证据 |
+|---|---|---|---|---|---|---|---|---|
+| PW-001 | | | | click / fill / upload / submit / approve / download | UI 文案 / URL / network / state | success / error / permission / boundary | pass / fail / skipped | |
+
+| 项 | 值 |
+|---|---|
+| Playwright 脚本 / 测试文件 | |
+| 执行命令 | |
+| 浏览器 / viewport | |
+| 截图 / trace / video / console 摘要 | |
+| 是否覆盖关键失败路径 | yes / no / N/A |
+
 | 工具 | 覆盖目标 | 关键发现 | 证据路径 / 摘要 | 结果 |
 |---|---|---|---|---|
 | playwright-skill | E2E / screenshot / responsive / role matrix | | | 通过 / 失败 / N/A |

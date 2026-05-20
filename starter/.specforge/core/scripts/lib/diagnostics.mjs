@@ -150,6 +150,11 @@ function technicalUnknownRows(workItemBase) {
     .filter((line) => !/yes\s*\/\s*no\s*\/\s*unknown/i.test(line));
 }
 
+function technicalNeedsDecision(workItemBase) {
+  const designPath = `${workItemBase}/01-spec/technical-design.md`;
+  return exists(designPath) && /\[NEEDS (TECH|DEPENDENCY) DECISION\]/i.test(readText(designPath));
+}
+
 function taskImpactSummary(workItemBase) {
   const tasksPath = `${workItemBase}/01-spec/tasks.md`;
   if (!exists(tasksPath)) return { exists: false, taskCount: 0, impactCount: 0, missing: false };
@@ -245,6 +250,16 @@ function buildBlockers({ readyArtifact, gates, workItemBase }) {
       route: "sf-prd",
       owner_artifact: "requirements",
       message: "brief 标记需要 PRD，但 00-intake/prd.md 尚未批准到 requirements。",
+    });
+  }
+
+  if (["tasks", "spec_review", "implementation"].includes(readyArtifact.id) && technicalNeedsDecision(workItemBase)) {
+    blockers.push({
+      severity: "P1",
+      code: "technical-selection-unconfirmed",
+      route: "sf-tech-design",
+      owner_artifact: "technical_design",
+      message: "technical-design.md 仍有 [NEEDS TECH DECISION] 或 [NEEDS DEPENDENCY DECISION]，关键技术选型或新增依赖未确认，不能进入下游阶段。",
     });
   }
 

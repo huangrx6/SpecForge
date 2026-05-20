@@ -69,7 +69,9 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 - 并行任务不得共享同一主要写入文件。
 - 共享契约、schema、类型、迁移、环境变量必须先完成再并行实现。
 - 验证任务不能藏在实现任务里。
+- `technical-design.md` 残留 `[NEEDS TECH DECISION]` 或 `[NEEDS DEPENDENCY DECISION]` 时停止，退回 `sf-tech-design` 确认选型或新增依赖，不生成任务。
 - UI 状态、API 契约、数据迁移、权限、安全、发布任务必须单独列出。
+- 有浏览器流程、上传、提交、审批、下载、权限或错误提示时，必须列出 Playwright E2E 用例设计、脚本执行和证据登记任务；不能只列单元测试或人工验证。
 - 对多个 agent / worker 友好的任务，要明确“谁拥有哪些文件或模块”。
 
 ## 必含任务类型

@@ -48,12 +48,14 @@ node .specforge/core/scripts/create-artifact.mjs implementation
    - `yes`：列出预计代码 / 配置 / 文档变更、关联任务和快速验证。
    - `no`：确认不写相关区域；若实现中发现必须修改，停止回到 `sf-tech-design` 或 `sf-spec-review`。
    - `unknown`：不得直接实现；先退回澄清。
+   - `[NEEDS TECH DECISION]` / `[NEEDS DEPENDENCY DECISION]`：不得直接实现；先退回 `sf-tech-design` 让用户确认技术选型或新增依赖。
 5. 新项目、新前端、新后端或新模块必须先使用选中的技术选择卡推荐的脚手架 / 生成命令，跑通安装、构建或启动冒烟，再写业务代码。
 6. 每次编辑前确认文件在 `_Boundary:_` 或已批准的 UI / technical design 允许范围内；边界不足时停止回到 spec，不自行扩大。
 7. UI 实现必须追溯到 `ui-design.md` 的页面地图、状态矩阵、Visual Style Brief 和原型证据；有已批准 Figma Frame 时，先按 `.specforge/core/skills/ORCHESTRATION.md` 判断是否读取 `core/skills/figma` 和 `core/skills/figma-implement-design`：
    - 先获取 design context 和 screenshot，再写代码。
    - 把 Figma MCP 输出翻译成项目组件、token、路由和状态管理约定；不得原样提交生成片段。
    - 视觉还原和偏离记录写入 `03-implementation/report.md`，最终证据交给 `sf-verify`。
+   - 为 Playwright E2E 保留稳定可访问选择器：优先 role、label、可见文本；必要时补 `data-testid`。不能为了测试绕过真实用户路径。
 8. 技术实现必须追溯到 `technical-design.md` 的技术选择、API、数据、安全、配置、运行、可观测性和验证策略。
 9. 每完成一个任务，运行该任务对应的快速验证或写明不能运行的原因；只有代码、验证证据、`changed-files.md` 登记和 task 勾选四者一致后才视为完成。
 10. 修改代码后同步更新：

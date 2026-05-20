@@ -35,6 +35,8 @@ description: 为新请求创建或整理 SpecForge work item；用于用户提�
 1. **是否已有 active work item。**
    - 没有：为本次请求创建新 work item。
    - 一个：判断是扩展已有 work item，还是应新开。
+     - 如果该 active work item 已经没有 ready artifact、已进入 closure、所有 required gate 已通过，或用户是在“刚刚已完成的需求”上讨论遗漏、报错、体验问题、测试漏测、后续增强，必须新建 follow-up work item；不要继续改旧 work item。
+     - 如果用户明确引用 archive 中的历史 work item，也必须新建 follow-up work item，并在 `relations.parent` 记录原 work item id。
    - 多个：先让用户指定，不猜。
 2. **是否需要拆分。**
    - 同时包含新增功能 + bugfix + 重构 + 预研时，优先拆成多个 work item。
@@ -75,6 +77,26 @@ description: 为新请求创建或整理 SpecForge work item；用于用户提�
 | 纯预研 | Spike、可行性、方案调研、黑盒系统理解，不承诺实现 | `discovery` | research |
 | 混合请求 | 跨多个目标或多种性质 | 不直接创建万能 work item | 先拆分 |
 
+## Follow-up / 回归问题规则
+
+已完成或已归档的 work item 是历史证据，不能继续被当成 active scope 修改。用户在完成后再次讨论“刚刚那个需求还有问题”“遗漏了某个功能”“提交时报错”“UI 不好看”“测试没覆盖出来”时，按新 work item 处理：
+
+| follow-up 类型 | workflow | kind | 例子 |
+|---|---|---|---|
+| 已实现功能出现错误或不符合已批准规格 | `bugfix` | `bugfix` | 提交审批 400、下载失败、权限绕过 |
+| 现象尚未确认根因 | `issue` | `issue` | 页面偶发空白、配置状态不一致 |
+| 原需求遗漏的新能力 / 新状态 / 新流程 | `feature` 或 `standard` | `feat` | 新增批量操作、补审批撤回 |
+| 体验质量或 UI 改版 | `standard` / `feature` | `feat` | UI 太丑、需要重新设计后台风格 |
+| 测试体系补强 | `standard` / `lite` | `chore` | 补 Playwright 覆盖矩阵 |
+
+创建时用关联字段保留历史关系：
+
+```bash
+node .specforge/core/scripts/create-work.mjs --workflow bugfix --kind bugfix --parent <previous-work-id> --relation follow_up "修复提交审批 400"
+```
+
+如果无法判断前一个 work item id，先读取 `node .specforge/core/scripts/status.mjs --json` 和 archive 列表；仍无法判断时，询问用户，不要复用旧 scope。
+
 ## PRD 决策
 
 `sf-prd` 不是 artifact graph 的固定阶段，所以 intake 必须把是否需要 PRD 写进 `brief.md`，供 `sf-router` 和人类判断。
@@ -112,6 +134,12 @@ node .specforge/core/scripts/create-work.mjs --workflow <workflow> "Work item ti
 
 ```bash
 node .specforge/core/scripts/create-work.mjs --workflow feature --has-ui true --has-api true --has-db false "Work item title"
+```
+
+如果是已完成 work item 的后续问题，带上关联：
+
+```bash
+node .specforge/core/scripts/create-work.mjs --workflow issue --kind issue --parent <previous-work-id> --relation follow_up "排查提交审批失败"
 ```
 
 未确定的组件 flag 保持 `auto`，表示保守保留对应 artifact；明确为 `false` 时，后续 artifact graph 会跳过对应阶段。
