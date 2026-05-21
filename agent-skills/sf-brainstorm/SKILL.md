@@ -31,6 +31,10 @@ description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户�
 - 用户说“先 brainstorm / 头脑风暴 / 我还没想清楚 / 你帮我想想”。
 - intake 发现产品、页面、全栈应用、AI 能力、多角色流程、审批、权限、数据生命周期等方向尚未确认。
 - PRD、requirements、UI design 或 technical_design 中出现会改变方向的 `[NEEDS ... DECISION]`。
+- `instructions.mjs` 返回 `ui-direction-unconfirmed`，表示 UI / 视觉 / 体验方向还没有用户确认，必须先让用户取舍。
+- `instructions.mjs` 返回 `tech-direction-unconfirmed`，表示新项目 / 空仓库路径的技术栈、数据库、调度器、AI provider、部署或依赖方向还没有用户确认，必须先让用户取舍。
+- `instructions.mjs` 返回 `dependency-decision-unconfirmed`，表示本次可能新增 / 替换直接依赖、SDK、插件、组件库、ORM、驱动、测试库或外部 provider，但还没有用户确认。
+- `instructions.mjs` 返回 `tooling-decision-unconfirmed`，表示本次可能选择 / 替换包管理器、UI 组件库、样式方案、Python 依赖管理 / 虚拟环境、构建工具、测试 runner、任务运行器或 monorepo 工具，但还没有用户确认。
 - 技术选型不是显而易见的项目既有约束，需要和用户确认框架、版本、部署、成本、长期维护取舍。
 
 ## 边界
@@ -50,6 +54,10 @@ description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户�
 3. 需要竞品、政策、模型、框架、SDK、浏览器能力、安全或版本事实时，先查当前可靠来源；技术类优先官方资料，并记录日期。
 4. 每轮只问会改变方向的问题；优先用选项和取舍帮助用户确认，不用长问卷。
 5. 用户确认后，写入或更新 `00-intake/brainstorm.md`。
+   - 如果确认的是 UI / 视觉 / 体验方向，必须写入 `[UI DECISION CONFIRMED]` 或 `UI Direction Status: confirmed`，并记录用户选择、放弃项和影响。
+   - 如果确认的是技术栈 / 架构 / 数据库 / 调度器 / AI provider / 部署 / 依赖方向，必须写入 `[TECH DECISION CONFIRMED]` 或 `Tech Direction Status: confirmed`；用户授权默认写 `Tech Direction Status: delegated_default`。
+   - 如果确认的是新增 / 替换依赖，必须写入 `[DEPENDENCY DECISION CONFIRMED]` 或 `Dependency Decision Status: confirmed`；用户授权默认写 `Dependency Decision Status: delegated_default`。
+   - 如果确认的是工程工具链，必须写入 `[TOOLING DECISION CONFIRMED]` 或 `Tooling Decision Status: confirmed`；用户授权默认写 `Tooling Decision Status: delegated_default`；沿用现有栈写 `Tooling Decision Status: existing_stack`。
 6. 同步更新 `00-intake/brief.md` 中的澄清记录、功能候选池、用户选择、外部研究摘要和 PRD 决策。
 7. 输出下一步路由：`sf-prd`、`sf-requirements`、`sf-ui-design`、`sf-tech-design`、`sf-discovery` 或暂停等待用户确认。
 

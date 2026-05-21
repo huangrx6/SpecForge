@@ -9,9 +9,12 @@
 | 是否有用户可见页面 / 组件 / 流程变化 | yes / no | |
 | 是否已有设计系统 / 品牌 / 页面约束 | yes / no | |
 | 是否需要向用户确认视觉方向 | yes / no | |
+| UI Direction Status | confirmed / blocked | `brief.md` / `brainstorm.md` / `prd.md` / `requirements.md` 中的真实 UI 确认标记或用户确认记录 |
 | 正式原型交付方式 | Pencil / N/A | |
 
 若无 UI 影响，在这里写 N/A 结论、跳过理由和验证方式，然后将后续章节标记为 N/A。
+
+若 `UI Direction Status` 不是 `confirmed`，停止在这里：写真实 UI decision-needed marker，回到 `sf-brainstorm` 让用户选择体验方向。不要继续填 Visual Style Brief、页面地图或 Pencil 原型。
 
 ## 1. 输入依据
 
@@ -22,6 +25,8 @@
 - 不确定项：
 
 ## 2. UI 设计访谈与方向选择
+
+> 本节必须引用用户确认、现有设计系统或明确低风险默认。Agent recommendation 不是用户确认。
 
 | 分类 | 内容 |
 |---|---|
@@ -36,6 +41,12 @@
 | 方向 A | | | |
 | 方向 B | | | |
 | 方向 C | | | |
+
+### 用户确认记录
+
+| 确认来源 | 用户选择 | 放弃项 | 对 UI design 的影响 |
+|---|---|---|---|
+| `00-intake/brainstorm.md` / 对话 / 现有设计系统 | | | |
 
 ## 3. Visual Style Brief
 

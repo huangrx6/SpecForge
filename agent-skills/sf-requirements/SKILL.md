@@ -106,6 +106,8 @@ requirements 不合格的信号：只剩用户故事、没有 SHALL 行为、没
 - 从 brief 的分析证据包追溯需求来源；复杂需求不能丢失代码探索、外部研究和用户澄清结论。
 - 产品类需求必须记录功能候选、MVP 选择、明确延后项和用户确认。
 - 必须包含范围、非目标、依赖和验收标准。
+- 如果需求可能需要新增 / 替换直接依赖、SDK、插件、组件库、ORM、驱动、测试库、浏览器自动化库或外部 provider，必须在 requirements 的依赖小节写 `[DEPENDENCY DECISION REQUIRED]` 或 `[NEEDS DEPENDENCY DECISION]`，并说明需要用户确认；不要在 requirements 中替用户选择具体依赖。
+- 如果需求会迫使技术设计选择包管理器、UI 组件库、样式方案、Python 依赖管理 / 虚拟环境、构建工具、测试 runner、任务运行器或 monorepo 工具，必须写 `[TOOLING DECISION REQUIRED]` 或 `[NEEDS TOOLING DECISION]`，并说明需要用户确认；不要在 requirements 中替用户选择 npm / pnpm / yarn、uv / Poetry / pip / Conda 等偏好。
 - 每条功能需求至少覆盖正常路径；有失败、空状态、边界值、权限差异时必须显式写出。
 - 每条 `MUST` 需求必须至少有一个 `AC-*`，并在 PRD / Brief 追溯表中标明来源。
 - 将 PRD 用户故事转成需求时，保留“角色 / 目标 / 价值”作为来源说明，但需求正文使用系统行为语言。

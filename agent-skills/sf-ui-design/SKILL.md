@@ -21,7 +21,9 @@ SpecForge 固定使用 **Pencil** 做正式 UI 原型。Figma、HTML、ASCII、�
 node .specforge/core/scripts/instructions.mjs
 ```
 
-确认 ready artifact 包含 `ui_design`，再：
+如果输出是 `Instructions blocked`，必须按 `Route` 处理阻断。尤其当 blocker 为 `ui-direction-unconfirmed` 时，停止 UI design，路由到 `sf-brainstorm`，只向用户确认体验方向；不要运行 `create-artifact.mjs ui_design`，不要调用 Pencil。
+
+确认 ready artifact 包含 `ui_design` 且没有阻断后，再：
 
 ```bash
 node .specforge/core/scripts/create-artifact.mjs ui_design
@@ -46,10 +48,12 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
 ## 执行要点
 
 1. 先判断是否有 UI 影响；没有时写 N/A、理由和验证方式。
-2. 有 UI 影响时，先做 UI 设计访谈，再画原型：
+2. 有 UI 影响时，先做 UI 设计访谈，再画原型；这一步是硬门槛，不是开场白：
    - 列出 `已确认 / 高影响未知 / 可安全默认`。
    - 没有现成设计系统时，给 2-3 个互斥体验方向，写推荐项和取舍；如果会影响信息架构、核心流程或视觉方向，先路由到 `sf-brainstorm` 等用户确认后再画 Pencil。
    - 每轮只问会改变 UI 的关键问题，避免把用户拖进工具选择。
+   - 用户未确认体验方向前，不得自行宣布“我将使用某某风格”并开始设计。推荐项必须标为 Agent recommendation，不能写成用户选择。
+   - 用户确认后，在 `00-intake/brainstorm.md`、`00-intake/brief.md`、`00-intake/prd.md` 或 `01-spec/requirements.md` 中留下 `[UI DECISION CONFIRMED]` 或 `UI Direction Status: confirmed`。
 3. 用户提供示例设计、截图、规范、Figma 或参考产品时，必须先提取设计语言并写入 Visual Style Brief，再做页面方案。
 4. 写页面地图、角色流程、状态矩阵、明确不做项和 UI 验证策略。
 5. 使用 Pencil 创建或更新原型：
@@ -65,6 +69,7 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
 
 - `01-spec/ui-design.md` 存在。
 - 有 UI 影响时，包含 Visual Style Brief、体验方向确认或默认假设、页面地图、流程、状态矩阵。
+- UI 方向确认必须可追溯到用户答案、现有设计系统或明确低风险默认；不能只写 Agent 自己的设计偏好。
 - 如果体验方向曾经进入 brainstorm，`ui-design.md` 必须引用 `00-intake/brainstorm.md` 的用户确认。
 - 有 UI 影响时，存在 `01-spec/ui-mockup.pen` 和 `01-spec/ui-mockup-export/*.png`，或明确 Pencil 阻断原因。
 - 有可视原型时，包含视觉质量 review、截图级证据和至少一轮修正记录。
@@ -77,3 +82,4 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
 - 不把前后端架构、API、数据迁移写进 UI design。
 - 不让用户选择 Figma / HTML / ASCII / Pencil 等工具通道；工具固定为 Pencil。
 - 不在 implementation 阶段重新发明视觉风格。
+- 不在用户尚未确认 UI / 视觉 / 体验方向时创建 Pencil 原型或填充完整 UI design。

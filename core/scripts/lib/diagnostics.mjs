@@ -1,5 +1,6 @@
 import {
   computeArtifactStates,
+  componentEnabled,
   effectiveSchema,
   exists,
   gateEvidence,
@@ -8,6 +9,7 @@ import {
   listWorkItems,
   loadSchema,
   nextReadyArtifact,
+  parseComponents,
   parseField,
   readText,
   resolveWorkItem,
@@ -155,6 +157,136 @@ function technicalNeedsDecision(workItemBase) {
   return exists(designPath) && /\[NEEDS (TECH|DEPENDENCY) DECISION\]/i.test(readText(designPath));
 }
 
+function hasUiDecisionConfirmation(text) {
+  if (!text) return false;
+  return [
+    /\[UI DECISION CONFIRMED\]/i,
+    /^UI Direction Status:\s*(confirmed|approved|user-confirmed|已确认)$/im,
+    /^体验方向状态[:：]\s*(confirmed|approved|user-confirmed|已确认)$/im,
+    /\|\s*UI direction confirmed\s*\|\s*(yes|true|confirmed|approved)\s*\|/i,
+    /\|\s*体验方向已确认\s*\|\s*(yes|true|confirmed|approved|是|已确认)\s*\|/i,
+    /用户确认.{0,40}(UI|视觉|体验|交互|信息架构|设计方向)/i,
+  ].some((pattern) => pattern.test(text));
+}
+
+function uiDirectionConfirmed(workItemBase) {
+  const upstreamFiles = [
+    "00-intake/brief.md",
+    "00-intake/brainstorm.md",
+    "00-intake/prd.md",
+    "01-spec/requirements.md",
+  ];
+
+  return upstreamFiles.some((file) => hasUiDecisionConfirmation(safeRead(`${workItemBase}/${file}`)));
+}
+
+function hasTechDecisionConfirmation(text) {
+  if (!text) return false;
+  return [
+    /\[TECH DECISION CONFIRMED\]/i,
+    /^Tech Direction Status:\s*(confirmed|approved|user-confirmed|delegated_default|existing_stack|scaffold_confirmed|已确认)$/im,
+    /^技术方向状态[:：]\s*(confirmed|approved|user-confirmed|delegated_default|existing_stack|scaffold_confirmed|已确认)$/im,
+    /\|\s*Tech direction confirmed\s*\|\s*(yes|true|confirmed|approved)\s*\|/i,
+    /\|\s*技术方向已确认\s*\|\s*(yes|true|confirmed|approved|是|已确认)\s*\|/i,
+    /用户确认.{0,60}(技术栈|技术选型|架构方向|数据库|调度器|AI provider|模型供应商|部署方式)/i,
+    /用户授权.{0,40}(默认|推荐方案|Agent recommendation)/i,
+  ].some((pattern) => pattern.test(text));
+}
+
+function techDirectionConfirmed(workItemBase) {
+  const upstreamFiles = [
+    "00-intake/brief.md",
+    "00-intake/brainstorm.md",
+    "00-intake/prd.md",
+    "01-spec/requirements.md",
+    "01-spec/ui-design.md",
+  ];
+
+  return upstreamFiles.some((file) => hasTechDecisionConfirmation(safeRead(`${workItemBase}/${file}`)));
+}
+
+function upstreamText(workItemBase) {
+  return [
+    "00-intake/brief.md",
+    "00-intake/brainstorm.md",
+    "00-intake/prd.md",
+    "01-spec/requirements.md",
+    "01-spec/ui-design.md",
+  ]
+    .map((file) => safeRead(`${workItemBase}/${file}`))
+    .filter(Boolean)
+    .join("\n\n");
+}
+
+function hasDependencyDecisionConfirmation(text) {
+  if (!text) return false;
+  return [
+    /\[DEPENDENCY DECISION CONFIRMED\]/i,
+    /^Dependency Decision Status:\s*(confirmed|approved|user-confirmed|delegated_default|scaffold_confirmed|not_required|已确认)$/im,
+    /^依赖决策状态[:：]\s*(confirmed|approved|user-confirmed|delegated_default|scaffold_confirmed|not_required|已确认)$/im,
+    /\|\s*Dependency decision confirmed\s*\|\s*(yes|true|confirmed|approved)\s*\|/i,
+    /\|\s*新增依赖已确认\s*\|\s*(yes|true|confirmed|approved|是|已确认)\s*\|/i,
+    /用户确认.{0,80}(新增依赖|引入依赖|SDK|插件|组件库|ORM|驱动|测试库|浏览器自动化库|AI SDK)/i,
+  ].some((pattern) => pattern.test(text));
+}
+
+function dependencyDecisionRequired(text) {
+  if (!text) return false;
+  return [
+    /\[NEEDS DEPENDENCY DECISION\]/i,
+    /\[DEPENDENCY DECISION REQUIRED\]/i,
+    /^Dependency Decision Required:\s*(yes|true|required)$/im,
+    /^新增依赖决策[:：]\s*(yes|true|required|需要|是)$/im,
+    /\|\s*Dependency decision required\s*\|\s*(yes|true|required)\s*\|/i,
+    /(新增|引入|添加|安装|升级|替换|采用|使用).{0,24}(直接依赖|依赖包|SDK|插件|组件库|ORM|驱动|测试库|浏览器自动化库|AI SDK|npm package|pip package)/i,
+    /(add|introduce|install|upgrade|replace|use).{0,32}(direct dependenc|SDK|plugin|component library|ORM|driver|test library|browser automation|package)/i,
+  ].some((pattern) => pattern.test(text));
+}
+
+function hasToolingDecisionConfirmation(text) {
+  if (!text) return false;
+  return [
+    /\[TOOLING DECISION CONFIRMED\]/i,
+    /^Tooling Decision Status:\s*(confirmed|approved|user-confirmed|delegated_default|existing_stack|scaffold_confirmed|not_required|已确认)$/im,
+    /^工具链决策状态[:：]\s*(confirmed|approved|user-confirmed|delegated_default|existing_stack|scaffold_confirmed|not_required|已确认)$/im,
+    /\|\s*Tooling decision confirmed\s*\|\s*(yes|true|confirmed|approved)\s*\|/i,
+    /\|\s*工具链决策已确认\s*\|\s*(yes|true|confirmed|approved|是|已确认)\s*\|/i,
+    /用户确认.{0,100}(包管理器|依赖管理|虚拟环境|UI 组件库|组件库|样式方案|构建工具|脚手架|测试工具|任务运行器|monorepo|npm|pnpm|yarn|bun|uv|poetry|pip|conda)/i,
+  ].some((pattern) => pattern.test(text));
+}
+
+function toolingDecisionRequired(text) {
+  if (!text) return false;
+  return [
+    /\[NEEDS TOOLING DECISION\]/i,
+    /\[TOOLING DECISION REQUIRED\]/i,
+    /^Tooling Decision Required:\s*(yes|true|required)$/im,
+    /^工具链决策[:：]\s*(yes|true|required|需要|是)$/im,
+    /\|\s*Tooling decision required\s*\|\s*(yes|true|required)\s*\|/i,
+    /(选择|确认|决定|采用|使用|切换|替换).{0,32}(包管理器|前端包管理器|依赖管理|虚拟环境|UI 组件库|组件库|样式方案|CSS 方案|构建工具|脚手架|测试工具|测试框架|任务运行器|monorepo 工具|npm|pnpm|yarn|bun|uv|poetry|pip|conda|ant design|antd|mui|material ui|chakra|shadcn|tailwind|bootstrap|vite|webpack|pytest|ruff)/i,
+    /(choose|select|decide|use|switch|replace).{0,40}(package manager|dependency manager|virtualenv|virtual environment|UI library|component library|styling|CSS framework|build tool|scaffold|test runner|test framework|task runner|monorepo|npm|pnpm|yarn|bun|uv|poetry|pip|conda|antd|mui|chakra|shadcn|tailwind|vite|webpack|pytest|ruff)/i,
+  ].some((pattern) => pattern.test(text));
+}
+
+function technicalDirectionNeedsConfirmation(workItemYaml) {
+  if (!workItemYaml) return !repositoryHasSourceCode();
+  const technicalFlags = [
+    "has_ui",
+    "has_api",
+    "has_db",
+    "has_domain",
+    "has_ai",
+    "has_nfr",
+    "has_security",
+    "has_integration",
+    "has_infra",
+    "has_background_job",
+  ];
+  const components = parseComponents(workItemYaml);
+  const hasTechnicalScope = technicalFlags.some((flag) => componentEnabled(components, flag));
+  return hasTechnicalScope && !repositoryHasSourceCode();
+}
+
 function taskImpactSummary(workItemBase) {
   const tasksPath = `${workItemBase}/01-spec/tasks.md`;
   if (!exists(tasksPath)) return { exists: false, taskCount: 0, impactCount: 0, missing: false };
@@ -206,7 +338,7 @@ function gateSummaries(schema, workItemYaml, workItemBase) {
     });
 }
 
-function buildBlockers({ readyArtifact, gates, workItemBase }) {
+function buildBlockers({ readyArtifact, gates, workItemBase, workItemYaml }) {
   const blockers = [];
 
   for (const gate of gates) {
@@ -250,6 +382,51 @@ function buildBlockers({ readyArtifact, gates, workItemBase }) {
       route: "sf-prd",
       owner_artifact: "requirements",
       message: "brief 标记需要 PRD，但 00-intake/prd.md 尚未批准到 requirements。",
+    });
+  }
+
+  if (readyArtifact.id === "ui_design" && !uiDirectionConfirmed(workItemBase)) {
+    blockers.push({
+      severity: "P1",
+      code: "ui-direction-unconfirmed",
+      route: "sf-brainstorm",
+      owner_artifact: "ui_design",
+      message: "ui_design 已 ready，但上游没有用户确认的 UI / 视觉 / 体验方向；先做 UI 方向取舍，不要直接创建 UI design 或 Pencil 原型。",
+    });
+  }
+
+  if (
+    readyArtifact.id === "technical_design" &&
+    technicalDirectionNeedsConfirmation(workItemYaml) &&
+    !techDirectionConfirmed(workItemBase)
+  ) {
+    blockers.push({
+      severity: "P1",
+      code: "tech-direction-unconfirmed",
+      route: "sf-brainstorm",
+      owner_artifact: "technical_design",
+      message: "technical_design 已 ready，但这是空仓库/新项目路径，上游没有用户确认的技术栈、数据库、调度器、AI provider、部署或依赖方向；先做技术路线取舍，不要直接创建 technical design。",
+    });
+  }
+
+  const upstream = upstreamText(workItemBase);
+  if (readyArtifact.id === "technical_design" && dependencyDecisionRequired(upstream) && !hasDependencyDecisionConfirmation(upstream)) {
+    blockers.push({
+      severity: "P1",
+      code: "dependency-decision-unconfirmed",
+      route: "sf-brainstorm",
+      owner_artifact: "technical_design",
+      message: "technical_design 已 ready，但上游显示本次需要新增/替换直接依赖、SDK、插件、组件库、ORM、驱动或测试库，且没有用户确认或授权默认；先确认依赖取舍，不要直接创建 technical design。",
+    });
+  }
+
+  if (readyArtifact.id === "technical_design" && toolingDecisionRequired(upstream) && !hasToolingDecisionConfirmation(upstream)) {
+    blockers.push({
+      severity: "P1",
+      code: "tooling-decision-unconfirmed",
+      route: "sf-brainstorm",
+      owner_artifact: "technical_design",
+      message: "technical_design 已 ready，但上游显示本次需要选择或变更工程工具链（包管理器、UI 组件库、样式方案、依赖管理、虚拟环境、构建/测试工具等），且没有用户确认或授权默认；先确认工具链取舍，不要直接创建 technical design。",
     });
   }
 
@@ -303,7 +480,7 @@ export function diagnoseWorkItem(options = {}) {
   const artifacts = artifactSummaries(schema, states, workItem.base, workItemYaml);
   const gates = gateSummaries(schema, workItemYaml, workItem.base);
   const readyArtifact = nextReadyArtifact(schema, states);
-  const blockers = buildBlockers({ readyArtifact, gates, workItemBase: workItem.base });
+  const blockers = buildBlockers({ readyArtifact, gates, workItemBase: workItem.base, workItemYaml });
   const doneCount = artifacts.filter((artifact) => artifact.status === "done").length;
   const readyArtifacts = artifacts.filter((artifact) => artifact.status === "ready").map((artifact) => artifact.id);
   const partialArtifacts = artifacts.filter((artifact) => artifact.status === "partial").map((artifact) => artifact.id);

@@ -19,6 +19,8 @@ description: 生成或更新 SpecForge work item 的 technical_design；用于 r
 node .specforge/core/scripts/instructions.mjs
 ```
 
+如果输出是 `Instructions blocked`，必须按 `Route` 处理阻断。尤其当 blocker 为 `tech-direction-unconfirmed` 或 `dependency-decision-unconfirmed` 时，停止 technical design，路由到 `sf-brainstorm`，只向用户确认技术栈、数据库、调度器、AI provider、部署和新增依赖方向；不要运行 `create-artifact.mjs technical_design`，不要继续展开架构、API、数据、NFR 或验证矩阵。
+
 确认 ready artifact 包含 `technical_design`，再：
 
 ```bash
@@ -63,7 +65,7 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 
 ## 技术选型与依赖确认门禁
 
-技术选型和新增依赖不能由 Agent 静默拍板。写入或改动框架、数据库、队列 / 调度、AI provider / 模型、组件库、运行时、部署方式、测试栈，或计划引入新的直接依赖、SDK、插件、组件库、ORM、驱动、测试库、浏览器自动化库前，先判断是否需要用户确认：
+技术选型、新增依赖和工程工具链不能由 Agent 静默拍板。写入或改动框架、数据库、队列 / 调度、AI provider / 模型、组件库、运行时、部署方式、测试栈，决定或变更包管理器、UI 组件库、样式方案、Python 依赖管理 / 虚拟环境、构建工具、测试 runner、任务运行器、monorepo 工具，或计划引入新的直接依赖、SDK、插件、组件库、ORM、驱动、测试库、浏览器自动化库前，先判断是否需要用户确认：
 
 | 场景 | 处理 |
 |---|---|
@@ -72,6 +74,7 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 | 用户明确说“按推荐方案默认做 / 不用再问” | 记录为“用户授权默认”，仍需写推荐理由和风险 |
 | 新项目、空仓库、技术栈缺失，或本次要新增 / 替换关键技术 | 必须给出候选方案和推荐项，等待用户确认后才能定稿和继续设计 |
 | 本次需要新增直接依赖或外部 SDK | 必须列出依赖名称、用途、替代方案、风险和推荐理由，等待用户确认 |
+| 本次需要选择或替换包管理器、UI 组件库、样式方案、Python 依赖管理 / 虚拟环境、构建工具、测试 runner、任务运行器、monorepo 工具 | 必须列出候选项、推荐项和取舍，等待用户确认 |
 | 用户已确认某个官方脚手架 / 框架组合 | 脚手架自带的直接依赖不逐个询问，但要按“依赖组”记录；额外新增依赖仍需确认 |
 | 多个方案都合理，且会影响成本、交付、招聘维护、上线或数据安全 | 必须停止并让用户选择 |
 
@@ -87,7 +90,11 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 | 维度 | 方案 A | 方案 B | 方案 C | 推荐 | 取舍 |
 |---|---|---|---|---|---|
 | Frontend | | | | | |
+| Frontend package manager | npm | pnpm | yarn / bun | | |
+| UI component library | | | | | |
+| Styling | | | | | |
 | Backend | | | | | |
+| Python dependency manager | uv | Poetry | pip / Conda | | |
 | Database | | | | | |
 | Jobs / Scheduler | | | | | |
 | AI / LLM Provider | | | | | |
@@ -103,6 +110,7 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 ```
 
 未经确认的关键技术选择写成 `[NEEDS TECH DECISION]`；未经确认的新增依赖写成 `[NEEDS DEPENDENCY DECISION]`。二者都不得进入 `sf-tasking`、`sf-spec-review` approval 或 `sf-implement`。
+未经确认的工具链选择写成 `[NEEDS TOOLING DECISION]`。它同样不得进入 `sf-tasking`、`sf-spec-review` approval 或 `sf-implement`。
 
 ## 当前版本事实检查
 
@@ -132,6 +140,10 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
    - 有 API 不等于必须有新后端模块；可能只是前端调用现有接口。
    - 有数据展示不等于必须有 DB 设计；只有持久化、索引、迁移、生命周期变化才读 data-design。
 4. 完成技术选型与依赖确认门禁：沿用现有栈、用户已指定、用户授权默认，或用户确认候选方案 / 新增依赖；把来源写入 `technical-design.md#1. 技术选型与依赖确认`。未确认时停止，不继续展开详细设计。
+   - 新项目 / 空仓库路径必须在上游 artifact 留下 `[TECH DECISION CONFIRMED]` 或 `Tech Direction Status: confirmed`，或明确 `delegated_default` / `scaffold_confirmed`。
+   - 任何新增 / 替换直接依赖、SDK、插件、组件库、ORM、驱动、测试库、浏览器自动化库或外部 provider，都必须在上游 artifact 留下 `[DEPENDENCY DECISION CONFIRMED]`、`Dependency Decision Status: confirmed`、用户授权默认或已确认脚手架依据。
+   - 任何包管理器、UI 组件库、样式方案、Python 依赖管理 / 虚拟环境、构建工具、测试 runner、任务运行器或 monorepo 工具选择，都必须在上游 artifact 留下 `[TOOLING DECISION CONFIRMED]`、`Tooling Decision Status: confirmed`、`existing_stack`、用户授权默认或已确认脚手架依据。
+   - 不能自行宣布“所有依赖已在 brainstorm 阶段用户确认”，除非 `brainstorm.md` 或用户消息里有可追溯确认记录。
 5. 写技术设计时，每个不涉及的章节保留一行 N/A 理由，不写空表。
 6. 输出必须能直接支持 `sf-tasking`：每个技术决策都要能拆成任务、验证或明确 N/A。
 
@@ -142,6 +154,7 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 - 无技术影响时，明确写出 N/A、理由和验证方式。
 - 技术栈选择引用 profile 或说明偏离理由。
 - 新项目、新增 / 替换关键技术或新增直接依赖时，必须有用户确认、用户授权默认或明确的现有栈 / 已确认脚手架依据。
+- 包管理器、UI 组件库、样式方案、Python 依赖管理 / 虚拟环境、构建工具、测试 runner、任务运行器或 monorepo 工具选择必须有用户确认、用户授权默认、沿用现有栈或已确认脚手架依据。
 - 规则基准采用点已写入采用点、偏离理由和验证证据。
 - 下一步路由到 `sf-tasking`，以 `instructions.mjs` 为准。
 
@@ -149,3 +162,5 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 
 - 不写业务代码。
 - 不重复维护 UI 原型、视觉风格和页面交互细节；这些只引用 `ui-design.md`。
+- 不在用户尚未确认技术栈 / 依赖 / 外部 provider / 部署方向时定稿 technical design。
+- 不在用户尚未确认工具链时替用户决定 npm / pnpm / yarn、UI 组件库、uv / Poetry / pip / Conda 等工程偏好。

@@ -12,6 +12,7 @@ import {
   updateWorkItemStage,
   writeText,
 } from "./lib/specforge.mjs";
+import { diagnoseWorkItem } from "./lib/diagnostics.mjs";
 
 const args = process.argv.slice(2);
 const force = args.includes("--force");
@@ -47,6 +48,19 @@ try {
   const artifact = artifactId ? artifactById(schema, artifactId) : nextReadyArtifact(schema, states);
 
   if (!artifact) throw new Error(artifactId ? `Unknown artifact: ${artifactId}` : "No ready artifact found.");
+
+  const diagnosis = diagnoseWorkItem({ workItem: workItem.name, activeOnly: true });
+  const blockingIssue = diagnosis.blockers.find((blocker) => blocker.owner_artifact === artifact.id);
+  if (blockingIssue && !force) {
+    throw new Error(
+      [
+        `Artifact is blocked: ${artifact.id}`,
+        `${blockingIssue.code}: ${blockingIssue.message}`,
+        `Route: ${blockingIssue.route}`,
+        "Use --force only when the user has explicitly confirmed this override.",
+      ].join("\n"),
+    );
+  }
 
   const state = states.get(artifact.id);
   if (state === "blocked") {

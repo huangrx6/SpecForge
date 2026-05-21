@@ -103,6 +103,10 @@
       "to": "core/scripts/validate-external-skills.mjs"
     },
     {
+      "from": "scripts/validate-skills.mjs",
+      "to": "core/scripts/validate-skills.mjs"
+    },
+    {
       "from": "scripts/validate-structure.mjs",
       "to": "core/scripts/validate-structure.mjs"
     },

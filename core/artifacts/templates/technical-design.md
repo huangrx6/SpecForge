@@ -27,23 +27,37 @@
 
 ## 1. 技术选型与依赖确认
 
-> 新项目、空仓库、技术栈缺失、新增 / 替换关键技术，或新增直接依赖 / SDK / 插件 / 组件库 / ORM / 驱动 / 测试库时必须先填写并等待确认。本次只沿用现有项目技术栈时，写清证据路径即可。未经确认的关键选型写 `[NEEDS TECH DECISION]`；未经确认的新增依赖写 `[NEEDS DEPENDENCY DECISION]`。二者都不能进入 tasking / spec_review approval / implementation。
+> 新项目、空仓库、技术栈缺失、新增 / 替换关键技术，或新增直接依赖 / SDK / 插件 / 组件库 / ORM / 驱动 / 测试库时必须先填写并等待确认。本次只沿用现有项目技术栈时，写清证据路径即可。未经确认的关键选型写真实 NEEDS_TECH_DECISION marker；未经确认的新增依赖写真实 NEEDS_DEPENDENCY_DECISION marker。二者都不能进入 tasking / spec_review approval / implementation。
 
 | 项 | 内容 |
 |---|---|
-| 确认状态 | confirmed / delegated_default / existing_stack / scaffold_confirmed / not_required / `[NEEDS TECH DECISION]` / `[NEEDS DEPENDENCY DECISION]` |
+| 确认状态 | confirmed / delegated_default / existing_stack / scaffold_confirmed / not_required / needs-tech-decision / needs-dependency-decision |
 | 确认来源 | 用户消息 / brief / PRD / requirements / wiki / 代码路径 |
 | 是否新项目或空仓库 | yes / no |
 | 是否新增或替换关键技术 | yes / no |
 | 是否新增直接依赖 | yes / no |
 | 待确认风险 | |
+| Tech Direction Status | confirmed / delegated_default / existing_stack / scaffold_confirmed / blocked |
+| 可追溯确认标记 | real tech confirmation marker / N/A |
+| Dependency Decision Status | confirmed / delegated_default / scaffold_confirmed / not_required / blocked |
+| 依赖确认标记 | real dependency confirmation marker / N/A |
+| Tooling Decision Status | confirmed / delegated_default / existing_stack / scaffold_confirmed / not_required / blocked |
+| 工具链确认标记 | real tooling confirmation marker / N/A |
 
 ### 候选方案与推荐
+
+> 本节的 Agent recommendation 不是用户确认。新项目 / 空仓库路径必须先在 `brainstorm.md`、`brief.md`、`prd.md`、`requirements.md` 或 `ui-design.md` 留下用户确认、授权默认、已确认脚手架或沿用现有栈证据，再继续填写最终选型。
+> 只要本次新增 / 替换直接依赖、SDK、插件、组件库、ORM、驱动、测试库或外部 provider，也必须先有真实依赖确认标记、用户授权默认或已确认脚手架依据。否则停止，不要继续写详细设计。
+> 只要本次需要决定或变更包管理器、UI 组件库、样式方案、Python 依赖管理、虚拟环境、构建工具、测试 runner、任务运行器或 monorepo 工具，也必须先有真实工具链确认标记、用户授权默认、沿用现有栈或已确认脚手架依据。
 
 | 维度 | 方案 A | 方案 B | 方案 C | 推荐 | 取舍理由 |
 |---|---|---|---|---|---|
 | Frontend framework / UI library | | | | | |
+| Frontend package manager | npm | pnpm | yarn / bun | | |
+| UI component library | | | | | |
+| Styling approach | | | | | |
 | Backend runtime / framework | | | | | |
+| Python dependency / environment manager | uv | Poetry | pip / Conda | | |
 | Database / storage | | | | | |
 | Jobs / queue / scheduler | | | | | |
 | AI / LLM provider / evaluation | | | | | |
@@ -72,7 +86,11 @@
 | 维度 | 最终选择 | 确认来源 | profile / 规则入口 | 回退或替换成本 |
 |---|---|---|---|---|
 | Frontend | | | | |
+| Frontend package manager | | | | |
+| UI component library | | | | |
+| Styling / CSS | | | | |
 | Backend | | | | |
+| Backend dependency manager | | | | |
 | Database | | | | |
 | Jobs / Scheduler | | | | |
 | AI / LLM | | | | |

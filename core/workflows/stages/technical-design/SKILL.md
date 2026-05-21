@@ -44,7 +44,11 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
    - 用户明确授权“按推荐方案默认做”时，记录“用户授权默认”，但仍写推荐理由、风险和回退点。
    - 新项目、空仓库、技术栈缺失，或新增 / 替换框架、数据库、队列、AI provider、运行时、部署方案、测试栈时，先给 2-3 个候选方案和推荐项，让用户确认；未确认时写 `[NEEDS TECH DECISION]`，不得定稿。
    - 计划新增直接依赖、SDK、插件、组件库、ORM、驱动、测试库、浏览器自动化库时，列出名称、用途、替代方案、风险、许可证 / 安全影响和推荐理由，让用户确认；未确认时写 `[NEEDS DEPENDENCY DECISION]`。
+   - 计划选择或替换包管理器、UI 组件库、样式方案、Python 依赖管理 / 虚拟环境、构建工具、测试 runner、任务运行器、monorepo 工具时，列出候选项、推荐项、团队维护影响和迁移成本，让用户确认；未确认时写 `[NEEDS TOOLING DECISION]`。
    - 用户确认官方脚手架 / 框架组合后，脚手架自带依赖按“依赖组”记录，不逐个询问；额外新增依赖仍需确认。
+   - 用户确认后，在上游 artifact 写入 `[TECH DECISION CONFIRMED]` 或 `Tech Direction Status: confirmed`；用户授权默认写 `Tech Direction Status: delegated_default`；沿用现有栈写 `Tech Direction Status: existing_stack`。
+   - 用户确认新增 / 替换依赖后，在上游 artifact 写入 `[DEPENDENCY DECISION CONFIRMED]` 或 `Dependency Decision Status: confirmed`；用户授权默认写 `Dependency Decision Status: delegated_default`；确无新增直接依赖写 `Dependency Decision Status: not_required`。
+   - 用户确认工具链后，在上游 artifact 写入 `[TOOLING DECISION CONFIRMED]` 或 `Tooling Decision Status: confirmed`；用户授权默认写 `Tooling Decision Status: delegated_default`；沿用现有栈写 `Tooling Decision Status: existing_stack`；确无工具链选择写 `Tooling Decision Status: not_required`。
 7. 执行当前版本事实检查：
    - 新增 / 替换框架、SDK、云服务、数据库、部署平台、AI provider、测试工具或安全相关依赖时，必须查询当前官方文档或项目锁文件中的版本事实。
    - 记录 `version / source / date / decision impact`；无法联网或资料不足时写风险和待确认项。
@@ -63,6 +67,9 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
 
 ## 停止条件
 
+- `instructions.mjs` 返回 `tech-direction-unconfirmed`，或新项目 / 空仓库路径没有用户确认的技术栈、数据库、调度器、AI provider、部署或依赖方向。
+- `instructions.mjs` 返回 `dependency-decision-unconfirmed`，或本次新增 / 替换直接依赖、SDK、插件、组件库、ORM、驱动、测试库、浏览器自动化库、外部 provider 但没有用户确认、用户授权默认或已确认脚手架依据。
+- `instructions.mjs` 返回 `tooling-decision-unconfirmed`，或本次选择 / 替换包管理器、UI 组件库、样式方案、Python 依赖管理 / 虚拟环境、构建工具、测试 runner、任务运行器、monorepo 工具但没有用户确认、用户授权默认、沿用现有栈或已确认脚手架依据。
 - requirements 仍有阻断歧义。
 - 新项目或新增 / 替换关键技术时，技术选型没有用户确认、用户授权默认或可信的“沿用现有栈”证据。
 - 新增直接依赖、SDK、插件、组件库、ORM、驱动、测试库或浏览器自动化库时，没有用户确认、用户授权默认或已确认脚手架依据。

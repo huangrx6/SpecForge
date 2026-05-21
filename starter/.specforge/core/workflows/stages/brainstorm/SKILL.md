@@ -21,6 +21,10 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
 - 模糊产品想法、页面体验、AI 能力、运营后台、多角色流程、审批/权限/数据生命周期。
 - PRD 或 requirements 前缺少 MVP、用户角色、成功标准、非目标或功能候选池。
 - UI design 前缺少信息架构、关键任务、状态矩阵或交互风格方向。
+- `instructions.mjs` 给出 `ui-direction-unconfirmed` blocker。
+- `instructions.mjs` 给出 `tech-direction-unconfirmed` blocker。
+- `instructions.mjs` 给出 `dependency-decision-unconfirmed` blocker。
+- `instructions.mjs` 给出 `tooling-decision-unconfirmed` blocker。
 - technical design 前缺少技术路线、版本、依赖、部署、成本、安全或长期维护取舍。
 - 任一 spec review 发现“方案还没被用户确认”。
 
@@ -45,6 +49,10 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
    - 写入 `00-intake/brainstorm.md`。
    - 更新 `00-intake/brief.md` 的澄清记录、功能候选池、用户选择、PRD 决策和下一步路由。
    - 如果来自 PRD / requirements / UI / tech design 的返工，标明 `Return to` 和需要修改的 artifact。
+   - 如果用户确认的是 UI / 视觉 / 体验方向，写入 `UI Direction Status: confirmed` 或 `[UI DECISION CONFIRMED]`，否则后续 `ui_design` 会继续被阻断。
+   - 如果用户确认的是技术栈 / 架构 / 数据库 / 调度器 / AI provider / 部署 / 依赖方向，写入 `Tech Direction Status: confirmed` 或 `[TECH DECISION CONFIRMED]`；用户授权默认写 `Tech Direction Status: delegated_default`，否则后续 `technical_design` 会继续被阻断。
+   - 如果用户确认的是新增 / 替换依赖，写入 `Dependency Decision Status: confirmed` 或 `[DEPENDENCY DECISION CONFIRMED]`；用户授权默认写 `Dependency Decision Status: delegated_default`，否则后续 `technical_design` 会继续被阻断。
+   - 如果用户确认的是工程工具链，写入 `Tooling Decision Status: confirmed` 或 `[TOOLING DECISION CONFIRMED]`；用户授权默认写 `Tooling Decision Status: delegated_default`；沿用现有栈写 `Tooling Decision Status: existing_stack`，否则后续 `technical_design` 会继续被阻断。
 
 ## `brainstorm.md` 必含内容
 

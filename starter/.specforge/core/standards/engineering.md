@@ -25,9 +25,41 @@
 - profile 之外的关键技术必须写偏离原因、风险和补偿验证。
 - Agent 不得静默决定新技术栈。新项目、空仓库、技术栈缺失，或新增 / 替换框架、数据库、队列 / 调度、AI provider、运行时、部署方式、测试栈时，必须先给候选方案、推荐项和取舍，让用户确认。
 - Agent 不得静默引入新的直接依赖。新增 SDK、插件、组件库、ORM、数据库驱动、队列库、AI SDK、测试库、浏览器自动化库等直接依赖前，必须列出用途、替代方案、风险、许可证 / 安全影响和推荐理由，让用户确认。
+- Agent 不得静默决定工程工具链。包管理器（npm / pnpm / yarn / bun）、UI 组件库、样式方案、脚手架、Python 依赖管理和虚拟环境（uv / Poetry / pip / Conda）、构建工具、测试 runner、任务运行器、monorepo 工具都属于技术决策；新项目、技术栈缺失或本次变更会引入 / 替换这些工具时，必须让用户确认或记录沿用现有栈证据。
 - 以下情况可不重复询问，但必须写入确认来源：沿用已有 wiki / 代码技术栈；用户在 brief / PRD / requirements 已明确指定；用户明确授权“按推荐方案默认做”。
 - 用户已确认的官方脚手架 / 框架组合，其自带依赖可按依赖组记录；脚手架之外额外新增的直接依赖仍需单独确认。
 - 未确认的关键技术选择写 `[NEEDS TECH DECISION]`；未确认的新增依赖写 `[NEEDS DEPENDENCY DECISION]`；二者都不能进入 tasking、implementation 或 spec_review approval。
+
+新项目 / 空仓库路径进入 `technical_design` 前必须有可追溯确认标记。上游 `brief.md`、`brainstorm.md`、`prd.md`、`requirements.md` 或 `ui-design.md` 至少保留以下任一标记，`instructions.mjs` 才允许进入正式 technical design：
+
+- `[TECH DECISION CONFIRMED]`
+- `Tech Direction Status: confirmed`
+- `Tech Direction Status: delegated_default`
+- `Tech Direction Status: scaffold_confirmed`
+- 表格项 `Tech direction confirmed | yes`
+
+如果缺少这些确认，下一步是 `sf-brainstorm` 的技术路线取舍，而不是 `sf-tech-design`。
+
+新增 / 替换直接依赖是独立门槛，不限于空仓库。只要本次需要新增或替换 SDK、插件、组件库、ORM、数据库驱动、队列库、AI SDK、测试库、浏览器自动化库、外部 provider 或其他直接依赖，上游 artifact 必须保留以下任一标记：
+
+- `[DEPENDENCY DECISION CONFIRMED]`
+- `Dependency Decision Status: confirmed`
+- `Dependency Decision Status: delegated_default`
+- `Dependency Decision Status: scaffold_confirmed`
+- 表格项 `Dependency decision confirmed | yes`
+
+如果只发现“需要新增依赖”但没有确认，写 `[DEPENDENCY DECISION REQUIRED]` 或 `[NEEDS DEPENDENCY DECISION]`，并路由到 `sf-brainstorm` 让用户确认。
+
+工具链决策是独立门槛，不等同于依赖确认。只要本次需要决定或变更包管理器、UI 组件库、样式方案、Python 依赖管理、虚拟环境、构建工具、测试 runner、任务运行器或 monorepo 工具，上游 artifact 必须保留以下任一标记：
+
+- `[TOOLING DECISION CONFIRMED]`
+- `Tooling Decision Status: confirmed`
+- `Tooling Decision Status: delegated_default`
+- `Tooling Decision Status: existing_stack`
+- `Tooling Decision Status: scaffold_confirmed`
+- 表格项 `Tooling decision confirmed | yes`
+
+如果只发现“需要工具链选择”但没有确认，写 `[TOOLING DECISION REQUIRED]` 或 `[NEEDS TOOLING DECISION]`，并路由到 `sf-brainstorm` 让用户确认。
 
 ## 主基准
 
@@ -113,5 +145,7 @@ Finding 必须指向具体文件、行号、artifact 章节或证据缺口。风
 - 关键路径没有测试，也没有替代证据。
 - 新技术栈没有 profile selection。
 - 新项目或关键技术变更没有用户确认、用户授权默认或可信的“沿用现有栈”证据。
-- 新增直接依赖没有用户确认、用户授权默认或已确认脚手架依据。
+- 空仓库路径由 Agent 自行选择框架、数据库、调度器、AI provider、部署方式或关键依赖。
+- 任意项目新增 / 替换直接依赖没有用户确认、用户授权默认或已确认脚手架依据。
+- 任意项目决定 / 替换包管理器、UI 组件库、样式方案、Python 依赖管理、虚拟环境、构建工具或测试 runner，但没有用户确认、用户授权默认、沿用现有栈或已确认脚手架依据。
 - 运行配置、回滚或观察方式不清。

@@ -51,6 +51,17 @@
 
 ### 依赖
 
+| 项 | 结论 |
+|---|---|
+| Package / SDK impact | yes / no / unknown |
+| Decision required | yes / no |
+| Required marker | real marker if needed / N/A |
+| Confirmed marker | real marker after user confirms / N/A |
+| Tooling decision impact | yes / no / unknown |
+| Tooling decision status | confirmed / delegated_default / existing_stack / scaffold_confirmed / not_required / blocked |
+
+需要用户取舍时，按 `sf-requirements` 规则写真实 marker，并在 `technical_design` 前回到 `sf-brainstorm`。不要在 requirements 中替用户选包或 provider。
+
 ### 重新验证触发条件
 
 ## 影响面确认

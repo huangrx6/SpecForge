@@ -115,6 +115,10 @@ AI 工具技能：sf-router / sf-*  负责让 AI 工具知道怎么工作，可 
      - `wiki_sync=REQUEST_CHANGES/REJECTED`：路由到 `sf-wiki`。
    - 如果 `brief.md`、`prd.md`、`requirements.md`、`ui-design.md` 或 `technical-design.md` 中存在 `[NEEDS DECISION]`、`[NEEDS PRODUCT DECISION]`、`[NEEDS UI DECISION]`、`[NEEDS TECH DECISION]` 且问题需要用户取舍，先路由到 `sf-brainstorm`，不要替用户拍板。
    - 如果 ready artifact 是 `requirements`，但 `brief.md#PRD 决策` 标记 `PRD required: yes` 或表格中 `PRD required | yes`，且 `00-intake/prd.md` 不存在、`Decision Status` 不是 `approved-for-requirements`，或仍有 `[NEEDS PRODUCT DECISION]`，先路由到 `sf-prd`，不要直接进入 `sf-requirements`。
+   - 如果 `instructions.mjs` 返回 blocker `ui-direction-unconfirmed`，先路由到 `sf-brainstorm` 做 UI / 视觉 / 体验方向取舍；不要创建 `ui-design.md` 或 Pencil 原型。
+   - 如果 `instructions.mjs` 返回 blocker `tech-direction-unconfirmed`，先路由到 `sf-brainstorm` 做技术栈 / 数据库 / 调度器 / AI provider / 部署 / 依赖方向取舍；不要创建 `technical-design.md`。
+   - 如果 `instructions.mjs` 返回 blocker `dependency-decision-unconfirmed`，先路由到 `sf-brainstorm` 确认新增 / 替换依赖、SDK、插件、组件库、ORM、驱动、测试库或外部 provider；不要创建 `technical-design.md`。
+   - 如果 `instructions.mjs` 返回 blocker `tooling-decision-unconfirmed`，先路由到 `sf-brainstorm` 确认包管理器、UI 组件库、样式方案、Python 依赖管理 / 虚拟环境、构建工具、测试 runner、任务运行器或 monorepo 工具；不要创建 `technical-design.md`。
    - 如果 ready artifact 是 `tasks` / `spec_review` / `implementation`，但 `technical-design.md` 仍有 `[NEEDS TECH DECISION]` 或 `[NEEDS DEPENDENCY DECISION]`，先路由到 `sf-tech-design` 确认技术选型或新增依赖。
    - 如果 ready artifact 是 `implementation`，但 `01-spec/tasks.md` 缺少 `_Impact:_` 或 `technical-design.md#0` 仍有关键 `unknown`，先路由到 `sf-tasking` 或 `sf-tech-design`，不要进入 `sf-implement`。
    - 如果 ready artifact 是 `closure`，但 `06-close/wiki-sync.md` 未证明唯一 current wiki、release / rollback 未覆盖 verification 残余风险，路由到 `sf-close` 并标明阻断点。

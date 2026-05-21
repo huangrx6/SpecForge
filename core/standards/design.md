@@ -19,9 +19,17 @@
 - 沿用现有设计系统或组件库。
 - 用户选择风格方向或参考产品。
 - Agent 给出 2-3 个候选体验方向并说明适用场景、风险和推荐项；复杂场景可扩展到 5 个。
-- 低风险内部工具可使用默认假设，但必须写入 style brief。
+- 低风险内部工具可记录默认假设，但在用户未确认前只能作为待确认输入，不能直接推进 Pencil 原型。
 
 Style brief 至少包含：产品气质、布局密度、主色或 token、组件形态、禁用风格、参考来源。
+
+用户确认必须可追溯。上游 `brief.md`、`brainstorm.md`、`prd.md` 或 `requirements.md` 至少保留以下任一标记，`instructions.mjs` 才允许进入正式 `ui_design`：
+
+- `[UI DECISION CONFIRMED]`
+- `UI Direction Status: confirmed`
+- 表格项 `UI direction confirmed | yes`
+
+如果缺少这些确认，下一步是 `sf-brainstorm` 的 UI 方向取舍，而不是 `sf-ui-design`。
 
 ## Pencil 是唯一正式原型通道
 
@@ -80,6 +88,7 @@ UI design 不是“控件摆上去就算完成”。有 UI 影响时，必须留
 ## 阻断项
 
 - 有 UI 变化但没有风格确认。
+- Agent 自行选择视觉方向，并在用户未确认时开始写 UI design 或 Pencil 原型。
 - 有复杂流程但没有页面地图和状态矩阵。
 - 原型只覆盖 happy path。
 - UI 原型只有控件堆叠，没有视觉层级、信息密度、状态反馈或参考设计语言落地。

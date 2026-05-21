@@ -35,6 +35,8 @@ description: SpecForge 内部需求技能。用于为 work item 生成清晰、�
 8. 拆成功能需求、非功能需求、约束和非目标。
 9. 为每条需求补可验证验收标准；适合时使用 Given/When/Then 或 EARS。每条 `MUST` 需求至少覆盖正常路径，并按适用性补失败、空状态、边界值和权限差异。
 10. 标出依赖、重新验证触发条件和已知歧义。
+11. 如果需求可能需要新增 / 替换直接依赖、SDK、插件、组件库、ORM、驱动、测试库、浏览器自动化库或外部 provider，在依赖小节写 `[DEPENDENCY DECISION REQUIRED]` 或 `[NEEDS DEPENDENCY DECISION]`；不要在 requirements 中替用户选依赖。
+12. 如果需求会迫使技术设计选择包管理器、UI 组件库、样式方案、Python 依赖管理 / 虚拟环境、构建工具、测试 runner、任务运行器或 monorepo 工具，写 `[TOOLING DECISION REQUIRED]` 或 `[NEEDS TOOLING DECISION]`；不要在 requirements 中替用户选工程偏好。
 11. 校准 `work.yaml` 的 components flags：`has_ui`、`has_api`、`has_db`、`has_domain`、`has_ai`、`has_integration`、`needs_research`。
 12. 避免写文件名、类名、数据库字段等实现细节，除非用户请求本身就是契约变更。
 
