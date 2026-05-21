@@ -96,3 +96,111 @@ UI design 不是“控件摆上去就算完成”。有 UI 影响时，必须留
 - 设计功能超出 requirements。
 - UI 证据无法被 reviewer 查看。
 - Pencil MCP 在空画布上重复读取而没有进入创建步骤。
+
+---
+
+## Design Token 基准
+
+SpecForge 项目的 UI 不接受"默认灰白表单"。有 UI 影响时，必须从以下基准中选择或基于用户参考产品定制。
+
+### 产品类型与默认风格基准
+
+| 产品类型 | 风格基调 | 颜色模式 | 密度 | 参考产品 |
+|---|---|---|---|---|
+| **ToB SaaS 管理后台** | 专业、清晰、信息密度高 | 浅色为主，支持深色 | 紧凑（compact） | Linear, Notion, Vercel Dashboard |
+| **ToC 消费应用** | 温暖、有品牌感、引导性强 | 品牌主色，渐变可用 | 宽松（comfortable） | Airbnb, Stripe, Figma |
+| **开发者工具 / CLI 辅助** | 简洁、代码感、低干扰 | 深色为主 | 极简（minimal） | VS Code, Linear, Railway |
+| **AI 助手 / Chat 产品** | 对话感、轻量、聚焦内容 | 浅色或双模 | 宽松 | Claude, ChatGPT, Perplexity |
+| **数据分析 / BI** | 数据可读性优先、图表清晰 | 浅色，图表用对比色 | 紧凑 | Metabase, Grafana, Retool |
+
+### Visual Style Brief 必须定义的 Token
+
+写入 `ui-design.md` 的 Visual Style Brief 必须包含以下所有字段：
+
+```yaml
+# 产品气质（必填）
+personality: "专业 / 温暖 / 极简 / 活力 / 权威"
+product_type: "ToB管理后台 / ToC消费应用 / 开发者工具 / AI助手 / 数据分析"
+
+# 颜色系统
+primary_color: "具体色值或色系描述，如 HSL(220, 90%, 56%) 科技蓝"
+neutral_palette: "灰度体系，如 slate / zinc / stone / gray"
+semantic_colors:
+  success: "绿系，如 #22c55e"
+  warning: "橙/黄系，如 #f59e0b"
+  error:   "红系，如 #ef4444"
+  info:    "蓝系，如 #3b82f6"
+dark_mode: "required / optional / not-required"
+
+# 字体
+font_family: "必须用 Google Fonts 或系统字体，如 Inter / Geist / PingFang SC"
+type_scale:
+  heading_1: "28-32px, weight 700"
+  heading_2: "20-24px, weight 600"
+  body:      "14-16px, weight 400"
+  caption:   "12px, weight 400"
+
+# 间距与圆角（必须基于 4px/8px 栅格）
+spacing_unit: "4px 或 8px"
+border_radius:
+  sm:   "4px（输入框、小按钮）"
+  md:   "8px（卡片、中等组件）"
+  lg:   "12-16px（大卡片、面板）"
+  full: "9999px（pill 按钮、头像、标签）"
+
+# 阴影层次
+elevation:
+  low:    "0 1px 3px rgba(0,0,0,0.08)"
+  medium: "0 4px 12px rgba(0,0,0,0.12)"
+  high:   "0 8px 24px rgba(0,0,0,0.16)"
+
+# 组件形态
+button_primary:   "filled + 品牌主色"
+button_secondary: "outlined 或 ghost"
+input_style:      "bordered / underline / filled-subtle"
+table_row_height: "compact=32px / default=44px / comfortable=56px"
+```
+
+### 视觉质量自审评分（Pencil 原型完成后必须执行）
+
+按以下 6 个维度自评（A/B/C），**任何维度评 C 必须修改后才能进入 spec review**：
+
+| 维度 | A（通过） | B（可接受） | C（必须修改） |
+|---|---|---|---|
+| **信息层级** | 明显视觉重量差异，用户视线有引导 | 层级存在但不突出 | 所有元素相同重量，"控件堆叠" |
+| **颜色一致性** | 全页面用同一套 token，无临时颜色 | 大部分一致，有少量例外 | 随机颜色，无 token 体系 |
+| **间距规律** | 严格使用 4px/8px 栅格 | 基本规律，有个别例外 | 间距随机，视觉嘈杂 |
+| **状态完整性** | hover/focus/error/empty/loading 全覆盖 | 覆盖主要状态 | 只有默认态 |
+| **响应式** | 移动端断点已定义，布局有适配 | 提及响应式但未细化 | 只有桌面端设计 |
+| **现代感** | 渐变/阴影/圆角/毛玻璃等现代元素到位 | 设计克制但不陈旧 | 纯 2010 年代灰白平面表单风格 |
+
+### 现代 UI 常用模式（实现参考）
+
+```css
+/* 渐变背景 */
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+/* 毛玻璃卡片 */
+backdrop-filter: blur(12px);
+background: rgba(255, 255, 255, 0.08);
+border: 1px solid rgba(255, 255, 255, 0.12);
+
+/* 微妙阴影 */
+box-shadow: 0 0 0 1px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.08);
+
+/* 卡片悬浮动效 */
+transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
+&:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.14); }
+
+/* 品牌渐变按钮 */
+background: linear-gradient(90deg, #6366f1, #8b5cf6);
+border-radius: 8px; color: white; font-weight: 600;
+```
+
+**禁止的陈旧模式：**
+- 没有品牌色的纯灰白表单
+- 没有阴影层次的完全扁平 UI
+- 使用系统默认 `<select>` 下拉（必须自定义）
+- 所有按钮相同颜色和大小
+- 表格无 hover 高亮效果
+- 错误/空状态没有视觉设计

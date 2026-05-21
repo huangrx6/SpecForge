@@ -69,9 +69,99 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 4. 如果项目已有模式和规则主基准不同，优先项目事实，并在 `规则基准与偏离` 中写偏离理由。
 5. 不要另起并行规范章节或堆多个候选规范。
 
-## 技术选型与依赖确认门禁
+## 技术选型全量访谈协议
 
-技术选型、新增依赖和工程工具链不能由 Agent 静默拍板。写入或改动框架、数据库、队列 / 调度、AI provider / 模型、组件库、运行时、部署方式、测试栈，决定或变更包管理器、UI 组件库、样式方案、Python 依赖管理 / 虚拟环境、构建工具、测试 runner、任务运行器、monorepo 工具，或计划引入新的直接依赖、SDK、插件、组件库、ORM、驱动、测试库、浏览器自动化库前，先判断是否需要用户确认：
+**铁律：任何 `[NEEDS TECH/DEPENDENCY/TOOLING DECISION]` 维度未确认 → 不得写架构设计正文。**
+
+### 第一步：影响面扫描（内部，不输出给用户）
+
+先从 requirements / brief / wiki 判断哪些维度适用，并标记状态：
+- `reuse` — 沿用现有 wiki / 代码中已存在技术栈
+- `confirmed` — 用户在 brief/PRD/requirements 中已明确指定
+- `pending` — 需要向用户确认
+
+```
+[ ] 前端：有用户界面  → 前端框架、包管理器、组件库、样式方案、状态管理
+[ ] 后端：有服务器逻辑  → 运行时、框架、认证方案
+[ ] 数据库：有持久化  → DB 类型、ORM、迁移工具
+[ ] 队列/任务：有异步  → 队列、调度器
+[ ] AI/LLM：有 AI 能力  → Provider、模型、SDK、评估框架
+[ ] 文件存储：有上传/下载  → 对象存储
+[ ] 部署：新项目或变更  → 平台、容器化、CI/CD
+[ ] 测试栈  → 单元/集成/E2E 工具选型
+```
+
+参考 `.specforge/core/profiles/` 判断选型，不要凭空推荐陌生技术栈：
+- 前端：`profiles/frontend/next-app-router-tailwind-ts.md` 或 `react-vite-tailwind-ts.md`
+- 后端：`profiles/backend/python-fastapi.md` 或 `next-api-routes.md`
+- 数据库：`profiles/database/rdbms-postgresql.md` 或 `embedded-sqlite.md`
+
+### 第二步：生成分批确认卡（只包含 pending 维度，每批等用户确认后再输出下一批）
+
+**第一批：架构级决策（影响最大，先确认）**
+
+```markdown
+## 技术选型确认 · 第一批：架构方向
+
+| 维度 | 方案 A | 方案 B | 方案 C | 推荐 | 权衡说明 |
+|---|---|---|---|---|---|
+| **部署平台** | Vercel / Netlify | 自建 VPS/Docker | 云服务(AWS/GCP/阿里云) | | 影响成本、运维复杂度、国内访问速度 |
+| **后端运行时** | Node.js (Next.js API) | Python (FastAPI) | 无后端(纯前端+第三方) | | 影响团队技能栈、AI 生态、性能 |
+| **数据库** | PostgreSQL | SQLite(轻量) | 无数据库(第三方托管) | | 影响数据建模方式、运维成本 |
+| **认证方案** | NextAuth / Clerk(托管) | 自建 JWT | 第三方(Auth0/Supabase) | | 影响安全复杂度和月费 |
+
+请先确认这几个架构方向 ↑，我确认收到后再展示第二批（前端工程细节）。
+```
+
+**第二批：前端工程（仅当有前端时，第一批确认后输出）**
+
+```markdown
+## 技术选型确认 · 第二批：前端工程
+
+| 维度 | 方案 A | 方案 B | 方案 C | 推荐 | 权衡说明 |
+|---|---|---|---|---|---|
+| **前端框架** | Next.js App Router | React + Vite(SPA) | Vue / Nuxt | 按部署平台推断 | SSR需要/SEO需要→Next.js；纯内部工具→Vite |
+| **包管理器** | pnpm | npm | yarn | pnpm | 速度和磁盘效率更好 |
+| **UI 组件库** | shadcn/ui + Radix | Ant Design | MUI | shadcn/ui | 可定制性 vs 开箱即用 vs 国内生态 |
+| **样式方案** | Tailwind CSS | CSS Modules | Styled Components | Tailwind | 与 shadcn/ui 最配 |
+| **状态管理** | Zustand | Jotai | Redux Toolkit / Context | Zustand(简单)/Redux(复杂) | 按状态复杂度选 |
+| **表单验证** | React Hook Form + Zod | Formik | 原生 | React Hook Form + Zod | 性能好且类型安全 |
+
+请确认前端工程选型 ↑，我确认收到后再展示第三批（测试和构建工具）。
+```
+
+**第三批：测试栈与工程工具（第二批确认后输出）**
+
+```markdown
+## 技术选型确认 · 第三批：测试与工程工具
+
+| 维度 | 方案 A | 方案 B | 推荐 | 说明 |
+|---|---|---|---|---|
+| **单元/集成测试** | Vitest | Jest | Vitest | 速度更快，与 Vite/Next.js 集成更好 |
+| **E2E 测试** | Playwright | Cypress | Playwright | 多浏览器支持，与 SpecForge sf-verify 集成 |
+| **API 测试** | supertest | msw (mock) | supertest | 实际测试 Route Handler/API |
+| **CI/CD** | GitHub Actions | GitLab CI | GitHub Actions | 免费额度充足，生态最好 |
+
+确认后我将开始展示核心依赖列表并请求最终确认。
+```
+
+### 第三步：新增依赖确认卡
+
+技术栈方向确认后，若有超出 profile 推荐范围的新增依赖，单独输出：
+
+```markdown
+## 新增依赖确认
+
+| 依赖 | 类型 | 用途 | 替代方案 | 推荐理由 | 风险 |
+|---|---|---|---|---|---|
+| | runtime / dev / SDK | | | | |
+```
+
+未经确认的关键技术写成 `[NEEDS TECH DECISION]`；未经确认的新增依赖写成 `[NEEDS DEPENDENCY DECISION]`；未经确认的工具链写成 `[NEEDS TOOLING DECISION]`。
+
+三者任一存在 → 不得进入 `sf-tasking`、`sf-spec-review` approval 或 `sf-implement`。
+
+写入或改动框架、数据库、队列 / 调度、AI provider / 模型、组件库、运行时、部署方式、测试栈，决定或变更包管理器、UI 组件库、样式方案、Python 依赖管理 / 虚拟环境、构建工具、测试 runner、任务运行器、monorepo 工具，或计划引入新的直接依赖、SDK、插件、组件库、ORM、驱动、测试库、浏览器自动化库前，先判断是否需要用户确认：
 
 | 场景 | 处理 |
 |---|---|

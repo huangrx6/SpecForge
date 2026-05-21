@@ -137,6 +137,26 @@ Gate Review：
 - 阻断项必须说明为什么阻断下一阶段。
 - `REQUEST_CHANGES` 必须说明退回哪个 artifact 和哪个 `sf-*` 技能。
 - 批准时也要写清残余风险。
+## 铁律（不可越过）
+
+```
+没有可审查的 evidence 文件，不得批准任何 gate。
+```
+
+**不允许的例外：**
+- 不能以"规格看起来没问题"为由批准
+- 不能以"requirements 已经很详细了"为由跳过状态矩阵检查
+- 不能因为"不想拖慢进度"而降低标准
+
+## Red Flags — 出现以下情况立即停止
+
+- 你写了"看起来没问题，可以进入 implementation"但没有完整的 review 矩阵
+- tasks 没有 `_Verification:_` 字段但你准备批准
+- `ui-design.md` 没有状态矩阵但 `has_ui=true`
+- technical-design.md 有 `[NEEDS TECH DECISION]` 但你准备批准 spec_review gate
+- 你没有逐项检查 requirements 的每个验收标准就批准了
+
+**所有以上情况 = 降级为 REQUEST_CHANGES，列出具体缺失项。**
 
 ## 完成标准
 

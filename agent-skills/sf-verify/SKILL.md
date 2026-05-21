@@ -77,6 +77,15 @@ node .specforge/core/scripts/create-artifact.mjs verification
 | 生产发布 | 不属于 | 交给 `sf-close` 的 release / rollback 记录处理 |
 
 验证深度必须匹配风险：安全、权限、数据迁移、部署配置、公共 API、后台任务、AI 调用或外部集成变更需要更强证据。
+## Playwright 执行铁律
+
+```
+有浏览器 UI → 必须有 Playwright 自动化测试 → 没有例外
+```
+
+项目没有 Playwright 配置？**自己安装并创建最小配置**，参见 `.specforge/core/standards/playwright.md`。
+不能写 Playwright 脚本？**停下来说明原因，等待用户指示**，不要自行替换为手工验证。
+测试通过了但没有运行截图？**重新运行并保存截图**，不接受无证据的声明。
 
 ## 浏览器验证 Skill 选择
 

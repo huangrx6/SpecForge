@@ -128,6 +128,26 @@ node .specforge/core/scripts/gate.mjs spec_review REJECTED
 
 - Artifact Review：review 文件存在，不更新 gate，明确返回路径。
 - Gate Review：`spec-review-v1.md` 有明确 decision；`APPROVED` 时 gate 状态与 evidence 路径一致；未批准时 gate evidence 保持 `null`。
+## 铁律（不可越过）
+
+```
+没有可审查的 evidence 文件，不得批准任何 gate。
+```
+
+**不允许的例外：**
+- 不能以"规格看起来没问题"为由批准
+- 不能以"requirements 已经很详细了"为由跳过状态矩阵检查
+- 不能因为"不想拖慢进度"而降低标准
+
+## Red Flags — 出现以下情况立即停止
+
+- 你写了"看起来没问题，可以进入 implementation"但没有完整的 review 矩阵
+- tasks 没有 `_Verification:_` 字段但你准备批准
+- `ui-design.md` 没有状态矩阵但 `has_ui=true`
+- technical-design.md 有 `[NEEDS TECH DECISION]` 但你准备批准 spec_review gate
+- 你没有逐项检查 requirements 的每个验收标准就批准了
+
+**所有以上情况 = 降级为 REQUEST_CHANGES，列出具体缺失项。**
 
 ## 不做
 
