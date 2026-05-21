@@ -49,7 +49,9 @@ Status: PENDING
 | Key technical selections and new direct dependencies are confirmed, delegated, scaffold-confirmed, or existing-stack | pass / fail / N/A | |
 | No blocking technical `unknown` remains | pass / fail / N/A | |
 | Tasks are granular, bounded, ordered and verifiable | pass / fail / N/A | |
-| Tasks include `_Trace:_`, `_Impact:_`, `_Files:_`, `_Boundary:_`, `_Depends:_`, `_Verification:_`, `_Rollback:_` | pass / fail / N/A | |
+| Technical design core decision summary was reviewed or marked N/A | pass / fail / N/A | |
+| Tasks include core fields `_Trace:_`, `_Files:_`, `_Verification:_`, `_Rollback:_`, `_Risk:_` | pass / fail / N/A | |
+| Tasks include conditional fields `_Impact:_`, `_Boundary:_`, `_Depends:_`, `_TestCase:_` where applicable | pass / fail / N/A | |
 | Browser-facing flows include Playwright case, execution and evidence tasks | pass / fail / N/A | |
 | No hidden scope expansion or unresolved blockers remain | pass / fail | |
 

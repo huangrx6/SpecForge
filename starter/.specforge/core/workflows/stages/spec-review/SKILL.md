@@ -79,14 +79,16 @@ Gate Review：
 
 - 是否先做技术影响面矩阵和读取计划。
 - 新项目、关键技术变化或新增直接依赖是否经过用户确认、用户授权默认、已确认脚手架或可信现有栈证据。
+- 初稿后的核心决策摘要是否已经由用户确认、用户授权默认，或明确 N/A。
 - 版本、框架、SDK、云服务、安全或依赖行为是否查了当前官方资料或写明跳过理由。
-- `unknown`、`[NEEDS DECISION]`、`[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]` 是否仍在关键路径；如果是用户取舍问题，Return to 必须指向 `sf-brainstorm`。
+- `unknown`、`[NEEDS DECISION]`、`[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]`、`[NEEDS TOOLING DECISION]` 是否仍在关键路径；如果是用户取舍问题，Return to 必须指向 `sf-brainstorm`。
 - API、数据、权限、配置、后台任务、可观测性、回滚和验证策略是否具体。
 
 ### Tasks
 
 - 是否小到能实现、能 review、能验证。
-- 每个任务是否有 `_Trace:_`、`_Impact:_`、`_Files:_`、`_Boundary:_`、`_Depends:_`、`_Verification:_`、`_Rollback:_`、必要的 `_Risk:_`。
+- 每个任务是否有核心字段 `_Trace:_`、`_Files:_`、`_Verification:_`、`_Rollback:_`、`_Risk:_`。
+- 条件字段 `_Impact:_`、`_Boundary:_`、`_Depends:_`、`_TestCase:_` 是否在适用任务上出现，而不是机械要求所有任务都填满。
 - 是否有来源覆盖矩阵，所有需求、设计决策和风险都有实现任务与验证任务。
 - 有浏览器流程时，是否单独列出测试用例、Playwright 自动操作执行和证据登记任务。
 - 是否存在范围膨胀、共享写入冲突或把验证藏进实现任务。
@@ -114,9 +116,9 @@ Gate Review：
 - 计划、设计或任务不能追溯到用户澄清、代码探索或外部研究结论。
 - 用户可见页面没有 Pencil 原型、导出截图、视觉质量 review 或可信 N/A。
 - UI 原型只是默认控件堆叠，未覆盖关键状态、权限、响应式或异常态。
-- 技术影响面存在但 technical design 缺失、关键 `unknown` 未闭环、关键技术或新增依赖缺少确认来源。
+- 技术影响面存在但 technical design 缺失、关键 `unknown` 未闭环、关键技术 / 新增依赖 / 工具链缺少确认来源，或初稿后核心决策摘要未确认。
 - technical design 对 API、数据、权限、配置、NFR 风险只写默认处理。
-- tasks 缺少 `_Impact:_`、`_Files:_`、`_Verification:_` 或 `_Rollback:_`，或 technical design `yes` 影响面没有任务承接。
+- tasks 缺少核心字段 `_Trace:_`、`_Files:_`、`_Verification:_`、`_Rollback:_`、`_Risk:_`，条件字段在适用任务上缺失，或 technical design `yes` 影响面没有任务承接。
 - 有浏览器流程、上传、提交、审批、下载、权限或错误提示，但 tasks / verification plan 没有 Playwright 用例、自动执行和证据要求。
 
 ## Findings 分级

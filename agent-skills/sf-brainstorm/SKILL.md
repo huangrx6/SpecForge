@@ -9,6 +9,12 @@ description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户�
 
 执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
 
+## 运行模式检测
+
+1. 当前目录向上存在 `.specforge/` 且有 active work item：**Embedded 模式**，按 active work item 读取 brief / PRD / requirements 并写入 `00-intake/brainstorm.md`。
+2. 存在 `.specforge/` 但无 active work item：**Lightweight 模式**，只做本阶段对话式 brainstorm；需要落档时输出 `specforge-import-ready.md` 格式内容，或先路由 `sf-intake` 创建 work item。
+3. 不存在 `.specforge/`：**Standalone 模式**，不要运行 `.specforge/...` 命令；产出可后续导入的 `specforge-import-ready.md` 格式内容，必须保留用户确认、未决问题和推荐项边界。
+
 `sf-brainstorm` 是用户参与式发散和收敛阶段。它把模糊诉求、产品方向、体验方向、AI 能力边界或技术路线问题整理成可选择的方案，并明确哪些选择已被用户确认。它不替用户拍板，不写最终 requirements，不实现代码。
 
 ## 启动

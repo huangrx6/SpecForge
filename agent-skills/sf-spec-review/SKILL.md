@@ -103,8 +103,8 @@ Artifact Review 输出必须包含：
 
 1. PRD / requirements 边界是否清楚：PRD 负责产品决策，requirements 负责可测试行为。
 2. UI 是否固定归一为 Pencil：有 UI 影响时必须有 Visual Style Brief、Pencil `.pen`、导出截图、状态矩阵和视觉质量修正记录。
-3. Tech design 是否经过问答确认：关键技术、新增依赖、版本、SDK、部署和测试栈不能由 AI 静默决定。
-4. Tasks 是否细：每个任务都要有 trace、impact、boundary、depends、verification，且验证任务独立存在。
+3. Tech design 是否经过问答确认：关键技术、新增依赖、工具链、版本、SDK、部署和测试栈不能由 AI 静默决定；初稿后的核心决策摘要必须已确认、授权默认或明确 N/A。
+4. Tasks 是否细：每个任务都要有核心字段 trace、files、verification、rollback、risk；impact、boundary、depends、testcase 按适用性检查，且验证任务独立存在。
 5. 浏览器流程是否有 Playwright 用例、自动操作执行和证据登记要求。
 
 ## Gate 动作

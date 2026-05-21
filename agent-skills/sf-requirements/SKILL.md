@@ -9,6 +9,12 @@ description: 生成或更新 SpecForge work item 的 requirements；用于 activ
 
 执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
 
+## 运行模式检测
+
+1. 当前目录向上存在 `.specforge/` 且有 active work item：**Embedded 模式**，按 artifact graph 写入 `01-spec/requirements.md`。
+2. 存在 `.specforge/` 但无 active work item：**Lightweight 模式**，可把用户提供的 brief / PRD 草稿整理成 requirements 草稿；需要落档时输出 `specforge-import-ready.md` 格式内容，或先路由 `sf-intake` 创建 work item。
+3. 不存在 `.specforge/`：**Standalone 模式**，不要运行 `.specforge/...` 命令；输出 `specforge-import-ready.md` 格式内容，保留 SHALL 需求、AC、非目标、影响面建议和未决问题，后续由 `sf-intake` 导入。
+
 把 brief（和可选 PRD）升级为可测试、可审查、可路由到后续设计阶段的需求规格。它不写 UI 方案、接口方案、数据库方案或实现任务。
 
 如果存在 `00-intake/brainstorm.md`，先读取其中的用户确认、明确延后和未决问题；如果存在 `00-intake/prd.md`，把它当作产品意图输入：保留产品目标、用户价值、MVP 决策和指标线索，但必须进一步落成系统可观察行为、输入输出边界、错误处理、空状态、权限差异和验收标准。不要把 PRD 原样复制成 requirements。

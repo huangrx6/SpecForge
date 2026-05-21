@@ -37,6 +37,17 @@
 | 阻塞产品决策 | none / [NEEDS PRODUCT DECISION: question] | |
 | 下一步路由 | sf-brainstorm / sf-prd / sf-requirements / sf-discovery / sf-tech-design | |
 
+## Brainstorm 决策
+
+> Brainstorm 深度由 intake 分类和 flags 决定，不由 Agent 临场随意选择。deep 表示先发散再聚焦；light 表示直接列 2-3 个取舍方案；skip 表示无需用户参与式取舍。
+
+| 项 | 结论 | 理由 / 证据 |
+|---|---|---|
+| Brainstorm required | yes / no | |
+| Brainstorm mode | skip / light / deep | |
+| Deep trigger | discovery / needs_research / high-risk UI / tech-dependency-tooling blocker / N/A | |
+| 用户确认后回写 | `00-intake/brainstorm.md` / N/A | |
+
 ## 分析深度
 
 - 档位：light / standard / deep

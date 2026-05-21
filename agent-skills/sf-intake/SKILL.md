@@ -9,6 +9,12 @@ description: 为新请求创建或整理 SpecForge work item；用于用户提�
 
 执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
 
+## 运行模式检测
+
+1. 当前目录向上存在 `.specforge/` 且有 active work item：**Embedded 模式**，按 artifact graph 写入正式 work item。
+2. 存在 `.specforge/` 但无 active work item：**Lightweight 模式**，可以创建 work item；如果用户只想先整理想法，则输出 `specforge-import-ready.md` 格式内容。
+3. 不存在 `.specforge/`：**Standalone 模式**，不要运行 `.specforge/...` 命令；用对话完成 intake 分类和 brief 草稿，输出 `specforge-import-ready.md` 格式内容，后续可在初始化后导入。
+
 把用户的原始诉求变成一个可推进的 active work item。`sf-intake` 是分诊入口：判断 work item 类型、workflow、是否需要 PRD、是否需要 research、影响面 flags、是否需要拆分，并识别是否需要进入 `sf-brainstorm`。它负责 intake，不负责写完整 PRD、requirements、设计或实现代码。
 
 ## 启动扫描
@@ -57,6 +63,16 @@ description: 为新请求创建或整理 SpecForge work item；用于用户提�
 - 需要竞品、政策、版本、框架 / SDK、AI 能力或安全事实时，先查当前可靠来源；技术类优先官方资料。
 - 用户没有确认核心方向、MVP 或关键边界前，不把 Agent 推荐方案写成“已确认”。
 - Brainstorm 落档到 `00-intake/brainstorm.md`，再同步回 `brief.md` 的候选功能池、用户选择和 PRD 决策。
+
+Brainstorm 深度必须写入 `brief.md#Brainstorm 决策`：
+
+| 模式 | 触发 | 处理 |
+|---|---|---|
+| `deep` | `workflow=discovery`；或 `needs_research=true`；或 feature/standard 中存在高风险产品、UI、技术路线、依赖、工具链、AI provider、数据生命周期取舍 | `sf-brainstorm` 先做 Phase 1 发散，再做 Phase 2 聚焦 |
+| `light` | feature/standard/lite 中存在少量用户取舍，但不需要外部研究或大范围探索 | `sf-brainstorm` 直接列 2-3 个互斥方案并请求确认 |
+| `skip` | bugfix 已有复现和期望；lite 小改范围清楚；refactor 已由用户明确目标；需求已有等价规格 | 记录跳过理由，继续对应 artifact |
+
+不要只写“看起来复杂 / 看起来简单”。必须用 workflow、components、`needs_research`、风险项或 blocker 类型解释分级。
 
 ## 存量项目前置判断
 

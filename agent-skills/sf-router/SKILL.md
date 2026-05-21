@@ -119,7 +119,8 @@ AI 工具技能：sf-router / sf-*  负责让 AI 工具知道怎么工作，可 
    - 如果 `instructions.mjs` 返回 blocker `tech-direction-unconfirmed`，先路由到 `sf-brainstorm` 做技术栈 / 数据库 / 调度器 / AI provider / 部署 / 依赖方向取舍；不要创建 `technical-design.md`。
    - 如果 `instructions.mjs` 返回 blocker `dependency-decision-unconfirmed`，先路由到 `sf-brainstorm` 确认新增 / 替换依赖、SDK、插件、组件库、ORM、驱动、测试库或外部 provider；不要创建 `technical-design.md`。
    - 如果 `instructions.mjs` 返回 blocker `tooling-decision-unconfirmed`，先路由到 `sf-brainstorm` 确认包管理器、UI 组件库、样式方案、Python 依赖管理 / 虚拟环境、构建工具、测试 runner、任务运行器或 monorepo 工具；不要创建 `technical-design.md`。
-   - 如果 ready artifact 是 `tasks` / `spec_review` / `implementation`，但 `technical-design.md` 仍有 `[NEEDS TECH DECISION]` 或 `[NEEDS DEPENDENCY DECISION]`，先路由到 `sf-tech-design` 确认技术选型或新增依赖。
+   - 如果 ready artifact 是 `tasks` / `spec_review` / `implementation`，但 `technical-design.md` 仍有 `[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]` 或 `[NEEDS TOOLING DECISION]`，先路由到 `sf-tech-design` 确认技术选型、新增依赖或工具链。
+   - 如果 ready artifact 是 `tasks` / `spec_review` / `implementation`，但 `technical-design.md` 的 `Core Decision Review Status` 不是 `confirmed`、`delegated_default` 或 `not_required`，先路由到 `sf-tech-design` 展示核心决策摘要并等待确认。
    - 如果 ready artifact 是 `implementation`，但 `01-spec/tasks.md` 缺少 `_Impact:_` 或 `technical-design.md#0` 仍有关键 `unknown`，先路由到 `sf-tasking` 或 `sf-tech-design`，不要进入 `sf-implement`。
    - 如果 ready artifact 是 `closure`，但 `06-close/wiki-sync.md` 未证明唯一 current wiki、release / rollback 未覆盖 verification 残余风险，路由到 `sf-close` 并标明阻断点。
    - 根据 ready artifact 路由：

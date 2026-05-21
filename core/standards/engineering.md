@@ -28,7 +28,8 @@
 - Agent 不得静默决定工程工具链。包管理器（npm / pnpm / yarn / bun）、UI 组件库、样式方案、脚手架、Python 依赖管理和虚拟环境（uv / Poetry / pip / Conda）、构建工具、测试 runner、任务运行器、monorepo 工具都属于技术决策；新项目、技术栈缺失或本次变更会引入 / 替换这些工具时，必须让用户确认或记录沿用现有栈证据。
 - 以下情况可不重复询问，但必须写入确认来源：沿用已有 wiki / 代码技术栈；用户在 brief / PRD / requirements 已明确指定；用户明确授权“按推荐方案默认做”。
 - 用户已确认的官方脚手架 / 框架组合，其自带依赖可按依赖组记录；脚手架之外额外新增的直接依赖仍需单独确认。
-- 未确认的关键技术选择写 `[NEEDS TECH DECISION]`；未确认的新增依赖写 `[NEEDS DEPENDENCY DECISION]`；二者都不能进入 tasking、implementation 或 spec_review approval。
+- 未确认的关键技术选择写 `[NEEDS TECH DECISION]`；未确认的新增依赖写 `[NEEDS DEPENDENCY DECISION]`；未确认的工具链选择写 `[NEEDS TOOLING DECISION]`；三者都不能进入 tasking、implementation 或 spec_review approval。
+- 技术设计初稿完成后还必须展示核心决策摘要，让用户确认架构选择、新增 / 替换依赖、工具链选择、架构冲突 / 变更和最大风险。确认后写 `[TECH DESIGN REVIEW CONFIRMED]` 或 `Core Decision Review Status: confirmed`；用户授权默认写 `delegated_default`；无技术影响写 `not_required`。缺少该确认时不能进入 tasking、implementation 或 spec_review approval。
 
 新项目 / 空仓库路径进入 `technical_design` 前必须有可追溯确认标记。上游 `brief.md`、`brainstorm.md`、`prd.md`、`requirements.md` 或 `ui-design.md` 至少保留以下任一标记，`instructions.mjs` 才允许进入正式 technical design：
 

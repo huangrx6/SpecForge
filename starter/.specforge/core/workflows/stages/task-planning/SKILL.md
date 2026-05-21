@@ -53,17 +53,20 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 
 ## 任务格式要求
 
-每个任务必须包含：
+每个任务必须包含核心字段：
 
 - `_Trace:_` 指向 requirements / gap_report / ui_design / technical_design / research 的具体条目或章节。
-- `_Impact:_` 写适用的 technical_design 影响面；纯产品 / bugfix 无技术设计时写 N/A。
 - `_Files:_` 写预计写入的文件、目录或模块类别；不能只写“相关文件”。
-- `_Boundary:_` 明确允许写入的目录、模块或文件类别。
-- `_Depends:_` 写任务依赖；没有依赖写 `none`。
 - `_Verification:_` 写可执行命令、测试类型、人工检查或后续 verification 证据。
 - `_Rollback:_` 写撤回、补偿、配置回退、feature flag 或 N/A 理由。
-- `_Risk:_` 对数据、安全、权限、发布、并发、AI 质量或外部集成风险写明防护。
-- `_TestCase:_` 写对应测试用例编号；无测试用例时写为什么 N/A。
+- `_Risk:_` 写本任务风险和防护；低风险任务写 `N/A - <理由>`，不能留空。
+
+条件字段按任务性质添加：
+
+- `_Impact:_` 涉及 technical_design 影响面、或需要证明技术影响面覆盖时必填；纯产品 / bugfix 无技术设计时可省略或写 N/A。
+- `_Boundary:_` 并行任务、跨模块任务、共享契约、迁移、配置或容易写入冲突的任务必填；单文件小任务可省略或写 N/A。
+- `_Depends:_` 有依赖顺序时必填；无依赖可省略或写 `none`。
+- `_TestCase:_` 已有或需要 `05-verification/test-cases.md`、Playwright、权限、边界或回归矩阵时必填；无测试用例时写为什么 N/A。
 
 任务描述要具体，不写“处理相关逻辑”“完善页面”“补充测试”这类空话。
 
@@ -72,7 +75,8 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 - 并行任务不得共享同一主要写入文件。
 - 共享契约、schema、类型、迁移、环境变量必须先完成再并行实现。
 - 验证任务不能藏在实现任务里。
-- `technical-design.md` 残留 `[NEEDS TECH DECISION]` 或 `[NEEDS DEPENDENCY DECISION]` 时停止，退回 `sf-tech-design` 确认选型或新增依赖，不生成任务。
+- `technical-design.md` 残留 `[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]` 或 `[NEEDS TOOLING DECISION]` 时停止，退回 `sf-tech-design` 确认选型、新增依赖或工具链，不生成任务。
+- `technical-design.md` 的 `Core Decision Review Status` 不是 `confirmed`、`delegated_default` 或 `not_required` 时停止，退回 `sf-tech-design` 展示核心决策摘要并等待用户确认。
 - 存在需要用户取舍的 `[NEEDS DECISION]`、`[NEEDS PRODUCT DECISION]` 或 `[NEEDS UI DECISION]` 时停止，退回 `sf-brainstorm`，不生成任务。
 - UI 状态、API 契约、数据迁移、权限、安全、发布任务必须单独列出。
 - 有浏览器流程、上传、提交、审批、下载、权限或错误提示时，必须列出 Playwright E2E 用例设计、脚本执行和证据登记任务；不能只列单元测试或人工验证。
@@ -109,7 +113,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 ## 完成标准
 
 - tasks 能驱动 implementation。
-- 每个任务都有追踪来源、边界、依赖、验证和必要风险说明。
+- 每个任务都有追踪来源、预期文件、验证、回滚和风险；边界、依赖、影响面和测试用例在适用任务上完整。
 - 每个任务都有预期写入文件边界和回滚提示；数据、权限、发布、依赖和迁移任务的回滚不能为空。
 - 每个 technical_design `yes` 影响面都有任务承接；`no` / N/A 有可信理由；无关键 `unknown` 留到实现阶段。
 - reviewer 可以用 tasks 判断实现是否完整。

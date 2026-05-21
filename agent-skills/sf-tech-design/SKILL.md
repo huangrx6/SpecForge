@@ -9,6 +9,12 @@ description: 生成或更新 SpecForge work item 的 technical_design；用于 r
 
 执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
 
+## 运行模式检测
+
+1. 当前目录向上存在 `.specforge/` 且有 active work item：**Embedded 模式**，按 artifact graph 写入 `01-spec/technical-design.md`，并遵守选型 / 依赖 / 工具链 / 核心决策 review 门禁。
+2. 存在 `.specforge/` 但无 active work item：**Lightweight 模式**，可先做技术影响面、候选方案和风险草稿；需要落档时输出 `specforge-import-ready.md` 格式内容，或先路由 `sf-intake` 创建 work item。
+3. 不存在 `.specforge/`：**Standalone 模式**，不要运行 `.specforge/...` 命令；输出可导入的 `specforge-import-ready.md` 格式内容，必须明确哪些技术、依赖、工具链是用户已确认，哪些只是 Agent recommendation。
+
 把 requirements 和可选 UI design 转成可实现、可审查、可验证的工程设计。它不负责画页面线稿或决定视觉风格。
 
 ## 启动
@@ -128,6 +134,32 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 
 如果沿用现有项目版本，可以用 lockfile、package manifest、代码入口或 wiki 作为证据；如果无法确认，必须写风险并暂停关键决策。
 
+## 初稿后核心决策 Review
+
+技术设计有两个确认点：动笔前确认技术选型 / 依赖 / 工具链，初稿后确认核心决策摘要。完成详细 technical design 初稿后，必须先向用户展示以下摘要，等待确认、调整或授权默认；确认前不得进入 `sf-tasking`、`sf-spec-review` approval 或 `sf-implement`。
+
+```markdown
+## 技术设计核心决策摘要
+
+| 项 | 结论 | 说明 |
+|---|---|---|
+| 架构选择 | | 为什么适合本次需求 |
+| 新增 / 替换依赖 | | 每项为什么必须引入，替代方案是什么 |
+| 工具链选择 | | 包管理器、组件库、样式、依赖管理、测试 runner 等 |
+| 与现有架构冲突 / 变更 | | 如无则写 N/A |
+| 已知最大风险 | | 风险、影响、缓解和验证方式 |
+
+请确认这份 technical design 是否可以进入 tasking；你也可以指出要改的技术路线、依赖或风险处理。
+```
+
+用户确认后，在 `technical-design.md#1. 技术选型与依赖确认` 的 `核心决策摘要 Review` 写：
+
+- `Core Decision Review Status: confirmed` 或表格项 `Core Decision Review Status | confirmed`
+- `[TECH DESIGN REVIEW CONFIRMED]`
+- 确认来源：用户消息 / 用户授权默认 / N/A 理由
+
+如果用户只是授权“按推荐方案默认做”，写 `delegated_default` 并保留推荐理由、风险和回退点。无技术影响时写 `not_required` 和 N/A 理由。
+
 ## 执行顺序
 
 1. 读取 requirements、可选 `ui-design.md`、wiki 和现有代码结构，判断本次是否真的有技术影响。
@@ -145,7 +177,8 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
    - 任何包管理器、UI 组件库、样式方案、Python 依赖管理 / 虚拟环境、构建工具、测试 runner、任务运行器或 monorepo 工具选择，都必须在上游 artifact 留下 `[TOOLING DECISION CONFIRMED]`、`Tooling Decision Status: confirmed`、`existing_stack`、用户授权默认或已确认脚手架依据。
    - 不能自行宣布“所有依赖已在 brainstorm 阶段用户确认”，除非 `brainstorm.md` 或用户消息里有可追溯确认记录。
 5. 写技术设计时，每个不涉及的章节保留一行 N/A 理由，不写空表。
-6. 输出必须能直接支持 `sf-tasking`：每个技术决策都要能拆成任务、验证或明确 N/A。
+6. 完成详细 technical design 初稿后，输出核心决策摘要给用户确认；确认后写入 `Core Decision Review Status` 和 `[TECH DESIGN REVIEW CONFIRMED]`。
+7. 输出必须能直接支持 `sf-tasking`：每个技术决策都要能拆成任务、验证或明确 N/A。
 
 ## 完成标准
 
@@ -155,6 +188,7 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 - 技术栈选择引用 profile 或说明偏离理由。
 - 新项目、新增 / 替换关键技术或新增直接依赖时，必须有用户确认、用户授权默认或明确的现有栈 / 已确认脚手架依据。
 - 包管理器、UI 组件库、样式方案、Python 依赖管理 / 虚拟环境、构建工具、测试 runner、任务运行器或 monorepo 工具选择必须有用户确认、用户授权默认、沿用现有栈或已确认脚手架依据。
+- 技术设计初稿后的核心决策摘要已经被用户确认、用户授权默认，或明确 N/A。
 - 规则基准采用点已写入采用点、偏离理由和验证证据。
 - 下一步路由到 `sf-tasking`，以 `instructions.mjs` 为准。
 

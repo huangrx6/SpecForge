@@ -45,6 +45,19 @@ const targetAliases = {
   },
 };
 
+const legacySkillNames = [
+  "specforge",
+  "specforge-intake",
+  "specforge-spec",
+  "specforge-implement",
+  "specforge-review",
+  "specforge-verify",
+  "specforge-close",
+  "specforge-work",
+  "specforge-doctor",
+  "specforge-onboard",
+];
+
 function readOption(name) {
   const index = args.indexOf(name);
   return index === -1 ? null : args[index + 1];
@@ -131,6 +144,11 @@ function copySkill(skillName, targetRoot) {
   return { action, source, target };
 }
 
+function legacySkillsIn(targetRoot) {
+  if (!existsSync(targetRoot)) return [];
+  return legacySkillNames.filter((name) => existsSync(join(targetRoot, name, "SKILL.md")));
+}
+
 function main() {
   const skills = listSkills();
   const targets = selectedTargets();
@@ -163,6 +181,14 @@ function main() {
       continue;
     }
     handledDestinations.add(normalizedDestination);
+
+    const legacy = legacySkillsIn(destination);
+    if (legacy.length > 0) {
+      console.log("- migration warning: legacy SpecForge skills detected");
+      for (const name of legacy) console.log(`  - ${name}`);
+      console.log("  These 0.2-style entry skills are replaced by sf-router + sf-* skills.");
+      console.log("  After confirming the new sf-* install works, remove the legacy directories from this target.");
+    }
 
     for (const skill of skills) {
       const result = copySkill(skill, destination);

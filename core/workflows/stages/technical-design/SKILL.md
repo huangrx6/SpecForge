@@ -64,6 +64,10 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
    - 配置、部署、可观测性、可靠性和回滚。
 11. 明确写入范围、禁止范围、失败模式和验证策略。
 12. 对高风险方案写备选方案和取舍理由。
+13. **初稿后核心决策 Review**：详细 technical design 初稿完成后，先向用户展示核心决策摘要并等待确认；确认前不得进入 tasking、spec_review approval 或 implementation。
+   - 摘要必须包含架构选择、新增 / 替换依赖、工具链选择、与现有架构冲突 / 变更、已知最大风险与缓解。
+   - 用户确认后写入 `Core Decision Review Status: confirmed` 或表格项 `Core Decision Review Status | confirmed`，并保留 `[TECH DESIGN REVIEW CONFIRMED]`。
+   - 用户授权默认时写 `delegated_default`，无技术影响时写 `not_required` 和 N/A 理由。
 
 ## 停止条件
 
@@ -80,6 +84,8 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
 - `technical-design.md#0. 影响面与读取计划` 仍有会改变架构或上线风险的 `unknown`。
 - `technical-design.md` 仍残留 `[NEEDS TECH DECISION]`。
 - `technical-design.md` 仍残留 `[NEEDS DEPENDENCY DECISION]`。
+- `technical-design.md` 仍残留 `[NEEDS TOOLING DECISION]`。
+- `technical-design.md` 的 `Core Decision Review Status` 不是 `confirmed`、`delegated_default` 或 `not_required`。
 - 设计需要超出已批准边界。
 - 外部版本、框架或 SDK 行为不确定且未查询当前资料。
 
@@ -88,5 +94,6 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
 - `technical-design.md` 能让实现者按边界开工。
 - reviewer 能判断实现是否偏离架构、接口、数据或安全要求。
 - 关键技术选型和新增直接依赖都有确认来源：现有项目证据、用户明确指定、用户授权默认、已确认脚手架或用户确认候选方案。
+- 初稿后的核心决策摘要已经被用户确认、用户授权默认，或明确 N/A。
 - tasks 可以从本文件和可选 `ui-design.md` 拆出可验证工作单元。
 - UI 细节只引用 `ui-design.md`，不在本文件重复维护。

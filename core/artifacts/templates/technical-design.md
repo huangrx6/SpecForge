@@ -73,6 +73,20 @@
 |---|---|---|---|---|---|---|
 | | runtime / dev / SDK / plugin / scaffold-bundled | | | | | |
 
+### 核心决策摘要 Review
+
+> 详细 technical design 初稿完成后，必须先把本节摘要展示给用户确认。确认前不要进入 `sf-tasking`、`sf-spec-review` approval 或 `sf-implement`。无技术影响时写 N/A 和理由。
+
+| 项 | 摘要 | 用户确认 / 来源 |
+|---|---|---|
+| Core Decision Review Status | pending / confirmed / delegated_default / not_required | |
+| 架构选择 | | |
+| 新增 / 替换依赖 | | |
+| 工具链选择 | | |
+| 与现有架构冲突 / 变更 | | |
+| 已知最大风险与缓解 | | |
+| 进入 tasking 前确认标记 | real tech design review confirmation marker / N/A | |
+
 ### 当前版本事实
 
 > 新增 / 替换框架、SDK、云服务、数据库、部署平台、AI provider、测试工具或安全相关依赖时必填。沿用现有项目时写 lockfile / manifest / wiki 证据。

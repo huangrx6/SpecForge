@@ -9,6 +9,12 @@ description: 生成或更新 SpecForge work item 的 UI design；用于 ready ar
 
 执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
 
+## 运行模式检测
+
+1. 当前目录向上存在 `.specforge/` 且有 active work item：**Embedded 模式**，按 artifact graph 写入 `01-spec/ui-design.md`，并按 Pencil 证据要求推进。
+2. 存在 `.specforge/` 但无 active work item：**Lightweight 模式**，可先做 UI 方向访谈、页面地图和状态矩阵草稿；需要落档时输出 `specforge-import-ready.md` 格式内容，或先路由 `sf-intake` 创建 work item。
+3. 不存在 `.specforge/`：**Standalone 模式**，不要运行 `.specforge/...` 命令或调用 `.specforge` 下的 Pencil 脚本；先和用户确认设计方向，输出可导入的 `specforge-import-ready.md` 格式内容。Standalone 草稿不等同于正式 Pencil 证据。
+
 把 requirements 中的用户可见体验转成可审查的 UI 设计证据。它不写技术架构、不写 API、不写数据库设计。
 
 SpecForge 固定使用 **Pencil** 做正式 UI 原型。Figma、HTML、ASCII、截图、竞品和第三方设计 skill 只能作为参考输入；最终必须归一为 `01-spec/ui-design.md`、`01-spec/ui-mockup.pen` 和 `01-spec/ui-mockup-export/*.png`。

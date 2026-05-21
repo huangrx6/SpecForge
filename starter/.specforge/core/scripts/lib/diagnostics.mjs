@@ -154,7 +154,18 @@ function technicalUnknownRows(workItemBase) {
 
 function technicalNeedsDecision(workItemBase) {
   const designPath = `${workItemBase}/01-spec/technical-design.md`;
-  return exists(designPath) && /\[NEEDS (TECH|DEPENDENCY) DECISION\]/i.test(readText(designPath));
+  return exists(designPath) && /\[NEEDS (TECH|DEPENDENCY|TOOLING) DECISION\]/i.test(readText(designPath));
+}
+
+function technicalCoreReviewUnconfirmed(workItemBase) {
+  const designPath = `${workItemBase}/01-spec/technical-design.md`;
+  if (!exists(designPath)) return false;
+  const design = readText(designPath);
+  if (/\[TECH DESIGN REVIEW CONFIRMED\]/i.test(design)) return false;
+  const status = design.match(/^Core Decision Review Status:\s*(.+)$/im)?.[1]?.trim();
+  if (/^(confirmed|delegated_default|not_required|n\/a|N\/A)$/i.test(status ?? "")) return false;
+  const tableStatus = design.match(/\|\s*Core Decision Review Status\s*\|\s*([^|]+)\|/i)?.[1]?.trim();
+  return !/^(confirmed|delegated_default|not_required|n\/a|N\/A)$/i.test(tableStatus ?? "");
 }
 
 function hasUiDecisionConfirmation(text) {
@@ -287,17 +298,20 @@ function technicalDirectionNeedsConfirmation(workItemYaml) {
   return hasTechnicalScope && !repositoryHasSourceCode();
 }
 
-function taskImpactSummary(workItemBase) {
+function taskFieldSummary(workItemBase) {
   const tasksPath = `${workItemBase}/01-spec/tasks.md`;
-  if (!exists(tasksPath)) return { exists: false, taskCount: 0, impactCount: 0, missing: false };
+  if (!exists(tasksPath)) return { exists: false, taskCount: 0, missingCore: [] };
   const tasks = readText(tasksPath);
   const taskCount = tasks.match(/^\s*[-*]\s+\[[ xX]\]\s+/gm)?.length ?? 0;
-  const impactCount = tasks.match(/^\s*_Impact:_/gm)?.length ?? 0;
+  const coreFields = ["Trace", "Files", "Verification", "Rollback", "Risk"];
+  const counts = Object.fromEntries(
+    coreFields.map((field) => [field, tasks.match(new RegExp(`^\\s*_${field}:_`, "gmi"))?.length ?? 0]),
+  );
   return {
     exists: true,
     taskCount,
-    impactCount,
-    missing: taskCount > 0 && impactCount < taskCount,
+    counts,
+    missingCore: coreFields.filter((field) => taskCount > 0 && counts[field] < taskCount),
   };
 }
 
@@ -436,7 +450,17 @@ function buildBlockers({ readyArtifact, gates, workItemBase, workItemYaml }) {
       code: "technical-selection-unconfirmed",
       route: "sf-tech-design",
       owner_artifact: "technical_design",
-      message: "technical-design.md 仍有 [NEEDS TECH DECISION] 或 [NEEDS DEPENDENCY DECISION]，关键技术选型或新增依赖未确认，不能进入下游阶段。",
+      message: "technical-design.md 仍有 [NEEDS TECH DECISION]、[NEEDS DEPENDENCY DECISION] 或 [NEEDS TOOLING DECISION]，关键技术选型、新增依赖或工具链未确认，不能进入下游阶段。",
+    });
+  }
+
+  if (["tasks", "spec_review", "implementation"].includes(readyArtifact.id) && technicalCoreReviewUnconfirmed(workItemBase)) {
+    blockers.push({
+      severity: "P1",
+      code: "technical-design-review-unconfirmed",
+      route: "sf-tech-design",
+      owner_artifact: "technical_design",
+      message: "technical-design.md 的核心决策摘要尚未用户确认、授权默认或标记为 N/A，不能进入 tasking、spec_review approval 或 implementation。",
     });
   }
 
@@ -452,14 +476,14 @@ function buildBlockers({ readyArtifact, gates, workItemBase, workItemYaml }) {
       });
     }
 
-    const taskImpact = taskImpactSummary(workItemBase);
-    if (taskImpact.missing) {
+    const taskFields = taskFieldSummary(workItemBase);
+    if (taskFields.missingCore.length > 0) {
       blockers.push({
         severity: "P1",
-        code: "tasks-impact-missing",
+        code: "tasks-core-fields-missing",
         route: "sf-tasking",
         owner_artifact: "tasks",
-        message: `tasks.md 有 ${taskImpact.taskCount} 个任务，但只有 ${taskImpact.impactCount} 个 _Impact:_ 标注。`,
+        message: `tasks.md 有 ${taskFields.taskCount} 个任务，但核心字段缺失或数量不足：${taskFields.missingCore.map((field) => `_${field}:_`).join(", ")}。`,
       });
     }
   }
