@@ -7,3 +7,4 @@ outputs/
 .env
 .env.*
 !.env.example
+.idea

@@ -76,6 +76,15 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 - 手工验证必须有步骤、环境和结果。
 - 跳过验证必须有理由、影响和 owner。
 - 命令输出只摘关键摘要；完整日志可写路径或链接。
+## Playwright 执行铁律
+
+```
+有浏览器 UI → 必须有 Playwright 自动化测试 → 没有例外
+```
+
+项目没有 Playwright 配置？**自己安装并创建最小配置**，参见 `.specforge/core/standards/playwright.md`。
+不能写 Playwright 脚本？**停下来说明原因，等待用户指示**，不要自行替换为手工验证。
+测试通过了但没有运行截图？**重新运行并保存截图**，不接受无证据的声明。
 
 ## 阻断规则
 
