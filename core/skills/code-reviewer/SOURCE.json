@@ -1,0 +1,51 @@
+{
+  "id": "code-reviewer",
+  "name": "code-reviewer",
+  "role": "代码审查参考",
+  "trust": "高星社区来源，MIT 许可，已做静态审查",
+  "risk": "中",
+  "source": {
+    "type": "github-raw",
+    "repo": "Shubhamsaboo/awesome-llm-apps",
+    "path": "awesome_agent_skills/code-reviewer/SKILL.md",
+    "url": "https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/awesome_agent_skills/code-reviewer",
+    "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/SKILL.md",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/AGENTS.md"
+      },
+      {
+        "path": "rules/correctness-error-handling.md",
+        "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/rules/correctness-error-handling.md"
+      },
+      {
+        "path": "rules/maintainability-naming.md",
+        "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/rules/maintainability-naming.md"
+      },
+      {
+        "path": "rules/maintainability-type-hints.md",
+        "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/rules/maintainability-type-hints.md"
+      },
+      {
+        "path": "rules/performance-n-plus-one.md",
+        "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/rules/performance-n-plus-one.md"
+      },
+      {
+        "path": "rules/security-sql-injection.md",
+        "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/rules/security-sql-injection.md"
+      },
+      {
+        "path": "rules/security-xss-prevention.md",
+        "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/rules/security-xss-prevention.md"
+      }
+    ]
+  },
+  "trigger": "当 code_review 需要补充安全、性能、正确性、可维护性检查清单时参考，尤其适合 PR review、上线前风险扫查和高风险 diff 的二次审查。",
+  "normalizeTo": [
+    "04-code-review/code-review-v1.md#Findings",
+    "04-code-review/code-review-v1.md#Risk Checks",
+    "05-verification/report.md#Regression Coverage"
+  ],
+  "updatedAt": "2026-05-24T05:38:13.418Z"
+}

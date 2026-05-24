@@ -1,0 +1,22 @@
+{
+  "id": "deep-research",
+  "name": "deep-research",
+  "role": "深度研究参考",
+  "trust": "高星社区来源，MIT 许可，已做静态审查",
+  "risk": "中",
+  "source": {
+    "type": "github-raw",
+    "repo": "Shubhamsaboo/awesome-llm-apps",
+    "path": "awesome_agent_skills/deep-research/SKILL.md",
+    "url": "https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/awesome_agent_skills/deep-research",
+    "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/deep-research/SKILL.md"
+  },
+  "trigger": "当 discovery 或 research 需要多来源综合、来源可信度标注、共识/争议拆解和引用编号时参考；外部事实仍必须实时核验。",
+  "normalizeTo": [
+    "01-spec/research.md#Executive Summary",
+    "01-spec/research.md#Key Findings",
+    "01-spec/research.md#Sources",
+    "01-spec/research.md#Open Questions"
+  ],
+  "updatedAt": "2026-05-24T05:38:15.875Z"
+}

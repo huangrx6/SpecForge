@@ -31,6 +31,16 @@ description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户�
 - `.specforge/core/standards/product.md`：候选池、MVP、PRD 和 requirements 边界。
 - 有 UI 方向时读取 `.specforge/core/standards/design.md`。
 - 有技术选型或依赖版本问题时读取 `.specforge/core/standards/engineering.md`。
+- `.specforge/core/skills/ORCHESTRATION.md`：第三方 brainstorm / UX / PRD 参考的选择、边界和归一化要求。
+
+## 第三方 Skill 联动
+
+当 brainstorm 的关键问题是目标用户、体验方向、用户旅程、信息架构、交互风格、微文案、可访问性或视觉层级时，按需读取 `.specforge/core/skills/ux-designer/SKILL.md`。
+
+- 用 `ux-designer` 帮助形成 2-3 个互斥体验方向、访谈镜头、风险提示和取舍项。
+- 总览可读 `.specforge/core/skills/ux-designer/AGENTS.md`；只在需要时读取相关 `rules/*.md`。
+- `ux-designer` 的 persona、流程或模板只是候选参考，必须经过用户确认后才能写成 `[UI DECISION CONFIRMED]`。
+- 如果只是把已确认 UI 方向落成页面地图、状态矩阵和 Pencil 原型，交给 `sf-ui-design`，不要在 brainstorm 中写完整 UI design。
 
 ## 何时使用
 

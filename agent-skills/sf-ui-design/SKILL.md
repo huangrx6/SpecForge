@@ -50,6 +50,15 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
 - `.specforge/core/standards/workflow.md`：UI 范围、非目标和 gate 边界。
 - `.specforge/core/standards/engineering.md`：UI 验证矩阵和 evidence 要求。
 - `core/skills/pencil/SKILL.md`：Pencil 文件创建、修改、导出和截图自检。
+- `.specforge/core/skills/ORCHESTRATION.md`：第三方 UX / UI 参考的选择、边界和归一化要求。
+
+## 第三方 Skill 联动
+
+UI design 的正式交付仍是 `01-spec/ui-design.md`、Pencil `.pen` 和导出截图。需要补充用户研究、信息架构、交互流程、微文案、可访问性或视觉层级检查时，按需读取 `.specforge/core/skills/ux-designer/SKILL.md`。
+
+- 总览读 `.specforge/core/skills/ux-designer/AGENTS.md`。
+- 只在需要时读取相关 `rules/*.md`，例如 `research.md`、`information-architecture.md`、`interaction-design.md`、`accessibility.md` 或 `visual-design.md`。
+- 第三方建议必须改写进 SpecForge 的 UI artifact；不要把 persona、模板标题或设计流程原样当作已确认需求。
 
 ## 执行要点
 
@@ -60,6 +69,7 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
    - 每轮只问会改变 UI 的关键问题，避免把用户拖进工具选择。
    - 用户未确认体验方向前，不得自行宣布“我将使用某某风格”并开始设计。推荐项必须标为 Agent recommendation，不能写成用户选择。
    - 用户确认后，在 `00-intake/brainstorm.md`、`00-intake/brief.md`、`00-intake/prd.md` 或 `01-spec/requirements.md` 中留下 `[UI DECISION CONFIRMED]` 或 `UI Direction Status: confirmed`。
+   - 如果需要用户在多个体验方向中取舍，退回 `sf-brainstorm`；`ux-designer` 在此阶段只用于细化已确认方向，不用于绕过确认。
 3. 用户提供示例设计、截图、规范、Figma 或参考产品时，必须先提取设计语言并写入 Visual Style Brief，再做页面方案。
 4. 写页面地图、角色流程、状态矩阵、明确不做项和 UI 验证策略。
 5. 使用 Pencil 创建或更新原型：

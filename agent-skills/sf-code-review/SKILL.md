@@ -34,6 +34,15 @@ node .specforge/core/scripts/create-artifact.mjs code_review
 
 - `.specforge/core/standards/workflow.md`：gate 状态、evidence、scope 和边界违规判断。
 - `.specforge/core/standards/engineering.md`：代码健康、安全、权限、测试证据、配置、回滚和工程规范一致性。
+- `.specforge/core/skills/ORCHESTRATION.md`：第三方 code review 参考的选择、边界和归一化要求。
+
+## 第三方 Skill 联动
+
+`sf-code-review` 仍是唯一 code_review gate 入口。需要补充安全、性能、正确性、可维护性或测试覆盖检查维度时，按需读取 `.specforge/core/skills/code-reviewer/SKILL.md`。
+
+- 快速总览读 `.specforge/core/skills/code-reviewer/AGENTS.md`。
+- 发现对应风险时只读取相关 `rules/*.md`，例如 SQL 注入、XSS、N+1、错误处理、命名或类型标注。
+- 第三方建议必须落成 `04-code-review/code-review-v1.md` 中有文件、行号、影响和修复方向的 finding；不要把第三方模板原样复制进审查报告。
 
 ## 必读证据
 

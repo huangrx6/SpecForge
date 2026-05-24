@@ -12,6 +12,9 @@
 | `pencil` | UI Design | Pencil `.pen` 原型读写、截图导出和布局检查参考 | `01-spec/ui-design.md`、`01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/` |
 | `web-design-guidelines` | UI Review / Verification | UI 质量、可访问性、表单、状态、导航和视觉审查基线 | `01-spec/ui-design.md` 的审查记录或 `05-verification/report.md` |
 | `playwright-skill` | Verification | 浏览器 E2E、真实点击输入、角色流程、截图和响应式证据 | `05-verification/test-cases.md`、`05-verification/report.md`、`05-verification/evidence/` |
+| `code-reviewer` | Code Review | 安全、性能、正确性、可维护性和测试覆盖的补充检查清单 | `04-code-review/code-review-v1.md`、`05-verification/report.md` |
+| `ux-designer` | Brainstorm / Research / UI Design | 用户研究、体验方向取舍、信息架构、交互、可访问性和视觉层级参考 | `00-intake/brainstorm.md`、`01-spec/research.md`、`01-spec/ui-design.md` |
+| `deep-research` | Research / Discovery | 多来源研究综合、引用、可信度和共识/争议拆解参考 | `01-spec/research.md` |
 
 ## 总原则
 
@@ -31,6 +34,12 @@
 - PRD 中只保留目标用户、问题、范围、非目标、MVP 决策、成功标准、开放问题和 handoff。
 - 不把技术架构、任务拆分或第三方模板标题直接写进 PRD。
 
+### Brainstorm
+
+- 缺的是体验方向、目标用户、用户旅程、信息架构或 UI 取舍时，先在 `sf-brainstorm` 中参考 `ux-designer`，把结论写入 `00-intake/brainstorm.md`。
+- `ux-designer` 在 brainstorm 中只帮助形成候选方向和提问镜头，不替用户确认 persona、视觉风格或主流程。
+- 用户确认 UI / 视觉 / 体验方向后，必须写入 `UI Direction Status: confirmed` 或 `[UI DECISION CONFIRMED]`，后续 `ui_design` 才能继续。
+
 ### Requirements
 
 - 只有当用户故事、验收标准、边界条件或故事拆分不足时，参考 `user-story-writing`。
@@ -40,9 +49,23 @@
 ### UI Design
 
 - 正式原型固定使用 `pencil`。
+- 方向已确认后，需要细化 persona、用户旅程、信息架构、微文案、可访问性或视觉层级时，可参考 `ux-designer`，但必须把输出归一为 `01-spec/research.md` 或 `01-spec/ui-design.md`。
+- 如果读取 `ux-designer` 后发现关键体验方向仍需用户取舍，停止 UI design，退回 `sf-brainstorm`。
 - `web-design-guidelines` 只作为 UI 质量和可访问性审查基线，不负责选择原型工具。
 - 有 UI 影响时必须留下页面地图、角色流程、状态矩阵、Pencil 源文件和导出截图。
 - 空 `.pen` / 空画布最多读取一次；确认空后立即创建第一屏，禁止空读循环。
+
+### Research / Discovery
+
+- 当 discovery 需要跨来源综合、引用编号、来源可信度、共识/争议和研究空白时，可参考 `deep-research`。
+- 涉及当前事实、法规、版本、价格、漏洞、新闻或竞品状态时，必须另行使用可靠来源实时核验；`deep-research` 只提供研究组织方法。
+- 研究结论必须写入 `01-spec/research.md`，并在 PRD、requirements 或 technical design 中只引用已归一化的结论。
+
+### Code Review
+
+- `sf-code-review` 仍是唯一 code_review 阶段入口；`code-reviewer` 只作为补充检查清单。
+- 安全和数据风险先看，再看性能、正确性、可维护性和测试覆盖；finding 必须绑定文件、行号、影响和可执行修复建议。
+- 不把第三方示例代码当成项目代码直接套用；修复建议必须结合本仓库语言、框架和既有模式。
 
 ### Verification
 

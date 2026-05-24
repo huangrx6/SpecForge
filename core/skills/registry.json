@@ -28,6 +28,142 @@
       ]
     },
     {
+      "id": "code-reviewer",
+      "name": "code-reviewer",
+      "role": "代码审查参考",
+      "trust": "高星社区来源，MIT 许可，已做静态审查",
+      "risk": "中",
+      "source": {
+        "type": "github-raw",
+        "repo": "Shubhamsaboo/awesome-llm-apps",
+        "path": "awesome_agent_skills/code-reviewer/SKILL.md",
+        "url": "https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/awesome_agent_skills/code-reviewer",
+        "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/SKILL.md",
+        "files": [
+          {
+            "path": "AGENTS.md",
+            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/AGENTS.md"
+          },
+          {
+            "path": "rules/correctness-error-handling.md",
+            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/rules/correctness-error-handling.md"
+          },
+          {
+            "path": "rules/maintainability-naming.md",
+            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/rules/maintainability-naming.md"
+          },
+          {
+            "path": "rules/maintainability-type-hints.md",
+            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/rules/maintainability-type-hints.md"
+          },
+          {
+            "path": "rules/performance-n-plus-one.md",
+            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/rules/performance-n-plus-one.md"
+          },
+          {
+            "path": "rules/security-sql-injection.md",
+            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/rules/security-sql-injection.md"
+          },
+          {
+            "path": "rules/security-xss-prevention.md",
+            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/rules/security-xss-prevention.md"
+          }
+        ]
+      },
+      "trigger": "当 code_review 需要补充安全、性能、正确性、可维护性检查清单时参考，尤其适合 PR review、上线前风险扫查和高风险 diff 的二次审查。",
+      "normalizeTo": [
+        "04-code-review/code-review-v1.md#Findings",
+        "04-code-review/code-review-v1.md#Risk Checks",
+        "05-verification/report.md#Regression Coverage"
+      ],
+      "doNotUseFor": [
+        "替代 SpecForge code_review gate",
+        "在未阅读 diff 和需求证据时泛泛输出模板化建议",
+        "把第三方示例代码原样当作项目修复方案",
+        "替代安全专项审计"
+      ]
+    },
+    {
+      "id": "ux-designer",
+      "name": "ux-designer",
+      "role": "UX 研究与设计参考",
+      "trust": "高星社区来源，MIT 许可，已做静态审查",
+      "risk": "低",
+      "source": {
+        "type": "github-raw",
+        "repo": "Shubhamsaboo/awesome-llm-apps",
+        "path": "awesome_agent_skills/ux-designer/SKILL.md",
+        "url": "https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/awesome_agent_skills/ux-designer",
+        "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/ux-designer/SKILL.md",
+        "files": [
+          {
+            "path": "AGENTS.md",
+            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/ux-designer/AGENTS.md"
+          },
+          {
+            "path": "rules/accessibility.md",
+            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/ux-designer/rules/accessibility.md"
+          },
+          {
+            "path": "rules/information-architecture.md",
+            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/ux-designer/rules/information-architecture.md"
+          },
+          {
+            "path": "rules/interaction-design.md",
+            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/ux-designer/rules/interaction-design.md"
+          },
+          {
+            "path": "rules/research.md",
+            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/ux-designer/rules/research.md"
+          },
+          {
+            "path": "rules/visual-design.md",
+            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/ux-designer/rules/visual-design.md"
+          }
+        ]
+      },
+      "trigger": "当 brainstorm、ui_design 或 spec_review 需要补充用户研究、体验方向取舍、信息架构、交互流程、可访问性和视觉层级检查时参考；用于提升体验决策和 UI artifact 的 UX 证据质量。",
+      "normalizeTo": [
+        "01-spec/research.md#User Evidence",
+        "01-spec/ui-design.md#UX Rationale",
+        "01-spec/ui-design.md#Accessibility Review",
+        "05-verification/report.md#UI Coverage"
+      ],
+      "doNotUseFor": [
+        "替代 Pencil 正式原型",
+        "替代 web-design-guidelines 的实现后 UI 审查",
+        "在没有用户确认时虚构 persona 或研究结论",
+        "把第三方模板标题原样写进 SpecForge artifact"
+      ]
+    },
+    {
+      "id": "deep-research",
+      "name": "deep-research",
+      "role": "深度研究参考",
+      "trust": "高星社区来源，MIT 许可，已做静态审查",
+      "risk": "中",
+      "source": {
+        "type": "github-raw",
+        "repo": "Shubhamsaboo/awesome-llm-apps",
+        "path": "awesome_agent_skills/deep-research/SKILL.md",
+        "url": "https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/awesome_agent_skills/deep-research",
+        "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/deep-research/SKILL.md"
+      },
+      "trigger": "当 discovery 或 research 需要多来源综合、来源可信度标注、共识/争议拆解和引用编号时参考；外部事实仍必须实时核验。",
+      "normalizeTo": [
+        "01-spec/research.md#Executive Summary",
+        "01-spec/research.md#Key Findings",
+        "01-spec/research.md#Sources",
+        "01-spec/research.md#Open Questions"
+      ],
+      "doNotUseFor": [
+        "替代联网检索或一手来源核验",
+        "把过期资料当作当前事实",
+        "在没有来源时编造引用",
+        "替代用户确认研究结论和产品范围"
+      ]
+    },
+    {
       "id": "to-prd",
       "name": "to-prd",
       "role": "PRD 合成主参考",

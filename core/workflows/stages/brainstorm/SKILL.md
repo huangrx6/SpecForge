@@ -15,6 +15,8 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
 - 可选：`00-intake/prd.md`、`01-spec/requirements.md`、`01-spec/ui-design.md`、`01-spec/technical-design.md`。
 - 相关 `.specforge/wiki/` 长期事实。
 - 当前可靠外部资料；技术类优先官方文档，产品/竞品类记录来源和访问日期。
+- `.specforge/core/skills/ORCHESTRATION.md`（需要第三方参考时）。
+- `.specforge/core/skills/ux-designer/SKILL.md`（体验方向、用户研究、IA、交互或可访问性取舍不足时）。
 
 ## 触发
 
@@ -42,6 +44,7 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
    - 需要外部事实时先研究，不凭旧知识拍板。
    - 技术事实优先官方资料；产品/竞品事实至少说明来源、日期和结论。
    - 不需要外部研究时写明跳过理由。
+   - 需要 UX 研究或体验方向镜头时，可参考 `ux-designer`；其输出只能作为候选和提问框架，不能替代用户确认。
 3. **Phase 1 发散。**
    - 仅 `deep` 必填；`light` 可写 N/A 和理由。
    - 从五个维度列出可能性，不先筛选：用户目标、解法可能性、技术路线、风险未知、不做什么。

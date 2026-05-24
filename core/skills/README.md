@@ -23,6 +23,9 @@
 | `pencil` | Pencil MCP 原型读写、布局检查和截图导出 | `01-spec/ui-design.md`、`.pen` 源文件和导出截图 |
 | `web-design-guidelines` | UI 质量、可访问性和视觉审查基线 | UI review 记录或 `05-verification/report.md` |
 | `playwright-skill` | 浏览器 E2E、真实操作、截图和响应式验证 | `05-verification/test-cases.md`、`05-verification/report.md`、`05-verification/evidence/` |
+| `code-reviewer` | 安全、性能、正确性和可维护性的 code review 参考清单 | `04-code-review/code-review-v1.md`、`05-verification/report.md` |
+| `ux-designer` | 用户研究、信息架构、交互、可访问性和视觉层级参考 | `01-spec/research.md`、`01-spec/ui-design.md` |
+| `deep-research` | 多来源研究综合、引用和共识/争议拆解参考 | `01-spec/research.md` |
 
 ## 触发纪律
 
@@ -30,6 +33,9 @@
 - PRD 只在需要脑暴或合成时参考 `product-brainstorming` / `to-prd`。
 - Requirements 只在故事、验收或边界不足时参考 `user-story-writing`。
 - UI 正式原型固定为 Pencil；其他工具只能作为用户显式提供的外部输入。
+- UX 参考只补充研究、流程和可访问性证据，不替代 Pencil 原型或 SpecForge UI artifact。
+- 深度研究参考必须绑定真实来源；遇到当前事实、法规、价格、版本或新闻时另行联网核验。
+- Code review 参考只补充检查维度，不替代 `sf-code-review` gate。
 - Verification 有浏览器流程时必须有 Playwright 用例和真实自动化操作证据。
 - 第三方输出只当作参考笔记，不替代用户确认、SpecForge 模板或 gate evidence。
 

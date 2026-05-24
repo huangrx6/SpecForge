@@ -27,6 +27,14 @@ description: 对新请求执行深度探索、缺陷根因分析或预研；用�
 
 - `.specforge/core/standards/workflow.md`：上下文加载、scope、非目标和写入边界。
 - `.specforge/core/standards/product.md`：分析深度、代码探索、外部研究、候选功能、用户选择和澄清。
+- `.specforge/core/skills/ORCHESTRATION.md`：第三方研究参考的选择、来源核验和归一化要求。
+
+## 第三方 Skill 联动
+
+需要跨来源综合、引用编号、来源可信度标注、共识 / 争议拆解或研究空白整理时，按需读取 `.specforge/core/skills/deep-research/SKILL.md`。
+
+- `deep-research` 只提供研究组织方法；当前事实、法规、版本、价格、新闻、漏洞和竞品状态必须另行查可靠来源。
+- 研究结论必须写入 `01-spec/research.md` 或 `00-intake/brief.md`，并保留来源、日期、可信度和未解决问题。
 
 ## 动作
 
