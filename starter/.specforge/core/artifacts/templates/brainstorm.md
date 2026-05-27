@@ -12,13 +12,21 @@
 | 事实 / 结论 | 来源 / 证据 | 日期 | 对决策的影响 |
 |---|---|---|---|
 
-## 已明确 / 高影响未知 / 可安全默认
+## 问题地图
 
-| 类型 | 内容 | 处理方式 |
-|---|---|---|
-| 已明确 | | |
-| 高影响未知 | NEEDS_DECISION marker if unresolved | |
-| 可安全默认 | | |
+> `[必须确认]` 按优先级排序：核心目标/范围 > 体验方向 > 数据与安全 > 集成与依赖 > 交付验收。若不确定是否可安全默认，归入 `[必须确认]`。
+
+| 类型 | 优先级维度 | 内容 | 状态 | 处理方式 |
+|---|---|---|---|---|
+| 已明确 | N/A | | confirmed | |
+| 必须确认 | 核心目标/范围 / 体验方向 / 数据与安全 / 集成与依赖 / 交付验收 | | pending / confirmed / delegated_default | NEEDS_DECISION marker if unresolved |
+| 可安全默认 | N/A | | defaulted | 默认理由、风险和回退点 |
+
+## 第三方 Skill 使用记录
+
+| Skill | 读取内容 | 提取结果 | 归一化到 | 不能替代的确认 |
+|---|---|---|---|---|
+| opportunity-solution-tree / ux-designer / deep-research / user-stories / create-prd / playwright-skill / N/A | SKILL.md / references or rules path | 候选方案 / 风险提示 / 访谈镜头 / 研究问题 / 验收问题 / 后续阶段输入 | 问题地图 / 方案对比 / research / UI design 输入 / requirements 输入 / verification 输入 / N/A | 用户确认 MVP / UI 方向 / 技术路线 / 依赖 / 工具链 / 验收口径 |
 
 ## 方案对比
 
@@ -33,8 +41,8 @@
 
 ## 用户确认记录
 
-| 问题 | 选项 / 推荐 | 用户答案 | 影响 |
-|---|---|---|---|
+| 问题 | 优先级维度 | 选项 / 推荐 | 用户答案 | 确认状态 / 标记 | 影响 |
+|---|---|---|---|---|---|
 
 ## UI / 体验方向确认
 

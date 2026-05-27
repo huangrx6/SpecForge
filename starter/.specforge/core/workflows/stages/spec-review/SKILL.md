@@ -116,6 +116,8 @@ Gate Review：
 - 计划、设计或任务不能追溯到用户澄清、代码探索或外部研究结论。
 - 用户可见页面没有 Pencil 原型、导出截图、视觉质量 review 或可信 N/A。
 - UI 原型只是默认控件堆叠，未覆盖关键状态、权限、响应式或异常态。
+- 有 UI 影响但 `ui-design.md#9` 没有 Pencil 保存状态、保存后重读校验或截图证据。
+- `ui-design.md` 声明采用 PC 端业务系统规范，但未记录 `pc-ui-design-spec.md`、核心 token、HTML/CSS 约束或偏离项。
 - 技术影响面存在但 technical design 缺失、关键 `unknown` 未闭环、关键技术 / 新增依赖 / 工具链缺少确认来源，或初稿后核心决策摘要未确认。
 - technical design 对 API、数据、权限、配置、NFR 风险只写默认处理。
 - tasks 缺少核心字段 `_Trace:_`、`_Files:_`、`_Verification:_`、`_Rollback:_`、`_Risk:_`，条件字段在适用任务上缺失，或 technical design `yes` 影响面没有任务承接。

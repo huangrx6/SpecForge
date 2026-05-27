@@ -181,10 +181,6 @@ function runExternalValidation() {
     return path && !path.startsWith("/") && !parts.includes("..");
   }
 
-  function canonical(value) {
-    return JSON.stringify(value ?? null);
-  }
-
   function validateRequiredRegistryFields(skill, seenIds) {
     if (!skill || typeof skill !== "object") {
       errors.push("registry contains a non-object skill entry");
@@ -213,33 +209,9 @@ function runExternalValidation() {
     if (!skill.source?.path) errors.push(`${skill.id}: registry source.path is required`);
   }
 
-  function validateSourceJson(skill, sourceJsonPath) {
-    if (!existsSync(sourceJsonPath)) {
-      errors.push(`${skill.id}: missing SOURCE.json`);
-      return;
-    }
-
-    const sourceJson = safeJson(sourceJsonPath, relative(sourceJsonPath));
-    if (!sourceJson) return;
-
-    for (const field of ["id", "name", "role", "trust", "risk", "trigger"]) {
-      if (sourceJson[field] !== skill[field]) {
-        errors.push(`${skill.id}: SOURCE.json ${field} differs from registry`);
-      }
-    }
-    if (canonical(sourceJson.source) !== canonical(skill.source)) {
-      errors.push(`${skill.id}: SOURCE.json source differs from registry`);
-    }
-    if (canonical(sourceJson.normalizeTo) !== canonical(skill.normalizeTo)) {
-      errors.push(`${skill.id}: SOURCE.json normalizeTo differs from registry`);
-    }
-    if (!sourceJson.updatedAt) errors.push(`${skill.id}: SOURCE.json missing updatedAt`);
-  }
-
   function validateSkillSnapshot(skill, baseDir) {
     const skillDir = join(baseDir, skill.id);
     const skillPath = join(skillDir, "SKILL.md");
-    const sourceJsonPath = join(skillDir, "SOURCE.json");
 
     if (!existsSync(skillDir)) {
       errors.push(`${skill.id}: missing skill directory ${relative(skillDir)}`);
@@ -256,9 +228,7 @@ function runExternalValidation() {
       if (!frontmatter.description) errors.push(`${skill.id}: SKILL.md missing description`);
     }
 
-    validateSourceJson(skill, sourceJsonPath);
-
-    const checkedFiles = ["SKILL.md", "SOURCE.json"];
+    const checkedFiles = ["SKILL.md"];
     for (const file of skill.source?.files ?? []) {
       if (!isSafeSupportPath(file.path)) {
         errors.push(`${skill.id}: unsafe support file path ${file.path}`);
@@ -278,8 +248,7 @@ function runExternalValidation() {
     for (const entry of readdirSync(skillsRoot, { withFileTypes: true })) {
       if (!entry.isDirectory()) continue;
       const skillPath = join(skillsRoot, entry.name, "SKILL.md");
-      const sourceJsonPath = join(skillsRoot, entry.name, "SOURCE.json");
-      if ((existsSync(skillPath) || existsSync(sourceJsonPath)) && !registryIds.has(entry.name)) {
+      if (existsSync(skillPath) && !registryIds.has(entry.name)) {
         errors.push(`unregistered external skill directory: ${relative(join(skillsRoot, entry.name))}`);
       }
     }

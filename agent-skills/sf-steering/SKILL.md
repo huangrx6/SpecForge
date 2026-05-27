@@ -71,11 +71,23 @@ node .specforge/core/scripts/codebase-index.mjs --write-report
 1. **Provider 决策层**：运行 `codebase-index.mjs --json`，读取 `status`、`selected_provider`、`bootstrap.scale`。
 2. **小项目**：内置 bootstrap map + `rg` + 关键文件阅读足够。
 3. **中型项目**：bootstrap map + `rg`；有明确模块时可用 Repomix 生成模块上下文包，不打包全仓。
-4. **大型项目**：优先使用 codebase-memory-mcp、CodeGraphContext 或同类图谱 / MCP / SCIP provider 查询模块、符号、调用链、依赖和入口关系。
+4. **大型项目**：优先使用 CodeGraph、codebase-memory-mcp、CodeGraphContext 或同类图谱 / MCP / SCIP provider 查询模块、符号、调用链、依赖和入口关系。
 5. **无 provider 的大型项目**：暂停全仓理解，让用户安装 provider 或指定目标模块、业务域、报错路径。
 6. **任务上下文层**：针对后续需求或 bug，只加载相关 wiki + 相关文件，不重新扫描全仓库。
 
-成熟开源工具的做法可以作为参考：Aider 的 repo map、Repomix/Gitingest 的代码打包、CodeGraphContext / codebase-memory-mcp 的图谱与 MCP 检索、RepoAgent 的文档生成。但在 SpecForge 中，外部工具输出只能作为证据来源，最终必须改写成 `.specforge/wiki/*.md` 的当前事实。
+成熟开源工具的做法可以作为参考：Aider 的 repo map、Repomix/Gitingest 的代码打包、CodeGraph / CodeGraphContext / codebase-memory-mcp 的图谱与 MCP 检索、RepoAgent 的文档生成。但在 SpecForge 中，外部工具输出只能作为证据来源，最终必须改写成 `.specforge/wiki/*.md` 的当前事实。
+
+## CodeGraph 用法
+
+检测到 `codegraph` CLI 或用户明确启用 CodeGraph 时，把它作为优先 graph provider。
+
+- 项目未安装或未初始化时，先读取 `codebase-index.mjs --json` 的 `host_platform` 和 `install_options`，向用户展示选项：推荐安装 CodeGraph、安装其他 graph provider、或指定目标模块 / 业务域 / 报错路径。
+- 用户确认要 Agent 辅助安装 CodeGraph 后，按当前 OS 执行安装：macOS / Linux 用 `curl -fsSL https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh | sh`；Windows 用 `irm https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.ps1 | iex`；若用户拒绝远程脚本，可用 `npx @colbymchenry/codegraph`。
+- 安装后自动运行 `codegraph init -i`、`codegraph status` 和 `node .specforge/core/scripts/codebase-index.mjs --json` 复查；复查通过前不要写 wiki 当前事实。
+- 进入 steering 前先检查 `codegraph_status` 或 `codegraph status`，确认索引健康和是否有 pending sync。
+- baseline 模式优先用 `codegraph_context` 找模块、入口、路由、核心符号，再用 `codegraph_explore` 读取相关源码片段。
+- change-focused / bug-focused 模式优先用 `codegraph_trace` 和 `codegraph_impact` 分析调用链、影响面和可能受影响测试。
+- CodeGraph 结果只能作为证据；写入 wiki 前仍要用代码、配置、测试、CI、文档或用户确认做事实校验。
 
 ## 写入 wiki
 

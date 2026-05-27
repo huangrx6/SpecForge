@@ -56,6 +56,86 @@ function normalize(content) {
   return content.replace(/\r\n/g, "\n").trimEnd() + "\n";
 }
 
+function adaptSnapshotContent(skill, content) {
+  if (skill.id === "code-reviewer" || skill.id === "ux-designer") {
+    return content.replace(
+      /1\. \*\*Review \[AGENTS\.md\]\(AGENTS\.md\)\*\* for a complete compilation of all rules with examples/,
+      skill.id === "code-reviewer"
+        ? "1. **Start from this file** to decide whether the review needs security, performance, correctness, or maintainability depth"
+        : "1. **Start from this file** to decide whether the task needs research, IA, interaction, accessibility, or visual depth",
+    ).replace(
+      "2. **Reference specific rules** from `rules/` directory for deep dives",
+      skill.id === "code-reviewer"
+        ? "2. **Reference only the specific rules** from `rules/` that match the current risk"
+        : "2. **Reference only the specific rules** from `rules/` that match the current design risk",
+    );
+  }
+
+  if (skill.id === "pencil") {
+    return content
+      .replace(
+        /### Rule 6: Always Load the `frontend-design` Skill[\s\S]*?This applies to both directions:\n- \*\*Pencil design tasks\*\*: Use the skill's aesthetic guidelines to inform layout, typography, color, and composition choices in the \.pen file\n- \*\*Code generation from Pencil\*\*: Use the skill's guidelines to ensure the generated code includes distinctive typography, intentional color themes, motion\/animations, and polished visual details — not just a mechanical translation of the design tree/,
+        [
+          "### Rule 6: Align With Confirmed SpecForge UI Direction",
+          "",
+          "**NEVER design in Pencil or generate code from Pencil before reading the confirmed UI direction and SpecForge design standards.**",
+          "",
+          "SpecForge does not vendor the upstream `frontend-design` skill. Instead, you MUST:",
+          "1. Read the confirmed UI direction from `brainstorm.md`, `brief.md`, or `ui-design.md`",
+          "2. Read `.specforge/core/standards/design.md` and the active `sf-ui-design` guidance",
+          "3. If the UI direction is still unconfirmed, stop and route back to `sf-brainstorm`",
+          "4. Apply the confirmed typography, color, density, motion, and interaction choices when designing in Pencil or generating code",
+          "5. Never produce generic AI aesthetics or invent a new visual direction without user confirmation",
+          "",
+          "### Rule 7: Persist and Re-read SpecForge `.pen` Handoffs",
+          "",
+          "**NEVER treat a Pencil design as complete until the target `.pen` file has been saved and re-read successfully.**",
+          "",
+          "For SpecForge UI design handoffs, you MUST:",
+          "1. Write the design to the target `01-spec/ui-mockup.pen` file path",
+          "2. After every `pencil_batch_design`, perform the available save / persistence action; if no standalone save tool exists, immediately re-open or re-read the target file",
+          "3. Use `pencil_open_document`, `pencil_get_editor_state`, or `pencil_batch_get` to confirm the saved file contains at least one non-empty screen / frame / artboard",
+          "4. Only export screenshots after the saved file has passed re-read verification",
+          "5. If the file is still empty or cannot be re-read after two attempts, stop and record a Pencil persistence blocker instead of handing off an empty `.pen`",
+        ].join("\n"),
+      )
+      .replaceAll("Load the `frontend-design` skill", "Read the confirmed SpecForge UI direction")
+      .replaceAll("Load `frontend-design` skill", "Read confirmed SpecForge UI direction")
+      .replaceAll("load the `frontend-design` skill", "read the confirmed SpecForge UI direction")
+      .replaceAll("Apply `frontend-design` guidelines", "Apply SpecForge UI design guidance")
+      .replaceAll("Follow `frontend-design` guidelines", "Follow SpecForge UI design guidance")
+      .replaceAll("Skipping `frontend-design` skill", "Skipping confirmed UI direction")
+      .replaceAll("Always load it before designing in Pencil or generating code", "Always read confirmed UI direction before designing in Pencil or generating code")
+      .replaceAll("the `frontend-design` skill", "SpecForge UI design guidance")
+      .replaceAll("frontend-design guidelines", "SpecForge UI design guidance")
+      .replaceAll("frontend-design", "SpecForge UI design guidance")
+      .replaceAll("upstream `SpecForge UI design guidance` skill", "upstream `frontend-design` skill")
+      .replaceAll(
+        "9. pencil_get_screenshot          -> Verify each section visually\n10. pencil_snapshot_layout        -> Check for layout problems",
+        "9. Re-open / re-read target .pen   -> Confirm saved file is non-empty\n10. pencil_get_screenshot         -> Verify each section visually\n11. pencil_snapshot_layout        -> Check for layout problems",
+      )
+      .replaceAll(
+        "| Skipping screenshots | Call `pencil_get_screenshot` after every section |",
+        "| Skipping screenshots | Call `pencil_get_screenshot` after every section |\n| Assuming `.pen` saved because a design tool call succeeded | Re-open or re-read the target `.pen` and confirm it contains a non-empty screen before screenshots or handoff |",
+      )
+      .replaceAll("## Step 1: Load the `SpecForge UI design guidance` Skill", "## Step 1: Read Confirmed SpecForge UI Direction")
+      .replaceAll(
+        "**MANDATORY.** Before any design or code generation work, load the `SpecForge UI design guidance` skill.",
+        "**MANDATORY.** Before any design or code generation work, read the confirmed UI direction and SpecForge design standards.",
+      )
+      .replaceAll(
+        "- Load the `SpecForge UI design guidance` skill and apply its aesthetic guidelines to the generated code",
+        "- Read the confirmed SpecForge UI direction and apply it to the generated code",
+      )
+      .replaceAll(
+        "- Skip the `SpecForge UI design guidance` skill — it is mandatory for both design and code generation",
+        "- Skip the confirmed UI direction — it is mandatory for both design and code generation",
+      );
+  }
+
+  return content;
+}
+
 function fetchText(url, redirects = 0) {
   if (redirects > 5) return Promise.reject(new Error(`获取 ${url} 时重定向次数过多`));
   return new Promise((resolve, reject) => {
@@ -127,25 +207,7 @@ function selectSkills(registry) {
   return selected;
 }
 
-function sourceContent(skill) {
-  return `${JSON.stringify(
-    {
-      id: skill.id,
-      name: skill.name,
-      role: skill.role,
-      trust: skill.trust,
-      risk: skill.risk,
-      source: skill.source,
-      trigger: skill.trigger,
-      normalizeTo: skill.normalizeTo,
-      updatedAt: new Date().toISOString(),
-    },
-    null,
-    2,
-  )}\n`;
-}
-
-function writeSnapshot(skill, content, sourceJson = sourceContent(skill), supportFiles = []) {
+function writeSnapshot(skill, content, supportFiles = []) {
   const skillDir = join(skillsRoot, skill.id);
   mkdirSync(skillDir, { recursive: true });
   writeFileSync(join(skillDir, "SKILL.md"), content, "utf8");
@@ -155,12 +217,11 @@ function writeSnapshot(skill, content, sourceJson = sourceContent(skill), suppor
     mkdirSync(dirname(target), { recursive: true });
     writeFileSync(target, file.content, "utf8");
   }
-  writeFileSync(join(skillDir, "SOURCE.json"), sourceJson, "utf8");
 }
 
 async function updateSkill(skill, checkOnly) {
   if (!skill.source?.rawUrl) throw new Error(`${skill.id}: registry 缺少 source.rawUrl。`);
-  const content = normalize(await fetchText(skill.source.rawUrl));
+  const content = adaptSnapshotContent(skill, normalize(await fetchText(skill.source.rawUrl)));
   validateSkillContent(skill, content);
 
   const supportFiles = [];
@@ -169,7 +230,7 @@ async function updateSkill(skill, checkOnly) {
     if (!file.rawUrl) throw new Error(`${skill.id}: ${file.path} 缺少 rawUrl。`);
     supportFiles.push({
       path: file.path,
-      content: normalize(await fetchText(file.rawUrl)),
+      content: adaptSnapshotContent(skill, normalize(await fetchText(file.rawUrl))),
     });
   }
 
@@ -181,24 +242,14 @@ async function updateSkill(skill, checkOnly) {
     const supportCurrent = existsSync(supportTarget) ? normalize(readFileSync(supportTarget, "utf8")) : null;
     return supportCurrent !== file.content;
   });
-  const sourceFile = join(skillsRoot, skill.id, "SOURCE.json");
-  const currentSource = existsSync(sourceFile) ? readFileSync(sourceFile, "utf8") : null;
-  const nextSource = sourceContent(skill);
-  const sourceChanged =
-    !currentSource ||
-    JSON.stringify({ ...JSON.parse(currentSource), updatedAt: null }) !==
-      JSON.stringify({ ...JSON.parse(nextSource), updatedAt: null });
-
   if (checkOnly) {
-    console.log(`${changed || supportChanged || sourceChanged ? "有漂移" : "正常"} ${skill.id}`);
-    return changed || supportChanged || sourceChanged;
+    console.log(`${changed || supportChanged ? "有漂移" : "正常"} ${skill.id}`);
+    return changed || supportChanged;
   }
 
-  if (changed || supportChanged || sourceChanged) writeSnapshot(skill, content, nextSource, supportFiles);
-  console.log(
-    `${changed || supportChanged ? "已更新" : sourceChanged ? "已刷新来源信息" : "无变化"} ${skill.id}`,
-  );
-  return changed || supportChanged || sourceChanged;
+  if (changed || supportChanged) writeSnapshot(skill, content, supportFiles);
+  console.log(`${changed || supportChanged ? "已更新" : "无变化"} ${skill.id}`);
+  return changed || supportChanged;
 }
 
 async function main() {

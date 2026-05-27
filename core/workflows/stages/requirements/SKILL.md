@@ -14,9 +14,7 @@ description: SpecForge 内部需求技能。用于为 work item 生成清晰、�
 - `00-intake/prd.md`（存在时，作为产品意图输入，不是可测试需求的替代品）
 - `.specforge/core/standards/product.md`
 - `.specforge/core/standards/workflow.md`
-- 需要用户故事、INVEST、Given/When/Then 或故事拆分检查时读取 `.specforge/core/skills/user-story-writing/SKILL.md`
-- 需要验收标准样例时按需读取 `.specforge/core/skills/user-story-writing/references/acceptance-criteria-examples.md`
-- 需要拆分过大需求时按需读取 `.specforge/core/skills/user-story-writing/references/story-splitting.md`
+- 需要用户故事、3C、INVEST、Given/When/Then 或验收标准检查时读取 `.specforge/core/skills/user-stories/SKILL.md`
 - 相关 `.specforge/wiki/` 文件
 
 ## 写入
@@ -44,7 +42,7 @@ description: SpecForge 内部需求技能。用于为 work item 生成清晰、�
 
 第三方 skill 只提供检查视角，不改变 SpecForge artifact 格式：
 
-- `user-story-writing` 的用户故事 -> 写入 `目标用户与场景` 或功能需求来源说明。
+- `user-stories` 的用户故事 -> 写入 `目标用户与场景` 或功能需求来源说明。
 - Given/When/Then -> 写入 `验收标准`，并补充验证方式。
 - INVEST / Story splitting -> 用于判断需求是否过大；过大时建议拆 work item 或标记后续版本。
 - Definition of Done、故事点、Sprint、Assignee -> 不写入 requirements，最多转成验证或项目管理备注。

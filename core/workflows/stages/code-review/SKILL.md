@@ -54,6 +54,7 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
 6. **再做 Code Quality / Risk Review**
    - 只在 spec compliance 没有阻断偏离后，继续审查工程质量、安全、可维护性和测试证据。
    - 需要补充检查视角时，按 `.specforge/core/skills/ORCHESTRATION.md` 读取 `code-reviewer`，只加载相关 rule 文件，并把结论归一为本审查的 finding。
+   - `code-reviewer` 是风险清单，不是 gate 入口；不得复制其模板标题或用泛泛建议替代文件 / 行号 / 影响 / 修复方向。
 7. **对照 technical-design 影响面**
    - `yes` 影响面必须有对应代码 / 配置 / 文档变更和验证证据；若实现阶段决定不做，必须在 implementation report 中写明偏离、风险和退回路径。
    - `no` 影响面不得出现未经批准的真实 diff；例如 technical design 判定无数据影响，却新增 migration、schema、ORM model 或持久化字段。

@@ -21,6 +21,7 @@ description: SpecForge 内部 Wiki 同步技能。用于 closure 前判断 work 
 - `.specforge/core/standards/wiki.md`
 - `.specforge/core/standards/engineering.md`
 - `.specforge/core/standards/workflow.md`
+- `.specforge/core/standards/pc-ui-design-spec.md`（本次确认或落地 PC 端业务系统 UI 规范时）
 
 ## 写入
 
@@ -48,7 +49,7 @@ description: SpecForge 内部 Wiki 同步技能。用于 closure 前判断 work 
 | API、事件、Webhook、SDK 契约 | `api-<domain>.md` |
 | 核心实体、表、关系、状态、迁移注意事项 | `data-model.md` |
 | 环境、配置、启动、任务、发布、回滚、观测 | `operations.md` |
-| 稳定 UI 组件、token、设计系统、风格规则 | `design-system.md` |
+| 稳定 UI 组件、token、设计系统、风格规则、PC 端业务系统规范落地规则 | `design-system.md` |
 | 长期架构 / 产品 / 技术决策 | `decisions.md` |
 | 术语、缩写、领域语言 | `glossary.md` |
 | 已知风险、技术债、后续事项 | `risks.md` |
@@ -57,7 +58,7 @@ description: SpecForge 内部 Wiki 同步技能。用于 closure 前判断 work 
 
 ## 回写流程
 
-1. **收集候选事实**：从 PRD / requirements / technical_design / implementation report / verification report 提取长期有效事实。
+1. **收集候选事实**：从 PRD / requirements / ui_design / technical_design / implementation report / verification report 提取长期有效事实。
 2. **判定写入目标**：使用“判断维度”表选择唯一目标文件；一个知识项只维护一个 current 文件。
 3. **对照现有 wiki**：读取目标文件和 `index.md`，判断是更新当前事实、补充新章节，还是写 N/A。
 4. **处理冲突**：如果 artifact 与现有 wiki 冲突，以已批准并验证的最新 work item 为准；同时在 `decisions.md` 或目标文件中保留必要决策理由。
@@ -72,6 +73,7 @@ description: SpecForge 内部 Wiki 同步技能。用于 closure 前判断 work 
 - 同一知识项不得存在多个 current 文件；不得创建日期版、work item 版或 v2 版 wiki。
 - 说明没有更新的理由。
 - 写明契约变化、下游重新验证要求和来源证据。
+- 本次若确认或实现了 PC 端业务系统 UI 规范，写明是否更新 `design-system.md`；不更新时说明该规范是否只是一次性页面约束。
 - 更新 `.specforge/wiki/index.md` 的当前知识项、摘要和最后同步时间。
 
 ## 停止条件

@@ -16,7 +16,7 @@
 
 | 优先级 | Provider 类型 | 代表工具 | 用途 |
 |---|---|---|---|
-| 1 | 图谱 / MCP / SCIP 类代码智能 | codebase-memory-mcp、CodeGraphContext | 大型项目主索引器，用于查询模块、符号、调用链、依赖、入口关系 |
+| 1 | 图谱 / MCP / SCIP 类代码智能 | CodeGraph、codebase-memory-mcp、CodeGraphContext | 大型项目主索引器，用于查询模块、符号、调用链、依赖、入口关系 |
 | 2 | 模块上下文打包 | Repomix | 中型项目或已限定模块的上下文包，不用于全仓主索引 |
 | 3 | 内置 bootstrap map | `codebase-map.mjs` | 小项目和所有项目的第一层粗地图 / fallback |
 | 4 | 文本搜索 | `rg` | 在已限定范围内验证事实、定位定义和引用 |
@@ -50,6 +50,19 @@ node .specforge/core/scripts/codebase-index.mjs --provider repomix --module src/
 - Provider 原始输出只能作为证据，不能直接粘贴进 wiki。
 - `normalized_context` 是后续 wiki 回写的输入边界。
 
+### CodeGraph
+
+[CodeGraph](https://github.com/colbymchenry/codegraph) 是推荐的一等 graph provider：本地 SQLite 代码知识图谱，支持 Codex MCP、Claude Code、Cursor 等 agent，能通过 `codegraph_context`、`codegraph_trace`、`codegraph_impact`、`codegraph_explore`、`codegraph_status` 等工具查询符号关系、调用链、影响面和相关源码。
+
+SpecForge 中的使用规则：
+
+- `codebase-index.mjs` 检测到 `codegraph` CLI 时，将其视为 graph provider。
+- 项目未安装或未初始化 CodeGraph 时，先展示 `install_options`，询问用户是否要由 Agent 辅助安装 / 初始化；用户确认后再按当前 OS 执行安装、`codegraph init -i` 和 `codegraph status`。
+- macOS / Linux 使用 `curl -fsSL https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh | sh`；Windows 使用 `irm https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.ps1 | iex`；若用户不想执行远程脚本，可改用 `npx @colbymchenry/codegraph`。
+- steering 时先用 `codegraph_status` 检查索引健康；若有 pending sync，等待同步或运行 `codegraph sync` 后再下结论。
+- 分析新需求或 bug 时优先用 `codegraph_context` 定位模块和入口，再用 `codegraph_trace` / `codegraph_impact` 分析调用链和影响面，最后只读取必要文件验证事实。
+- CodeGraph 输出仍是证据来源，进入 `.specforge/wiki/*.md` 前必须改写为当前事实。
+
 ## 规模策略
 
 | 规模 | 推荐策略 | 停止条件 |
@@ -76,6 +89,7 @@ node .specforge/core/scripts/codebase-index.mjs --provider repomix --module src/
 当 `codebase-index.mjs` 输出 `blocked_large_without_provider`：
 
 1. 停止全仓扫描。
-2. 询问用户是否安装 codebase-memory-mcp / CodeGraphContext，或指定目标模块、业务域、报错路径。
-3. 用户指定范围后，可以用 bootstrap map + `rg` 做局部理解。
-4. 后续 work item 只加载相关 wiki 和相关文件。
+2. 展示 `codebase-index.mjs` 输出的 `install_options`，优先建议 CodeGraph，并说明当前系统对应安装命令。
+3. 询问用户是否要 Agent 辅助安装；用户确认后自动执行安装、初始化、状态检查和 `codebase-index` 复查。
+4. 如果用户不安装 provider，询问目标模块、业务域、报错路径；用户指定范围后，可以用 bootstrap map + `rg` 做局部理解。
+5. 后续 work item 只加载相关 wiki 和相关文件。

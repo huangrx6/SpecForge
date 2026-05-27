@@ -11,91 +11,102 @@ description: 生成或更新 SpecForge work item 的 UI design；用于 ready ar
 
 ## 运行模式检测
 
-1. 当前目录向上存在 `.specforge/` 且有 active work item：**Embedded 模式**，按 artifact graph 写入 `01-spec/ui-design.md`，并按 Pencil 证据要求推进。
+1. 当前目录向上存在 `.specforge/` 且有 active work item：**Embedded 模式**，按 artifact graph 写入 `01-spec/ui-design.md`，并产出 Pencil 证据。
 2. 存在 `.specforge/` 但无 active work item：**Lightweight 模式**，可先做 UI 方向访谈、页面地图和状态矩阵草稿；需要落档时输出 `specforge-import-ready.md` 格式内容，或先路由 `sf-intake` 创建 work item。
-3. 不存在 `.specforge/`：**Standalone 模式**，不要运行 `.specforge/...` 命令或调用 `.specforge` 下的 Pencil 脚本；先和用户确认设计方向，输出可导入的 `specforge-import-ready.md` 格式内容。Standalone 草稿不等同于正式 Pencil 证据。
+3. 不存在 `.specforge/`：**Standalone 模式**，不要运行 `.specforge/...` 命令或调用 `.specforge` 下的 Pencil 脚本；输出可导入的 `specforge-import-ready.md`。Standalone 草稿不等同于正式 Pencil 证据。
 
-把 requirements 中的用户可见体验转成可审查的 UI 设计证据。它不写技术架构、不写 API、不写数据库设计。
+`sf-ui-design` 把 requirements 中的用户可见体验转成可审查的 UI 设计证据。它不写技术架构、API、数据库设计或实现任务。
 
 SpecForge 固定使用 **Pencil** 做正式 UI 原型。Figma、HTML、ASCII、截图、竞品和第三方设计 skill 只能作为参考输入；最终必须归一为 `01-spec/ui-design.md`、`01-spec/ui-mockup.pen` 和 `01-spec/ui-mockup-export/*.png`。
 
-## 启动
+## 必读
 
-运行：
+- `references/ui-design-playbook.md`：UI 方向访谈、第三方 UX / Pencil reference 编排、Pencil 保存门禁、视觉 review 和完成标准。
+- `references/pc-business-ui-template.md`：PC 端业务系统 UI 规范模板。用户提供或确认该规范、或项目是后台 / 管理系统 / 数据管理工具时读取。
+- `.specforge/core/workflows/stages/ui-design/SKILL.md`：内部 UI 设计母本。
+- `.specforge/core/artifacts/templates/ui-design.md`：写入骨架。
+- `.specforge/core/standards/product.md`、`.specforge/core/standards/design.md`、`.specforge/core/standards/workflow.md`、`.specforge/core/standards/engineering.md`。
+- PC 端业务系统场景还要读取 `.specforge/core/standards/pc-ui-design-spec.md`；该文件的具体数值优先于通用 `design.md` 基准。
+- `.specforge/core/skills/ORCHESTRATION.md`、`README.md`、`registry.json`：第三方 skill 选择、边界和来源风险。
+- 需要操作 Pencil 时读取 `.specforge/core/skills/pencil/SKILL.md`，再按需读取其 `references/*.md`。
+
+## 启动扫描
+
+1. 运行：
 
 ```bash
 node .specforge/core/scripts/instructions.mjs
 ```
 
-如果输出是 `Instructions blocked`，必须按 `Route` 处理阻断。尤其当 blocker 为 `ui-direction-unconfirmed` 时，停止 UI design，路由到 `sf-brainstorm`，只向用户确认体验方向；不要运行 `create-artifact.mjs ui_design`，不要调用 Pencil。
-
-确认 ready artifact 包含 `ui_design` 且没有阻断后，再：
+2. 如果输出是 `Instructions blocked`，按 `Route` 处理阻断。尤其当 blocker 为 `ui-direction-unconfirmed` 时，停止 UI design，路由到 `sf-brainstorm`，只确认体验方向。
+3. 确认 ready artifact 包含 `ui_design` 且没有阻断后，再运行：
 
 ```bash
 node .specforge/core/scripts/create-artifact.mjs ui_design
 ```
 
-## 内部技能母本
+4. 读取 `00-intake/brief.md`、`00-intake/prd.md`（如果存在）、`00-intake/brainstorm.md`（如果存在）、`01-spec/requirements.md`、现有页面 / 组件库 / 设计系统 / 用户提供的参考材料。
 
-写 UI design 前，读取：
+## 执行序列
 
-```text
-.specforge/core/workflows/stages/ui-design/SKILL.md
-```
+### A. 判断 UI 影响
 
-## 关联标准
+1. 判断本 work item 是否有页面、组件、角色视图、流程、文案、状态、响应式或可访问性变化。
+2. 无 UI 影响时，在 `01-spec/ui-design.md` 写 N/A、理由和验证方式，然后停止。
+3. 有 UI 影响时，先检查 UI 方向是否已由用户、现有设计系统或明确低风险默认确认。
 
-- `.specforge/core/standards/product.md`：页面和流程必须追溯到已确认需求。
-- `.specforge/core/standards/design.md`：视觉风格、页面地图、用户流程、状态矩阵和 Pencil 证据。
-- `.specforge/core/standards/workflow.md`：UI 范围、非目标和 gate 边界。
-- `.specforge/core/standards/engineering.md`：UI 验证矩阵和 evidence 要求。
-- `core/skills/pencil/SKILL.md`：Pencil 文件创建、修改、导出和截图自检。
-- `.specforge/core/skills/ORCHESTRATION.md`：第三方 UX / UI 参考的选择、边界和归一化要求。
+### B. 对齐体验方向
 
-## 第三方 Skill 联动
+1. 按 `references/ui-design-playbook.md#UI 设计访谈` 列出 `已确认 / 高影响未知 / 可安全默认`。
+2. 没有现成设计系统或确认方向时，给 2-3 个互斥体验方向、推荐项和取舍；如果方向会影响信息架构、核心流程或视觉气质，先路由 `sf-brainstorm`。
+3. 用户确认后，立即在上游 artifact 或 `ui-design.md` 写入 `[UI DECISION CONFIRMED]` 或 `UI Direction Status: confirmed`，并记录来源。
+4. 用户未确认体验方向前，不创建 Pencil 原型，不写完整页面方案。
 
-UI design 的正式交付仍是 `01-spec/ui-design.md`、Pencil `.pen` 和导出截图。需要补充用户研究、信息架构、交互流程、微文案、可访问性或视觉层级检查时，按需读取 `.specforge/core/skills/ux-designer/SKILL.md`。
+### C. 写 UI design
 
-- 总览读 `.specforge/core/skills/ux-designer/AGENTS.md`。
-- 只在需要时读取相关 `rules/*.md`，例如 `research.md`、`information-architecture.md`、`interaction-design.md`、`accessibility.md` 或 `visual-design.md`。
-- 第三方建议必须改写进 SpecForge 的 UI artifact；不要把 persona、模板标题或设计流程原样当作已确认需求。
+1. 写 Visual Style Brief、页面地图、信息架构、用户流程、微文案、状态矩阵、无障碍预审和明确不做项。
+2. 若采用 PC 端业务系统模板，按 `references/pc-business-ui-template.md` 填写 `ui-design.md#4` 的设计系统来源、核心 token、页面结构和组件约束。
+3. 第三方 skill 只作为参考镜头，按 `references/ui-design-playbook.md#第三方 Skill 和 Reference 编排` 归一化到 SpecForge 结构。
+4. 每个参考产品、截图或设计稿都要写“采用什么、不采用什么、如何落地”。
 
-## 执行要点
+### D. 创建、保存并校验 Pencil
 
-1. 先判断是否有 UI 影响；没有时写 N/A、理由和验证方式。
-2. 有 UI 影响时，先做 UI 设计访谈，再画原型；这一步是硬门槛，不是开场白：
-   - 列出 `已确认 / 高影响未知 / 可安全默认`。
-   - 没有现成设计系统时，给 2-3 个互斥体验方向，写推荐项和取舍；如果会影响信息架构、核心流程或视觉方向，先路由到 `sf-brainstorm` 等用户确认后再画 Pencil。
-   - 每轮只问会改变 UI 的关键问题，避免把用户拖进工具选择。
-   - 用户未确认体验方向前，不得自行宣布“我将使用某某风格”并开始设计。推荐项必须标为 Agent recommendation，不能写成用户选择。
-   - 用户确认后，在 `00-intake/brainstorm.md`、`00-intake/brief.md`、`00-intake/prd.md` 或 `01-spec/requirements.md` 中留下 `[UI DECISION CONFIRMED]` 或 `UI Direction Status: confirmed`。
-   - 如果需要用户在多个体验方向中取舍，退回 `sf-brainstorm`；`ux-designer` 在此阶段只用于细化已确认方向，不用于绕过确认。
-3. 用户提供示例设计、截图、规范、Figma 或参考产品时，必须先提取设计语言并写入 Visual Style Brief，再做页面方案。
-4. 写页面地图、角色流程、状态矩阵、明确不做项和 UI 验证策略。
-5. 使用 Pencil 创建或更新原型：
-   - 输出 `01-spec/ui-mockup.pen`。
-   - 导出关键截图到 `01-spec/ui-mockup-export/`。
-   - 空 `.pen` / 空画布最多读取一次；确认空后立即创建第一屏，禁止空读循环。
-   - Pencil 连续创建失败 2 次时停止并记录阻断原因，不把 HTML / ASCII 当正式替代。
-6. 有 Pencil 截图后必须做视觉质量 review 并修一轮：
-   - 检查信息层级、间距、对齐、密度、色彩、组件一致性、状态反馈、响应式和可访问性。
-   - 记录发现、修改动作和最终结论。
+1. 使用 Pencil 创建或更新 `01-spec/ui-mockup.pen`，截图目录固定为 `01-spec/ui-mockup-export/`。
+2. 空 `.pen` / 空画布最多读取一次；确认空后立即创建第一屏，禁止空读循环。
+3. 每次完成 `pencil_batch_design` 后，必须执行 `references/ui-design-playbook.md#Pencil 保存与重读门禁`：保存 / 持久化、重新打开或重读目标 `.pen`、确认第一屏非空，再导出截图。
+4. 保存后重读失败、`.pen` 仍为空、或连续创建失败 2 次时，停止并记录阻断原因；不得把 HTML / ASCII 当正式替代。
+
+### E. Review 和路由
+
+1. 基于导出截图做视觉质量 review，并至少修一轮 Pencil。
+2. 把 review 发现、修改动作、保存后重读证据和最终结论写入 `ui-design.md`。
+3. 运行 `node .specforge/core/scripts/instructions.mjs`，按 ready artifact 路由到 `sf-tech-design` 或 `sf-tasking`。
+
+## 判定表
+
+| 条件 | 状态 |
+|---|---|
+| `instructions.mjs` 返回 `ui-direction-unconfirmed` | 停止：路由 `sf-brainstorm` |
+| 关键体验方向、页面范围或角色流程尚未确认，且默认假设风险高 | 停止：提问或路由 `sf-brainstorm` |
+| 第三方 skill 输出未归一化到 SpecForge artifact | 停止：先归一化 |
+| Pencil 原型未保存、保存后重读失败或 `.pen` 仍为空 | 停止：记录阻断，不进入后续阶段 |
+| 有 UI 影响但没有 `.pen`、导出截图或明确 Pencil 阻断原因 | 停止 |
+| 原型与 requirements 的角色、流程、权限或异常态不一致 | 停止：修正 |
 
 ## 完成标准
 
 - `01-spec/ui-design.md` 存在。
-- 有 UI 影响时，包含 Visual Style Brief、体验方向确认或默认假设、页面地图、流程、状态矩阵。
-- UI 方向确认必须可追溯到用户答案、现有设计系统或明确低风险默认；不能只写 Agent 自己的设计偏好。
-- 如果体验方向曾经进入 brainstorm，`ui-design.md` 必须引用 `00-intake/brainstorm.md` 的用户确认。
-- 有 UI 影响时，存在 `01-spec/ui-mockup.pen` 和 `01-spec/ui-mockup-export/*.png`，或明确 Pencil 阻断原因。
-- 有可视原型时，包含视觉质量 review、截图级证据和至少一轮修正记录。
-- 无 UI 影响时，明确写出 N/A、理由和验证方式。
-- 下一步路由到 `sf-tech-design` 或 `sf-tasking`，以 `instructions.mjs` 为准。
+- 有 UI 影响时，包含 Visual Style Brief、确认来源、页面地图、流程、状态矩阵、微文案、无障碍自查和明确不做项。
+- UI 方向确认可追溯；Agent recommendation 不能伪装成用户选择。
+- 有 UI 影响时，存在非空且保存后可重读的 `01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/*.png`，或明确 Pencil 阻断原因。
+- `ui-design.md#9. Pencil 原型证据` 记录 Pencil 保存状态、保存后重读校验和截图证据。
+- 有可视原型时，包含视觉质量 review 和至少一轮修正记录。
+- 下一步路由以 `instructions.mjs` 为准。
 
 ## 不做
 
 - 不写业务代码。
-- 不把前后端架构、API、数据迁移写进 UI design。
+- 不写前后端架构、API、数据迁移或部署设计。
 - 不让用户选择 Figma / HTML / ASCII / Pencil 等工具通道；工具固定为 Pencil。
 - 不在 implementation 阶段重新发明视觉风格。
 - 不在用户尚未确认 UI / 视觉 / 体验方向时创建 Pencil 原型或填充完整 UI design。

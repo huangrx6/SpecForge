@@ -253,6 +253,22 @@ UI design 不是“控件摆上去就算完成”。有 UI 影响时，必须留
 
 SpecForge 项目的 UI 不接受"默认灰白表单"。有 UI 影响时，必须从以下基准中选择或基于用户参考产品定制。
 
+### PC 端业务系统固定规范
+
+当项目是 PC 端业务系统、运营后台、管理控制台、数据表格工具，或用户明确提供 PC 端 UI 规范时，读取 `pc-ui-design-spec.md`，并让该文件的具体数值覆盖本节后续通用基准。
+
+采用该规范时，`ui-design.md#4 Visual Style Brief` 必须写明：
+
+- 规范来源：`.specforge/core/standards/pc-ui-design-spec.md`。
+- 基准画布：`1920x920px`。
+- App shell：顶部导航 `64px`，侧边导航 `208px` / 缩进 `68px`，模块间距 `16px`。
+- 主色：`#277DEA`；hover `#4998FC`；active `#1D6BD0`。
+- 控件与组件：按钮 / 输入 / 选择器 `32px`，圆角 `8px`，表格行高 `46px`，弹窗最小宽 `520px`，抽屉 `480 / 720 / 960px`。
+- 字体：中文 `"阿里巴巴普惠体 3.0", "Alibaba PuHuiTi 3.0", sans-serif`，英文/数字 `"D-DIN EXP", "DIN", monospace`。
+- HTML/CSS 约束：必须使用规范 token；可用 UI 库但必须覆盖主题 token；不得用 emoji 图标；不得擅自引入渐变、毛玻璃、营销页 hero 或未确认的大圆角风格。
+
+若现有项目设计系统与 `pc-ui-design-spec.md` 冲突，以项目设计系统为准，但必须在 `ui-design.md` 写明偏离原因、替代 token 和验证方式。
+
 ### 产品类型与默认风格基准
 
 | 产品类型 | 风格基调 | 颜色模式 | 密度 | 参考产品 |

@@ -1,283 +1,205 @@
 ---
-name: "pencil"
-description: "用于通过 Pencil MCP 读取/修改 .pen 设计文件并校验布局。用户提到 pencil/.pen/设计稿编辑、需要列出工具或执行 batch_get/batch_design 时调用。"
+name: pencil-design
+description: Design UIs in Pencil (.pen files) and generate production code from them. Use when working with .pen files, designing screens or components in Pencil, or generating code from Pencil designs. Triggers on tasks involving Pencil, .pen files, design-to-code workflows, or UI design with the Pencil MCP tools.
+metadata:
+  author: Nyasha Chiroro
+  version: "1.0"
 ---
 
-# Pencil（MCP：pencil）
+# Pencil Design Skill
 
-本 Skill 负责与 Pencil MCP Server 交互，读取/编辑加密的 `.pen` 设计文件，并提供可复制的调用模板与最佳实践。
+Design production-quality UIs in Pencil and generate clean, maintainable code from them. This skill enforces best practices for design system reuse, variable usage, layout correctness, visual verification, and design-to-code workflows.
 
-## 关键边界与安全规则
+## When to Use This Skill
 
-- `.pen` 文件内容是加密的：禁止用普通文件读取/搜索方式解析 `.pen` 内容；只能通过 pencil MCP tools 访问与修改。
-- 优先“先读后写”：写入前先用 `get_editor_state` / `batch_get` 了解当前文档结构与选区。
-- `batch_design` 单次最多 25 条操作；超过时按“结构→内容→样式→验收”拆分多次执行。
-- 任何会造成大范围变更的能力（`replace_all_matching_properties`、大批量 `batch_design`）都必须先输出变更计划，再执行。
+- Designing screens, pages, or components in a `.pen` file
+- Generating code (React, Next.js, Vue, Svelte, HTML/CSS) from Pencil designs
+- Building or extending a design system in Pencil
+- Syncing design tokens between Pencil and code (Tailwind v4 `@theme`, shadcn/ui tokens)
+- Importing existing code into Pencil designs
+- Working with any Pencil MCP tools (`pencil_batch_design`, `pencil_batch_get`, etc.)
 
-## MCP Server 配置（参考）
+## Critical Rules
 
-```json
-{
-  "pencil": {
-    "name": "pencil",
-    "transport": "stdio",
-    "command": "/Users/wandl/.trae/extensions/highagency.pencildev-0.6.15-universal/out/mcp-server-darwin-arm64",
-    "args": ["--ws-port", "61405"],
-    "env": {}
-  }
-}
+These rules address the most common agent mistakes. Violating them produces designs that are inconsistent, hard to maintain, and generate poor code.
+
+### Rule 1: Always Reuse Design System Components
+
+**NEVER recreate a component from scratch when one already exists in the design file.**
+
+Before inserting any element, you MUST:
+1. Call `pencil_batch_get` with `patterns: [{ reusable: true }]` to list all available reusable components
+2. Search the results for a component that matches what you need (button, card, input, nav, etc.)
+3. If a match exists, insert it as a `ref` instance using `I(parent, { type: "ref", ref: "<componentId>" })`
+4. Customize the instance by updating its descendants with `U(instanceId + "/childId", { ... })`
+5. Only create a new component from scratch if no suitable reusable component exists
+
+See [references/design-system-components.md](references/design-system-components.md) for detailed workflow.
+
+### Rule 2: Always Use Variables Instead of Hardcoded Values
+
+**NEVER hardcode colors, border radius, spacing, or typography values when variables exist.**
+
+Before applying any style value, you MUST:
+1. Call `pencil_get_variables` to read all defined design tokens
+2. Map your intended values to existing variables (e.g., use `primary` not `#3b82f6`, use `radius-md` not `6`)
+3. Apply values using variable references, not raw values
+4. When generating code, use Tailwind v4 semantic utility classes (e.g., `bg-primary`, `text-foreground`, `rounded-md`). NEVER use arbitrary value syntax (`bg-[#3b82f6]`, `text-[var(--primary)]`, `rounded-[6px]`)
+
+See [references/variables-and-tokens.md](references/variables-and-tokens.md) for detailed workflow.
+
+### Rule 3: Prevent Text and Content Overflow
+
+**NEVER allow text or child elements to overflow their parent or the artboard.**
+
+For every text element and container:
+1. Set appropriate text wrapping and truncation
+2. Constrain widths to parent bounds, especially on mobile screens (typically 375px wide)
+3. Use `"fill_container"` for width on text elements inside auto-layout frames
+4. After inserting content, call `pencil_snapshot_layout` with `problemsOnly: true` to detect clipping/overflow
+5. Fix any reported issues before proceeding
+
+See [references/layout-and-text-overflow.md](references/layout-and-text-overflow.md) for detailed workflow.
+
+### Rule 4: Visually Verify Every Section
+
+**NEVER skip visual verification after building a section or screen.**
+
+After completing each logical section (header, hero, sidebar, form, card grid, etc.):
+1. Call `pencil_get_screenshot` on the section or full screen node
+2. Analyze the screenshot for: alignment issues, spacing inconsistencies, text overflow, visual glitches, missing content
+3. Call `pencil_snapshot_layout` with `problemsOnly: true` to catch clipping and overlap
+4. Fix any issues found before moving to the next section
+5. Take a final full-screen screenshot when the entire design is complete
+
+See [references/visual-verification.md](references/visual-verification.md) for detailed workflow.
+
+### Rule 5: Reuse Existing Assets (Logos, Icons, Images)
+
+**NEVER generate a new logo or duplicate asset when one already exists in the document.**
+
+Before generating any image or logo:
+1. Call `pencil_batch_get` and search for existing image/logo nodes by name pattern (e.g., `patterns: [{ name: "logo|brand|icon" }]`)
+2. If a matching asset exists elsewhere in the document (another artboard/screen), copy it using the `C()` (Copy) operation
+3. Only use the `G()` (Generate) operation for genuinely new images that don't exist anywhere in the document
+4. For logos specifically: always copy from an existing instance, never regenerate
+
+See [references/asset-reuse.md](references/asset-reuse.md) for detailed workflow.
+
+### Rule 6: Align With Confirmed SpecForge UI Direction
+
+**NEVER design in Pencil or generate code from Pencil before reading the confirmed UI direction and SpecForge design standards.**
+
+SpecForge does not vendor the upstream `frontend-design` skill. Instead, you MUST:
+1. Read the confirmed UI direction from `brainstorm.md`, `brief.md`, or `ui-design.md`
+2. Read `.specforge/core/standards/design.md` and the active `sf-ui-design` guidance
+3. If the UI direction is still unconfirmed, stop and route back to `sf-brainstorm`
+4. Apply the confirmed typography, color, density, motion, and interaction choices when designing in Pencil or generating code
+5. Never produce generic AI aesthetics or invent a new visual direction without user confirmation
+
+### Rule 7: Persist and Re-read SpecForge `.pen` Handoffs
+
+**NEVER treat a Pencil design as complete until the target `.pen` file has been saved and re-read successfully.**
+
+For SpecForge UI design handoffs, you MUST:
+1. Write the design to the target `01-spec/ui-mockup.pen` file path
+2. After every `pencil_batch_design`, perform the available save / persistence action; if no standalone save tool exists, immediately re-open or re-read the target file
+3. Use `pencil_open_document`, `pencil_get_editor_state`, or `pencil_batch_get` to confirm the saved file contains at least one non-empty screen / frame / artboard
+4. Only export screenshots after the saved file has passed re-read verification
+5. If the file is still empty or cannot be re-read after two attempts, stop and record a Pencil persistence blocker instead of handing off an empty `.pen`
+
+## Design Workflow
+
+### Starting a New Design
+
+```
+0. Read confirmed SpecForge UI direction   -> Get aesthetic direction and design quality standards
+1. pencil_get_editor_state        -> Understand file state, get schema
+2. pencil_batch_get (reusable)    -> Discover design system components
+3. pencil_get_variables           -> Read design tokens
+4. pencil_get_guidelines          -> Get relevant design rules
+5. pencil_get_style_guide_tags    -> (optional) Get style inspiration
+6. pencil_get_style_guide         -> (optional) Apply style direction
+7. pencil_find_empty_space_on_canvas -> Find space for new screen
+8. pencil_batch_design            -> Build the design (section by section)
+9. Re-open / re-read target .pen   -> Confirm saved file is non-empty
+10. pencil_get_screenshot         -> Verify each section visually
+11. pencil_snapshot_layout        -> Check for layout problems
 ```
 
-## 使用流程（推荐）
+### Building Section by Section
 
-1. `get_editor_state(include_schema=false)`：确认当前是否已打开 `.pen`、当前选区。
-2. 如无文档：`open_document(filePathOrTemplate)` 打开或新建。
-3. 读结构：`batch_get(...)` 获取目标节点树、组件、变量等。
-4. 设计/修改：`batch_design(filePath, operations)`（≤25 ops/次）。
-5. 验收：`snapshot_layout(...)` 检查布局问题；必要时 `get_screenshot(...)` 截图复核。
+For each section of a screen (header, content area, footer, sidebar, etc.):
 
-## 工具列表（Tools）与主要参数用途
+1. **Plan** - Identify which design system components to reuse
+2. **Build** - Insert components as `ref` instances, apply variables for styles
+3. **Verify** - Screenshot the section + check layout for problems
+4. **Fix** - Address any overflow, alignment, or spacing issues
+5. **Proceed** - Move to the next section only after verification passes
 
-以下为 pencil MCP 当前支持的工具（prompts/resources 不支持）。
+### Design-to-Code Workflow
 
-### 1) get_editor_state
+See [references/design-to-code-workflow.md](references/design-to-code-workflow.md) for the complete workflow.
+See [references/tailwind-shadcn-mapping.md](references/tailwind-shadcn-mapping.md) for the full Pencil-to-Tailwind mapping table.
+See [references/responsive-breakpoints.md](references/responsive-breakpoints.md) for multi-artboard responsive code generation.
 
-- 用途：获取当前编辑器状态、激活文档、当前选中节点等上下文。
-- 参数：
-  - `include_schema: boolean`：是否附带 `.pen` schema。
-- 调用模板：
+Summary:
+1. Read the confirmed SpecForge UI direction for aesthetic direction
+2. Call `pencil_get_guidelines` with topic `"code"` and `"tailwind"`
+3. Call `pencil_get_variables` to map design tokens to Tailwind `@theme` declarations
+4. Read the design tree with `pencil_batch_get`
+5. Map reusable Pencil components to shadcn/ui components (Button, Card, Input, etc.)
+6. Generate code using semantic Tailwind classes (`bg-primary`, `rounded-md`), never arbitrary values
+7. Apply SpecForge UI design guidance: distinctive typography, intentional color, motion, spatial composition
+8. Use CVA for custom component variants, `cn()` for class merging, Lucide for icons
 
-```json
-{ "name": "get_editor_state", "arguments": { "include_schema": false } }
-```
+## MCP Tool Quick Reference
 
-### 2) open_document
+| Tool | When to Use |
+|------|-------------|
+| `pencil_get_editor_state` | First call - understand file state and get .pen schema |
+| `pencil_batch_get` | Read nodes, search for components (`reusable: true`), inspect structure |
+| `pencil_batch_design` | Insert, copy, update, replace, move, delete elements; generate images |
+| `pencil_get_variables` | Read design tokens (colors, radius, spacing, fonts) |
+| `pencil_set_variables` | Create or update design tokens |
+| `pencil_get_screenshot` | Visual verification of any node |
+| `pencil_snapshot_layout` | Detect clipping, overflow, overlapping elements |
+| `pencil_get_guidelines` | Get design rules for: `code`, `table`, `tailwind`, `landing-page`, `design-system` |
+| `pencil_find_empty_space_on_canvas` | Find space for new screens/frames |
+| `pencil_get_style_guide_tags` | Browse available style directions |
+| `pencil_get_style_guide` | Get specific style inspiration |
+| `pencil_search_all_unique_properties` | Audit property values across the document |
+| `pencil_replace_all_matching_properties` | Bulk update properties (e.g., swap colors) |
+| `pencil_open_document` | Open a .pen file or create a new document |
 
-- 用途：打开或创建 `.pen` 文件。
-- 参数：
-  - `filePathOrTemplate: string`：`.pen` 文件路径或 `"new"`。
-- 调用模板：
+## Common Mistakes to Avoid
 
-```json
-{ "name": "open_document", "arguments": { "filePathOrTemplate": "new" } }
-```
+| Mistake | Correct Approach |
+|---------|-----------------|
+| Creating a button from scratch | Search for existing button component, insert as `ref` |
+| Using `fill: "#3b82f6"` | Use the variable: reference `primary` or the corresponding variable |
+| Using `cornerRadius: 8` | Use the variable: reference `radius-md` or the corresponding variable |
+| Generating `bg-[#3b82f6]` in code | Use semantic Tailwind class: `bg-primary` |
+| Generating `text-[var(--primary)]` in code | Use semantic Tailwind class: `text-primary` |
+| Generating `rounded-[6px]` in code | Use semantic Tailwind class: `rounded-md` |
+| Using `var(--primary)` in className | Use semantic Tailwind class: `bg-primary` or `text-primary` |
+| Not checking for overflow | Call `pencil_snapshot_layout(problemsOnly: true)` after every section |
+| Skipping screenshots | Call `pencil_get_screenshot` after every section |
+| Assuming `.pen` saved because a design tool call succeeded | Re-open or re-read the target `.pen` and confirm it contains a non-empty screen before screenshots or handoff |
+| Generating a new logo | Copy existing logo from another artboard with `C()` |
+| Building entire screen, then checking | Build and verify section by section |
+| Ignoring `pencil_get_guidelines` | Always call it for the relevant topic before starting |
+| Using `tailwind.config.ts` | Use CSS `@theme` block (Tailwind v4) |
+| Using Material Icons in code | Map to Lucide icons (`<Search />`, `<ArrowRight />`, etc.) |
+| Skipping confirmed UI direction | Always read confirmed UI direction before designing in Pencil or generating code |
+| Generic AI aesthetics (Inter font, purple gradients) | Follow SpecForge UI design guidance for distinctive, intentional design |
 
-### 3) batch_get
+## Resources
 
-- 用途：批量读取/搜索节点（读结构、读组件、读实例）。
-- 关键参数：
-  - `filePath: string`（必填）
-  - `nodeIds?: string[]`：按 ID 读取
-  - `parentId?: string`：限定在某节点子树内搜索
-  - `patterns?: object[]`：按模式搜索（如 `name` 正则、`type`、`reusable`）
-  - `includePathGeometry?: boolean`：是否返回完整 path 几何（默认会用 `...` 缩略）
-  - `readDepth?: number`：读取展开深度（建议 ≤3）
-  - `searchDepth?: number`：搜索深度
-  - `resolveInstances?: boolean`：展开实例
-  - `resolveVariables?: boolean`：解析变量为当前值
-- 调用模板（按 pattern 搜索可复用组件）：
-
-```json
-{
-  "name": "batch_get",
-  "arguments": {
-    "filePath": "designs/app.pen",
-    "patterns": [{ "reusable": true }],
-    "readDepth": 2,
-    "searchDepth": 3
-  }
-}
-```
-
-### 4) batch_design
-
-- 用途：批量执行插入/复制/更新/替换/移动/删除/图片等操作。
-- 关键参数：
-  - `filePath: string`（必填）
-  - `operations: string`（必填）：操作脚本（每行一个 op，可绑定变量名；≤25 ops/次）。
-- 调用模板（示意）：
-
-```json
-{
-  "name": "batch_design",
-  "arguments": {
-    "filePath": "designs/app.pen",
-    "operations": "root=G()\\nframe=I(root,{type:\\\"frame\\\",name:\\\"Home\\\"})\\nU(frame,{width:390,height:844})"
-  }
-}
-```
-
-### 5) snapshot_layout
-
-- 用途：检查布局结构与常见问题（重叠、裁剪等），可只返回问题节点。
-- 关键参数：
-  - `filePath: string`（必填）
-  - `parentId?: string`：仅检查子树
-  - `maxDepth?: number`：检查深度
-  - `problemsOnly?: boolean`：仅输出有问题的节点
-- 调用模板：
-
-```json
-{
-  "name": "snapshot_layout",
-  "arguments": { "filePath": "designs/app.pen", "maxDepth": 2, "problemsOnly": true }
-}
-```
-
-### 6) get_screenshot
-
-- 用途：对指定节点截图（视觉验收）。
-- 参数：
-  - `filePath: string`（必填）
-  - `nodeId: string`（必填）
-- 调用模板：
-
-```json
-{
-  "name": "get_screenshot",
-  "arguments": { "filePath": "designs/app.pen", "nodeId": "node_123" }
-}
-```
-
-### 7) get_guidelines
-
-- 用途：获取设计指南/规则。
-- 参数：
-  - `topic: \"code\" | \"table\" | \"tailwind\" | \"landing-page\" | \"design-system\"`（必填）
-- 调用模板：
-
-```json
-{ "name": "get_guidelines", "arguments": { "topic": "design-system" } }
-```
-
-### 8) get_style_guide_tags
-
-- 用途：获取可用风格标签集合。
-- 调用模板：
-
-```json
-{ "name": "get_style_guide_tags", "arguments": {} }
-```
-
-### 9) get_style_guide
-
-- 用途：按 tags 或 id 获取风格指南。
-- 参数（可选）：
-  - `tags?: string[]`
-  - `id?: string`
-- 调用模板：
-
-```json
-{ "name": "get_style_guide", "arguments": { "tags": ["mobile", "minimal", "fresh"] } }
-```
-
-### 10) get_variables
-
-- 用途：读取 `.pen` 文件的变量与主题（用于生成全局样式/代码映射）。
-- 参数：
-  - `filePath: string`（必填）
-- 调用模板：
-
-```json
-{ "name": "get_variables", "arguments": { "filePath": "designs/app.pen" } }
-```
-
-### 11) set_variables
-
-- 用途：更新 `.pen` 文件的变量与主题。
-- 参数：
-  - `filePath: string`（必填）
-  - `variables: object`（必填）
-  - `replace?: boolean`：是否全量替换（默认合并）。
-- 调用模板：
-
-```json
-{
-  "name": "set_variables",
-  "arguments": { "filePath": "designs/app.pen", "replace": false, "variables": {} }
-}
-```
-
-### 12) find_empty_space_on_canvas
-
-- 用途：在画布或某节点周边查找指定尺寸的空白区域。
-- 参数：
-  - `filePath: string`（必填）
-  - `width: number`（必填）
-  - `height: number`（必填）
-  - `padding: number`（必填）
-  - `direction: \"top\" | \"right\" | \"bottom\" | \"left\"`（必填）
-  - `nodeId?: string`：以某节点为参照（可选）
-- 调用模板：
-
-```json
-{
-  "name": "find_empty_space_on_canvas",
-  "arguments": {
-    "filePath": "designs/app.pen",
-    "width": 390,
-    "height": 844,
-    "padding": 24,
-    "direction": "right"
-  }
-}
-```
-
-### 13) search_all_unique_properties
-
-- 用途：统计指定子树里若干属性（颜色/字体/间距等）的唯一值集合，用于分析是否一致。
-- 参数：
-  - `filePath: string`（必填）
-  - `parents: string[]`（必填）
-  - `properties: string[]`（必填；枚举：fillColor/textColor/strokeColor/strokeThickness/cornerRadius/padding/gap/fontSize/fontFamily/fontWeight）
-- 调用模板：
-
-```json
-{
-  "name": "search_all_unique_properties",
-  "arguments": {
-    "filePath": "designs/app.pen",
-    "parents": ["root_frame"],
-    "properties": ["fillColor", "fontFamily", "fontSize"]
-  }
-}
-```
-
-### 14) replace_all_matching_properties
-
-- 用途：在指定子树里批量替换匹配属性（换色/换字体/调整间距等）。
-- 参数：
-  - `filePath: string`（必填）
-  - `parents: string[]`（必填）
-  - `properties: object`（必填）：按属性名提供 from/to 替换规则列表
-- 调用模板：
-
-```json
-{
-  "name": "replace_all_matching_properties",
-  "arguments": {
-    "filePath": "designs/app.pen",
-    "parents": ["root_frame"],
-    "properties": {
-      "fontFamily": [{ "from": "Inter", "to": "SF Pro" }],
-      "fontSize": [{ "from": 14, "to": 15 }]
-    }
-  }
-}
-```
-
-## 常见任务提示词（给大模型的执行指令模板）
-
-### A) “打开并分析当前设计结构”
-
-1) 调用 `get_editor_state(include_schema=false)` 获取 activeFilePath 与 selection  
-2) 用 `batch_get` 读取选中节点与其子树（readDepth=2）  
-3) 用 `snapshot_layout(problemsOnly=true)` 输出布局问题清单  
-4) 必要时 `get_screenshot` 对问题节点截图确认
-
-### B) “批量换主题/换字体/统一间距”
-
-1) `search_all_unique_properties` 先统计现状（输出唯一值集合与分布）  
-2) 提出变更计划（from→to 映射、影响范围、回滚策略）  
-3) `replace_all_matching_properties` 执行替换  
-4) `snapshot_layout` + `get_screenshot` 验收
+- [Pencil Docs](https://docs.pencil.dev)
+- [Pencil Prompt Gallery](https://www.pencil.dev/prompts)
+- [Design as Code](https://docs.pencil.dev/core-concepts/design-as-code)
+- [Variables](https://docs.pencil.dev/core-concepts/variables)
+- [Components](https://docs.pencil.dev/core-concepts/components)
+- [Design to Code](https://docs.pencil.dev/design-and-code/design-to-code)
+- [Styles and UI Kits](https://docs.pencil.dev/design-and-code/styles-and-ui-kits)

@@ -21,6 +21,7 @@
 - 来自 requirements：
 - 来自 PRD / brief / 用户澄清：
 - 现有页面 / 组件库 / 设计系统：
+- 设计规范 / 模板：
 - 参考产品 / 设计稿 / 截图 / Pencil / Figma：
 - 不确定项：
 
@@ -76,6 +77,24 @@
 | 动效范围 | |
 | 响应式策略 | |
 | 不采用 | |
+
+### 设计系统 / PC 业务系统规范
+
+> 若采用 `.specforge/core/standards/pc-ui-design-spec.md`，本节必须填完整；否则写 N/A。
+
+| 项 | 值 |
+|---|---|
+| 规范来源 | PC 端业务系统 UI 设计规范 / 现有项目设计系统 / N/A |
+| 适用原因 | 后台 / 管理系统 / 数据表格系统 / 用户明确指定 / N/A |
+| 画布与布局 | `1920x920px`; top nav `64px`; side nav `208px` / collapsed `68px`; module gap `16px` |
+| 字体 | 中文 `"阿里巴巴普惠体 3.0", "Alibaba PuHuiTi 3.0", sans-serif`; 英文/数字 `"D-DIN EXP", "DIN", monospace` |
+| 字号 / 行高 | `12/20`, `14/22`, `16/24`, `18/26`, `20/28`, `22/30`, `24/32` |
+| 主色 / 状态 | primary `#277DEA`; hover `#4998FC`; active `#1D6BD0`; disabled `rgba(39,125,234,.5)` |
+| 功能色 | success `#28CE89`; warning `#FFB92E`; danger `#F56C6C` |
+| 中性色 | text `#333333/#666666/#999999`; bg `#F5F7FA`; disabled `#F5F5F5`; border `#E8E8E8` / `rgba(0,0,0,.10)` |
+| 组件尺寸 | button/input/select `32px`; radius `8px`; table row `46px`; modal min `520px`; drawer `480/720/960px` |
+| HTML/CSS 约束 | 必须使用规范 token；不得使用未定义外部默认主题；不得用 emoji 图标；不得擅自引入渐变/毛玻璃/营销页 hero |
+| 偏离项 | 无 / 写明偏离原因、替代 token 和验证方式 |
 
 ### 参考设计语言提取
 
@@ -160,6 +179,9 @@ flowchart LR
 | 项 | 值 |
 |---|---|
 | `.pen` 文件 | `01-spec/ui-mockup.pen` / N/A |
+| Pencil 保存状态 | saved / blocked / N/A |
+| 保存后重读校验 | pass / fail / N/A |
+| 重读证据 | 节点 id / 页面名称 / `batch_get` 摘要 / 截图路径 |
 | 导出截图目录 | `01-spec/ui-mockup-export/` / N/A |
 | Pencil 操作摘要 | |
 | 空画布处理 | N/A / 已创建第一屏 / 阻断 |

@@ -58,3 +58,14 @@
 ## 8. 备注
 
 - 
+
+## 9. SpecForge 本体同步提示
+
+> 仅当当前仓库是 SpecForge 本体，且本次修改影响 `agent-skills/`、`core/workflows/stages/`、`core/skills/` 或 `core/standards/` 时填写；否则写 N/A。
+
+| 项 | 值 |
+|---|---|
+| 是否影响 Agent skill / runtime 母本 | 是 / 否 / N/A |
+| 影响范围 | |
+| 是否需要用户另行决定同步安装到 Codex / Claude Code / cc-switch / Trae CN | 是 / 否 / N/A |
+| 备注 | 不自动执行安装或同步命令，除非用户单独明确要求 |

@@ -77,15 +77,29 @@ Status: PENDING
 |---|---|---|---|---|
 | P0 / P1 / P2 / P3 | | | | sf-brainstorm / sf-prd / sf-requirements / sf-ui-design / sf-tech-design / sf-tasking |
 
-## 7. Residual Risks
+## 7. Approval Gate Checklist
+
+> Gate Review 批准前必填；Artifact Review 写 N/A。
+
+| Check | Result | Evidence |
+|---|---|---|
+| Review evidence file exists before gate update | pass / fail / N/A | |
+| No P0 / P1 findings remain | pass / fail / N/A | |
+| All required artifacts exist and were reviewed | pass / fail / N/A | |
+| User confirmation gates are traceable | pass / fail / N/A | MVP / UI / tech / dependency / tooling / core review |
+| UI Pencil evidence includes saved `.pen`, re-read check and screenshots where applicable | pass / fail / N/A | |
+| Technical decisions and dependencies are confirmed or N/A | pass / fail / N/A | |
+| Tasks cover implementation and verification | pass / fail / N/A | |
+
+## 8. Residual Risks
 
 -
 
-## 8. Required Follow-up
+## 9. Required Follow-up
 
 -
 
-## 9. Decision
+## 10. Decision
 
 可选值：APPROVED, REQUEST_CHANGES, REJECTED.
 
@@ -99,7 +113,7 @@ Gate Review 中：
 - `APPROVED` 表示可以进入 implementation。
 - `REQUEST_CHANGES` / `REJECTED` 必须写清 return path。
 
-## 10. Gate Update
+## 11. Gate Update
 
 Artifact Review：
 

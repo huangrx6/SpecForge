@@ -68,18 +68,20 @@
 | 安全 / 权限 | | 通过 / 失败 / 未运行 / N/A | |
 | 迁移 / 回滚 | | 通过 / 失败 / 未运行 / N/A | |
 
-## 7. Figma / UI 实现备注
+## 7. UI 实现备注
 
-> 无 Figma / UI 实现可写 N/A。
+> 无 UI 实现可写 N/A。实现阶段以 `ui-design.md`、Pencil 导出截图和状态矩阵为依据，不重新选择视觉风格。
 
 | 项 | 结论 / 证据 |
 |---|---|
-| Figma Frame / Section | |
-| design context 获取 | 通过 / 失败 / N/A |
-| screenshot 获取 | 通过 / 失败 / N/A |
+| UI design 来源 | `01-spec/ui-design.md` / N/A |
+| Pencil `.pen` / 截图 | |
+| 页面 / 状态矩阵覆盖 | |
 | 项目组件复用 | |
 | token 映射 | |
-| 与 Figma 偏离 | |
+| PC 端业务系统规范 | 采用 / 未采用 / N/A |
+| PC 规范 token 对齐 | 通过 / 失败 / N/A |
+| 与 Pencil / UI design 偏离 | |
 | 待 verification 视觉证据 | |
 
 ## 8. 与规格的对应关系

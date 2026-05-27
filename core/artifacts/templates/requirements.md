@@ -5,7 +5,7 @@
 | 项 | 内容 |
 |---|---|
 | 来源 artifact | `original-request.md` / `brief.md` / `prd.md` / `research.md` |
-| 参考第三方 skill | N/A / `user-story-writing` |
+| 参考第三方 skill | N/A / `user-stories` |
 | 归一化说明 | 第三方输出已转写为 SpecForge 需求；未直接复制外部模板 |
 | 影响面 flags 校准 | `has_ui` / `has_api` / `has_db` / `has_domain` / `needs_research` |
 

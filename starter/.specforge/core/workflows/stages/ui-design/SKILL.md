@@ -17,11 +17,12 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - `01-spec/requirements.md`
 - `.specforge/core/standards/product.md`（用户画像、调研方法论）
 - `.specforge/core/standards/design.md`（无障碍红线、信息架构、交互设计、视觉层级）
+- `.specforge/core/standards/pc-ui-design-spec.md`（PC 端业务系统、运营后台、管理系统、数据管理工具，或用户明确提供该规范时读取；具体数值优先于通用设计基准）
 - `.specforge/core/standards/workflow.md`
 - 现有页面、组件库、设计系统、Pencil 文件、截图、参考产品或用户提供的设计资料
 - 需要操作 Pencil 时读取 `core/skills/pencil/SKILL.md`
 - 需要补充 UX 研究、IA、交互、微文案或可访问性检查时读取 `core/skills/ux-designer/SKILL.md`
-- 做视觉质量审查时读取项目设计系统或 `core/skills/web-design-guidelines`（如果存在）
+- 做视觉质量审查时优先读取项目设计系统、已确认 UI 方向和 `core/skills/ux-designer` 的相关规则；不再内置 `web-design-guidelines`
 
 ## 写入
 
@@ -46,8 +47,9 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - **判断 UI 影响**：检查页面、组件、路由、视觉状态、角色视图、响应式、可访问性和用户操作流。
 - 无 UI 影响时写 N/A、跳过理由和验证方式；不要继续生成风格或原型。
 - **提取用户画像**：从 `prd.md`、`brainstorm.md` 或 `requirements.md` 中提取目标用户画像（Persona），确认用户的目标、痛点和行为模式。
-- **按需参考 UX skill**：如果用户画像、信息架构、交互流程、微文案、可访问性或视觉层级证据不足，读取 `core/skills/ux-designer/AGENTS.md` 或相关 `rules/*.md`，再归一化为本文件内容。
+- **按需参考 UX skill**：如果用户画像、信息架构、交互流程、微文案、可访问性或视觉层级证据不足，先读取 `core/skills/ux-designer/SKILL.md`，再按需读取相关 `rules/*.md`，并归一化为本文件内容。
 - **竞品与参考分析**：若有现有设计系统、品牌手册、页面、Pencil、Figma、截图或参考产品，提取可执行规则：布局、导航、密度、色彩、字体、表格、表单、反馈、空态和错误态。不要只贴链接；每个参考都要写"采用什么、不采用什么、如何落地"。
+- **PC 业务系统模板**：若产品是后台 / 管理系统 / 数据表格系统，或用户明确给出 PC 端 UI 规范，读取 `pc-ui-design-spec.md`，在 Visual Style Brief 中写入设计系统来源和核心 token；后续 Pencil、HTML/CSS、前端实现都不得擅自改这些数值。
 
 ### 2. 定义（Define）
 
@@ -74,10 +76,13 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 
 - **创建或更新 Pencil 原型**：读取 `core/skills/pencil/SKILL.md`。
 - 输出 `01-spec/ui-mockup.pen`。
-- 导出关键页面截图到 `01-spec/ui-mockup-export/`。
 - 空 `.pen` / 空画布最多读取一次。确认为空后必须立即创建第一屏，不能陷入空读循环。
+- 每次完成 `pencil_batch_design` 后，必须确认目标 `.pen` 已保存 / 持久化；如果 Pencil MCP 没有单独 `save` 工具，则仍必须立刻重新打开或重读 `01-spec/ui-mockup.pen`。
+- 保存后重读校验必须确认至少存在一个 screen / frame / artboard 或第一屏节点，且不是空画布；校验通过后才能导出截图。
+- 导出关键页面截图到 `01-spec/ui-mockup-export/`。
 - Pencil 创建连续失败 2 次时，停止并写阻断原因；不要降级成 HTML / ASCII 作为正式 UI 证据。
 - **原型必须体现**：Visual Style Brief 中的设计 token、信息层级、导航模式和无障碍基础。
+- 采用 PC 端业务系统模板时，原型必须体现顶部导航 `64px`、侧边导航 `208px / 68px`、模块间距 `16px`、控件高度 `32px`、表格行高 `46px`、圆角 `8px` 和主色 `#277DEA`。
 
 ### 5. 测试与验证（Test）
 
@@ -98,6 +103,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - `instructions.mjs` 返回 `ui-direction-unconfirmed`，或上游没有用户确认的 UI / 视觉 / 体验方向。
 - 用户可见体验的关键风格、页面范围或角色流程尚未确认，且默认假设风险高。
 - 有 UI 变更但没有 Pencil `.pen`、导出截图或明确 Pencil 阻断原因。
+- Pencil `.pen` 未保存、保存后无法重读、重读后仍为空画布，或截图不是来自保存后的目标文件。
 - Pencil 原型只是默认控件堆叠，没有参考设计语言、状态矩阵或视觉质量自检。
 - 原型与 requirements 的角色、流程、审批、权限或异常态不一致。
 - 设计需要改变产品范围或技术能力，但没有回到 PRD / requirements / technical design。
@@ -107,6 +113,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 
 - `ui-design.md` 能让 reviewer 判断 UI 是否满足需求。
 - 有 UI 变更时，存在用户画像提取、Visual Style Brief、页面地图、信息架构、用户流程、微文案、状态矩阵、Pencil `.pen`、导出截图、无障碍自查和视觉质量修正记录。
+- Pencil `.pen` 保存后可重读，且 `ui-design.md#9. Pencil 原型证据` 记录保存状态、重读校验和截图证据。
 - 无 UI 影响时，N/A 理由和验证方式清楚。
 - 实现者能据此实现页面结构和交互状态。
 - `technical-design.md` 只引用本文件的 UI 结论，不重复维护视觉和交互细节。

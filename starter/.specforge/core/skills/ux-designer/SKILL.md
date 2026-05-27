@@ -34,8 +34,8 @@ This skill contains **detailed rules** in the `rules/` directory, organized by c
 
 ### Quick Start
 
-1. **Review [AGENTS.md](AGENTS.md)** for a complete compilation of all rules with examples
-2. **Reference specific rules** from `rules/` directory for deep dives
+1. **Start from this file** to decide whether the task needs research, IA, interaction, accessibility, or visual depth
+2. **Reference only the specific rules** from `rules/` that match the current design risk
 3. **Follow priority order**: User Needs → Accessibility → Usability → Visual Hierarchy → Consistency
 
 ### Available Rules

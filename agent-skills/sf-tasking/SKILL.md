@@ -1,6 +1,6 @@
 ---
 name: sf-tasking
-description: 生成或更新 SpecForge work item 的 tasks；用于 requirements、gap_report 或 technical_design 已完成后，把已批准前的规格拆成可执行、可验证、可并行的实现任务。
+description: 生成或更新 SpecForge work item 的 tasks；用于 requirements、gap_report、ui_design 或 technical_design 已完成后，把规格拆成可执行、可验证、可并行的实现任务。
 ---
 
 # sf-tasking
@@ -12,94 +12,111 @@ description: 生成或更新 SpecForge work item 的 tasks；用于 requirements
 ## 运行模式检测
 
 1. 当前目录向上存在 `.specforge/` 且有 active work item：**Embedded 模式**，按 artifact graph 写入 `01-spec/tasks.md`。
-2. 存在 `.specforge/` 但无 active work item：**Lightweight 模式**，可把用户提供的规格草稿拆成任务草案；需要落档时输出 `specforge-import-ready.md` 格式内容，或先路由 `sf-intake` 创建 work item。
-3. 不存在 `.specforge/`：**Standalone 模式**，不要运行 `.specforge/...` 命令；输出可导入的 `specforge-import-ready.md` 格式内容，保留任务、核心字段、条件字段适用性和未决 blocker。
+2. 存在 `.specforge/` 但无 active work item：**Lightweight 模式**，可把用户提供的规格草稿拆成任务草案；需要落档时输出 `specforge-import-ready.md`，或先路由 `sf-intake` 创建 work item。
+3. 不存在 `.specforge/`：**Standalone 模式**，不要运行 `.specforge/...` 命令；输出可导入的 `specforge-import-ready.md`，保留任务、核心字段、条件字段适用性和 blocker。
 
-把 requirements、gap_report、适用的 UI design 和适用的 technical design 拆成可执行任务图。任务不是待办愿望，而是实现者可以逐项完成、reviewer 可以逐项核对、verification 可以逐项取证的工作单元。
+`sf-tasking` 把 requirements、gap report、UI design、technical design 和 research 拆成实现者能逐项完成、reviewer 能逐项核对、verification 能逐项取证的任务图。本技能不写业务代码，也不提前写 verification / close 报告。
 
-## 启动
+## 必读
 
-运行：
+- `references/tasking-playbook.md`：输入选择、任务字段、并行波次、UI / PC 规范、Playwright、Wiki 提示和停止条件。
+- `.specforge/core/workflows/stages/task-planning/SKILL.md`：内部任务规划母本。
+- `.specforge/core/artifacts/templates/tasks.md`
+- `.specforge/core/standards/workflow.md`
+- `.specforge/core/standards/product.md`
+- UI 适用时读取 `.specforge/core/standards/design.md`；若 `ui-design.md` 声明采用 PC 端业务系统规范，还要读取 `.specforge/core/standards/pc-ui-design-spec.md`。
+- technical design 适用时读取 `.specforge/core/standards/engineering.md` 和 `.specforge/core/profiles/README.md`。
+
+## 启动扫描
+
+1. 运行：
 
 ```bash
 node .specforge/core/scripts/artifact-graph-status.mjs
 node .specforge/core/scripts/instructions.mjs
 ```
 
-确认 ready artifact 包含 `tasks`，再：
+2. 确认 ready artifact 包含 `tasks`。否则停止并按 `instructions.mjs` 路由。
+3. 生成 artifact：
 
 ```bash
 node .specforge/core/scripts/create-artifact.mjs tasks
 ```
 
-## 内部技能母本
+4. 读取 `work.yaml`、workflow schema、components flags 和适用输入。
 
-写 tasks 前，读取 `.specforge/core/workflows/stages/task-planning/SKILL.md`。任务格式、输入选择、并行规则、停止条件和完成标准以内置母本为准。
+## 执行序列
 
-## 关联标准
-
-- `.specforge/core/standards/workflow.md`：ready artifact、scope、任务边界和中文协作。
-- `.specforge/core/standards/product.md`：需求追踪、验收标准和非目标。
-- `.specforge/core/standards/design.md`：UI 状态、原型证据和体验验证。
-- `.specforge/core/standards/engineering.md`：实现纪律、测试验证、配置、回滚、可观测性和代码审查。
-- `.specforge/core/profiles/README.md`：技术选型和 profile 偏离需要转成实施任务。
-
-## 先确定输入范围
-
-根据 `work.yaml` 的 workflow 和 components 决定读取哪些产物：
+### A. 确定输入范围
 
 | Workflow / 条件 | 必读输入 |
 |---|---|
-| `feature` / `standard` | `brief.md`、`requirements.md`、适用的 `ui-design.md`、适用的 `technical-design.md` |
+| `feature` / `standard` | `brief.md`、`requirements.md`、适用 `ui-design.md`、适用 `technical-design.md` |
 | `lite` | `brief.md`、`requirements.md` |
 | `bugfix` / `issue` | `brief.md`、`gap-report.md` |
 | `refactor` | `brief.md`、`technical-design.md` |
 | `needs_research: true` 或已有 research | `research.md` 中的约束和结论 |
-| workflow 不包含 `tasks` | 不执行本技能，回到 `sf-router` |
 
 `components` 为 `auto` 时保守读取对应设计；只有明确 `false` 且上游 artifact 能证明不涉及，才跳过。
 
-## 拆解要求
+### B. 先做覆盖矩阵
 
-- 每个任务必须有核心字段：`_Trace:_`、`_Files:_`、`_Verification:_`、`_Rollback:_`、`_Risk:_`。
-- 条件字段按任务性质添加：涉及 technical_design 影响面时加 `_Impact:_`；任务写入边界可能冲突、跨模块或并行执行时加 `_Boundary:_`；任务依赖其他任务时加 `_Depends:_`；已有或需要测试用例矩阵时加 `_TestCase:_`。
-- 任务必须能追溯到 requirements / gap_report / ui_design / technical_design / research，不要凭实现冲动新增范围。
-- 读取 `technical-design.md#0. 影响面与读取计划` 后，必须把每个 `yes` 影响面映射到实现任务和验证任务；`no` 写 N/A 理由；关键 `unknown` 不能进入 tasks，必须退回澄清。
-- 任务应小到一次实现或一次 review 可以聚焦完成；如果一个任务同时改多个主要模块、多个页面或多个风险面，继续拆。
-- `_Files:_` 写预期写入文件、目录或模块类别；如果实现者需要重新猜主要文件，说明任务还不够细。
-- `_Rollback:_` 写撤回方式、feature flag、迁移补偿、配置回退或“不适用及理由”；数据、权限、发布和依赖任务不得留空。
-- `_Risk:_` 对所有任务都要写；低风险任务写 `N/A - <理由>`，不能留空。
-- 先列契约任务（API、schema、类型、配置、迁移、权限、提示词 / 评估集），再列实现任务，再列验证任务。
-- 新项目或新前端 / 后端子项目必须先列脚手架和启动冒烟任务，不能一个个手写骨架文件。
-- UI 任务必须覆盖页面、组件、状态和原型证据；不能只写“实现页面”。
-- 有浏览器流程、上传、提交、审批、下载、权限或错误提示时，必须单独列 `05-verification/test-cases.md` 用例编写、Playwright 自动执行和证据登记任务；单元测试任务不能替代。
-- 数据迁移、权限、安全、发布、回滚、可观测性任务必须单独列出。
-- 每个验收标准至少能映射到一个实现任务和一个验证任务。
+1. 列出所有来源需求、决策、风险和验收标准。
+2. 每个来源项至少映射到一个实现任务和一个验证任务；N/A 必须写理由。
+3. 读取 `technical-design.md#0. 影响面与读取计划`，每个 `yes` 影响面必须有实现任务和验证任务，`no` 写 N/A，关键 `unknown` 退回澄清。
+4. UI 适用时把页面、组件、状态矩阵、Pencil 证据和视觉验证转成任务。
+5. PC 端业务系统规范适用时，把 token、布局尺寸、表格 / 表单 / 弹窗 / 抽屉、响应式验证转成任务。
+
+### C. 拆任务图
+
+1. W0：契约、脚手架、启动基线、失败优先验证。
+2. W1：核心实现、UI 实现、数据 / 安全 / 权限 / 运行支持。
+3. W2：自动化测试、Playwright、启动 / 回滚 / 观察点、Wiki 回写提示。
+4. 标注 `_Depends:_` 和并行波次；并行任务不得共享同一主要写入文件。
+5. 任务要小到一次 implementation 和一次 code review 可以聚焦完成。
+
+### D. 写 `01-spec/tasks.md`
+
+每个任务必须包含核心字段：
+
+- `_Trace:_`
+- `_Files:_`
+- `_Verification:_`
+- `_Rollback:_`
+- `_Risk:_`
+
+条件字段按需添加：
+
+- `_Impact:_`
+- `_Boundary:_`
+- `_Depends:_`
+- `_TestCase:_`
+
+字段适用性和写法见 `references/tasking-playbook.md#任务字段规则`。
 
 ## 停止条件
 
-- 上游 artifact 不足以拆任务，比如 API 契约、UI 状态、数据库迁移或权限边界缺失。
-- 任务会扩大已确认范围。
-- tasks 无法映射到验收标准或验证证据。
-- technical_design 中仍有 `[NEEDS TECH DECISION]` 或 `[NEEDS DEPENDENCY DECISION]`，说明关键技术选型或新增依赖尚未确认。
-- technical_design 中仍有 `[NEEDS TOOLING DECISION]`，说明包管理器、组件库、样式方案、依赖管理、构建 / 测试工具等工程工具链尚未确认。
-- technical_design 的 `Core Decision Review Status` 不是 `confirmed`、`delegated_default` 或 `not_required`，说明初稿后的核心决策摘要尚未确认。
-- technical_design 中存在会影响架构、数据、安全、成本、外部契约、发布或可靠性的 `unknown`。
-- technical_design 的 `yes` 影响面无法拆出实现任务或验证任务。
-- 存在未决产品取舍、设计方向或技术方案选择，应该先回到 `sf-brainstorm`；如果只是规格表达不完整，再回到 `sf-requirements`、`sf-ui-design` 或 `sf-tech-design`。
+| 条件 | Return path |
+|---|---|
+| workflow 不包含 tasks | `sf-router` |
+| 上游 artifact 不足以拆任务 | 对应 `sf-requirements` / `sf-ui-design` / `sf-tech-design` / `sf-gap-report` |
+| 存在 `[NEEDS PRODUCT DECISION]`、`[NEEDS UI DECISION]` 或需要用户取舍的方案 | `sf-brainstorm` |
+| technical design 残留 `[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]`、`[NEEDS TOOLING DECISION]` 或关键 `unknown` | `sf-tech-design` |
+| technical design 核心决策 review 未确认 | `sf-tech-design` |
+| 任务会扩大 approved scope | `sf-spec-review` / 对应上游阶段 |
+| 验收标准没有验证任务承接 | 先补任务，或退回上游澄清 |
 
 ## 完成标准
 
-- `01-spec/tasks.md` 能驱动 implementation，不需要实现者重新猜范围。
-- 每个任务都有追踪来源、预期文件、验证、回滚和风险；条件字段在适用任务上完整。
-- 每个 technical_design `yes` 影响面都有任务承接；`no` / N/A 有可信理由；无关键 `unknown` 留给 implementation。
+- `01-spec/tasks.md` 能直接驱动 implementation，不需要实现者重新猜范围。
+- 每个任务有 trace、files、verification、rollback、risk；条件字段在适用任务上完整。
+- 每个 technical design `yes` 影响面都有任务承接；`no` / N/A 有理由；无关键 `unknown` 留给 implementation。
+- UI / PC 规范 / Playwright / 权限 / 数据 / 发布 / 回滚 / 可观测性任务在适用时单独列出。
 - 并行波次不会让多个任务同时写同一核心文件或共享未完成契约。
-- 测试、启动验证、回滚 / 观察和安全验证在适用时单独列出。
-- `tasks.md` 能直接生成 verification 测试用例矩阵，不需要验证阶段重新猜边界。
 - 下一步路由到 `sf-spec-review`，以 `instructions.mjs` 为准。
 
 ## 不做
 
 - 不写业务代码。
-- 不发明超出 requirements、gap_report、ui_design 或 technical_design 边界的新任务。
+- 不发明超出 requirements、gap report、ui design、technical design 或 research 边界的新任务。
 - 不把 verification / close 阶段的报告提前写好；只定义后续需要验证和回写的工作。

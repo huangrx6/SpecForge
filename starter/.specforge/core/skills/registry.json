@@ -3,28 +3,106 @@
   "description": "SpecForge 托管的最小第三方 skill 快照。它们是参考能力，不是工作流阶段。",
   "skills": [
     {
-      "id": "web-design-guidelines",
-      "name": "web-design-guidelines",
-      "role": "UI 审查",
-      "trust": "Vercel 官方",
-      "risk": "中",
+      "id": "create-prd",
+      "name": "create-prd",
+      "role": "PRD 合成参考",
+      "trust": "高星社区来源，MIT 许可，已做静态审查",
+      "risk": "低",
       "source": {
         "type": "github-raw",
-        "repo": "vercel-labs/agent-skills",
-        "path": "skills/web-design-guidelines/SKILL.md",
-        "url": "https://github.com/vercel-labs/agent-skills/tree/main/skills/web-design-guidelines",
-        "rawUrl": "https://raw.githubusercontent.com/vercel-labs/agent-skills/main/skills/web-design-guidelines/SKILL.md"
+        "repo": "phuryn/pm-skills",
+        "path": "pm-execution/skills/create-prd/SKILL.md",
+        "url": "https://github.com/phuryn/pm-skills/tree/main/pm-execution/skills/create-prd",
+        "rawUrl": "https://raw.githubusercontent.com/phuryn/pm-skills/main/pm-execution/skills/create-prd/SKILL.md"
       },
-      "trigger": "当已有 UI 原型或实现后使用，尤其适合在 spec_review、code_review 或 verification 前审查可访问性、UX、表单、动效、性能、导航和状态处理。",
+      "trigger": "当 sf-prd 需要把已确认的问题、目标用户、价值主张、功能范围和发布计划整理成 PRD 时参考；重点借鉴 8 段式 PRD、目标和非目标、成功指标、假设和 release 分期。",
       "normalizeTo": [
-        "01-spec/ui-design.md#Visual Quality Review",
-        "04-code-review/code-review-v1.md#Verification Notes",
-        "05-verification/report.md#UI Coverage"
+        "00-intake/prd.md#Executive Summary",
+        "00-intake/prd.md#Background & Product Goals",
+        "00-intake/prd.md#Scope & MVP Decision",
+        "00-intake/prd.md#Handoff To Requirements"
       ],
       "doNotUseFor": [
-        "初始风格发散",
-        "产品需求",
-        "替代人工确认"
+        "替代 sf-prd 模板",
+        "自动保存 PRD-[product-name].md 到任意路径",
+        "把 Technology 小节扩写成 technical design",
+        "跳过用户确认产品范围和非目标"
+      ]
+    },
+    {
+      "id": "user-stories",
+      "name": "user-stories",
+      "role": "Requirements 用户故事与验收标准参考",
+      "trust": "高星社区来源，MIT 许可，已做静态审查",
+      "risk": "低",
+      "source": {
+        "type": "github-raw",
+        "repo": "phuryn/pm-skills",
+        "path": "pm-execution/skills/user-stories/SKILL.md",
+        "url": "https://github.com/phuryn/pm-skills/tree/main/pm-execution/skills/user-stories",
+        "rawUrl": "https://raw.githubusercontent.com/phuryn/pm-skills/main/pm-execution/skills/user-stories/SKILL.md"
+      },
+      "trigger": "当 sf-requirements 需要用户故事、3C、INVEST、验收标准或 backlog item 视角时参考；只用来补足角色、价值、确认条件和可测试性。",
+      "normalizeTo": [
+        "01-spec/requirements.md#目标用户与场景",
+        "01-spec/requirements.md#功能需求",
+        "01-spec/requirements.md#验收标准",
+        "01-spec/requirements.md#重新验证触发条件"
+      ],
+      "doNotUseFor": [
+        "替代 sf-requirements 的 SHALL 需求",
+        "把 Sprint 周期、故事点或 backlog 排期写成承诺",
+        "把外部故事模板原样复制为 requirements",
+        "替代用户确认范围或验收口径"
+      ]
+    },
+    {
+      "id": "opportunity-solution-tree",
+      "name": "opportunity-solution-tree",
+      "role": "产品发现、机会树和功能优先级参考",
+      "trust": "高星社区来源，MIT 许可，已做静态审查",
+      "risk": "低",
+      "source": {
+        "type": "github-raw",
+        "repo": "phuryn/pm-skills",
+        "path": "pm-product-discovery/skills/opportunity-solution-tree/SKILL.md",
+        "url": "https://github.com/phuryn/pm-skills/tree/main/pm-product-discovery/skills/opportunity-solution-tree",
+        "rawUrl": "https://raw.githubusercontent.com/phuryn/pm-skills/main/pm-product-discovery/skills/opportunity-solution-tree/SKILL.md",
+        "files": [
+          {
+            "path": "references/brainstorm-ideas-new.md",
+            "rawUrl": "https://raw.githubusercontent.com/phuryn/pm-skills/main/pm-product-discovery/skills/brainstorm-ideas-new/SKILL.md"
+          },
+          {
+            "path": "references/brainstorm-ideas-existing.md",
+            "rawUrl": "https://raw.githubusercontent.com/phuryn/pm-skills/main/pm-product-discovery/skills/brainstorm-ideas-existing/SKILL.md"
+          },
+          {
+            "path": "references/analyze-feature-requests.md",
+            "rawUrl": "https://raw.githubusercontent.com/phuryn/pm-skills/main/pm-product-discovery/skills/analyze-feature-requests/SKILL.md"
+          },
+          {
+            "path": "references/prioritize-features.md",
+            "rawUrl": "https://raw.githubusercontent.com/phuryn/pm-skills/main/pm-product-discovery/skills/prioritize-features/SKILL.md"
+          },
+          {
+            "path": "references/prioritization-frameworks.md",
+            "rawUrl": "https://raw.githubusercontent.com/phuryn/pm-skills/main/pm-execution/skills/prioritization-frameworks/SKILL.md"
+          }
+        ]
+      },
+      "trigger": "当 sf-brainstorm 或 sf-prd 需要从“用户机会 / 问题”出发，而不是直接堆功能时参考；用于机会树、假设、实验、功能候选、需求 triage 和优先级取舍。",
+      "normalizeTo": [
+        "00-intake/brainstorm.md#问题地图",
+        "00-intake/brainstorm.md#方案对比",
+        "00-intake/prd.md#Scope & MVP Decision",
+        "00-intake/brief.md#Feature Candidates"
+      ],
+      "doNotUseFor": [
+        "替代用户确认 MVP 或产品方向",
+        "把客户提出的功能直接当解决方案",
+        "在没有研究证据时伪造 Opportunity Score",
+        "替代 sf-requirements 或技术设计"
       ]
     },
     {
@@ -40,10 +118,6 @@
         "url": "https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/awesome_agent_skills/code-reviewer",
         "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/SKILL.md",
         "files": [
-          {
-            "path": "AGENTS.md",
-            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/AGENTS.md"
-          },
           {
             "path": "rules/correctness-error-handling.md",
             "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/rules/correctness-error-handling.md"
@@ -97,10 +171,6 @@
         "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/ux-designer/SKILL.md",
         "files": [
           {
-            "path": "AGENTS.md",
-            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/ux-designer/AGENTS.md"
-          },
-          {
             "path": "rules/accessibility.md",
             "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/ux-designer/rules/accessibility.md"
           },
@@ -131,7 +201,7 @@
       ],
       "doNotUseFor": [
         "替代 Pencil 正式原型",
-        "替代 web-design-guidelines 的实现后 UI 审查",
+        "替代实现后的 UI 审查 gate",
         "在没有用户确认时虚构 persona 或研究结论",
         "把第三方模板标题原样写进 SpecForge artifact"
       ]
@@ -161,103 +231,6 @@
         "把过期资料当作当前事实",
         "在没有来源时编造引用",
         "替代用户确认研究结论和产品范围"
-      ]
-    },
-    {
-      "id": "to-prd",
-      "name": "to-prd",
-      "role": "PRD 合成主参考",
-      "trust": "高星社区来源",
-      "risk": "低",
-      "source": {
-        "type": "github-raw",
-        "repo": "mattpocock/skills",
-        "path": "skills/engineering/to-prd/SKILL.md",
-        "url": "https://github.com/mattpocock/skills/tree/main/skills/engineering/to-prd",
-        "rawUrl": "https://raw.githubusercontent.com/mattpocock/skills/main/skills/engineering/to-prd/SKILL.md"
-      },
-      "trigger": "当对话和代码库上下文已经足够丰富，可以在不做大范围 discovery 的情况下合成 PRD 时使用；重点借鉴其 repo 感知、领域词汇、用户故事覆盖、deep module 思考和非目标纪律。",
-      "normalizeTo": [
-        "00-intake/prd.md#Executive Summary",
-        "00-intake/prd.md#User Stories & Acceptance Seeds",
-        "00-intake/prd.md#Scope & MVP Decision",
-        "00-intake/prd.md#Handoff To Requirements"
-      ],
-      "doNotUseFor": [
-        "发布 GitHub issue",
-        "跳过 SpecForge brief",
-        "替代 sf-requirements",
-        "把技术设计细节写进 PRD"
-      ]
-    },
-    {
-      "id": "user-story-writing",
-      "name": "user-story-writing",
-      "role": "Requirements 用户故事与验收标准参考",
-      "trust": "社区来源，MIT 许可，已做静态审查",
-      "risk": "低",
-      "source": {
-        "type": "github-raw",
-        "repo": "aj-geddes/useful-ai-prompts",
-        "path": "skills/user-story-writing/SKILL.md",
-        "url": "https://github.com/aj-geddes/useful-ai-prompts/tree/main/skills/user-story-writing",
-        "rawUrl": "https://raw.githubusercontent.com/aj-geddes/useful-ai-prompts/main/skills/user-story-writing/SKILL.md",
-        "files": [
-          {
-            "path": "references/story-refinement-process.md",
-            "rawUrl": "https://raw.githubusercontent.com/aj-geddes/useful-ai-prompts/main/skills/user-story-writing/references/story-refinement-process.md"
-          },
-          {
-            "path": "references/acceptance-criteria-examples.md",
-            "rawUrl": "https://raw.githubusercontent.com/aj-geddes/useful-ai-prompts/main/skills/user-story-writing/references/acceptance-criteria-examples.md"
-          },
-          {
-            "path": "references/story-splitting.md",
-            "rawUrl": "https://raw.githubusercontent.com/aj-geddes/useful-ai-prompts/main/skills/user-story-writing/references/story-splitting.md"
-          },
-          {
-            "path": "references/story-estimation.md",
-            "rawUrl": "https://raw.githubusercontent.com/aj-geddes/useful-ai-prompts/main/skills/user-story-writing/references/story-estimation.md"
-          }
-        ]
-      },
-      "trigger": "当 requirements 需要把 PRD / brief 转成用户故事、Given/When/Then 验收标准、INVEST 检查、故事拆分或 Definition of Done 时参考。",
-      "normalizeTo": [
-        "01-spec/requirements.md#目标用户与场景",
-        "01-spec/requirements.md#功能需求",
-        "01-spec/requirements.md#验收标准",
-        "01-spec/requirements.md#重新验证触发条件"
-      ],
-      "doNotUseFor": [
-        "替代 sf-prd",
-        "把故事点或 Sprint 信息写成强制交付承诺",
-        "把外部模板原样复制为 requirements",
-        "替代用户确认范围"
-      ]
-    },
-    {
-      "id": "product-brainstorming",
-      "name": "product-brainstorming",
-      "role": "自适应产品思考",
-      "trust": "Anthropic 官方",
-      "risk": "低",
-      "source": {
-        "type": "github-raw",
-        "repo": "anthropics/knowledge-work-plugins",
-        "path": "product-management/skills/product-brainstorming/SKILL.md",
-        "url": "https://github.com/anthropics/knowledge-work-plugins/tree/main/product-management/skills/product-brainstorming",
-        "rawUrl": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/main/product-management/skills/product-brainstorming/SKILL.md"
-      },
-      "trigger": "当需求描述宽泛、过早偏向某个方案，或访谈容易变成固定问卷时，在写 PRD 前使用；借鉴其问题探索、方案发散、假设测试和收敛模式。",
-      "normalizeTo": [
-        "00-intake/prd.md#Product Interview Evidence",
-        "00-intake/prd.md#Scope & MVP Decision",
-        "00-intake/brief.md#Feature Candidates"
-      ],
-      "doNotUseFor": [
-        "直接生成最终 PRD",
-        "在没有用户选择时创建臆测功能",
-        "跳过 MVP 边界"
       ]
     },
     {
@@ -306,29 +279,65 @@
     },
     {
       "id": "pencil",
-      "name": "pencil",
-      "role": "Pencil 原型读写参考",
-      "trust": "社区来源，已做静态审查",
+      "name": "pencil-design",
+      "role": "Pencil 设计与设计转代码参考",
+      "trust": "社区来源，已做静态审查，按 SpecForge 本地规则裁剪 frontend-design 依赖",
       "risk": "中",
       "source": {
         "type": "github-raw",
-        "repo": "partme-ai/full-stack-skills",
-        "path": "skills/pencil-skills/pencil/SKILL.md",
-        "url": "https://github.com/partme-ai/full-stack-skills/tree/main/skills/pencil-skills/pencil",
-        "rawUrl": "https://raw.githubusercontent.com/partme-ai/full-stack-skills/main/skills/pencil-skills/pencil/SKILL.md"
+        "repo": "chiroro-jr/skills",
+        "path": "pencil-design/SKILL.md",
+        "url": "https://github.com/chiroro-jr/skills/tree/main/pencil-design",
+        "rawUrl": "https://raw.githubusercontent.com/chiroro-jr/skills/main/pencil-design/SKILL.md",
+        "files": [
+          {
+            "path": "references/asset-reuse.md",
+            "rawUrl": "https://raw.githubusercontent.com/chiroro-jr/skills/main/pencil-design/references/asset-reuse.md"
+          },
+          {
+            "path": "references/design-system-components.md",
+            "rawUrl": "https://raw.githubusercontent.com/chiroro-jr/skills/main/pencil-design/references/design-system-components.md"
+          },
+          {
+            "path": "references/design-to-code-workflow.md",
+            "rawUrl": "https://raw.githubusercontent.com/chiroro-jr/skills/main/pencil-design/references/design-to-code-workflow.md"
+          },
+          {
+            "path": "references/layout-and-text-overflow.md",
+            "rawUrl": "https://raw.githubusercontent.com/chiroro-jr/skills/main/pencil-design/references/layout-and-text-overflow.md"
+          },
+          {
+            "path": "references/responsive-breakpoints.md",
+            "rawUrl": "https://raw.githubusercontent.com/chiroro-jr/skills/main/pencil-design/references/responsive-breakpoints.md"
+          },
+          {
+            "path": "references/tailwind-shadcn-mapping.md",
+            "rawUrl": "https://raw.githubusercontent.com/chiroro-jr/skills/main/pencil-design/references/tailwind-shadcn-mapping.md"
+          },
+          {
+            "path": "references/variables-and-tokens.md",
+            "rawUrl": "https://raw.githubusercontent.com/chiroro-jr/skills/main/pencil-design/references/variables-and-tokens.md"
+          },
+          {
+            "path": "references/visual-verification.md",
+            "rawUrl": "https://raw.githubusercontent.com/chiroro-jr/skills/main/pencil-design/references/visual-verification.md"
+          }
+        ]
       },
-      "trigger": "当 ui_design 已选择 Pencil，或需要通过 Pencil MCP 读取 / 修改 .pen 原型、生成截图、检查布局问题时使用。",
+      "trigger": "当 ui_design 已选择 Pencil，或需要通过 Pencil MCP 读取 / 修改 .pen 原型、复用组件、使用 design tokens、生成截图、检查布局溢出，或从 Pencil 设计生成前端代码时使用。",
       "normalizeTo": [
         "01-spec/ui-design.md#UI Artifact Decision",
         "01-spec/ui-design.md#Wireframe / Prototype Evidence",
         "01-spec/ui-mockup.pen",
-        "01-spec/ui-mockup-export/"
+        "01-spec/ui-mockup-export/",
+        "02-implementation/implementation-plan.md#Frontend Notes"
       ],
       "doNotUseFor": [
         "替代视觉风格确认",
         "替代用户确认",
         "用普通文件读取方式解析 .pen 加密内容",
-        "不导出 PNG 截图就通过 spec_review"
+        "在未读取已确认 UI 方向时直接设计",
+        "不截图、不检查 overflow 就通过 spec_review"
       ]
     }
   ]

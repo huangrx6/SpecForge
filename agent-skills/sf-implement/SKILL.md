@@ -9,120 +9,106 @@ description: 根据已批准的 SpecForge tasks 执行实现；用于 implementa
 
 执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
 
-按照已批准 tasks 实现代码，并留下实现证据。实现不是“直接开始写代码”，而是把 tasks 的 `_Trace:_`、`_Files:_`、`_Boundary:_`、`_Verification:_`、`_Rollback:_` 落到真实文件、命令和证据上。本技能不批准自己的 code_review gate。
+`sf-implement` 负责把已批准 tasks 落成真实代码、命令和证据。实现完成的定义是：代码、task 状态、验证记录、`changed-files.md` 和真实 git diff 五者一致。本技能不批准 `code_review` gate。
 
-## 启动
+## 必读
 
-运行：
+- `references/implementation-playbook.md`：任务边界、失败优先验证、脚手架、UI / PC 规范、diff 对账和报告规则。
+- `.specforge/core/workflows/stages/implementation/SKILL.md`：内部实现母本。
+- `.specforge/core/artifacts/templates/implementation-plan.md`
+- `.specforge/core/artifacts/templates/implementation-report.md`
+- `.specforge/core/artifacts/templates/changed-files.md`
+- `.specforge/core/standards/workflow.md`
+- `.specforge/core/standards/engineering.md`
+- 需要实现 UI 时读取 `.specforge/core/standards/design.md`；若 `ui-design.md` 声明采用 PC 端业务系统规范，还要读取 `.specforge/core/standards/pc-ui-design-spec.md`。
+
+## 启动扫描
+
+1. 运行：
 
 ```bash
 node .specforge/core/scripts/instructions.mjs apply
 ```
 
-如果 implementation 不是 ready，按 `instructions.mjs` 的 ready artifact 回到对应的 `sf-*` 子技能。
-
-生成实现产物：
+2. 如果 implementation 不是 ready，停止并按 `instructions.mjs` 的 route 回到对应 `sf-*` 阶段。
+3. 生成实现产物：
 
 ```bash
 node .specforge/core/scripts/create-artifact.mjs implementation
 ```
 
-## 内部技能母本
+4. 读取 `work.yaml`、`01-spec/tasks.md`、适用的 `requirements.md` / `gap-report.md` / `ui-design.md` / `technical-design.md`、`02-spec-review/spec-review-v1.md`。
+5. 运行：
 
-开始实现前，读取 `.specforge/core/workflows/stages/implementation/SKILL.md`。实现阶段的输入、写入、停止条件和完成标准以内置母本为准。
-
-## 关联标准
-
-- `.specforge/core/standards/workflow.md`：只改批准范围内文件，不加载无关历史。
-- `.specforge/core/standards/engineering.md`：实现纪律、API 契约、安全、测试、配置、运行和回滚影响。
-- `.specforge/core/profiles/README.md` 以及 `technical-design.md` 选中的技术选择卡：新项目或新模块优先使用官方脚手架 / 框架生成命令，不手写通用骨架。
-- `.specforge/core/skills/ORCHESTRATION.md`：Figma 到代码实现、浏览器验证和第三方 skill 的阶段编排。
-- `.specforge/core/skills/README.md`：Figma 到代码实现、浏览器验证和第三方 skill 归一化边界。
-## 铁律（不可越过）
-
-```
-在没有可失败测试之前，不得写任何生产代码。
+```bash
+git status --short --untracked-files=all
 ```
 
-写代码之前没有看到测试失败？**删掉代码，从测试开始重来。**
+记录本次开始前已有改动；不要覆盖、回滚或登记无关改动为本次成果。
 
-**不允许的例外：**
-- 不能以"这个逻辑不好测"为由跳过
-- 不能以"tasks 没有写测试步骤"为由跳过
-- 不能以"影响面太小"为由跳过
-- 不能边写代码边补测试——先测试，后代码
+## 执行序列
 
-## 常见合理化借口（全部是错的）
+### A. 先写实现计划
 
-| Agent 可能说的 | 真相 |
+1. 从 tasks 建立任务执行图：task -> batch -> `_Trace:_` -> `_Files:_` -> `_Boundary:_` -> `_Verification:_` -> `_Rollback:_` -> risk。
+2. 从 `technical-design.md#0. 影响面与读取计划` 建立影响面对账：`yes`、`no`、`unknown`、N/A。
+3. 若任务边界、验证方式、回滚信息不足以指导实现，停止并退回 `sf-tasking` 或 `sf-spec-review`。
+4. 若存在 `[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]`、关键 `unknown`，停止并退回 `sf-tech-design` 或 `sf-spec-review`。
+5. 写 `03-implementation/plan.md`。
+
+### B. 准备实现基线
+
+1. 新项目、新前端、新后端或新模块，优先使用 technical design 选中的脚手架 / 官方 CLI / 模板。
+2. 跑通依赖安装、构建 / typecheck / dev server / service 启动中的适用项。
+3. 对行为变更，先写或定位会失败的测试 / 检查 / Playwright 用例，再写生产代码。确实不能失败优先时，先在 report 写原因、风险和替代证据。
+4. 脚手架、配置初始化、文档记录、删除死代码等不直接表达业务行为的任务，可以先做结构性准备，但必须有对应验证或对账证据。
+
+### C. 按任务小步实现
+
+1. 每次编辑前确认目标文件在 `_Files:_` / `_Boundary:_` 或 approved UI / technical design 范围内。
+2. UI 实现必须追溯到 `ui-design.md` 的页面地图、状态矩阵、Visual Style Brief、Pencil `.pen` 和导出截图。
+3. PC 端业务系统规范被采用时，HTML / CSS / 组件样式必须使用 `pc-ui-design-spec.md` token，不接受 UI 库默认主题或临时改值。
+4. 技术实现必须追溯到 `technical-design.md` 的 API、数据、安全、配置、运行、可观测性和验证策略。
+5. 每完成一个 task，运行对应快速验证或写明不能运行的原因；task 状态只能是 `DONE`、`DONE_WITH_CONCERNS`、`BLOCKED`、`NEEDS_SPEC`。
+
+### D. 持续维护证据
+
+1. 更新 `03-implementation/report.md`：task 状态、实现策略、验证、偏离、风险、code review 提示。
+2. 更新 `03-implementation/changed-files.md`：每个真实变更文件、task、批准边界、风险和验证方式。
+3. 收尾时运行：
+
+```bash
+git status --short --untracked-files=all
+git diff --name-only
+git diff --stat
+```
+
+4. 真实 diff、report、changed-files、tasks 不一致时先修证据或停止，不能进入 code review。
+
+## 停止条件
+
+| 条件 | Return path |
 |---|---|
-| "影响面是 unknown，但看起来问题不大" | **unknown 就是 unknown，必须退回澄清，不得推测** |
-| "task 没有 Verification 字段，先实现再说" | **缺验证 = task 不完整，退回 sf-tasking** |
-| "Boundary 外只改了一点点" | **任何越界都必须停，回 spec，不可以自行扩大** |
-| "测试很难写，先手工验证" | **手工验证不能替代自动化测试，sf-verify 也不接受** |
-| "代码已经写好了，补个测试形式上过一下" | **这不是 TDD，这是事后测试，不接受** |
-| "requirements 没明确要求这个场景" | **不确定就停下来问，不要自行假设** |
-
-## Red Flags — 出现以下情况立即停止
-
-- 你在没有失败测试的情况下写了生产代码
-- 你的 task 状态写了 `DONE`，但实际上验证命令没跑
-- 你修改了 `_Boundary:_` 之外的文件
-- 你遇到 `[NEEDS TECH DECISION]` 或 `[NEEDS SPEC DECISION]` 还在继续实现
-- 连续 3 次修复同一个问题失败，你还在尝试第 4 次
-
-**所有以上情况 = 停止，说明阻断原因，等待用户指示。**
-
-## 动作
-
-1. 读取 `work.yaml`、`01-spec/tasks.md`、适用的 `requirements.md` / `gap-report.md` / `ui-design.md` / `technical-design.md`。
-2. 运行 `git status --short --untracked-files=all`，识别已有未提交和未追踪改动；不要覆盖或回滚不属于本次 work item 的用户改动。
-3. 从 tasks 建立执行计划：任务 -> 批次 -> `_Impact:_` -> `_Files:_` -> 写入边界 -> 回滚提示 -> 验证方式。
-4. 从 `technical-design.md#0. 影响面与读取计划` 建立实现影响面对账：
-   - `yes`：列出预计代码 / 配置 / 文档变更、关联任务和快速验证。
-   - `no`：确认不写相关区域；若实现中发现必须修改，停止回到 `sf-tech-design` 或 `sf-spec-review`。
-   - `unknown`：不得直接实现；先退回澄清。
-   - `[NEEDS TECH DECISION]` / `[NEEDS DEPENDENCY DECISION]`：不得直接实现；先退回 `sf-tech-design` 让用户确认技术选型或新增依赖。
-5. 新项目、新前端、新后端或新模块必须先使用选中的技术选择卡推荐的脚手架 / 生成命令，跑通安装、构建或启动冒烟，再写业务代码。
-6. 每次编辑前确认文件在 `_Boundary:_` 或已批准的 UI / technical design 允许范围内；边界不足时停止回到 spec，不自行扩大。
-7. UI 实现必须追溯到 `ui-design.md` 的页面地图、状态矩阵、Visual Style Brief、Pencil 原型和导出截图；实现阶段不读取 Figma-to-code 参考 skill。
-   - 以 Pencil 导出截图和状态矩阵作为布局、密度、状态反馈和交互参照。
-   - 视觉还原和偏离记录写入 `03-implementation/report.md`，最终证据交给 `sf-verify`。
-   - 为 Playwright E2E 保留稳定可访问选择器：优先 role、label、可见文本；必要时补 `data-testid`。不能为了测试绕过真实用户路径。
-8. 技术实现必须追溯到 `technical-design.md` 的技术选择、API、数据、安全、配置、运行、可观测性和验证策略。
-9. 每完成一个任务，运行该任务对应的快速验证或写明不能运行的原因；行为变更默认先写或定位能失败的测试 / 检查，再写生产代码让它通过。确实不能失败优先时，在 report 写替代证据。
-10. 每个任务完成后做一次自审：trace、impact、boundary、verification、真实 diff 是否一致。任务状态只能写 `DONE`、`DONE_WITH_CONCERNS`、`BLOCKED`、`NEEDS_SPEC`。
-11. 只有代码、验证证据、`changed-files.md` 登记和 task 勾选四者一致后才视为完成。
-12. 修改代码后同步更新：
-   - `03-implementation/plan.md`
-   - `03-implementation/report.md`
-   - `03-implementation/changed-files.md`
-13. 收尾时用 `git status --short --untracked-files=all`、`git diff --name-only`、`git diff --stat` 反查变更文件清单，确保无未登记变更、无登记但无 diff 的文件、无未说明的批准范围外改动。
-
-## 实现报告必须包含
-
-- 实际变更摘要、实现策略和主要取舍。
-- 每个 task 的状态、证据、对应文件、验证结果。
-- 每个行为变更的失败优先验证证据，或无法失败优先的原因与替代证据。
-- 变更文件、批准边界来源和风险。
-- 与 requirements / gap_report、适用的 ui_design / technical_design、tasks 的对应关系。
-- technical_design 影响面实现对账：`yes` 是否落地且验证，`no` 是否未被越界修改，`unknown` 是否已退回澄清。
-- 本阶段已运行的快速验证、启动验证和未运行原因。
-- 偏离、补偿、已知缺口、需要 code review 重点看的地方。
+| implementation 未 ready 或 spec_review 未批准 | 按 `instructions.mjs` |
+| tasks 的核心字段不足以指导实现 | `sf-tasking` / `sf-spec-review` |
+| 需要修改 `_Boundary:_` 外文件 | `sf-tasking` / `sf-spec-review` |
+| technical design 仍有关键 `unknown` 或未确认技术 / 依赖决策 | `sf-tech-design` |
+| UI 原型、Pencil 截图或 PC 规范 token 缺失但实现依赖它们 | `sf-ui-design` / `sf-spec-review` |
+| 快速验证失败且无法在当前 task 范围内修复 | `sf-implement` 修复或 `sf-tasking` |
+| 连续 3 次修复同一问题失败 | 停止，说明原因，等待用户决策 |
 
 ## 完成标准
 
-- tasks 中实现项完成或明确剩余项。
-- `03-implementation/plan.md`、`report.md`、`changed-files.md` 与真实 diff 一致。
-- 关键验证已运行或有明确 N/A / 未运行理由。
-- `git status --short --untracked-files=all` 中属于本 work item 的改动都已登记，非本 work item 的改动已排除并说明。
-- 没有把 `DONE_WITH_CONCERNS`、`BLOCKED` 或 `NEEDS_SPEC` 任务描述为已完成。
-- 下一步路由到 `sf-code-review` 做 code review。
+- `03-implementation/plan.md`、`report.md`、`changed-files.md` 已填写。
+- tasks 中完成项有代码、验证或可信 N/A、变更文件登记和状态说明。
+- technical design `yes / no / unknown` 影响面对账清楚。
+- 属于本 work item 的真实 git diff 均已登记；无关已有改动已排除并说明。
+- 没有把 `DONE_WITH_CONCERNS`、`BLOCKED`、`NEEDS_SPEC` 描述成已完成。
+- 下一步路由到 `sf-code-review`，以 `instructions.mjs` 为准。
 
 ## 不做
 
-- 不批准 code_review gate。
-- 不扩大到未写入 tasks / `ui-design.md` / `technical-design.md` 的范围。
-- 不写入 `_Files:_` 和 `_Boundary:_` 之外的主要文件；确需新增时先回 `sf-tasking` 或记录方案外阻断。
-- 不把通用项目骨架一个文件一个文件手写出来；能用官方脚手架就先用脚手架。
-- 不修顺手看到的无关问题；需要时新开 work item。
+- 不批准 `code_review` gate。
+- 不扩大到未写入 tasks、`ui-design.md` 或 `technical-design.md` 的范围。
+- 不顺手修无关问题；需要时新开 work item。
+- 不自动安装 / 同步外部 Agent 技能副本，除非用户单独明确要求。

@@ -31,16 +31,23 @@ description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户�
 - `.specforge/core/standards/product.md`：候选池、MVP、PRD 和 requirements 边界。
 - 有 UI 方向时读取 `.specforge/core/standards/design.md`。
 - 有技术选型或依赖版本问题时读取 `.specforge/core/standards/engineering.md`。
-- `.specforge/core/skills/ORCHESTRATION.md`：第三方 brainstorm / UX / PRD 参考的选择、边界和归一化要求。
+- `.specforge/core/skills/ORCHESTRATION.md`：第三方参考能力的总编排规则。
+- `references/external-skills.md`：本 skill 的第三方 skill 选择表、读取深度和归一化格式。
 
 ## 第三方 Skill 联动
 
-当 brainstorm 的关键问题是目标用户、体验方向、用户旅程、信息架构、交互风格、微文案、可访问性或视觉层级时，按需读取 `.specforge/core/skills/ux-designer/SKILL.md`。
+先读取 `.specforge/core/skills/ORCHESTRATION.md`。当本轮 brainstorm 需要第三方方法卡时，再读取本 skill 目录下的 `references/external-skills.md`，按其中的选择表决定使用哪个 skill、读到什么深度、归一化到哪里。
 
-- 用 `ux-designer` 帮助形成 2-3 个互斥体验方向、访谈镜头、风险提示和取舍项。
-- 总览可读 `.specforge/core/skills/ux-designer/AGENTS.md`；只在需要时读取相关 `rules/*.md`。
-- `ux-designer` 的 persona、流程或模板只是候选参考，必须经过用户确认后才能写成 `[UI DECISION CONFIRMED]`。
-- 如果只是把已确认 UI 方向落成页面地图、状态矩阵和 Pencil 原型，交给 `sf-ui-design`，不要在 brainstorm 中写完整 UI design。
+常见参考包括：
+
+- `opportunity-solution-tree`：产品目标、用户机会、MVP、候选方向、实验和优先级取舍。
+- `ux-designer`：体验方向、用户旅程、信息架构、交互和可访问性。
+- `deep-research`：多来源研究、共识/争议和研究空白。
+- `user-stories`：用户故事、验收口径和边界条件。
+- `create-prd`：PRD handoff 检查、非目标和 release 分期覆盖。
+- `playwright-skill`：只在 brainstorm 需要提前识别验证风险时参考，正式执行仍交给后续阶段。
+
+第三方 skill 的输出必须先归一化为 `问题地图 / 方案对比 / 用户确认记录 / 后续阶段输入`。它不能替代事实查证，不能替代用户确认，也不能原样落入 `brainstorm.md`。
 
 ## 何时使用
 
@@ -80,6 +87,12 @@ description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户�
 - `[必须确认]` 会改变架构/体验/成本/范围的高影响决策
 - `[可安全默认]` 技术社区有明显最优解、低风险、后期可调整的
 
+硬规则：
+
+- 若对某项是否“明显最优”存在任何不确定，强制划入 `[必须确认]`，不得自行归入 `[可安全默认]`。
+- 将所有 `[必须确认]` 按以下维度顺序排列：核心目标/范围 > 体验方向 > 数据与安全 > 集成与依赖 > 交付验收。依次提问，不得跳跃。
+- 每轮对话结束前自检：是否还有未解决的高影响问题？如有，补写对应 `[NEEDS ... DECISION]` 后再输出回复或路由。
+
 **`[必须确认]` 问题优先级排序（从高到低依次问）：**
 
 1. **核心目标/范围**：这是为谁做的？解决什么核心问题？MVP 做什么，明确不做什么？
@@ -103,14 +116,12 @@ C) 不确定 → 先按 B 设计，留扩展点
 你们现在大概是哪种情况？
 ```
 
-错误的提问方式：
-```
-请问你们的技术栈是什么？前端用什么？后端用什么？数据库用什么？邨署在哪里？ ❌ 一次问太多
-```
+提问前检查：
 
-```
-你想要什么样的 UI？ ❌ 太开放，用户不知道怎么回答
-```
+- 本轮只包含一个会改变方向的问题。
+- 选项之间有真实权衡，不只是同一建议的不同措辞。
+- 问题不能太开放；用户看完选项后应能直接选择、组合或修正。
+- 涉及技术栈、前端、后端、数据库、部署等多个维度时，按优先级拆成多轮问。
 
 **收敛信号（满足全部才能进入下一阶段）：**
 - ✅ 所有 `[必须确认]` 事项有用户答案或明确授权默认
@@ -119,42 +130,70 @@ C) 不确定 → 先按 B 设计，留扩展点
 - ✅ 用户知道下一步是什么
 - ❌ 任何 `[NEEDS ... DECISION]` 标记存在 → 不得宣布收敛
 
-## 合理化借口表
+## 正向执行断言
 
-| Agent 可能说的 | 真相 |
+- 沉默不是确认；必须等到用户给出明确答复才能继续。
+- 会影响架构、体验、成本或范围的问题，现在就要问，不能推给后续阶段。
+- 用户说“你来决定”时，必须写明授权内容、推荐理由、风险和回退点。
+- 每轮只问一个会改变方向的问题；多问会降低答案质量。
+- 对 Agent 明显不等于对用户明显；只要不确定，就归入 `[必须确认]`。
+
+## 执行序列
+
+### A. 启动时做一次
+
+1. 读取 active work item 的 original request、brief、可选 PRD / requirements / UI / technical design 和已有 brainstorm。
+2. 读取 `brief.md#Brainstorm 决策` 的模式，决定本轮深度：
+   - `skip`：无需用户参与式取舍，记录跳过理由并回到 brief 指定下一步。
+   - `light`：直接框定问题、给 2-3 个候选并收敛，不做五维全量发散。
+   - `deep`：先做 Phase 1 发散，再做 Phase 2 聚焦。
+   - 模式来源见 `sf-intake` 的“Brainstorm 分流规则”和 `core/artifacts/templates/brief.md#Brainstorm 决策`。
+3. 需要当前事实时先查证；技术类优先官方资料，并记录日期。
+4. 需要第三方方法卡时，按 `references/external-skills.md` 选择并读取最小必要内容；只把它转成候选、风险、问题地图或后续阶段输入，不把第三方输出直接当结论。
+5. 建立问题地图：`[已明确] / [必须确认] / [可安全默认]`。
+6. 按固定维度排序 `[必须确认]`：核心目标/范围 > 体验方向 > 数据与安全 > 集成与依赖 > 交付验收。
+
+### B. 每轮对话循环
+
+1. 只选择当前排序最高的一个 `[必须确认]` 问题。
+2. 用“背景 1 句 + 2-3 个真实选项 + 清楚提问”的格式提问。
+3. 等用户回答；不要同时抛下一个问题。
+4. 用户明确确认后，立即更新确认记录：
+   - UI / 视觉 / 体验方向：写 `UI Direction Status: confirmed` 或真实 `[UI DECISION CONFIRMED]`。
+   - 技术栈 / 架构 / 数据库 / 调度器 / AI provider / 部署方向：写 `Tech Direction Status: confirmed` 或真实 `[TECH DECISION CONFIRMED]`；用户授权默认写 `Tech Direction Status: delegated_default`。
+   - 新增 / 替换依赖：写 `Dependency Decision Status: confirmed` 或真实 `[DEPENDENCY DECISION CONFIRMED]`；用户授权默认写 `Dependency Decision Status: delegated_default`。
+   - 工程工具链：写 `Tooling Decision Status: confirmed` 或真实 `[TOOLING DECISION CONFIRMED]`；用户授权默认写 `Tooling Decision Status: delegated_default`；沿用现有栈写 `Tooling Decision Status: existing_stack`。
+5. 用户没有确认时，保留 pending，并补写对应 `[NEEDS ... DECISION]`。
+6. 每轮回复前自检：是否还有未解决的高影响问题？如果有，不得宣布收敛。
+7. 每轮结束都更新阶段记录：Embedded 模式写入 `00-intake/brainstorm.md` 并同步 `00-intake/brief.md`；Standalone / Lightweight 模式写入 `specforge-import-ready.md` 格式内容。
+
+### C. 收敛时做一次
+
+1. 写入或更新 `00-intake/brainstorm.md`：问题地图、事实证据、方案对比、推荐项、用户确认、明确延后 / 不做、未决问题。
+2. 同步更新 `00-intake/brief.md`：澄清记录、功能候选池、用户选择、外部研究摘要、PRD 决策和 Brainstorm 决策。
+3. 确认没有 `[NEEDS ... DECISION]` 阻断项；如仍有阻断项，输出暂停原因而不是路由到下游。
+4. 输出下一步路由：`sf-prd`、`sf-requirements`、`sf-ui-design`、`sf-tech-design`、`sf-discovery` 或暂停等待用户确认。
+
+## 判定表
+
+| 条件 | 状态 |
 |---|---|
-| “我已经列了几个方案，用户没反对就算确认了” | 没有明确答复 = 没有确认，必须重新问 |
-| “这个问题太细了，以后 tech design 再说” | 会影响架构/体验方向的问题现在就要问 |
-| “用户说‘你来决定’就等于授权默认” | 必须写明授权内容和推荐理由，不能空白 |
-| “一次问多个问题效率更高” | 效率高但质量差，每次只问一个 |
-| “这个选项很明显，不用问” | 对你明显不等于用户有同样预期，先问 |
-
-## 动作
-
-1. 列出 `已明确 / 高影响未知 / 可安全默认`。
-2. 根据问题类型生成 2-3 个互斥方案或 MVP 组合；每个方案写价值、成本、风险、适用条件和不推荐原因。
-3. 需要竞品、政策、模型、框架、SDK、浏览器能力、安全或版本事实时，先查当前可靠来源；技术类优先官方资料，并记录日期。
-4. 每轮只问会改变方向的问题；优先用选项和取舍帮助用户确认，不用长问卷。
-5. 用户确认后，写入或更新 `00-intake/brainstorm.md`。
-   - 如果确认的是 UI / 视觉 / 体验方向，必须写入 `[UI DECISION CONFIRMED]` 或 `UI Direction Status: confirmed`，并记录用户选择、放弃项和影响。
-   - 如果确认的是技术栈 / 架构 / 数据库 / 调度器 / AI provider / 部署 / 依赖方向，必须写入 `[TECH DECISION CONFIRMED]` 或 `Tech Direction Status: confirmed`；用户授权默认写 `Tech Direction Status: delegated_default`。
-   - 如果确认的是新增 / 替换依赖，必须写入 `[DEPENDENCY DECISION CONFIRMED]` 或 `Dependency Decision Status: confirmed`；用户授权默认写 `Dependency Decision Status: delegated_default`。
-   - 如果确认的是工程工具链，必须写入 `[TOOLING DECISION CONFIRMED]` 或 `Tooling Decision Status: confirmed`；用户授权默认写 `Tooling Decision Status: delegated_default`；沿用现有栈写 `Tooling Decision Status: existing_stack`。
-6. 同步更新 `00-intake/brief.md` 中的澄清记录、功能候选池、用户选择、外部研究摘要和 PRD 决策。
-7. 输出下一步路由：`sf-prd`、`sf-requirements`、`sf-ui-design`、`sf-tech-design`、`sf-discovery` 或暂停等待用户确认。
+| 没有 active work item，且用户要求落档但尚未创建 work item | 停止：先路由 `sf-intake` |
+| 用户尚未确认 MVP、核心方案、关键技术路线或不能安全默认的边界 | 停止：继续 Socratic 单问 |
+| 需要当前事实支撑的判断尚未完成研究 | 停止：先补事实来源 |
+| 方案之间成本、风险或用户价值差异未说明清楚 | 停止：补方案对比 |
+| 任何 `[NEEDS ... DECISION]` 仍存在 | 停止：不得宣布收敛 |
+| 用户确认的选择、授权默认、Agent recommendation 和未决问题已分清 | 完成条件之一 |
+| `brainstorm.md` 足以支撑 PRD、requirements、UI design 或 technical design 继续推进 | 完成条件之一 |
+| `brief.md` 已同步，下一步路由清楚 | 完成 |
 
 ## 停止条件
 
-- 没有 active work item，且用户要求落档但尚未创建 work item。
-- 用户尚未确认 MVP、核心方案、关键技术路线或不能安全默认的边界。
-- 需要当前事实支撑的判断尚未完成研究。
-- 方案之间成本、风险或用户价值差异未说明清楚。
+以“判定表”为准。任一停止条件命中时，不进入下游阶段。
 
 ## 完成标准
 
-- `00-intake/brainstorm.md` 记录了问题框架、候选方案、研究证据、用户确认和未决问题。
-- `brief.md` 已同步更新，不会让后续阶段误把 Agent 建议当成用户确认。
-- 下一步路由明确，且所有阻断问题都用 `[NEEDS ... DECISION]` 标记。
+以“判定表”为准。只有完成条件全部满足，才能输出下一步路由。
 
 ## 不做
 

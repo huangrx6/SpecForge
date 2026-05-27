@@ -9,116 +9,113 @@ description: 更新 SpecForge 项目 Wiki；用于用户要求“回写知识库
 
 执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
 
-`sf-wiki` 只维护项目当前事实，不复制 work item 过程流水账。Wiki 是项目长期记忆，不是 work item 的第二份报告。
+`sf-wiki` 维护项目当前长期事实，不复制 work item 过程流水账。Wiki 是项目记忆，不是 implementation report、verification report 或 release note 的第二份副本。
 
-如果用户的目标是“先理解整个存量项目 / 建立项目画像 / 扫描大型代码库”，优先路由到 `sf-steering`。`sf-wiki` 主要负责把已经完成的 work item 或已确认事实同步成当前 wiki；`sf-steering` 负责从现有代码中建立基线。
+如果用户目标是“先理解整个存量项目 / 建立项目画像 / 扫描大型代码库”，优先路由 `sf-steering`。`sf-wiki` 负责把已确认事实或完成 work item 的结论同步成当前 wiki。
 
-## 启动
+## 必读
+
+- `references/wiki-playbook.md`：回写判断、目标文件选择、frontmatter、index 对账、gate 决策。
+- `.specforge/core/workflows/stages/wiki-sync/SKILL.md`
+- `.specforge/core/artifacts/templates/wiki-sync.md`
+- `.specforge/core/standards/wiki.md`
+- `.specforge/core/standards/workflow.md`
+- `.specforge/core/standards/engineering.md`
+- 涉及设计系统或 PC 端业务系统规范时读取 `.specforge/core/standards/design.md` 和 `.specforge/core/standards/pc-ui-design-spec.md`。
+- 涉及第三方 skill 长期事实时读取 `.specforge/core/skills/ORCHESTRATION.md`，只沉淀已被 SpecForge artifact 证实的稳定内容。
+
+## 启动扫描
+
+1. 运行：
 
 ```bash
 node .specforge/core/scripts/instructions.mjs
 ```
 
-如果当前 ready artifact 是 `wiki_sync`，先创建 evidence：
+2. 如果 ready artifact 是 `wiki_sync`，生成 evidence：
 
 ```bash
 node .specforge/core/scripts/create-artifact.mjs wiki_sync
 ```
 
-如果 `.specforge/wiki/` 缺少基础文件，先补齐：
+3. 如果 `.specforge/wiki/` 缺少基础文件，先补齐：
 
 ```bash
 node .specforge/core/scripts/sync-wiki.mjs
 ```
 
-## 内部技能母本
+4. 若当前没有 active work item，但用户明确要求更新 wiki，可进入 Lightweight wiki 更新；必须写清来源证据，不能凭口头印象改当前事实。
 
-写入 wiki 前读取：
+## 执行序列
 
-```text
-.specforge/core/workflows/stages/wiki-sync/SKILL.md
-```
+### A. 收集来源
 
-如果本次 wiki 回写涉及设计系统、产品规则、外部调研或第三方 skill 产出的长期事实，还要读取 `.specforge/core/skills/ORCHESTRATION.md`，只沉淀已经被 SpecForge artifact 证实的稳定内容。
+优先读取 active work 的最终产物：
 
-## Wiki 结构
+- `00-intake/brief.md`
+- `00-intake/prd.md`（存在时）
+- `01-spec/requirements.md`
+- `01-spec/gap-report.md`（存在时）
+- `01-spec/ui-design.md`（存在时）
+- `01-spec/technical-design.md`（存在时）
+- `00-steering/codebase-intelligence.md`（存在时）
+- `02-spec-review/spec-review-v1.md`（存在时）
+- `03-implementation/report.md`
+- `04-code-review/code-review-v1.md`
+- `05-verification/report.md`
+- `06-close/release.md` / `rollback.md`（存在时）
 
-每个知识项一个文件，保持当前最新状态：
+### B. 判断是否回写
 
-```text
-.specforge/wiki/
-  index.md
-  project-overview.md
-  product-rules.md
-  architecture.md
-  module-<name>.md        # 按需创建，模块级架构
-  api-<domain>.md         # 按需创建，接口域汇总
-  design-system.md        # 按需创建，稳定 UI 组件、token、风格规则
-  data-model.md
-  operations.md
-  decisions.md
-  glossary.md
-  risks.md
-```
+1. 提取候选长期事实。
+2. 按 `references/wiki-playbook.md#回写矩阵` 判断目标文件。
+3. 只影响一次性实现、临时日志、测试输出、截图或局部无复用备注时，在 `06-close/wiki-sync.md` 写 N/A 理由，不更新 wiki。
+4. 改变长期产品、架构、接口、数据、运行、设计系统、术语、风险时，必须更新对应 wiki 文件。
 
-## 动作
+### C. 更新 wiki
 
-1. 读取 active 或指定 archived work 的最终产物：
-   - `00-intake/brief.md`
-   - `00-intake/prd.md`（存在时）
-   - `01-spec/requirements.md`
-   - `01-spec/ui-design.md`（存在时）
-   - `01-spec/technical-design.md`（存在时）
-   - `00-steering/codebase-intelligence.md`（存在时）
-   - `02-spec-review/spec-review-v1.md`（存在时）
-   - `03-implementation/report.md`
-   - `04-code-review/code-review-v1.md`
-   - `05-verification/report.md`
-2. 先做“是否回写”判断：
-   - 只影响一次性实现、临时日志、测试输出：写 N/A 理由，不更新 wiki。
-   - 改变长期产品、架构、接口、数据、运行、设计系统、术语、风险：必须更新对应 wiki 文件。
-   - 参考 implementation report 的 Wiki 回写提示、verification 的已知缺口和 technical_design 的影响面，不只凭主观判断。
-3. 判断哪些事实长期有效：
-   - 产品规则、角色、权限、审批、状态机。
-   - 架构、模块边界、技术栈、依赖关系。
-   - codebase intelligence 报告中已被代码 / 配置 / provider 查询证实的模块、入口和风险。
-   - API、事件、Webhook、SDK 契约语义。
-   - 数据模型、字段语义、生命周期、迁移注意事项。
-   - 部署、启动、配置、任务调度、监控、回滚。
-   - UI 设计系统、组件用法、token、风格方向。
-   - Figma MCP / Pencil MCP / DESIGN.md 中已经稳定为项目规则的设计系统约定。
-   - 决策、术语、风险、技术债。
-4. 更新对应 `.specforge/wiki/*.md` 文件。每个知识项只保留一个当前文件；事实变化时更新原文件，不新建 v2、日期版或 work item 版文件。确需新增时按 `module-<name>.md`、`api-<domain>.md`、`design-system.md` 这类见名知意的短名。
-5. 每个更新文件都保留并刷新 frontmatter：`title`、`kind`、`owner`、`last_updated`、`source_work`、`status`。
-6. 更新 `.specforge/wiki/index.md` 的当前文件索引、摘要和最后同步时间。
-7. 在 `06-close/wiki-sync.md` 中记录：
-   - 本次是否影响 wiki。
-   - 更新了哪些文件。
-   - 哪些事实未更新及原因。
-   - 来源 work 和证据路径。
-8. 更新 wiki_sync gate：
+1. 优先更新现有 current 文件，不创建日期版、v2 版、work item 版。
+2. 确需新增时使用短名：`module-<name>.md`、`api-<domain>.md`、`design-system.md`。
+3. 每个更新文件都保留并刷新 frontmatter：`title`、`kind`、`owner`、`last_updated`、`source_work`、`status`。
+4. 更新 `.specforge/wiki/index.md` 的摘要、当前文件索引和最后同步时间。
+5. 在 `06-close/wiki-sync.md` 记录更新文件、写入事实、来源证据、不更新原因和下游重新验证要求。
+
+### D. 更新 gate
+
+批准：
 
 ```bash
 node .specforge/core/scripts/gate.mjs wiki_sync APPROVED --evidence 06-close/wiki-sync.md
 ```
 
-缺少事实证据时不要批准：
+缺少事实证据或冲突未解决：
 
 ```bash
 node .specforge/core/scripts/gate.mjs wiki_sync REQUEST_CHANGES
 ```
 
+## 判定表
+
+| 条件 | 状态 |
+|---|---|
+| verification 未批准，且处于 close 前 wiki_sync | 停止，回 `sf-verify` |
+| 只是一次性过程记录、日志、截图、临时调试 | 不更新 wiki，写 N/A 理由 |
+| 长期产品 / 架构 / API / 数据 / 运行 / 设计系统 / 风险变化 | 更新对应 wiki |
+| artifact 与现有 wiki 冲突且无法判断最新事实 | `REQUEST_CHANGES` |
+| 会产生重复 current 文件 | 停止，合并到唯一目标文件 |
+
 ## 完成标准
 
-- 每个被更新的 wiki 文件都有 frontmatter：`title`、`kind`、`owner`、`last_updated`、`source_work`、`status`。
-- 同一知识项只有一个 `status: current` 文件。
-- wiki 只包含当前事实；被替代的旧事实已更新或移入 `decisions.md` 的决策背景，不保留重复 current 文件。
-- `index.md` 已反映最新 current 文件列表。
-- `06-close/wiki-sync.md` 已写明更新或不更新原因。
-- `wiki_sync` gate 状态与证据一致。
+- `06-close/wiki-sync.md` 写明影响或不影响。
+- 更新的 wiki 文件 frontmatter 完整，`status: current` 正确。
+- 同一知识项只有一个 current 文件。
+- `.specforge/wiki/index.md` 反映最新 current 文件列表。
+- wiki 只包含当前事实；旧事实被更新，必要背景进入 `decisions.md`。
+- wiki_sync gate 状态与 evidence 一致。
 
 ## 不做
 
 - 不把临时日志、测试输出、截图或实现流水账复制进 wiki。
-- 不创建按日期命名的 wiki 文件。
+- 不创建按日期、版本号或 work item 命名的 wiki 文件。
 - 不用 wiki 替代 work item evidence。
+- 不把第三方 skill 的模板、persona 或建议当成项目事实；只有经 SpecForge artifact 确认后才可沉淀。

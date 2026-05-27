@@ -25,7 +25,7 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
 - `core/profiles/README.md` 以及 `technical-design.md` 选中的技术选择卡
 - `.specforge/core/standards/engineering.md`
 - `.specforge/core/standards/workflow.md`
-- `.specforge/core/skills/README.md`（存在 Figma / 浏览器实现或验证辅助时）
+- `.specforge/core/skills/README.md`（存在浏览器实现或验证辅助时）
 
 ## 写入
 
@@ -34,40 +34,20 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
 - `03-implementation/report.md`
 - `03-implementation/changed-files.md`
 - 勾选 `01-spec/tasks.md` 中完成的任务。
-## 铁律（不可越过）
 
-```
-在没有可失败测试之前，不得写任何生产代码。
-```
+## 失败优先验证规则
 
-写代码之前没有看到测试失败？**删掉代码，从测试开始重来。**
+行为变更默认先写或定位一个会失败的单元 / 集成 / 契约 / Playwright 用例，再写生产代码使其通过。确实无法失败优先时，必须在 `03-implementation/report.md` 写明原因、风险和替代证据。
 
-**不允许的例外：**
-- 不能以"这个逻辑不好测"为由跳过
-- 不能以"tasks 没有写测试步骤"为由跳过
-- 不能以"影响面太小"为由跳过
-- 不能边写代码边补测试——先测试，后代码
+允许先做结构性准备的场景包括：官方脚手架 / 模板初始化、依赖安装、测试框架配置、纯文档、纯配置登记、删除无引用死文件、为测试可运行而做的最小 harness。这些场景仍要记录安装、构建、启动、diff 对账或人工检查证据。
 
-## 常见合理化借口（全部是错的）
+## 立即停止条件
 
-| Agent 可能说的 | 真相 |
-|---|---|
-| "影响面是 unknown，但看起来问题不大" | **unknown 就是 unknown，必须退回澄清，不得推测** |
-| "task 没有 Verification 字段，先实现再说" | **缺验证 = task 不完整，退回 sf-tasking** |
-| "Boundary 外只改了一点点" | **任何越界都必须停，回 spec，不可以自行扩大** |
-| "测试很难写，先手工验证" | **手工验证不能替代自动化测试，sf-verify 也不接受** |
-| "代码已经写好了，补个测试形式上过一下" | **这不是 TDD，这是事后测试，不接受** |
-| "requirements 没明确要求这个场景" | **不确定就停下来问，不要自行假设** |
-
-## Red Flags — 出现以下情况立即停止
-
-- 你在没有失败测试的情况下写了生产代码
-- 你的 task 状态写了 `DONE`，但实际上验证命令没跑
-- 你修改了 `_Boundary:_` 之外的文件
-- 你遇到 `[NEEDS TECH DECISION]` 或 `[NEEDS SPEC DECISION]` 还在继续实现
-- 连续 3 次修复同一个问题失败，你还在尝试第 4 次
-
-**所有以上情况 = 停止，说明阻断原因，等待用户指示。**
+- task 状态写了 `DONE`，但验证命令、证据或可信 N/A 缺失。
+- 修改了 `_Boundary:_` 之外的文件，且没有 approved spec 依据。
+- 遇到 `[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]` 或关键 `unknown` 还在继续实现。
+- 需要改变 technical design 中被批准为 `no` 的影响面。
+- 连续 3 次修复同一个问题失败。
 
 ## 执行流程
 
@@ -88,6 +68,7 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
    - 如果项目已有架构，沿用现有结构，不重新初始化。
 4. **实现 UI 前先读取 `ui-design.md` 中批准的 UI 产物**：
    - 先读取 Visual Style Brief；实现阶段不得临时改风格、主色、密度或组件形态。
+   - 如果 `ui-design.md` 声明采用 PC 端业务系统规范，必须同时读取 `.specforge/core/standards/pc-ui-design-spec.md`；生成 HTML/CSS 或组件样式时严格使用该规范 token，不得使用 UI 库默认主题或临时改值。
    - Pencil 原型：读取导出截图和 `ui-design.md` 中的页面/状态矩阵，以原型为布局和交互参照实现。
    - 为 Playwright E2E 保留稳定可访问选择器：优先 role、label、可见文本；必要时补 `data-testid`。不能为了测试绕过真实用户路径。
 5. **实现技术变更前先读取 `technical-design.md`**，按其中的前后端边界、API、数据、权限、配置、NFR 和验证策略执行。

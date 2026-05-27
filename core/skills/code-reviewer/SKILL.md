@@ -30,8 +30,8 @@ This skill contains **detailed rules** in the `rules/` directory, organized by c
 
 ### Quick Start
 
-1. **Review [AGENTS.md](AGENTS.md)** for a complete compilation of all rules with examples
-2. **Reference specific rules** from `rules/` directory for deep dives
+1. **Start from this file** to decide whether the review needs security, performance, correctness, or maintainability depth
+2. **Reference only the specific rules** from `rules/` that match the current risk
 3. **Follow priority order**: Security → Performance → Correctness → Maintainability
 
 ### Available Rules

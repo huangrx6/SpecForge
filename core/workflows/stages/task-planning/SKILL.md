@@ -21,6 +21,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/product.md`
 - `.specforge/core/standards/design.md`（存在 UI 影响时）
+- `.specforge/core/standards/pc-ui-design-spec.md`（`ui-design.md` 声明采用 PC 端业务系统规范时）
 - `.specforge/core/standards/engineering.md`
 - `.specforge/core/profiles/README.md`（存在技术选型时）
 
@@ -47,7 +48,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 3. **先列失败优先 / 契约任务**：API、schema、类型、配置、迁移、权限、提示词、评估集、feature flag、环境变量。行为变更优先设计能先失败的测试或检查。
 4. **再列基础任务**：新项目脚手架、开发服务器冒烟、目录结构、共享客户端、测试基线。
 5. **再列实现任务**：按模块、层次、用户路径或状态机拆分。每个任务应小到一次实现和一次 review 可以聚焦完成。
-6. **再列验证任务**：单元、集成、契约、E2E、页面 × 操作 × 角色矩阵、启动验证、回归验证、人工证据。
+6. **再列验证任务**：单元、集成、契约、E2E、页面 × 操作 × 角色矩阵、启动验证、回归验证、人工证据。采用 PC 端业务系统规范时，必须包含 token、布局尺寸、表格 / 表单 / 弹窗 / 抽屉、SVG 图标和响应式验证任务。
 7. **最后列运行任务**：配置、迁移、回滚、可观测性、告警、发布检查和 Wiki 回写提示。
 8. 标注依赖关系和并行波次。并行任务必须有不同主要写入边界。
 
@@ -81,6 +82,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 - UI 状态、API 契约、数据迁移、权限、安全、发布任务必须单独列出。
 - 有浏览器流程、上传、提交、审批、下载、权限或错误提示时，必须列出 Playwright E2E 用例设计、脚本执行和证据登记任务；不能只列单元测试或人工验证。
 - 有 UI / 浏览器流程时，必须先生成 `05-verification/test-cases.md` 的测试用例任务，再生成执行任务；执行任务要覆盖成功、失败、权限、边界和响应式中适用项。
+- `ui-design.md` 声明采用 PC 端业务系统规范时，任务必须承接 `pc-ui-design-spec.md` 的核心约束：顶栏 / 侧栏尺寸、字体、颜色 token、控件高度、表格行高、弹窗 / 抽屉、图标和 HTML/CSS token。
 - 对多个 agent / worker 友好的任务，要明确“谁拥有哪些文件或模块”。
 
 ## 必含任务类型

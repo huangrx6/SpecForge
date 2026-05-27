@@ -76,6 +76,21 @@
 |---|---|---|---|---|---|---|
 | | | | 默认 / 加载 / 空 / 错误 / 权限不足 / 禁用 / 边界 / 响应式 | | 通过 / 失败 / 跳过 | |
 
+### PC 端业务系统规范验证
+
+> `ui-design.md` 声明采用 `.specforge/core/standards/pc-ui-design-spec.md` 时必填；否则写 N/A。
+
+| 检查项 | 通过标准 | 验证方式 | 结果 | 证据 |
+|---|---|---|---|---|
+| App shell | 顶栏 `64px`、侧栏 `208px / 68px`、模块间距 `16px` | screenshot / DOM / computed style | pass / fail / N/A | |
+| 字体 / 字号 / 行高 | 使用规范字体和 `12/20` 至 `24/32` 层级 | computed style / screenshot | pass / fail / N/A | |
+| 颜色 token | primary `#277DEA`、功能色、中性色符合规范 | CSS token / computed style | pass / fail / N/A | |
+| 控件尺寸 | button/input/select `32px`，radius `8px` | DOM / screenshot | pass / fail / N/A | |
+| Table | row `46px`、表头 / hover / 固定列 / 分页适配 | Playwright / screenshot | pass / fail / N/A | |
+| Modal / Drawer | 尺寸、遮罩、关闭、固定头尾和滚动符合规范 | Playwright | pass / fail / N/A | |
+| 图标 | SVG、统一图标集、16/18px、aria-label | DOM / screenshot | pass / fail / N/A | |
+| 响应式 | 桌面基准和低分辨率 viewport 不溢出 | Playwright screenshot | pass / fail / N/A | |
+
 ## 7. 浏览器运行诊断
 
 > 使用 Playwright 或 DevTools 时必填；无浏览器行为可写 N/A。

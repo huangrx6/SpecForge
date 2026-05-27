@@ -59,12 +59,13 @@ node core/scripts/codebase-index.mjs --write-report --report /tmp/specforge-code
 - `bootstrap.candidates.tests`
 - `bootstrap.candidates.operations`
 
-如果 `status=blocked_large_without_provider`，先向用户确认是否安装 codebase-memory-mcp / CodeGraphContext，或让用户指定目标业务域、优先模块、报错路径；不要自行展开全仓。
+如果 `status=blocked_large_without_provider`，先展示 `install_options` 并向用户确认是否安装 CodeGraph / codebase-memory-mcp / CodeGraphContext，或让用户指定目标业务域、优先模块、报错路径；不要自行展开全仓。用户确认安装 CodeGraph 后，按当前 OS 执行安装命令，再运行 `codegraph init -i`、`codegraph status` 和 `codebase-index` 复查。
 
 ### 1.5 Provider 决策层
 
 | provider 类型 | 用法 |
 |---|---|
+| CodeGraph | 本地 SQLite 知识图谱 + MCP；查询 context、trace、impact、callers/callees、affected source/tests；大型项目优先 |
 | codebase-memory-mcp / CodeGraphContext | 查询模块、符号、调用链、依赖、入口、影响面；大型项目优先 |
 | Repomix | 只在目标模块已限定时生成 context 包；不打包全仓 |
 | `codebase-map.mjs` | bootstrap / fallback，提供粗地图和候选路径 |
@@ -132,7 +133,7 @@ Wiki 中每一项保持单文件、当前态。不要创建 `architecture-v2.md`
 |---|---|---|
 | Aider repo map | 用 Tree-sitter / 符号 / 依赖关系在 token 预算内选上下文 | `codebase-map` 先给粗地图；后续按模块选文件 |
 | Repomix / Gitingest | 生成 prompt-friendly 代码包和 token 分布 | 只用于小范围模块包，不用于全仓长期事实 |
-| CodeGraphContext / codebase-memory-mcp | 图谱、MCP、依赖、调用和文档层 | 大项目首选，结果归一到 wiki |
+| CodeGraph / CodeGraphContext / codebase-memory-mcp | 图谱、MCP、依赖、调用、影响面和文档层 | 大项目首选，结果归一到 wiki |
 | RepoAgent | 自动生成和维护仓库文档 | 可借鉴“先全局结构，再增量维护”的机制 |
 
 ## 与 work item 的关系

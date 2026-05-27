@@ -28,7 +28,15 @@ Status: PENDING
 | Git diff | | pass / fail | |
 | 测试 / 启动证据 | | pass / fail / N/A | |
 
-## 3. Diff 摘要
+## 3. 外部 Code Review 参考
+
+> 仅在需要补充安全、性能、正确性、可维护性检查维度时填写。第三方 `code-reviewer` 只能作为风险清单，不能替代 SpecForge 的 diff / tasks / implementation report 对账。
+
+| 参考 | 读取内容 | 触发原因 | 归一化结果 |
+|---|---|---|---|
+| code-reviewer / N/A | `SKILL.md` / `rules/...` / N/A | SQL / XSS / N+1 / error handling / naming / typing / N/A | findings / risk checklist / N/A |
+
+## 4. Diff 摘要
 
 | 文件 / 区域 | 变更摘要 | 关联任务 | 在批准边界内？ | 风险 |
 |---|---|---|---|---|
@@ -44,19 +52,19 @@ Status: PENDING
 | 登记但无真实 diff 的文件已有解释 | pass / fail / N/A | |
 | 批准边界外偏离已在 implementation report 中说明 | pass / fail / N/A | |
 
-## 4. 任务覆盖
+## 5. 任务覆盖
 
 | 任务 | Impact | 预期结果 | 实现证据 | 验证证据 | 状态 |
 |---|---|---|---|---|---|
 | T001 | | | | | pass / fail / N/A |
 
-## 5. Spec 符合性
+## 6. Spec 符合性
 
 | Spec 条目 | 预期行为 / 约束 | 实现证据 | 缺口 |
 |---|---|---|---|
 | | | | |
 
-## 6. Technical Design 影响面实现审查
+## 7. Technical Design 影响面实现审查
 
 > 仅在 `technical-design.md` 适用时填写；否则写 N/A。检查 `technical-design.md#0. 影响面与读取计划` 中每个影响面是否被正确实现、跳过或退回。
 
@@ -72,7 +80,7 @@ Status: PENDING
 | Jobs / Queue / Scheduler | yes / no / unknown / N/A | | | | pass / fail / N/A |
 | Observability / Reliability | yes / no / unknown / N/A | | | | pass / fail / N/A |
 
-## 7. 风险检查
+## 8. 风险检查
 
 | 领域 | 结果 | 证据 / 备注 |
 |---|---|---|
@@ -88,29 +96,29 @@ Status: PENDING
 | 测试和启动验证 | pass / fail | |
 | Wiki 影响识别 | pass / fail / N/A | |
 
-## 8. 问题列表
+## 9. 问题列表
 
 | 等级 | 位置 | 问题 | 影响 | 建议修复 | 需要补充的证据 |
 |---|---|---|---|---|---|
 | P0 / P1 / P2 / P3 | file:line / artifact section | | | | |
 
-## 9. 残余风险
+## 10. 残余风险
 
 -
 
-## 10. 验证提示
+## 11. 验证提示
 
 -
 
-## 11. Wiki 影响
+## 12. Wiki 影响
 
 -
 
-## 12. 决策
+## 13. 决策
 
 可选值：APPROVED, REQUEST_CHANGES, REJECTED.
 
-## 13. Gate 更新
+## 14. Gate 更新
 
 APPROVED 时执行：
 

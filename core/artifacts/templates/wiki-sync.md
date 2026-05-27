@@ -23,6 +23,7 @@
 |---|---|---|---|---|
 | PRD / requirements 产品规则 | 是 / 否 | `product-rules.md` / N/A | 更新 / 不更新 | |
 | UI 设计系统 / 风格规则 | 是 / 否 | `design-system.md` / N/A | 更新 / 不更新 | |
+| PC 端业务系统 UI 规范 | 是 / 否 | `design-system.md` / N/A | 更新 / 不更新 | |
 | 技术架构 / 模块边界 | 是 / 否 | `architecture.md` / `module-<name>.md` / N/A | 更新 / 不更新 | |
 | API / 事件 / SDK 契约 | 是 / 否 | `api-<domain>.md` / N/A | 更新 / 不更新 | |
 | 数据模型 / 迁移注意事项 | 是 / 否 | `data-model.md` / N/A | 更新 / 不更新 | |

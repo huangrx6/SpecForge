@@ -28,13 +28,25 @@ function optionValues(name) {
 
 function commandPath(commands) {
   for (const command of commands) {
-    const result = spawnSync("sh", ["-lc", `command -v ${command}`], {
-      encoding: "utf8",
-      timeout: 2000,
-    });
-    if (result.status === 0 && result.stdout.trim()) return { command, path: result.stdout.trim() };
+    if (process.platform === "win32") {
+      const result = spawnSync("where", [command], { encoding: "utf8", timeout: 2000 });
+      if (result.status === 0 && result.stdout.trim()) return { command, path: result.stdout.trim().split(/\r?\n/)[0] };
+    } else {
+      const result = spawnSync("sh", ["-lc", `command -v ${command}`], {
+        encoding: "utf8",
+        timeout: 2000,
+      });
+      if (result.status === 0 && result.stdout.trim()) return { command, path: result.stdout.trim() };
+    }
   }
   return null;
+}
+
+function hostPlatform() {
+  if (process.platform === "darwin") return { id: "macos", label: "macOS", shell: "sh" };
+  if (process.platform === "linux") return { id: "linux", label: "Linux", shell: "sh" };
+  if (process.platform === "win32") return { id: "windows", label: "Windows", shell: "powershell" };
+  return { id: process.platform, label: process.platform, shell: "unknown" };
 }
 
 function focusModules() {
@@ -78,6 +90,14 @@ function provider(id, label, kind, commands, role, recommendedFor) {
 
 function providers() {
   return [
+    provider(
+      "codegraph",
+      "CodeGraph",
+      "graph",
+      ["codegraph"],
+      "首选代码智能 provider：本地 SQLite 代码知识图谱，支持 MCP 查询、context、trace、impact、affected tests 和自动同步。",
+      ["medium", "large", "focused-large"],
+    ),
     provider(
       "codebase-memory-mcp",
       "Codebase Memory MCP",
@@ -165,7 +185,8 @@ function nextActions(status, scale, selected) {
   if (status === "blocked_large_without_provider") {
     return [
       "暂停全仓理解，不要继续扩大读取范围。",
-      "让用户安装 codebase-memory-mcp / CodeGraphContext，或指定一个目标模块、业务域、错误路径。",
+      "向用户展示 install_options：推荐安装 CodeGraph，或选择安装其他 graph provider，或指定目标模块 / 业务域 / 错误路径。",
+      "用户确认安装后，按当前 OS 自动执行推荐命令；安装后运行 codegraph init/status 和 codebase-index 复查。",
       "若用户指定目标模块，可用 codebase-map + rg 做 change-focused / bug-focused 局部理解。",
     ];
   }
@@ -193,6 +214,42 @@ function nextActions(status, scale, selected) {
     "使用 bootstrap map 作为第一层地图。",
     "按模块分批阅读，避免一次性读取全仓。",
   ];
+}
+
+function installOptions(providerList, status) {
+  const host = hostPlatform();
+  const codegraph = providerList.find((item) => item.id === "codegraph");
+  const options = [];
+
+  if (codegraph && !codegraph.installed) {
+    const installCommand =
+      host.id === "windows"
+        ? "irm https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.ps1 | iex"
+        : "curl -fsSL https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh | sh";
+
+    options.push({
+      id: "codegraph",
+      label: "Install CodeGraph",
+      recommended: true,
+      requires_user_confirmation: true,
+      host,
+      when: status === "blocked_large_without_provider" ? "large codebase without graph provider" : "optional graph provider upgrade",
+      install_command: installCommand,
+      fallback_command: "npx @colbymchenry/codegraph",
+      post_install_commands: [
+        "codegraph init -i",
+        "codegraph status",
+        "node .specforge/core/scripts/codebase-index.mjs --json",
+      ],
+      notes: [
+        "Do not run install commands before the user confirms.",
+        "Use the OS-specific command above; the fallback requires Node/npm.",
+        "After installation, initialize the current project and re-run codebase-index before writing wiki facts.",
+      ],
+    });
+  }
+
+  return options;
 }
 
 function firstItems(items = [], limit = 12) {
@@ -251,6 +308,26 @@ function providerPlan(selected) {
   }
 
   if (selected.kind === "graph") {
+    if (selected.id === "codegraph") {
+      return {
+        executable: false,
+        reason: "CodeGraph 主要通过 Agent runtime 的 MCP tools 查询；本地 wrapper 只检测 CLI 并给出初始化 / 查询计划。",
+        commands: [
+          "codegraph init -i",
+          "codegraph status",
+          "codegraph sync",
+          "codegraph query <search> --json",
+          "codegraph impact <symbol> --depth 2 --json",
+        ],
+        queries: [
+          "codegraph_status: check index health and pending sync",
+          "codegraph_context: map target feature/module before reading files",
+          "codegraph_trace: trace call path between symbols",
+          "codegraph_impact: find affected callers/tests before edits",
+          "codegraph_explore: fetch related symbol source in one bounded call",
+        ],
+      };
+    }
     return {
       executable: false,
       reason: "Graph/MCP providers are queried by the Agent runtime, not by this local wrapper.",
@@ -322,6 +399,7 @@ function renderReport(payload) {
 | Selected provider | ${selected.label} (\`${selected.id}\`) |
 | Provider kind | ${selected.kind} |
 | Has codebase | ${normalized.has_codebase ? "yes" : "no"} |
+| Host platform | ${payload.host_platform.label} (\`${payload.host_platform.id}\`) |
 
 ## 2. Provider 可用性
 
@@ -341,9 +419,19 @@ ${payload.providers
 | 输出字节数 | ${execution.stdout_bytes ?? "N/A"} |
 | 说明 | ${execution.reason ?? "N/A"} |
 
-### 执行计划 / 查询计划
+### 执行计划
 
-${payload.provider_plan.commands ? markdownList(payload.provider_plan.commands, (item) => `\`${item}\``) : markdownList(payload.provider_plan.queries)}
+${payload.provider_plan.commands ? markdownList(payload.provider_plan.commands, (item) => `\`${item}\``) : "- none"}
+
+### 查询计划
+
+${payload.provider_plan.queries ? markdownList(payload.provider_plan.queries) : "- none"}
+
+## 3.1 Provider 安装选项
+
+${payload.install_options.length === 0 ? "- none" : payload.install_options
+    .map((item) => `- ${item.recommended ? "**推荐** " : ""}${item.label}（${item.host.label}）：\`${item.install_command}\`\n  - fallback: \`${item.fallback_command}\`\n  - post-install: ${item.post_install_commands.map((command) => `\`${command}\``).join(" → ")}\n  - requires user confirmation: ${item.requires_user_confirmation ? "yes" : "no"}`)
+    .join("\n")}
 
 ## 4. Bootstrap Map 归一化
 
@@ -428,6 +516,7 @@ function printHuman(payload) {
   console.log(`Bootstrap scale: ${payload.bootstrap.scale}`);
   console.log(`Provider status: ${payload.status}`);
   console.log(`Selected provider: ${payload.selected_provider.label} (${payload.selected_provider.id})`);
+  console.log(`Host platform: ${payload.host_platform.label} (${payload.host_platform.id})`);
   console.log("");
   console.log("Provider availability:");
   for (const item of payload.providers) {
@@ -439,6 +528,17 @@ function printHuman(payload) {
     console.log("");
     console.log("Warnings:");
     for (const warning of payload.warnings) console.log(`- ${warning}`);
+  }
+  if (payload.install_options.length > 0) {
+    console.log("");
+    console.log("Install options:");
+    for (const item of payload.install_options) {
+      console.log(`- ${item.label}${item.recommended ? " (recommended)" : ""}`);
+      console.log(`  command: ${item.install_command}`);
+      console.log(`  fallback: ${item.fallback_command}`);
+      console.log(`  post-install: ${item.post_install_commands.join(" -> ")}`);
+      console.log(`  requires user confirmation: ${item.requires_user_confirmation ? "yes" : "no"}`);
+    }
   }
   console.log("");
   console.log("Next actions:");
@@ -463,6 +563,8 @@ try {
     status: selection.status,
     selected_provider: selection.selected,
     providers: providerList,
+    host_platform: hostPlatform(),
+    install_options: installOptions(providerList, selection.status),
     policy: policyForScale(bootstrap.scale),
     next_actions: nextActions(selection.status, bootstrap.scale, selection.selected),
     warnings: selection.warnings,
