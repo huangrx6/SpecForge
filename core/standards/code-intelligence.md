@@ -93,6 +93,11 @@ SpecForge 中的使用规则：
 3. 让用户选择 `baseline-lite`、`baseline-standard`、`baseline-deep`、`change-focused` 或 `bug-focused`。
 4. 用户选择后，重新运行 `codebase-index.mjs --scan-mode <mode>`；定向模式还应补充目标模块、业务域、页面、接口、报错路径或复现线索。
 
+执行约束：
+
+- `status=scan_mode_required` 时，不得继续解析 `bootstrap.languages`、`bootstrap.source_roots`、`bootstrap.candidates` 或启动多 Agent 探索。
+- 展示状态摘要时优先使用 `summary` 字段；`bootstrap` 是证据原始结构，字段类型可能随 scanner 演进变化。
+
 当用户选择的模式需要 provider，但当前未安装时：
 
 1. 展示安装选择：A. 用户自己安装；B. Agent 辅助安装。优先建议 CodeGraph，并说明当前系统对应安装命令。

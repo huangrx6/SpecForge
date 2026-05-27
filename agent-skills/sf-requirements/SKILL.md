@@ -53,7 +53,7 @@ node .specforge/core/scripts/create-artifact.mjs requirements
 
 1. 如果 `brief.md#PRD 决策` 标记需要 PRD，但 `00-intake/prd.md` 不存在或 `Decision Status` 不是 `approved-for-requirements`，先回到 `sf-prd`。
 2. 如果存在 `brainstorm.md`，读取其中用户确认、明确延后和未决问题。
-3. 如果 PRD 或 brainstorm 没有回答目标用户、MVP 边界或成功标准，按 `[NEEDS CLARIFICATION]` 标记并路由 `sf-brainstorm` 或 `sf-prd`。
+3. 如果 PRD 或 brainstorm 没有回答目标用户、MVP 边界或成功标准，按 `[NEEDS CLARIFICATION]` 标记并暂停。
 
 ### B. 转译为可测试行为
 
@@ -68,24 +68,21 @@ node .specforge/core/scripts/create-artifact.mjs requirements
 2. 每条 `MUST` 需求至少有一个 `AC-*`。
 3. 适用时覆盖正常路径、失败路径、空状态、边界值、权限差异和重新验证触发条件。
 4. 涉及依赖或工具链选择时，写 `[NEEDS DEPENDENCY DECISION]` / `[NEEDS TOOLING DECISION]`，不要替用户选择。
-5. 标出非目标、依赖、风险、重新验证触发条件和已知歧义。
+5. 标出非目标、依赖、风险、重新验证触发条件和已知歧义；无法确认的行为必须写 `[NEEDS CLARIFICATION]`，不得猜测或包装成已批准规格。
+6. **新增字段或数据变更时，必须枚举所有读取或展示该数据的页面**（不仅是新增/编辑表单，还包括列表页、详情页、只读视图、导出等），每个页面单独列为影响面，不得合并或遗漏。
 
 ### D. 回写 flags 和路由
 
 1. 按 `references/requirements-playbook.md#影响面回写` 校准 `work.yaml` / `brief.md` 的 components flags。
-2. 如果 flags 改变，运行 `node .specforge/core/scripts/instructions.mjs` 复查 ready artifact。
-3. 涉及用户可见页面、交互、视觉或原型时，下一步路由到 `sf-ui-design`。
-4. 涉及前端工程、后端、API、数据、权限、配置、任务或 NFR 时，下一步路由到 `sf-tech-design`。
-5. 同时涉及 UI 和技术实现时，先 `sf-ui-design`，再 `sf-tech-design`，由 `instructions.mjs` 的 ready artifact 决定实际顺序。
 
 ## 判定表
 
 | 条件 | 状态 |
 |---|---|
-| `brief.md` 要求 PRD，但 PRD 缺失或未 approved | 停止：路由 `sf-prd` |
-| 目标用户、成功标准或范围无法判断 | 停止：澄清或路由 `sf-brainstorm` / `sf-prd` |
+| `brief.md` 要求 PRD，但 PRD 缺失或未 approved | 停止：PRD 尚未就绪 |
+| 目标用户、成功标准或范围无法判断 | 停止：澄清或补充探索 |
 | intake 证据包不足以支撑需求 | 停止：补探索、研究或澄清记录 |
-| 产品功能组合、目标用户或版本边界没有确认 | 停止：路由 `sf-brainstorm` |
+| 产品功能组合、目标用户或版本边界没有确认 | 停止：需先完成方向取舍 |
 | 需求互相冲突 | 停止：列冲突并请求决策 |
 | 验收标准无法定义 | 停止：补清触发、条件、系统响应和可见结果 |
 | 需要产品或业务决策才能继续 | 停止：不要包装成已批准规格 |
@@ -96,8 +93,10 @@ node .specforge/core/scripts/create-artifact.mjs requirements
 - PRD 中每个已确认 MVP 能力都能追溯到 requirements 中的需求或非目标。
 - PRD 的每个验收种子都已转成最终 AC、NFR、非目标或待澄清项。
 - 每个 user-visible / operator-visible 行为都有验收标准。
-- 影响面 flags 已校准，后续 ready artifact 路由可信。
+- 影响面 flags 已校准。
 - 所有未决问题都显式标记 `[NEEDS CLARIFICATION]`、`[NEEDS DEPENDENCY DECISION]` 或 `[NEEDS TOOLING DECISION]`。
+- **按需求规模裁剪**：单字段 / 单页面 / 配置类小需求，`PRD 转译边界`、`行为覆盖矩阵`、`用户流程` 等章节可省略或合并为一行摘要；不要为了填满模板而生成无意义内容。目标是让用户有审批欲望，而不是让文档看起来完整。
+- 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 
 ## 不做
 

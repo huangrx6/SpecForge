@@ -5,6 +5,13 @@ use_for:
   - 新技术栈预研 (Spike)
   - 第三方 API 可行性测试
   - 遗留黑盒系统逆向分析
+not_for:
+  - 有明确实现目标的功能（用 feature 或 standard）
+  - bug 修复（用 bugfix 或 issue）
+  - 已有足够信息可以直接进入 requirements 的需求
+vs:
+  feature: discovery 不承诺实现，只输出研究结论；feature 有明确的产品交付目标
+  standard: discovery 没有 implementation 阶段；standard 有完整的实现和验证
 stages:
   - 00-intake
   - 01-spec (Research/Design)

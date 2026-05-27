@@ -24,12 +24,12 @@ Discovery 是新工作的分诊和事实探索入口。它负责把原始诉求�
 4. 按深度执行代码库探索；绿地项目也要记录“无既有实现”和项目规范。
 5. 判断风险等级：安全、数据迁移、生产发布、权限、外部依赖、跨模块契约。
 6. 需要新框架、第三方库、部署、安全或版本敏感事实时执行外部官方资料研究；不触发时写明跳过理由。
-7. 对产品、页面、全栈应用或复杂功能，如果需要用户确认 MVP / 核心方向 / 技术路线，路由到 `sf-brainstorm`，并要求它写入 `00-intake/brainstorm.md`。
+7. 对产品、页面、全栈应用或复杂功能，如果需要用户确认 MVP / 核心方向 / 技术路线，暂停并向用户提问。
 8. 需要新领域知识、竞品、政策、框架 / SDK / 版本事实、AI 能力边界、部署 / 安全事实时，必须查当前可靠来源；技术类优先官方文档，产品/竞品类记录来源日期和结论。若跳过外部研究，写明为什么对本次决策无影响。
 9. 对产品、页面、全栈应用或复杂功能，生成候选功能池，按 `MVP / 可选增强 / 后续版本` 分组，并给出推荐组合。
 10. 先汇总“已明确 / 待确认 / 可能遗漏”，再向用户澄清关键问题并记录答案。
 11. 明确哪些选择已由用户确认，哪些只是 Agent 默认假设。
-12. 判断是否需要 PRD，并写入 `brief.md#PRD 决策`。PRD 是 graph 外产品澄清产物；需要时下一步路由到 `sf-prd`，不需要时写清跳过理由。
+12. 判断是否需要 PRD，并写入 `brief.md#PRD 决策`。PRD 是 graph 外产品澄清产物；需要时标记 `PRD required: yes`，不需要时写清跳过理由。
 13. 选择 workflow：`lite`、`feature`、`standard`、`bugfix`、`issue`、`refactor` 或 `discovery`，并写出影响面矩阵。
 14. 根据影响面设置 `components` flags：`has_ui`、`has_api`、`has_db`、`has_domain`、`has_ai`、`has_nfr`、`has_security`、`has_integration`、`has_infra`、`has_background_job`、`needs_research`。纯预研使用 `discovery` workflow，不用在 feature / standard 内模拟 discovery 阶段。
 15. 没有 active work item 时，运行 `node .specforge/core/scripts/create-work.mjs --workflow <workflow> "工作项标题"`，已确定的影响面可用 `--has-ui false`、`--has-api true` 等参数写入。

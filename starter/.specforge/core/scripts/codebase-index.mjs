@@ -446,6 +446,42 @@ function normalizedContext(bootstrap, selected, status) {
   };
 }
 
+function itemPath(item) {
+  if (typeof item === "string") return item;
+  return item?.path ?? item?.name ?? item?.file ?? String(item);
+}
+
+function languageNames(languages) {
+  if (!languages) return [];
+  if (Array.isArray(languages)) {
+    return languages
+      .map((item) => (typeof item === "string" ? item : item?.language ?? item?.name ?? item?.id))
+      .filter(Boolean);
+  }
+  if (typeof languages === "object") return Object.keys(languages);
+  return [];
+}
+
+function payloadSummary(payload) {
+  return {
+    status: payload.status,
+    provider_status: payload.provider_status,
+    scale: payload.bootstrap.scale,
+    selected_provider: payload.selected_provider.id,
+    requested_scan_mode: payload.requested_scan_mode,
+    selected_scan_mode: payload.scan_mode_decision.selected?.id ?? null,
+    dependency_status: payload.dependency_decision.status,
+    report_path: payload.report_path ?? null,
+    languages: languageNames(payload.bootstrap.languages),
+    source_roots: payload.normalized_context.modules.map((item) => item.path),
+    entries: payload.normalized_context.entries.map(itemPath),
+    api_candidates: payload.normalized_context.api_candidates.map(itemPath),
+    data_candidates: payload.normalized_context.data_candidates.map(itemPath),
+    test_candidates: payload.normalized_context.test_candidates.map(itemPath),
+    operations_candidates: payload.normalized_context.operations_candidates.map(itemPath),
+  };
+}
+
 function providerPlan(selected) {
   const modules = focusModules();
   if (selected.id === "repomix") {
@@ -778,6 +814,7 @@ try {
     bootstrap,
   };
   if (writeReport) payload.report_path = writeReportFile(payload);
+  payload.summary = payloadSummary(payload);
 
   if (asJson) {
     console.log(JSON.stringify(payload, null, 2));

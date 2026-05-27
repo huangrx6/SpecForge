@@ -80,8 +80,8 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 - `technical-design.md` 的 `Core Decision Review Status` 不是 `confirmed`、`delegated_default` 或 `not_required` 时停止，退回 `sf-tech-design` 展示核心决策摘要并等待用户确认。
 - 存在需要用户取舍的 `[NEEDS DECISION]`、`[NEEDS PRODUCT DECISION]` 或 `[NEEDS UI DECISION]` 时停止，退回 `sf-brainstorm`，不生成任务。
 - UI 状态、API 契约、数据迁移、权限、安全、发布任务必须单独列出。
-- 有浏览器流程、上传、提交、审批、下载、权限或错误提示时，必须列出 Playwright E2E 用例设计、脚本执行和证据登记任务；不能只列单元测试或人工验证。
-- 有 UI / 浏览器流程时，必须先生成 `05-verification/test-cases.md` 的测试用例任务，再生成执行任务；执行任务要覆盖成功、失败、权限、边界和响应式中适用项。
+- 有浏览器流程、上传、提交、审批、下载、权限或错误提示时，必须列出 Playwright E2E 用例设计、脚本执行和证据登记任务；不能只列单元测试或人工验证；不得把 Playwright 写入"不在范围"。
+- 有 UI / 浏览器流程时，必须先生成 `05-verification/test-cases.md` 的测试用例任务，再生成执行任务；执行任务要覆盖**所有读取或展示该数据的页面**（列表页、表单页、详情页等，不得遗漏）；覆盖成功、失败、权限、边界和响应式中适用项。
 - `ui-design.md` 声明采用 PC 端业务系统规范时，任务必须承接 `pc-ui-design-spec.md` 的核心约束：顶栏 / 侧栏尺寸、字体、颜色 token、控件高度、表格行高、弹窗 / 抽屉、图标和 HTML/CSS token。
 - 对多个 agent / worker 友好的任务，要明确“谁拥有哪些文件或模块”。
 

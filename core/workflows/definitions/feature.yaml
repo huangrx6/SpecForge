@@ -5,6 +5,13 @@ use_for:
   - 全新的产品页面或能力
   - 核心业务流扩展
   - 涉及交互界面大改
+not_for:
+  - 已确认的 bug（用 bugfix）
+  - 行为不变的代码重构（用 refactor）
+  - 一目了然的小修小补（用 lite）
+vs:
+  standard: feature 明确是产品功能；standard 用于无法归类但风险高的通用变更
+  lite: feature 有设计风险或影响面不确定；lite 范围清楚且无设计风险
 stages:
   - 00-intake
   - 00-intake (Brainstorm, if decisions need user tradeoff)

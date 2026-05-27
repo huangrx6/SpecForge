@@ -5,6 +5,13 @@ use_for:
   - 代码坏味道清理与架构解耦
   - 依赖库大版本升级
   - 性能优化与存储介质迁移
+not_for:
+  - 有用户可见行为变化的改动（用 feature 或 standard）
+  - 修复 bug（用 bugfix）
+  - 纯预研（用 discovery）
+vs:
+  feature: refactor 用户行为严格不变；feature 有新的用户可见能力
+  standard: refactor 跳过 requirements；standard 需要完整需求规格
 stages:
   - 00-intake
   - 01-spec (Technical Design Only)

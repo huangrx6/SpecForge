@@ -115,6 +115,7 @@ node .specforge/core/scripts/gate.mjs wiki_sync REQUEST_CHANGES
 - wiki 只包含当前事实；旧事实被更新，必要背景进入 `decisions.md`。
 - 架构 / API / 数据 / 运维文件满足最低完整度；不足项已明确标注 `未确认`，并在 `risks.md` 或 `06-close/wiki-sync.md` 记录补证路径。
 - wiki_sync gate 状态与 evidence 一致。
+- 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 
 ## 不做
 

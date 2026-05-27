@@ -69,6 +69,9 @@ node .specforge/core/scripts/codebase-index.mjs --write-report
 不要把大型仓库直接打包进上下文。采用 provider 优先策略：
 
 1. **扫描模式决策层**：运行 `codebase-index.mjs --json`，先读取 `scan_modes`、`scan_mode_decision`、`dependency_decision` 和 `bootstrap.scale`。
+   - 如果顶层 `status=scan_mode_required`，立即停止后续扫描，只展示扫描模式并等待用户选择。
+   - 不要在未选模式时解析 `bootstrap.languages`、`bootstrap.source_roots` 或启动 Explore agents。
+   - 需要摘要时优先读取 JSON 的 `summary` 字段。
 2. **小项目**：内置 bootstrap map + `rg` + 关键文件阅读足够。
 3. **中型项目**：bootstrap map + `rg`；有明确模块时可用 Repomix 生成模块上下文包，不打包全仓。
 4. **大型项目**：优先使用 CodeGraph、codebase-memory-mcp、CodeGraphContext 或同类图谱 / MCP / SCIP provider 查询模块、符号、调用链、依赖和入口关系。

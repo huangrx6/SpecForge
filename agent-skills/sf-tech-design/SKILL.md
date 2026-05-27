@@ -33,7 +33,7 @@ description: 生成或更新 SpecForge work item 的 technical_design；用于 r
 node .specforge/core/scripts/instructions.mjs
 ```
 
-2. 如果输出是 `Instructions blocked`，按 `Route` 处理阻断。尤其当 blocker 为 `tech-direction-unconfirmed`、`dependency-decision-unconfirmed` 或 `tooling-decision-unconfirmed` 时，停止 technical design，路由到 `sf-brainstorm` 或向用户输出确认卡。
+2. 如果输出是 `Instructions blocked`，按 `Route` 处理阻断。尤其当 blocker 为 `tech-direction-unconfirmed`、`dependency-decision-unconfirmed` 或 `tooling-decision-unconfirmed` 时，停止 technical design，向用户输出确认卡。
 3. 确认 ready artifact 包含 `technical_design` 后，再运行：
 
 ```bash
@@ -77,16 +77,15 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 1. 详细 technical design 初稿完成后，必须先向用户展示 `references/technical-design-playbook.md#核心决策摘要 Review`，等待确认、调整或授权默认。
 2. 确认前不得进入 `sf-tasking`、`sf-spec-review` approval 或 `sf-implement`。
 3. 用户确认后，在 `technical-design.md#1. 技术选型与依赖确认` 写 `Core Decision Review Status: confirmed` 或 `delegated_default` / `not_required`，并保留 `[TECH DESIGN REVIEW CONFIRMED]`。
-4. 运行 `node .specforge/core/scripts/instructions.mjs`，按 ready artifact 路由到下一步。
 
 ## 判定表
 
 | 条件 | 状态 |
 |---|---|
-| `instructions.mjs` 返回 `tech-direction-unconfirmed` | 停止：确认技术方向 |
-| `instructions.mjs` 返回 `dependency-decision-unconfirmed` | 停止：确认新增 / 替换依赖 |
-| `instructions.mjs` 返回 `tooling-decision-unconfirmed` | 停止：确认包管理器、组件库、依赖管理、测试工具等 |
-| requirements 仍有阻断歧义 | 停止：回到 `sf-requirements` 或 `sf-brainstorm` |
+| 技术方向尚未确认 | 停止：确认技术方向 |
+| 新增 / 替换依赖尚未确认 | 停止：确认新增 / 替换依赖 |
+| 工具链选择尚未确认 | 停止：确认包管理器、组件库、依赖管理、测试工具等 |
+| requirements 仍有阻断歧义 | 停止：上游需求需先澄清 |
 | 新项目、空仓库或关键技术缺失，但没有确认来源 | 停止 |
 | 新增 / 替换技术或依赖缺少版本事实、官方资料、lockfile 证据或明确风险说明 | 停止 |
 | `technical-design.md` 仍残留 `[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]` 或 `[NEEDS TOOLING DECISION]` | 停止 |
@@ -101,7 +100,8 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 - 新项目、新增 / 替换关键技术、新增直接依赖或工具链选择都有用户确认、授权默认、沿用现有栈或已确认脚手架依据。
 - 当前版本事实、规则基准采用点、偏离理由和验证证据已写入。
 - 初稿后的核心决策摘要已经被用户确认、用户授权默认，或明确 N/A。
-- 下一步路由到 `sf-tasking`，以 `instructions.mjs` 为准。
+- **按需求规模裁剪**：单字段 / 单页面 / 配置类小需求，`Tech Profile Selection`、`Requirements Trace`、`核心决策摘要 Review` 等章节可省略或合并为一行摘要；沿用现有栈时不需要重复列出所有技术选型表格。目标是让文档可读可审批，而不是填满模板。
+- 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 
 ## 不做
 

@@ -9,7 +9,7 @@ description: 对新请求执行深度探索、缺陷根因分析或预研；用�
 
 执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
 
-把原始诉求升级为有分析证据支撑的 brief，或生成 bugfix 的 `gap_report`、discovery workflow 的 `research`。如果分析发现缺的是用户取舍而不是事实证据，路由到 `sf-brainstorm`。它不写业务实现代码。
+把原始诉求升级为有分析证据支撑的 brief，或生成 bugfix 的 `gap_report`、discovery workflow 的 `research`。如果分析发现缺的是用户取舍而不是事实证据，暂停并向用户提问。它不写业务实现代码。
 
 ## 启动
 
@@ -41,7 +41,7 @@ description: 对新请求执行深度探索、缺陷根因分析或预研；用�
 1. 按 `.specforge/core/standards/product.md` 判断分析深度：`light`、`standard` 或 `deep`。
 2. 按深度执行代码库探索；绿地项目也要记录"无既有实现"和项目规范。
 3. 需要新框架、第三方库或版本敏感事实时执行外部官方资料研究；不触发时写明跳过理由。
-4. 对产品、页面、全栈应用，如果缺少 MVP / 方向取舍，路由到 `sf-brainstorm`；如果只是补充事实证据，生成候选功能池，按 `MVP / 可选增强 / 后续版本` 分组并给出推荐组合，再向用户澄清并记录答案。
+4. 对产品、页面、全栈应用，如果缺少 MVP / 方向取舍，暂停并向用户提问；如果只是补充事实证据，生成候选功能池，按 `MVP / 可选增强 / 后续版本` 分组并给出推荐组合，再向用户澄清并记录答案。
 5. 如果 ready artifact 是 `gap_report`，运行 `node .specforge/core/scripts/create-artifact.mjs gap_report`，并写清复现、当前行为、期望行为、根因、修复策略和回归测试。
 6. 如果 ready artifact 是 `research`，运行 `node .specforge/core/scripts/create-artifact.mjs research`，并写清研究问题、来源、实验、发现、决策和未解决问题。
 7. 其他 discovery 场景更新 `00-intake/brief.md`。
@@ -58,7 +58,6 @@ description: 对新请求执行深度探索、缺陷根因分析或预研；用�
 ## 完成标准
 
 - `brief.md` / `gap-report.md` / `research.md` 包含足以支撑下一步的分析证据。
-- 下一步明确路由到 `sf-requirements`、`sf-tasking`、`sf-close`，或因澄清项暂停。
 
 ## 不做
 

@@ -42,6 +42,17 @@ description: 为新请求创建或整理 SpecForge work item；用于用户提�
 3. 混合请求先拆分，不创建万能 work item。
 4. 已完成或 archive work item 的后续问题，按 follow-up 新建，并保留 parent/relation。
 
+### A1. Workflow 协作选择
+
+Workflow 类型由 AI 和用户共同确认，不由 AI 单方面决定：
+
+1. 根据 `references/routing.md#Workflow 分类表` 推断最可能的 workflow 类型。
+2. 向用户展示推荐结果和理由，格式：
+   - 推荐：`<workflow>` — 一句话理由
+   - 备选：`<workflow>` — 适用条件
+3. 等待用户确认或纠正；用户说"你来定"时，写明授权内容和风险，再继续。
+4. 用户确认后才写入 `work.yaml`，不提前创建。
+
 ### B. 再创建或整理 work item
 
 没有 active work item 时创建：
@@ -84,9 +95,7 @@ node .specforge/core/scripts/create-work.mjs --workflow issue --kind issue --par
 
 1. 更新 `work.yaml` 中的 `workflow`、`kind`、`components` 和 relations。
 2. 不确定的组件 flag 保持 `auto`；明确无影响才写 `false`。
-3. 如果需要 brainstorm，下一步路由到 `sf-brainstorm`，不要把 Agent 推荐写成用户确认。
-4. 如果存量项目 wiki 不足，下一步路由到 `sf-steering`。
-5. 否则按 workflow 路由到 `sf-prd`、`sf-requirements`、`sf-discovery`、`sf-tech-design` 或 `gap_report`。
+3. 运行 `node .specforge/core/scripts/instructions.mjs`，确认 flags 和 workflow 已正确写入。
 
 ## 判定表
 
@@ -94,9 +103,9 @@ node .specforge/core/scripts/create-work.mjs --workflow issue --kind issue --par
 |---|---|
 | 多个 active work item，且用户未指定 | 停止：先请用户指定 |
 | 需求边界不清，无法判断 workflow | 停止：提一个关键澄清问题 |
-| 产品 / 页面 / 全栈应用的 MVP 功能组合尚未确认，且无法安全默认 | 路由 `sf-brainstorm` |
-| 已有代码项目缺少 wiki 基线 | 路由 `sf-steering` |
-| 产品型 work item 需要 PRD，但缺少核心产品决策 | 路由 `sf-brainstorm` 或暂停澄清 |
+| 产品 / 页面 / 全栈应用的 MVP 功能组合尚未确认，且无法安全默认 | 停止：需先完成方向取舍 |
+| 已有代码项目缺少 wiki 基线 | 停止：需先建立 wiki |
+| 产品型 work item 需要 PRD，但缺少核心产品决策 | 停止：需先澄清产品方向 |
 | `standard` / `deep` 缺少代码库探索证据或明确跳过原因 | 停止：补探索或写跳过理由 |
 | `deep` 缺少外部研究证据或明确跳过原因 | 停止：补研究或写跳过理由 |
 | 存在生产、安全、权限、数据迁移风险但没有足够上下文 | 停止：澄清或路由 discovery |
@@ -105,10 +114,10 @@ node .specforge/core/scripts/create-work.mjs --workflow issue --kind issue --par
 
 - work item 已进入 `.specforge/work/active/`，或 Standalone / Lightweight 模式下输出了可导入内容。
 - brief 足以支撑 PRD 或 requirements。
-- PRD 决策清楚：需要就路由到 `sf-prd`，不需要就写明跳过理由。
+- PRD 决策清楚：需要就标记 `PRD required: yes`，不需要就写明跳过理由。
 - Brainstorm 决策清楚：`skip / light / deep` 有理由。
 - `work.yaml` 的 `workflow` 和 `components` 已与 brief 影响面矩阵一致。
-- 下一步明确路由到 `sf-brainstorm` / `sf-prd` / `sf-requirements` / `sf-discovery` / `sf-tech-design` / `sf-steering`，或因澄清项暂停。
+- 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 
 ## 不做
 

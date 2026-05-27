@@ -47,6 +47,10 @@ node core/scripts/codebase-index.mjs --write-report --report /tmp/specforge-code
 
 先读取 `codebase-index.mjs --json` 输出的 `scan_modes`、`scan_mode_decision` 和 `dependency_decision`。默认没有用户明确选择时，不要直接安装 provider，也不要展开全仓分析。
 
+如果顶层 `status=scan_mode_required`，立即停止后续扫描，只向用户展示扫描模式、优缺点和依赖策略并等待选择。不要继续读取或解析 `bootstrap.languages`、`bootstrap.source_roots`、`bootstrap.candidates`，也不要启动 Explore agents。
+
+需要给用户展示摘要时，优先使用 JSON 里的 `summary` 字段，不要手写脚本猜测 `bootstrap` 内部字段类型。
+
 必须向用户展示这些模式，让用户自己选：
 
 | 模式 | 适用 | 优点 | 缺点 | 依赖判断 |
@@ -69,6 +73,7 @@ node .specforge/core/scripts/codebase-index.mjs --json --scan-mode <mode>
 
 读取 `codebase-index.mjs --json` 输出，记录：
 
+- `summary`
 - `scan_modes`、`scan_mode_decision`、`dependency_decision`
 - `status`、`selected_provider`、`providers`
 - `normalized_context`

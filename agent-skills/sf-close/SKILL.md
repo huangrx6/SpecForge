@@ -116,6 +116,7 @@ node .specforge/core/scripts/archive-work.mjs
 - verification 残余风险、release 观察点、rollback 触发条件互相对齐。
 - doctor 和 archive dry-run 通过。
 - archive 成功，work item 从 active 移到 archive，registry 状态正确。
+- 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，确认 workflow 已全部完成。
 
 ## 不做
 

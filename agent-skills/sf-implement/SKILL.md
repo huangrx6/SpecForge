@@ -30,7 +30,7 @@ description: 根据已批准的 SpecForge tasks 执行实现；用于 implementa
 node .specforge/core/scripts/instructions.mjs apply
 ```
 
-2. 如果 implementation 不是 ready，停止并按 `instructions.mjs` 的 route 回到对应 `sf-*` 阶段。
+2. 如果 implementation 不是 ready，停止，上游 artifact 或 gate 尚未就绪。
 3. 生成实现产物：
 
 ```bash
@@ -89,13 +89,12 @@ git diff --stat
 
 | 条件 | Return path |
 |---|---|
-| implementation 未 ready 或 spec_review 未批准 | 按 `instructions.mjs` |
-| tasks 的核心字段不足以指导实现 | `sf-tasking` / `sf-spec-review` |
-| 需要修改 `_Boundary:_` 外文件 | `sf-tasking` / `sf-spec-review` |
-| technical design 仍有关键 `unknown` 或未确认技术 / 依赖决策 | `sf-tech-design` |
-| UI 原型、Pencil 截图或 PC 规范 token 缺失但实现依赖它们 | `sf-ui-design` / `sf-spec-review` |
-| 快速验证失败且无法在当前 task 范围内修复 | `sf-implement` 修复或 `sf-tasking` |
-| 连续 3 次修复同一问题失败 | 停止，说明原因，等待用户决策 |
+| implementation 未 ready 或 spec_review 未批准 | 停止：上游 gate 未通过 |
+| tasks 的核心字段不足以指导实现 | 停止：任务边界不足 |
+| 需要修改 `_Boundary:_` 外文件 | 停止：超出批准范围 |
+| technical design 仍有关键 `unknown` 或未确认技术 / 依赖决策 | 停止：技术决策未确认 |
+| UI 原型、Pencil 截图或 PC 规范 token 缺失但实现依赖它们 | 停止：UI 设计缺失 |
+| 快速验证失败且无法在当前 task 范围内修复 | 停止：说明原因，等待用户决策 |
 
 ## 完成标准
 
@@ -104,7 +103,7 @@ git diff --stat
 - technical design `yes / no / unknown` 影响面对账清楚。
 - 属于本 work item 的真实 git diff 均已登记；无关已有改动已排除并说明。
 - 没有把 `DONE_WITH_CONCERNS`、`BLOCKED`、`NEEDS_SPEC` 描述成已完成。
-- 下一步路由到 `sf-code-review`，以 `instructions.mjs` 为准。
+- 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 
 ## 不做
 
@@ -112,3 +111,5 @@ git diff --stat
 - 不扩大到未写入 tasks、`ui-design.md` 或 `technical-design.md` 的范围。
 - 不顺手修无关问题；需要时新开 work item。
 - 不自动安装 / 同步外部 Agent 技能副本，除非用户单独明确要求。
+- **不在修复 bug 时顺手改动范围外的代码**（如把同步调用改成 async、修改无关方法签名）；范围外改动必须新开 work item。
+- **编辑 Python 文件后，如果自动格式化工具（Prettier 等）修改了缩进，必须立即检查并还原**；Python 缩进有语义，格式化工具可能破坏逻辑结构。

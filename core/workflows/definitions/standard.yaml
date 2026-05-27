@@ -5,6 +5,13 @@ use_for:
   - 通用复杂变更
   - 跨模块的大型联动
   - 涉及安全、金钱、敏感数据流的改动
+not_for:
+  - 明确是产品新功能（用 feature）
+  - 明确是 bug 修复（用 bugfix）
+  - 明确是重构（用 refactor）
+vs:
+  feature: standard 是兜底选项，不确定归类时用；feature 明确是产品功能
+  refactor: standard 可能有用户可见行为变化；refactor 用户行为严格不变
 stages:
   - 00-intake
   - 00-intake (Brainstorm, if decisions need user tradeoff)

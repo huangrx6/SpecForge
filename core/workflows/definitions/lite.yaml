@@ -5,6 +5,13 @@ use_for:
   - 小型文案或 UI 调整
   - 简单的静态页面添加
   - 无架构风险的边缘功能
+not_for:
+  - 影响面不确定的变更（用 feature 或 standard）
+  - 涉及数据库、权限、外部集成的改动（用 standard）
+  - 需要用户取舍的产品决策（用 feature + brainstorm）
+vs:
+  feature: lite 范围清楚且无设计风险；feature 有影响面不确定或需要设计评审
+  standard: lite 跳过 spec review；standard 需要完整规格和双门禁
 stages:
   - 00-intake
   - 01-spec

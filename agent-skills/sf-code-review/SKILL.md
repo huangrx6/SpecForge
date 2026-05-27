@@ -139,7 +139,8 @@ node .specforge/core/scripts/gate.mjs code_review REJECTED
 - `04-code-review/code-review-v1.md` 有明确 decision。
 - `APPROVED` 时 gate 状态与 evidence 路径一致。
 - `REQUEST_CHANGES` / `REJECTED` 时 gate 状态已更新，evidence 保持 `null`。
-- 未批准时下一步修复范围明确，通常回到 `sf-implement`；规格偏离严重时退回对应 spec 阶段。
+- `REQUEST_CHANGES` / `REJECTED` 时 findings 已明确列出需修复的问题和对应文件。
+- 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 
 ## 不做
 

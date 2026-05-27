@@ -105,6 +105,7 @@ node .specforge/core/scripts/gate.mjs spec_review REJECTED
 
 - Artifact Review：review 文件存在，包含 scope、findings、是否可进入下一阶段和 return path；不更新 gate。
 - Gate Review：`spec-review-v1.md` 有明确 decision；`APPROVED` 时 gate 状态与 evidence 路径一致；未批准时 gate evidence 保持 `null`。
+- 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 
 ## 不做
 

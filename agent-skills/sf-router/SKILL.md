@@ -109,10 +109,10 @@ AI 工具技能：sf-router / sf-*  负责让 AI 工具知道怎么工作，可 
    - 读取 `00-intake/brief.md` 和可选 `00-intake/prd.md`。
    - 运行 `node .specforge/core/scripts/instructions.mjs`。
    - 先检查 gate 状态：
-     - `spec_review=REQUEST_CHANGES/REJECTED`：读取 `02-spec-review/spec-review-v1.md` 的 `Return to`，路由到 `sf-prd` / `sf-requirements` / `sf-ui-design` / `sf-tech-design` / `sf-tasking`；无法判断时路由到 `sf-spec-review` 解释阻断。
-     - `code_review=REQUEST_CHANGES/REJECTED`：路由到 `sf-implement`；如果 finding 指向 spec 缺口，再按 review 的 return path 路由。
-     - `verification=REQUEST_CHANGES/REJECTED`：优先路由到 `sf-implement` 修复；若只是缺证据且实现未变，路由到 `sf-verify` 重跑验证。
-     - `wiki_sync=REQUEST_CHANGES/REJECTED`：路由到 `sf-wiki`。
+     - `spec_review=REQUEST_CHANGES/REJECTED`：读取 `02-spec-review/spec-review-v1.md` 的 `Return to` 字段，路由到对应阶段；无法判断时路由到 `sf-spec-review` 解释阻断。
+     - `code_review=REQUEST_CHANGES/REJECTED`：路由到实现修复阶段；如果 finding 指向 spec 缺口，按 review 的 return path 路由到对应 spec 阶段。
+     - `verification=REQUEST_CHANGES/REJECTED`：优先路由到实现修复阶段；若只是缺证据且实现未变，路由到验证阶段重跑。
+     - `wiki_sync=REQUEST_CHANGES/REJECTED`：路由到 wiki 同步阶段。
    - 如果 `brief.md`、`prd.md`、`requirements.md`、`ui-design.md` 或 `technical-design.md` 中存在 `[NEEDS DECISION]`、`[NEEDS PRODUCT DECISION]`、`[NEEDS UI DECISION]`、`[NEEDS TECH DECISION]` 且问题需要用户取舍，先路由到 `sf-brainstorm`，不要替用户拍板。
    - 如果 ready artifact 是 `requirements`，但 `brief.md#PRD 决策` 标记 `PRD required: yes` 或表格中 `PRD required | yes`，且 `00-intake/prd.md` 不存在、`Decision Status` 不是 `approved-for-requirements`，或仍有 `[NEEDS PRODUCT DECISION]`，先路由到 `sf-prd`，不要直接进入 `sf-requirements`。
    - 如果 `instructions.mjs` 返回 blocker `ui-direction-unconfirmed`，先路由到 `sf-brainstorm` 做 UI / 视觉 / 体验方向取舍；不要创建 `ui-design.md` 或 Pencil 原型。

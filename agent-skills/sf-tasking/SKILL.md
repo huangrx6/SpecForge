@@ -36,7 +36,7 @@ node .specforge/core/scripts/artifact-graph-status.mjs
 node .specforge/core/scripts/instructions.mjs
 ```
 
-2. 确认 ready artifact 包含 `tasks`。否则停止并按 `instructions.mjs` 路由。
+2. 确认 ready artifact 包含 `tasks`。否则停止，上游 artifact 尚未就绪。
 3. 生成 artifact：
 
 ```bash
@@ -71,9 +71,15 @@ node .specforge/core/scripts/create-artifact.mjs tasks
 
 1. W0：契约、脚手架、启动基线、失败优先验证。
 2. W1：核心实现、UI 实现、数据 / 安全 / 权限 / 运行支持。
-3. W2：自动化测试、Playwright、启动 / 回滚 / 观察点、Wiki 回写提示。
-4. 标注 `_Depends:_` 和并行波次；并行任务不得共享同一主要写入文件。
+3. W2：自动化测试、Playwright（有 UI 时**必须**）、启动 / 回滚 / 观察点、Wiki 回写提示。
+4. 标注 `_Depends:_` 和并行波次；并行任务不得共享同一主要写入文件。用 `[P]` 标记可并行执行的独立任务。
 5. 任务要小到一次 implementation 和一次 code review 可以聚焦完成。
+
+**UI 场景 Playwright 铁律**：`has_ui=true` 或存在浏览器流程时，W2 必须包含：
+- 先写 `05-verification/test-cases.md` 测试用例任务（覆盖成功路径、失败路径、边界状态）
+- 再写 Playwright 脚本执行任务，覆盖**所有读取或展示该数据的页面**（列表页、表单页、详情页等，不得遗漏）
+- 不得以"项目无测试框架"或"手动验证"替代；不得把 Playwright 写入"不在范围"
+- 确实无法运行时必须在 report 写明原因和替代证据，不能静默跳过
 
 ### D. 写 `01-spec/tasks.md`
 
@@ -113,7 +119,7 @@ node .specforge/core/scripts/create-artifact.mjs tasks
 - 每个 technical design `yes` 影响面都有任务承接；`no` / N/A 有理由；无关键 `unknown` 留给 implementation。
 - UI / PC 规范 / Playwright / 权限 / 数据 / 发布 / 回滚 / 可观测性任务在适用时单独列出。
 - 并行波次不会让多个任务同时写同一核心文件或共享未完成契约。
-- 下一步路由到 `sf-spec-review`，以 `instructions.mjs` 为准。
+- 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 
 ## 不做
 

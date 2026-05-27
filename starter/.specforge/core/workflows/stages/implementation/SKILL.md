@@ -113,3 +113,10 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
 - 启动 / 构建 / 局部验证结果已记录。
 - implementation report 写清偏差、验证、已知缺口和 code review 重点。
 - 没有把未验证或未登记的实现描述为完成。
+
+## 不做
+
+- 不扩大到未写入 tasks、`ui-design.md` 或 `technical-design.md` 的范围。
+- 不顺手修无关问题；需要时新开 work item。
+- **不在修复 bug 时顺手改动范围外的代码**（如把同步调用改成 async、修改无关方法签名）；范围外改动必须新开 work item。
+- **编辑 Python 文件后，如果自动格式化工具修改了缩进，必须立即检查并还原**；Python 缩进有语义，格式化工具可能破坏逻辑结构。

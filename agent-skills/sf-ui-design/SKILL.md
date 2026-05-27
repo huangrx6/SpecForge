@@ -38,7 +38,7 @@ SpecForge 固定使用 **Pencil** 做正式 UI 原型。Figma、HTML、ASCII、�
 node .specforge/core/scripts/instructions.mjs
 ```
 
-2. 如果输出是 `Instructions blocked`，按 `Route` 处理阻断。尤其当 blocker 为 `ui-direction-unconfirmed` 时，停止 UI design，路由到 `sf-brainstorm`，只确认体验方向。
+2. 如果输出是 `Instructions blocked`，按 `Route` 处理阻断。尤其当 blocker 为 `ui-direction-unconfirmed` 时，停止 UI design，向用户输出体验方向确认卡。
 3. 确认 ready artifact 包含 `ui_design` 且没有阻断后，再运行：
 
 ```bash
@@ -58,7 +58,7 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
 ### B. 对齐体验方向
 
 1. 按 `references/ui-design-playbook.md#UI 设计访谈` 列出 `已确认 / 高影响未知 / 可安全默认`。
-2. 没有现成设计系统或确认方向时，给 2-3 个互斥体验方向、推荐项和取舍；如果方向会影响信息架构、核心流程或视觉气质，先路由 `sf-brainstorm`。
+2. 没有现成设计系统或确认方向时，给 2-3 个互斥体验方向、推荐项和取舍；如果方向会影响信息架构、核心流程或视觉气质，先向用户确认方向。
 3. 用户确认后，立即在上游 artifact 或 `ui-design.md` 写入 `[UI DECISION CONFIRMED]` 或 `UI Direction Status: confirmed`，并记录来源。
 4. 用户未确认体验方向前，不创建 Pencil 原型，不写完整页面方案。
 
@@ -80,14 +80,14 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
 
 1. 基于导出截图做视觉质量 review，并至少修一轮 Pencil。
 2. 把 review 发现、修改动作、保存后重读证据和最终结论写入 `ui-design.md`。
-3. 运行 `node .specforge/core/scripts/instructions.mjs`，按 ready artifact 路由到 `sf-tech-design` 或 `sf-tasking`。
+3. 把 review 结论写入 `ui-design.md`，确认 Pencil 原型已保存且可重读。
 
 ## 判定表
 
 | 条件 | 状态 |
 |---|---|
-| `instructions.mjs` 返回 `ui-direction-unconfirmed` | 停止：路由 `sf-brainstorm` |
-| 关键体验方向、页面范围或角色流程尚未确认，且默认假设风险高 | 停止：提问或路由 `sf-brainstorm` |
+| UI 方向尚未确认 | 停止：需先完成体验方向取舍 |
+| 关键体验方向、页面范围或角色流程尚未确认，且默认假设风险高 | 停止：提问澄清 |
 | 第三方 skill 输出未归一化到 SpecForge artifact | 停止：先归一化 |
 | Pencil 原型未保存、保存后重读失败或 `.pen` 仍为空 | 停止：记录阻断，不进入后续阶段 |
 | 有 UI 影响但没有 `.pen`、导出截图或明确 Pencil 阻断原因 | 停止 |
@@ -101,7 +101,8 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
 - 有 UI 影响时，存在非空且保存后可重读的 `01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/*.png`，或明确 Pencil 阻断原因。
 - `ui-design.md#9. Pencil 原型证据` 记录 Pencil 保存状态、保存后重读校验和截图证据。
 - 有可视原型时，包含视觉质量 review 和至少一轮修正记录。
-- 下一步路由以 `instructions.mjs` 为准。
+- 所有 `[NEEDS UI DECISION]` 已清除。
+- 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 
 ## 不做
 

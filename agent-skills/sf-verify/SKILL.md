@@ -106,7 +106,8 @@ node .specforge/core/scripts/gate.mjs verification REJECTED
 - 有 UI 影响时覆盖页面、操作、角色、状态和适用响应式；浏览器流程有 Playwright 证据。
 - `05-verification/ci-result.md` 如实记录 CI / local / N/A。
 - `APPROVED` gate 绑定 `05-verification/report.md`；非批准状态不带 evidence。
-- 下一步路由到 `sf-close` 或 wiki sync，以 `instructions.mjs` 为准。
+- `APPROVED` gate 绑定完整验证证据；非批准状态已列出具体失败项和修复建议。
+- 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 
 ## 不做
 

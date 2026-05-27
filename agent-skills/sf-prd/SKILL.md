@@ -47,7 +47,7 @@ node .specforge/core/scripts/doctor.mjs
 
 1. 读取 `brief.md#PRD 决策`，确认本 work item 需要 PRD。
 2. 读取 `brainstorm.md` 的用户确认、明确延后和未决问题。
-3. 如果需要多方案取舍但没有用户确认，先路由 `sf-brainstorm`。
+3. 如果需要多方案取舍但没有用户确认，暂停并向用户提问。
 4. 如果目标用户、核心问题、MVP 边界或高风险角色/数据/AI 质量决策缺失，按 `references/prd-playbook.md#自适应产品访谈` 提出少量高价值问题。
 
 ### B. 选择深度和参考输入
@@ -75,7 +75,6 @@ PRD 完成后，回写或补充 `00-intake/brief.md`：
 - 待澄清项。
 - `PRD required: yes`
 - `PRD depth: <实际深度>`
-- `下一步路由: sf-requirements`
 
 不要让 `brief.md` 和 `prd.md` 在 MVP、非目标、components flags 上互相矛盾。
 
@@ -84,9 +83,9 @@ PRD 完成后，回写或补充 `00-intake/brief.md`：
 | 条件 | 状态 |
 |---|---|
 | 多个 active work item | 停止：请用户指定目标 |
-| `brief.md#PRD 决策` 不需要 PRD | 停止：路由回 `sf-requirements` 或 brief 指定下一步 |
-| 需要多方案取舍但缺少 `brainstorm.md` 或用户确认记录 | 停止：路由 `sf-brainstorm` |
-| 目标用户、核心问题或 MVP 功能边界无法确认 | 停止：提问或路由 `sf-brainstorm` |
+| `brief.md#PRD 决策` 不需要 PRD | 停止：跳过本阶段，brief 已标记跳过理由 |
+| 需要多方案取舍但缺少 `brainstorm.md` 或用户确认记录 | 停止：需先完成方向取舍 |
+| 目标用户、核心问题或 MVP 功能边界无法确认 | 停止：提问澄清 |
 | 成功指标完全缺失，且无法安全给出默认指标 | 停止：提问 |
 | 存在产品方向、角色权限、合规/数据风险或 AI 质量目标冲突 | 停止：等待用户或业务负责人决策 |
 | 用户要求 PRD 直接替代 requirements / UI design / technical design | 停止：说明边界 |
@@ -98,7 +97,8 @@ PRD 完成后，回写或补充 `00-intake/brief.md`：
 - 功能边界、非目标、成功指标、风险和路线图已有用户确认或明确默认假设。
 - 产品型需求的功能候选池已经裁剪为 MVP / 可选增强 / 后续版本。
 - AI 功能已经写明评估策略、人工兜底、安全隐私和成本边界。
-- `brief.md` 已同步，下一步路由到 `sf-requirements`。
+- `brief.md` 已同步，所有 `[NEEDS ... DECISION]` 已清除。
+- 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 
 ## 不做
 

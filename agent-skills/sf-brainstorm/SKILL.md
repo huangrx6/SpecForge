@@ -172,20 +172,19 @@ C) 不确定 → 先按 B 设计，留扩展点
 1. 写入或更新 `00-intake/brainstorm.md`：问题地图、事实证据、方案对比、推荐项、用户确认、明确延后 / 不做、未决问题。
 2. 同步更新 `00-intake/brief.md`：澄清记录、功能候选池、用户选择、外部研究摘要、PRD 决策和 Brainstorm 决策。
 3. 确认没有 `[NEEDS ... DECISION]` 阻断项；如仍有阻断项，输出暂停原因而不是路由到下游。
-4. 输出下一步路由：`sf-prd`、`sf-requirements`、`sf-ui-design`、`sf-tech-design`、`sf-discovery` 或暂停等待用户确认。
 
 ## 判定表
 
 | 条件 | 状态 |
 |---|---|
-| 没有 active work item，且用户要求落档但尚未创建 work item | 停止：先路由 `sf-intake` |
+| 没有 active work item，且用户要求落档但尚未创建 work item | 停止：需先创建 work item |
 | 用户尚未确认 MVP、核心方案、关键技术路线或不能安全默认的边界 | 停止：继续 Socratic 单问 |
 | 需要当前事实支撑的判断尚未完成研究 | 停止：先补事实来源 |
 | 方案之间成本、风险或用户价值差异未说明清楚 | 停止：补方案对比 |
 | 任何 `[NEEDS ... DECISION]` 仍存在 | 停止：不得宣布收敛 |
 | 用户确认的选择、授权默认、Agent recommendation 和未决问题已分清 | 完成条件之一 |
 | `brainstorm.md` 足以支撑 PRD、requirements、UI design 或 technical design 继续推进 | 完成条件之一 |
-| `brief.md` 已同步，下一步路由清楚 | 完成 |
+| `brief.md` 已同步，所有 `[NEEDS ... DECISION]` 已清除 | 完成 |
 
 ## 停止条件
 
@@ -193,7 +192,8 @@ C) 不确定 → 先按 B 设计，留扩展点
 
 ## 完成标准
 
-以“判定表”为准。只有完成条件全部满足，才能输出下一步路由。
+以”判定表”为准。只有完成条件全部满足，才能输出下一步路由。
+- 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 
 ## 不做
 

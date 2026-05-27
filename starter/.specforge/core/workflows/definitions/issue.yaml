@@ -6,6 +6,11 @@ use_for:
   - 监控告警或任务失败
   - 需要排查但未确认根因的问题
   - 可能演化为 bugfix / refactor / ops 的技术问题
+not_for:
+  - 已有明确复现和期望行为的 bug（用 bugfix）
+  - 新功能需求（用 feature）
+vs:
+  bugfix: issue 根因未确认，需要先排查；bugfix 已有复现、当前行为、期望行为
 stages:
   - 00-intake
   - 01-spec (Issue Triage / Gap Analysis)

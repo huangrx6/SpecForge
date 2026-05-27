@@ -5,6 +5,12 @@ use_for:
   - 线上缺陷热修复 (Hotfix)
   - QA 回归测试出的 Bug
   - 安全漏洞紧急修复
+not_for:
+  - 尚未确认是代码缺陷的异常现象（用 issue）
+  - 需要新增功能才能"修复"的问题（用 feature）
+  - 行为不变的代码重构（用 refactor）
+vs:
+  issue: bugfix 已有明确复现和期望行为；issue 现象未定性，需要先排查根因
 stages:
   - 00-intake
   - 01-spec (Gap Analysis)
