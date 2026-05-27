@@ -185,8 +185,9 @@ function nextActions(status, scale, selected) {
   if (status === "blocked_large_without_provider") {
     return [
       "暂停全仓理解，不要继续扩大读取范围。",
-      "向用户展示 install_options：推荐安装 CodeGraph，或选择安装其他 graph provider，或指定目标模块 / 业务域 / 错误路径。",
-      "用户确认安装后，按当前 OS 自动执行推荐命令；安装后运行 codegraph init/status 和 codebase-index 复查。",
+      "向用户展示两种安装方式：A. 用户自己安装；B. Agent 辅助安装。也允许用户改选其他 graph provider 或指定目标模块 / 业务域 / 错误路径。",
+      "如果用户选择自己安装，只给出当前 OS 的安装命令、初始化命令和复查命令，然后等待用户完成后再继续。",
+      "如果用户选择 Agent 辅助安装，先确认授权，再按当前 OS 自动执行安装；安装后运行 codegraph init/status 和 codebase-index 复查。",
       "若用户指定目标模块，可用 codebase-map + rg 做 change-focused / bug-focused 局部理解。",
     ];
   }
@@ -241,8 +242,21 @@ function installOptions(providerList, status) {
         "codegraph status",
         "node .specforge/core/scripts/codebase-index.mjs --json",
       ],
+      choices: [
+        {
+          id: "user_install",
+          label: "用户自己安装",
+          action: "把 install_command、post_install_commands 发给用户，等待用户安装并确认后再复查。",
+        },
+        {
+          id: "agent_install",
+          label: "Agent 辅助安装",
+          action: "先向用户确认授权，然后由 Agent 执行 install_command 和 post_install_commands。",
+        },
+      ],
       notes: [
         "Do not run install commands before the user confirms.",
+        "Always offer both choices: user installs manually, or Agent installs after confirmation.",
         "Use the OS-specific command above; the fallback requires Node/npm.",
         "After installation, initialize the current project and re-run codebase-index before writing wiki facts.",
       ],
@@ -531,9 +545,15 @@ function printHuman(payload) {
   }
   if (payload.install_options.length > 0) {
     console.log("");
-    console.log("Install options:");
+    console.log("Install choices:");
     for (const item of payload.install_options) {
       console.log(`- ${item.label}${item.recommended ? " (recommended)" : ""}`);
+      if (item.choices) {
+        for (const choice of item.choices) {
+          console.log(`  ${choice.id}: ${choice.label}`);
+          console.log(`    ${choice.action}`);
+        }
+      }
       console.log(`  command: ${item.install_command}`);
       console.log(`  fallback: ${item.fallback_command}`);
       console.log(`  post-install: ${item.post_install_commands.join(" -> ")}`);

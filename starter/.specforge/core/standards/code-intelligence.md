@@ -57,7 +57,7 @@ node .specforge/core/scripts/codebase-index.mjs --provider repomix --module src/
 SpecForge 中的使用规则：
 
 - `codebase-index.mjs` 检测到 `codegraph` CLI 时，将其视为 graph provider。
-- 项目未安装或未初始化 CodeGraph 时，先展示 `install_options`，询问用户是否要由 Agent 辅助安装 / 初始化；用户确认后再按当前 OS 执行安装、`codegraph init -i` 和 `codegraph status`。
+- 项目未安装或未初始化 CodeGraph 时，必须展示两种方式：A. 用户自己安装；B. Agent 辅助安装 / 初始化。用户选择自己安装时，只给命令并等待用户完成；用户确认 Agent 辅助安装后，再按当前 OS 执行安装、`codegraph init -i` 和 `codegraph status`。
 - macOS / Linux 使用 `curl -fsSL https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh | sh`；Windows 使用 `irm https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.ps1 | iex`；若用户不想执行远程脚本，可改用 `npx @colbymchenry/codegraph`。
 - steering 时先用 `codegraph_status` 检查索引健康；若有 pending sync，等待同步或运行 `codegraph sync` 后再下结论。
 - 分析新需求或 bug 时优先用 `codegraph_context` 定位模块和入口，再用 `codegraph_trace` / `codegraph_impact` 分析调用链和影响面，最后只读取必要文件验证事实。
@@ -89,7 +89,7 @@ SpecForge 中的使用规则：
 当 `codebase-index.mjs` 输出 `blocked_large_without_provider`：
 
 1. 停止全仓扫描。
-2. 展示 `codebase-index.mjs` 输出的 `install_options`，优先建议 CodeGraph，并说明当前系统对应安装命令。
-3. 询问用户是否要 Agent 辅助安装；用户确认后自动执行安装、初始化、状态检查和 `codebase-index` 复查。
+2. 展示 `codebase-index.mjs` 输出的安装选择：A. 用户自己安装；B. Agent 辅助安装。优先建议 CodeGraph，并说明当前系统对应安装命令。
+3. 用户选择自己安装时，给出安装、初始化、状态检查和 `codebase-index` 复查命令后等待；用户选择 Agent 辅助安装时，确认授权后自动执行这些命令。
 4. 如果用户不安装 provider，询问目标模块、业务域、报错路径；用户指定范围后，可以用 bootstrap map + `rg` 做局部理解。
 5. 后续 work item 只加载相关 wiki 和相关文件。

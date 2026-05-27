@@ -59,7 +59,7 @@ node core/scripts/codebase-index.mjs --write-report --report /tmp/specforge-code
 - `bootstrap.candidates.tests`
 - `bootstrap.candidates.operations`
 
-如果 `status=blocked_large_without_provider`，先展示 `install_options` 并向用户确认是否安装 CodeGraph / codebase-memory-mcp / CodeGraphContext，或让用户指定目标业务域、优先模块、报错路径；不要自行展开全仓。用户确认安装 CodeGraph 后，按当前 OS 执行安装命令，再运行 `codegraph init -i`、`codegraph status` 和 `codebase-index` 复查。
+如果 `status=blocked_large_without_provider`，不要自行展开全仓。先展示安装选择：A. 用户自己安装；B. Agent 辅助安装。用户选择自己安装时，给出当前 OS 的安装、初始化和复查命令后等待；用户选择 Agent 辅助安装时，确认授权后按当前 OS 执行安装命令，再运行 `codegraph init -i`、`codegraph status` 和 `codebase-index` 复查。用户也可以改选 codebase-memory-mcp / CodeGraphContext，或指定目标业务域、优先模块、报错路径。
 
 ### 1.5 Provider 决策层
 
