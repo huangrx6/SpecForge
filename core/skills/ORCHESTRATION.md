@@ -65,6 +65,7 @@
 ### Code Review
 
 - `sf-code-review` 仍是唯一 code_review 阶段入口；`code-reviewer` 只作为补充检查清单。
+- 不调用任何外部 code-reviewer agent，包括 `code-reviewer` 和 `superpowers:code-reviewer`；`code-reviewer` 只表示本地 skill 目录和规则文件。
 - 安全和数据风险先看，再看性能、正确性、可维护性和测试覆盖；finding 必须绑定文件、行号、影响和可执行修复建议。
 - 不把第三方示例代码当成项目代码直接套用；修复建议必须结合本仓库语言、框架和既有模式。
 

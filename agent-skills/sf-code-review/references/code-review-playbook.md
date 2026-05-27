@@ -55,6 +55,12 @@
 
 `code-reviewer` 是风险检查清单，不是 gate 入口。只有当 diff 或 spec 暗示对应风险时才读取。
 
+使用规则：
+
+- 不调用任何外部 code-reviewer agent，包括 `code-reviewer` 和 `superpowers:code-reviewer`。
+- `code-reviewer` 只表示本地 skill 目录和规则文件，不表示可调用 agent。
+- 只读取 `.specforge/core/skills/code-reviewer/SKILL.md` 和下表相关 rule 文件。
+
 | 风险信号 | 读取 |
 |---|---|
 | SQL、ORM raw query、拼接查询、筛选参数、搜索接口 | `.specforge/core/skills/code-reviewer/rules/security-sql-injection.md` |
