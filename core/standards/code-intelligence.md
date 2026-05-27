@@ -86,10 +86,16 @@ SpecForge 中的使用规则：
 
 ## Provider 缺失处理
 
-当 `codebase-index.mjs` 输出 `blocked_large_without_provider`：
+当 `codebase-index.mjs` 尚未选择扫描模式：
 
-1. 停止全仓扫描。
-2. 展示 `codebase-index.mjs` 输出的安装选择：A. 用户自己安装；B. Agent 辅助安装。优先建议 CodeGraph，并说明当前系统对应安装命令。
-3. 用户选择自己安装时，给出安装、初始化、状态检查和 `codebase-index` 复查命令后等待；用户选择 Agent 辅助安装时，确认授权后自动执行这些命令。
-4. 如果用户不安装 provider，询问目标模块、业务域、报错路径；用户指定范围后，可以用 bootstrap map + `rg` 做局部理解。
-5. 后续 work item 只加载相关 wiki 和相关文件。
+1. 停止全仓扫描，不要直接进入 provider 安装。
+2. 展示 `scan_modes`，说明每种模式的适用场景、优点、缺点和依赖策略。
+3. 让用户选择 `baseline-lite`、`baseline-standard`、`baseline-deep`、`change-focused` 或 `bug-focused`。
+4. 用户选择后，重新运行 `codebase-index.mjs --scan-mode <mode>`；定向模式还应补充目标模块、业务域、页面、接口、报错路径或复现线索。
+
+当用户选择的模式需要 provider，但当前未安装时：
+
+1. 展示安装选择：A. 用户自己安装；B. Agent 辅助安装。优先建议 CodeGraph，并说明当前系统对应安装命令。
+2. 用户选择自己安装时，给出安装、初始化、状态检查和 `codebase-index` 复查命令后等待；用户选择 Agent 辅助安装时，确认授权后自动执行这些命令。
+3. 如果用户不安装 provider，询问是否改选轻量/标准/定向模式，或提供目标模块、业务域、报错路径后做局部理解。
+4. 后续 work item 只加载相关 wiki 和相关文件。

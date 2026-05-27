@@ -11,6 +11,7 @@ const asJson = args.includes("--json");
 const writeReport = args.includes("--write-report");
 const executeProvider = args.includes("--execute-provider");
 const requestedProvider = option("--provider", "auto");
+const requestedScanMode = option("--scan-mode", "ask");
 
 function option(name, fallback) {
   const index = args.indexOf(name);
@@ -54,6 +55,70 @@ function focusModules() {
     .flatMap((item) => item.split(","))
     .map((item) => item.trim())
     .filter(Boolean);
+}
+
+function scanModes() {
+  return [
+    {
+      id: "baseline-lite",
+      label: "轻量项目画像",
+      best_for: "小项目、目录清楚、只想快速生成最小 wiki 基线。",
+      pros: ["最快", "通常不需要新增依赖", "适合首次粗看或小仓库"],
+      cons: ["理解较浅", "容易漏掉跨模块关系", "不适合大型遗留仓库做全局结论"],
+      dependency_policy: "不要求安装 provider；使用 bootstrap map + rg + 少量关键文件。",
+    },
+    {
+      id: "baseline-standard",
+      label: "标准项目画像",
+      best_for: "普通存量项目首接入，想建立可供日常需求复用的 wiki。",
+      pros: ["覆盖项目概览、架构、数据、运行和风险", "成本和质量比较均衡", "适合大多数日常接入"],
+      cons: ["比 lite 慢", "大型仓库仍需要用户指定模块或补充 provider", "关系链路不如 deep 完整"],
+      dependency_policy: "默认不强制安装；已限定模块时可选 Repomix，仓库很大且要全局理解时建议 graph provider。",
+    },
+    {
+      id: "baseline-deep",
+      label: "深度项目画像",
+      best_for: "大型仓库、单体遗留、多服务、多语言，或需要比较可靠的全局关系图。",
+      pros: ["关系和影响面最完整", "适合后续长期维护", "能更好支持跨模块需求和代码评审"],
+      cons: ["耗时最长", "通常需要安装或启用图谱 provider", "需要等待索引初始化"],
+      dependency_policy: "大型仓库必须先有 CodeGraph / codebase-memory-mcp / CodeGraphContext 等 graph provider，缺失时再让用户选择自己安装或 Agent 辅助安装。",
+    },
+    {
+      id: "change-focused",
+      label: "新需求定向扫描",
+      best_for: "用户已经有明确新需求、业务域、页面、接口或模块。",
+      pros: ["最快进入需求实现", "只读相关上下文", "适合日常迭代"],
+      cons: ["不会建立完整全仓 wiki", "如果目标范围不清，需要先追问", "可能漏掉隐藏影响面"],
+      dependency_policy: "通常不强制安装；大型仓库且影响面不清时建议 graph provider。",
+    },
+    {
+      id: "bug-focused",
+      label: "Bug 定向扫描",
+      best_for: "用户已有报错、日志、复现路径、接口、页面或异常模块。",
+      pros: ["聚焦复现链路和调用链", "适合快速定位", "天然连接验证和回归测试"],
+      cons: ["依赖用户提供错误线索", "不覆盖无关模块", "大型项目无 graph provider 时调用链可能不完整"],
+      dependency_policy: "通常不强制安装；大型仓库需要跨模块追踪时建议 graph provider。",
+    },
+  ];
+}
+
+function selectScanMode(modes) {
+  if (requestedScanMode === "ask" || requestedScanMode === "choose") {
+    return {
+      selected: null,
+      status: "scan_mode_required",
+      warnings: [],
+    };
+  }
+  const selected = modes.find((item) => item.id === requestedScanMode);
+  if (!selected) {
+    return {
+      selected: null,
+      status: "unknown_scan_mode",
+      warnings: [`Unknown scan mode "${requestedScanMode}". Ask the user to choose one of: ${modes.map((item) => item.id).join(", ")}.`],
+    };
+  }
+  return { selected, status: "scan_mode_selected", warnings: [] };
 }
 
 function runBootstrapMap() {
@@ -181,16 +246,92 @@ function selectProvider(list, scale) {
   return { selected: fallback, status: "fallback_ready", warnings: [] };
 }
 
-function nextActions(status, scale, selected) {
-  if (status === "blocked_large_without_provider") {
+function graphProviderInstalled(providerList) {
+  return providerList.some((item) => item.kind === "graph" && item.installed);
+}
+
+function dependencyDecision(scanModeDecision, scale, providerList) {
+  const selected = scanModeDecision.selected;
+  if (!selected) {
+    return {
+      status: "waiting_for_scan_mode",
+      requires_install: false,
+      required_provider: null,
+      message: "先让用户选择扫描模式；选择后再判断是否需要安装依赖。",
+    };
+  }
+
+  const hasGraph = graphProviderInstalled(providerList);
+  if (selected.id === "baseline-deep" && scale === "large" && !hasGraph) {
+    return {
+      status: "install_required",
+      requires_install: true,
+      required_provider: "graph",
+      message: "baseline-deep 在大型仓库中需要 graph provider；缺失时提供用户自己安装 / Agent 辅助安装两种方式。",
+    };
+  }
+
+  if ((selected.id === "change-focused" || selected.id === "bug-focused") && scale === "large" && focusModules().length === 0) {
+    return {
+      status: "scope_required",
+      requires_install: false,
+      required_provider: null,
+      message: "定向扫描优先让用户提供模块、业务域、页面、接口、报错路径或复现线索；暂不要求安装依赖。",
+    };
+  }
+
+  if ((selected.id === "baseline-standard" || selected.id === "change-focused" || selected.id === "bug-focused") && scale === "large" && !hasGraph) {
+    return {
+      status: "install_optional",
+      requires_install: false,
+      required_provider: null,
+      message: "该模式可先按限定范围推进；如果用户希望分析跨模块关系和影响面，再安装 graph provider。",
+    };
+  }
+
+  return {
+    status: "ready",
+    requires_install: false,
+    required_provider: null,
+    message: "当前模式可以继续，无需先安装依赖。",
+  };
+}
+
+function nextActions(status, scale, selected, scanModeDecision, dependency) {
+  if (!scanModeDecision.selected) {
+    return [
+      "先暂停执行扫描，不要直接安装 provider，也不要展开全仓分析。",
+      "向用户展示 scan_modes：说明每种模式的适用场景、优点、缺点和依赖策略。",
+      "让用户选择 baseline-lite / baseline-standard / baseline-deep / change-focused / bug-focused 之一。",
+      "用户选择扫描模式后，再根据 dependency_decision 判断是否需要安装依赖或补充目标模块。",
+    ];
+  }
+
+  if (dependency.status === "install_required") {
     return [
       "暂停全仓理解，不要继续扩大读取范围。",
+      `用户已选择 ${scanModeDecision.selected.id}；该模式在当前仓库规模下需要先安装 graph provider。`,
       "向用户展示两种安装方式：A. 用户自己安装；B. Agent 辅助安装。也允许用户改选其他 graph provider 或指定目标模块 / 业务域 / 错误路径。",
       "如果用户选择自己安装，只给出当前 OS 的安装命令、初始化命令和复查命令，然后等待用户完成后再继续。",
       "如果用户选择 Agent 辅助安装，先确认授权，再按当前 OS 自动执行安装；安装后运行 codegraph init/status 和 codebase-index 复查。",
-      "若用户指定目标模块，可用 codebase-map + rg 做 change-focused / bug-focused 局部理解。",
     ];
   }
+
+  if (dependency.status === "scope_required") {
+    return [
+      `用户已选择 ${scanModeDecision.selected.id}；先询问目标模块、业务域、页面、接口、报错路径或复现线索。`,
+      "拿到范围后，用 bootstrap map + rg 做局部理解；如影响面跨模块且用户需要更高可靠性，再建议安装 graph provider。",
+    ];
+  }
+
+  if (dependency.status === "install_optional") {
+    return [
+      `用户已选择 ${scanModeDecision.selected.id}；可以先按限定范围推进。`,
+      "提醒用户：如果希望更可靠地分析跨模块关系、调用链或影响面，可以选择安装 graph provider。",
+      "如果用户不安装，继续用 bootstrap map + rg + 关键文件阅读建立局部事实。",
+    ];
+  }
+
   if (selected.kind === "graph") {
     return [
       `使用 ${selected.label} 查询模块、符号、调用链、依赖和入口关系。`,
@@ -217,12 +358,12 @@ function nextActions(status, scale, selected) {
   ];
 }
 
-function installOptions(providerList, status) {
+function installOptions(providerList, dependency) {
   const host = hostPlatform();
   const codegraph = providerList.find((item) => item.id === "codegraph");
   const options = [];
 
-  if (codegraph && !codegraph.installed) {
+  if (dependency.requires_install && codegraph && !codegraph.installed) {
     const installCommand =
       host.id === "windows"
         ? "irm https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.ps1 | iex"
@@ -234,7 +375,7 @@ function installOptions(providerList, status) {
       recommended: true,
       requires_user_confirmation: true,
       host,
-      when: status === "blocked_large_without_provider" ? "large codebase without graph provider" : "optional graph provider upgrade",
+      when: dependency.message,
       install_command: installCommand,
       fallback_command: "npx @colbymchenry/codegraph",
       post_install_commands: [
@@ -409,11 +550,25 @@ function renderReport(payload) {
 | 日期 | ${localDateIso()} |
 | Root | \`${payload.root}\` |
 | Scale | ${normalized.scale} |
-| Provider status | ${payload.status} |
+| Workflow status | ${payload.status} |
+| Provider status | ${payload.provider_status} |
 | Selected provider | ${selected.label} (\`${selected.id}\`) |
 | Provider kind | ${selected.kind} |
 | Has codebase | ${normalized.has_codebase ? "yes" : "no"} |
 | Host platform | ${payload.host_platform.label} (\`${payload.host_platform.id}\`) |
+| Requested scan mode | ${payload.requested_scan_mode} |
+| Scan mode status | ${payload.scan_mode_decision.status} |
+| Selected scan mode | ${payload.scan_mode_decision.selected ? `${payload.scan_mode_decision.selected.label} (\`${payload.scan_mode_decision.selected.id}\`)` : "not selected"} |
+| Dependency status | ${payload.dependency_decision.status} |
+
+## 1.1 扫描模式选择
+
+${payload.scan_modes.map((mode) => `### ${mode.id} — ${mode.label}
+
+- 适用：${mode.best_for}
+- 优点：${mode.pros.join("；")}
+- 缺点：${mode.cons.join("；")}
+- 依赖策略：${mode.dependency_policy}`).join("\n\n")}
 
 ## 2. Provider 可用性
 
@@ -491,6 +646,10 @@ ${markdownList(payload.next_actions)}
 ${JSON.stringify(
   {
     status: payload.status,
+    provider_status: payload.provider_status,
+    requested_scan_mode: payload.requested_scan_mode,
+    scan_mode_decision: payload.scan_mode_decision,
+    dependency_decision: payload.dependency_decision,
     selected_provider: payload.selected_provider,
     normalized_context: payload.normalized_context,
     provider_execution: payload.provider_execution,
@@ -528,9 +687,24 @@ function printHuman(payload) {
   console.log("");
   console.log(`Root: ${payload.root}`);
   console.log(`Bootstrap scale: ${payload.bootstrap.scale}`);
-  console.log(`Provider status: ${payload.status}`);
+  console.log(`Workflow status: ${payload.status}`);
+  console.log(`Provider status: ${payload.provider_status}`);
   console.log(`Selected provider: ${payload.selected_provider.label} (${payload.selected_provider.id})`);
   console.log(`Host platform: ${payload.host_platform.label} (${payload.host_platform.id})`);
+  console.log(`Requested scan mode: ${payload.requested_scan_mode}`);
+  console.log(`Scan mode status: ${payload.scan_mode_decision.status}`);
+  console.log(`Selected scan mode: ${payload.scan_mode_decision.selected ? `${payload.scan_mode_decision.selected.label} (${payload.scan_mode_decision.selected.id})` : "not selected"}`);
+  console.log(`Dependency status: ${payload.dependency_decision.status}`);
+  console.log(`Dependency note: ${payload.dependency_decision.message}`);
+  console.log("");
+  console.log("Scan modes:");
+  for (const mode of payload.scan_modes) {
+    console.log(`- ${mode.id}: ${mode.label}`);
+    console.log(`  best for: ${mode.best_for}`);
+    console.log(`  pros: ${mode.pros.join("；")}`);
+    console.log(`  cons: ${mode.cons.join("；")}`);
+    console.log(`  dependency: ${mode.dependency_policy}`);
+  }
   console.log("");
   console.log("Provider availability:");
   for (const item of payload.providers) {
@@ -573,21 +747,31 @@ try {
   const bootstrap = runBootstrapMap();
   const providerList = providers();
   const selection = selectProvider(providerList, bootstrap.scale);
+  const modes = scanModes();
+  const scanModeDecision = selectScanMode(modes);
+  const dependency = dependencyDecision(scanModeDecision, bootstrap.scale, providerList);
   const plan = providerPlan(selection.selected);
   const execution = runProvider(selection.selected, plan);
+  const workflowStatus = scanModeDecision.selected ? selection.status : scanModeDecision.status;
+  const warnings = scanModeDecision.selected ? [...selection.warnings, ...scanModeDecision.warnings] : scanModeDecision.warnings;
   const payload = {
     kind: "specforge_codebase_intelligence",
     version: 1,
     root,
     requested_provider: requestedProvider,
-    status: selection.status,
+    requested_scan_mode: requestedScanMode,
+    status: workflowStatus,
+    provider_status: selection.status,
     selected_provider: selection.selected,
     providers: providerList,
+    scan_modes: modes,
+    scan_mode_decision: scanModeDecision,
+    dependency_decision: dependency,
     host_platform: hostPlatform(),
-    install_options: installOptions(providerList, selection.status),
+    install_options: installOptions(providerList, dependency),
     policy: policyForScale(bootstrap.scale),
-    next_actions: nextActions(selection.status, bootstrap.scale, selection.selected),
-    warnings: selection.warnings,
+    next_actions: nextActions(selection.status, bootstrap.scale, selection.selected, scanModeDecision, dependency),
+    warnings,
     normalized_context: normalizedContext(bootstrap, selection.selected, selection.status),
     provider_plan: plan,
     provider_execution: execution,

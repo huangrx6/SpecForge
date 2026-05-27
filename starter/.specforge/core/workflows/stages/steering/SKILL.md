@@ -11,7 +11,7 @@ description: SpecForge 内部 steering 技能。用于存量项目、大型代�
 
 本阶段必须读取 `.specforge/core/standards/code-intelligence.md` 和 `.specforge/core/standards/wiki.md`。
 
-1. **先选 provider，再读细节**：先运行 `codebase-index.mjs` 判断规模和可用 provider，再分模块阅读。
+1. **先选扫描模式，再选 provider**：先运行 `codebase-index.mjs` 判断规模并展示扫描模式，让用户选择后再判断是否需要 provider。
 2. **分层理解，不读全仓**：大型项目不能把所有文件塞进上下文；只读取当前层级和目标模块需要的文件。
 3. **当前事实优先**：wiki 写当前代码和配置可证明的事实，不写愿望、猜测或过期历史。
 4. **任务上下文最小化**：后续每个 work item 只加载相关 wiki 和相关文件，不重复扫描全仓库。
@@ -31,7 +31,7 @@ node core/scripts/codebase-index.mjs --json
 node core/scripts/codebase-index.mjs --write-report --report /tmp/specforge-codebase-intelligence.md
 ```
 
-`codebase-index.mjs` 会检测 code intelligence provider，并在内部运行 `codebase-map.mjs` 生成 bootstrap map，输出 `normalized_context`、provider plan 和可审查 Markdown report。`codebase-map.mjs` 是 fallback scanner，只提供候选，不直接等于结论。重要结论必须继续读取文件、查询 provider 或由用户确认。
+`codebase-index.mjs` 会先输出 `scan_modes`，再检测 code intelligence provider，并在内部运行 `codebase-map.mjs` 生成 bootstrap map，输出 `normalized_context`、provider plan 和可审查 Markdown report。`codebase-map.mjs` 是 fallback scanner，只提供候选，不直接等于结论。重要结论必须继续读取文件、查询 provider 或由用户确认。
 
 ## 规模判断
 
@@ -43,10 +43,33 @@ node core/scripts/codebase-index.mjs --write-report --report /tmp/specforge-code
 
 ## 推荐流程
 
+### 0. 扫描模式选择层
+
+先读取 `codebase-index.mjs --json` 输出的 `scan_modes`、`scan_mode_decision` 和 `dependency_decision`。默认没有用户明确选择时，不要直接安装 provider，也不要展开全仓分析。
+
+必须向用户展示这些模式，让用户自己选：
+
+| 模式 | 适用 | 优点 | 缺点 | 依赖判断 |
+|---|---|---|---|---|
+| `baseline-lite` | 小项目、快速粗看 | 快、低成本、通常不用新增依赖 | 浅，容易漏跨模块关系 | 不要求 provider |
+| `baseline-standard` | 普通存量项目首接入 | 覆盖 wiki 基线，质量和成本均衡 | 大仓库可能需要限定模块 | 默认不强制，必要时可选 Repomix / graph |
+| `baseline-deep` | 大型仓库、遗留单体、多服务 | 关系和影响面最完整 | 慢，通常要建索引 | 大型仓库必须先有 graph provider |
+| `change-focused` | 已有明确新需求 | 直接服务本次迭代，读取少 | 不建立完整全仓 wiki | 先要目标模块/业务域；graph 视影响面可选 |
+| `bug-focused` | 已有 bug、日志、复现路径 | 聚焦链路和回归验证 | 依赖错误线索 | 先要复现/报错路径；graph 视调用链可选 |
+
+用户选择后，重新运行：
+
+```bash
+node .specforge/core/scripts/codebase-index.mjs --json --scan-mode <mode>
+```
+
+如果是定向模式，优先补充 `--module <path>` 或 `--focus <domain>`。
+
 ### 1. 仓库地图层
 
 读取 `codebase-index.mjs --json` 输出，记录：
 
+- `scan_modes`、`scan_mode_decision`、`dependency_decision`
 - `status`、`selected_provider`、`providers`
 - `normalized_context`
 - `provider_plan`、`provider_execution`
@@ -59,7 +82,7 @@ node core/scripts/codebase-index.mjs --write-report --report /tmp/specforge-code
 - `bootstrap.candidates.tests`
 - `bootstrap.candidates.operations`
 
-如果 `status=blocked_large_without_provider`，不要自行展开全仓。先展示安装选择：A. 用户自己安装；B. Agent 辅助安装。用户选择自己安装时，给出当前 OS 的安装、初始化和复查命令后等待；用户选择 Agent 辅助安装时，确认授权后按当前 OS 执行安装命令，再运行 `codegraph init -i`、`codegraph status` 和 `codebase-index` 复查。用户也可以改选 codebase-memory-mcp / CodeGraphContext，或指定目标业务域、优先模块、报错路径。
+如果 `dependency_decision.status=install_required`，不要自行展开全仓。先展示安装选择：A. 用户自己安装；B. Agent 辅助安装。用户选择自己安装时，给出当前 OS 的安装、初始化和复查命令后等待；用户选择 Agent 辅助安装时，确认授权后按当前 OS 执行安装命令，再运行 `codegraph init -i`、`codegraph status` 和 `codebase-index` 复查。用户也可以改选 codebase-memory-mcp / CodeGraphContext，或改选轻量/定向扫描模式。
 
 ### 1.5 Provider 决策层
 
