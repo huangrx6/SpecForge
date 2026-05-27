@@ -77,8 +77,10 @@ node .specforge/core/scripts/sync-wiki.mjs
 1. 优先更新现有 current 文件，不创建日期版、v2 版、work item 版。
 2. 确需新增时使用短名：`module-<name>.md`、`api-<domain>.md`、`design-system.md`。
 3. 每个更新文件都保留并刷新 frontmatter：`title`、`kind`、`owner`、`last_updated`、`source_work`、`status`。
-4. 更新 `.specforge/wiki/index.md` 的摘要、当前文件索引和最后同步时间。
-5. 在 `06-close/wiki-sync.md` 记录更新文件、写入事实、来源证据、不更新原因和下游重新验证要求。
+4. 按 `references/wiki-playbook.md#Wiki 质量清单` 检查信息密度；架构、API、数据、运维类文件不能只写概述。
+5. 对缺失事实执行一次补证：用 `rg` / provider / 关键配置读取查找路由、模型、migration、服务入口、脚本和测试。仍无法确认的，写 `未确认` 并同步到 `risks.md`。
+6. 更新 `.specforge/wiki/index.md` 的摘要、当前文件索引和最后同步时间。
+7. 在 `06-close/wiki-sync.md` 记录更新文件、写入事实、来源证据、不更新原因、未确认缺口和下游重新验证要求。
 
 ### D. 更新 gate
 
@@ -111,6 +113,7 @@ node .specforge/core/scripts/gate.mjs wiki_sync REQUEST_CHANGES
 - 同一知识项只有一个 current 文件。
 - `.specforge/wiki/index.md` 反映最新 current 文件列表。
 - wiki 只包含当前事实；旧事实被更新，必要背景进入 `decisions.md`。
+- 架构 / API / 数据 / 运维文件满足最低完整度；不足项已明确标注 `未确认`，并在 `risks.md` 或 `06-close/wiki-sync.md` 记录补证路径。
 - wiki_sync gate 状态与 evidence 一致。
 
 ## 不做

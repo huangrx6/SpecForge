@@ -61,9 +61,10 @@ description: SpecForge 内部 Wiki 同步技能。用于 closure 前判断 work 
 1. **收集候选事实**：从 PRD / requirements / ui_design / technical_design / implementation report / verification report 提取长期有效事实。
 2. **判定写入目标**：使用“判断维度”表选择唯一目标文件；一个知识项只维护一个 current 文件。
 3. **对照现有 wiki**：读取目标文件和 `index.md`，判断是更新当前事实、补充新章节，还是写 N/A。
-4. **处理冲突**：如果 artifact 与现有 wiki 冲突，以已批准并验证的最新 work item 为准；同时在 `decisions.md` 或目标文件中保留必要决策理由。
-5. **刷新元数据**：每个更新文件都刷新 frontmatter 的 `last_updated`、`source_work` 和 `status: current`。
-6. **同步索引**：新增或重命名 wiki 文件后更新 `index.md`；不得产生重复 current 条目。
+4. **检查最低完整度**：按 `.specforge/core/standards/wiki.md#最低完整度` 检查目标文件。架构、API、数据、运维文件缺少关键事实时，先补扫相关代码 / 配置 / 测试；仍缺失时写 `未确认`，并同步到 `risks.md` 或本次 wiki-sync 的缺口表。
+5. **处理冲突**：如果 artifact 与现有 wiki 冲突，以已批准并验证的最新 work item 为准；同时在 `decisions.md` 或目标文件中保留必要决策理由。
+6. **刷新元数据**：每个更新文件都刷新 frontmatter 的 `last_updated`、`source_work` 和 `status: current`。
+7. **同步索引**：新增或重命名 wiki 文件后更新 `index.md`；不得产生重复 current 条目。
 
 ## 输出要求
 
@@ -73,6 +74,7 @@ description: SpecForge 内部 Wiki 同步技能。用于 closure 前判断 work 
 - 同一知识项不得存在多个 current 文件；不得创建日期版、work item 版或 v2 版 wiki。
 - 说明没有更新的理由。
 - 写明契约变化、下游重新验证要求和来源证据。
+- 写明未确认缺口：缺失的 API、数据模型、架构链路、运行配置或证据不足项。
 - 本次若确认或实现了 PC 端业务系统 UI 规范，写明是否更新 `design-system.md`；不更新时说明该规范是否只是一次性页面约束。
 - 更新 `.specforge/wiki/index.md` 的当前知识项、摘要和最后同步时间。
 
@@ -89,4 +91,5 @@ description: SpecForge 内部 Wiki 同步技能。用于 closure 前判断 work 
 - `wiki-sync.md` 存在。
 - wiki 更新与 work item 证据一致。
 - `index.md` 已列出所有 current 知识项和最后同步时间。
+- 目标 wiki 文件达到最低完整度；未达到的部分已标注 `未确认` 并进入风险 / 缺口记录。
 - `wiki_sync` gate 可以被批准或有明确阻断原因。

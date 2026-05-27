@@ -114,6 +114,22 @@ node .specforge/core/scripts/codebase-index.mjs --write-report
 
 Wiki 只保留当前事实。不要按日期、版本或 work item 复制多份同类文档。
 
+## Wiki 完整度要求
+
+存量项目画像不能只写“这是一个前后端项目”这类概述。写入前必须按 `.specforge/core/standards/wiki.md#最低完整度` 自检。
+
+重点补扫：
+
+| 不完整表现 | 必须补扫 |
+|---|---|
+| 架构只有技术栈，没有模块边界 | source roots、package / build 配置、入口、路由、服务目录、部署文件 |
+| API 只有“有接口” | route / controller / OpenAPI / SDK / test / caller，必要时创建 `api-<domain>.md` |
+| 数据模型只有“使用数据库” | schema / model / migration / repository / SQL / fixture / test，补表关系和状态字段 |
+| 模块只有目录名 | 入口、职责、上游、下游、数据读写、测试位置，必要时创建 `module-<name>.md` |
+| 运维只有启动命令 | env、构建、测试、DB 初始化、任务、部署、回滚、日志监控 |
+
+如果补扫后仍无法确认，不要略过：在目标 wiki 写 `未确认`，并在 `risks.md` 记录“缺口 / 已扫范围 / 下一步证据来源”。
+
 ## 关联标准
 
 - `.specforge/core/standards/code-intelligence.md`：provider 优先级、规模策略和大型项目停止条件。
@@ -144,6 +160,7 @@ Wiki 只保留当前事实。不要按日期、版本或 work item 复制多份�
 
 - `.specforge/wiki/` 至少包含当前项目概览和架构概览。
 - 大型项目至少有相关模块级 wiki，而不是只有笼统总结。
+- `architecture.md`、`data-model.md`、`operations.md` 和必要的 `api-<domain>.md` / `module-<name>.md` 达到最低完整度；缺口进入 `risks.md`。
 - 后续 `sf-intake` 能引用 wiki 判断影响面，不必重新理解全仓库。
 - 未确认内容写入 `risks.md` 或在输出中列为待确认，不混入当前事实。
 

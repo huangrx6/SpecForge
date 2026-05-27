@@ -148,6 +148,20 @@ Provider 输出只能作为证据来源，必须归一成 wiki 当前事实。
 
 Wiki 中每一项保持单文件、当前态。不要创建 `architecture-v2.md`、`module-x-20260518.md` 这类过程文件。
 
+### 4.5 Wiki 完整度补扫
+
+写入前按 `.specforge/core/standards/wiki.md#最低完整度` 自检。以下情况不能直接完成：
+
+| 不完整表现 | 必须补扫 |
+|---|---|
+| 架构只有技术栈，没有模块边界 | source roots、manifest、入口、路由、服务目录、部署文件 |
+| API 只有“有接口” | route、controller、OpenAPI、SDK、测试、调用方 |
+| 数据模型只有“使用数据库” | schema、model、migration、repository、SQL、fixture、测试 |
+| 模块只有目录名 | 入口、职责、上游、下游、数据读写、测试位置 |
+| 运维只有启动命令 | env、构建、测试、DB 初始化、任务、部署、回滚、日志监控 |
+
+补扫后仍无法确认的，目标 wiki 写 `未确认`，并在 `risks.md` 写清缺口、已扫范围和下一步证据来源。
+
 ## 外部工具参考策略
 
 可参考成熟工具的思想，但不要把它们的输出原样变成 SpecForge 事实：
@@ -178,5 +192,6 @@ Wiki 中每一项保持单文件、当前态。不要创建 `architecture-v2.md`
 - 代码库规模和技术栈判断清楚。
 - 至少更新 `project-overview.md` 和 `architecture.md`。
 - 对大型项目，至少建立目标模块的 `module-<name>.md`。
+- `architecture.md`、`data-model.md`、`operations.md` 和必要的 `api-<domain>.md` 达到最低完整度；不足项进入 `risks.md`。
 - 后续 work item 能引用 wiki 中的模块、API、数据和运行事实。
 - 未确认内容没有混进 wiki 当前事实。
