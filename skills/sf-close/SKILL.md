@@ -13,7 +13,7 @@ description: 完成 SpecForge 关闭阶段；用于当前 workflow 已到 wiki_s
 
 ## 必读
 
-- `references/closure-playbook.md`：wiki sync 判断、release / rollback 对账、archive 和安装提示边界。
+- `references/closure-gate-checklist.md`：wiki sync 判断、release / rollback 对账、archive 和安装提示边界。
 - `.specforge/core/workflows/stages/wiki-sync/SKILL.md`
 - `.specforge/core/workflows/stages/closure/SKILL.md`
 - `.specforge/core/artifacts/templates/wiki-sync.md`

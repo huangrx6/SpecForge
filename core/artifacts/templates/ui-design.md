@@ -69,6 +69,8 @@
 | 项 | 结论 |
 |---|---|
 | 用户确认 / 默认假设 | |
+| Design Mode | Product UI / Brand Surface / Hybrid |
+| UI stack / reference | 现有设计系统 / PC 业务系统规范 / shadcn/ui / design-taste-frontend / 其他 |
 | 产品气质 | |
 | 信息密度 | 宽松 / 标准 / 紧凑 |
 | 色彩方向 | |
@@ -101,6 +103,19 @@
 | 来源 | 可复用设计语言 | 不适合本项目的部分 | 落地方式 |
 |---|---|---|---|
 | | 信息密度 / 网格 / 导航 / 色彩 / 字体 / 表格 / 表单 / 卡片 / 反馈 | | |
+
+### 管理端 / shadcn 组件封装契约
+
+> 仅在后台、管理端、配置台、数据表格系统，或实现层采用 shadcn/ui 时填写；否则写 N/A。shadcn/ui 是 primitive 层，不是最终页面结构。
+
+| 层级 | 采用的封装 | 关键规则 / 状态 |
+|---|---|---|
+| App Shell | Sidebar / Topbar / Breadcrumb / Command Search / N/A | 导航层级、折叠、当前定位、移动端 |
+| Resource Page | PageHeader / ActionBar / Filter Bar / Saved Views / Bulk Actions / N/A | 主任务、主次操作、筛选保存、批量操作 |
+| Entity Table | TanStack Table wrapper / Data Grid / N/A | 排序、筛选、分页、列显隐、密度、空/错/加载 |
+| Detail / Form | DetailHeader / Form Section / Sticky Save Bar / Tabbed Detail / N/A | 校验、脏数据保护、保存反馈、只读/禁用 |
+| State Feedback | EmptyState / LoadingSkeleton / ErrorState / PermissionDenied / Toast / N/A | 文案、恢复路径、重试、权限显示 |
+| Ops Pattern | Import / Export / Async Job / Audit Log / Approval Timeline / N/A | 长任务、失败恢复、审计、审批 |
 
 ## 5. 信息架构（Information Architecture）
 

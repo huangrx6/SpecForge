@@ -13,7 +13,7 @@ description: 执行 SpecForge code_review gate；用于 implementation 完成后
 
 ## 必读
 
-- `references/code-review-playbook.md`：diff 对账、spec compliance、外部 `code-reviewer` 使用、finding 分级和 gate 决策。
+- `references/review-gate-rubric.md`：diff 对账、spec compliance、外部 `code-reviewer` 使用、finding 分级和 gate 决策。
 - `.specforge/core/workflows/stages/code-review/SKILL.md`：内部代码审查母本。
 - `.specforge/core/artifacts/templates/code-review.md`：写入骨架。
 - `.specforge/core/standards/workflow.md`、`.specforge/core/standards/engineering.md`。
@@ -80,10 +80,10 @@ node .specforge/core/scripts/create-artifact.mjs code_review
 
 ### D. 外部 `code-reviewer` 联动
 
-`sf-code-review` 仍是唯一 code_review gate 入口。需要补充安全、性能、正确性、可维护性或测试覆盖检查维度时，按 `references/code-review-playbook.md#外部 code-reviewer 联动` 读取本地 `.specforge/core/skills/code-reviewer/SKILL.md`。
+`sf-code-review` 仍是唯一 code_review gate 入口。需要补充安全、性能、正确性、可维护性或测试覆盖检查维度时，按 `references/review-gate-rubric.md#外部 code-reviewer 联动` 读取本地 `.specforge/core/skills/quality/code-reviewer/SKILL.md`。
 
 - 不调用任何外部 code-reviewer agent，包括 `code-reviewer` 和 `superpowers:code-reviewer`。
-- 只能读取本地 `.specforge/core/skills/code-reviewer/SKILL.md` 和相关 `rules/*.md`，由 `sf-code-review` 自己完成审查。
+- 只能读取本地 `.specforge/core/skills/quality/code-reviewer/SKILL.md` 和相关 `rules/*.md`，由 `sf-code-review` 自己完成审查。
 - 先读 `code-reviewer/SKILL.md` 总览。
 - 只在对应风险存在时读取相关 `rules/*.md`：SQL 注入、XSS、N+1、错误处理、命名、类型标注。
 - 第三方输出只能转成 `04-code-review/code-review-v1.md` 中有文件、行号、影响和修复方向的 finding；不要复制外部模板标题。

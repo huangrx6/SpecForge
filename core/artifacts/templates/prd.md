@@ -19,6 +19,8 @@
 - Proposed Solution:
 - Target Users:
 - Success Criteria:
+- Business KPI:
+- Primary Device / Channel:
 
 ## 2. Background & Product Goals
 
@@ -29,8 +31,8 @@
 
 ## 3. Users, Personas & Scenarios
 
-| 用户 / 角色 | 目标 | 当前痛点 | 典型场景 | 权限 / 责任 |
-|---|---|---|---|---|
+| 用户 / 角色 | 部门 / 组织 | 目标 | 当前痛点 | 典型场景 | 使用频率 / 设备 | 权限 / 责任 |
+|---|---|---|---|---|---|---|
 
 ## 4. Scope & MVP Decision
 
@@ -64,6 +66,8 @@ Exceptions:
 ## 8. Metrics, Evaluation & Analytics
 
 - Product KPIs:
+- Business KPIs:
+- Data Metrics:
 - Quality Metrics:
 - Operational Metrics:
 - Tracking / Evidence:
@@ -81,6 +85,13 @@ Exceptions:
 
 | Item | Type | Impact | Mitigation / Owner |
 |---|---|---|---|
+
+### Data & Compliance Snapshot
+
+- Data Sources:
+- Refresh Cadence:
+- Sensitive Fields:
+- Masking / Approval / Audit:
 
 ## 11. Rollout & Roadmap
 
@@ -100,6 +111,7 @@ Exceptions:
 - Recommended components flags:
 - Notes for ui_design:
 - Notes for technical_design:
+- Notes for data / security:
 
 ## PRD Boundary Notes
 

@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { basename, join } from "node:path";
+import { basename, join, relative as pathRelative } from "node:path";
 import { layout } from "./lib/specforge.mjs";
 
 const root = process.cwd();
@@ -181,6 +181,15 @@ function runExternalValidation() {
     return path && !path.startsWith("/") && !parts.includes("..");
   }
 
+  function skillLocalPath(skill) {
+    const localPath = skill?.localPath ?? skill?.id;
+    if (!isSafeSupportPath(localPath)) {
+      errors.push(`${skill?.id ?? "(missing id)"}: unsafe localPath ${localPath}`);
+      return skill?.id ?? "";
+    }
+    return localPath;
+  }
+
   function validateRequiredRegistryFields(skill, seenIds) {
     if (!skill || typeof skill !== "object") {
       errors.push("registry contains a non-object skill entry");
@@ -194,8 +203,11 @@ function runExternalValidation() {
     if (skill.id && seenIds.has(skill.id)) errors.push(`${skill.id}: duplicate registry id`);
     if (skill.id) seenIds.add(skill.id);
 
-    for (const field of ["name", "role", "trust", "risk", "trigger"]) {
+    for (const field of ["name", "role", "trust", "risk", "trigger", "category", "localPath"]) {
       if (!skill[field]) errors.push(`${skill.id ?? "(missing id)"}: registry missing ${field}`);
+    }
+    if (skill.category && !/^[a-z0-9][a-z0-9-]*$/.test(skill.category)) {
+      errors.push(`${skill.id}: category must use lowercase kebab-case`);
     }
     if (!Array.isArray(skill.normalizeTo) || skill.normalizeTo.length === 0) {
       errors.push(`${skill.id}: registry normalizeTo must be a non-empty array`);
@@ -210,7 +222,7 @@ function runExternalValidation() {
   }
 
   function validateSkillSnapshot(skill, baseDir) {
-    const skillDir = join(baseDir, skill.id);
+    const skillDir = join(baseDir, skillLocalPath(skill));
     const skillPath = join(skillDir, "SKILL.md");
 
     if (!existsSync(skillDir)) {
@@ -245,13 +257,24 @@ function runExternalValidation() {
 
   function validateNoUnregisteredSkillDirs(registryIds) {
     if (!existsSync(skillsRoot)) return;
-    for (const entry of readdirSync(skillsRoot, { withFileTypes: true })) {
-      if (!entry.isDirectory()) continue;
-      const skillPath = join(skillsRoot, entry.name, "SKILL.md");
-      if (existsSync(skillPath) && !registryIds.has(entry.name)) {
-        errors.push(`unregistered external skill directory: ${relative(join(skillsRoot, entry.name))}`);
+
+    function walk(current) {
+      for (const entry of readdirSync(current, { withFileTypes: true })) {
+        if (!entry.isDirectory()) continue;
+        const directory = join(current, entry.name);
+        const skillPath = join(directory, "SKILL.md");
+        if (existsSync(skillPath)) {
+          const localPath = pathRelative(skillsRoot, directory).replaceAll("\\", "/");
+          if (!registryIds.has(localPath)) {
+            errors.push(`unregistered external skill directory: ${relative(directory)}`);
+          }
+          continue;
+        }
+        walk(directory);
       }
     }
+
+    walk(skillsRoot);
   }
 
   function read(path) {
@@ -262,8 +285,8 @@ function runExternalValidation() {
     if (layout.kind !== "source" || !existsSync(starterSkillsRoot)) return;
 
     for (const file of checkedFiles) {
-      const sourcePath = join(skillsRoot, skill.id, file);
-      const starterPath = join(starterSkillsRoot, skill.id, file);
+      const sourcePath = join(skillsRoot, skillLocalPath(skill), file);
+      const starterPath = join(starterSkillsRoot, skillLocalPath(skill), file);
       if (!existsSync(starterPath)) {
         errors.push(`${skill.id}: starter missing ${relative(starterPath)}`);
         continue;
@@ -314,14 +337,18 @@ function runExternalValidation() {
         errors.push("external skill registry must contain a skills array");
       } else {
         const seenIds = new Set();
+        const seenLocalPaths = new Set();
         validateOrchestrationCoverage(registry.skills);
         for (const skill of registry.skills) {
           validateRequiredRegistryFields(skill, seenIds);
+          const localPath = skillLocalPath(skill);
+          if (localPath && seenLocalPaths.has(localPath)) errors.push(`${skill.id}: duplicate registry localPath ${localPath}`);
+          if (localPath) seenLocalPaths.add(localPath);
           if (!skill?.id) continue;
           const checkedFiles = validateSkillSnapshot(skill, skillsRoot);
           validateStarterMirror(skill, checkedFiles);
         }
-        validateNoUnregisteredSkillDirs(seenIds);
+        validateNoUnregisteredSkillDirs(seenLocalPaths);
 
         if (errors.length === 0) {
           const declaredSupportCount = registry.skills.reduce(

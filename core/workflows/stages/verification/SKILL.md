@@ -54,7 +54,7 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
    - 每个单元格必须有实际测试结果：通过 / 失败 / 跳过及理由。
    - 若 UI 设计列出了多个角色、流程或状态，验证报告必须逐项覆盖；不能只验证一个 happy path、一个角色或一个桌面视口。
    - 涉及浏览器页面流程、上传、表单提交、审批、下载、权限、路由跳转或错误提示时，Playwright E2E 是必需证据：先写 `05-verification/test-cases.md` 用例，再用真实浏览器自动点击 / 填写 / 上传 / 提交 / 断言。
-   - 项目未配置 Playwright 时，优先使用 `core/skills/playwright-skill` 的临时脚本运行；不能因为“项目没有 E2E 配置”直接跳过。
+   - 项目未配置 Playwright 时，优先使用 `core/skills/quality/playwright-skill` 的临时脚本运行；不能因为“项目没有 E2E 配置”直接跳过。
    - 需要 console、network、DOM、a11y、performance 诊断时，优先使用 Playwright trace、console、network 和 screenshot 证据。
    - 不读取、保存或输出 Cookie、token、密码、localStorage / sessionStorage 敏感数据。
 6. **业务闭环验证**
@@ -81,7 +81,7 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 
 有浏览器页面流程、上传、提交、审批、下载、权限、路由跳转或错误提示时，必须先写 `05-verification/test-cases.md` 中的 Playwright 用例，再执行自动化操作并保存截图、trace、日志摘要或等价证据。
 
-项目没有 Playwright 配置时，优先使用 `core/skills/playwright-skill` 的临时脚本或同等 Playwright 脚本。无法运行时必须写阻断原因、替代证据、owner 和重新验证触发条件；高风险 UI 不得批准。
+项目没有 Playwright 配置时，优先使用 `core/skills/quality/playwright-skill` 的临时脚本或同等 Playwright 脚本。无法运行时必须写阻断原因、替代证据、owner 和重新验证触发条件；高风险 UI 不得批准。
 
 ## 阻断规则
 

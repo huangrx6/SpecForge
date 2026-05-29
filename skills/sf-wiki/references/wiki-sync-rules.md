@@ -1,4 +1,4 @@
-# sf-wiki 参考手册
+# Wiki Sync Rules
 
 本文件保存 wiki 回写判断、目标文件选择、frontmatter、index 对账和 gate 决策。`SKILL.md` 只保留入口和硬门禁。
 

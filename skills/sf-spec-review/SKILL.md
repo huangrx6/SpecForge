@@ -20,7 +20,7 @@ description: 审查 SpecForge 规格；用于随时 review 已存在的 PRD、re
 
 ## 必读
 
-- `references/spec-review-playbook.md`：Artifact / Gate Review 执行细则、必审范围、finding 分级、退回路径。
+- `references/spec-review-gate-rubric.md`：Artifact / Gate Review 执行细则、必审范围、finding 分级、退回路径。
 - `.specforge/core/workflows/stages/spec-review/SKILL.md`：内部规格审查母本。
 - `.specforge/core/artifacts/templates/spec-review.md`：写入骨架。
 - `.specforge/core/standards/workflow.md`、`product.md`、`design.md`、`engineering.md`。
@@ -48,7 +48,7 @@ node .specforge/core/scripts/create-artifact.mjs spec_review
 ### A. 选择 Review 范围
 
 1. Artifact Review：只审用户指定 artifact 和必要上下游证据。
-2. Gate Review：读取 `work.yaml`、workflow schema、components flags，按 `references/spec-review-playbook.md#Gate Review 必审范围` 计算必审 artifact。
+2. Gate Review：读取 `work.yaml`、workflow schema、components flags，按 `references/spec-review-gate-rubric.md#Gate Review 必审范围` 计算必审 artifact。
 3. 不要因为文件存在就审，也不要因为文件不存在就自动跳过；Gate Review 以 schema 和 components 为准。
 
 ### B. 做完整性和追踪检查
@@ -59,7 +59,7 @@ node .specforge/core/scripts/create-artifact.mjs spec_review
 
 ### C. 做分 artifact 质量审查
 
-按 `references/spec-review-playbook.md#分项审查清单` 检查：
+按 `references/spec-review-gate-rubric.md#分项审查清单` 检查：
 
 - PRD / brief：为什么做、给谁做、MVP、非目标、成功指标、候选功能是否经用户确认。
 - Requirements：可观察行为、AC、边界、权限、失败路径、非目标。

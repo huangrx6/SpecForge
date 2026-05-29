@@ -53,7 +53,7 @@ function positionalIds() {
 }
 
 function normalize(content) {
-  return content.replace(/\r\n/g, "\n").trimEnd() + "\n";
+  return content.replace(/\r\n/g, "\n").replace(/[ \t]+$/gm, "").trimEnd() + "\n";
 }
 
 function adaptSnapshotContent(skill, content) {
@@ -192,6 +192,12 @@ function validateSupportFilePath(skill, path) {
   }
 }
 
+function skillLocalPath(skill) {
+  const path = skill.localPath ?? skill.id;
+  validateSupportFilePath(skill, path);
+  return path;
+}
+
 function selectSkills(registry) {
   if (args.includes("--list")) return [];
   const ids = [...optionValues("--skill"), ...positionalIds()];
@@ -208,7 +214,7 @@ function selectSkills(registry) {
 }
 
 function writeSnapshot(skill, content, supportFiles = []) {
-  const skillDir = join(skillsRoot, skill.id);
+  const skillDir = join(skillsRoot, skillLocalPath(skill));
   mkdirSync(skillDir, { recursive: true });
   writeFileSync(join(skillDir, "SKILL.md"), content, "utf8");
   for (const file of supportFiles) {
@@ -234,11 +240,11 @@ async function updateSkill(skill, checkOnly) {
     });
   }
 
-  const target = join(skillsRoot, skill.id, "SKILL.md");
+  const target = join(skillsRoot, skillLocalPath(skill), "SKILL.md");
   const current = existsSync(target) ? normalize(readFileSync(target, "utf8")) : null;
   const changed = current !== content;
   const supportChanged = supportFiles.some((file) => {
-    const supportTarget = join(skillsRoot, skill.id, file.path);
+    const supportTarget = join(skillsRoot, skillLocalPath(skill), file.path);
     const supportCurrent = existsSync(supportTarget) ? normalize(readFileSync(supportTarget, "utf8")) : null;
     return supportCurrent !== file.content;
   });
@@ -262,7 +268,7 @@ async function main() {
 
   if (args.includes("--list")) {
     for (const skill of registry.skills) {
-      console.log(`${skill.id}\t${skill.role}\t${skill.source.url}`);
+      console.log(`${skill.id}\t${skill.localPath ?? skill.id}\t${skill.role}\t${skill.source.url}`);
     }
     return;
   }

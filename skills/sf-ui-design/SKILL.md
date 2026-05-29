@@ -19,16 +19,23 @@ description: 生成或更新 SpecForge work item 的 UI design；用于 ready ar
 
 SpecForge 固定使用 **Pencil** 做正式 UI 原型。Figma、HTML、ASCII、截图、竞品和第三方设计 skill 只能作为参考输入；最终必须归一为 `01-spec/ui-design.md`、`01-spec/ui-mockup.pen` 和 `01-spec/ui-mockup-export/*.png`。
 
-## 必读
+## 必读与按需 Reference
 
-- `references/ui-design-playbook.md`：UI 方向访谈、第三方 UX / Pencil reference 编排、Pencil 保存门禁、视觉 review 和完成标准。
-- `references/pc-business-ui-template.md`：PC 端业务系统 UI 规范模板。用户提供或确认该规范、或项目是后台 / 管理系统 / 数据管理工具时读取。
+必读：
+
+- `references/design-mode-routing.md`：判断 Product UI / Brand Surface / Hybrid，并决定后续 reference 读取顺序。
+- `references/ui-design-process.md`：UI 方向访谈、第三方 UX / Pencil reference 编排、Pencil 保存门禁、视觉 review 和完成标准。
+
+按需读取：
+
+- `references/admin-product-ui-contracts.md`：Product UI / 管理端 / shadcn 场景的组件层级和 Admin Component Contract。
+- `references/pc-business-system-spec.md`：PC 端业务系统 UI 规范。用户提供或确认该规范、或项目是后台 / 管理系统 / 数据管理工具时读取。
 - `.specforge/core/workflows/stages/ui-design/SKILL.md`：内部 UI 设计母本。
 - `.specforge/core/artifacts/templates/ui-design.md`：写入骨架。
 - `.specforge/core/standards/product.md`、`.specforge/core/standards/design.md`、`.specforge/core/standards/workflow.md`、`.specforge/core/standards/engineering.md`。
 - PC 端业务系统场景还要读取 `.specforge/core/standards/pc-ui-design-spec.md`；该文件的具体数值优先于通用 `design.md` 基准。
 - `.specforge/core/skills/ORCHESTRATION.md`、`README.md`、`registry.json`：第三方 skill 选择、边界和来源风险。
-- 需要操作 Pencil 时读取 `.specforge/core/skills/pencil/SKILL.md`，再按需读取其 `references/*.md`。
+- 需要操作 Pencil 时读取 `.specforge/core/skills/ui-ux/pencil/SKILL.md`，再按需读取其 `references/*.md`。
 
 ## 启动扫描
 
@@ -57,23 +64,24 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
 
 ### B. 对齐体验方向
 
-1. 按 `references/ui-design-playbook.md#UI 设计访谈` 列出 `已确认 / 高影响未知 / 可安全默认`。
+1. 先按 `references/design-mode-routing.md` 判断 Design Mode，再按 `references/ui-design-process.md#UI 设计访谈` 列出 `已确认 / 高影响未知 / 可安全默认`。
 2. 没有现成设计系统或确认方向时，给 2-3 个互斥体验方向、推荐项和取舍；如果方向会影响信息架构、核心流程或视觉气质，先向用户确认方向。
 3. 用户确认后，立即在上游 artifact 或 `ui-design.md` 写入 `[UI DECISION CONFIRMED]` 或 `UI Direction Status: confirmed`，并记录来源。
 4. 用户未确认体验方向前，不创建 Pencil 原型，不写完整页面方案。
 
 ### C. 写 UI design
 
-1. 写 Visual Style Brief、页面地图、信息架构、用户流程、微文案、状态矩阵、无障碍预审和明确不做项。
-2. 若采用 PC 端业务系统模板，按 `references/pc-business-ui-template.md` 填写 `ui-design.md#4` 的设计系统来源、核心 token、页面结构和组件约束。
-3. 第三方 skill 只作为参考镜头，按 `references/ui-design-playbook.md#第三方 Skill 和 Reference 编排` 归一化到 SpecForge 结构。
-4. 每个参考产品、截图或设计稿都要写“采用什么、不采用什么、如何落地”。
+1. 写 Design Mode、Visual Style Brief、页面地图、信息架构、用户流程、微文案、状态矩阵、无障碍预审和明确不做项。
+2. 若采用 PC 端业务系统规范，按 `references/pc-business-system-spec.md` 填写 `ui-design.md#4` 的设计系统来源、核心 token、页面结构和组件约束。
+3. 若实现层采用 shadcn/ui 或场景是管理端，按 `references/admin-product-ui-contracts.md#Admin Component Contract` 写清 Admin Component Contract；shadcn 只作为 primitive / registry 层。
+4. 第三方 skill 只作为参考镜头，按 `references/ui-design-process.md#第三方 Skill 和 Reference 编排` 归一化到 SpecForge 结构。
+5. 每个参考产品、截图或设计稿都要写“采用什么、不采用什么、如何落地”。
 
 ### D. 创建、保存并校验 Pencil
 
 1. 使用 Pencil 创建或更新 `01-spec/ui-mockup.pen`，截图目录固定为 `01-spec/ui-mockup-export/`。
 2. 空 `.pen` / 空画布最多读取一次；确认空后立即创建第一屏，禁止空读循环。
-3. 每次完成 `pencil_batch_design` 后，必须执行 `references/ui-design-playbook.md#Pencil 保存与重读门禁`：保存 / 持久化、重新打开或重读目标 `.pen`、确认第一屏非空，再导出截图。
+3. 每次完成 `pencil_batch_design` 后，必须执行 `references/ui-design-process.md#Pencil 保存与重读门禁`：保存 / 持久化、重新打开或重读目标 `.pen`、确认第一屏非空，再导出截图。
 4. 保存后重读失败、`.pen` 仍为空、或连续创建失败 2 次时，停止并记录阻断原因；不得把 HTML / ASCII 当正式替代。
 
 ### E. Review 和路由
@@ -97,6 +105,7 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
 
 - `01-spec/ui-design.md` 存在。
 - 有 UI 影响时，包含 Visual Style Brief、确认来源、页面地图、流程、状态矩阵、微文案、无障碍自查和明确不做项。
+- Product UI / 管理端 / shadcn 场景包含组件封装契约，能指导实现阶段复用项目级组件。
 - UI 方向确认可追溯；Agent recommendation 不能伪装成用户选择。
 - 有 UI 影响时，存在非空且保存后可重读的 `01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/*.png`，或明确 Pencil 阻断原因。
 - `ui-design.md#9. Pencil 原型证据` 记录 Pencil 保存状态、保存后重读校验和截图证据。

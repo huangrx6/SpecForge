@@ -1,4 +1,4 @@
-# sf-spec-review 参考手册
+# Spec Review Gate Rubric
 
 本文件保存规格审查的模式选择、必审范围、分项清单、finding 分级和退回路径。`SKILL.md` 只保留入口执行顺序和硬门禁。
 

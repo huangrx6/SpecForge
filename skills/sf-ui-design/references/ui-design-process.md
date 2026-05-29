@@ -1,6 +1,6 @@
-# sf-ui-design 参考手册
+# UI 设计流程与原型证据
 
-本文件保存 UI 访谈、第三方 skill/reference 编排、Pencil 保存门禁、视觉 review 和质量标准。`SKILL.md` 只保留入口执行顺序、门禁和产物边界。
+本文件只保存 UI 访谈、第三方 skill/reference 编排、Pencil 保存门禁、视觉 review 和质量标准。Design Mode 路由见 `design-mode-routing.md`；管理端组件契约见 `admin-product-ui-contracts.md`；PC 业务系统规范见 `pc-business-system-spec.md`。
 
 ## UI 设计访谈
 
@@ -34,7 +34,10 @@ UI design 不是一上来画图。先判断哪些问题会改变页面结构、�
 |---|---|---|
 | `ux-designer` | 用户画像、信息架构、交互流程、微文案、可访问性或视觉层级证据不足 | Personas、IA、流程风险、a11y 约束、体验方向候选 |
 | `pencil` | 需要创建、更新、读取、截图或检查 `.pen` | Pencil 原型证据、截图、保存后重读校验 |
-| `pc-business-ui-template.md` / `pc-ui-design-spec.md` | PC 端业务系统、运营后台、管理系统、数据表格系统，或用户明确提供该规范 | Visual Style Brief、设计系统来源、组件 token、Pencil 变量、HTML/CSS 实现约束 |
+| `design-taste-frontend` | landing、portfolio、品牌页、redesign 或公开展示页需要更强视觉判断 | Brand Surface 的气质、版式、动效边界、反模板化检查 |
+| `design-mode-routing.md` | 产品同时可能是后台、官网、展示页或混合场景，需要先判断设计方向 | Design Mode、读取顺序、风格和组件边界 |
+| shadcn 官方 skill / shadcn registry reference | 管理端实现层采用 shadcn/ui，或需要查组件、registry、theme、update 规则 | `admin-product-ui-contracts.md` 中的 primitive 选择、registry 候选、组件审查点、实现约束 |
+| `pc-business-system-spec.md` / `pc-ui-design-spec.md` | PC 端业务系统、运营后台、管理系统、数据表格系统，或用户明确提供该规范 | Visual Style Brief、设计系统来源、组件 token、Pencil 变量、HTML/CSS 实现约束 |
 | 用户提供的截图 / Figma / 参考产品 | 已有视觉倾向、品牌或竞品约束 | Visual Style Brief、采用 / 不采用、落地方式 |
 
 融合规则：
@@ -46,22 +49,6 @@ UI design 不是一上来画图。先判断哪些问题会改变页面结构、�
 - 用户已经明确确认 PC 端业务系统规范时，不再让 Agent 自行选择视觉风格；必须把该规范作为 design-system reference，并让具体数值覆盖通用 `design.md` 的默认 UI 基准。
 - 如果只是把已确认 UI 方向落成页面地图、状态矩阵和 Pencil 原型，不要再在 brainstorm 中写完整 UI design。
 - 涉及当前产品、竞品、法规、版本或安全事实时，第三方 skill 不能背书，必须另行查证或标为假设。
-
-## PC 端业务系统规范模板
-
-当用户提供或确认 PC 端业务系统 UI 规范时，读取：
-
-- `.specforge/core/standards/pc-ui-design-spec.md`
-- `references/pc-business-ui-template.md`
-
-落地规则：
-
-- `ui-design.md#1` 写入该规范作为输入依据。
-- `ui-design.md#4` 必须写明采用的设计系统来源和核心 token：`1920x920px`、顶栏 `64px`、侧栏 `208px / 68px`、主色 `#277DEA`、控件 `32px`、圆角 `8px`、表格行高 `46px`、字号/行高对照。
-- Pencil 原型必须体现 PC app shell：顶部导航、侧边导航、操作区和背景层。
-- 表单、表格、弹窗、抽屉、图表优先使用规范里的尺寸，不使用通用默认值。
-- 生成 HTML/CSS 时必须定义并使用规范 token；可用 UI 库但必须覆盖主题 token。
-- 如果为了现有项目设计系统偏离本规范，必须写清偏离原因、替代 token 和验证方式。
 
 ## Pencil 保存与重读门禁
 

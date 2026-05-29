@@ -45,8 +45,7 @@ npx skills add https://github.com/huangrx6/SpecForge --skill '*' --agent trae-cn
 │   ├── artifacts/
 │   ├── scripts/
 │   ├── skills/
-│   ├── hooks/
-│   └── commands/
+│   └── hooks/
 ├── hooks/
 │   └── local/
 ├── wiki/

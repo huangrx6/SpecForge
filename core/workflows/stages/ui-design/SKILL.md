@@ -20,9 +20,9 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - `.specforge/core/standards/pc-ui-design-spec.md`（PC 端业务系统、运营后台、管理系统、数据管理工具，或用户明确提供该规范时读取；具体数值优先于通用设计基准）
 - `.specforge/core/standards/workflow.md`
 - 现有页面、组件库、设计系统、Pencil 文件、截图、参考产品或用户提供的设计资料
-- 需要操作 Pencil 时读取 `core/skills/pencil/SKILL.md`
-- 需要补充 UX 研究、IA、交互、微文案或可访问性检查时读取 `core/skills/ux-designer/SKILL.md`
-- 做视觉质量审查时优先读取项目设计系统、已确认 UI 方向和 `core/skills/ux-designer` 的相关规则；不再内置 `web-design-guidelines`
+- 需要操作 Pencil 时读取 `core/skills/ui-ux/pencil/SKILL.md`
+- 需要补充 UX 研究、IA、交互、微文案或可访问性检查时读取 `core/skills/ui-ux/ux-designer/SKILL.md`
+- 做视觉质量审查时优先读取项目设计系统、已确认 UI 方向和 `core/skills/ui-ux/ux-designer` 的相关规则；不再内置 `web-design-guidelines`
 
 ## 写入
 
@@ -37,6 +37,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - **Pencil 是唯一正式原型证据。** 参考 Figma、截图、HTML 或竞品时，必须把设计语言转译到 `ui-design.md` 和 Pencil 原型。
 - **不要给用户丢 5 种工具。** 工具不让用户选，体验方向让用户选。
 - **设计要像真实产品。** 后台和工具类界面优先信息密度、扫描效率、稳定布局和状态反馈；不要用营销页式大卡片、空泛 hero、默认控件堆叠来糊弄 UI 设计。
+- **先区分设计模式。** Product UI、Brand Surface、Hybrid 的质量标准不同；管理端采用 shadcn/ui 时必须定义上层 Admin Component Contract，而不是直接拼官方基础组件。
 - **无障碍是底线而非附加功能。** 颜色对比度、键盘导航、语义标签和焦点管理必须在设计阶段纳入，而不是"实现后再补"。
 - **实现阶段不得重新发明视觉风格。** `ui-design.md` 和 Pencil 截图是后续实现与验证的依据。
 
@@ -47,9 +48,10 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - **判断 UI 影响**：检查页面、组件、路由、视觉状态、角色视图、响应式、可访问性和用户操作流。
 - 无 UI 影响时写 N/A、跳过理由和验证方式；不要继续生成风格或原型。
 - **提取用户画像**：从 `prd.md`、`brainstorm.md` 或 `requirements.md` 中提取目标用户画像（Persona），确认用户的目标、痛点和行为模式。
-- **按需参考 UX skill**：如果用户画像、信息架构、交互流程、微文案、可访问性或视觉层级证据不足，先读取 `core/skills/ux-designer/SKILL.md`，再按需读取相关 `rules/*.md`，并归一化为本文件内容。
+- **按需参考 UX skill**：如果用户画像、信息架构、交互流程、微文案、可访问性或视觉层级证据不足，先读取 `core/skills/ui-ux/ux-designer/SKILL.md`，再按需读取相关 `rules/*.md`，并归一化为本文件内容。
 - **竞品与参考分析**：若有现有设计系统、品牌手册、页面、Pencil、Figma、截图或参考产品，提取可执行规则：布局、导航、密度、色彩、字体、表格、表单、反馈、空态和错误态。不要只贴链接；每个参考都要写"采用什么、不采用什么、如何落地"。
 - **PC 业务系统模板**：若产品是后台 / 管理系统 / 数据表格系统，或用户明确给出 PC 端 UI 规范，读取 `pc-ui-design-spec.md`，在 Visual Style Brief 中写入设计系统来源和核心 token；后续 Pencil、HTML/CSS、前端实现都不得擅自改这些数值。
+- **shadcn 管理端模式**：若实现层采用 shadcn/ui，把 shadcn 视为 primitive / registry / theming 层；在 UI design 中定义 App Shell、Resource Page、Entity Table、Detail/Form、State Feedback 和 Ops Pattern 的封装契约。
 
 ### 2. 定义（Define）
 
@@ -66,6 +68,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 ### 3. 构思与设计（Ideate）
 
 - **建立体验规格**：页面地图、入口出口、角色流程、主路径、异常路径。
+- **写组件封装契约**：管理端必须说明哪些页面级、资源级和状态级组件由项目封装；避免每个页面重复散落基础 `Button`、`Card`、`Table`。
 - 页面 × 状态矩阵：default、loading、empty、error、permission、disabled、success、boundary、responsive、a11y。
 - 明确不做项，防止实现阶段扩大 UI 范围。
 - **用户流程设计**：先绘制 happy path，再设计错误和边缘情况。最小化步骤，3 步以上流程提供进度指示器。
@@ -74,7 +77,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 
 ### 4. 原型（Prototype）
 
-- **创建或更新 Pencil 原型**：读取 `core/skills/pencil/SKILL.md`。
+- **创建或更新 Pencil 原型**：读取 `core/skills/ui-ux/pencil/SKILL.md`。
 - 输出 `01-spec/ui-mockup.pen`。
 - 空 `.pen` / 空画布最多读取一次。确认为空后必须立即创建第一屏，不能陷入空读循环。
 - 每次完成 `pencil_batch_design` 后，必须确认目标 `.pen` 已保存 / 持久化；如果 Pencil MCP 没有单独 `save` 工具，则仍必须立刻重新打开或重读 `01-spec/ui-mockup.pen`。

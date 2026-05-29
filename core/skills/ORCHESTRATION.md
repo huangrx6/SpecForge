@@ -1,19 +1,29 @@
 # 外部 Skill 编排手册
 
-`core/skills/` 只保留少量经过审查、能直接补足 SpecForge 主流程的第三方 skill。它们是参考能力，不是工作流阶段；输出必须归一化为 SpecForge artifact，不能原样落库。
+`core/skills/` 只保留少量经过审查、能直接补足 SpecForge 主流程的第三方 skill。项目外已安装或用户临时提供的 skill / reference 也可以按需读取，但它们仍是参考能力，不是工作流阶段；输出必须归一化为 SpecForge artifact，不能原样落库。
 
 ## 保留集合
 
-| Skill | 阶段 | 作用 | 归一化目标 |
+| Skill | 本地路径 | 阶段 | 作用 | 归一化目标 |
+|---|---|---|---|---|
+| `opportunity-solution-tree` | `product/opportunity-solution-tree` | Brainstorm / PRD | 从机会和问题出发做候选方案、实验、需求 triage 和优先级取舍 | `00-intake/brainstorm.md`、`00-intake/brief.md`、`00-intake/prd.md` |
+| `create-prd` | `prd/create-prd` | PRD | 上下文充分时合成 PRD，整理背景、目标、用户、价值主张、范围、假设和 release | `00-intake/prd.md` |
+| `user-stories` | `requirements/user-stories` | Requirements | 用户故事、3C、INVEST、验收标准和可测试性参考 | `01-spec/requirements.md` |
+| `pencil` | `ui-ux/pencil` | UI Design | Pencil `.pen` 原型读写、组件复用、tokens、截图导出、布局检查和设计转代码参考 | `01-spec/ui-design.md`、`01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/` |
+| `playwright-skill` | `quality/playwright-skill` | Verification | 浏览器 E2E、真实点击输入、角色流程、截图和响应式证据 | `05-verification/test-cases.md`、`05-verification/report.md`、`05-verification/evidence/` |
+| `code-reviewer` | `quality/code-reviewer` | Code Review | 安全、性能、正确性、可维护性和测试覆盖的补充检查清单 | `04-code-review/code-review-v1.md`、`05-verification/report.md` |
+| `ux-designer` | `ui-ux/ux-designer` | Brainstorm / Research / UI Design | 用户研究、体验方向取舍、信息架构、交互、可访问性和视觉层级参考 | `00-intake/brainstorm.md`、`01-spec/research.md`、`01-spec/ui-design.md` |
+| `deep-research` | `research/deep-research` | Research / Discovery | 多来源研究综合、引用、可信度和共识/争议拆解参考 | `01-spec/research.md` |
+
+## 按需外部参考
+
+这些能力不作为 SpecForge 内置快照维护，只在用户明确提供、当前环境已安装，或本轮需要实时查询时使用。
+
+| Reference | 阶段 | 作用 | 归一化目标 |
 |---|---|---|---|
-| `opportunity-solution-tree` | Brainstorm / PRD | 从机会和问题出发做候选方案、实验、需求 triage 和优先级取舍 | `00-intake/brainstorm.md`、`00-intake/brief.md`、`00-intake/prd.md` |
-| `create-prd` | PRD | 上下文充分时合成 PRD，整理背景、目标、用户、价值主张、范围、假设和 release | `00-intake/prd.md` |
-| `user-stories` | Requirements | 用户故事、3C、INVEST、验收标准和可测试性参考 | `01-spec/requirements.md` |
-| `pencil` | UI Design | Pencil `.pen` 原型读写、组件复用、tokens、截图导出、布局检查和设计转代码参考 | `01-spec/ui-design.md`、`01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/` |
-| `playwright-skill` | Verification | 浏览器 E2E、真实点击输入、角色流程、截图和响应式证据 | `05-verification/test-cases.md`、`05-verification/report.md`、`05-verification/evidence/` |
-| `code-reviewer` | Code Review | 安全、性能、正确性、可维护性和测试覆盖的补充检查清单 | `04-code-review/code-review-v1.md`、`05-verification/report.md` |
-| `ux-designer` | Brainstorm / Research / UI Design | 用户研究、体验方向取舍、信息架构、交互、可访问性和视觉层级参考 | `00-intake/brainstorm.md`、`01-spec/research.md`、`01-spec/ui-design.md` |
-| `deep-research` | Research / Discovery | 多来源研究综合、引用、可信度和共识/争议拆解参考 | `01-spec/research.md` |
+| `design-taste-frontend` | Brainstorm / UI Design | landing、portfolio、品牌页和 redesign 的视觉方向、反模板化检查和设计气质提炼 | `00-intake/brainstorm.md`、`01-spec/ui-design.md` |
+| shadcn 官方 skill / shadcn registry reference | Brainstorm / UI Design / Technical Design / Implementation | shadcn CLI、registry、docs、theme、组件更新和第三方 registry 组件审查 | `00-intake/brainstorm.md`、`01-spec/ui-design.md`、`02-design/technical-design.md`、实现任务 |
+| `shadcn-component-discovery` / `shadcn-component-review` | Brainstorm / UI Design / Code Review | 发现现有 shadcn 组件、审查自定义组件是否符合 shadcn pattern 和 token 规则 | registry 候选、Admin Component Contract、code review finding |
 
 ## 总原则
 
@@ -50,8 +60,10 @@
 ### UI Design
 
 - 正式原型固定使用 `pencil`。
-- 读取 `pencil` 时，先确认 UI 方向已由用户确认；如果 upstream 提到 `frontend-design`，按 SpecForge 的 `design.md`、`sf-ui-design` 和已确认 UI 方向处理，不额外引入未托管 skill。
+- 读取 `pencil` 时，先确认 UI 方向已由用户确认；如果 upstream 提到 `frontend-design`，按 SpecForge 的 `design.md`、`sf-ui-design` 和已确认 UI 方向处理。
 - 方向已确认后，需要细化 persona、用户旅程、信息架构、微文案、可访问性或视觉层级时，可参考 `ux-designer`，但必须把输出归一为 `01-spec/research.md` 或 `01-spec/ui-design.md`。
+- Brand Surface 可按需参考 `design-taste-frontend`，只提取视觉气质、版式和反模板化检查，不让它替代 Pencil 或 `ui-design.md`。
+- Product UI / 管理端采用 shadcn/ui 时，可按需参考 shadcn 官方 skill、registry docs 或组件 review skill；产出必须转成 Admin Component Contract、token 约束和实现任务。
 - 如果读取 `ux-designer` 后发现关键体验方向仍需用户取舍，停止 UI design，退回 `sf-brainstorm`。
 - 有 UI 影响时必须留下页面地图、角色流程、状态矩阵、Pencil 源文件和导出截图。
 - 空 `.pen` / 空画布最多读取一次；确认空后立即创建第一屏，禁止空读循环。

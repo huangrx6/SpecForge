@@ -1,4 +1,4 @@
-# sf-verify 参考手册
+# Verification Gate Checklist
 
 本文件保存 verification 阶段的覆盖矩阵、风险证据、Playwright、CI、跳过项和 gate 决策。`SKILL.md` 只保留入口和硬门禁。
 
@@ -60,7 +60,7 @@
 
 项目没有 Playwright 配置时：
 
-1. 优先使用 `.specforge/core/skills/playwright-skill` 或临时 Playwright 脚本。
+1. 优先使用 `.specforge/core/skills/quality/playwright-skill` 或临时 Playwright 脚本。
 2. 记录安装 / 执行命令和证据。
 3. 如果无法运行，写阻断原因、替代证据和 owner；高风险 UI 不得批准。
 

@@ -19,7 +19,7 @@ description: 生成或更新 SpecForge work item 的 requirements；用于 activ
 
 ## 必读
 
-- `references/requirements-playbook.md`：PRD 转译、第三方 skill、访谈镜头、写作细则和 flags 回写。
+- `references/requirements-authoring-guide.md`：PRD 转译、第三方 skill、访谈镜头、写作细则和 flags 回写。
 - `.specforge/core/workflows/stages/requirements/SKILL.md`：内部需求质量标准、停止条件和完成标准。
 - `.specforge/core/standards/product.md`：PRD 输入、候选功能、用户故事、验收标准和可测试需求。
 - `.specforge/core/standards/workflow.md`：范围、非目标、写入边界和中文协作。
@@ -57,10 +57,10 @@ node .specforge/core/scripts/create-artifact.mjs requirements
 
 ### B. 转译为可测试行为
 
-1. 按 `references/requirements-playbook.md#PRD 转译规则` 显式完成 PRD 转译。
+1. 按 `references/requirements-authoring-guide.md#PRD 转译规则` 显式完成 PRD 转译。
 2. 把 PRD / brief 中的用户故事、候选功能和验收种子转成 `REQ-*`、`AC-*`、NFR、非目标或待澄清项。
 3. 需求正文使用系统行为语言，不复制 PRD 原文，不写实现方案。
-4. 如需用户故事或验收样例，按 `references/requirements-playbook.md#第三方 Skill 归一化` 读取 `user-stories`。
+4. 如需用户故事或验收样例，按 `references/requirements-authoring-guide.md#第三方 Skill 归一化` 读取 `user-stories`。
 
 ### C. 写 requirements
 
@@ -73,7 +73,7 @@ node .specforge/core/scripts/create-artifact.mjs requirements
 
 ### D. 回写 flags 和路由
 
-1. 按 `references/requirements-playbook.md#影响面回写` 校准 `work.yaml` / `brief.md` 的 components flags。
+1. 按 `references/requirements-authoring-guide.md#影响面回写` 校准 `work.yaml` / `brief.md` 的 components flags。
 
 ## 判定表
 

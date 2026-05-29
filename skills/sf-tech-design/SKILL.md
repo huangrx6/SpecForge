@@ -19,7 +19,7 @@ description: 生成或更新 SpecForge work item 的 technical_design；用于 r
 
 ## 必读
 
-- `references/technical-design-playbook.md`：影响面扫描、分批确认卡、依赖 / 工具链确认、版本事实检查、核心决策 review 和写作细则。
+- `references/technical-decision-guide.md`：影响面扫描、分批确认卡、依赖 / 工具链确认、版本事实检查、核心决策 review 和写作细则。
 - `.specforge/core/workflows/stages/technical-design/SKILL.md`：内部技术设计母本。
 - `.specforge/core/artifacts/templates/technical-design.md`：写入骨架。
 - `.specforge/core/standards/product.md`、`.specforge/core/standards/workflow.md`、`.specforge/core/standards/engineering.md`。
@@ -46,7 +46,7 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 
 ### A. 建立影响面与读取计划
 
-1. 按 `references/technical-design-playbook.md#影响面扫描` 标记 frontend、backend、domain、API、data、auth/security、config/delivery、jobs、observability、reliability。
+1. 按 `references/technical-decision-guide.md#影响面扫描` 标记 frontend、backend、domain、API、data、auth/security、config/delivery、jobs、observability、reliability。
 2. 把每个影响面写成 `yes / no / unknown`；会改变架构、数据、安全、成本或上线风险的 `unknown` 必须暂停澄清。
 3. 只读取本次需要的内部子模块和 profile，不默认全量读取：
    - frontend：`.specforge/core/workflows/stages/technical-design/frontend-design.md`
@@ -59,22 +59,22 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 ### B. 先确认选型、依赖和工具链
 
 1. 技术设计动笔前必须先完成确认门禁。任何 `[NEEDS TECH/DEPENDENCY/TOOLING DECISION]` 维度未确认，不得写架构设计正文。
-2. 新项目、空仓库、技术栈缺失，或要新增 / 替换关键技术时，按 `references/technical-design-playbook.md#分批确认卡` 输出候选方案，等用户确认。
-3. 需要新增直接依赖、SDK、插件、组件库、ORM、驱动、测试库、浏览器自动化库或外部 provider 时，按 `references/technical-design-playbook.md#新增依赖确认` 单独确认。
+2. 新项目、空仓库、技术栈缺失，或要新增 / 替换关键技术时，按 `references/technical-decision-guide.md#分批确认卡` 输出候选方案，等用户确认。
+3. 需要新增直接依赖、SDK、插件、组件库、ORM、驱动、测试库、浏览器自动化库或外部 provider 时，按 `references/technical-decision-guide.md#新增依赖确认` 单独确认。
 4. 需要决定或替换包管理器、UI 组件库、样式方案、Python 依赖管理 / 虚拟环境、构建工具、测试 runner、任务运行器或 monorepo 工具时，必须确认或引用现有栈证据。
 5. 用户确认后，写入 `[TECH DECISION CONFIRMED]`、`[DEPENDENCY DECISION CONFIRMED]`、`[TOOLING DECISION CONFIRMED]` 或对应状态：`existing_stack`、`delegated_default`、`scaffold_confirmed`、`not_required`。
 
 ### C. 写 technical design
 
 1. 按模板填写 `01-spec/technical-design.md`。
-2. 当前版本事实不能只靠记忆；新增或替换框架、SDK、云服务、数据库、部署平台、AI provider、模型、测试工具或安全相关依赖时，按 `references/technical-design-playbook.md#当前版本事实检查` 查询官方资料或读取 lockfile / manifest。
+2. 当前版本事实不能只靠记忆；新增或替换框架、SDK、云服务、数据库、部署平台、AI provider、模型、测试工具或安全相关依赖时，按 `references/technical-decision-guide.md#当前版本事实检查` 查询官方资料或读取 lockfile / manifest。
 3. 按影响面展开工程设计；不涉及的章节保留一行 N/A 理由，不写空表。
 4. 对齐规则主基准：按影响面写采用点、偏离理由和验证证据。
 5. 输出必须能直接支持 `sf-tasking`：每个技术决策都要能拆成任务、验证或明确 N/A。
 
 ### D. 初稿后核心决策 Review
 
-1. 详细 technical design 初稿完成后，必须先向用户展示 `references/technical-design-playbook.md#核心决策摘要 Review`，等待确认、调整或授权默认。
+1. 详细 technical design 初稿完成后，必须先向用户展示 `references/technical-decision-guide.md#核心决策摘要 Review`，等待确认、调整或授权默认。
 2. 确认前不得进入 `sf-tasking`、`sf-spec-review` approval 或 `sf-implement`。
 3. 用户确认后，在 `technical-design.md#1. 技术选型与依赖确认` 写 `Core Decision Review Status: confirmed` 或 `delegated_default` / `not_required`，并保留 `[TECH DESIGN REVIEW CONFIRMED]`。
 

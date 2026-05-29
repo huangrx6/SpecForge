@@ -1,6 +1,6 @@
-# PC 端业务系统 UI 模板
+# PC 端业务系统 UI 规范
 
-本模板用于把用户提供的 PC 端业务系统规范接入 `sf-ui-design`。它不是新的外部 skill，而是 SpecForge UI 设计阶段的可选 design-system reference。
+本文件保存 PC 端业务系统的具体设计系统约束，用于运营后台、管理系统、审批台、配置台、数据管理系统等 Product UI 场景。它不是新的外部 skill，而是 `sf-ui-design` 的可选 design-system reference。
 
 权威标准文件：
 
@@ -18,15 +18,15 @@
 不适用：
 
 - 营销官网、品牌落地页、移动 App、游戏、内容社区。
-- 已有项目设计系统与本模板冲突，且用户要求沿用项目设计系统。
+- 已有项目设计系统与本规范冲突，且用户要求沿用项目设计系统。
 
 ## 使用顺序
 
 1. 在 `ui-design.md#1 输入依据` 写入：`PC 端业务系统 UI 设计规范（.specforge/core/standards/pc-ui-design-spec.md）`。
 2. 在 `ui-design.md#3 UI 设计访谈与方向选择` 记录用户确认或默认假设来源。
-3. 在 `ui-design.md#4 Visual Style Brief` 写明采用本模板，并把核心 token 填完整。
+3. 在 `ui-design.md#4 Visual Style Brief` 写明采用本规范，并把核心 token 填完整。
 4. 在页面地图、状态矩阵和 Pencil 原型中落地布局、组件和状态。
-5. 在视觉质量 review 中逐项检查：尺寸、颜色、字号、行高、间距、圆角、状态、响应式是否与模板一致。
+5. 在视觉质量 review 中逐项检查：尺寸、颜色、字号、行高、间距、圆角、状态、响应式是否与规范一致。
 
 ## 核心 token
 
@@ -104,7 +104,7 @@ App Shell
 
 | 检查项 | 通过标准 |
 |---|---|
-| PC 规范 token | 颜色、字号、行高、间距、圆角、控件高度均来自模板 |
+| PC 规范 token | 颜色、字号、行高、间距、圆角、控件高度均来自本规范 |
 | App Shell | 顶栏 64px、侧栏 208px / 68px、模块间距 16px |
 | 数据效率 | 表格、筛选、分页、固定列和状态反馈适合后台高频操作 |
 | 图标一致性 | SVG、统一图标集、16/18px，不使用 emoji |

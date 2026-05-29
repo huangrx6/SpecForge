@@ -14,7 +14,7 @@ description: SpecForge 内部预研技能。执行架构论证、API可行性测
 - `.specforge/core/standards/product.md`
 - `.specforge/core/standards/engineering.md`
 - 与调研主题相关的官方文档、源码、release note 或项目内证据
-- `.specforge/core/skills/deep-research/SKILL.md`（需要多来源综合、引用、共识 / 争议或研究空白结构时）
+- `.specforge/core/skills/research/deep-research/SKILL.md`（需要多来源综合、引用、共识 / 争议或研究空白结构时）
 
 ## 写入
 

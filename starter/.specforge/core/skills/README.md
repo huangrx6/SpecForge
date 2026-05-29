@@ -11,20 +11,31 @@
 | `ORCHESTRATION.md` | 运行时编排规则：什么时候调用哪个 skill、输出写回哪里 |
 | `registry.json` | 唯一机器可读清单：来源、风险、触发、归一化目标和更新输入 |
 | `VETTING.md` | 安全审查和更新纪律 |
-| `<skill>/references/` / `<skill>/rules/` | 按需读取的细分材料；只有能降低主 `SKILL.md` 负担时保留 |
+| `<category>/<skill>/references/` / `<category>/<skill>/rules/` | 按需读取的细分材料；只有能降低主 `SKILL.md` 负担时保留 |
+
+## 分类
+
+| 目录 | 归属 | Skill |
+|---|---|---|
+| `product/` | 产品发现、机会树、方案取舍 | `opportunity-solution-tree` |
+| `prd/` | PRD 合成与产品范围整理 | `create-prd` |
+| `requirements/` | 用户故事、验收标准和可测试性 | `user-stories` |
+| `ui-ux/` | UX 研究、Pencil 原型、设计转代码参考 | `ux-designer`, `pencil` |
+| `research/` | 多来源研究综合 | `deep-research` |
+| `quality/` | Code review 与浏览器验证参考 | `code-reviewer`, `playwright-skill` |
 
 ## 保留 Skill
 
-| Skill | 在 SpecForge 中的作用 | 归一化输出 |
+| Skill | 本地路径 | 在 SpecForge 中的作用 | 归一化输出 |
 |---|---|---|
-| `opportunity-solution-tree` | Intake / PRD 前的机会树、功能候选、假设、实验和优先级参考 | `00-intake/brainstorm.md`、`00-intake/brief.md`、`00-intake/prd.md` |
-| `create-prd` | 上下文充分时合成 PRD | `00-intake/prd.md` |
-| `user-stories` | 用户故事、3C / INVEST 和验收标准参考 | `01-spec/requirements.md` |
-| `pencil` | Pencil MCP 原型读写、组件复用、tokens、布局检查、截图导出和设计转代码参考 | `01-spec/ui-design.md`、`.pen` 源文件、导出截图、前端实现备注 |
-| `playwright-skill` | 浏览器 E2E、真实操作、截图和响应式验证 | `05-verification/test-cases.md`、`05-verification/report.md`、`05-verification/evidence/` |
-| `code-reviewer` | 安全、性能、正确性和可维护性的 code review 参考清单 | `04-code-review/code-review-v1.md`、`05-verification/report.md` |
-| `ux-designer` | 用户研究、信息架构、交互、可访问性和视觉层级参考 | `01-spec/research.md`、`01-spec/ui-design.md` |
-| `deep-research` | 多来源研究综合、引用和共识/争议拆解参考 | `01-spec/research.md` |
+| `opportunity-solution-tree` | `product/opportunity-solution-tree` | Intake / PRD 前的机会树、功能候选、假设、实验和优先级参考 | `00-intake/brainstorm.md`、`00-intake/brief.md`、`00-intake/prd.md` |
+| `create-prd` | `prd/create-prd` | 上下文充分时合成 PRD | `00-intake/prd.md` |
+| `user-stories` | `requirements/user-stories` | 用户故事、3C / INVEST 和验收标准参考 | `01-spec/requirements.md` |
+| `pencil` | `ui-ux/pencil` | Pencil MCP 原型读写、组件复用、tokens、布局检查、截图导出和设计转代码参考 | `01-spec/ui-design.md`、`.pen` 源文件、导出截图、前端实现备注 |
+| `playwright-skill` | `quality/playwright-skill` | 浏览器 E2E、真实操作、截图和响应式验证 | `05-verification/test-cases.md`、`05-verification/report.md`、`05-verification/evidence/` |
+| `code-reviewer` | `quality/code-reviewer` | 安全、性能、正确性和可维护性的 code review 参考清单 | `04-code-review/code-review-v1.md`、`05-verification/report.md` |
+| `ux-designer` | `ui-ux/ux-designer` | 用户研究、信息架构、交互、可访问性和视觉层级参考 | `01-spec/research.md`、`01-spec/ui-design.md` |
+| `deep-research` | `research/deep-research` | 多来源研究综合、引用和共识/争议拆解参考 | `01-spec/research.md` |
 
 ## 触发纪律
 

@@ -1,4 +1,4 @@
-# sf-tasking 参考手册
+# Task Planning Rules
 
 本文件保存 tasking 阶段的输入选择、字段规则、任务类型、并行波次和停止条件。`SKILL.md` 只保留入口和硬门禁。
 

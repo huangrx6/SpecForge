@@ -1,4 +1,4 @@
-# sf-close 参考手册
+# Closure Gate Checklist
 
 本文件保存关闭阶段的 wiki sync、release、rollback、archive 和安装提示边界。`SKILL.md` 只保留入口和执行序列。
 

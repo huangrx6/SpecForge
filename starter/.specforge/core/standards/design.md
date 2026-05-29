@@ -12,6 +12,23 @@
 
 纯后端、配置、日志、任务调度、数据迁移且没有用户可见变化时，`ui-design.md` 可写 N/A，并说明验证方式。
 
+## 设计模式
+
+有 UI 影响时，先判断设计模式，再选择参考 skill、设计系统和质量门禁。设计模式只用于收敛规则，不替代用户确认。
+
+| 模式 | 适用场景 | 设计重点 | 默认参考 |
+|---|---|---|---|
+| **Product UI** | SaaS、后台、管理台、配置台、数据表格、审批和内部工具 | 信息架构、任务效率、状态覆盖、权限和密度 | 现有设计系统、`pc-ui-design-spec.md`、产品型 UI reference |
+| **Brand Surface** | 官网、landing、portfolio、品牌页、活动页、redesign | 叙事、气质、视觉记忆点、首屏表达 | 用户参考、品牌素材、`design-taste-frontend` |
+| **Hybrid** | 同一项目同时有管理端和公开展示页 | 分区处理，不混用质量标准 | Product UI 与 Brand Surface 分别确认 |
+
+规则：
+
+- Product UI 不追求营销页式“惊艳”；首要目标是扫描、比较、批量操作、异常恢复和长期使用不疲劳。
+- Brand Surface 可以参考 `design-taste-frontend` 的 anti-slop 视觉判断，但必须转译成 Visual Style Brief、页面规则和 Pencil 原型，不直接替代 SpecForge artifact。
+- Hybrid 必须把管理端和品牌展示页拆开确认：同一个产品可以有两套密度、色彩和动效边界，但不能在同一个工作区里混成四不像。
+- 当 Product UI 使用 shadcn/ui 时，shadcn 只是底层 primitive / registry / theming 工具，不等于设计方向；必须在 `ui-design.md` 写清上层管理端组件契约。
+
 ## 风格确认
 
 设计前必须确认视觉方向，方式任选其一：
@@ -45,7 +62,7 @@ Figma、HTML、ASCII、竞品截图、公开网站和第三方设计 skill 只�
 
 Pencil 操作规则：
 
-- 可参考 `core/skills/pencil` 的 MCP 操作流程。
+- 可参考 `core/skills/ui-ux/pencil` 的 MCP 操作流程。
 - 不要用普通文件读取 `.pen`。
 - 空 `.pen` / 空画布只能读取一次；确认没有节点后必须直接创建第一屏。
 - 禁止反复 `batch_get` 或 `find_empty_space_on_canvas`。
@@ -256,6 +273,8 @@ SpecForge 项目的 UI 不接受"默认灰白表单"。有 UI 影响时，必须
 ### PC 端业务系统固定规范
 
 当项目是 PC 端业务系统、运营后台、管理控制台、数据表格工具，或用户明确提供 PC 端 UI 规范时，读取 `pc-ui-design-spec.md`，并让该文件的具体数值覆盖本节后续通用基准。
+
+如果实现层采用 shadcn/ui，仍优先遵守本规范或项目现有设计系统：通过 token、CSS variables、组件 wrapper 和组合组件覆盖默认样式，不把 shadcn 官方基础示例当成最终管理端设计。
 
 采用该规范时，`ui-design.md#4 Visual Style Brief` 必须写明：
 

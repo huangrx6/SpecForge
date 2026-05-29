@@ -23,7 +23,7 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
 - `.specforge/core/standards/engineering.md`
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/skills/ORCHESTRATION.md`（需要外部 code review 参考时）
-- `.specforge/core/skills/code-reviewer/SKILL.md`（需要安全、性能、正确性、可维护性补充检查清单时）
+- `.specforge/core/skills/quality/code-reviewer/SKILL.md`（需要安全、性能、正确性、可维护性补充检查清单时）
 
 ## 写入
 

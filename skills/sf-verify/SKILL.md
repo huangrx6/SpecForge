@@ -13,7 +13,7 @@ description: 执行 SpecForge verification 阶段；用于 code_review 已通过
 
 ## 必读
 
-- `references/verification-playbook.md`：覆盖矩阵、风险分级、Playwright、CI、跳过项和 gate 决策。
+- `references/verification-gate-checklist.md`：覆盖矩阵、风险分级、Playwright、CI、跳过项和 gate 决策。
 - `.specforge/core/workflows/stages/verification/SKILL.md`：内部验证母本。
 - `.specforge/core/artifacts/templates/test-cases.md`
 - `.specforge/core/artifacts/templates/verification-report.md`

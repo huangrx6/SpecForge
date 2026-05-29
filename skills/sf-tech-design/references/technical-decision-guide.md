@@ -1,4 +1,4 @@
-# sf-tech-design 参考手册
+# Technical Decision Guide
 
 本文件保存技术影响面扫描、分批确认卡、依赖 / 工具链确认、版本事实检查、核心决策 review 和写作细则。`SKILL.md` 只保留入口执行顺序、门禁和产物边界。
 

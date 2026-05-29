@@ -16,6 +16,8 @@
 |---|---|---|---|---|
 | 产品目标、MVP、功能候选、机会树、假设压力测试或优先级不清楚 | `opportunity-solution-tree` | `SKILL.md`；按需读 `references/brainstorm-ideas-new.md`、`references/brainstorm-ideas-existing.md`、`references/analyze-feature-requests.md`、`references/prioritize-features.md`、`references/prioritization-frameworks.md` | 用户机会、候选方向、关键假设、实验、取舍问题、优先级线索 | `brainstorm.md#问题地图`、`#方案对比`、`brief.md#功能候选池` |
 | 体验方向、目标用户、用户旅程、信息架构、交互风格、可访问性不清楚 | `ux-designer` | 先读 `SKILL.md`；再按需读 `rules/research.md`、`rules/information-architecture.md`、`rules/interaction-design.md`、`rules/accessibility.md`、`rules/visual-design.md` | 体验方向候选、用户旅程风险、信息架构问题、可访问性约束 | `brainstorm.md#问题地图`、`#方案对比`、`#第三方 Skill 使用记录`、后续 `ui-design.md` 输入 |
+| 官网、landing、portfolio、品牌页或 redesign 的视觉方向容易模板化 | `design-taste-frontend` | `SKILL.md`；只在需要时读取其 references | Brand Surface 的视觉气质、版式候选、动效边界、反模板化风险 | `brainstorm.md#UI / 体验方向确认`、后续 `ui-design.md#Visual Style Brief` |
+| 管理端采用 shadcn/ui，但需要判断组件封装、registry 候选或避免基础组件拼装 | shadcn 官方 skill / shadcn registry reference | 官方 shadcn skill、`npx shadcn@latest docs/search/view` 输出；按需参考 `shadcn-component-discovery` / `shadcn-component-review` | primitive 选择、registry 候选、Admin Component Contract、组件审查点 | `brainstorm.md#技术路线确认`、`#UI / 体验方向确认`、后续 `ui-design.md` 和 `technical_design.md` 输入 |
 | 需要多来源研究、共识/争议拆解、研究空白 | `deep-research` | `SKILL.md` | 研究问题、来源类型、共识、争议、待验证事实 | `research.md` 或 `brainstorm.md#当前事实与研究证据` |
 | 用户故事、验收口径、边界条件会影响方案取舍 | `user-stories` | `SKILL.md` | 用户故事候选、验收问题、边界/异常问题 | `brainstorm.md#问题地图`、后续 `requirements.md` 输入 |
 | PRD 信息已经足够，需要判断是否进入 PRD 合成 | `create-prd` | `SKILL.md` | PRD handoff 检查、非目标、目标用户、价值主张、release 分期覆盖缺口 | `prd.md` 输入，不直接写 brainstorm 结论 |

@@ -14,7 +14,7 @@ description: SpecForge 内部需求技能。用于为 work item 生成清晰、�
 - `00-intake/prd.md`（存在时，作为产品意图输入，不是可测试需求的替代品）
 - `.specforge/core/standards/product.md`
 - `.specforge/core/standards/workflow.md`
-- 需要用户故事、3C、INVEST、Given/When/Then 或验收标准检查时读取 `.specforge/core/skills/user-stories/SKILL.md`
+- 需要用户故事、3C、INVEST、Given/When/Then 或验收标准检查时读取 `.specforge/core/skills/requirements/user-stories/SKILL.md`
 - 相关 `.specforge/wiki/` 文件
 
 ## 写入

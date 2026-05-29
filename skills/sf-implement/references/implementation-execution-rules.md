@@ -1,4 +1,4 @@
-# sf-implement 参考手册
+# Implementation Execution Rules
 
 本文件保存 implementation 阶段的细则。`SKILL.md` 只保留入口、执行序列和硬门禁。
 

@@ -50,6 +50,8 @@
 |---|---|
 | UI Direction Status | pending / confirmed |
 | Confirmation marker | real confirmation marker only after user confirms / N/A |
+| Design Mode | Product UI / Brand Surface / Hybrid / N/A |
+| 管理端组件策略 | 现有设计系统 / PC 业务系统规范 / shadcn 封装组件 / N/A |
 | 用户选择的体验方向 | |
 | 明确放弃的方向 | |
 | 对 ui_design 的影响 | |

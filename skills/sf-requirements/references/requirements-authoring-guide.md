@@ -1,4 +1,4 @@
-# sf-requirements 参考手册
+# Requirements Authoring Guide
 
 本文件保存 PRD 转译、第三方 skill 归一化、自适应需求访谈、写作细则和影响面 flags。`SKILL.md` 只保留入口执行顺序、门禁和产物边界。
 

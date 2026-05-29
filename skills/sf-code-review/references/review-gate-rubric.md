@@ -1,4 +1,4 @@
-# sf-code-review 参考手册
+# Code Review Gate Rubric
 
 本文件保存 code review 的 diff 对账、spec compliance、外部 `code-reviewer` 使用、finding 分级和 gate 决策。`SKILL.md` 只保留入口执行顺序和硬门禁。
 
@@ -59,16 +59,16 @@
 
 - 不调用任何外部 code-reviewer agent，包括 `code-reviewer` 和 `superpowers:code-reviewer`。
 - `code-reviewer` 只表示本地 skill 目录和规则文件，不表示可调用 agent。
-- 只读取 `.specforge/core/skills/code-reviewer/SKILL.md` 和下表相关 rule 文件。
+- 只读取 `.specforge/core/skills/quality/code-reviewer/SKILL.md` 和下表相关 rule 文件。
 
 | 风险信号 | 读取 |
 |---|---|
-| SQL、ORM raw query、拼接查询、筛选参数、搜索接口 | `.specforge/core/skills/code-reviewer/rules/security-sql-injection.md` |
-| HTML 注入、markdown 渲染、富文本、用户输入展示、dangerouslySetInnerHTML | `.specforge/core/skills/code-reviewer/rules/security-xss-prevention.md` |
-| 新增列表页、批量查询、循环内访问 DB / API、GraphQL resolver | `.specforge/core/skills/code-reviewer/rules/performance-n-plus-one.md` |
-| try/catch、错误响应、重试、后台任务、外部服务调用 | `.specforge/core/skills/code-reviewer/rules/correctness-error-handling.md` |
-| 变量 / 函数命名导致审查理解困难 | `.specforge/core/skills/code-reviewer/rules/maintainability-naming.md` |
-| Python / TS 类型边界模糊，公共函数或 DTO 缺类型 | `.specforge/core/skills/code-reviewer/rules/maintainability-type-hints.md` |
+| SQL、ORM raw query、拼接查询、筛选参数、搜索接口 | `.specforge/core/skills/quality/code-reviewer/rules/security-sql-injection.md` |
+| HTML 注入、markdown 渲染、富文本、用户输入展示、dangerouslySetInnerHTML | `.specforge/core/skills/quality/code-reviewer/rules/security-xss-prevention.md` |
+| 新增列表页、批量查询、循环内访问 DB / API、GraphQL resolver | `.specforge/core/skills/quality/code-reviewer/rules/performance-n-plus-one.md` |
+| try/catch、错误响应、重试、后台任务、外部服务调用 | `.specforge/core/skills/quality/code-reviewer/rules/correctness-error-handling.md` |
+| 变量 / 函数命名导致审查理解困难 | `.specforge/core/skills/quality/code-reviewer/rules/maintainability-naming.md` |
+| Python / TS 类型边界模糊，公共函数或 DTO 缺类型 | `.specforge/core/skills/quality/code-reviewer/rules/maintainability-type-hints.md` |
 
 融合规则：
 

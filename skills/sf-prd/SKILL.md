@@ -13,9 +13,11 @@ description: 生成或更新产品需求文档（PRD）；用于产品型 work i
 
 PRD 不是固定问卷。它是一份产品决策文档：先识别当前需求最可能出错的决策点，再用少量高价值问题、候选功能池和可防守假设，把模糊想法推进到可进入 requirements 的状态。
 
+面向 B 端、运营商、大数据、AI 应用、管理后台、数据看板、驾驶舱或任务配置平台时，使用 `references/prd-authoring-guide.md#B 端运营商 / 数据产品镜头` 补充业务 KPI、部门角色、使用频率、PC / 移动端、数据口径、接口来源、脱敏、审批和审计问题。该镜头只补足产品事实，不把 PRD 扩写成 UI design、接口设计或技术方案。
+
 ## 必读
 
-- `references/prd-playbook.md`：PRD 深度、第三方 skill 编排、访谈镜头、PRD 模板和质量标准。
+- `references/prd-authoring-guide.md`：PRD 深度、第三方 skill 编排、访谈镜头、PRD 模板和质量标准。
 - `.specforge/core/artifacts/templates/prd.md`：写入骨架。
 - `.specforge/core/workflows/stages/brainstorm/SKILL.md`：候选功能池和用户确认纪律。
 - `.specforge/core/workflows/stages/discovery/SKILL.md`：research / discovery 输入和跳过理由。
@@ -48,19 +50,20 @@ node .specforge/core/scripts/doctor.mjs
 1. 读取 `brief.md#PRD 决策`，确认本 work item 需要 PRD。
 2. 读取 `brainstorm.md` 的用户确认、明确延后和未决问题。
 3. 如果需要多方案取舍但没有用户确认，暂停并向用户提问。
-4. 如果目标用户、核心问题、MVP 边界或高风险角色/数据/AI 质量决策缺失，按 `references/prd-playbook.md#自适应产品访谈` 提出少量高价值问题。
+4. 如果原始需求仍模糊且没有可追溯确认摘要，按 `references/prd-authoring-guide.md#需求摘要确认` 先输出摘要并等待用户确认，不直接写完整 PRD。
+5. 如果目标用户、核心问题、MVP 边界或高风险角色/数据/AI 质量决策缺失，按 `references/prd-authoring-guide.md#自适应产品访谈` 提出少量高价值问题。
 
 ### B. 选择深度和参考输入
 
-1. 按 `references/prd-playbook.md#PRD 深度` 选择 `prd-lite / prd-standard / prd-deep`。
-2. 如需第三方参考，按 `references/prd-playbook.md#第三方 PRD Skill 编排` 选择 `create-prd` 或 `opportunity-solution-tree`。
+1. 按 `references/prd-authoring-guide.md#PRD 深度` 选择 `prd-lite / prd-standard / prd-deep`。
+2. 如需第三方参考，按 `references/prd-authoring-guide.md#第三方 PRD Skill 编排` 选择 `create-prd` 或 `opportunity-solution-tree`。
 3. 第三方输出只作为候选和检查视角，必须归一化到 SpecForge PRD 结构。
 
 ### C. 裁剪候选和写 PRD
 
 1. 先整理候选功能池，不直接替用户定 MVP。
 2. 拆分 `MVP / 可选增强 / 后续版本`，写清非目标。
-3. 使用 `.specforge/core/artifacts/templates/prd.md` 或 `references/prd-playbook.md#PRD 模板` 写入 `00-intake/prd.md`。
+3. 使用 `.specforge/core/artifacts/templates/prd.md` 或 `references/prd-authoring-guide.md#PRD 模板` 写入 `00-intake/prd.md`。
 4. 没有内容的章节写 `N/A` 并说明原因，不留空。
 5. 可进入 requirements 时，把 `Decision Status` 写为 `approved-for-requirements`；否则写 `needs-decision` 并暂停。
 

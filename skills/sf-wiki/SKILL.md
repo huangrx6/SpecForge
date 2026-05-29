@@ -15,7 +15,7 @@ description: 更新 SpecForge 项目 Wiki；用于用户要求“回写知识库
 
 ## 必读
 
-- `references/wiki-playbook.md`：回写判断、目标文件选择、frontmatter、index 对账、gate 决策。
+- `references/wiki-sync-rules.md`：回写判断、目标文件选择、frontmatter、index 对账、gate 决策。
 - `.specforge/core/workflows/stages/wiki-sync/SKILL.md`
 - `.specforge/core/artifacts/templates/wiki-sync.md`
 - `.specforge/core/standards/wiki.md`
@@ -68,7 +68,7 @@ node .specforge/core/scripts/sync-wiki.mjs
 ### B. 判断是否回写
 
 1. 提取候选长期事实。
-2. 按 `references/wiki-playbook.md#回写矩阵` 判断目标文件。
+2. 按 `references/wiki-sync-rules.md#回写矩阵` 判断目标文件。
 3. 只影响一次性实现、临时日志、测试输出、截图或局部无复用备注时，在 `06-close/wiki-sync.md` 写 N/A 理由，不更新 wiki。
 4. 改变长期产品、架构、接口、数据、运行、设计系统、术语、风险时，必须更新对应 wiki 文件。
 
@@ -77,7 +77,7 @@ node .specforge/core/scripts/sync-wiki.mjs
 1. 优先更新现有 current 文件，不创建日期版、v2 版、work item 版。
 2. 确需新增时使用短名：`module-<name>.md`、`api-<domain>.md`、`design-system.md`。
 3. 每个更新文件都保留并刷新 frontmatter：`title`、`kind`、`owner`、`last_updated`、`source_work`、`status`。
-4. 按 `references/wiki-playbook.md#Wiki 质量清单` 检查信息密度；架构、API、数据、运维类文件不能只写概述。
+4. 按 `references/wiki-sync-rules.md#Wiki 质量清单` 检查信息密度；架构、API、数据、运维类文件不能只写概述。
 5. 对缺失事实执行一次补证：用 `rg` / provider / 关键配置读取查找路由、模型、migration、服务入口、脚本和测试。仍无法确认的，写 `未确认` 并同步到 `risks.md`。
 6. 更新 `.specforge/wiki/index.md` 的摘要、当前文件索引和最后同步时间。
 7. 在 `06-close/wiki-sync.md` 记录更新文件、写入事实、来源证据、不更新原因、未确认缺口和下游重新验证要求。

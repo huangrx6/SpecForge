@@ -13,7 +13,7 @@ description: 根据已批准的 SpecForge tasks 执行实现；用于 implementa
 
 ## 必读
 
-- `references/implementation-playbook.md`：任务边界、失败优先验证、脚手架、UI / PC 规范、diff 对账和报告规则。
+- `references/implementation-execution-rules.md`：任务边界、失败优先验证、脚手架、UI / PC 规范、diff 对账和报告规则。
 - `.specforge/core/workflows/stages/implementation/SKILL.md`：内部实现母本。
 - `.specforge/core/artifacts/templates/implementation-plan.md`
 - `.specforge/core/artifacts/templates/implementation-report.md`

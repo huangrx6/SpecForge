@@ -54,8 +54,7 @@ AI 工具技能：sf-router / sf-*  负责让 AI 工具知道怎么工作，可 
 │   ├── artifacts/
 │   ├── scripts/
 │   ├── skills/
-│   ├── hooks/
-│   └── commands/
+│   └── hooks/
 ├── hooks/
 │   └── local/
 ├── wiki/

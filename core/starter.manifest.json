@@ -23,10 +23,6 @@
       "to": "core/artifacts/templates"
     },
     {
-      "from": "commands",
-      "to": "core/commands"
-    },
-    {
       "from": "hooks/events",
       "to": "core/hooks/events"
     },
@@ -133,7 +129,7 @@
   "files": {
     "project.yaml": "name: TBD\nprofile: standard\nwiki:\n  mode: item-files\n  index: .specforge/wiki/index.md\nwork:\n  id_format: YYYYMMDD-kind-NNN-short-title\n",
     "registry.yaml": "active: []\nblocked: []\narchive: []\n",
-    "hooks/README.md": "# Project Hooks\n\n项目自定义 hook 放在 `hooks/local/`。默认事件实现位于 `core/hooks/events/`。\n",
+    "hooks/README.md": "# Project Hooks\n\n项目自定义 hook 放在 `hooks/local/`。默认事件实现位于 `core/hooks/events/`。\n\n当前支持 `pre-gate`、`post-gate`、`pre-close`、`on-close`。用于阻断 gate、发送通知、同步内部系统或执行归档前后检查；不要在 hook 中改写 SpecForge artifact。\n",
     "hooks/local/.gitkeep": "",
     "work/inbox/.gitkeep": "",
     "work/active/.gitkeep": "",
