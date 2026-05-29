@@ -1,7 +1,6 @@
 node_modules/
 dist/
 coverage/
-outputs/
 .claude/
 .DS_Store
 .env

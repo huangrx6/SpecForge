@@ -12,15 +12,14 @@ function usage() {
   console.log(`SpecForge CLI
 
 Usage:
-  specforge skill add [--target codex|claude-code|cc-switch|agents|trae-cn|all] [--scope user|project] [--project-dir <path>] [--apply]
   specforge init [--dir <path>] [--force]
   specforge doctor [--dir <path>]
+  specforge skill add [--target codex|claude-code|cc-switch|agents|trae-cn|all] [--scope user|project] [--project-dir <path>] [--apply]  (legacy)
 
 Examples:
-  npx github:huangrx6/SpecForge skill add --target codex --scope user --apply
-  npx github:huangrx6/SpecForge skill add --target trae-cn --scope project --project-dir . --apply
-  npx github:huangrx6/SpecForge skill add --target all --scope user --apply
+  npx skills add https://github.com/huangrx6/SpecForge --skill '*' --agent codex --global
   npx github:huangrx6/SpecForge init --dir .
+  npm exec --yes --package=git+ssh://git@git.company.com/team/specforge.git#v0.3.0-company.1 -- specforge init --dir .
   npx github:huangrx6/SpecForge doctor --dir .
 `);
 }
