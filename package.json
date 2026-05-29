@@ -4,7 +4,7 @@
   "private": false,
   "type": "module",
   "scripts": {
-    "validate": "node core/scripts/validate-structure.mjs && node core/scripts/sync-agent-skills.mjs --check",
+    "validate": "node core/scripts/validate-structure.mjs",
     "status": "node core/scripts/status.mjs",
     "graph:status": "node core/scripts/artifact-graph-status.mjs",
     "new:work": "node core/scripts/create-work.mjs",
@@ -18,16 +18,13 @@
     "doctor": "node core/scripts/doctor.mjs",
     "validate:skills": "node core/scripts/validate-skills.mjs",
     "validate:external-skills": "node core/scripts/validate-external-skills.mjs",
-    "sync:agent-skills": "node core/scripts/sync-agent-skills.mjs",
     "sync:starter": "node core/scripts/sync-starter.mjs",
     "sync:wiki": "node core/scripts/sync-wiki.mjs",
     "update:skills": "node core/scripts/update-skills.mjs --all",
     "check:skills": "node core/scripts/update-skills.mjs --check --all",
-    "check:agent-skills": "node core/scripts/sync-agent-skills.mjs --check",
     "check:starter": "node core/scripts/sync-starter.mjs --check",
     "install:skills": "npx skills add .",
     "skill:add": "npx skills add .",
-    "install:skills:legacy": "node cli/specforge.mjs skill add --target all --scope user --apply",
     "init": "node cli/specforge.mjs init"
   },
   "license": "MIT",
@@ -39,7 +36,6 @@
     "cli",
     "skills",
     "core",
-    "starter",
-    "agent-skills"
+    "starter"
   ]
 }

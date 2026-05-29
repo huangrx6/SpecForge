@@ -28,7 +28,7 @@ npx skills add https://github.com/huangrx6/SpecForge --skill '*' --agent claude-
 npx skills add https://github.com/huangrx6/SpecForge --skill '*' --agent trae-cn
 ```
 
-`node cli/specforge.mjs skill add ...` 仍保留给源码仓库维护者应急使用，但日常安装优先使用官方 `skills` CLI。
+日常安装统一使用官方 `skills` CLI；`specforge` CLI 只负责项目 `.specforge/` 初始化和诊断。
 
 ## 标准骨架
 

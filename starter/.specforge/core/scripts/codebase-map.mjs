@@ -217,7 +217,7 @@ function parsePackageJson(path) {
 }
 
 function hasCodebase(files) {
-  return files.some((file) => file.source && !file.path.startsWith("core/") && !file.path.startsWith("agent-skills/"));
+  return files.some((file) => file.source && !file.path.startsWith("core/") && !file.path.startsWith("skills/"));
 }
 
 const state = { files: [], truncated: false };

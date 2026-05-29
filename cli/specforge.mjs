@@ -14,7 +14,6 @@ function usage() {
 Usage:
   specforge init [--dir <path>] [--force]
   specforge doctor [--dir <path>]
-  specforge skill add [--target codex|claude-code|cc-switch|agents|trae-cn|all] [--scope user|project] [--project-dir <path>] [--apply]  (legacy)
 
 Examples:
   npx skills add https://github.com/huangrx6/SpecForge --skill '*' --agent codex --global
@@ -86,12 +85,9 @@ if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
   process.exit(0);
 }
 
-const [command, subcommand] = args;
+const [command] = args;
 
-if (command === "skill" && subcommand === "add") {
-  const tool = join(packageRoot, "core/scripts/install-agent-skills.mjs");
-  runNode(tool, args.slice(2), packageRoot);
-} else if (command === "init") {
+if (command === "init") {
   initProject();
 } else if (command === "doctor") {
   doctor();

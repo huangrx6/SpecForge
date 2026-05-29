@@ -1,6 +1,6 @@
 # 阶段技能母本
 
-`core/workflows/stages/` 保存 SpecForge 生命周期的内部阶段技能母本。它们不是全局安装入口，而是项目运行时可以按需读取的阶段能力包。`agent-skills/sf-*` 技能负责触发和路由；本目录负责定义阶段行为、输入输出、停止条件和完成标准。
+`core/workflows/stages/` 保存 SpecForge 生命周期的内部阶段技能母本。它们不是全局安装入口，而是项目运行时可以按需读取的阶段能力包。`skills/sf-*` 技能负责触发和路由；本目录负责定义阶段行为、输入输出、停止条件和完成标准。
 
 ## 结构约定
 
@@ -45,7 +45,7 @@ description: <说明此技能做什么，以及什么时候使用>
 
 ## 维护规则
 
-- 阶段行为变化时，先更新 `core/workflows/stages/<name>/SKILL.md`，再更新对应 `agent-skills/sf-*` skill。
+- 阶段行为变化时，先更新 `core/workflows/stages/<name>/SKILL.md`，再更新对应 `skills/sf-*` skill。
 - 不要把 UI 体验设计和技术架构设计重新合并成一个长期维护的 stage。
 - 入口 skill 只保留运行时入口、动作、停止条件和完成标准，不复制内部技能的全部内容。
 - 业务项目通过 onboard 会获得本目录的发行快照，保证离线环境也能读取内部技能。

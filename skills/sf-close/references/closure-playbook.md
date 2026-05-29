@@ -86,8 +86,8 @@
 
 如果当前仓库是 SpecForge 本体，并且 work item 修改了：
 
-- `agent-skills/sf*/SKILL.md`
-- `agent-skills/sf*/references/**`
+- `skills/sf*/SKILL.md`
+- `skills/sf*/references/**`
 - `core/workflows/stages/**`
 - `core/skills/**`
 - `core/standards/**`

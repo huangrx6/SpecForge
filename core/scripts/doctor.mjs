@@ -10,7 +10,7 @@ const checks = [
   { name: "graph", command: ["node", `${layout.tools}/artifact-graph-status.mjs`] },
 ];
 
-if (existsSync("agent-skills/sf-router/SKILL.md") || existsSync("sf-router/SKILL.md")) {
+if (existsSync("skills/sf-router/SKILL.md") || existsSync("sf-router/SKILL.md")) {
   checks.splice(1, 0, { name: "validate-skills", command: ["node", `${layout.tools}/validate-skills.mjs`] });
 }
 

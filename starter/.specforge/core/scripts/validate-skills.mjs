@@ -36,7 +36,7 @@ function parseFrontmatter(content, file) {
 // ----------------------------------------------------
 function runInternalValidation() {
   function listEntrySkillFiles() {
-    const skillsRoot = join(root, layout.kind === "source" ? "agent-skills" : ".");
+    const skillsRoot = join(root, layout.skills);
     if (!existsSync(skillsRoot)) return [];
     return readdirSync(skillsRoot, { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
@@ -106,7 +106,7 @@ function runInternalValidation() {
     const stageSkillPath = join(root, layout.stages, stageSkill);
     if (!existsSync(stageSkillPath)) errors.push(`missing stage skill: ${layout.stages}/${stageSkill}`);
     for (const skill of skills) {
-      const skillPath = join(root, layout.kind === "source" ? "agent-skills" : ".", skill, "SKILL.md");
+      const skillPath = join(root, layout.skills, skill, "SKILL.md");
       if (!existsSync(skillPath)) errors.push(`stage skill ${stageSkill} points to missing entry skill: ${skill}`);
     }
   }
@@ -121,7 +121,7 @@ function runInternalValidation() {
     }
   }
 
-  const rootSkill = join(root, layout.kind === "source" ? "agent-skills/sf-router/SKILL.md" : "sf-router/SKILL.md");
+  const rootSkill = join(root, layout.skills, "sf-router/SKILL.md");
   if (existsSync(rootSkill)) {
     const rootContent = readFileSync(rootSkill, "utf8");
     for (const required of [

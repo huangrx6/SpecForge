@@ -5,7 +5,7 @@ import { pathToFileURL } from "node:url";
 export const root = process.cwd();
 
 function hasSourceRuntime() {
-  return existsSync(join(root, "core/manifest.yaml")) && existsSync(join(root, "agent-skills/sf-router/SKILL.md"));
+  return existsSync(join(root, "core/manifest.yaml")) && existsSync(join(root, "skills/sf-router/SKILL.md"));
 }
 
 export const layout = hasSourceRuntime()
@@ -27,7 +27,7 @@ export const layout = hasSourceRuntime()
       projectHooks: "core/hooks/events",
       starterManifest: "core/starter.manifest.json",
       starter: "starter",
-      skills: "agent-skills",
+      skills: "skills",
     }
   : {
       kind: "project",

@@ -1,10 +1,10 @@
 # SpecForge Agent Skills
 
-This directory is generated from `agent-skills/` so the official `skills` CLI can discover SpecForge entry skills from the standard `skills/<name>/SKILL.md` layout.
+This directory is the source of truth for SpecForge agent entry skills. The official `skills` CLI discovers these skills from the standard `skills/<name>/SKILL.md` layout.
 
-Do not edit files here directly. Update `agent-skills/`, then run:
+After editing a skill, run:
 
 ```bash
-npm run sync:agent-skills
-npm run check:agent-skills
+npm run validate:skills
+npm run validate
 ```
