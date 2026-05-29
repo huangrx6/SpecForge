@@ -12,6 +12,7 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
 - `00-intake/brief.md`
 - `01-spec/requirements.md`
 - `01-spec/ui-design.md`（存在时）
+- `.specforge/wiki/00-index.md` 和本次相关 wiki
 - `.specforge/core/standards/product.md`
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/engineering.md`
@@ -35,7 +36,9 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
    - `no` 必须写跳过理由。
    - `unknown` 如果会改变架构、数据、安全、成本或上线风险，停止并向用户澄清。
    - 低风险未知可以写入 assumptions，但必须说明后续验证点。
-3. 生成读取计划：只列本次实际读取的子模块、profiles 和官方基准入口。
+3. 生成读取计划：先列本次实际读取的 wiki 入口、代码入口、上游 / 下游和缺口，再列实际读取的子模块、profiles 和官方基准入口。
+   - 存量项目只沿 wiki 指向的模块、API、数据、测试和运行链路读取代码。
+   - wiki 缺入口、过期或与代码冲突时，停止并路由 `sf-steering`，不要在本阶段临时全量探索。
 4. 无技术影响时，写 N/A 结论：例如纯文案、纯 UI 视觉调整、无工程改动的配置说明，并说明验证方式。
 5. 建立需求追踪表，确保关键需求能落到技术方案或明确不适用。
 6. 执行技术选型全量访谈协议。该门禁发生在详细 technical design 之前；未确认时只输出分批确认卡并停止，不继续展开架构、API、数据、NFR 或任务拆解：
@@ -75,6 +78,7 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
 - `instructions.mjs` 返回 `dependency-decision-unconfirmed`，或本次新增 / 替换直接依赖、SDK、插件、组件库、ORM、驱动、测试库、浏览器自动化库、外部 provider 但没有用户确认、用户授权默认或已确认脚手架依据。
 - `instructions.mjs` 返回 `tooling-decision-unconfirmed`，或本次选择 / 替换包管理器、UI 组件库、样式方案、Python 依赖管理 / 虚拟环境、构建工具、测试 runner、任务运行器、monorepo 工具但没有用户确认、用户授权默认、沿用现有栈或已确认脚手架依据。
 - requirements 仍有阻断歧义。
+- 存量项目 wiki 无法给出本次相关入口、边界或上下游，且需要触碰既有代码。
 - 新项目或新增 / 替换关键技术时，技术选型没有用户确认、用户授权默认或可信的“沿用现有栈”证据。
 - 新增直接依赖、SDK、插件、组件库、ORM、驱动、测试库或浏览器自动化库时，没有用户确认、用户授权默认或已确认脚手架依据。
 - 技术选型没有 profile、备选方案或偏离理由。
@@ -92,6 +96,7 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
 ## 完成标准
 
 - `technical-design.md` 能让实现者按边界开工。
+- 存量项目的读取计划包含 wiki 入口和 bounded code context，不要求实现者重新全仓定位。
 - reviewer 能判断实现是否偏离架构、接口、数据或安全要求。
 - 关键技术选型和新增直接依赖都有确认来源：现有项目证据、用户明确指定、用户授权默认、已确认脚手架或用户确认候选方案。
 - 初稿后的核心决策摘要已经被用户确认、用户授权默认，或明确 N/A。

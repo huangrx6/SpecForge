@@ -37,7 +37,7 @@ node .specforge/core/scripts/instructions.mjs apply
 node .specforge/core/scripts/create-artifact.mjs implementation
 ```
 
-4. 读取 `work.yaml`、`01-spec/tasks.md`、适用的 `requirements.md` / `gap-report.md` / `ui-design.md` / `technical-design.md`、`02-spec-review/spec-review-v1.md`。
+4. 读取 `work.yaml`、`01-spec/tasks.md`、适用的 `requirements.md` / `gap-report.md` / `ui-design.md` / `technical-design.md`、`02-spec-review/spec-review-v1.md`、`.specforge/wiki/00-index.md` 和任务 / 技术设计引用的相关 wiki。
 5. 运行：
 
 ```bash
@@ -51,10 +51,11 @@ git status --short --untracked-files=all
 ### A. 先写实现计划
 
 1. 从 tasks 建立任务执行图：task -> batch -> `_Trace:_` -> `_Files:_` -> `_Boundary:_` -> `_Verification:_` -> `_Rollback:_` -> risk。
-2. 从 `technical-design.md#0. 影响面与读取计划` 建立影响面对账：`yes`、`no`、`unknown`、N/A。
-3. 若任务边界、验证方式、回滚信息不足以指导实现，停止并退回 `sf-tasking` 或 `sf-spec-review`。
-4. 若存在 `[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]`、关键 `unknown`，停止并退回 `sf-tech-design` 或 `sf-spec-review`。
-5. 写 `03-implementation/plan.md`。
+2. 从 `technical-design.md#0. 影响面与读取计划` 和相关 wiki 建立上下文边界：入口路径、关键符号 / 路由、上游 / 下游、测试位置和运行命令。
+3. 实现前只沿上述边界读取代码；不得为了“保险”重新全量扫描仓库。
+4. 若任务边界、验证方式、回滚信息不足以指导实现，停止并退回 `sf-tasking` 或 `sf-spec-review`。
+5. 若存在 `[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]`、关键 `unknown`，停止并退回 `sf-tech-design` 或 `sf-spec-review`。
+6. 写 `03-implementation/plan.md`。
 
 ### B. 准备实现基线
 
@@ -92,6 +93,7 @@ git diff --stat
 | implementation 未 ready 或 spec_review 未批准 | 停止：上游 gate 未通过 |
 | tasks 的核心字段不足以指导实现 | 停止：任务边界不足 |
 | 需要修改 `_Boundary:_` 外文件 | 停止：超出批准范围 |
+| 存量项目任务需要先全仓查找才能知道改哪里 | 停止：退回 `sf-tasking` / `sf-tech-design` / `sf-steering` 补 wiki 和边界 |
 | technical design 仍有关键 `unknown` 或未确认技术 / 依赖决策 | 停止：技术决策未确认 |
 | UI 原型、Pencil 截图或 PC 规范 token 缺失但实现依赖它们 | 停止：UI 设计缺失 |
 | 快速验证失败且无法在当前 task 范围内修复 | 停止：说明原因，等待用户决策 |

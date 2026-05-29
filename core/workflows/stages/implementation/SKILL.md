@@ -22,6 +22,7 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
 - `01-spec/technical-design.md`（存在时）
 - `01-spec/tasks.md`
 - `02-spec-review/spec-review-v1.md`
+- `.specforge/wiki/00-index.md` 和 tasks / technical design 引用的相关 wiki
 - `core/profiles/README.md` 以及 `technical-design.md` 选中的技术选择卡
 - `.specforge/core/standards/engineering.md`
 - `.specforge/core/standards/workflow.md`
@@ -45,6 +46,7 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
 
 - task 状态写了 `DONE`，但验证命令、证据或可信 N/A 缺失。
 - 修改了 `_Boundary:_` 之外的文件，且没有 approved spec 依据。
+- 存量项目任务需要先全仓查找才能知道改哪里。
 - 遇到 `[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]` 或关键 `unknown` 还在继续实现。
 - 需要改变 technical design 中被批准为 `no` 的影响面。
 - 连续 3 次修复同一个问题失败。
@@ -57,7 +59,8 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
    - 运行 `git status --short --untracked-files=all`，识别本次工作前已有改动；不要覆盖或回滚无关改动。
 2. **先写 implementation plan**
    - 从 tasks 提取批次、依赖、`_Impact:_`、`_Files:_`、`_Boundary:_`、`_Verification:_`、`_Rollback:_`、风险和预计变更文件。
-   - 从 `technical-design.md#0. 影响面与读取计划` 提取 `yes` / `no` / `unknown`，形成实现影响面对账计划。
+   - 从 `technical-design.md#0. 影响面与读取计划` 以及相关 wiki 提取 `yes` / `no` / `unknown`、入口路径、关键符号 / 路由、上游 / 下游、测试位置和运行命令，形成实现影响面对账计划。
+   - 只沿上述 bounded context 读取代码；不得为了“保险”重新全量扫描仓库。
    - 如果任务边界不足以指导写入，停止回到 `sf-tasking` 或 `sf-spec-review`。
    - 如果 `technical-design.md` 仍有 `[NEEDS TECH DECISION]` 或 `[NEEDS DEPENDENCY DECISION]`，停止回到 `sf-tech-design` 确认技术选型或新增依赖。
    - 如果影响面仍有会改变架构、数据、安全、成本、外部契约、发布或可靠性的 `unknown`，停止回到 `sf-tech-design` 或 `sf-spec-review`。
@@ -100,6 +103,7 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
 - gate 未批准。
 - 需要修改未批准范围。
 - tasks 的 `_Files:_`、`_Boundary:_`、`_Verification:_` 或 `_Rollback:_` 不足以指导实现。
+- 存量项目没有可追溯的 wiki 入口、读取计划或文件边界。
 - 发现设计错误、需求矛盾或 UI 原型 / technical design 缺失。
 - technical_design 影响面仍有关键 `unknown`，或实现需要修改被批准为 `no` 的影响面。
 - technical_design 仍残留 `[NEEDS TECH DECISION]` 或 `[NEEDS DEPENDENCY DECISION]`。

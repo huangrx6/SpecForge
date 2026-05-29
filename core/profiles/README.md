@@ -27,7 +27,7 @@ profiles/
 1. 先判断本次是否真的需要 profile；纯文案、纯配置、小 bugfix 可写 N/A。
 2. 主栈只在受影响时选择：Frontend、Backend、Database。
 3. 横向能力按需选择；当前内置能力卡只保留 `capabilities/processing-ai-jobs`，其他专项能力在 technical design 中写明选择理由和待补 profile。
-4. 如果项目已有技术栈，以 `.specforge/wiki/architecture.md` 为准；profile 只用于确认是否沿用或偏离。
+4. 如果项目已有技术栈，以 `.specforge/wiki/03-architecture.md` 为准；profile 只用于确认是否沿用或偏离。
 5. 使用 profile 之外的关键技术，必须写偏离原因、风险和验证方式。
 
 ## 分类原则

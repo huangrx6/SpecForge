@@ -40,15 +40,17 @@ node .specforge/core/scripts/instructions.mjs
 node .specforge/core/scripts/create-artifact.mjs technical_design
 ```
 
-4. 读取 `00-intake/brief.md`、`00-intake/prd.md`（如果存在）、`00-intake/brainstorm.md`（如果存在）、`01-spec/requirements.md`、`01-spec/ui-design.md`（如果存在）、相关 `.specforge/wiki/` 和现有代码结构。
+4. 读取 `00-intake/brief.md`、`00-intake/prd.md`（如果存在）、`00-intake/brainstorm.md`（如果存在）、`01-spec/requirements.md`、`01-spec/ui-design.md`（如果存在）、`.specforge/wiki/00-index.md` 和相关 `.specforge/wiki/`。
+5. 只沿 wiki 给出的入口路径、模块、API、数据、运行命令和风险线索读取现有代码结构；wiki 缺入口、过期或与代码冲突时，先路由 `sf-steering`，不要在 technical design 中临时全量探索。
 
 ## 执行序列
 
 ### A. 建立影响面与读取计划
 
 1. 按 `references/technical-decision-guide.md#影响面扫描` 标记 frontend、backend、domain、API、data、auth/security、config/delivery、jobs、observability、reliability。
-2. 把每个影响面写成 `yes / no / unknown`；会改变架构、数据、安全、成本或上线风险的 `unknown` 必须暂停澄清。
-3. 只读取本次需要的内部子模块和 profile，不默认全量读取：
+2. 从 wiki 建立本次的读取计划：关联知识项、代码入口、上游 / 下游、测试位置、运行命令和需要补证的缺口。
+3. 把每个影响面写成 `yes / no / unknown`；会改变架构、数据、安全、成本或上线风险的 `unknown` 必须暂停澄清。
+4. 只读取本次需要的内部子模块和 profile，不默认全量读取：
    - frontend：`.specforge/core/workflows/stages/technical-design/frontend-design.md`
    - backend：`.specforge/core/workflows/stages/technical-design/backend-design.md`
    - domain：`.specforge/core/workflows/stages/technical-design/domain-design.md`
@@ -86,6 +88,7 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 | 新增 / 替换依赖尚未确认 | 停止：确认新增 / 替换依赖 |
 | 工具链选择尚未确认 | 停止：确认包管理器、组件库、依赖管理、测试工具等 |
 | requirements 仍有阻断歧义 | 停止：上游需求需先澄清 |
+| 存量项目 wiki 无法给出本次相关入口、边界或上下游 | 停止：路由 `sf-steering` 刷新 wiki |
 | 新项目、空仓库或关键技术缺失，但没有确认来源 | 停止 |
 | 新增 / 替换技术或依赖缺少版本事实、官方资料、lockfile 证据或明确风险说明 | 停止 |
 | `technical-design.md` 仍残留 `[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]` 或 `[NEEDS TOOLING DECISION]` | 停止 |

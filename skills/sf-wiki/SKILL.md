@@ -9,7 +9,7 @@ description: 更新 SpecForge 项目 Wiki；用于用户要求“回写知识库
 
 执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
 
-`sf-wiki` 维护项目当前长期事实，不复制 work item 过程流水账。Wiki 是项目记忆，不是 implementation report、verification report 或 release note 的第二份副本。
+`sf-wiki` 维护项目当前长期事实，不复制 work item 过程流水账。Wiki 是项目记忆，也是后续任务的入口地图，不是 implementation report、verification report 或 release note 的第二份副本。
 
 如果用户目标是“先理解整个存量项目 / 建立项目画像 / 扫描大型代码库”，优先路由 `sf-steering`。`sf-wiki` 负责把已确认事实或完成 work item 的结论同步成当前 wiki。
 
@@ -77,9 +77,9 @@ node .specforge/core/scripts/sync-wiki.mjs
 1. 优先更新现有 current 文件，不创建日期版、v2 版、work item 版。
 2. 确需新增时使用短名：`module-<name>.md`、`api-<domain>.md`、`design-system.md`。
 3. 每个更新文件都保留并刷新 frontmatter：`title`、`kind`、`owner`、`last_updated`、`source_work`、`status`。
-4. 按 `references/wiki-sync-rules.md#Wiki 质量清单` 检查信息密度；架构、API、数据、运维类文件不能只写概述。
-5. 对缺失事实执行一次补证：用 `rg` / provider / 关键配置读取查找路由、模型、migration、服务入口、脚本和测试。仍无法确认的，写 `未确认` 并同步到 `risks.md`。
-6. 更新 `.specforge/wiki/index.md` 的摘要、当前文件索引和最后同步时间。
+4. 按 `references/wiki-sync-rules.md#Wiki 质量清单` 检查信息密度；架构、模块、API、数据、运维类文件不能只写概述，还要能支持后续任务从 wiki 入手定位代码。
+5. 对缺失事实执行一次补证：用 `rg` / provider / 关键配置读取查找路由、模型、migration、服务入口、脚本和测试。仍无法确认的，写 `未确认` 并同步到 `08-risks.md`。
+6. 更新 `.specforge/wiki/00-index.md` 的摘要、当前文件索引和最后同步时间。
 7. 在 `06-close/wiki-sync.md` 记录更新文件、写入事实、来源证据、不更新原因、未确认缺口和下游重新验证要求。
 
 ### D. 更新 gate
@@ -111,9 +111,10 @@ node .specforge/core/scripts/gate.mjs wiki_sync REQUEST_CHANGES
 - `06-close/wiki-sync.md` 写明影响或不影响。
 - 更新的 wiki 文件 frontmatter 完整，`status: current` 正确。
 - 同一知识项只有一个 current 文件。
-- `.specforge/wiki/index.md` 反映最新 current 文件列表。
-- wiki 只包含当前事实；旧事实被更新，必要背景进入 `decisions.md`。
-- 架构 / API / 数据 / 运维文件满足最低完整度；不足项已明确标注 `未确认`，并在 `risks.md` 或 `06-close/wiki-sync.md` 记录补证路径。
+- `.specforge/wiki/00-index.md` 反映最新 current 文件列表。
+- wiki 只包含当前事实；旧事实被更新，必要背景进入 `06-decisions.md`。
+- 架构 / API / 数据 / 运维文件满足最低完整度；不足项已明确标注 `未确认`，并在 `08-risks.md` 或 `06-close/wiki-sync.md` 记录补证路径。
+- 架构 / 模块 / API / 数据 / 运维文件包含后续任务可用的入口路径、关键符号 / 路由、上游下游、测试位置、运行命令或推荐检索词。
 - wiki_sync gate 状态与 evidence 一致。
 - 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 

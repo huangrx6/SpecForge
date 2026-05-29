@@ -43,7 +43,7 @@ node .specforge/core/scripts/instructions.mjs
 node .specforge/core/scripts/create-artifact.mjs tasks
 ```
 
-4. 读取 `work.yaml`、workflow schema、components flags 和适用输入。
+4. 读取 `work.yaml`、workflow schema、components flags、`.specforge/wiki/00-index.md`、brief / technical design 中声明的相关 wiki，以及适用输入。
 
 ## 执行序列
 
@@ -63,9 +63,10 @@ node .specforge/core/scripts/create-artifact.mjs tasks
 
 1. 列出所有来源需求、决策、风险和验收标准。
 2. 每个来源项至少映射到一个实现任务和一个验证任务；N/A 必须写理由。
-3. 读取 `technical-design.md#0. 影响面与读取计划`，每个 `yes` 影响面必须有实现任务和验证任务，`no` 写 N/A，关键 `unknown` 退回澄清。
+3. 读取 `technical-design.md#0. 影响面与读取计划` 和其中的 wiki 入口；每个 `yes` 影响面必须有实现任务和验证任务，`no` 写 N/A，关键 `unknown` 退回澄清。
 4. UI 适用时把页面、组件、状态矩阵、Pencil 证据和视觉验证转成任务。
 5. PC 端业务系统规范适用时，把 token、布局尺寸、表格 / 表单 / 弹窗 / 抽屉、响应式验证转成任务。
+6. 存量模块任务的 `_Files:_` / `_Boundary:_` 应优先来自 wiki 和 technical design 的入口路径；如果只能写成“待查全仓”，退回 `sf-tech-design` 或 `sf-steering`。
 
 ### C. 拆任务图
 
@@ -109,6 +110,7 @@ node .specforge/core/scripts/create-artifact.mjs tasks
 | 存在 `[NEEDS PRODUCT DECISION]`、`[NEEDS UI DECISION]` 或需要用户取舍的方案 | `sf-brainstorm` |
 | technical design 残留 `[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]`、`[NEEDS TOOLING DECISION]` 或关键 `unknown` | `sf-tech-design` |
 | technical design 核心决策 review 未确认 | `sf-tech-design` |
+| 存量模块没有 wiki 入口、读取计划或可执行文件边界 | `sf-tech-design` / `sf-steering` |
 | 任务会扩大 approved scope | `sf-spec-review` / 对应上游阶段 |
 | 验收标准没有验证任务承接 | 先补任务，或退回上游澄清 |
 
@@ -116,6 +118,7 @@ node .specforge/core/scripts/create-artifact.mjs tasks
 
 - `01-spec/tasks.md` 能直接驱动 implementation，不需要实现者重新猜范围。
 - 每个任务有 trace、files、verification、rollback、risk；条件字段在适用任务上完整。
+- 存量项目任务有可追溯的 wiki 入口或明确说明为什么不适用。
 - 每个 technical design `yes` 影响面都有任务承接；`no` / N/A 有理由；无关键 `unknown` 留给 implementation。
 - UI / PC 规范 / Playwright / 权限 / 数据 / 发布 / 回滚 / 可观测性任务在适用时单独列出。
 - 并行波次不会让多个任务同时写同一核心文件或共享未完成契约。

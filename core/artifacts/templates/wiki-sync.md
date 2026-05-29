@@ -21,14 +21,14 @@
 
 | 来源变化 | 是否长期有效 | 目标 wiki 文件 | 处理方式 | 证据 |
 |---|---|---|---|---|
-| PRD / requirements 产品规则 | 是 / 否 | `product-rules.md` / N/A | 更新 / 不更新 | |
+| PRD / requirements 产品规则 | 是 / 否 | `02-product-rules.md` / N/A | 更新 / 不更新 | |
 | UI 设计系统 / 风格规则 | 是 / 否 | `design-system.md` / N/A | 更新 / 不更新 | |
 | PC 端业务系统 UI 规范 | 是 / 否 | `design-system.md` / N/A | 更新 / 不更新 | |
-| 技术架构 / 模块边界 | 是 / 否 | `architecture.md` / `module-<name>.md` / N/A | 更新 / 不更新 | |
+| 技术架构 / 模块边界 | 是 / 否 | `03-architecture.md` / `module-<name>.md` / N/A | 更新 / 不更新 | |
 | API / 事件 / SDK 契约 | 是 / 否 | `api-<domain>.md` / N/A | 更新 / 不更新 | |
-| 数据模型 / 迁移注意事项 | 是 / 否 | `data-model.md` / N/A | 更新 / 不更新 | |
-| 配置 / 启动 / 发布 / 回滚 / 观测 | 是 / 否 | `operations.md` / N/A | 更新 / 不更新 | |
-| 决策 / 风险 / 技术债 / 术语 | 是 / 否 | `decisions.md` / `risks.md` / `glossary.md` / N/A | 更新 / 不更新 | |
+| 数据模型 / 迁移注意事项 | 是 / 否 | `04-data-model.md` / N/A | 更新 / 不更新 | |
+| 配置 / 启动 / 发布 / 回滚 / 观测 | 是 / 否 | `05-operations.md` / N/A | 更新 / 不更新 | |
+| 决策 / 风险 / 技术债 / 术语 | 是 / 否 | `06-decisions.md` / `08-risks.md` / `07-glossary.md` / N/A | 更新 / 不更新 | |
 
 ## 4. 不更新原因
 
@@ -48,13 +48,19 @@
 
 | Wiki 文件 | 最低完整度是否满足 | 缺失项 | 已补扫范围 | 后续补证方式 |
 |---|---|---|---|---|
-| `architecture.md` | 是 / 否 / N/A | 模块边界 / 入口 / 链路 / 集成 / 风险 | | |
+| `03-architecture.md` | 是 / 否 / N/A | 模块边界 / 入口 / 链路 / 集成 / 风险 | | |
 | `api-<domain>.md` | 是 / 否 / N/A | 端点 / 请求响应 / 错误 / 鉴权 / 测试 | | |
-| `data-model.md` | 是 / 否 / N/A | 表字段 / 关系 / 索引 / 状态机 / 迁移 | | |
-| `operations.md` | 是 / 否 / N/A | env / 启动 / 构建 / 测试 / 部署 / 观测 | | |
+| `04-data-model.md` | 是 / 否 / N/A | 表字段 / 关系 / 索引 / 状态机 / 迁移 | | |
+| `05-operations.md` | 是 / 否 / N/A | env / 启动 / 构建 / 测试 / 部署 / 观测 | | |
 | `module-<name>.md` | 是 / 否 / N/A | 职责 / 入口 / 上下游 / 数据 / 测试 | | |
 
-## 7. Current 文件对账
+## 7. 后续任务导航检查
+
+| Wiki 文件 | 是否提供入口路径 / 关键符号 | 是否提供上游 / 下游 | 是否提供测试 / 运行入口 | 推荐检索词 | 缺口 |
+|---|---|---|---|---|---|
+| `.specforge/wiki/...md` | 是 / 否 / N/A | 是 / 否 / N/A | 是 / 否 / N/A | | |
+
+## 8. Current 文件对账
 
 | 检查项 | 结果 | 备注 |
 |---|---|---|
@@ -63,16 +69,16 @@
 | 旧事实已更新为当前事实或保留必要决策背景 | 是 / 否 / N/A | |
 | 新增按需文件命名见名知意 | 是 / 否 / N/A | |
 
-## 8. Index 对账
+## 9. Index 对账
 
 | 检查项 | 结果 | 备注 |
 |---|---|---|
-| `.specforge/wiki/index.md` 已更新摘要 | 是 / 否 / N/A | |
+| `.specforge/wiki/00-index.md` 已更新摘要 | 是 / 否 / N/A | |
 | 新增 wiki 文件已加入索引 | 是 / 否 / N/A | |
 | 同一知识项只有一个 current 文件 | 是 / 否 | |
 | 所有更新文件 frontmatter 完整 | 是 / 否 | |
 
-## 9. Gate 更新
+## 10. Gate 更新
 
 APPROVED 时执行：
 

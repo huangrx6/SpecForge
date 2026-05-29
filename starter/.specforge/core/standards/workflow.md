@@ -11,7 +11,8 @@
 1. **读取上下文**：首先读取业务最新请求和更高优先级指令。然后读取 `.specforge/AGENTS.md`、`.specforge/manifest.yaml`、`.specforge/registry.yaml`。
 2. **加载 active 项**：若有且只有一个 active work item，读取其 `work.yaml` 和当前 ready artifact。
 3. **健康检查与就绪判定**：自动推进或高风险动作前运行 `node .specforge/core/scripts/doctor.mjs`。运行 `node .specforge/core/scripts/instructions.mjs` 判断下一步。
-4. **按需加载**：只加载当前阶段需要的标准、模板、profile 和 wiki，避免上下文污染。
+4. **Wiki-first 定位**：已有代码项目先读 `.specforge/wiki/00-index.md` 和相关知识项，提取入口路径、模块、API、数据、运行和风险线索。
+5. **按需加载**：只加载当前阶段需要的标准、模板、profile、wiki 和 wiki 指向的代码文件，避免上下文污染。
 
 ## Work Item 命名与创建
 
@@ -99,9 +100,13 @@ Brainstorm 和 PRD 都是 graph 外的澄清产物：`intake -> sf-brainstorm ->
 ## 上下文标准
 
 - 先读入口标准，再按需读 profile / template / wiki。
+- 存量项目默认遵循 wiki-first：先用 wiki 找入口点，再顺着模块、API、数据、测试和运行链路读取必要文件。
+- 不把 `rg`、provider、Repomix 或文件阅读当作全仓重新理解工具；它们只用于验证 wiki 给出的路径、符号和上下游。
 - 不读取无关 archive work item，除非当前问题明确依赖历史。
 - 外部事实、框架版本、API 行为、安全标准可能变化时，查当前官方资料。
 - 用户明确说“不要改代码”“只分析”“先给建议”时，不进入实现。
+
+全仓扫描或大型代码库 provider 建图只属于 `sf-steering`、显式 discovery / audit，或 wiki 缺失、过期、冲突且无法用局部补证解决的情况。
 
 ## 输出语言
 

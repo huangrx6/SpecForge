@@ -20,7 +20,7 @@
   - `.specforge/core/profiles/frontend/next-app-router-tailwind-ts.md`
   - `.specforge/core/profiles/frontend/vue-vite-tailwind-ts.md`
 
-如果项目已有前端栈，以 `.specforge/wiki/architecture.md` 和现有代码为准；profile 只用于确认沿用、偏离或补齐约束。
+如果项目已有前端栈，以 `.specforge/wiki/03-architecture.md` 和现有代码为准；profile 只用于确认沿用、偏离或补齐约束。
 
 ## 设计要求
 

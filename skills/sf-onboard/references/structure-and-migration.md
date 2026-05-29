@@ -135,7 +135,7 @@ node core/scripts/sync-starter.mjs --check
 
 | 现有文件 | 推测内容类型 | 建议归入 SpecForge | 置信度 |
 |---|---|---|---|
-| `docs/ARCHITECTURE.md` | 架构现状 | `.specforge/wiki/architecture.md` | 高 |
+| `docs/ARCHITECTURE.md` | 架构现状 | `.specforge/wiki/03-architecture.md` | 高 |
 | `SPEC.md` | 需求或功能规格 | 需用户确认 | 低 |
 
 规则：

@@ -44,7 +44,7 @@ node .specforge/core/scripts/create-artifact.mjs requirements
    - `00-intake/brief.md`
    - `00-intake/brainstorm.md`（如果存在）
    - `00-intake/prd.md`（如果存在）
-   - 相关 `.specforge/wiki/` 文件
+   - `.specforge/wiki/00-index.md` 和相关 `.specforge/wiki/` 文件
    - `01-spec/requirements.md`（如果是更新）
 
 ## 执行序列
@@ -58,9 +58,10 @@ node .specforge/core/scripts/create-artifact.mjs requirements
 ### B. 转译为可测试行为
 
 1. 按 `references/requirements-authoring-guide.md#PRD 转译规则` 显式完成 PRD 转译。
-2. 把 PRD / brief 中的用户故事、候选功能和验收种子转成 `REQ-*`、`AC-*`、NFR、非目标或待澄清项。
-3. 需求正文使用系统行为语言，不复制 PRD 原文，不写实现方案。
-4. 如需用户故事或验收样例，按 `references/requirements-authoring-guide.md#第三方 Skill 归一化` 读取 `user-stories`。
+2. 从 brief 的 Wiki 上下文入口和相关 wiki 中提取既有产品规则、模块边界、API / 数据约束和已知风险，只转成需求约束或影响面，不展开全仓代码探索。
+3. 把 PRD / brief 中的用户故事、候选功能和验收种子转成 `REQ-*`、`AC-*`、NFR、非目标或待澄清项。
+4. 需求正文使用系统行为语言，不复制 PRD 原文，不写实现方案。
+5. 如需用户故事或验收样例，按 `references/requirements-authoring-guide.md#第三方 Skill 归一化` 读取 `user-stories`。
 
 ### C. 写 requirements
 
@@ -82,6 +83,7 @@ node .specforge/core/scripts/create-artifact.mjs requirements
 | `brief.md` 要求 PRD，但 PRD 缺失或未 approved | 停止：PRD 尚未就绪 |
 | 目标用户、成功标准或范围无法判断 | 停止：澄清或补充探索 |
 | intake 证据包不足以支撑需求 | 停止：补探索、研究或澄清记录 |
+| 存量项目相关 wiki 缺入口且无法判断既有边界 | 停止：退回 `sf-intake` 或 `sf-steering` 补上下文 |
 | 产品功能组合、目标用户或版本边界没有确认 | 停止：需先完成方向取舍 |
 | 需求互相冲突 | 停止：列冲突并请求决策 |
 | 验收标准无法定义 | 停止：补清触发、条件、系统响应和可见结果 |

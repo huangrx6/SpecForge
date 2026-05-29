@@ -19,6 +19,7 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
 - `02-spec-review/spec-review-v1.md`（存在且 required 时）
 - `03-implementation/report.md`
 - `03-implementation/changed-files.md`
+- `.specforge/wiki/00-index.md` 和本次引用的相关 wiki
 - 当前 `git status --short --untracked-files=all`、`git diff --name-only`、`git diff --stat`、关键文件 diff、测试输出或验证证据
 - `.specforge/core/standards/engineering.md`
 - `.specforge/core/standards/workflow.md`
@@ -44,6 +45,7 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
    - 未完成任务不能靠口头说明通过。
 4. **三向对账**
    - 每个真实 diff 文件必须能追溯到 approved spec、`tasks.md` 的 `_Boundary:_` 或 implementation report 中的批准偏离说明。
+   - 存量模块的真实 diff 必须仍落在 wiki / technical design 指定的入口、模块和上下游边界内；缺边界时记录 finding，不为审查临时全仓扫描补齐。
    - 每个完成任务必须能追溯到至少一个真实变更或可信 N/A，以及至少一个验证证据或可信 deferred 理由。
    - `changed-files.md`、implementation report、真实 git diff 三者不一致时，先记 finding，不允许靠口头解释通过。
 5. **先做 Spec Compliance Review**
@@ -71,6 +73,7 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
 以下情况不得批准：
 
 - 真实 diff 超出 tasks 边界，且没有 approved spec 依据。
+- diff 触碰 wiki 未覆盖的长期模块边界，且 technical design / tasks 未说明。
 - 真实 diff、changed-files、implementation report 三者不一致，且缺少可信解释。
 - technical_design 中为 `no` 的影响面出现未经批准的代码改动，或 `unknown` 被直接实现。
 - technical_design 中为 `yes` 的影响面缺少实现证据、验证证据或明确偏离说明。

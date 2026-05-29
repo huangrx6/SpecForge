@@ -129,9 +129,9 @@ const sourceRequiredPaths = [
   "core/hooks/events/post-gate.mjs",
   "core/hooks/events/pre-close.mjs",
   "core/hooks/events/on-close.mjs",
-  "starter/.specforge/wiki/index.md",
-  "starter/.specforge/wiki/project-overview.md",
-  "starter/.specforge/wiki/architecture.md",
+  "starter/.specforge/wiki/00-index.md",
+  "starter/.specforge/wiki/01-project-overview.md",
+  "starter/.specforge/wiki/03-architecture.md",
   "starter/.specforge/work/inbox",
   "starter/.specforge/work/active",
   "starter/.specforge/work/archive",
@@ -268,15 +268,20 @@ const projectRequiredPaths = [
   ".specforge/core/hooks/events/post-gate.mjs",
   ".specforge/core/hooks/events/pre-close.mjs",
   ".specforge/core/hooks/events/on-close.mjs",
-  ".specforge/wiki/index.md",
-  ".specforge/wiki/project-overview.md",
-  ".specforge/wiki/architecture.md",
   ".specforge/work/inbox",
   ".specforge/work/active",
   ".specforge/work/archive",
 ];
 
 const requiredPaths = layout.kind === "source" ? sourceRequiredPaths : projectRequiredPaths;
+const requiredAnyPathGroups =
+  layout.kind === "project"
+    ? [
+        [".specforge/wiki/00-index.md", ".specforge/wiki/index.md"],
+        [".specforge/wiki/01-project-overview.md", ".specforge/wiki/project-overview.md"],
+        [".specforge/wiki/03-architecture.md", ".specforge/wiki/architecture.md"],
+      ]
+    : [];
 
 function exists(relativePath) {
   return existsSync(join(root, relativePath));
@@ -288,6 +293,10 @@ function read(relativePath) {
 
 for (const path of requiredPaths) {
   if (!exists(path)) errors.push(`Missing required path: ${path}`);
+}
+
+for (const paths of requiredAnyPathGroups) {
+  if (!paths.some((path) => exists(path))) errors.push(`Missing required path: ${paths.join(" or ")}`);
 }
 
 function loadSchema(workflow) {

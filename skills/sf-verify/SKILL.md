@@ -39,14 +39,14 @@ node .specforge/core/scripts/instructions.mjs
 node .specforge/core/scripts/create-artifact.mjs verification
 ```
 
-4. 读取 `03-implementation/report.md`、`03-implementation/changed-files.md`、`04-code-review/code-review-v1.md`、适用 spec 和已记录测试 / 截图 / 日志 / CI。
+4. 读取 `03-implementation/report.md`、`03-implementation/changed-files.md`、`04-code-review/code-review-v1.md`、适用 spec、`.specforge/wiki/00-index.md`、本次引用的运行 / API / 模块 / 风险 wiki 和已记录测试 / 截图 / 日志 / CI。
 
 ## 执行序列
 
 ### A. 先写测试用例
 
 1. 在执行验证前写 `05-verification/test-cases.md`。
-2. 用例来源必须来自 requirements / gap report / tasks / UI design / technical design / code review notes。
+2. 用例来源必须来自 requirements / gap report / tasks / UI design / technical design / code review notes / 相关 wiki 的运行、风险和模块边界。
 3. 每个用例包含 ID、来源、前置条件、步骤、断言、证据类型、自动化方式和风险等级。
 4. 有浏览器 UI 时，必须包含 Playwright 用例；不能用“手工点过”替代。
 
@@ -96,6 +96,7 @@ node .specforge/core/scripts/gate.mjs verification REJECTED
 | 有浏览器流程但无 Playwright 用例、执行命令或截图 / trace 证据 | `REQUEST_CHANGES` |
 | UI 只测 happy path、单角色或单状态 | `REQUEST_CHANGES` |
 | 安全、权限、数据迁移、配置、回滚或公共 API 缺强证据 | `REQUEST_CHANGES` |
+| 验证需要的启动、测试、回滚或风险入口在 wiki 中缺失且报告未记录补证方式 | `REQUEST_CHANGES` 或转 `sf-wiki` 补齐 |
 | 实现明显偏离 approved spec | `REJECTED` 或退回 spec |
 | 只有低风险跳过项，且 owner、影响和触发条件清楚 | 可 `APPROVED` |
 

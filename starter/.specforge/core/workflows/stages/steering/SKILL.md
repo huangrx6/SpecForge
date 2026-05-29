@@ -7,6 +7,8 @@ description: SpecForge 内部 steering 技能。用于存量项目、大型代�
 
 本技能用于理解已有项目。它解决的问题不是“这次需求怎么做”，而是“这个项目现在真实长什么样”。结果写入 `.specforge/wiki/`，供后续 `sf-intake`、`sf-requirements`、`sf-tech-design`、`sf-implement` 和 `sf-code-review` 复用。
 
+Steering 产出的 wiki 必须能作为后续任务入口：不仅写结论，还要写入口路径、关键符号 / 路由、上游下游、测试位置、运行命令和推荐检索词，避免日常 work item 重新全量读取代码。
+
 ## 核心原则
 
 本阶段必须读取 `.specforge/core/standards/code-intelligence.md` 和 `.specforge/core/standards/wiki.md`。
@@ -15,7 +17,7 @@ description: SpecForge 内部 steering 技能。用于存量项目、大型代�
 2. **分层理解，不读全仓**：大型项目不能把所有文件塞进上下文；只读取当前层级和目标模块需要的文件。
 3. **当前事实优先**：wiki 写当前代码和配置可证明的事实，不写愿望、猜测或过期历史。
 4. **任务上下文最小化**：后续每个 work item 只加载相关 wiki 和相关文件，不重复扫描全仓库。
-5. **未知显式记录**：业务含义、权限规则、上线流程无法从代码确认时，写入 `risks.md` 或询问用户。
+5. **未知显式记录**：业务含义、权限规则、上线流程无法从代码确认时，写入 `08-risks.md` 或询问用户。
 
 ## 必跑命令
 
@@ -140,16 +142,16 @@ Provider 输出只能作为证据来源，必须归一成 wiki 当前事实。
 
 | 文件 | 内容 |
 |---|---|
-| `project-overview.md` | 项目目标、主要用户、核心能力、明确边界 |
-| `architecture.md` | 架构形态、模块/服务划分、入口、依赖、关键链路 |
-| `module-<name>.md` | 模块职责、入口文件、上下游、测试和风险 |
-| `api-<domain>.md` | API 域、路由、鉴权、请求响应、错误约定 |
-| `data-model.md` | 数据库、核心表/模型、迁移、索引、生命周期 |
-| `operations.md` | 本地启动、构建、测试、部署、CI、环境变量 |
-| `decisions.md` | 已确认的长期决策 |
-| `glossary.md` | 领域术语、缩写、系统内命名 |
-| `risks.md` | 技术债、未知区、冲突事实、待用户确认项 |
-| `index.md` | 当前 wiki 索引和摘要 |
+| `01-project-overview.md` | 项目目标、主要用户、核心能力、明确边界、常见任务入口 |
+| `03-architecture.md` | 架构形态、模块/服务划分、入口、依赖、关键链路、追踪路径 |
+| `module-<name>.md` | 模块职责、入口文件、上下游、测试、推荐检索词和风险 |
+| `api-<domain>.md` | API 域、路由、鉴权、请求响应、错误约定、实现路径和调用方 |
+| `04-data-model.md` | 数据库、核心表/模型、迁移、索引、生命周期、读写入口 |
+| `05-operations.md` | 本地启动、构建、测试、部署、CI、环境变量、验证入口 |
+| `06-decisions.md` | 已确认的长期决策 |
+| `07-glossary.md` | 领域术语、缩写、系统内命名 |
+| `08-risks.md` | 技术债、未知区、冲突事实、待用户确认项 |
+| `00-index.md` | 当前 wiki 索引和摘要 |
 
 Wiki 中每一项保持单文件、当前态。不要创建 `architecture-v2.md`、`module-x-20260518.md` 这类过程文件。
 
@@ -165,7 +167,7 @@ Wiki 中每一项保持单文件、当前态。不要创建 `architecture-v2.md`
 | 模块只有目录名 | 入口、职责、上游、下游、数据读写、测试位置 |
 | 运维只有启动命令 | env、构建、测试、DB 初始化、任务、部署、回滚、日志监控 |
 
-补扫后仍无法确认的，目标 wiki 写 `未确认`，并在 `risks.md` 写清缺口、已扫范围和下一步证据来源。
+补扫后仍无法确认的，目标 wiki 写 `未确认`，并在 `08-risks.md` 写清缺口、已扫范围和下一步证据来源。
 
 ## 外部工具参考策略
 
@@ -195,8 +197,8 @@ Wiki 中每一项保持单文件、当前态。不要创建 `architecture-v2.md`
 ## 完成标准
 
 - 代码库规模和技术栈判断清楚。
-- 至少更新 `project-overview.md` 和 `architecture.md`。
+- 至少更新 `01-project-overview.md` 和 `03-architecture.md`。
 - 对大型项目，至少建立目标模块的 `module-<name>.md`。
-- `architecture.md`、`data-model.md`、`operations.md` 和必要的 `api-<domain>.md` 达到最低完整度；不足项进入 `risks.md`。
+- `03-architecture.md`、`04-data-model.md`、`05-operations.md` 和必要的 `api-<domain>.md` 达到最低完整度；不足项进入 `08-risks.md`。
 - 后续 work item 能引用 wiki 中的模块、API、数据和运行事实。
 - 未确认内容没有混进 wiki 当前事实。

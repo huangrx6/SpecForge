@@ -341,19 +341,19 @@ function nextActions(status, scale, selected, scanModeDecision, dependency) {
   }
   if (selected.id === "repomix") {
     return [
-      "先用 bootstrap map 确定模块边界。",
+      "先用 wiki 或用户目标确定模块边界；wiki 不足时再用 bootstrap map 补入口。",
       "只对目标模块运行 Repomix 生成上下文包，不打包全仓。",
       "从上下文包中抽取稳定事实，改写进 wiki。",
     ];
   }
   if (scale === "small") {
     return [
-      "使用 bootstrap map + rg + 关键文件阅读即可建立 wiki 基线。",
+      "优先读取现有 wiki；缺基线时使用 bootstrap map + rg + 关键文件阅读建立 wiki 基线。",
       "读取入口、配置、核心模块、测试和运行文件。",
     ];
   }
   return [
-    "使用 bootstrap map 作为第一层地图。",
+    "优先读取现有 wiki；wiki 缺入口时使用 bootstrap map 作为第一层地图。",
     "按模块分批阅读，避免一次性读取全仓。",
   ];
 }
@@ -431,11 +431,11 @@ function normalizedContext(bootstrap, selected, status) {
     test_candidates: firstItems(bootstrap.candidates?.tests ?? [], 20),
     operations_candidates: firstItems(bootstrap.candidates?.operations ?? [], 20),
     wiki_targets: [
-      ".specforge/wiki/project-overview.md",
-      ".specforge/wiki/architecture.md",
-      ".specforge/wiki/data-model.md",
-      ".specforge/wiki/operations.md",
-      ".specforge/wiki/risks.md",
+      ".specforge/wiki/01-project-overview.md",
+      ".specforge/wiki/03-architecture.md",
+      ".specforge/wiki/04-data-model.md",
+      ".specforge/wiki/05-operations.md",
+      ".specforge/wiki/08-risks.md",
       "按需新增 .specforge/wiki/module-<name>.md",
       "按需新增 .specforge/wiki/api-<domain>.md",
     ],

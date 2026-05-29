@@ -2,6 +2,6 @@ name: TBD
 profile: standard
 wiki:
   mode: item-files
-  index: .specforge/wiki/index.md
+  index: .specforge/wiki/00-index.md
 work:
   id_format: YYYYMMDD-kind-NNN-short-title

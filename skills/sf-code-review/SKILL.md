@@ -51,6 +51,7 @@ node .specforge/core/scripts/create-artifact.mjs code_review
 
 - `03-implementation/report.md`
 - `03-implementation/changed-files.md`
+- `.specforge/wiki/00-index.md` 和本次 work item 引用的相关 wiki（用于核对长期边界、模块事实和 wiki 回写影响）
 - 当前 `git status --short --untracked-files=all`
 - `git diff --name-only`
 - `git diff --stat`
@@ -69,7 +70,8 @@ node .specforge/core/scripts/create-artifact.mjs code_review
 1. 对照 `tasks.md` 每个完成任务的 `_Trace:_`、`_Files:_`、`_Verification:_`、`_Rollback:_`、`_Risk:_`。
 2. 每个完成任务必须能追溯到真实 diff 或可信 N/A，以及验证证据或可信 deferred 理由。
 3. 每个真实 diff 文件必须能追溯到 approved spec、task `_Boundary:_` 或 implementation report 中的批准偏离说明。
-4. `changed-files.md`、implementation report、真实 git diff 三者不一致时，先记 finding，不靠口头解释通过。
+4. 对存量模块，检查真实 diff 是否仍落在 wiki / technical design 指定的入口、模块和上下游边界内；不为 review 临时全仓扫描来补齐边界。
+5. `changed-files.md`、implementation report、真实 git diff 三者不一致时，先记 finding，不靠口头解释通过。
 
 ### C. Spec Compliance 先行
 
@@ -120,6 +122,7 @@ node .specforge/core/scripts/gate.mjs code_review REJECTED
 | 条件 | 状态 |
 |---|---|
 | 真实 diff 超出 tasks 边界，且没有 approved spec 依据 | `REQUEST_CHANGES` 或 `REJECTED` |
+| diff 触碰 wiki 未覆盖的长期模块边界，且 technical design / tasks 未说明 | `REQUEST_CHANGES` |
 | `changed-files.md`、implementation report、真实 diff 不一致且缺少可信解释 | `REQUEST_CHANGES` |
 | technical design 的 `no` 影响面出现未经批准代码改动 | `REQUEST_CHANGES` |
 | technical design 的 `unknown` 被直接实现 | `REJECTED` 或退回 spec |

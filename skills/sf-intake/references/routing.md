@@ -60,7 +60,7 @@ Brainstorm 深度必须写入 `brief.md#Brainstorm 决策`：
 
 ## 存量项目前置判断
 
-如果仓库已有业务代码，但 `.specforge/wiki/project-overview.md` 或 `.specforge/wiki/architecture.md` 仍是空模板、明显过期，或没有覆盖本次请求涉及的模块/API/数据域，先路由到 `sf-steering`。
+如果仓库已有业务代码，但 `.specforge/wiki/01-project-overview.md` 或 `.specforge/wiki/03-architecture.md` 仍是空模板、明显过期，或没有覆盖本次请求涉及的模块/API/数据域，先路由到 `sf-steering`。
 
 可直接继续 intake 的情况：
 

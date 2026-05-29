@@ -17,6 +17,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 - `01-spec/research.md`（存在时）
 - `01-spec/ui-design.md`（存在且适用时）
 - `01-spec/technical-design.md`（存在且适用时）
+- `.specforge/wiki/00-index.md` 和上游 artifact 引用的相关 wiki
 - `.specforge/core/artifacts/schemas/<workflow>.json`
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/product.md`
@@ -44,7 +45,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 ## 拆解流程
 
 1. **建立来源审计矩阵**：列出所有来源需求、决策、风险和验收标准，确认每项至少有实现任务和验证任务。来源必须包含适用的 `GOAL / PRD / REQ / UI / TECH / RESEARCH / CONTEXT`，不能只写“见上游文档”。
-2. **建立技术影响面任务覆盖**：读取 `technical-design.md#0. 影响面与读取计划`，把每个 `yes` 影响面映射到实现任务和验证任务；`no` 写 N/A 理由；关键 `unknown` 退回澄清。
+2. **建立技术影响面任务覆盖**：读取 `technical-design.md#0. 影响面与读取计划` 及其 wiki 入口，把每个 `yes` 影响面映射到实现任务和验证任务；`no` 写 N/A 理由；关键 `unknown` 退回澄清。
 3. **先列失败优先 / 契约任务**：API、schema、类型、配置、迁移、权限、提示词、评估集、feature flag、环境变量。行为变更优先设计能先失败的测试或检查。
 4. **再列基础任务**：新项目脚手架、开发服务器冒烟、目录结构、共享客户端、测试基线。
 5. **再列实现任务**：按模块、层次、用户路径或状态机拆分。每个任务应小到一次实现和一次 review 可以聚焦完成。
@@ -70,6 +71,8 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 - `_TestCase:_` 已有或需要 `05-verification/test-cases.md`、Playwright、权限、边界或回归矩阵时必填；无测试用例时写为什么 N/A。
 
 任务描述要具体，不写“处理相关逻辑”“完善页面”“补充测试”这类空话。
+
+存量项目任务的 `_Files:_` 和 `_Boundary:_` 应优先来自 wiki 或 technical design 的入口路径、模块边界和上下游；如果只能写“待全仓搜索”，说明上游上下文不足，应退回 `sf-tech-design` 或 `sf-steering`。
 
 ## 并行规则
 
@@ -108,6 +111,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 - technical_design 中存在会影响架构、数据、安全、成本、外部契约、发布或可靠性的 `unknown`。
 - 上游存在未确认的产品、体验或技术路线取舍。
 - technical_design 的 `yes` 影响面缺少实现任务或验证任务承接。
+- 存量模块缺少 wiki 入口、读取计划或可执行文件边界。
 - 任务会扩大写入范围。
 - 验收标准没有验证任务承接。
 - 存在未解决的契约、数据迁移、安全或发布风险。
@@ -117,6 +121,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 - tasks 能驱动 implementation。
 - 每个任务都有追踪来源、预期文件、验证、回滚和风险；边界、依赖、影响面和测试用例在适用任务上完整。
 - 每个任务都有预期写入文件边界和回滚提示；数据、权限、发布、依赖和迁移任务的回滚不能为空。
+- 存量项目任务有可追溯的 wiki 入口，或明确说明本次为何不适用。
 - 每个 technical_design `yes` 影响面都有任务承接；`no` / N/A 有可信理由；无关键 `unknown` 留到实现阶段。
 - reviewer 可以用 tasks 判断实现是否完整。
 - verification 可以直接从 tasks 列出验证矩阵。

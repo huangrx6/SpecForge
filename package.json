@@ -33,6 +33,7 @@
     "specforge": "cli/specforge.mjs"
   },
   "files": [
+    "assets",
     "cli",
     "skills",
     "core",

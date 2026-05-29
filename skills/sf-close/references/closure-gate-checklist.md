@@ -19,13 +19,13 @@
 
 | 变化 | 目标 |
 |---|---|
-| 产品规则、角色、流程、术语 | `product-rules.md` / `glossary.md` |
+| 产品规则、角色、流程、术语 | `02-product-rules.md` / `07-glossary.md` |
 | UI 设计系统、PC 端业务系统规范、页面规则 | `design-system.md` 或现有 UI wiki |
-| 架构、模块边界、技术选型 | `architecture.md` / `decisions.md` |
+| 架构、模块边界、技术选型 | `03-architecture.md` / `06-decisions.md` |
 | API、事件、SDK、契约 | `api-*.md` |
-| 数据模型、迁移注意事项 | `data-model.md` |
-| 配置、启动、发布、回滚、观测 | `operations.md` |
-| 风险、技术债、遗留事项 | `risks.md` |
+| 数据模型、迁移注意事项 | `04-data-model.md` |
+| 配置、启动、发布、回滚、观测 | `05-operations.md` |
+| 风险、技术债、遗留事项 | `08-risks.md` |
 
 不更新 wiki 也要写明具体理由，例如：
 

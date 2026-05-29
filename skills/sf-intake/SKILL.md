@@ -29,9 +29,9 @@ description: 为新请求创建或整理 SpecForge work item；用于用户提�
 
 1. 读取 `.specforge/AGENTS.md`。
 2. 读取 `.specforge/registry.yaml`。
-3. 读取相关 `.specforge/wiki/` 长期事实；只读和请求相关的文件。
+3. 先读取 `.specforge/wiki/00-index.md`，再读取和请求相关的 `.specforge/wiki/` 长期事实；只读相关文件。
 4. 运行 `node .specforge/core/scripts/status.mjs`，确认 active work item 数量。
-5. 如果是已有代码项目或用户请求触碰既有模块，运行 `node .specforge/core/scripts/codebase-index.mjs --json`，判断 wiki 是否已有足够项目画像和 provider 支撑。
+5. 如果是已有代码项目或用户请求触碰既有模块，先判断 wiki 是否能给出相关模块、入口、API、数据、运行或风险线索。只有 wiki 缺基线、过期、冲突或无法覆盖本次请求时，才运行 `node .specforge/core/scripts/codebase-index.mjs --json` 并考虑路由 `sf-steering`。
 
 ## 执行序列
 
@@ -86,6 +86,7 @@ node .specforge/core/scripts/create-work.mjs --workflow issue --kind issue --par
 - PRD 决策：是否需要 PRD、深度、原因和下一步。
 - Brainstorm 决策：`skip / light / deep`、原因和阻断项。
 - 分析深度、代码库探索、外部研究或跳过理由、澄清记录和分析综合。
+- Wiki 上下文入口：本次读取的 wiki 文件、入口路径、相关模块、上游 / 下游和需要补证的缺口。
 - 候选功能池、推荐 MVP、用户已确认选择和明确延后项。
 - 本次负责 / 不负责。
 - 影响面矩阵：UI、frontend、backend、API、data、AI、integration、security、delivery、tests。
@@ -105,6 +106,7 @@ node .specforge/core/scripts/create-work.mjs --workflow issue --kind issue --par
 | 需求边界不清，无法判断 workflow | 停止：提一个关键澄清问题 |
 | 产品 / 页面 / 全栈应用的 MVP 功能组合尚未确认，且无法安全默认 | 停止：需先完成方向取舍 |
 | 已有代码项目缺少 wiki 基线 | 停止：需先建立 wiki |
+| 需求触碰既有模块但 wiki 没有入口或明显过期 | 停止：路由 `sf-steering` 补齐项目画像 |
 | 产品型 work item 需要 PRD，但缺少核心产品决策 | 停止：需先澄清产品方向 |
 | `standard` / `deep` 缺少代码库探索证据或明确跳过原因 | 停止：补探索或写跳过理由 |
 | `deep` 缺少外部研究证据或明确跳过原因 | 停止：补研究或写跳过理由 |

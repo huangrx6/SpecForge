@@ -84,9 +84,23 @@ function safeRead(relativePath) {
   return exists(relativePath) ? readText(relativePath) : "";
 }
 
+function safeReadAny(relativePaths) {
+  for (const relativePath of relativePaths) {
+    const content = safeRead(relativePath);
+    if (content) return content;
+  }
+  return "";
+}
+
 function wikiBaselineMissing() {
-  const overview = safeRead(`${layout.workspace}/wiki/project-overview.md`);
-  const architecture = safeRead(`${layout.workspace}/wiki/architecture.md`);
+  const overview = safeReadAny([
+    `${layout.workspace}/wiki/01-project-overview.md`,
+    `${layout.workspace}/wiki/project-overview.md`,
+  ]);
+  const architecture = safeReadAny([
+    `${layout.workspace}/wiki/03-architecture.md`,
+    `${layout.workspace}/wiki/architecture.md`,
+  ]);
   return /暂无/.test(overview) || /暂无/.test(architecture) || !overview || !architecture;
 }
 

@@ -8,6 +8,7 @@
 | Workflow | |
 | Components 摘要 | |
 | 来源产物 | brief / prd / requirements / gap_report / research / ui_design / technical_design |
+| Wiki 入口 | `.specforge/wiki/...md` / N/A |
 | instructions.mjs 已确认 ready artifact | yes / no |
 
 ## 2. 来源审计与覆盖矩阵
@@ -15,6 +16,12 @@
 | Source | 来源需求 / 决策 / 风险 | 来源产物 | 实现任务 | 验证任务 | 备注 |
 |---|---|---|---|---|---|
 | GOAL / PRD / REQ / UI / TECH / RESEARCH / CONTEXT | | | | | |
+
+## 2.1 Wiki 上下文与代码入口
+
+| Wiki 文件 | 关联事实 | 代码入口 / 关键符号 | 上游 / 下游 | 测试 / 运行入口 | 是否足够指导任务 |
+|---|---|---|---|---|---|
+| `.specforge/wiki/...md` | | | | | yes / no / N/A |
 
 ## 3. Technical Design 影响面任务覆盖
 

@@ -11,9 +11,11 @@ description: 为存量项目或大型代码库建立 SpecForge 项目画像；�
 
 `sf-steering` 用来理解存量项目。它不写业务代码，也不创建普通需求产物；它先建立可复用的项目画像，并把稳定事实回写到 `.specforge/wiki/*.md`。后续 `sf-intake`、`sf-requirements`、`sf-tech-design`、`sf-implement` 才能基于这些事实做新需求、bugfix 或重构。
 
+Steering 的产出必须能降低后续 token 成本：wiki 不只写“项目是什么”，还要写“下次从哪里开始查”。架构、模块、API、数据和运维文件都要尽量包含入口路径、关键符号 / 路由、上游下游、测试位置、运行命令和推荐检索词。
+
 ## 何时触发
 
-- 已有项目刚接入 SpecForge，`.specforge/wiki/architecture.md` 仍是空模板。
+- 已有项目刚接入 SpecForge，`.specforge/wiki/03-architecture.md` 仍是空模板。
 - 用户说“先理解这个项目 / 扫描项目 / 项目画像 / 架构地图 / 存量项目 / 老项目”。
 - 新需求或 bugfix 会触碰既有模块，但 wiki 中没有对应模块、API、数据或运行事实。
 - 项目较大，不能靠一次性读取所有文件来理解。
@@ -104,16 +106,16 @@ node .specforge/core/scripts/codebase-index.mjs --write-report
 
 | 文件 | 写入内容 |
 |---|---|
-| `.specforge/wiki/project-overview.md` | 项目目标、主要用户、核心能力、边界 |
-| `.specforge/wiki/architecture.md` | 架构形态、服务/模块划分、入口、关键依赖 |
-| `.specforge/wiki/module-<name>.md` | 单个模块职责、入口、依赖、关键文件、测试位置 |
-| `.specforge/wiki/api-<domain>.md` | API 域、路由、请求响应、鉴权、错误约定 |
-| `.specforge/wiki/data-model.md` | 数据库、核心表/模型、迁移、索引、数据生命周期 |
-| `.specforge/wiki/operations.md` | 本地启动、构建、测试、部署、CI、环境变量 |
-| `.specforge/wiki/decisions.md` | 已确认的架构或产品决策 |
-| `.specforge/wiki/glossary.md` | 领域术语、缩写、系统内命名 |
-| `.specforge/wiki/risks.md` | 技术债、风险点、未知区、需用户确认项 |
-| `.specforge/wiki/index.md` | 当前 wiki 索引和摘要 |
+| `.specforge/wiki/01-project-overview.md` | 项目目标、主要用户、核心能力、边界、常见任务入口 |
+| `.specforge/wiki/03-architecture.md` | 架构形态、服务/模块划分、入口、关键依赖、主要追踪路径 |
+| `.specforge/wiki/module-<name>.md` | 单个模块职责、入口、依赖、关键文件、测试位置、推荐检索词 |
+| `.specforge/wiki/api-<domain>.md` | API 域、路由、请求响应、鉴权、错误约定、实现路径和调用方 |
+| `.specforge/wiki/04-data-model.md` | 数据库、核心表/模型、迁移、索引、数据生命周期、读写入口 |
+| `.specforge/wiki/05-operations.md` | 本地启动、构建、测试、部署、CI、环境变量、验证入口 |
+| `.specforge/wiki/06-decisions.md` | 已确认的架构或产品决策 |
+| `.specforge/wiki/07-glossary.md` | 领域术语、缩写、系统内命名 |
+| `.specforge/wiki/08-risks.md` | 技术债、风险点、未知区、需用户确认项 |
+| `.specforge/wiki/00-index.md` | 当前 wiki 索引和摘要 |
 
 Wiki 只保留当前事实。不要按日期、版本或 work item 复制多份同类文档。
 
@@ -131,7 +133,7 @@ Wiki 只保留当前事实。不要按日期、版本或 work item 复制多份�
 | 模块只有目录名 | 入口、职责、上游、下游、数据读写、测试位置，必要时创建 `module-<name>.md` |
 | 运维只有启动命令 | env、构建、测试、DB 初始化、任务、部署、回滚、日志监控 |
 
-如果补扫后仍无法确认，不要略过：在目标 wiki 写 `未确认`，并在 `risks.md` 记录“缺口 / 已扫范围 / 下一步证据来源”。
+如果补扫后仍无法确认，不要略过：在目标 wiki 写 `未确认`，并在 `08-risks.md` 记录“缺口 / 已扫范围 / 下一步证据来源”。
 
 ## 关联标准
 
@@ -163,9 +165,9 @@ Wiki 只保留当前事实。不要按日期、版本或 work item 复制多份�
 
 - `.specforge/wiki/` 至少包含当前项目概览和架构概览。
 - 大型项目至少有相关模块级 wiki，而不是只有笼统总结。
-- `architecture.md`、`data-model.md`、`operations.md` 和必要的 `api-<domain>.md` / `module-<name>.md` 达到最低完整度；缺口进入 `risks.md`。
+- `03-architecture.md`、`04-data-model.md`、`05-operations.md` 和必要的 `api-<domain>.md` / `module-<name>.md` 达到最低完整度；缺口进入 `08-risks.md`。
 - 后续 `sf-intake` 能引用 wiki 判断影响面，不必重新理解全仓库。
-- 未确认内容写入 `risks.md` 或在输出中列为待确认，不混入当前事实。
+- 未确认内容写入 `08-risks.md` 或在输出中列为待确认，不混入当前事实。
 
 ## 不做
 

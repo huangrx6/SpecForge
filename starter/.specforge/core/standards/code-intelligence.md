@@ -4,6 +4,8 @@
 
 ## 核心定位
 
+日常 work item 不应把代码智能当作第一入口。已有 `.specforge/wiki/` 时，先用 wiki 定位业务域、模块、API、数据和运行入口，再用代码智能或 `rg` 验证局部事实。
+
 `codebase-map.mjs` 是内置保底扫描器，只负责生成 bootstrap map：
 
 - 目录、语言、源码数量和规模判断。
@@ -20,6 +22,16 @@
 | 2 | 模块上下文打包 | Repomix | 中型项目或已限定模块的上下文包，不用于全仓主索引 |
 | 3 | 内置 bootstrap map | `codebase-map.mjs` | 小项目和所有项目的第一层粗地图 / fallback |
 | 4 | 文本搜索 | `rg` | 在已限定范围内验证事实、定位定义和引用 |
+
+## Wiki-first 查询顺序
+
+针对新需求、bugfix、issue、refactor、实现、审查和验证，默认顺序是：
+
+1. 读取 `.specforge/wiki/00-index.md`，找到相关知识项。
+2. 读取相关 `01-project-overview.md`、`03-architecture.md`、`module-<name>.md`、`api-<domain>.md`、`04-data-model.md`、`05-operations.md`、`08-risks.md` 或 `design-system.md`。
+3. 从 wiki 生成 bounded context：入口路径、关键符号 / 路由、上游下游、测试位置、运行命令和风险。
+4. 只在 bounded context 内使用 CodeGraph、Repomix、`rg` 或文件阅读追踪链路。
+5. 如果 wiki 没有覆盖本次范围、明显过期或与代码冲突，先路由 `sf-steering` 刷新 wiki，不要在普通阶段临时全仓探索。
 
 SpecForge 的统一入口是：
 
@@ -45,7 +57,7 @@ node .specforge/core/scripts/codebase-index.mjs --provider repomix --module src/
 
 执行规则：
 
-- Repomix 只能在显式 `--module` 或 `--focus` 限定范围后执行。
+- Repomix 只能在显式 `--module` 或 `--focus` 限定范围后执行；模块 / focus 应优先来自 wiki 或用户提供的目标范围。
 - Graph / MCP provider 由 Agent runtime 查询，本地 wrapper 只输出查询计划。
 - Provider 原始输出只能作为证据，不能直接粘贴进 wiki。
 - `normalized_context` 是后续 wiki 回写的输入边界。
@@ -60,15 +72,15 @@ SpecForge 中的使用规则：
 - 项目未安装或未初始化 CodeGraph 时，必须展示两种方式：A. 用户自己安装；B. Agent 辅助安装 / 初始化。用户选择自己安装时，只给命令并等待用户完成；用户确认 Agent 辅助安装后，再按当前 OS 执行安装、`codegraph init -i` 和 `codegraph status`。
 - macOS / Linux 使用 `curl -fsSL https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh | sh`；Windows 使用 `irm https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.ps1 | iex`；若用户不想执行远程脚本，可改用 `npx @colbymchenry/codegraph`。
 - steering 时先用 `codegraph_status` 检查索引健康；若有 pending sync，等待同步或运行 `codegraph sync` 后再下结论。
-- 分析新需求或 bug 时优先用 `codegraph_context` 定位模块和入口，再用 `codegraph_trace` / `codegraph_impact` 分析调用链和影响面，最后只读取必要文件验证事实。
+- 分析新需求或 bug 时先从 wiki 取得目标模块和入口；wiki 不足时再用 `codegraph_context` 定位模块和入口，并用 `codegraph_trace` / `codegraph_impact` 分析调用链和影响面，最后只读取必要文件验证事实。
 - CodeGraph 输出仍是证据来源，进入 `.specforge/wiki/*.md` 前必须改写为当前事实。
 
 ## 规模策略
 
 | 规模 | 推荐策略 | 停止条件 |
 |---|---|---|
-| small | `codebase-map.mjs` + `rg` + 关键文件阅读即可 | 无 |
-| medium | `codebase-map.mjs` + `rg`；有明确模块时用 Repomix 打包模块上下文；可选图谱 provider | 模块边界不清时先问用户 |
+| small | wiki + `codebase-map.mjs` + `rg` + 关键文件阅读即可 | 无 |
+| medium | wiki + `codebase-map.mjs` + `rg`；有明确模块时用 Repomix 打包模块上下文；可选图谱 provider | 模块边界不清且 wiki 无入口时先问用户或路由 steering |
 | large | 必须优先使用图谱 / MCP / SCIP 类 provider；只深入目标模块和上下游 | 无 provider 且无目标模块时暂停 |
 
 大型项目不能靠“多读文件”解决。没有 provider 时，只能做 change-focused / bug-focused 局部理解，或停下让用户安装 provider / 指定模块。
@@ -80,7 +92,7 @@ SpecForge 中的使用规则：
 - 项目目标、边界、模块职责。
 - 入口、API、数据、后台任务、运行和部署路径。
 - 能被代码、配置、测试、CI、文档或用户确认支持的关系。
-- 未确认内容写入 `risks.md`，不要混进当前事实。
+- 未确认内容写入 `08-risks.md`，不要混进当前事实。
 
 禁止把 provider 的原始报告、全仓上下文包、大段代码摘要直接粘贴进 wiki。
 
