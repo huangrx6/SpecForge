@@ -7,6 +7,9 @@
 | 来源 | 吸收原则 | SpecForge 落地 |
 |---|---|---|
 | Spec-driven development / Kiro Specs | spec、design、tasks 先于实现；小任务可走轻量路径 | workflow 分流，`lite` 不套完整 feature 流程 |
+| Spec Kit analyze / checklist | tasks 前做跨 artifact 一致性和覆盖分析 | `workflow-audit`、`traceability-summary` 作为实现前的一页审计 |
+| Diátaxis / progressive disclosure | 文档按用户任务组织，先给可行动入口，再给背景解释 | 一页摘要、audit、HTML report 是阅读层；Markdown 保持 source of truth |
+| Requirements traceability / NASA SE | 需求、设计、实现、测试需要双向可追溯 | `REQ/AC/NFR/GAP/UI/TD -> Txxx -> TC/PW` 追踪链 |
 | OPA policy-as-code | 把流程规则声明成可检查数据 | workflow schema 定义 artifact DAG 和 `quality_policy` |
 | GitHub Actions / Argo DAG | 显式依赖、可视化状态和 gate | artifact graph、ready / blocked / done、gate evidence |
 | SLSA / NIST SSDF / AI RMF | provenance、验证证据、人类监督和风险接受 | evidence strength、decision checkpoints、manual-confirmed 记录 |
@@ -90,3 +93,16 @@ node .specforge/core/scripts/doctor.mjs
 4. 再看 traceability / task graph / verification evidence。
 5. 最后才读附录、长表和派生 HTML。
 6. 交给他人或新 Agent 前，生成 `handoff.md`，让接手者先看一页状态、下一步、阻断和证据入口。
+
+## 后续雕琢路线
+
+| 优化方向 | 目标体验 | 技术落点 | 约束 |
+|---|---|---|---|
+| Audit-first | 用户和 Agent 先看一页就知道卡在哪里 | `workflow-audit.mjs` 汇总 route、blocker、decision、traceability、推荐命令 | audit 只提示，不私自推进 gate |
+| Trace-first | tasks 前发现需求、设计、验证断链 | `traceability-summary.mjs` 和 HTML report Traceability section | 稳定前先 P2/P3 warning，不默认阻断低风险需求 |
+| Human-in-the-loop | 高影响未知灵活找人工确认，低风险可授权默认 | `decision-checkpoints.mjs`、`[NEEDS ...]`、`manual-confirmed`、`delegated_default` | 必须记录 owner、影响、回退和补证触发条件 |
+| Lightweight artifacts | 人能读完，Agent 能接手 | 一页摘要、artifact summary、handoff、HTML reading layer | Markdown 仍是版本管理事实源，HTML 不能成为唯一证据 |
+| Stage quality policy | 不同 workflow 有不同质量条 | schema `quality_policy.section_checks`、diagnostics warnings | 不把 `lite` 套成完整 `feature` 流程 |
+| Evidence grading | gate 不是形式，证据强度和风险强度匹配 | verification evidence strength、mock / proven / manual-confirmed / deferred | `missing` 不能批准 gate；弱证据必须说明边界 |
+| Knowledge compaction | 关闭后下次不用重读全仓 | wiki sync、archive、handoff summary、长期事实索引 | 只沉淀未来会复用的信息，不写过程噪音 |
+| Reviewability | code review 和 spec review 小而可审 | tasks wave、changed-files、traceability、findings-first | 大 diff 要拆任务或说明不可拆原因 |

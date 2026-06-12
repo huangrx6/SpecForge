@@ -179,12 +179,14 @@ npx github:huangrx6/SpecForge init --dir .
 ### 3. 检查状态
 
 ```bash
+node .specforge/core/scripts/workflow-audit.mjs
 node .specforge/core/scripts/doctor.mjs
 ```
 
 或：
 
 ```bash
+npx github:huangrx6/SpecForge audit --dir .
 npx github:huangrx6/SpecForge doctor --dir .
 ```
 
@@ -421,11 +423,16 @@ node .specforge/core/scripts/gate.mjs code_review REQUEST_CHANGES
 在已经初始化的业务项目中：
 
 ```bash
+node .specforge/core/scripts/workflow-audit.mjs
 node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/status.mjs
 node .specforge/core/scripts/instructions.mjs
+node .specforge/core/scripts/decision-checkpoints.mjs
+node .specforge/core/scripts/traceability-summary.mjs
 node .specforge/core/scripts/create-work.mjs --workflow feature "新增审批记录导出"
 node .specforge/core/scripts/create-artifact.mjs requirements
+node .specforge/core/scripts/render-work-report.mjs
+node .specforge/core/scripts/handoff-summary.mjs --output <work-item>/07-report/handoff.md
 node .specforge/core/scripts/gate.mjs verification APPROVED --evidence 05-verification/report.md
 node .specforge/core/scripts/sync-wiki.mjs
 ```
