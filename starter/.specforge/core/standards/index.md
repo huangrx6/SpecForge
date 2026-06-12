@@ -19,6 +19,7 @@
 | `design.md` | UI / UX、页面、交互、视觉风格、原型证据 | 用户看见什么，怎么操作，状态是否完整 |
 | `pc-ui-design-spec.md` | PC 端业务系统、运营后台、管理控制台、数据表格工具，或用户明确提供该规范 | 具体颜色、字号、行高、间距、组件尺寸和 HTML/CSS token |
 | `engineering.md` | technical design、implementation、review、verification | 工程上怎么做才可靠、安全、可维护、可验证 |
+| `ai-toolkit.md` | intake、自动推进、人工确认、verification、wiki sync、AI 工具链沉淀 | 不同阶段用什么 AI 工具，证据强度如何分级，什么时候需要人工确认 |
 | `code-intelligence.md` | 存量项目、老项目、大型代码库理解、项目画像 | 该用哪个 provider，什么时候暂停，如何把代码事实归一到 wiki |
 | `wiki.md` | wiki sync、close、长期知识回写 | 哪些事实要沉淀，写到哪，何时更新 |
 
@@ -37,8 +38,8 @@
 | spec_review | `workflow.md`、`product.md`、`design.md`、`engineering.md` |
 | implementation | `engineering.md`、`workflow.md` |
 | code_review | `engineering.md`、`workflow.md` |
-| verification | `engineering.md`、`workflow.md` |
-| wiki_sync / closure | `wiki.md`、`workflow.md` |
+| verification | `engineering.md`、`workflow.md`、`ai-toolkit.md` |
+| wiki_sync / closure | `wiki.md`、`workflow.md`、`ai-toolkit.md` |
 
 ## 领域主基准与官方入口
 

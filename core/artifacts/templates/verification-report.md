@@ -13,6 +13,7 @@
 | 代码审查门禁 | APPROVED / REQUEST_CHANGES / REJECTED |
 | 验证环境 | local / CI / staging / other |
 | 结论 | 通过 / 失败 / 部分通过 |
+| 证据策略 | proven / mocked / manual-confirmed / deferred / mixed |
 
 ## 2. 覆盖矩阵
 
@@ -33,6 +34,12 @@
 | 用例 ID | 来源 | 类型 | 风险等级 | 自动化方式 | 结果 | 证据 |
 |---|---|---|---|---|---|---|
 | TC-001 | REQ / TASK / REVIEW | unit / integration / contract / playwright / startup / manual | high / medium / low | command / Playwright / manual | pass / fail / skipped | |
+
+## 3.2 证据强度分级
+
+| 来源项 / 风险 | 证据等级 | 证据路径 / 摘要 | 可证明结论 | 不能证明的范围 | Gate 影响 |
+|---|---|---|---|---|---|
+| | proven / mocked / manual-confirmed / deferred / missing | | | | approve / request_changes / follow-up |
 
 ### Technical Design 影响面验证
 
@@ -153,15 +160,31 @@
 |---|---|---|---|---|
 | | | | | |
 
-## 12. 重新验证触发条件
+## 12. 人工确认与外部补证
+
+> 只有真实环境、第三方系统、外部账号或低风险残余可走人工确认。P0 / P1 缺陷、安全风险、数据破坏风险和核心验收缺失不能用本节覆盖。
+
+| 缺口 | 已有证据 | 风险等级 | 人工确认人 / 来源 | 确认结论 | Owner | 重新验证触发条件 |
+|---|---|---|---|---|---|---|
+| | local / mock / CI evidence | high / medium / low | 用户 / 负责人 / 会议结论 | 接受外部待补证 / 要求补证 / 拆 follow-up | | |
+
+## 13. HTML / 可视化报告索引
+
+> Markdown 是事实源；HTML、图表、截图或看板只作为阅读友好的派生产物。
+
+| 产物 | 路径 / 链接 | 来源 artifact | 用途 | 是否含敏感信息 |
+|---|---|---|---|---|
+| | | | | no / yes |
+
+## 14. 重新验证触发条件
 
 - 
 
-## 13. 决策
+## 15. 决策
 
 可选值：APPROVED, REQUEST_CHANGES, REJECTED.
 
-## 14. Gate 更新
+## 16. Gate 更新
 
 APPROVED 时执行：
 

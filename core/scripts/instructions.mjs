@@ -66,7 +66,7 @@ const contextByArtifact = {
 };
 
 const standardsByArtifact = {
-  intake: [standard("workflow.md"), standard("product.md")],
+  intake: [standard("workflow.md"), standard("product.md"), standard("ai-toolkit.md")],
   gap_report: [standard("workflow.md"), standard("product.md"), standard("engineering.md")],
   research: [standard("workflow.md"), standard("product.md"), standard("engineering.md")],
   requirements: [standard("workflow.md"), standard("product.md")],
@@ -76,9 +76,9 @@ const standardsByArtifact = {
   spec_review: [standard("workflow.md"), standard("product.md"), standard("design.md"), standard("engineering.md")],
   implementation: [standard("workflow.md"), standard("engineering.md")],
   code_review: [standard("workflow.md"), standard("engineering.md")],
-  verification: [standard("workflow.md"), standard("engineering.md")],
-  wiki_sync: [standard("workflow.md"), standard("wiki.md")],
-  closure: [standard("workflow.md"), standard("wiki.md")],
+  verification: [standard("workflow.md"), standard("engineering.md"), standard("ai-toolkit.md")],
+  wiki_sync: [standard("workflow.md"), standard("wiki.md"), standard("ai-toolkit.md")],
+  closure: [standard("workflow.md"), standard("wiki.md"), standard("ai-toolkit.md")],
 };
 
 function dependencyRows(schema, states, artifact) {

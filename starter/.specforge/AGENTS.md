@@ -35,6 +35,7 @@
 | `core/standards/design.md` | ui_design (有 UI 变更时) | 界面如何交互，状态矩阵是否覆盖 |
 | `core/standards/engineering.md` | technical_design、实现、review、验证 | 架构怎么设计，代码怎么安全实现与测试 |
 | `core/standards/code-intelligence.md` | steering (新项目画像) | 存量大代码库如何快速定位与理解 |
+| `core/standards/ai-toolkit.md` | intake、自动推进、verification、wiki_sync | AI 工具集如何选型，人机确认和证据分级如何落地 |
 | `core/standards/wiki.md` | wiki_sync、closure | 哪些项目事实需要沉淀为长期知识 |
 
 ---

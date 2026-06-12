@@ -19,6 +19,7 @@ description: 执行 SpecForge verification 阶段；用于 code_review 已通过
 - `.specforge/core/artifacts/templates/verification-report.md`
 - `.specforge/core/artifacts/templates/ci-result.md`
 - `.specforge/core/standards/workflow.md`
+- `.specforge/core/standards/ai-toolkit.md`
 - `.specforge/core/standards/engineering.md`
 - 有 UI 影响时读取 `.specforge/core/standards/design.md`；若 `ui-design.md` 声明采用 PC 端业务系统规范，还要读取 `.specforge/core/standards/pc-ui-design-spec.md`。
 - 有浏览器流程时读取 `.specforge/core/standards/playwright.md` 和 `.specforge/core/skills/ORCHESTRATION.md`。
@@ -71,14 +72,16 @@ node .specforge/core/scripts/create-artifact.mjs verification
 ### D. 记录证据和决策
 
 1. 写入 `05-verification/report.md`、`05-verification/ci-result.md`，并把截图、trace、日志摘要或链接登记到报告。
-2. 跳过项必须写明原因、影响、owner、重新验证触发条件和可接受期限。
-3. `APPROVED` 时执行：
+2. 为每项关键证据标注强度：`proven` / `mocked` / `manual-confirmed` / `deferred` / `missing`。
+3. 跳过项必须写明原因、影响、owner、重新验证触发条件和可接受期限。
+4. 如果缺口来自真实环境、第三方系统、外部账号或低风险残余，先输出人工确认请求；用户明确接受后，把确认内容写入 `## 人工确认与外部补证`，再判断 gate。
+5. `APPROVED` 时执行：
 
 ```bash
 node .specforge/core/scripts/gate.mjs verification APPROVED --evidence 05-verification/report.md
 ```
 
-4. 失败或缺证据时执行其一，不带 evidence：
+6. 失败或缺证据时执行其一，不带 evidence：
 
 ```bash
 node .specforge/core/scripts/gate.mjs verification REQUEST_CHANGES
@@ -92,18 +95,21 @@ node .specforge/core/scripts/gate.mjs verification REJECTED
 | code review 未批准 | 停止，回 `sf-code-review` |
 | P0 / P1 finding 未解决 | `REQUEST_CHANGES` |
 | 阻断测试失败 | `REQUEST_CHANGES` |
-| 关键验收标准无证据 | `REQUEST_CHANGES` |
+| 关键验收标准无证据，且不是人工确认的外部待补证 / 低风险残余 | `REQUEST_CHANGES` |
 | 有浏览器流程但无 Playwright 用例、执行命令或截图 / trace 证据 | `REQUEST_CHANGES` |
 | UI 只测 happy path、单角色或单状态 | `REQUEST_CHANGES` |
 | 安全、权限、数据迁移、配置、回滚或公共 API 缺强证据 | `REQUEST_CHANGES` |
 | 验证需要的启动、测试、回滚或风险入口在 wiki 中缺失且报告未记录补证方式 | `REQUEST_CHANGES` 或转 `sf-wiki` 补齐 |
 | 实现明显偏离 approved spec | `REJECTED` 或退回 spec |
-| 只有低风险跳过项，且 owner、影响和触发条件清楚 | 可 `APPROVED` |
+| 只有低风险跳过项，且 owner、影响、触发条件和人工确认清楚 | 可 `APPROVED` |
+| 真实环境或第三方系统不可访问，但本地 / mock 已覆盖代码路径，用户确认由真实环境补证 | 可 `APPROVED`，报告必须标记 `manual-confirmed` / `deferred` |
 
 ## 完成标准
 
 - `05-verification/test-cases.md` 先于验证执行存在并更新。
 - `05-verification/report.md` 能追溯 requirements / gap / tasks / code review notes 到证据。
+- 报告已区分证据强度，并明确哪些结论来自 local、mock、CI、真实环境或人工确认。
+- 外部待补证项已记录 owner、影响、触发条件和用户确认原文摘要。
 - 有 UI 影响时覆盖页面、操作、角色、状态和适用响应式；浏览器流程有 Playwright 证据。
 - `05-verification/ci-result.md` 如实记录 CI / local / N/A。
 - `APPROVED` gate 绑定 `05-verification/report.md`；非批准状态不带 evidence。

@@ -87,6 +87,18 @@
 | 问题 | 选项 / 推荐 | 用户答案 | 影响 |
 |---|---|---|---|
 
+## AI 工具链计划
+
+> 只列本 work item 实际需要的工具。不要为了显得完整而堆工具；每个工具都要能落到 artifact、代码、验证或 wiki。
+
+| 阶段 | 工具 / 能力 | 使用目标 | 产物 / 证据 | 是否需要人工确认 |
+|---|---|---|---|---|
+| 需求澄清 | sf-intake / sf-brainstorm / sf-prd | | brief / brainstorm / prd | yes / no |
+| 方案设计 | sf-requirements / sf-ui-design / sf-tech-design / Pencil | | requirements / ui-design / technical-design | yes / no |
+| 代码实现 | Codex / Trae / SOLO / existing tests | | code / implementation report | yes / no |
+| 联调验证 | pytest / Playwright / Mock API / CI | | test-cases / verification report / evidence | yes / no |
+| 知识沉淀 | sf-wiki / sf-close / Wiki Sync | | wiki / release / rollback | yes / no |
+
 ## 初始范围
 
 ## 影响面矩阵

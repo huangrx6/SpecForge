@@ -26,6 +26,7 @@ node .specforge/core/scripts/doctor.mjs
 ## 关联标准
 
 - `.specforge/core/standards/workflow.md`：ready artifact、required gate、scope 和停止条件。
+- `.specforge/core/standards/ai-toolkit.md`：AI 工具集、人工确认、证据分级和轻量产物规则。
 - `.specforge/core/standards/engineering.md`：verification evidence 和高风险变更暂停。
 
 ## 循环
@@ -48,7 +49,8 @@ git status --short --untracked-files=all
    - technical_design 的核心决策摘要未确认、授权默认或标记 N/A 时，暂停到 `sf-tech-design`。
    - tasks 缺少核心字段，或条件字段无法覆盖 technical_design `yes` 影响面时，暂停到 `sf-tasking`。
    - implementation report、changed-files 和真实 git 状态不一致时，暂停到 `sf-implement`。
-   - verification 有跳过项但没有 owner / 影响 / 重新验证条件时，暂停到 `sf-verify`。
+   - verification 有跳过项但没有 owner / 影响 / 重新验证条件 / 证据强度时，暂停到 `sf-verify`。
+   - verification 的缺口属于真实环境、第三方系统或低风险残余时，先让 `sf-verify` 生成人工确认请求；用户确认后继续。
    - wiki_sync 会产生重复 current wiki 文件，或 release / rollback 未覆盖 verification 残余风险时，暂停到 `sf-wiki` / `sf-close`。
 3. 对 ready artifact 调用对应子技能：
    - requirements：先检查 `00-intake/brief.md`、可选 `brainstorm.md` 和 PRD 决策；如果存在需要用户取舍的 `[NEEDS DECISION]`，先调用 `sf-brainstorm`；如果 `PRD required: yes` 或表格中 `PRD required | yes`，且 `00-intake/prd.md` 不存在、`Decision Status` 不是 `approved-for-requirements`，或仍有 `[NEEDS PRODUCT DECISION]`，先调用 `sf-prd`；否则调用 `sf-requirements`
@@ -91,7 +93,7 @@ Gate artifact 允许自动生成草稿，但不允许“空模板批准”。批
 
 - spec_review：无 P0 / P1，technical_design 影响面、tasks `_Impact:_` 和 verification 计划一致。
 - code_review：真实 diff、changed-files、implementation report、tasks `_Impact:_` 四者一致。
-- verification：风险驱动验证计划有证据，跳过项有 owner、影响和重新验证条件。
+- verification：风险驱动验证计划有证据，证据强度已分级；跳过项有 owner、影响、重新验证条件；外部待补证项有人工确认记录。
 - wiki_sync：长期事实已写入唯一 current wiki 文件，或 N/A 理由具体可信。
 
 ## 必须暂停
@@ -107,7 +109,8 @@ Gate artifact 允许自动生成草稿，但不允许“空模板批准”。批
 - 任一 gate 为 `REQUEST_CHANGES` / `REJECTED`，且尚未按 return path 修复。
 - `technical-design.md#0` 存在关键 `unknown`，或 tasks 缺少核心字段 / 适用条件字段。
 - implementation report / changed-files / 真实 git diff 不一致。
-- verification 缺关键证据、只测 happy path，或跳过项没有 owner / 影响 / 重新验证条件。
+- verification 缺关键证据、只测 happy path，或跳过项没有 owner / 影响 / 重新验证条件 / 人工确认。
+- 需要人工确认外部补证、低风险跳过或风险接受，但用户尚未确认。
 - wiki_sync 会产生重复 current 文件，或 release / rollback 没有覆盖 verification 残余风险。
 - gate 需要用户判断、产品取舍、风险接受或上线确认。
 - doctor、validate、selftest 失败。
