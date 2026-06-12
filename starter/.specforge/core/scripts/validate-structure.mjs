@@ -38,6 +38,7 @@ const sourceRequiredPaths = [
   "core/standards/engineering.md",
   "core/standards/code-intelligence.md",
   "core/standards/ai-toolkit.md",
+  "core/standards/stage-playbook.md",
   "core/standards/wiki.md",
   "core/profiles/README.md",
   "core/profiles/database/rdbms-postgresql.md",
@@ -110,6 +111,7 @@ const sourceRequiredPaths = [
   "core/scripts/codebase-map.mjs",
   "core/scripts/create-work.mjs",
   "core/scripts/create-artifact.mjs",
+  "core/scripts/decision-checkpoints.mjs",
   "core/scripts/instructions.mjs",
   "core/scripts/gate.mjs",
   "core/scripts/doctor.mjs",
@@ -146,6 +148,7 @@ const sourceRequiredPaths = [
   "starter/.specforge/core/standards/engineering.md",
   "starter/.specforge/core/standards/code-intelligence.md",
   "starter/.specforge/core/standards/ai-toolkit.md",
+  "starter/.specforge/core/standards/stage-playbook.md",
   "starter/.specforge/core/standards/wiki.md",
   "starter/.specforge/core/profiles/README.md",
   "starter/.specforge/core/profiles/database/rdbms-postgresql.md",
@@ -182,6 +185,7 @@ const projectRequiredPaths = [
   ".specforge/core/standards/engineering.md",
   ".specforge/core/standards/code-intelligence.md",
   ".specforge/core/standards/ai-toolkit.md",
+  ".specforge/core/standards/stage-playbook.md",
   ".specforge/core/standards/wiki.md",
   ".specforge/core/profiles/README.md",
   ".specforge/core/profiles/database/rdbms-postgresql.md",
@@ -252,6 +256,7 @@ const projectRequiredPaths = [
   ".specforge/core/scripts/codebase-map.mjs",
   ".specforge/core/scripts/create-artifact.mjs",
   ".specforge/core/scripts/create-work.mjs",
+  ".specforge/core/scripts/decision-checkpoints.mjs",
   ".specforge/core/scripts/doctor.mjs",
   ".specforge/core/scripts/gate.mjs",
   ".specforge/core/scripts/instructions.mjs",
@@ -315,6 +320,28 @@ function loadSchema(workflow) {
   } catch (error) {
     errors.push(`${schemaPath}: invalid JSON (${error.message})`);
     return null;
+  }
+}
+
+function sectionExists(content, section) {
+  const escaped = section.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`^#{1,6}\\s+.*${escaped}`, "im").test(content) || content.includes(section);
+}
+
+function validateQualityPolicyTemplates(schema, schemaPath) {
+  for (const [index, check] of (schema.quality_policy?.section_checks ?? []).entries()) {
+    if (!check?.path || !Array.isArray(check.sections)) continue;
+    const templateName = templateByOutput.get(check.path);
+    if (!templateName) continue;
+    const templatePath = `${layout.templates}/${templateName}`;
+    if (!exists(templatePath)) continue;
+    const template = read(templatePath);
+    const missing = check.sections.filter((section) => !sectionExists(template, section));
+    if (missing.length > 0) {
+      errors.push(
+        `${schemaPath}: quality_policy.section_checks[${index}] references sections missing from template ${templatePath}: ${missing.join(", ")}`,
+      );
+    }
   }
 }
 
@@ -415,8 +442,10 @@ for (const workflowId of workflowIds) {
 
   const schema = loadSchema(workflowId);
   if (!schema) continue;
-  if (schema.id !== workflowId) errors.push(`${layout.schemas}/${workflowId}.json: id must be ${workflowId}, got ${schema.id || "missing"}`);
-  for (const error of validateSchema(schema, `${layout.schemas}/${workflowId}.json`)) errors.push(error);
+  const schemaPath = `${layout.schemas}/${workflowId}.json`;
+  if (schema.id !== workflowId) errors.push(`${schemaPath}: id must be ${workflowId}, got ${schema.id || "missing"}`);
+  for (const error of validateSchema(schema, schemaPath)) errors.push(error);
+  validateQualityPolicyTemplates(schema, schemaPath);
 }
 
 for (const kind of ["active", "archive"]) {
