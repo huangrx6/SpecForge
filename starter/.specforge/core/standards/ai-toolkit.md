@@ -127,7 +127,7 @@ Traceability 由 workflow schema 的 `traceability_policy` 控制：`off` 不提
 
 准备批准 verification gate 前，先运行 `node .specforge/core/scripts/evidence-summary.mjs` 或 `specforge evidence --dir .`。它解析 `05-verification/report.md#3.2 证据强度分级` 和 `#12 人工确认与外部补证`，汇总 proven / mocked / manual-confirmed / deferred / missing，并指出缺少证据、缺人工确认或缺 owner / 重新验证触发条件的问题。`gate-preflight verification APPROVED` 会自动执行同类检查；`missing` 或无可解析证据不能批准。
 
-想先看全流程怎么走时，运行 `node .specforge/core/scripts/stage-contract.mjs --overview` 或 `specforge roadmap --dir .`。它把当前 workflow 的每个 artifact、状态、推荐工具、推荐命令、人工确认点和退出标准放在一张 roadmap 表里，适合给人看“后面每一步怎么配合”。
+想先看全流程怎么走时，运行 `node .specforge/core/scripts/stage-contract.mjs --overview` 或 `specforge roadmap --dir .`。它先用 Current Focus 呈现当前 artifact 的状态、退出标准、必须证明项、人工确认点和质量热点，再把每个 artifact、推荐工具、推荐命令和退出标准放在 roadmap 表里，适合给人看“现在先做什么、后面每一步怎么配合”。
 
 进入具体阶段前建议运行 `node .specforge/core/scripts/stage-contract.mjs` 或 `specforge contract --dir .`。它把当前 artifact 的目标、应读取内容、必须产出、人工确认点、must prove 和 exit standard 单独列出，避免 Agent 只读长模板却漏掉阶段完成标准。
 
@@ -194,7 +194,7 @@ Markdown 仍是版本管理主格式；HTML / 可视化产物用于提升阅读�
 - 可用 `node .specforge/core/scripts/traceability-summary.mjs` 检查 source item、tasks、test cases 之间的追溯缺口；先作为提示使用，稳定后再考虑升级为 gate。
 - 可用 `node .specforge/core/scripts/workflow-audit.mjs` 生成一页流程审计摘要，先判断是否 BLOCKED / NEEDS_DECISION / NEEDS_ATTENTION，再进入具体阶段。
 - 可用 `node .specforge/core/scripts/workflow-health.mjs` 生成健康分、`quality_suite` 维度和 Top priorities，帮助人和 Agent 快速决定先修 blocker、先问人、先补 traceability，还是先下钻 source / implementation / evidence / wiki / closure 质量缺口。
-- 可用 `node .specforge/core/scripts/stage-contract.mjs --overview` 或 `specforge roadmap --dir .` 查看当前 workflow 每个 artifact 的状态、阶段契约、工具搭配、命令、人工确认点和退出标准；也可用 `--artifact tasks` 聚焦单阶段。
+- 可用 `node .specforge/core/scripts/stage-contract.mjs --overview` 或 `specforge roadmap --dir .` 先查看 Current Focus，再查看当前 workflow 每个 artifact 的状态、阶段契约、工具搭配、命令、人工确认点和退出标准；也可用 `--artifact tasks` 聚焦单阶段。
 - 可用 `node .specforge/core/scripts/gate-preflight.mjs <gate> APPROVED --evidence <path>` 在真正更新 gate 前做只读预检，适合本地审批、CI advisory check 和发布前复核。
 
 ## 持续演进
