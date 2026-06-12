@@ -1,6 +1,7 @@
 import { artifactById, effectiveSchema, exists, loadSchema, parseField, readText } from "./specforge.mjs";
 import { decisionQualitySummary } from "./decision-quality.mjs";
 import { evidenceSummary } from "./evidence.mjs";
+import { implementationQualitySummary } from "./implementation-quality.mjs";
 import { sourceQualitySummary } from "./source-quality.mjs";
 import { normalizeTraceabilityPolicy, traceabilityGapChecks } from "./traceability.mjs";
 import { wikiQualitySummary } from "./wiki-quality.mjs";
@@ -148,6 +149,26 @@ export function gatePreflight(diagnosis, options = {}) {
       );
       for (const sourceIssue of sourceQuality.issues) {
         add(checks, sourceIssue.severity, `source-${sourceIssue.code}`, `${sourceIssue.path}: ${sourceIssue.message}`, "source-quality");
+      }
+    }
+
+    if (gate === "code_review") {
+      const implementationQuality = implementationQualitySummary(diagnosis.work_item.path);
+      add(
+        checks,
+        implementationQuality.summary.fail === 0 ? (implementationQuality.summary.warn === 0 ? "PASS" : "WARN") : "FAIL",
+        "implementation-quality",
+        `Implementation quality: tasks=${implementationQuality.summary.tasks}, report=${implementationQuality.summary.implementation_rows}, changed=${implementationQuality.summary.changed_files}, git=${implementationQuality.summary.git_files}, fail=${implementationQuality.summary.fail}, warn=${implementationQuality.summary.warn}.`,
+        "implementation-quality",
+      );
+      for (const implementationIssue of implementationQuality.issues) {
+        add(
+          checks,
+          implementationIssue.severity,
+          `implementation-${implementationIssue.code}`,
+          `${implementationIssue.path}: ${implementationIssue.message}`,
+          implementationIssue.route,
+        );
       }
     }
 

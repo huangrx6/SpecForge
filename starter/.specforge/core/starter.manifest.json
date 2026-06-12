@@ -55,6 +55,10 @@
       "to": "core/scripts/lib/evidence.mjs"
     },
     {
+      "from": "scripts/lib/implementation-quality.mjs",
+      "to": "core/scripts/lib/implementation-quality.mjs"
+    },
+    {
       "from": "scripts/lib/decision-quality.mjs",
       "to": "core/scripts/lib/decision-quality.mjs"
     },
@@ -145,6 +149,10 @@
     {
       "from": "scripts/handoff-summary.mjs",
       "to": "core/scripts/handoff-summary.mjs"
+    },
+    {
+      "from": "scripts/implementation-quality.mjs",
+      "to": "core/scripts/implementation-quality.mjs"
     },
     {
       "from": "scripts/instructions.mjs",

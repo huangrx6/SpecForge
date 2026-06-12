@@ -25,6 +25,7 @@ Usage:
   specforge decision-brief [--dir <path>] [--work-item <id>] [--json]
   specforge decision-quality [--dir <path>] [--work-item <id>] [--json]
   specforge evidence [--dir <path>] [--work-item <id>] [--report <path>] [--json]
+  specforge implementation-quality [--dir <path>] [--work-item <id>] [--json]
   specforge package [--dir <path>] [--work-item <id>] [--skip-derived] [--json]
   specforge gate-preflight [--dir <path>] <gate> [status] [--evidence <path>] [--work-item <id>] [--json] [--strict]
   specforge gate [--dir <path>] <gate> <status> [--evidence <path>] [--work-item <id>] [--strict-hooks]
@@ -48,6 +49,7 @@ Examples:
   npx github:huangrx6/SpecForge decision-brief --dir .
   npx github:huangrx6/SpecForge decision-quality --dir .
   npx github:huangrx6/SpecForge evidence --dir .
+  npx github:huangrx6/SpecForge implementation-quality --dir .
   npx github:huangrx6/SpecForge package --dir .
   npx github:huangrx6/SpecForge gate-preflight --dir . verification APPROVED --evidence 05-verification/report.md
   npx github:huangrx6/SpecForge gate --dir . verification APPROVED --evidence 05-verification/report.md
@@ -289,6 +291,20 @@ function evidence() {
   runNode(evidencePath, extraArgs, targetDir);
 }
 
+function implementationQuality() {
+  const targetDir = resolve(option("--dir", "."));
+  const qualityPath = join(targetDir, ".specforge/core/scripts/implementation-quality.mjs");
+  if (!existsSync(qualityPath)) {
+    console.error(`Missing SpecForge implementation quality script: ${qualityPath}`);
+    process.exit(1);
+  }
+  const extraArgs = [];
+  const workItem = option("--work-item");
+  if (workItem) extraArgs.push("--work-item", workItem);
+  if (args.includes("--json")) extraArgs.push("--json");
+  runNode(qualityPath, extraArgs, targetDir);
+}
+
 function reviewPackage() {
   const targetDir = resolve(option("--dir", "."));
   const packagePath = join(targetDir, ".specforge/core/scripts/workflow-package.mjs");
@@ -427,6 +443,8 @@ if (command === "init") {
   decisionQuality();
 } else if (command === "evidence") {
   evidence();
+} else if (command === "implementation-quality") {
+  implementationQuality();
 } else if (command === "package") {
   reviewPackage();
 } else if (command === "gate-preflight") {

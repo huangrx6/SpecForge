@@ -152,13 +152,18 @@ const executionByArtifact = {
     ],
   },
   implementation: {
-    tools: ["sf-implement", "Codex / Trae / SOLO", "instructions.mjs apply", "git diff"],
-    commands: ["node .specforge/core/scripts/instructions.mjs apply", "git status --short --untracked-files=all"],
+    tools: ["sf-implement", "Codex / Trae / SOLO", "instructions.mjs apply", "implementation-quality.mjs", "git diff"],
+    commands: [
+      "node .specforge/core/scripts/instructions.mjs apply",
+      "node .specforge/core/scripts/implementation-quality.mjs",
+      "git status --short --untracked-files=all",
+    ],
   },
   code_review: {
-    tools: ["sf-code-review", "git diff", "test output", "gate-preflight.mjs"],
+    tools: ["sf-code-review", "git diff", "test output", "implementation-quality.mjs", "gate-preflight.mjs"],
     commands: [
       "node .specforge/core/scripts/create-artifact.mjs code_review",
+      "node .specforge/core/scripts/implementation-quality.mjs",
       "node .specforge/core/scripts/gate-preflight.mjs code_review APPROVED --evidence 04-code-review/code-review-v1.md",
     ],
   },
