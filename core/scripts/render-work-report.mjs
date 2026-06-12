@@ -3,7 +3,9 @@ import { dirname } from "node:path";
 import {
   abs,
   exists,
+  effectiveSchema,
   localDateIso,
+  loadSchema,
   parseField,
   readText,
   resolveWorkItem,
@@ -13,6 +15,7 @@ import { actionCommands, actionReason, actionState, readingOrder, traceabilityPo
 import { diagnoseWorkItem, gateLine } from "./lib/diagnostics.mjs";
 import { workflowHealth } from "./lib/workflow-health.mjs";
 import { qualitySuiteSummary } from "./lib/quality-suite.mjs";
+import { contractForArtifact, focusArtifactId } from "./lib/stage-contracts.mjs";
 
 const args = process.argv.slice(2);
 
@@ -72,6 +75,12 @@ function renderList(items, emptyText, renderItem) {
 
 function renderCommandBlock(commands) {
   return `<pre><code>${escapeHtml(commands.join("\n"))}</code></pre>`;
+}
+
+function activeContract(diagnosis, workItemYaml) {
+  const workflow = parseField(workItemYaml, "workflow") || "standard";
+  const schema = effectiveSchema(loadSchema(workflow), workItemYaml);
+  return contractForArtifact(schema, focusArtifactId(diagnosis));
 }
 
 function truncate(value, max = 22) {
@@ -261,6 +270,54 @@ function renderQualitySuite(qualitySuite) {
   `;
 }
 
+function renderQualityHotspots(qualitySuite) {
+  const issues = (qualitySuite?.checks ?? [])
+    .filter((check) => check.status !== "PASS")
+    .flatMap((check) =>
+      (check.issues ?? []).slice(0, 3).map((issue) => ({
+        check: check.title,
+        severity: issue.severity ?? check.status,
+        path: issue.path ?? "N/A",
+        message: issue.message ?? check.message,
+      })),
+    )
+    .slice(0, 5);
+
+  return renderList(
+    issues,
+    "No quality hotspots.",
+    (item) => `<li>${renderStatusBadge(item.severity)} <strong>${escapeHtml(item.check)}</strong> <span class="muted">${escapeHtml(item.path)}</span><br>${escapeHtml(item.message)}</li>`,
+  );
+}
+
+function renderCurrentFocus(diagnosis, contract, qualitySuite) {
+  const artifact = (diagnosis.artifacts ?? []).find((item) => item.id === contract?.id);
+  if (!contract) return `<p class="muted">No current stage contract available.</p>`;
+
+  return `
+    <div class="summary" aria-label="Current focus summary">
+      <div class="metric">Artifact<strong>${escapeHtml(contract.id)}</strong><span>${escapeHtml(contract.title)}</span></div>
+      <div class="metric">Status<strong>${renderStatusBadge(artifact?.status ?? "unknown")}</strong><span>${escapeHtml(contract.stage)}</span></div>
+      <div class="metric">Gate<strong>${escapeHtml(contract.gate ?? "N/A")}</strong></div>
+      <div class="metric">Quality<strong>${renderStatusBadge(qualitySuite.summary.overall)}</strong><span>${escapeHtml(`${qualitySuite.summary.failures} fail / ${qualitySuite.summary.warnings} warn`)}</span></div>
+    </div>
+    <div class="grid two">
+      <section class="card">
+        <h3>Exit Standard</h3>
+        <p>${escapeHtml(contract.exit)}</p>
+        <h3>Must Prove</h3>
+        ${renderList(contract.must_prove, "N/A", (item) => `<li>${escapeHtml(item)}</li>`)}
+      </section>
+      <section class="card">
+        <h3>Human Decisions</h3>
+        ${renderList(contract.human_decisions, "none", (item) => `<li>${escapeHtml(item)}</li>`)}
+        <h3>Quality Hotspots</h3>
+        ${renderQualityHotspots(qualitySuite)}
+      </section>
+    </div>
+  `;
+}
+
 function renderActionBoard(diagnosis, health, qualitySuite) {
   const state = actionState(diagnosis, health);
   const topPriority = health.priorities?.[0];
@@ -323,7 +380,35 @@ function responseOptions(marker = "") {
   return "approve / reject / ask for more evidence / defer";
 }
 
-function renderDecisionBrief(diagnosis) {
+function approvalBoundary(diagnosis, contract) {
+  const artifact = contract?.id ?? diagnosis.ready_artifact ?? "current artifact";
+  return `本次确认只授权 ${artifact} 按 ${diagnosis.route} 继续推进；不代表批准生产发布、范围扩大或无关实现。`;
+}
+
+function renderHumanRequest(diagnosis, contract, topDecision) {
+  if (!topDecision) return renderLines(["No open decision markers. No human reply is required right now."]);
+  return renderLines([
+    "请确认 SpecForge 当前决策点：",
+    "",
+    `- 需求 / 工作项：${diagnosis.work_item?.title || diagnosis.work_item?.id}`,
+    `- 当前阶段：${contract?.id ?? diagnosis.ready_artifact ?? "N/A"} / ${diagnosis.route}`,
+    `- 决策位置：${topDecision.path}:${topDecision.line}`,
+    `- 待确认内容：${topDecision.text}`,
+    `- 可选回复方向：${responseOptions(topDecision.marker)}`,
+    `- 批准边界：${approvalBoundary(diagnosis, contract)}`,
+    "",
+    "建议直接按下面格式回复：",
+    "",
+    "Decision:",
+    "Scope:",
+    "Rationale:",
+    "Risk acceptance: yes / no / N/A",
+    "Owner:",
+    "Revalidation trigger:",
+  ]);
+}
+
+function renderDecisionBrief(diagnosis, contract) {
   const checkpoints = diagnosis.decision_checkpoints;
   const topDecision = checkpoints?.open?.[0];
 
@@ -343,9 +428,12 @@ function renderDecisionBrief(diagnosis) {
     </div>
     <section class="card">
       <h3>Top Decision</h3>
+      <h4>Human Request</h4>
+      ${renderHumanRequest(diagnosis, contract, topDecision)}
       <p>${renderStatusBadge(topDecision.marker)} <span class="muted">${escapeHtml(topDecision.path)}:${escapeHtml(topDecision.line)}</span></p>
       <p>${escapeHtml(topDecision.text)}</p>
       <p><strong>Acceptable responses:</strong> ${escapeHtml(responseOptions(topDecision.marker))}</p>
+      <p><strong>Approval boundary:</strong> ${escapeHtml(approvalBoundary(diagnosis, contract))}</p>
       <h4>Reply Format</h4>
       ${renderLines([
         "Decision: approve / reject / choose option / defer / ask for more evidence",
@@ -365,6 +453,7 @@ function render(diagnosis, workItemYaml, generatedAt) {
   const progress = `${diagnosis.progress.done}/${diagnosis.progress.total}`;
   const qualitySuite = qualitySuiteSummary(diagnosis);
   const health = workflowHealth(diagnosis, { qualitySuite });
+  const contract = activeContract(diagnosis, workItemYaml);
   return `<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -556,6 +645,7 @@ function render(diagnosis, workItemYaml, generatedAt) {
     </div>
     <nav aria-label="Report sections">
       <a href="#action-board">Action Board</a>
+      <a href="#current-focus">Current Focus</a>
       <a href="#route">Route</a>
       <a href="#health">Health</a>
       <a href="#quality-suite">Quality Suite</a>
@@ -570,6 +660,12 @@ function render(diagnosis, workItemYaml, generatedAt) {
   </header>
   <main>
     ${renderActionBoard(diagnosis, health, qualitySuite)}
+
+    <section id="current-focus">
+      <h2>Current Focus</h2>
+      <p class="muted">The smallest useful reading layer for the current stage: what is being produced, what must be proven, what needs human judgment, and which quality issues should be fixed first.</p>
+      ${renderCurrentFocus(diagnosis, contract, qualitySuite)}
+    </section>
 
     <section id="route">
       <h2>Route</h2>
@@ -646,7 +742,7 @@ function render(diagnosis, workItemYaml, generatedAt) {
     <section id="decision-brief">
       <h2>Decision Brief</h2>
       <p class="muted">A compact, human-facing approval package for open decisions. Markdown remains the source of truth; this section is generated from current markers and diagnostics.</p>
-      ${renderDecisionBrief(diagnosis)}
+      ${renderDecisionBrief(diagnosis, contract)}
     </section>
 
     <section id="artifacts">
