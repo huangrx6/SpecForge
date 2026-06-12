@@ -31,6 +31,7 @@ function recommendedCommands(diagnosis) {
     "node .specforge/core/scripts/stage-contract.mjs",
     "node .specforge/core/scripts/instructions.mjs",
     "node .specforge/core/scripts/decision-checkpoints.mjs",
+    "node .specforge/core/scripts/decision-brief.mjs",
     "node .specforge/core/scripts/traceability-summary.mjs",
   ];
 
@@ -93,6 +94,7 @@ ${diagnosis.route_reason}
 
 \`\`\`bash
 node .specforge/core/scripts/doctor.mjs
+node .specforge/core/scripts/decision-brief.mjs
 node .specforge/core/scripts/instructions.mjs
 \`\`\`
 `;

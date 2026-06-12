@@ -83,6 +83,8 @@
 
 自动推进、handoff 或 gate 前建议运行 `node .specforge/core/scripts/decision-checkpoints.mjs`。该脚本汇总当前 work item 中的 open `[NEEDS ...]` 标记、已确认标记和人工接受 / 外部补证候选，用于把“需要人拍板的点”从长文档里提出来。`specforge checkpoints --dir .` 是对外 CLI 入口。
 
+当需要把确认点发给用户或负责人时，运行 `node .specforge/core/scripts/decision-brief.mjs` 或 `specforge decision-brief --dir .`。它把 top open decision、当前阶段契约、traceability、blocker、quality warning 和风险接受候选整理成一页，并给出可复制的回复格式。
+
 日常推进建议先运行 `node .specforge/core/scripts/workflow-audit.mjs` 或 `specforge audit --dir .`。它把 route、blocker、open decision、quality warning、traceability 和推荐命令合并成一页，适合作为人工确认、跨 Agent 接力和自动推进前的第一入口。
 
 进入具体阶段前建议运行 `node .specforge/core/scripts/stage-contract.mjs` 或 `specforge contract --dir .`。它把当前 artifact 的目标、应读取内容、必须产出、人工确认点、must prove 和 exit standard 单独列出，避免 Agent 只读长模板却漏掉阶段完成标准。
@@ -134,6 +136,7 @@ Markdown 仍是版本管理主格式；HTML / 可视化产物用于提升阅读�
 - 不把 token、cookie、密钥、个人隐私和生产敏感日志写入 HTML。
 - 可用 `node .specforge/core/scripts/render-work-report.mjs` 生成 `07-report/work-summary.html`，用于快速浏览 artifact graph、gate、blocker、quality warning 和关键 artifact 摘要。
 - 可用 `node .specforge/core/scripts/handoff-summary.mjs --output <work-item>/07-report/handoff.md` 生成接力摘要，用于跨 Agent、跨线程或人工复盘。
+- 可用 `node .specforge/core/scripts/decision-brief.mjs` 生成面向人工审批 / 澄清 / 授权默认的决策包。
 - 可用 `node .specforge/core/scripts/traceability-summary.mjs` 检查 source item、tasks、test cases 之间的追溯缺口；先作为提示使用，稳定后再考虑升级为 gate。
 - 可用 `node .specforge/core/scripts/workflow-audit.mjs` 生成一页流程审计摘要，先判断是否 BLOCKED / NEEDS_DECISION / NEEDS_ATTENTION，再进入具体阶段。
 - 可用 `node .specforge/core/scripts/stage-contract.mjs --overview` 查看当前 workflow 每个 artifact 的阶段契约，或用 `--artifact tasks` 聚焦单阶段。

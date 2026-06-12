@@ -50,6 +50,7 @@ node .specforge/core/scripts/stage-contract.mjs
 node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/instructions.mjs
 node .specforge/core/scripts/decision-checkpoints.mjs
+node .specforge/core/scripts/decision-brief.mjs
 node .specforge/core/scripts/traceability-summary.mjs
 node .specforge/core/scripts/artifact-graph-status.mjs
 ```
@@ -85,6 +86,7 @@ node .specforge/core/scripts/doctor.mjs
 - 低风险默认：写 `delegated_default`、默认理由、回退方式和重新验证触发条件。
 - 外部待补证：写 `manual-confirmed` / `deferred`、owner、影响、已有证据和补证触发条件。
 - Gate 争议：优先给 return path；只有低风险残余且记录完整时才允许人工接受。
+- 向用户请求确认时，优先生成 `decision-brief.mjs`：它必须带上当前阶段目标、待决 marker、可接受回复、风险接受候选和补证触发条件，避免只问“确认吗”。
 
 ## 产物读法
 
@@ -104,6 +106,7 @@ node .specforge/core/scripts/doctor.mjs
 | Contract-first | 当前阶段先看输入、输出、人工确认和退出标准 | `stage-contract.mjs` 从 artifact id 输出阶段契约 | contract 是执行约束，不替代 artifact 证据 |
 | Trace-first | tasks 前发现需求、设计、验证断链 | `traceability-summary.mjs` 和 HTML report Traceability section | 稳定前先 P2/P3 warning，不默认阻断低风险需求 |
 | Human-in-the-loop | 高影响未知灵活找人工确认，低风险可授权默认 | `decision-checkpoints.mjs`、`[NEEDS ...]`、`manual-confirmed`、`delegated_default` | 必须记录 owner、影响、回退和补证触发条件 |
+| Decision package | 让人工确认有上下文、有选项、有可复制回复格式 | `decision-brief.mjs` 汇总 top decision、contract、traceability、blockers、risk candidates | 人工回复必须能写回 artifact 或 gate evidence |
 | Lightweight artifacts | 人能读完，Agent 能接手 | 一页摘要、artifact summary、handoff、HTML reading layer | Markdown 仍是版本管理事实源，HTML 不能成为唯一证据 |
 | Stage quality policy | 不同 workflow 有不同质量条 | schema `quality_policy.section_checks`、diagnostics warnings | 不把 `lite` 套成完整 `feature` 流程 |
 | Evidence grading | gate 不是形式，证据强度和风险强度匹配 | verification evidence strength、mock / proven / manual-confirmed / deferred | `missing` 不能批准 gate；弱证据必须说明边界 |

@@ -75,6 +75,10 @@
       "to": "core/scripts/decision-checkpoints.mjs"
     },
     {
+      "from": "scripts/decision-brief.mjs",
+      "to": "core/scripts/decision-brief.mjs"
+    },
+    {
       "from": "scripts/codebase-map.mjs",
       "to": "core/scripts/codebase-map.mjs"
     },

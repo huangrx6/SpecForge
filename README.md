@@ -182,6 +182,7 @@ npx github:huangrx6/SpecForge init --dir .
 node .specforge/core/scripts/workflow-audit.mjs
 node .specforge/core/scripts/stage-contract.mjs
 node .specforge/core/scripts/doctor.mjs
+node .specforge/core/scripts/decision-brief.mjs
 ```
 
 或：
@@ -190,6 +191,7 @@ node .specforge/core/scripts/doctor.mjs
 npx github:huangrx6/SpecForge audit --dir .
 npx github:huangrx6/SpecForge contract --dir .
 npx github:huangrx6/SpecForge doctor --dir .
+npx github:huangrx6/SpecForge decision-brief --dir .
 ```
 
 ### 4. 在 Agent 中开始使用
@@ -431,6 +433,7 @@ node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/status.mjs
 node .specforge/core/scripts/instructions.mjs
 node .specforge/core/scripts/decision-checkpoints.mjs
+node .specforge/core/scripts/decision-brief.mjs
 node .specforge/core/scripts/traceability-summary.mjs
 node .specforge/core/scripts/create-work.mjs --workflow feature "新增审批记录导出"
 node .specforge/core/scripts/create-artifact.mjs requirements
