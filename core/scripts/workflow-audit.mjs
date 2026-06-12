@@ -5,6 +5,7 @@ import { contractForArtifact, focusArtifactId } from "./lib/stage-contracts.mjs"
 import { abs, effectiveSchema, loadSchema, localDateIso, parseField, readText, resolveWorkItem } from "./lib/specforge.mjs";
 import { workflowHealth } from "./lib/workflow-health.mjs";
 import { actionCommands, actionReason, actionState, readingOrder, traceGapCount, traceabilityPolicyLine } from "./lib/action-board.mjs";
+import { qualitySuiteSummary } from "./lib/quality-suite.mjs";
 
 const args = process.argv.slice(2);
 const json = args.includes("--json");
@@ -64,6 +65,23 @@ function priorityList(health) {
   return bullet(health.priorities?.slice(0, 5), "none", (item) => `[${item.severity}] ${item.area}: ${item.message} (route=${item.route || "N/A"})`);
 }
 
+function qualitySuiteLine(suite) {
+  if (!suite?.work_item) return "not applicable";
+  return `${suite.summary.overall}; checks=${suite.summary.checked}; fail=${suite.summary.failures}; warn=${suite.summary.warnings}`;
+}
+
+function qualitySuiteIssues(suite) {
+  return suite?.checks?.flatMap((qualityCheck) =>
+    (qualityCheck.issues ?? []).slice(0, 5).map((issue) => ({
+      check: qualityCheck.id,
+      severity: issue.severity,
+      route: issue.route ?? qualityCheck.route,
+      path: issue.path ?? issue.file ?? "-",
+      message: issue.message,
+    })),
+  ) ?? [];
+}
+
 function auditCommands(diagnosis) {
   return actionCommands(diagnosis).filter((command) => !command.includes("workflow-audit.mjs"));
 }
@@ -72,6 +90,7 @@ function markdown(diagnosis) {
   const generated = localDateIso();
   const health = workflowHealth(diagnosis);
   const status = actionState(diagnosis, health);
+  const qualitySuite = qualitySuiteSummary(diagnosis);
 
   if (!diagnosis.work_item) {
     return `# SpecForge Workflow Audit
@@ -126,6 +145,7 @@ ${auditCommands(diagnosis).join("\n")}
 - Next: ${actionReason(diagnosis)}
 - Health: ${health.score}/100 (${health.level})
 - Open decisions: ${diagnosis.decision_checkpoints?.summary?.open ?? 0}
+- Quality suite: ${qualitySuiteLine(qualitySuite)}
 - Blockers: ${diagnosis.blockers?.length ?? 0}
 - Trace gaps: ${traceGapCount(diagnosis.traceability)}
 - Traceability policy: ${traceabilityPolicyLine(diagnosis.traceability_policy)}
@@ -190,6 +210,16 @@ ${bullet(diagnosis.traceability?.gaps?.uncovered_sources?.slice(0, 5), "none", (
 
 ${topQualityWarnings(diagnosis.quality_warnings)}
 
+## Quality Suite
+
+- Overall: ${qualitySuiteLine(qualitySuite)}
+
+${bullet(qualitySuite?.checks, "none", (qualityCheck) => `[${qualityCheck.status}] ${qualityCheck.title}: ${qualityCheck.message} (route=${qualityCheck.route ?? "N/A"})`)}
+
+Top quality suite issues:
+
+${bullet(qualitySuiteIssues(qualitySuite).slice(0, 10), "none", (issue) => `[${issue.severity}] ${issue.check} ${issue.path}: ${issue.message} (route=${issue.route ?? "N/A"})`)}
+
 ## Reading Order
 
 ${readingOrder().map((item, index) => `${index + 1}. ${item}`).join("\n")}
@@ -210,7 +240,8 @@ try {
 
   if (json) {
     const health = workflowHealth(diagnosis);
-    console.log(JSON.stringify({ audit_status: actionState(diagnosis, health), health, action_commands: auditCommands(diagnosis), diagnosis }, null, 2));
+    const qualitySuite = qualitySuiteSummary(diagnosis);
+    console.log(JSON.stringify({ audit_status: actionState(diagnosis, health), health, quality_suite: qualitySuite, action_commands: auditCommands(diagnosis), diagnosis }, null, 2));
     process.exit(0);
   }
 

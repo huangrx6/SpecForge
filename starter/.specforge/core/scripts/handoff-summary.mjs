@@ -5,6 +5,7 @@ import { actionCommands, actionReason, actionState, readingOrder, traceabilityPo
 import { diagnoseWorkItem, diagnoseWorkspace, gateLine } from "./lib/diagnostics.mjs";
 import { abs, localDateIso, resolveWorkItem } from "./lib/specforge.mjs";
 import { workflowHealth } from "./lib/workflow-health.mjs";
+import { qualitySuiteSummary } from "./lib/quality-suite.mjs";
 
 const args = process.argv.slice(2);
 const json = args.includes("--json");
@@ -42,6 +43,11 @@ function artifactSummaryLines(workItemBase, artifacts) {
   return lines.length > 0 ? lines.join("\n") : "- none";
 }
 
+function qualitySuiteLine(suite) {
+  if (!suite?.work_item) return "not applicable";
+  return `${suite.summary.overall}; checks=${suite.summary.checked}; fail=${suite.summary.failures}; warn=${suite.summary.warnings}`;
+}
+
 function markdown(diagnosis) {
   if (!diagnosis.work_item) {
     return `# SpecForge Handoff\n\nNo active work item.\n\n- Route: ${diagnosis.route}\n- Reason: ${diagnosis.route_reason}\n`;
@@ -55,6 +61,7 @@ function markdown(diagnosis) {
   const traceability = diagnosis.traceability;
   const health = workflowHealth(diagnosis);
   const state = actionState(diagnosis, health);
+  const qualitySuite = qualitySuiteSummary(diagnosis);
 
   return `# SpecForge Handoff: ${item.id}
 
@@ -77,6 +84,7 @@ function markdown(diagnosis) {
 - Health: ${health.score}/100 (${health.level})
 - Open decisions: ${checkpoints.summary.open}
 - Blockers: ${diagnosis.blockers.length}
+- Quality suite: ${qualitySuiteLine(qualitySuite)}
 - Trace gaps: ${traceGapCount(traceability)}
 - Traceability policy: ${traceabilityPolicyLine(diagnosis.traceability_policy)}
 
@@ -111,6 +119,10 @@ ${bullet(checkpoints.risk_acceptance.slice(0, 8), "none", (entry) => `${entry.pa
 ## Quality Warnings
 
 ${bullet(diagnosis.quality_warnings, "none", (warning) => `[${warning.severity}] ${warning.message} (owner=${warning.owner_artifact}; missing=${(warning.missing_sections ?? []).join(", ") || "N/A"})`)}
+
+## Quality Suite
+
+${bullet(qualitySuite.checks, "none", (qualityCheck) => `[${qualityCheck.status}] ${qualityCheck.title}: ${qualityCheck.message} (route=${qualityCheck.route ?? "N/A"})`)}
 
 ## Gates
 
@@ -161,7 +173,7 @@ try {
   }
 
   if (json) {
-    console.log(JSON.stringify(diagnosis, null, 2));
+    console.log(JSON.stringify({ diagnosis, quality_suite: qualitySuiteSummary(diagnosis) }, null, 2));
     process.exit(0);
   }
 
