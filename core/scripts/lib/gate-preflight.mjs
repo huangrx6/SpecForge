@@ -1,5 +1,6 @@
 import { artifactById, effectiveSchema, exists, loadSchema, parseField, readText } from "./specforge.mjs";
 import { evidenceSummary } from "./evidence.mjs";
+import { sourceQualitySummary } from "./source-quality.mjs";
 import { normalizeTraceabilityPolicy, traceabilityGapChecks } from "./traceability.mjs";
 import { wikiQualitySummary } from "./wiki-quality.mjs";
 import { workflowHealth } from "./workflow-health.mjs";
@@ -112,6 +113,22 @@ export function gatePreflight(diagnosis, options = {}) {
       );
       for (const issue of evidence.issues) {
         add(checks, issue.severity, `evidence-${issue.code}`, issue.message, "evidence-summary");
+      }
+    }
+
+    if (gate === "spec_review") {
+      const sourceQuality = sourceQualitySummary(diagnosis.work_item.path);
+      add(
+        checks,
+        sourceQuality.summary.checked_artifacts > 0 ? "PASS" : "WARN",
+        sourceQuality.summary.checked_artifacts > 0 ? "source-quality-artifacts-checked" : "source-quality-no-artifacts",
+        sourceQuality.summary.checked_artifacts > 0
+          ? `Source quality checked ${sourceQuality.summary.checked_artifacts} artifact(s).`
+          : "No research or technical design artifact is available for source quality checks.",
+        "source-quality",
+      );
+      for (const sourceIssue of sourceQuality.issues) {
+        add(checks, sourceIssue.severity, `source-${sourceIssue.code}`, `${sourceIssue.path}: ${sourceIssue.message}`, "source-quality");
       }
     }
 

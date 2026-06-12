@@ -112,7 +112,7 @@ const executionByArtifact = {
   },
   research: {
     tools: ["sf-discovery", "official docs / primary sources", "repo search", "PoC or logs when available"],
-    commands: ["node .specforge/core/scripts/create-artifact.mjs research", "node .specforge/core/scripts/decision-brief.mjs"],
+    commands: ["node .specforge/core/scripts/create-artifact.mjs research", "node .specforge/core/scripts/source-quality.mjs", "node .specforge/core/scripts/decision-brief.mjs"],
   },
   gap_report: {
     tools: ["sf-discovery", "logs", "reproduction steps", "repo search"],
@@ -128,16 +128,21 @@ const executionByArtifact = {
   },
   technical_design: {
     tools: ["sf-tech-design", "profiles", "official docs", "wiki architecture"],
-    commands: ["node .specforge/core/scripts/create-artifact.mjs technical_design", "node .specforge/core/scripts/stage-contract.mjs --artifact technical_design"],
+    commands: [
+      "node .specforge/core/scripts/create-artifact.mjs technical_design",
+      "node .specforge/core/scripts/source-quality.mjs",
+      "node .specforge/core/scripts/stage-contract.mjs --artifact technical_design",
+    ],
   },
   tasks: {
     tools: ["sf-tasking", "traceability-summary.mjs", "artifact graph"],
     commands: ["node .specforge/core/scripts/create-artifact.mjs tasks", "node .specforge/core/scripts/traceability-summary.mjs"],
   },
   spec_review: {
-    tools: ["sf-spec-review", "traceability-summary.mjs", "decision-checkpoints.mjs", "gate-preflight.mjs"],
+    tools: ["sf-spec-review", "traceability-summary.mjs", "source-quality.mjs", "decision-checkpoints.mjs", "gate-preflight.mjs"],
     commands: [
       "node .specforge/core/scripts/create-artifact.mjs spec_review",
+      "node .specforge/core/scripts/source-quality.mjs",
       "node .specforge/core/scripts/gate-preflight.mjs spec_review APPROVED --evidence 02-spec-review/spec-review-v1.md",
     ],
   },

@@ -67,6 +67,7 @@
 node .specforge/core/scripts/workflow-audit.mjs
 node .specforge/core/scripts/workflow-health.mjs
 node .specforge/core/scripts/artifact-quality.mjs
+node .specforge/core/scripts/source-quality.mjs
 node .specforge/core/scripts/wiki-quality.mjs
 node .specforge/core/scripts/stage-contract.mjs --overview
 node .specforge/core/scripts/stage-contract.mjs
@@ -76,6 +77,7 @@ node .specforge/core/scripts/instructions.mjs
 node .specforge/core/scripts/decision-checkpoints.mjs
 node .specforge/core/scripts/decision-brief.mjs
 node .specforge/core/scripts/evidence-summary.mjs
+node .specforge/core/scripts/source-quality.mjs
 node .specforge/core/scripts/traceability-summary.mjs
 node .specforge/core/scripts/artifact-graph-status.mjs
 ```
@@ -135,6 +137,7 @@ node .specforge/core/scripts/doctor.mjs
 | Roadmap-first | 先看全流程每一步怎么配合，再看当前阶段细节 | `stage-contract.mjs --overview` / `specforge roadmap` 输出 artifact status、tools、commands、human decisions、exit | roadmap 是导航层，不替代 artifact 证据 |
 | Contract-first | 当前阶段先看输入、输出、人工确认和退出标准 | `stage-contract.mjs` 从 artifact id 输出阶段契约 | contract 是执行约束，不替代 artifact 证据 |
 | Trace-first | tasks 前发现需求、设计、验证断链 | `traceability_policy`、`traceability-summary.mjs` 和 HTML report Traceability section | `lite` 默认 advisory；复杂 workflow 可在 code_review / verification preflight 严格阻断 |
+| Source-first | 外部事实、版本、标准和 ADR 决策有可信来源 | `source-quality.mjs`、research source grading、technical-design version facts | 缺来源或缺权威度阻断 spec_review；弱来源先 WARN，由 evidence 说明 |
 | Human-in-the-loop | 高影响未知灵活找人工确认，低风险可授权默认 | `decision-checkpoints.mjs`、`[NEEDS ...]`、`manual-confirmed`、`delegated_default` | 必须记录 owner、影响、回退和补证触发条件 |
 | Decision package | 让人工确认有上下文、有选项、有可复制回复格式 | `decision-brief.mjs` 汇总 top decision、contract、traceability、blockers、risk candidates | 人工回复必须能写回 artifact 或 gate evidence |
 | Lightweight artifacts | 人能读完，Agent 能接手 | `artifact-quality.mjs`、一页摘要、artifact summary、handoff、HTML Action Board | Markdown 仍是版本管理事实源，HTML 不能成为唯一证据；长文档必须有摘要或分层阅读入口 |

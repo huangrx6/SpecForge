@@ -182,6 +182,7 @@ npx github:huangrx6/SpecForge init --dir .
 node .specforge/core/scripts/workflow-audit.mjs
 node .specforge/core/scripts/workflow-health.mjs
 node .specforge/core/scripts/artifact-quality.mjs
+node .specforge/core/scripts/source-quality.mjs
 node .specforge/core/scripts/wiki-quality.mjs
 node .specforge/core/scripts/stage-contract.mjs --overview
 node .specforge/core/scripts/stage-contract.mjs
@@ -197,6 +198,7 @@ node .specforge/core/scripts/workflow-package.mjs
 npx github:huangrx6/SpecForge audit --dir .
 npx github:huangrx6/SpecForge health --dir .
 npx github:huangrx6/SpecForge quality --dir .
+npx github:huangrx6/SpecForge source-quality --dir .
 npx github:huangrx6/SpecForge wiki-quality --dir .
 npx github:huangrx6/SpecForge roadmap --dir .
 npx github:huangrx6/SpecForge contract --dir .
@@ -446,6 +448,7 @@ node .specforge/core/scripts/gate.mjs code_review REQUEST_CHANGES
 node .specforge/core/scripts/workflow-audit.mjs
 node .specforge/core/scripts/workflow-health.mjs
 node .specforge/core/scripts/artifact-quality.mjs
+node .specforge/core/scripts/source-quality.mjs
 node .specforge/core/scripts/wiki-quality.mjs
 node .specforge/core/scripts/stage-contract.mjs --overview
 node .specforge/core/scripts/stage-contract.mjs
@@ -455,6 +458,7 @@ node .specforge/core/scripts/instructions.mjs
 node .specforge/core/scripts/decision-checkpoints.mjs
 node .specforge/core/scripts/decision-brief.mjs
 node .specforge/core/scripts/evidence-summary.mjs
+node .specforge/core/scripts/source-quality.mjs
 node .specforge/core/scripts/traceability-summary.mjs
 node .specforge/core/scripts/create-work.mjs --workflow feature "新增审批记录导出"
 node .specforge/core/scripts/create-artifact.mjs requirements
@@ -468,6 +472,8 @@ node .specforge/core/scripts/wiki-quality.mjs
 ```
 
 `render-work-report.mjs` 生成的 HTML 首屏是 Action Board：先给当前状态、下一步、最高优先级、复制命令和阅读顺序；完整 artifact 摘要、traceability、gate 和长表放在下方。Markdown artifact 仍然是事实源。
+
+`source-quality.mjs` 检查 `research.md` 的来源池和 `technical-design.md` 的版本事实 / 官方基准记录。缺少研究来源或权威度分级是 `FAIL`；轶事、过期、未知来源以及技术版本事实缺日期 / 来源是 `WARN`。`gate-preflight spec_review APPROVED` 会自动执行同类检查。
 
 `wiki-quality.mjs` 检查 `.specforge/wiki/` 的 frontmatter、`00-index.md` 引用、重复 current 项、日期 / 版本化命名和模板占位；`gate-preflight wiki_sync APPROVED` 会自动执行同类检查。结构性问题是 `FAIL`，内容薄或占位偏多是 `WARN`，需要在 wiki-sync evidence 中说明是否接受。
 
