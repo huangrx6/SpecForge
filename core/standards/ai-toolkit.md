@@ -130,6 +130,7 @@ Markdown 仍是版本管理主格式；HTML / 可视化产物用于提升阅读�
 - 不把 token、cookie、密钥、个人隐私和生产敏感日志写入 HTML。
 - 可用 `node .specforge/core/scripts/render-work-report.mjs` 生成 `07-report/work-summary.html`，用于快速浏览 artifact graph、gate、blocker、quality warning 和关键 artifact 摘要。
 - 可用 `node .specforge/core/scripts/handoff-summary.mjs --output <work-item>/07-report/handoff.md` 生成接力摘要，用于跨 Agent、跨线程或人工复盘。
+- 可用 `node .specforge/core/scripts/traceability-summary.mjs` 检查 source item、tasks、test cases 之间的追溯缺口；先作为提示使用，稳定后再考虑升级为 gate。
 
 ## 持续演进
 

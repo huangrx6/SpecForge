@@ -17,6 +17,7 @@ Usage:
   specforge checkpoints [--dir <path>] [--work-item <id>] [--json]
   specforge handoff [--dir <path>] [--work-item <id>] [--output <path>] [--json]
   specforge report [--dir <path>] [--work-item <id>] [--output <path>]
+  specforge traceability [--dir <path>] [--work-item <id>] [--json]
 
 Examples:
   npx skills add https://github.com/huangrx6/SpecForge --skill '*' --agent codex --global
@@ -26,6 +27,7 @@ Examples:
   npx github:huangrx6/SpecForge checkpoints --dir .
   npx github:huangrx6/SpecForge handoff --dir .
   npx github:huangrx6/SpecForge report --dir .
+  npx github:huangrx6/SpecForge traceability --dir .
 `);
 }
 
@@ -132,6 +134,20 @@ function handoff() {
   runNode(handoffPath, extraArgs, targetDir);
 }
 
+function traceability() {
+  const targetDir = resolve(option("--dir", "."));
+  const traceabilityPath = join(targetDir, ".specforge/core/scripts/traceability-summary.mjs");
+  if (!existsSync(traceabilityPath)) {
+    console.error(`Missing SpecForge traceability script: ${traceabilityPath}`);
+    process.exit(1);
+  }
+  const extraArgs = [];
+  const workItem = option("--work-item");
+  if (workItem) extraArgs.push("--work-item", workItem);
+  if (args.includes("--json")) extraArgs.push("--json");
+  runNode(traceabilityPath, extraArgs, targetDir);
+}
+
 if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
   usage();
   process.exit(0);
@@ -149,6 +165,8 @@ if (command === "init") {
   handoff();
 } else if (command === "report") {
   report();
+} else if (command === "traceability") {
+  traceability();
 } else {
   usage();
   process.exit(1);

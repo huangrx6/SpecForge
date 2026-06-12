@@ -3,6 +3,7 @@ import { dirname } from "node:path";
 import { summarizeOutput } from "./lib/artifact-summary.mjs";
 import { diagnoseWorkItem, diagnoseWorkspace, gateLine } from "./lib/diagnostics.mjs";
 import { abs, localDateIso, resolveWorkItem } from "./lib/specforge.mjs";
+import { traceabilitySummary } from "./lib/traceability.mjs";
 
 const args = process.argv.slice(2);
 const json = args.includes("--json");
@@ -50,6 +51,7 @@ function markdown(diagnosis) {
   const done = diagnosis.progress.done;
   const total = diagnosis.progress.total;
   const generated = localDateIso();
+  const traceability = traceabilitySummary(item.path);
 
   return `# SpecForge Handoff: ${item.id}
 
@@ -109,6 +111,20 @@ ${bullet(diagnosis.gates, "none", (gate) => `${gate.gate}: ${gate.status}; evide
 ## Artifact Graph
 
 ${bullet(diagnosis.artifacts, "none", artifactLine)}
+
+## Traceability
+
+- Source items: ${traceability.summary.source_items}
+- Tasks: ${traceability.summary.tasks}
+- Verification items: ${traceability.summary.verification_items}
+- Uncovered source items: ${traceability.summary.uncovered_sources}
+- Tasks missing trace: ${traceability.summary.tasks_missing_trace}
+- Tasks missing verification: ${traceability.summary.tasks_missing_verification}
+- Tasks without testcase link: ${traceability.summary.tasks_without_testcase}
+
+Top gaps:
+
+${bullet(traceability.gaps.uncovered_sources.slice(0, 5), "none", (item) => `${item.id} ${item.path}:${item.line}`)}
 
 ## Artifact Summaries
 

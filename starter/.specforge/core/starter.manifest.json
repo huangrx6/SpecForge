@@ -43,6 +43,10 @@
       "to": "core/scripts/lib/artifact-summary.mjs"
     },
     {
+      "from": "scripts/lib/traceability.mjs",
+      "to": "core/scripts/lib/traceability.mjs"
+    },
+    {
       "from": "scripts/lib/diagnostics.mjs",
       "to": "core/scripts/lib/diagnostics.mjs"
     },
@@ -105,6 +109,10 @@
     {
       "from": "scripts/sync-wiki.mjs",
       "to": "core/scripts/sync-wiki.mjs"
+    },
+    {
+      "from": "scripts/traceability-summary.mjs",
+      "to": "core/scripts/traceability-summary.mjs"
     },
     {
       "from": "scripts/update-skills.mjs",
