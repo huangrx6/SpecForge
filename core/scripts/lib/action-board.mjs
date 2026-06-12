@@ -41,6 +41,9 @@ export function actionCommands(diagnosis) {
   const commands = ["node .specforge/core/scripts/workflow-audit.mjs", "node .specforge/core/scripts/stage-contract.mjs"];
   if (diagnosis.blockers?.length > 0) commands.push(`node .specforge/core/scripts/instructions.mjs ${diagnosis.blockers[0].owner_artifact ?? ""}`.trim());
   if ((diagnosis.decision_checkpoints?.summary?.open ?? 0) > 0) commands.push("node .specforge/core/scripts/decision-brief.mjs");
+  if ((diagnosis.quality_warnings ?? []).length > 0 || traceGapCount(diagnosis.traceability) > 0) {
+    commands.push("node .specforge/core/scripts/quality-suite.mjs");
+  }
   if ((diagnosis.quality_warnings ?? []).some((warning) => String(warning.code ?? "").startsWith("artifact-quality-"))) {
     commands.push("node .specforge/core/scripts/artifact-quality.mjs");
   }

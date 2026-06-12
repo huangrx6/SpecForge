@@ -181,6 +181,7 @@ npx github:huangrx6/SpecForge init --dir .
 ```bash
 node .specforge/core/scripts/workflow-audit.mjs
 node .specforge/core/scripts/workflow-health.mjs
+node .specforge/core/scripts/quality-suite.mjs
 node .specforge/core/scripts/artifact-quality.mjs
 node .specforge/core/scripts/closure-quality.mjs
 node .specforge/core/scripts/source-quality.mjs
@@ -200,6 +201,7 @@ node .specforge/core/scripts/workflow-package.mjs
 ```bash
 npx github:huangrx6/SpecForge audit --dir .
 npx github:huangrx6/SpecForge health --dir .
+npx github:huangrx6/SpecForge quality-suite --dir .
 npx github:huangrx6/SpecForge quality --dir .
 npx github:huangrx6/SpecForge closure-quality --dir .
 npx github:huangrx6/SpecForge source-quality --dir .
@@ -453,6 +455,7 @@ node .specforge/core/scripts/gate.mjs code_review REQUEST_CHANGES
 ```bash
 node .specforge/core/scripts/workflow-audit.mjs
 node .specforge/core/scripts/workflow-health.mjs
+node .specforge/core/scripts/quality-suite.mjs
 node .specforge/core/scripts/artifact-quality.mjs
 node .specforge/core/scripts/closure-quality.mjs
 node .specforge/core/scripts/source-quality.mjs
@@ -482,6 +485,8 @@ node .specforge/core/scripts/wiki-quality.mjs
 ```
 
 `render-work-report.mjs` 生成的 HTML 首屏是 Action Board：先给当前状态、下一步、最高优先级、复制命令和阅读顺序；完整 artifact 摘要、traceability、gate 和长表放在下方。Markdown artifact 仍然是事实源。
+
+`quality-suite.mjs` 是日常推进的阶段感知质量总入口。它总是检查 artifact 可读性、决策闭环和 traceability；到达或出现对应产物后再自动启用 source、implementation、verification evidence、wiki、closure 检查。这样用户和 Agent 可以先看一个 PASS / WARN / FAIL 总表，再按 route 下钻专项脚本。
 
 `source-quality.mjs` 检查 `research.md` 的来源池和 `technical-design.md` 的版本事实 / 官方基准记录。缺少研究来源或权威度分级是 `FAIL`；轶事、过期、未知来源以及技术版本事实缺日期 / 来源是 `WARN`。`gate-preflight spec_review APPROVED` 会自动执行同类检查。
 

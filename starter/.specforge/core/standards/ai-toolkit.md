@@ -107,6 +107,8 @@ Traceability 由 workflow schema 的 `traceability_policy` 控制：`off` 不提
 
 需要快速判断当前流程是否可继续时，运行 `node .specforge/core/scripts/workflow-health.mjs` 或 `specforge health --dir .`。它给出 health score、level、维度扣分和 Top priorities，用来排序下一步，不替代 gate evidence。
 
+需要一条命令判断“当前阶段质量是否够继续”时，运行 `node .specforge/core/scripts/quality-suite.mjs` 或 `specforge quality-suite --dir .`。它按 ready artifact 自动启用相关检查：早期只看可读性、决策和追踪；进入设计后看来源；进入实现后看 diff 账本；进入验证、wiki、关闭后再看证据、知识沉淀和 release / rollback。先看总表，再按 route 下钻专项脚本。
+
 需要判断 artifact 是否“人能读完”时，运行 `node .specforge/core/scripts/artifact-quality.mjs` 或 `specforge quality --dir .`。它检查已存在 artifact 的摘要 section、摘要长度、模板占位和长文档提示；结果也会进入 `quality_warnings`，帮助 audit / health / report 提前暴露阅读负担。
 
 需要判断研究和技术方案是否“有可信来源”时，运行 `node .specforge/core/scripts/source-quality.mjs` 或 `specforge source-quality --dir .`。它检查 `research.md` 的来源池、来源日期 / 版本、primary / secondary / anecdotal / stale / unknown 分级，以及 `technical-design.md` 的当前版本事实和官方基准来源。缺来源或缺权威度是 FAIL，弱来源或缺日期是 WARN；`spec_review` 的 gate preflight 会自动执行同类检查。

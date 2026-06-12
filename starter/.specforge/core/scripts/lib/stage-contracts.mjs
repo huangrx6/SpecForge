@@ -111,83 +111,108 @@ const executionByArtifact = {
     commands: ["node .specforge/core/scripts/status.mjs", "node .specforge/core/scripts/create-work.mjs --workflow <workflow> \"<title>\""],
   },
   research: {
-    tools: ["sf-discovery", "official docs / primary sources", "repo search", "PoC or logs when available"],
-    commands: ["node .specforge/core/scripts/create-artifact.mjs research", "node .specforge/core/scripts/source-quality.mjs", "node .specforge/core/scripts/decision-brief.mjs"],
+    tools: ["sf-discovery", "official docs / primary sources", "repo search", "PoC or logs when available", "quality-suite.mjs"],
+    commands: [
+      "node .specforge/core/scripts/create-artifact.mjs research",
+      "node .specforge/core/scripts/quality-suite.mjs",
+      "node .specforge/core/scripts/source-quality.mjs",
+      "node .specforge/core/scripts/decision-brief.mjs",
+    ],
   },
   gap_report: {
-    tools: ["sf-discovery", "logs", "reproduction steps", "repo search"],
-    commands: ["node .specforge/core/scripts/create-artifact.mjs gap_report", "node .specforge/core/scripts/decision-brief.mjs"],
+    tools: ["sf-discovery", "logs", "reproduction steps", "repo search", "quality-suite.mjs"],
+    commands: [
+      "node .specforge/core/scripts/create-artifact.mjs gap_report",
+      "node .specforge/core/scripts/quality-suite.mjs",
+      "node .specforge/core/scripts/decision-brief.mjs",
+    ],
   },
   requirements: {
-    tools: ["sf-requirements", "decision-checkpoints.mjs", "decision-quality.mjs", "wiki product rules"],
+    tools: ["sf-requirements", "decision-checkpoints.mjs", "decision-quality.mjs", "quality-suite.mjs", "wiki product rules"],
     commands: [
       "node .specforge/core/scripts/create-artifact.mjs requirements",
+      "node .specforge/core/scripts/quality-suite.mjs",
       "node .specforge/core/scripts/decision-checkpoints.mjs",
       "node .specforge/core/scripts/decision-quality.mjs",
     ],
   },
   ui_design: {
-    tools: ["sf-ui-design", "Pencil", "design standards", "visual verification screenshots"],
-    commands: ["node .specforge/core/scripts/create-artifact.mjs ui_design", "node .specforge/core/scripts/stage-contract.mjs --artifact ui_design"],
+    tools: ["sf-ui-design", "Pencil", "design standards", "visual verification screenshots", "quality-suite.mjs"],
+    commands: [
+      "node .specforge/core/scripts/create-artifact.mjs ui_design",
+      "node .specforge/core/scripts/quality-suite.mjs",
+      "node .specforge/core/scripts/stage-contract.mjs --artifact ui_design",
+    ],
   },
   technical_design: {
-    tools: ["sf-tech-design", "profiles", "official docs", "wiki architecture"],
+    tools: ["sf-tech-design", "profiles", "official docs", "wiki architecture", "quality-suite.mjs"],
     commands: [
       "node .specforge/core/scripts/create-artifact.mjs technical_design",
+      "node .specforge/core/scripts/quality-suite.mjs",
       "node .specforge/core/scripts/source-quality.mjs",
       "node .specforge/core/scripts/stage-contract.mjs --artifact technical_design",
     ],
   },
   tasks: {
-    tools: ["sf-tasking", "traceability-summary.mjs", "artifact graph"],
-    commands: ["node .specforge/core/scripts/create-artifact.mjs tasks", "node .specforge/core/scripts/traceability-summary.mjs"],
+    tools: ["sf-tasking", "traceability-summary.mjs", "quality-suite.mjs", "artifact graph"],
+    commands: [
+      "node .specforge/core/scripts/create-artifact.mjs tasks",
+      "node .specforge/core/scripts/quality-suite.mjs",
+      "node .specforge/core/scripts/traceability-summary.mjs",
+    ],
   },
   spec_review: {
-    tools: ["sf-spec-review", "traceability-summary.mjs", "source-quality.mjs", "decision-quality.mjs", "decision-checkpoints.mjs", "gate-preflight.mjs"],
+    tools: ["sf-spec-review", "traceability-summary.mjs", "quality-suite.mjs", "source-quality.mjs", "decision-quality.mjs", "decision-checkpoints.mjs", "gate-preflight.mjs"],
     commands: [
       "node .specforge/core/scripts/create-artifact.mjs spec_review",
+      "node .specforge/core/scripts/quality-suite.mjs",
       "node .specforge/core/scripts/source-quality.mjs",
       "node .specforge/core/scripts/decision-quality.mjs",
       "node .specforge/core/scripts/gate-preflight.mjs spec_review APPROVED --evidence 02-spec-review/spec-review-v1.md",
     ],
   },
   implementation: {
-    tools: ["sf-implement", "Codex / Trae / SOLO", "instructions.mjs apply", "implementation-quality.mjs", "git diff"],
+    tools: ["sf-implement", "Codex / Trae / SOLO", "instructions.mjs apply", "quality-suite.mjs", "implementation-quality.mjs", "git diff"],
     commands: [
       "node .specforge/core/scripts/instructions.mjs apply",
+      "node .specforge/core/scripts/quality-suite.mjs",
       "node .specforge/core/scripts/implementation-quality.mjs",
       "git status --short --untracked-files=all",
     ],
   },
   code_review: {
-    tools: ["sf-code-review", "git diff", "test output", "implementation-quality.mjs", "gate-preflight.mjs"],
+    tools: ["sf-code-review", "git diff", "test output", "quality-suite.mjs", "implementation-quality.mjs", "gate-preflight.mjs"],
     commands: [
       "node .specforge/core/scripts/create-artifact.mjs code_review",
+      "node .specforge/core/scripts/quality-suite.mjs",
       "node .specforge/core/scripts/implementation-quality.mjs",
       "node .specforge/core/scripts/gate-preflight.mjs code_review APPROVED --evidence 04-code-review/code-review-v1.md",
     ],
   },
   verification: {
-    tools: ["sf-verify", "CI", "Playwright", "logs", "mock / real environment evidence", "decision-quality.mjs"],
+    tools: ["sf-verify", "CI", "Playwright", "logs", "mock / real environment evidence", "quality-suite.mjs", "decision-quality.mjs"],
     commands: [
       "node .specforge/core/scripts/create-artifact.mjs verification",
+      "node .specforge/core/scripts/quality-suite.mjs",
       "node .specforge/core/scripts/evidence-summary.mjs",
       "node .specforge/core/scripts/decision-quality.mjs",
       "node .specforge/core/scripts/gate-preflight.mjs verification APPROVED --evidence 05-verification/report.md",
     ],
   },
   wiki_sync: {
-    tools: ["sf-wiki", "sync-wiki.mjs", "wiki-quality.mjs", "wiki index", "gate-preflight.mjs"],
+    tools: ["sf-wiki", "sync-wiki.mjs", "quality-suite.mjs", "wiki-quality.mjs", "wiki index", "gate-preflight.mjs"],
     commands: [
       "node .specforge/core/scripts/sync-wiki.mjs",
+      "node .specforge/core/scripts/quality-suite.mjs",
       "node .specforge/core/scripts/wiki-quality.mjs",
       "node .specforge/core/scripts/gate-preflight.mjs wiki_sync APPROVED --evidence 06-close/wiki-sync.md",
     ],
   },
   closure: {
-    tools: ["sf-close", "doctor.mjs", "decision-quality.mjs", "closure-quality.mjs", "workflow-package.mjs", "archive-work.mjs"],
+    tools: ["sf-close", "doctor.mjs", "quality-suite.mjs", "decision-quality.mjs", "closure-quality.mjs", "workflow-package.mjs", "archive-work.mjs"],
     commands: [
       "node .specforge/core/scripts/workflow-package.mjs",
+      "node .specforge/core/scripts/quality-suite.mjs",
       "node .specforge/core/scripts/decision-quality.mjs",
       "node .specforge/core/scripts/closure-quality.mjs",
       "node .specforge/core/scripts/doctor.mjs",
