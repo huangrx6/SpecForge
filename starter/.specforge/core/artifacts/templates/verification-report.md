@@ -43,6 +43,14 @@
 |---|---|---|---|---|---|---|
 | TC-001 | REQ / TASK / REVIEW | unit / integration / contract / playwright / startup / manual | high / medium / low | command / Playwright / manual | pass / fail / skipped | |
 
+### 测试设计产物索引
+
+> XMind / 白板 / 表格只作为测试设计草图；最终可审计事实来自导出的 Markdown / JSON 和 `test-cases.md` 中的 TC/PW 用例。
+
+| 产物 | 格式 | 原始路径 | 导出路径 | 派生用例 | 状态 |
+|---|---|---|---|---|---|
+| | xmind / markdown / json / table | | 05-verification/test-design/<name>.md / .json | TC-001, PW-001 | used / superseded / N/A |
+
 ## 3.2 证据强度分级
 
 | 来源项 / 风险 | 证据等级 | 证据路径 / 摘要 | 可证明结论 | 不能证明的范围 | Gate 影响 |
@@ -123,6 +131,7 @@
 | Playwright 脚本 / 测试文件 | |
 | 执行命令 | |
 | 浏览器 / viewport | |
+| Evidence run directory | 05-verification/evidence/run-YYYYMMDD-HHMM |
 | 截图 / trace / video / console 摘要 | |
 | 是否覆盖关键失败路径 | yes / no / N/A |
 

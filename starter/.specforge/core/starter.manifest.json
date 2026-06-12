@@ -75,6 +75,10 @@
       "to": "core/scripts/lib/quality-suite.mjs"
     },
     {
+      "from": "scripts/lib/test-case-quality.mjs",
+      "to": "core/scripts/lib/test-case-quality.mjs"
+    },
+    {
       "from": "scripts/lib/decision-quality.mjs",
       "to": "core/scripts/lib/decision-quality.mjs"
     },
@@ -177,6 +181,10 @@
     {
       "from": "scripts/quality-suite.mjs",
       "to": "core/scripts/quality-suite.mjs"
+    },
+    {
+      "from": "scripts/test-case-quality.mjs",
+      "to": "core/scripts/test-case-quality.mjs"
     },
     {
       "from": "scripts/instructions.mjs",

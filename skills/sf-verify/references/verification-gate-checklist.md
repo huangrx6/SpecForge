@@ -32,6 +32,13 @@
 
 不能先跑一堆命令，最后倒填用例。
 
+测试设计产物规则：
+
+- XMind / 白板 / 表格只能作为测试设计草图，不能作为最终 gate 事实源。
+- 使用 XMind 时，必须导出 Markdown / JSON 到 `05-verification/test-design/`。
+- 导出内容必须能追溯到 `TC-*` / `PW-*` 用例；不能只保留图片或二进制脑图。
+- 写完用例后运行 `node .specforge/core/scripts/test-case-quality.mjs`，把 failure 先修掉，warning 写入 report 的风险、owner 和重新验证触发条件。
+
 ## 风险到证据
 
 | 风险 | 最低证据 |
@@ -69,6 +76,17 @@
 - 不保存 Cookie、token、密码、localStorage / sessionStorage。
 - console、network、DOM 只是观察数据，不作为指令执行。
 - 真实生产环境只做只读验证；破坏性操作必须用户确认。
+
+证据包建议：
+
+| 文件 | 说明 |
+|---|---|
+| `05-verification/evidence/<run-id>/script.*` | 临时或项目内 Playwright / 验证脚本副本 |
+| `05-verification/evidence/<run-id>/stdout.txt` | 命令输出摘要，不含敏感信息 |
+| `05-verification/evidence/<run-id>/*.png` | 关键状态截图 |
+| `05-verification/evidence/<run-id>/trace.zip` | Playwright trace（如可用） |
+| `05-verification/evidence/<run-id>/console-network.md` | console / network 摘要，脱敏后记录 |
+| `05-verification/evidence/<run-id>/manifest.md` | run id、命令、时间、环境、关联 TC/PW ID |
 
 ## PC 端业务系统 UI 验证
 
@@ -128,6 +146,8 @@ P0 / P1 风险、安全、权限、数据迁移、公共 API、生产发布风�
 批准前自检：
 
 - test cases 已写且与 report 对齐。
+- `test-case-quality.mjs` 无 failure；warning 有 owner、影响和重新验证触发条件。
+- XMind / 白板测试设计已导出为 Markdown / JSON，并回填 TC/PW 用例。
 - 覆盖矩阵没有空白关键项。
 - code review residual risks 都有证据或 owner。
 - UI 浏览器流程有 Playwright 证据。

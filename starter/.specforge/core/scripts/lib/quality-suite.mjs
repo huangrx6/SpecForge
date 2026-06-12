@@ -5,6 +5,7 @@ import { evidenceSummary } from "./evidence.mjs";
 import { implementationQualitySummary } from "./implementation-quality.mjs";
 import { sourceQualitySummary } from "./source-quality.mjs";
 import { exists } from "./specforge.mjs";
+import { testCaseQualitySummary } from "./test-case-quality.mjs";
 import { normalizeTraceabilityPolicy, traceabilityGapChecks } from "./traceability.mjs";
 import { wikiQualitySummary } from "./wiki-quality.mjs";
 
@@ -30,6 +31,7 @@ const routesByCheck = {
   "source-quality": "source-quality",
   traceability: "sf-tasking",
   "implementation-quality": "implementation-quality",
+  "test-case-quality": "test-case-quality",
   "evidence-summary": "evidence-summary",
   "wiki-quality": "wiki-quality",
   "closure-quality": "closure-quality",
@@ -41,6 +43,7 @@ const commandsByCheck = {
   "source-quality": ["node .specforge/core/scripts/source-quality.mjs"],
   traceability: ["node .specforge/core/scripts/traceability-summary.mjs"],
   "implementation-quality": ["node .specforge/core/scripts/implementation-quality.mjs"],
+  "test-case-quality": ["node .specforge/core/scripts/test-case-quality.mjs"],
   "evidence-summary": ["node .specforge/core/scripts/evidence-summary.mjs"],
   "wiki-quality": ["node .specforge/core/scripts/wiki-quality.mjs"],
   "closure-quality": ["node .specforge/core/scripts/closure-quality.mjs"],
@@ -228,6 +231,23 @@ function evidenceCheck(diagnosis) {
   );
 }
 
+function testCaseQualityCheck(diagnosis) {
+  const quality = testCaseQualitySummary(diagnosis.work_item.path);
+  const counts = countIssues(quality.issues);
+  return check(
+    "test-case-quality",
+    "Test Case Quality",
+    statusFromCounts(counts.failures, counts.warnings),
+    `Test cases=${quality.summary?.test_cases ?? 0}, Playwright=${quality.summary?.playwright_cases ?? 0}, design artifacts=${quality.summary?.test_design_artifacts ?? 0}.`,
+    {
+      failures: counts.failures,
+      warnings: counts.warnings,
+      issues: quality.issues,
+      data: quality,
+    },
+  );
+}
+
 function wikiQualityCheck() {
   const quality = wikiQualitySummary();
   return check(
@@ -309,6 +329,7 @@ export function qualitySuiteSummary(diagnosis) {
   }
 
   if (artifactReached(diagnosis, "verification") || anyOutputExists(diagnosis, ["verification"])) {
+    checks.push(testCaseQualityCheck(diagnosis));
     checks.push(evidenceCheck(diagnosis));
   }
 

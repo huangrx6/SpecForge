@@ -15,6 +15,7 @@
     "archive": "node core/scripts/archive-work.mjs",
     "codebase:map": "node core/scripts/codebase-map.mjs",
     "codebase:index": "node core/scripts/codebase-index.mjs",
+    "quality:test-cases": "node core/scripts/test-case-quality.mjs",
     "selftest": "node core/scripts/self-test.mjs",
     "doctor": "node core/scripts/doctor.mjs",
     "validate:skills": "node core/scripts/validate-skills.mjs",

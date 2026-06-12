@@ -43,6 +43,8 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
    - 在执行验证前写 `05-verification/test-cases.md`。
    - 用例必须从 requirements / gap_report / tasks / ui_design / technical_design / code review notes / 相关 wiki 的运行、风险和模块边界推导，不凭验证阶段临时想象。
    - 每个用例包含 ID、来源、前置条件、步骤、断言、证据类型、自动化方式和风险等级。
+   - XMind / 白板 / 表格只能作为测试设计草图；必须导出 Markdown / JSON 到 `05-verification/test-design/`，并把派生用例回填到 `05-verification/test-cases.md`。
+   - 写完用例后运行 `node .specforge/core/scripts/test-case-quality.mjs`；失败项先修正，warning 写入 report 的风险 / owner / 重新验证触发条件。
 3. **建立覆盖矩阵**
    - requirements / gap_report / tasks / code review notes 每项都要映射到验证方式和证据。
    - 每个 tasks 的 `_Verification:_` 必须有通过 / 失败 / 跳过及理由。
@@ -58,6 +60,7 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
    - 涉及浏览器页面流程、上传、表单提交、审批、下载、权限、路由跳转或错误提示时，Playwright E2E 是必需证据：先写 `05-verification/test-cases.md` 用例，再用真实浏览器自动点击 / 填写 / 上传 / 提交 / 断言。
    - 项目未配置 Playwright 时，优先使用 `core/skills/quality/playwright-skill` 的临时脚本运行；不能因为“项目没有 E2E 配置”直接跳过。
    - 需要 console、network、DOM、a11y、performance 诊断时，优先使用 Playwright trace、console、network 和 screenshot 证据。
+   - 浏览器证据优先归档到 `05-verification/evidence/<run-id>/`，至少记录脚本 / 命令、stdout 摘要、截图或 trace、console/network 摘要和相关 TC/PW ID。
    - 不读取、保存或输出 Cookie、token、密码、localStorage / sessionStorage 敏感数据。
 6. **业务闭环验证**
    - E2E 必须覆盖完整业务闭环，不能只测 happy path。
@@ -99,6 +102,7 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 - code review 标记的 technical_design `yes` 影响面没有验证证据，或跳过项没有 owner、影响和重新验证触发条件。
 - UI 关键路径只测 happy path。
 - 有浏览器流程但未先写 `05-verification/test-cases.md` 和 Playwright 用例、未执行自动化操作，或只用单元测试 / 手工点击替代。
+- 使用 XMind 但没有导出 Markdown / JSON，或导出内容未回填到 TC/PW 用例。
 - 涉及提交、审批、上传、下载、权限或错误提示，但没有 Playwright 覆盖成功和失败路径。
 - 浏览器验证证据没有写入 `05-verification/report.md` 或 `05-verification/evidence/`。
 - `ui-design.md` 声明采用 PC 端业务系统规范，但未验证核心 token、布局尺寸、表格 / 表单 / 弹窗 / 抽屉或响应式约束。
@@ -119,6 +123,7 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 ## 完成标准
 
 - verification report 足以支撑发布或关闭判断。
+- `test-case-quality.mjs` 无 failure；warning 已进入 verification report 的风险、owner 和重新验证触发条件。
 - `APPROVED` 时 verification gate 状态与证据一致。
 - `REQUEST_CHANGES` / `REJECTED` 时 gate 状态已更新且 evidence 为 `null`。
 - known gaps、风险、owner 和重新验证触发条件清楚。

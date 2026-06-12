@@ -50,6 +50,8 @@ node .specforge/core/scripts/create-artifact.mjs verification
 2. 用例来源必须来自 requirements / gap report / tasks / UI design / technical design / code review notes / 相关 wiki 的运行、风险和模块边界。
 3. 每个用例包含 ID、来源、前置条件、步骤、断言、证据类型、自动化方式和风险等级。
 4. 有浏览器 UI 时，必须包含 Playwright 用例；不能用“手工点过”替代。
+5. 如果使用 XMind / 白板 / 表格做测试设计，必须导出 Markdown / JSON 到 `05-verification/test-design/`，并把派生 TC/PW 用例回填到 `test-cases.md`。
+6. 写完用例后运行 `node .specforge/core/scripts/test-case-quality.mjs`；失败项必须先修正，warning 必须进入 report 的风险 / owner / 重新验证触发条件。
 
 ### B. 建覆盖矩阵
 
@@ -71,7 +73,7 @@ node .specforge/core/scripts/create-artifact.mjs verification
 
 ### D. 记录证据和决策
 
-1. 写入 `05-verification/report.md`、`05-verification/ci-result.md`，并把截图、trace、日志摘要或链接登记到报告。
+1. 写入 `05-verification/report.md`、`05-verification/ci-result.md`，并把截图、trace、日志摘要或链接登记到报告。Playwright / 浏览器证据优先归档到 `05-verification/evidence/<run-id>/`，包含脚本、stdout 摘要、截图、trace、console/network 摘要和相关 TC/PW ID。
 2. 为每项关键证据标注强度：`proven` / `mocked` / `manual-confirmed` / `deferred` / `missing`。
 3. 跳过项必须写明原因、影响、owner、重新验证触发条件和可接受期限。
 4. 如果缺口来自真实环境、第三方系统、外部账号或低风险残余，先输出人工确认请求；用户明确接受后，把确认内容写入 `## 人工确认与外部补证`，再判断 gate。
@@ -97,6 +99,7 @@ node .specforge/core/scripts/gate.mjs verification REJECTED
 | 阻断测试失败 | `REQUEST_CHANGES` |
 | 关键验收标准无证据，且不是人工确认的外部待补证 / 低风险残余 | `REQUEST_CHANGES` |
 | 有浏览器流程但无 Playwright 用例、执行命令或截图 / trace 证据 | `REQUEST_CHANGES` |
+| 使用 XMind 但没有导出 Markdown / JSON，或导出内容未回填到 TC/PW 用例 | `REQUEST_CHANGES` |
 | UI 只测 happy path、单角色或单状态 | `REQUEST_CHANGES` |
 | 安全、权限、数据迁移、配置、回滚或公共 API 缺强证据 | `REQUEST_CHANGES` |
 | 验证需要的启动、测试、回滚或风险入口在 wiki 中缺失且报告未记录补证方式 | `REQUEST_CHANGES` 或转 `sf-wiki` 补齐 |
@@ -107,6 +110,7 @@ node .specforge/core/scripts/gate.mjs verification REJECTED
 ## 完成标准
 
 - `05-verification/test-cases.md` 先于验证执行存在并更新。
+- `node .specforge/core/scripts/test-case-quality.mjs` 通过，或所有 warning 都在 report 中有 owner、影响和重新验证条件。
 - `05-verification/report.md` 能追溯 requirements / gap / tasks / code review notes 到证据。
 - 报告已区分证据强度，并明确哪些结论来自 local、mock、CI、真实环境或人工确认。
 - 外部待补证项已记录 owner、影响、触发条件和用户确认原文摘要。

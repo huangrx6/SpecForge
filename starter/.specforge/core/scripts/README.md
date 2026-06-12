@@ -8,7 +8,7 @@
 |---|---|---|
 | `routing` | `status.mjs`, `instructions.mjs`, `workflow-audit.mjs`, `workflow-health.mjs`, `stage-contract.mjs`, `artifact-graph-status.mjs` | 判断当前状态、下一步、健康度、阶段契约和全流程导航 |
 | `authoring` | `create-work.mjs`, `create-artifact.mjs`, `sync-wiki.mjs` | 创建 work item / artifact，回写长期 wiki |
-| `quality` | `quality-suite.mjs`, `artifact-quality.mjs`, `decision-quality.mjs`, `source-quality.mjs`, `implementation-quality.mjs`, `evidence-summary.mjs`, `wiki-quality.mjs`, `closure-quality.mjs`, `gate-preflight.mjs` | 阶段感知质量检查、gate 前只读预检和证据分级 |
+| `quality` | `quality-suite.mjs`, `artifact-quality.mjs`, `decision-quality.mjs`, `source-quality.mjs`, `implementation-quality.mjs`, `test-case-quality.mjs`, `evidence-summary.mjs`, `wiki-quality.mjs`, `closure-quality.mjs`, `gate-preflight.mjs` | 阶段感知质量检查、测试用例质量、gate 前只读预检和证据分级 |
 | `gates` | `gate.mjs` | 更新 gate 状态并触发 hook |
 | `reporting` | `render-work-report.mjs`, `workflow-package.mjs`, `handoff-summary.mjs`, `traceability-summary.mjs` | 生成 HTML / review package / handoff / traceability 摘要 |
 | `code-intelligence` | `codebase-map.mjs`, `codebase-index.mjs` | 存量项目代码画像、provider 检测、CodeGraph / Repomix 编排计划 |
@@ -21,7 +21,7 @@
 |---|---|---|
 | CodeGraph health | `scripts/code-intelligence/providers/codegraph.mjs` | 区分 installed / version / initialized / indexed / pending sync，不再把 CLI 存在当作图谱可用 |
 | Provider 事实归一 | `scripts/code-intelligence/provider-facts.mjs` | 统一记录 fact、source path、confidence、provider、query、timestamp、used_for_wiki |
-| 测试用例质量 | `scripts/quality/test-case-quality.mjs` | 检查 `test-cases.md`、TC/PW ID、report 引用和 evidence target |
+| 测试用例质量 | `scripts/quality/test-case-quality.mjs` | 已有根入口；后续可抽到内部模块并扩展覆盖率 / 追溯规则 |
 | Playwright 证据归档 | `scripts/quality/playwright-evidence.mjs` | 把临时脚本、stdout、截图、trace manifest 归档到 `05-verification/evidence/<run-id>/` |
 | XMind 测试设计 | `scripts/quality/xmind-export-check.mjs` | XMind 只做测试设计草图，必须导出 Markdown / JSON 并回到 test cases |
 
