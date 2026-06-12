@@ -20,6 +20,7 @@ Usage:
   specforge contract [--dir <path>] [--work-item <id>] [--artifact <id>] [--overview] [--json]
   specforge checkpoints [--dir <path>] [--work-item <id>] [--json]
   specforge decision-brief [--dir <path>] [--work-item <id>] [--json]
+  specforge evidence [--dir <path>] [--work-item <id>] [--report <path>] [--json]
   specforge package [--dir <path>] [--work-item <id>] [--skip-derived] [--json]
   specforge gate-preflight [--dir <path>] <gate> [status] [--evidence <path>] [--work-item <id>] [--json] [--strict]
   specforge gate [--dir <path>] <gate> <status> [--evidence <path>] [--work-item <id>] [--strict-hooks]
@@ -38,6 +39,7 @@ Examples:
   npx github:huangrx6/SpecForge contract --dir .
   npx github:huangrx6/SpecForge checkpoints --dir .
   npx github:huangrx6/SpecForge decision-brief --dir .
+  npx github:huangrx6/SpecForge evidence --dir .
   npx github:huangrx6/SpecForge package --dir .
   npx github:huangrx6/SpecForge gate-preflight --dir . verification APPROVED --evidence 05-verification/report.md
   npx github:huangrx6/SpecForge gate --dir . verification APPROVED --evidence 05-verification/report.md
@@ -209,6 +211,22 @@ function decisionBrief() {
   runNode(briefPath, extraArgs, targetDir);
 }
 
+function evidence() {
+  const targetDir = resolve(option("--dir", "."));
+  const evidencePath = join(targetDir, ".specforge/core/scripts/evidence-summary.mjs");
+  if (!existsSync(evidencePath)) {
+    console.error(`Missing SpecForge evidence summary script: ${evidencePath}`);
+    process.exit(1);
+  }
+  const extraArgs = [];
+  const workItem = option("--work-item");
+  const report = option("--report");
+  if (workItem) extraArgs.push("--work-item", workItem);
+  if (report) extraArgs.push("--report", report);
+  if (args.includes("--json")) extraArgs.push("--json");
+  runNode(evidencePath, extraArgs, targetDir);
+}
+
 function reviewPackage() {
   const targetDir = resolve(option("--dir", "."));
   const packagePath = join(targetDir, ".specforge/core/scripts/workflow-package.mjs");
@@ -337,6 +355,8 @@ if (command === "init") {
   checkpoints();
 } else if (command === "decision-brief") {
   decisionBrief();
+} else if (command === "evidence") {
+  evidence();
 } else if (command === "package") {
   reviewPackage();
 } else if (command === "gate-preflight") {

@@ -156,6 +156,7 @@ const executionByArtifact = {
     tools: ["sf-verify", "CI", "Playwright", "logs", "mock / real environment evidence"],
     commands: [
       "node .specforge/core/scripts/create-artifact.mjs verification",
+      "node .specforge/core/scripts/evidence-summary.mjs",
       "node .specforge/core/scripts/gate-preflight.mjs verification APPROVED --evidence 05-verification/report.md",
     ],
   },

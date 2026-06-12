@@ -185,6 +185,7 @@ node .specforge/core/scripts/stage-contract.mjs --overview
 node .specforge/core/scripts/stage-contract.mjs
 node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/decision-brief.mjs
+node .specforge/core/scripts/evidence-summary.mjs
 node .specforge/core/scripts/workflow-package.mjs
 ```
 
@@ -197,6 +198,7 @@ npx github:huangrx6/SpecForge roadmap --dir .
 npx github:huangrx6/SpecForge contract --dir .
 npx github:huangrx6/SpecForge doctor --dir .
 npx github:huangrx6/SpecForge decision-brief --dir .
+npx github:huangrx6/SpecForge evidence --dir .
 npx github:huangrx6/SpecForge package --dir .
 ```
 
@@ -446,6 +448,7 @@ node .specforge/core/scripts/status.mjs
 node .specforge/core/scripts/instructions.mjs
 node .specforge/core/scripts/decision-checkpoints.mjs
 node .specforge/core/scripts/decision-brief.mjs
+node .specforge/core/scripts/evidence-summary.mjs
 node .specforge/core/scripts/traceability-summary.mjs
 node .specforge/core/scripts/create-work.mjs --workflow feature "新增审批记录导出"
 node .specforge/core/scripts/create-artifact.mjs requirements

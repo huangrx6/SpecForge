@@ -1,4 +1,5 @@
 import { artifactById, effectiveSchema, exists, loadSchema, parseField, readText } from "./specforge.mjs";
+import { evidenceSummary } from "./evidence.mjs";
 import { normalizeTraceabilityPolicy, traceabilityGapChecks } from "./traceability.mjs";
 import { workflowHealth } from "./workflow-health.mjs";
 
@@ -88,6 +89,29 @@ export function gatePreflight(diagnosis, options = {}) {
 
     if (health.score !== null && health.score < 70) {
       add(checks, "WARN", "low-health-score", `Workflow health score is ${health.score}/100 (${health.level}).`, "workflow-health");
+    }
+
+    if (gate === "verification") {
+      const evidence = evidenceSummary(diagnosis.work_item.path);
+      add(
+        checks,
+        evidence.exists ? "PASS" : "FAIL",
+        evidence.exists ? "verification-report-exists" : "verification-report-missing",
+        evidence.exists ? `Verification report exists: ${evidence.report_path}.` : `Verification report is missing: ${evidence.report_path}.`,
+        "evidence-summary",
+      );
+      add(
+        checks,
+        evidence.rows.length > 0 ? "PASS" : "FAIL",
+        evidence.rows.length > 0 ? "graded-evidence-present" : "graded-evidence-missing",
+        evidence.rows.length > 0
+          ? `Evidence grading rows found: ${evidence.rows.length}.`
+          : "No parseable evidence grading rows found in verification report.",
+        "evidence-summary",
+      );
+      for (const issue of evidence.issues) {
+        add(checks, issue.severity, `evidence-${issue.code}`, issue.message, "evidence-summary");
+      }
     }
   } else {
     add(checks, "PASS", "non-approval-status", `${targetStatus} does not require approval evidence preflight.`, "");

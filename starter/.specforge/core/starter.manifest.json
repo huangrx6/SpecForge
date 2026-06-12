@@ -47,6 +47,10 @@
       "to": "core/scripts/lib/action-board.mjs"
     },
     {
+      "from": "scripts/lib/evidence.mjs",
+      "to": "core/scripts/lib/evidence.mjs"
+    },
+    {
       "from": "scripts/lib/traceability.mjs",
       "to": "core/scripts/lib/traceability.mjs"
     },
@@ -89,6 +93,10 @@
     {
       "from": "scripts/decision-brief.mjs",
       "to": "core/scripts/decision-brief.mjs"
+    },
+    {
+      "from": "scripts/evidence-summary.mjs",
+      "to": "core/scripts/evidence-summary.mjs"
     },
     {
       "from": "scripts/codebase-map.mjs",
