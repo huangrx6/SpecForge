@@ -213,6 +213,64 @@ function renderTraceability(traceability) {
   `;
 }
 
+function decisionKind(marker = "") {
+  const normalized = String(marker).toUpperCase();
+  if (normalized.includes("DEPENDENCY")) return "dependency";
+  if (normalized.includes("TOOLING")) return "tooling";
+  if (normalized.includes("TECH")) return "technical direction";
+  if (normalized.includes("UI")) return "UI direction";
+  if (normalized.includes("PRODUCT")) return "product direction";
+  if (normalized.includes("CLARIFICATION")) return "clarification";
+  return "decision";
+}
+
+function responseOptions(marker = "") {
+  const kind = decisionKind(marker);
+  if (kind === "dependency") return "approve dependency / reject dependency / ask for alternatives / defer with owner";
+  if (kind === "tooling") return "approve tooling / keep existing tooling / ask for comparison / defer with trigger";
+  if (kind === "technical direction") return "approve design direction / choose simpler option / ask for ADR / defer";
+  if (kind === "UI direction") return "approve direction / request prototype / choose alternate flow / mark no UI impact";
+  if (kind === "product direction") return "approve MVP / narrow scope / split follow-up / reject";
+  if (kind === "clarification") return "answer question / mark N/A / authorize default / defer";
+  return "approve / reject / ask for more evidence / defer";
+}
+
+function renderDecisionBrief(diagnosis) {
+  const checkpoints = diagnosis.decision_checkpoints;
+  const topDecision = checkpoints?.open?.[0];
+
+  if (!topDecision) {
+    return `
+      <p class="muted">No open decision markers. Use this section when a future gate or stage needs human approval, clarification, or risk acceptance.</p>
+      <p><code>node .specforge/core/scripts/decision-brief.mjs</code></p>
+    `;
+  }
+
+  return `
+    <div class="summary" aria-label="Decision brief summary">
+      <div class="metric">Open Decisions<strong>${escapeHtml(checkpoints.summary.open)}</strong></div>
+      <div class="metric">Decision Kind<strong>${escapeHtml(decisionKind(topDecision.marker))}</strong></div>
+      <div class="metric">Risk Candidates<strong>${escapeHtml(checkpoints.summary.risk_acceptance)}</strong></div>
+      <div class="metric">Command<strong>decision-brief</strong></div>
+    </div>
+    <section class="card">
+      <h3>Top Decision</h3>
+      <p>${renderStatusBadge(topDecision.marker)} <span class="muted">${escapeHtml(topDecision.path)}:${escapeHtml(topDecision.line)}</span></p>
+      <p>${escapeHtml(topDecision.text)}</p>
+      <p><strong>Acceptable responses:</strong> ${escapeHtml(responseOptions(topDecision.marker))}</p>
+      <h4>Reply Format</h4>
+      ${renderLines([
+        "Decision: approve / reject / choose option / defer / ask for more evidence",
+        "Scope:",
+        "Rationale:",
+        "Risk acceptance: yes / no / N/A",
+        "Owner:",
+        "Revalidation trigger:",
+      ])}
+    </section>
+  `;
+}
+
 function render(diagnosis, workItemYaml, generatedAt) {
   const item = diagnosis.work_item;
   const title = `${item.id} - ${item.title || "SpecForge Work Report"}`;
@@ -385,6 +443,7 @@ function render(diagnosis, workItemYaml, generatedAt) {
       <a href="#traceability">Traceability</a>
       <a href="#warnings">Warnings</a>
       <a href="#decision-checkpoints">Decisions</a>
+      <a href="#decision-brief">Decision Brief</a>
       <a href="#artifacts">Artifact Excerpts</a>
     </nav>
   </header>
@@ -447,6 +506,12 @@ function render(diagnosis, workItemYaml, generatedAt) {
       ${renderList(diagnosis.decision_checkpoints?.open, "No open decision markers.", (item) => `<li><strong>${escapeHtml(item.marker)}</strong> <span class="muted">${escapeHtml(item.path)}:${escapeHtml(item.line)}</span><br>${escapeHtml(item.text)}</li>`)}
       <h3>Risk Acceptance Candidates</h3>
       ${renderList(diagnosis.decision_checkpoints?.risk_acceptance, "No risk acceptance candidates.", (item) => `<li><span class="muted">${escapeHtml(item.path)}:${escapeHtml(item.line)}</span><br>${escapeHtml(item.text)}</li>`)}
+    </section>
+
+    <section id="decision-brief">
+      <h2>Decision Brief</h2>
+      <p class="muted">A compact, human-facing approval package for open decisions. Markdown remains the source of truth; this section is generated from current markers and diagnostics.</p>
+      ${renderDecisionBrief(diagnosis)}
     </section>
 
     <section id="artifacts">
