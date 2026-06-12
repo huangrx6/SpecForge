@@ -103,6 +103,8 @@ Traceability 由 workflow schema 的 `traceability_policy` 控制：`off` 不提
 
 当需要判断人工确认是否足以支撑继续推进时，运行 `node .specforge/core/scripts/decision-quality.mjs` 或 `specforge decision-quality --dir .`。它检查 open decision、`delegated_default` 的默认理由 / 风险 / 回退触发条件，以及 `manual-confirmed` / `deferred` 的 owner、影响和重新验证触发条件。所有 gate preflight 在 `APPROVED` 前都会自动执行同类检查。
 
+每次进入下一阶段前运行 `node .specforge/core/scripts/instructions.mjs` 或 `specforge` 对应路由入口。instructions 除了 ready artifact、stage skill、standards、dependencies、outputs 和 gate commands，还会输出 Quality Suite 总态、失败 / 警告检查和推荐下钻命令；如果这里出现 FAIL，先按 quality route 处理或在 gate evidence 中记录人工接受理由。
+
 日常推进建议先运行 `node .specforge/core/scripts/workflow-audit.mjs` 或 `specforge audit --dir .`。它把 Action Summary、route、blocker、open decision、quality warning、traceability 和推荐命令合并成一页，适合作为人工确认、跨 Agent 接力和自动推进前的第一入口。没有 active work item 时，它只推荐 status / create-work / doctor 这类可执行入口，不推荐阶段命令。
 
 需要快速判断当前流程是否可继续时，运行 `node .specforge/core/scripts/workflow-health.mjs` 或 `specforge health --dir .`。它给出 health score、level、维度扣分和 Top priorities；除 blocker、decision、traceability、gate 外，也会把 `quality-suite.mjs` 中 source、implementation、evidence、wiki、closure 等阶段感知质量缺口纳入健康分。health 用来排序下一步，不替代 gate evidence。

@@ -15,6 +15,7 @@ import {
   templateByOutput,
 } from "./lib/specforge.mjs";
 import { diagnoseWorkItem, diagnoseWorkspace } from "./lib/diagnostics.mjs";
+import { qualitySuiteSummary } from "./lib/quality-suite.mjs";
 
 const args = process.argv.slice(2);
 const json = args.includes("--json");
@@ -65,6 +66,23 @@ function printDecisionCheckpoints(checkpoints) {
     console.log(`  ${item.text}`);
   }
   if (summary.open > 5) console.log(`- ... ${summary.open - 5} more open decision(s)`);
+}
+
+function printQualitySuite(qualitySuite) {
+  if (!qualitySuite) return;
+  console.log("");
+  console.log(
+    `Quality suite: ${qualitySuite.summary.overall}; checks=${qualitySuite.summary.checked}; fail=${qualitySuite.summary.failures}; warn=${qualitySuite.summary.warnings}`,
+  );
+  const actionable = qualitySuite.checks.filter((check) => ["FAIL", "WARN"].includes(check.status)).slice(0, 5);
+  for (const check of actionable) {
+    console.log(`- [${check.status}] ${check.title}: ${check.message}`);
+    console.log(`  route: ${check.route ?? "N/A"}`);
+  }
+  if (qualitySuite.recommended_commands.length > 0) {
+    console.log("Quality commands:");
+    for (const command of qualitySuite.recommended_commands) console.log(`- ${command}`);
+  }
 }
 
 const stageSkillByArtifact = {
@@ -148,6 +166,7 @@ try {
   if (!requestedWorkItem) {
     const workspaceDiagnosis = diagnoseWorkspace();
     if (!workspaceDiagnosis.work_item) {
+      const qualitySuite = qualitySuiteSummary(workspaceDiagnosis);
       const payload = {
         mode: "workspace",
         route: workspaceDiagnosis.route,
@@ -156,6 +175,7 @@ try {
         active_items: workspaceDiagnosis.active_items,
         blockers: workspaceDiagnosis.blockers,
         quality_warnings: workspaceDiagnosis.quality_warnings ?? [],
+        quality_suite: qualitySuite,
         decision_checkpoints: workspaceDiagnosis.decision_checkpoints,
       };
 
@@ -175,6 +195,7 @@ try {
           for (const blocker of payload.blockers) console.log(`- [${blocker.severity}] ${blocker.message}`);
         }
         printQualityWarnings(payload.quality_warnings);
+        printQualitySuite(payload.quality_suite);
         printDecisionCheckpoints(payload.decision_checkpoints);
       }
       process.exit(0);
@@ -192,6 +213,7 @@ try {
   const schema = effectiveSchema(loadSchema(workflow), workItemYaml);
   const states = computeArtifactStates(schema, workItemYaml, workItem.base);
   const diagnosis = diagnoseWorkItem({ workItem: workItem.name, activeOnly: false });
+  const qualitySuite = qualitySuiteSummary(diagnosis);
 
   if (!requestedArtifact && !applyMode && diagnosis.blockers.length > 0) {
     const payload = {
@@ -205,6 +227,7 @@ try {
       reason: diagnosis.route_reason,
       blockers: diagnosis.blockers,
       quality_warnings: diagnosis.quality_warnings,
+      quality_suite: qualitySuite,
       decision_checkpoints: diagnosis.decision_checkpoints,
     };
 
@@ -224,6 +247,7 @@ try {
         console.log(`  owner: ${blocker.owner_artifact}`);
       }
       printQualityWarnings(payload.quality_warnings);
+      printQualitySuite(payload.quality_suite);
       printDecisionCheckpoints(payload.decision_checkpoints);
     }
     process.exit(0);
@@ -250,6 +274,7 @@ try {
       route: diagnosis.route,
       blockers: diagnosis.blockers,
       quality_warnings: diagnosis.quality_warnings,
+      quality_suite: qualitySuite,
       decision_checkpoints: diagnosis.decision_checkpoints,
       context_files: schema.artifacts
         .flatMap((artifact) => artifact.outputs)
@@ -268,6 +293,7 @@ try {
         for (const blocker of payload.blockers) console.log(`- [${blocker.severity}] ${blocker.message} -> ${blocker.route}`);
       }
       printQualityWarnings(payload.quality_warnings);
+      printQualitySuite(payload.quality_suite);
       printDecisionCheckpoints(payload.decision_checkpoints);
       console.log(`Tasks: ${payload.task_progress.done}/${payload.task_progress.total} done`);
       for (const task of payload.task_progress.pending) console.log(`- [ ] ${task}`);
@@ -313,6 +339,7 @@ try {
       .filter((item) => states.get(item.id) === "ready")
       .map((item) => item.id),
     quality_warnings: diagnosis.quality_warnings,
+    quality_suite: qualitySuite,
     decision_checkpoints: diagnosis.decision_checkpoints,
   };
 
@@ -365,6 +392,7 @@ try {
       console.log(`- specforge gate --dir . ${payload.artifact.gate.name} APPROVED --evidence ${suggestedEvidence}`);
     }
     printQualityWarnings(payload.quality_warnings);
+    printQualitySuite(payload.quality_suite);
     printDecisionCheckpoints(payload.decision_checkpoints);
   }
 } catch (error) {
