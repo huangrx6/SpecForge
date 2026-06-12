@@ -58,10 +58,17 @@ function markdown(diagnosis, result) {
 - Evidence: ${result.evidence ?? "N/A"}
 - Artifact: ${artifact}
 - Health: ${health}
+- Quality suite: ${result.quality_suite?.summary?.overall ?? "N/A"}; fail=${result.quality_suite?.summary?.failures ?? 0}; warn=${result.quality_suite?.summary?.warnings ?? 0}
 
 ## Checks
 
 ${bullet(result.checks, "none", (check) => `[${check.status}] ${check.code}: ${check.message}${check.route ? ` (route=${check.route})` : ""}`)}
+
+## Quality Suite Commands
+
+\`\`\`bash
+${result.quality_suite?.recommended_commands?.length > 0 ? result.quality_suite.recommended_commands.join("\n") : "# none"}
+\`\`\`
 
 ## Recommended Next
 

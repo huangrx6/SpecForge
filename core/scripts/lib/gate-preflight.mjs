@@ -6,6 +6,7 @@ import { sourceQualitySummary } from "./source-quality.mjs";
 import { normalizeTraceabilityPolicy, traceabilityGapChecks } from "./traceability.mjs";
 import { wikiQualitySummary } from "./wiki-quality.mjs";
 import { workflowHealth } from "./workflow-health.mjs";
+import { qualitySuiteSummary } from "./quality-suite.mjs";
 
 function add(checks, status, code, message, route = "") {
   checks.push({ status, code, message, route });
@@ -30,7 +31,8 @@ export function gatePreflight(diagnosis, options = {}) {
 
   if (!diagnosis.work_item) {
     add(checks, "FAIL", "no-work-item", "No active work item is available for gate preflight.", "sf-intake");
-    return { gate, target_status: targetStatus, overall: overall(checks), checks, health: workflowHealth(diagnosis), artifact: null };
+    const qualitySuite = qualitySuiteSummary(diagnosis);
+    return { gate, target_status: targetStatus, overall: overall(checks), checks, health: workflowHealth(diagnosis, { qualitySuite }), quality_suite: qualitySuite, artifact: null };
   }
 
   const yaml = readText(`${diagnosis.work_item.path}/work.yaml`);
@@ -39,7 +41,8 @@ export function gatePreflight(diagnosis, options = {}) {
   const gateArtifact = schema.artifacts.find((artifact) => artifact.gate === gate);
   const artifact = gateArtifact ? artifactById(schema, gateArtifact.id) : null;
   const artifactStatus = diagnosis.artifacts.find((item) => item.id === gateArtifact?.id)?.status ?? "unknown";
-  const health = workflowHealth(diagnosis);
+  const qualitySuite = qualitySuiteSummary(diagnosis);
+  const health = workflowHealth(diagnosis, { qualitySuite });
 
   if (!gateArtifact) {
     add(checks, "FAIL", "unknown-gate", `Unknown gate for workflow ${workflow}: ${gate}.`, "sf-doctor");
@@ -112,6 +115,14 @@ export function gatePreflight(diagnosis, options = {}) {
     if (health.score !== null && health.score < 70) {
       add(checks, "WARN", "low-health-score", `Workflow health score is ${health.score}/100 (${health.level}).`, "workflow-health");
     }
+
+    add(
+      checks,
+      qualitySuite.summary.overall === "PASS" ? "PASS" : qualitySuite.summary.overall,
+      "quality-suite",
+      `Quality suite: ${qualitySuite.summary.overall}; checks=${qualitySuite.summary.checked}; fail=${qualitySuite.summary.failures}; warn=${qualitySuite.summary.warnings}.`,
+      "quality-suite",
+    );
 
     if (gate === "verification") {
       const evidence = evidenceSummary(diagnosis.work_item.path);
@@ -214,6 +225,7 @@ export function gatePreflight(diagnosis, options = {}) {
         }
       : null,
     health,
+    quality_suite: qualitySuite,
     checks,
   };
 }

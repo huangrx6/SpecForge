@@ -150,7 +150,7 @@ node .specforge/core/scripts/doctor.mjs
 | Lightweight artifacts | 人能读完，Agent 能接手 | `artifact-quality.mjs`、一页摘要、artifact summary、handoff、HTML Action Board、HTML Quality Suite | Markdown 仍是版本管理事实源，HTML 不能成为唯一证据；长文档必须有摘要或分层阅读入口 |
 | Wiki quality | 长期知识可追溯、无重复、可从索引进入 | `wiki-quality.mjs`、`00-index.md`、frontmatter、source_work | 结构断链阻断 wiki_sync；内容薄先 WARN，由 evidence 说明 |
 | Review package | 审查、接力、关闭前一键生成可交付材料 | `workflow-package.mjs` 输出 review-package、handoff、HTML report，三者都先给 Action Summary 和 Quality Suite | 派生包引用 source artifacts，不替代 source of truth |
-| Gate preflight | 审批前先跑只读 policy check | `gate-preflight.mjs` 输出 PASS / WARN / FAIL、证据和 return route | `FAIL` 不批准；`WARN` 必须被 evidence 解释 |
+| Gate preflight | 审批前先跑只读 policy check | `gate-preflight.mjs` 输出 PASS / WARN / FAIL、证据、Quality Suite 和 return route | `FAIL` 不批准；`WARN` 必须被 evidence 解释 |
 | Stage quality policy | 不同 workflow 有不同质量条 | schema `quality_policy.section_checks`、diagnostics warnings | 不把 `lite` 套成完整 `feature` 流程 |
 | Implementation ledger | 防止实现越界、漏登记、报告和真实 diff 不一致 | `implementation-quality.mjs` 对账 tasks、report、changed-files、git diff/status | code_review preflight 自动检查；真实 diff 未登记不能批准 |
 | Evidence grading | gate 不是形式，证据强度和风险强度匹配 | `evidence-summary.mjs` 解析 verification report 的 proven / mocked / manual-confirmed / deferred / missing | `missing` 或无可解析证据不能批准 verification gate；弱证据必须有人工确认、owner 和触发条件 |

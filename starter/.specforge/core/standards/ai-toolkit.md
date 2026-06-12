@@ -119,7 +119,7 @@ Traceability 由 workflow schema 的 `traceability_policy` 控制：`off` 不提
 
 需要判断关闭材料是否“能支撑归档”时，运行 `node .specforge/core/scripts/closure-quality.mjs` 或 `specforge closure-quality --dir .`。它检查 release / rollback 是否覆盖发布结论、影响范围、发布前检查、证据引用、观察点、回滚触发条件、风险来源和补偿措施；它不替代 doctor 或 archive dry-run，只提前暴露关闭材料断链。
 
-准备批准 gate 前运行 `node .specforge/core/scripts/gate-preflight.mjs <gate> APPROVED --evidence <path>` 或 `specforge gate-preflight --dir . <gate> APPROVED --evidence <path>`。它按 policy-as-code 的方式把证据文件、artifact ready 状态、P0 / P1 blocker、open decision、traceability 和 health 汇总为 PASS / WARN / FAIL；预检不改写 gate，`FAIL` 不能继续批准，`WARN` 必须在 evidence 中说明接受或处理结果。预检通过后优先用 `specforge gate --dir . <gate> APPROVED --evidence <path>` 更新 gate。
+准备批准 gate 前运行 `node .specforge/core/scripts/gate-preflight.mjs <gate> APPROVED --evidence <path>` 或 `specforge gate-preflight --dir . <gate> APPROVED --evidence <path>`。它按 policy-as-code 的方式把证据文件、artifact ready 状态、P0 / P1 blocker、open decision、traceability、health 和 Quality Suite 汇总为 PASS / WARN / FAIL，并给出质量下钻命令；预检不改写 gate，`FAIL` 不能继续批准，`WARN` 必须在 evidence 中说明接受或处理结果。预检通过后优先用 `specforge gate --dir . <gate> APPROVED --evidence <path>` 更新 gate。
 
 准备批准 verification gate 前，先运行 `node .specforge/core/scripts/evidence-summary.mjs` 或 `specforge evidence --dir .`。它解析 `05-verification/report.md#3.2 证据强度分级` 和 `#12 人工确认与外部补证`，汇总 proven / mocked / manual-confirmed / deferred / missing，并指出缺少证据、缺人工确认或缺 owner / 重新验证触发条件的问题。`gate-preflight verification APPROVED` 会自动执行同类检查；`missing` 或无可解析证据不能批准。
 
