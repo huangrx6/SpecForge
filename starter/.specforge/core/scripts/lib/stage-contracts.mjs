@@ -185,10 +185,11 @@ const executionByArtifact = {
     ],
   },
   closure: {
-    tools: ["sf-close", "doctor.mjs", "decision-quality.mjs", "workflow-package.mjs", "archive-work.mjs"],
+    tools: ["sf-close", "doctor.mjs", "decision-quality.mjs", "closure-quality.mjs", "workflow-package.mjs", "archive-work.mjs"],
     commands: [
       "node .specforge/core/scripts/workflow-package.mjs",
       "node .specforge/core/scripts/decision-quality.mjs",
+      "node .specforge/core/scripts/closure-quality.mjs",
       "node .specforge/core/scripts/doctor.mjs",
       "node .specforge/core/scripts/archive-work.mjs --dry-run",
     ],

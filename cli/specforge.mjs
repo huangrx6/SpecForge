@@ -17,6 +17,7 @@ Usage:
   specforge audit [--dir <path>] [--work-item <id>] [--output <path>] [--json]
   specforge health [--dir <path>] [--work-item <id>] [--json]
   specforge quality [--dir <path>] [--work-item <id>] [--json]
+  specforge closure-quality [--dir <path>] [--work-item <id>] [--json]
   specforge source-quality [--dir <path>] [--work-item <id>] [--json]
   specforge wiki-quality [--dir <path>] [--json]
   specforge roadmap [--dir <path>] [--work-item <id>] [--json]
@@ -41,6 +42,7 @@ Examples:
   npx github:huangrx6/SpecForge audit --dir .
   npx github:huangrx6/SpecForge health --dir .
   npx github:huangrx6/SpecForge quality --dir .
+  npx github:huangrx6/SpecForge closure-quality --dir .
   npx github:huangrx6/SpecForge source-quality --dir .
   npx github:huangrx6/SpecForge wiki-quality --dir .
   npx github:huangrx6/SpecForge roadmap --dir .
@@ -151,6 +153,20 @@ function quality() {
   const qualityPath = join(targetDir, ".specforge/core/scripts/artifact-quality.mjs");
   if (!existsSync(qualityPath)) {
     console.error(`Missing SpecForge artifact quality script: ${qualityPath}`);
+    process.exit(1);
+  }
+  const extraArgs = [];
+  const workItem = option("--work-item");
+  if (workItem) extraArgs.push("--work-item", workItem);
+  if (args.includes("--json")) extraArgs.push("--json");
+  runNode(qualityPath, extraArgs, targetDir);
+}
+
+function closureQuality() {
+  const targetDir = resolve(option("--dir", "."));
+  const qualityPath = join(targetDir, ".specforge/core/scripts/closure-quality.mjs");
+  if (!existsSync(qualityPath)) {
+    console.error(`Missing SpecForge closure quality script: ${qualityPath}`);
     process.exit(1);
   }
   const extraArgs = [];
@@ -427,6 +443,8 @@ if (command === "init") {
   health();
 } else if (command === "quality") {
   quality();
+} else if (command === "closure-quality") {
+  closureQuality();
 } else if (command === "source-quality") {
   sourceQuality();
 } else if (command === "wiki-quality") {

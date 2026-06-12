@@ -182,6 +182,7 @@ npx github:huangrx6/SpecForge init --dir .
 node .specforge/core/scripts/workflow-audit.mjs
 node .specforge/core/scripts/workflow-health.mjs
 node .specforge/core/scripts/artifact-quality.mjs
+node .specforge/core/scripts/closure-quality.mjs
 node .specforge/core/scripts/source-quality.mjs
 node .specforge/core/scripts/wiki-quality.mjs
 node .specforge/core/scripts/stage-contract.mjs --overview
@@ -200,6 +201,7 @@ node .specforge/core/scripts/workflow-package.mjs
 npx github:huangrx6/SpecForge audit --dir .
 npx github:huangrx6/SpecForge health --dir .
 npx github:huangrx6/SpecForge quality --dir .
+npx github:huangrx6/SpecForge closure-quality --dir .
 npx github:huangrx6/SpecForge source-quality --dir .
 npx github:huangrx6/SpecForge wiki-quality --dir .
 npx github:huangrx6/SpecForge roadmap --dir .
@@ -452,6 +454,7 @@ node .specforge/core/scripts/gate.mjs code_review REQUEST_CHANGES
 node .specforge/core/scripts/workflow-audit.mjs
 node .specforge/core/scripts/workflow-health.mjs
 node .specforge/core/scripts/artifact-quality.mjs
+node .specforge/core/scripts/closure-quality.mjs
 node .specforge/core/scripts/source-quality.mjs
 node .specforge/core/scripts/wiki-quality.mjs
 node .specforge/core/scripts/stage-contract.mjs --overview
@@ -471,6 +474,7 @@ node .specforge/core/scripts/create-artifact.mjs requirements
 node .specforge/core/scripts/render-work-report.mjs
 node .specforge/core/scripts/handoff-summary.mjs --output <work-item>/07-report/handoff.md
 node .specforge/core/scripts/workflow-package.mjs
+node .specforge/core/scripts/closure-quality.mjs
 node .specforge/core/scripts/gate-preflight.mjs verification APPROVED --evidence 05-verification/report.md
 node .specforge/core/scripts/gate.mjs verification APPROVED --evidence 05-verification/report.md
 node .specforge/core/scripts/sync-wiki.mjs
@@ -484,6 +488,8 @@ node .specforge/core/scripts/wiki-quality.mjs
 `decision-quality.mjs` 检查人工确认记录是否闭环：open decision 会 `FAIL`；`delegated_default` 必须有默认理由、风险影响和回退 / 重新验证触发条件；`manual-confirmed` / `deferred` 必须有 owner、影响和重新验证触发条件。所有 `gate-preflight <gate> APPROVED` 都会自动执行同类检查。
 
 `implementation-quality.mjs` 检查 `tasks.md`、`03-implementation/report.md`、`03-implementation/changed-files.md` 和真实 `git diff/status` 是否一致。缺 task 核心字段、完成任务缺证据、真实 diff 未登记、changed-files 缺任务或验证方式会 `FAIL`；`gate-preflight code_review APPROVED` 会自动执行同类检查。
+
+`closure-quality.mjs` 检查 `release.md` / `rollback.md` 是否真正覆盖发布结论、影响范围、发布前检查、观察点、回滚触发条件、风险来源和补偿措施。它不替代 `doctor` 和 `archive-work --dry-run`，而是在归档前提前暴露空模板和 release / rollback 断链。
 
 `wiki-quality.mjs` 检查 `.specforge/wiki/` 的 frontmatter、`00-index.md` 引用、重复 current 项、日期 / 版本化命名和模板占位；`gate-preflight wiki_sync APPROVED` 会自动执行同类检查。结构性问题是 `FAIL`，内容薄或占位偏多是 `WARN`，需要在 wiki-sync evidence 中说明是否接受。
 

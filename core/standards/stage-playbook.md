@@ -67,6 +67,7 @@
 node .specforge/core/scripts/workflow-audit.mjs
 node .specforge/core/scripts/workflow-health.mjs
 node .specforge/core/scripts/artifact-quality.mjs
+node .specforge/core/scripts/closure-quality.mjs
 node .specforge/core/scripts/source-quality.mjs
 node .specforge/core/scripts/wiki-quality.mjs
 node .specforge/core/scripts/stage-contract.mjs --overview
@@ -97,6 +98,7 @@ git status --short --untracked-files=all
 node .specforge/core/scripts/render-work-report.mjs
 node .specforge/core/scripts/handoff-summary.mjs --output <work-item>/07-report/handoff.md
 node .specforge/core/scripts/workflow-package.mjs
+node .specforge/core/scripts/closure-quality.mjs
 node .specforge/core/scripts/wiki-quality.mjs
 node .specforge/core/scripts/doctor.mjs
 ```
@@ -151,4 +153,5 @@ node .specforge/core/scripts/doctor.mjs
 | Implementation ledger | 防止实现越界、漏登记、报告和真实 diff 不一致 | `implementation-quality.mjs` 对账 tasks、report、changed-files、git diff/status | code_review preflight 自动检查；真实 diff 未登记不能批准 |
 | Evidence grading | gate 不是形式，证据强度和风险强度匹配 | `evidence-summary.mjs` 解析 verification report 的 proven / mocked / manual-confirmed / deferred / missing | `missing` 或无可解析证据不能批准 verification gate；弱证据必须有人工确认、owner 和触发条件 |
 | Knowledge compaction | 关闭后下次不用重读全仓 | wiki sync、`wiki-quality.mjs`、archive、handoff summary、长期事实索引 | 只沉淀未来会复用的信息，不写过程噪音 |
+| Closure readiness | 归档前发布、回滚、观察和补偿路径闭环 | `closure-quality.mjs`、release、rollback、doctor、archive dry-run | release / rollback 空模板或风险来源未覆盖不能归档 |
 | Reviewability | code review 和 spec review 小而可审 | tasks wave、changed-files、traceability、findings-first | 大 diff 要拆任务或说明不可拆原因 |

@@ -115,6 +115,8 @@ Traceability 由 workflow schema 的 `traceability_policy` 控制：`off` 不提
 
 需要判断实现证据是否“能被 code review 接住”时，运行 `node .specforge/core/scripts/implementation-quality.mjs` 或 `specforge implementation-quality --dir .`。它对账 `tasks.md`、implementation report、changed-files、排除清单和真实 `git diff/status`，防止完成任务缺证据、真实 diff 未登记、changed-files 无任务或验证方式。`code_review` 的 gate preflight 会自动执行同类检查。
 
+需要判断关闭材料是否“能支撑归档”时，运行 `node .specforge/core/scripts/closure-quality.mjs` 或 `specforge closure-quality --dir .`。它检查 release / rollback 是否覆盖发布结论、影响范围、发布前检查、证据引用、观察点、回滚触发条件、风险来源和补偿措施；它不替代 doctor 或 archive dry-run，只提前暴露关闭材料断链。
+
 准备批准 gate 前运行 `node .specforge/core/scripts/gate-preflight.mjs <gate> APPROVED --evidence <path>` 或 `specforge gate-preflight --dir . <gate> APPROVED --evidence <path>`。它按 policy-as-code 的方式把证据文件、artifact ready 状态、P0 / P1 blocker、open decision、traceability 和 health 汇总为 PASS / WARN / FAIL；预检不改写 gate，`FAIL` 不能继续批准，`WARN` 必须在 evidence 中说明接受或处理结果。预检通过后优先用 `specforge gate --dir . <gate> APPROVED --evidence <path>` 更新 gate。
 
 准备批准 verification gate 前，先运行 `node .specforge/core/scripts/evidence-summary.mjs` 或 `specforge evidence --dir .`。它解析 `05-verification/report.md#3.2 证据强度分级` 和 `#12 人工确认与外部补证`，汇总 proven / mocked / manual-confirmed / deferred / missing，并指出缺少证据、缺人工确认或缺 owner / 重新验证触发条件的问题。`gate-preflight verification APPROVED` 会自动执行同类检查；`missing` 或无可解析证据不能批准。
@@ -175,6 +177,7 @@ Markdown 仍是版本管理主格式；HTML / 可视化产物用于提升阅读�
 - 可用 `node .specforge/core/scripts/source-quality.mjs` 检查 research 来源质量、technical design 版本事实和官方基准来源。
 - 可用 `node .specforge/core/scripts/wiki-quality.mjs` 检查 wiki frontmatter、索引引用、重复 current、日期 / 版本化命名、模板占位和导航证据。
 - 可用 `node .specforge/core/scripts/implementation-quality.mjs` 检查 tasks、implementation report、changed-files 和真实 git diff/status 对账。
+- 可用 `node .specforge/core/scripts/closure-quality.mjs` 检查 release、rollback、观察点、风险来源和补偿措施是否闭环。
 - HTML report 的首屏必须优先呈现 Action Board：当前状态、下一步理由、最高优先级、可复制命令和阅读顺序。Artifact excerpt、traceability 表和长矩阵放在下方，避免读者先被长文档淹没。
 - 可用 `node .specforge/core/scripts/handoff-summary.mjs --output <work-item>/07-report/handoff.md` 生成接力摘要，用于跨 Agent、跨线程或人工复盘。
 - Handoff summary 和 review package 必须先呈现 Action Summary：状态、下一步、健康度、open decisions、blockers、trace gaps、policy、下一组命令和阅读顺序；证据、图谱、artifact 摘录放在后面。
