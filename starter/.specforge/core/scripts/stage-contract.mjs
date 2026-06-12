@@ -1,6 +1,8 @@
 import { diagnoseWorkspace, diagnoseWorkItem } from "./lib/diagnostics.mjs";
 import { contractsForSchema, contractForArtifact, focusArtifactId } from "./lib/stage-contracts.mjs";
 import { effectiveSchema, loadSchema, parseField, readText, resolveWorkItem } from "./lib/specforge.mjs";
+import { actionCommands, actionReason, actionState, traceGapCount, traceabilityPolicyLine } from "./lib/action-board.mjs";
+import { workflowHealth } from "./lib/workflow-health.mjs";
 
 const args = process.argv.slice(2);
 const json = args.includes("--json");
@@ -13,6 +15,28 @@ function argValue(name) {
 function bullet(items, emptyText, renderItem = (item) => item) {
   if (!items || items.length === 0) return `- ${emptyText}`;
   return items.map((item) => `- ${renderItem(item)}`).join("\n");
+}
+
+function cell(value) {
+  return String(value ?? "N/A").replaceAll("|", "\\|").replace(/\r?\n/g, "<br>");
+}
+
+function roadmapRows(diagnosis, contracts) {
+  const artifactStatus = new Map((diagnosis.artifacts ?? []).map((artifact) => [artifact.id, artifact]));
+  return contracts.map((contract) => {
+    const artifact = artifactStatus.get(contract.id);
+    return {
+      artifact: contract.id,
+      title: contract.title,
+      status: artifact?.status ?? "unknown",
+      stage: contract.stage,
+      gate: contract.gate ?? "N/A",
+      tools: contract.execution?.tools ?? [],
+      commands: contract.execution?.commands ?? [],
+      human_decisions: contract.human_decisions ?? [],
+      exit: contract.exit,
+    };
+  });
 }
 
 export function contractMarkdown(contract) {
@@ -68,18 +92,58 @@ ${contract.exit}
 
 function workflowOverviewMarkdown(diagnosis, contracts) {
   if (!diagnosis.work_item) {
-    return `# SpecForge Stage Contracts\n\nNo active work item.\n\n- Route: ${diagnosis.route}\n- Reason: ${diagnosis.route_reason}\n`;
+    return `# SpecForge Workflow Roadmap
+
+No active work item.
+
+- Route: ${diagnosis.route}
+- Reason: ${diagnosis.route_reason}
+
+Start with:
+
+\`\`\`bash
+node .specforge/core/scripts/status.mjs
+node .specforge/core/scripts/create-work.mjs --workflow <workflow> "<title>"
+\`\`\`
+`;
   }
 
-  return `# SpecForge Stage Contracts: ${diagnosis.work_item.id}
+  const health = workflowHealth(diagnosis);
+  const rows = roadmapRows(diagnosis, contracts);
+
+  return `# SpecForge Workflow Roadmap: ${diagnosis.work_item.id}
 
 - Workflow: ${diagnosis.work_item.workflow}@${diagnosis.schema.version}
 - Ready artifact: ${diagnosis.ready_artifact ?? "none"}
 - Route: ${diagnosis.route}
+- Health: ${health.score}/100 (${health.level})
 
-| Artifact | Stage | Gate | Tools | Outputs | Exit |
-|---|---|---|---|---|---|
-${contracts.map((contract) => `| ${contract.id} | ${contract.stage} | ${contract.gate ?? "N/A"} | ${(contract.execution?.tools ?? []).join("<br>")} | ${contract.outputs.join("<br>")} | ${contract.exit} |`).join("\n")}
+## Action Summary
+
+- State: ${actionState(diagnosis, health)}
+- Next: ${actionReason(diagnosis)}
+- Open decisions: ${diagnosis.decision_checkpoints?.summary?.open ?? 0}
+- Blockers: ${diagnosis.blockers?.length ?? 0}
+- Trace gaps: ${traceGapCount(diagnosis.traceability)}
+- Traceability policy: ${traceabilityPolicyLine(diagnosis.traceability_policy)}
+
+Recommended commands:
+
+\`\`\`bash
+${actionCommands(diagnosis).join("\n")}
+\`\`\`
+
+## Roadmap
+
+| Artifact | Status | Stage | Gate | Tools | Commands | Human Decisions | Exit |
+|---|---|---|---|---|---|---|---|
+${rows.map((row) => `| ${cell(row.artifact)} | ${cell(row.status)} | ${cell(row.stage)} | ${cell(row.gate)} | ${cell(row.tools.join("<br>") || "N/A")} | ${cell(row.commands.join("<br>") || "N/A")} | ${cell(row.human_decisions.join("<br>") || "none")} | ${cell(row.exit)} |`).join("\n")}
+
+## Legend
+
+- done: source artifact exists and dependencies are satisfied.
+- ready: this is the next artifact to create or approve.
+- blocked: upstream artifact or gate evidence is missing.
 `;
 }
 
@@ -109,6 +173,7 @@ try {
   const contracts = schema ? contractsForSchema(schema) : [];
 
   if (json) {
+    const health = workflowHealth(diagnosis);
     console.log(
       JSON.stringify(
         {
@@ -116,6 +181,8 @@ try {
           focus_artifact: artifactId,
           contract,
           contracts: overview ? contracts : undefined,
+          health: overview ? health : undefined,
+          roadmap: overview && diagnosis.work_item ? roadmapRows(diagnosis, contracts) : undefined,
         },
         null,
         2,

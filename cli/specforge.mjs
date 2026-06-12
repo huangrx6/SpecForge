@@ -16,6 +16,7 @@ Usage:
   specforge doctor [--dir <path>]
   specforge audit [--dir <path>] [--work-item <id>] [--output <path>] [--json]
   specforge health [--dir <path>] [--work-item <id>] [--json]
+  specforge roadmap [--dir <path>] [--work-item <id>] [--json]
   specforge contract [--dir <path>] [--work-item <id>] [--artifact <id>] [--overview] [--json]
   specforge checkpoints [--dir <path>] [--work-item <id>] [--json]
   specforge decision-brief [--dir <path>] [--work-item <id>] [--json]
@@ -33,6 +34,7 @@ Examples:
   npx github:huangrx6/SpecForge doctor --dir .
   npx github:huangrx6/SpecForge audit --dir .
   npx github:huangrx6/SpecForge health --dir .
+  npx github:huangrx6/SpecForge roadmap --dir .
   npx github:huangrx6/SpecForge contract --dir .
   npx github:huangrx6/SpecForge checkpoints --dir .
   npx github:huangrx6/SpecForge decision-brief --dir .
@@ -179,6 +181,20 @@ function contract() {
   runNode(contractPath, extraArgs, targetDir);
 }
 
+function roadmap() {
+  const targetDir = resolve(option("--dir", "."));
+  const contractPath = join(targetDir, ".specforge/core/scripts/stage-contract.mjs");
+  if (!existsSync(contractPath)) {
+    console.error(`Missing SpecForge stage contract script: ${contractPath}`);
+    process.exit(1);
+  }
+  const extraArgs = ["--overview"];
+  const workItem = option("--work-item");
+  if (workItem) extraArgs.push("--work-item", workItem);
+  if (args.includes("--json")) extraArgs.push("--json");
+  runNode(contractPath, extraArgs, targetDir);
+}
+
 function decisionBrief() {
   const targetDir = resolve(option("--dir", "."));
   const briefPath = join(targetDir, ".specforge/core/scripts/decision-brief.mjs");
@@ -313,6 +329,8 @@ if (command === "init") {
   audit();
 } else if (command === "health") {
   health();
+} else if (command === "roadmap") {
+  roadmap();
 } else if (command === "contract") {
   contract();
 } else if (command === "checkpoints") {

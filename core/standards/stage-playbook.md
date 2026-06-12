@@ -66,6 +66,7 @@
 ```bash
 node .specforge/core/scripts/workflow-audit.mjs
 node .specforge/core/scripts/workflow-health.mjs
+node .specforge/core/scripts/stage-contract.mjs --overview
 node .specforge/core/scripts/stage-contract.mjs
 node .specforge/core/scripts/workflow-package.mjs
 node .specforge/core/scripts/doctor.mjs
@@ -114,11 +115,12 @@ node .specforge/core/scripts/doctor.mjs
 
 1. 先读一页摘要。
 2. 再看 `workflow-audit.mjs` 的 audit status、route 和 recommended commands。
-3. 再看 `stage-contract.mjs` 的当前阶段 goal / must prove / exit standard。
-4. 再看 `Decision checkpoints` 和 `Quality warnings`。
-5. 再看 traceability / task graph / verification evidence。
-6. 最后才读附录、长表和派生 HTML。
-7. 交给他人或新 Agent 前，生成 `handoff.md`，让接手者先看一页状态、下一步、阻断和证据入口。
+3. 再看 `stage-contract.mjs --overview` 的 workflow roadmap，确认后续每一步的状态、工具、命令和人工确认点。
+4. 再看 `stage-contract.mjs` 的当前阶段 goal / must prove / exit standard。
+5. 再看 `Decision checkpoints` 和 `Quality warnings`。
+6. 再看 traceability / task graph / verification evidence。
+7. 最后才读附录、长表和派生 HTML。
+8. 交给他人或新 Agent 前，生成 `handoff.md`，让接手者先看一页状态、下一步、阻断和证据入口。
 
 ## 后续雕琢路线
 
@@ -126,6 +128,7 @@ node .specforge/core/scripts/doctor.mjs
 |---|---|---|---|
 | Audit-first | 用户和 Agent 先看一页就知道卡在哪里 | `workflow-audit.mjs` 先给 Action Summary，再汇总 route、blocker、decision、traceability、推荐命令 | audit 只提示，不私自推进 gate |
 | Health score | 用一个总览分数暴露当前流程是否能继续 | `workflow-health.mjs` 汇总 blocker、decision、quality、traceability、gate | score 只做排序和扫读，不替代 gate evidence |
+| Roadmap-first | 先看全流程每一步怎么配合，再看当前阶段细节 | `stage-contract.mjs --overview` / `specforge roadmap` 输出 artifact status、tools、commands、human decisions、exit | roadmap 是导航层，不替代 artifact 证据 |
 | Contract-first | 当前阶段先看输入、输出、人工确认和退出标准 | `stage-contract.mjs` 从 artifact id 输出阶段契约 | contract 是执行约束，不替代 artifact 证据 |
 | Trace-first | tasks 前发现需求、设计、验证断链 | `traceability_policy`、`traceability-summary.mjs` 和 HTML report Traceability section | `lite` 默认 advisory；复杂 workflow 可在 code_review / verification preflight 严格阻断 |
 | Human-in-the-loop | 高影响未知灵活找人工确认，低风险可授权默认 | `decision-checkpoints.mjs`、`[NEEDS ...]`、`manual-confirmed`、`delegated_default` | 必须记录 owner、影响、回退和补证触发条件 |
