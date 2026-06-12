@@ -434,6 +434,80 @@ function qualityWarnings(workItemBase, schema) {
   return warnings;
 }
 
+const openDecisionPattern = /\[(NEEDS (?:PRODUCT |UI |TECH |DEPENDENCY |TOOLING |CLARIFICATION|DECISION|SPEC)[^\]]*)\]/gi;
+const confirmedDecisionPattern =
+  /\[(?:UI|TECH|DEPENDENCY|TOOLING|TECH DESIGN REVIEW) DECISION CONFIRMED\]|(?:Decision|Direction|Review|Dependency|Tooling) Status:\s*(?:confirmed|delegated_default|approved-for-requirements|existing_stack|scaffold_confirmed|not_required)|人工确认.{0,40}(已确认|接受|授权默认)/i;
+const riskAcceptancePattern = /\b(?:manual-confirmed|deferred)\b|人工确认|外部补证|接受跳过|低风险跳过|风险接受/i;
+const templateChoicePattern =
+  /confirmed\s*\/\s*delegated_default|manual-confirmed\s*\/\s*deferred|pending\s*\/\s*confirmed|yes\s*\/\s*no|proven\s*\/\s*mocked|示例|样例/i;
+
+function checkpointPaths(schema) {
+  return [
+    "00-intake/brief.md",
+    "00-intake/brainstorm.md",
+    "00-intake/prd.md",
+    ...schema.artifacts.flatMap((artifact) => artifact.outputs ?? []),
+  ].filter((value, index, array) => value && array.indexOf(value) === index);
+}
+
+function lineRecord(path, lineNumber, line, marker = "") {
+  return {
+    path,
+    line: lineNumber,
+    marker,
+    text: line.trim().slice(0, 240),
+  };
+}
+
+function decisionCheckpoints(workItemBase, schema) {
+  const open = [];
+  const confirmed = [];
+  const riskAcceptance = [];
+
+  for (const path of checkpointPaths(schema)) {
+    const filePath = `${workItemBase}/${path}`;
+    if (!exists(filePath)) continue;
+    const lines = readText(filePath).split(/\r?\n/);
+    for (const [index, line] of lines.entries()) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+
+      openDecisionPattern.lastIndex = 0;
+      for (const match of trimmed.matchAll(openDecisionPattern)) {
+        open.push(lineRecord(path, index + 1, trimmed, match[1]));
+      }
+
+      if (/^#{1,6}\s/.test(trimmed) || templateChoicePattern.test(trimmed)) continue;
+      if (confirmedDecisionPattern.test(trimmed)) {
+        confirmed.push(lineRecord(path, index + 1, trimmed));
+      }
+      if (riskAcceptancePattern.test(trimmed)) {
+        riskAcceptance.push(lineRecord(path, index + 1, trimmed));
+      }
+    }
+  }
+
+  return {
+    open,
+    confirmed,
+    risk_acceptance: riskAcceptance,
+    summary: {
+      open: open.length,
+      confirmed: confirmed.length,
+      risk_acceptance: riskAcceptance.length,
+    },
+  };
+}
+
+function emptyDecisionCheckpoints() {
+  return {
+    open: [],
+    confirmed: [],
+    risk_acceptance: [],
+    summary: { open: 0, confirmed: 0, risk_acceptance: 0 },
+  };
+}
+
 function artifactSummaries(schema, states, workItemBase, workItemYaml) {
   return schema.artifacts.map((artifact) => {
     const missingDeps = artifact.requires.filter((id) => states.get(id) !== "done");
@@ -625,6 +699,7 @@ export function diagnoseWorkItem(options = {}) {
   const readyArtifact = nextReadyArtifact(schema, states);
   const blockers = buildBlockers({ readyArtifact, gates, workItemBase: workItem.base, workItemYaml });
   const warnings = qualityWarnings(workItem.base, schema);
+  const checkpoints = decisionCheckpoints(workItem.base, schema);
   const doneCount = artifacts.filter((artifact) => artifact.status === "done").length;
   const readyArtifacts = artifacts.filter((artifact) => artifact.status === "ready").map((artifact) => artifact.id);
   const partialArtifacts = artifacts.filter((artifact) => artifact.status === "partial").map((artifact) => artifact.id);
@@ -657,6 +732,7 @@ export function diagnoseWorkItem(options = {}) {
     gates,
     blockers,
     quality_warnings: warnings,
+    decision_checkpoints: checkpoints,
     route,
     route_reason: routeReason,
     artifacts,
@@ -678,6 +754,7 @@ export function diagnoseWorkspace() {
         route_reason: "当前没有 active work item，但这是已有代码项目且 wiki 基线仍为空；应先建立项目画像。",
         blockers: [],
         quality_warnings: [],
+        decision_checkpoints: emptyDecisionCheckpoints(),
         work_item: null,
       };
     }
@@ -691,6 +768,7 @@ export function diagnoseWorkspace() {
       route_reason: "当前没有 active work item；下一步应创建或整理一个新工作事项。",
       blockers: [],
       quality_warnings: [],
+      decision_checkpoints: emptyDecisionCheckpoints(),
       work_item: null,
     };
   }
@@ -704,6 +782,7 @@ export function diagnoseWorkspace() {
       route: "sf-doctor",
       route_reason: "存在多个 active work item，不能猜测要继续哪一个。",
       quality_warnings: [],
+      decision_checkpoints: emptyDecisionCheckpoints(),
       blockers: [
         {
           severity: "P0",

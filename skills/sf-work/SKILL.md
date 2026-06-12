@@ -36,6 +36,7 @@ node .specforge/core/scripts/doctor.mjs
 ```bash
 node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/instructions.mjs
+node .specforge/core/scripts/decision-checkpoints.mjs
 node .specforge/core/scripts/artifact-graph-status.mjs
 git status --short --untracked-files=all
 ```
@@ -65,7 +66,7 @@ git status --short --untracked-files=all
    - verification：`sf-verify`
    - wiki_sync：`sf-wiki`
    - closure：`sf-close`
-4. 每完成一个 gate 或阶段后再次运行 doctor、`instructions.mjs`、`artifact-graph-status.mjs` 和 `git status --short --untracked-files=all`。
+4. 每完成一个 gate 或阶段后再次运行 doctor、`instructions.mjs`、`decision-checkpoints.mjs`、`artifact-graph-status.mjs` 和 `git status --short --untracked-files=all`。
 5. ready artifact 进入 `closure` 后交给 `sf-close`，由 `sf-close` 负责 release、rollback、archive dry-run 和 archive。
 6. archive 成功后停止，并输出已完成 artifact、gate、验证和归档路径。
 
@@ -76,6 +77,7 @@ git status --short --untracked-files=all
 ```bash
 node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/instructions.mjs
+node .specforge/core/scripts/decision-checkpoints.mjs
 node .specforge/core/scripts/artifact-graph-status.mjs
 ```
 

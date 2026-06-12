@@ -277,6 +277,19 @@ function render(diagnosis, workItemYaml, generatedAt) {
       ${renderList(diagnosis.quality_warnings, "No quality warnings.", (warning) => `<li>${renderStatusBadge(warning.severity)} ${escapeHtml(warning.message)} <span class="muted">missing=${escapeHtml((warning.missing_sections ?? []).join(", ") || "N/A")}</span></li>`)}
     </section>
 
+    <section id="decision-checkpoints">
+      <h2>Decision Checkpoints</h2>
+      <p>
+        ${renderStatusBadge(`open=${diagnosis.decision_checkpoints?.summary?.open ?? 0}`)}
+        ${renderStatusBadge(`confirmed=${diagnosis.decision_checkpoints?.summary?.confirmed ?? 0}`)}
+        ${renderStatusBadge(`risk=${diagnosis.decision_checkpoints?.summary?.risk_acceptance ?? 0}`)}
+      </p>
+      <h3>Open Decisions</h3>
+      ${renderList(diagnosis.decision_checkpoints?.open, "No open decision markers.", (item) => `<li><strong>${escapeHtml(item.marker)}</strong> <span class="muted">${escapeHtml(item.path)}:${escapeHtml(item.line)}</span><br>${escapeHtml(item.text)}</li>`)}
+      <h3>Risk Acceptance Candidates</h3>
+      ${renderList(diagnosis.decision_checkpoints?.risk_acceptance, "No risk acceptance candidates.", (item) => `<li><span class="muted">${escapeHtml(item.path)}:${escapeHtml(item.line)}</span><br>${escapeHtml(item.text)}</li>`)}
+    </section>
+
     <section id="artifacts">
       <h2>Artifact Excerpts</h2>
       <div class="grid">

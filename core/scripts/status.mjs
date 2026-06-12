@@ -79,6 +79,17 @@ function printQualityWarnings(warnings) {
   }
 }
 
+function printDecisionCheckpoints(checkpoints) {
+  const summary = checkpoints?.summary ?? { open: 0, confirmed: 0, risk_acceptance: 0 };
+  console.log(`Decision checkpoints: open=${summary.open}, confirmed=${summary.confirmed}, risk_acceptance=${summary.risk_acceptance}`);
+  if (!checkpoints || summary.open === 0) return;
+  for (const item of checkpoints.open.slice(0, 5)) {
+    console.log(`- ${item.marker}: ${item.path}:${item.line}`);
+    console.log(`  ${item.text}`);
+  }
+  if (summary.open > 5) console.log(`- ... ${summary.open - 5} more open decision(s)`);
+}
+
 function printActiveSummary(diagnosis) {
   if (!diagnosis.work_item) {
     console.log(`Active work items: ${diagnosis.active_count}`);
@@ -89,6 +100,7 @@ function printActiveSummary(diagnosis) {
     console.log(`Reason: ${diagnosis.route_reason}`);
     printBlockers(diagnosis.blockers);
     printQualityWarnings(diagnosis.quality_warnings);
+    printDecisionCheckpoints(diagnosis.decision_checkpoints);
     return;
   }
 
@@ -108,6 +120,7 @@ function printActiveSummary(diagnosis) {
   console.log(`Graph: ${artifactLine(diagnosis.artifacts)}`);
   printBlockers(diagnosis.blockers);
   printQualityWarnings(diagnosis.quality_warnings);
+  printDecisionCheckpoints(diagnosis.decision_checkpoints);
 }
 
 function printArchiveSummary(items) {
@@ -225,6 +238,7 @@ function runGraphStatus() {
           route_reason: diagnosis.route_reason,
           blockers: diagnosis.blockers,
           quality_warnings: diagnosis.quality_warnings,
+          decision_checkpoints: diagnosis.decision_checkpoints,
           readyArtifacts,
           blockedArtifacts,
           artifacts: artifactSummaries,
@@ -260,6 +274,7 @@ function runGraphStatus() {
       console.log(`- [${warning.severity}] ${warning.message} -> ${warning.route}`);
     }
   }
+  printDecisionCheckpoints(diagnosis.decision_checkpoints);
   console.log("");
 
   for (const artifact of artifactSummaries) {

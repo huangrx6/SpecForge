@@ -14,6 +14,7 @@ function usage() {
 Usage:
   specforge init [--dir <path>] [--force]
   specforge doctor [--dir <path>]
+  specforge checkpoints [--dir <path>] [--work-item <id>] [--json]
   specforge report [--dir <path>] [--work-item <id>] [--output <path>]
 
 Examples:
@@ -21,6 +22,7 @@ Examples:
   npx github:huangrx6/SpecForge init --dir .
   npm exec --yes --package=git+ssh://git@git.company.com/team/specforge.git#v0.3.0-company.1 -- specforge init --dir .
   npx github:huangrx6/SpecForge doctor --dir .
+  npx github:huangrx6/SpecForge checkpoints --dir .
   npx github:huangrx6/SpecForge report --dir .
 `);
 }
@@ -98,6 +100,20 @@ function report() {
   runNode(reportPath, extraArgs, targetDir);
 }
 
+function checkpoints() {
+  const targetDir = resolve(option("--dir", "."));
+  const checkpointsPath = join(targetDir, ".specforge/core/scripts/decision-checkpoints.mjs");
+  if (!existsSync(checkpointsPath)) {
+    console.error(`Missing SpecForge decision checkpoint script: ${checkpointsPath}`);
+    process.exit(1);
+  }
+  const extraArgs = [];
+  const workItem = option("--work-item");
+  if (workItem) extraArgs.push("--work-item", workItem);
+  if (args.includes("--json")) extraArgs.push("--json");
+  runNode(checkpointsPath, extraArgs, targetDir);
+}
+
 if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
   usage();
   process.exit(0);
@@ -109,6 +125,8 @@ if (command === "init") {
   initProject();
 } else if (command === "doctor") {
   doctor();
+} else if (command === "checkpoints") {
+  checkpoints();
 } else if (command === "report") {
   report();
 } else {

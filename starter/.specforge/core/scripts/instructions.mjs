@@ -55,6 +55,18 @@ function printQualityWarnings(warnings = []) {
   }
 }
 
+function printDecisionCheckpoints(checkpoints) {
+  const summary = checkpoints?.summary ?? { open: 0, confirmed: 0, risk_acceptance: 0 };
+  if (summary.open === 0 && summary.risk_acceptance === 0) return;
+  console.log("");
+  console.log(`Decision checkpoints: open=${summary.open}, confirmed=${summary.confirmed}, risk_acceptance=${summary.risk_acceptance}`);
+  for (const item of (checkpoints?.open ?? []).slice(0, 5)) {
+    console.log(`- ${item.marker}: ${item.path}:${item.line}`);
+    console.log(`  ${item.text}`);
+  }
+  if (summary.open > 5) console.log(`- ... ${summary.open - 5} more open decision(s)`);
+}
+
 const stageSkillByArtifact = {
   intake: stageSkill("discovery/SKILL.md"),
   gap_report: stageSkill("gap-report/SKILL.md"),
@@ -128,6 +140,7 @@ try {
         active_items: workspaceDiagnosis.active_items,
         blockers: workspaceDiagnosis.blockers,
         quality_warnings: workspaceDiagnosis.quality_warnings ?? [],
+        decision_checkpoints: workspaceDiagnosis.decision_checkpoints,
       };
 
       if (json) {
@@ -146,6 +159,7 @@ try {
           for (const blocker of payload.blockers) console.log(`- [${blocker.severity}] ${blocker.message}`);
         }
         printQualityWarnings(payload.quality_warnings);
+        printDecisionCheckpoints(payload.decision_checkpoints);
       }
       process.exit(0);
     }
@@ -175,6 +189,7 @@ try {
       reason: diagnosis.route_reason,
       blockers: diagnosis.blockers,
       quality_warnings: diagnosis.quality_warnings,
+      decision_checkpoints: diagnosis.decision_checkpoints,
     };
 
     if (json) {
@@ -193,6 +208,7 @@ try {
         console.log(`  owner: ${blocker.owner_artifact}`);
       }
       printQualityWarnings(payload.quality_warnings);
+      printDecisionCheckpoints(payload.decision_checkpoints);
     }
     process.exit(0);
   }
@@ -218,6 +234,7 @@ try {
       route: diagnosis.route,
       blockers: diagnosis.blockers,
       quality_warnings: diagnosis.quality_warnings,
+      decision_checkpoints: diagnosis.decision_checkpoints,
       context_files: schema.artifacts
         .flatMap((artifact) => artifact.outputs)
         .filter((output) => exists(`${workItem.base}/${output}`)),
@@ -235,6 +252,7 @@ try {
         for (const blocker of payload.blockers) console.log(`- [${blocker.severity}] ${blocker.message} -> ${blocker.route}`);
       }
       printQualityWarnings(payload.quality_warnings);
+      printDecisionCheckpoints(payload.decision_checkpoints);
       console.log(`Tasks: ${payload.task_progress.done}/${payload.task_progress.total} done`);
       for (const task of payload.task_progress.pending) console.log(`- [ ] ${task}`);
       console.log("");
@@ -279,6 +297,7 @@ try {
       .filter((item) => states.get(item.id) === "ready")
       .map((item) => item.id),
     quality_warnings: diagnosis.quality_warnings,
+    decision_checkpoints: diagnosis.decision_checkpoints,
   };
 
   if (json) {
@@ -326,6 +345,7 @@ try {
       console.log(`Evidence: ${payload.artifact.gate.evidence ?? "null"}`);
     }
     printQualityWarnings(payload.quality_warnings);
+    printDecisionCheckpoints(payload.decision_checkpoints);
   }
 } catch (error) {
   console.error(error.message);

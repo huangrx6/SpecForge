@@ -81,6 +81,8 @@
 | 高风险跳过项 | owner、影响、重新验证触发条件 | 接受跳过、要求补证、回退实现 |
 | Gate `REQUEST_CHANGES` 争议 | 阻断项、return path、可选修复 | 修复、重开规格、人工接受低风险残余 |
 
+自动推进、handoff 或 gate 前建议运行 `node .specforge/core/scripts/decision-checkpoints.mjs`。该脚本汇总当前 work item 中的 open `[NEEDS ...]` 标记、已确认标记和人工接受 / 外部补证候选，用于把“需要人拍板的点”从长文档里提出来。`specforge checkpoints --dir .` 是对外 CLI 入口。
+
 ## 输出预算
 
 | Work item 规模 | 对用户输出 | Artifact 内容 | 禁止事项 |

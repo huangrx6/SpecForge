@@ -25,6 +25,7 @@ description: SpecForge 内部状态技能。用于汇总 active work items、sta
 node .specforge/core/scripts/status.mjs
 node .specforge/core/scripts/artifact-graph-status.mjs
 node .specforge/core/scripts/instructions.mjs
+node .specforge/core/scripts/decision-checkpoints.mjs
 node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/codebase-index.mjs --json
 ```
@@ -35,6 +36,7 @@ node .specforge/core/scripts/codebase-index.mjs --json
 node .specforge/core/scripts/status.mjs --json
 node .specforge/core/scripts/artifact-graph-status.mjs --json
 node .specforge/core/scripts/instructions.mjs --json
+node .specforge/core/scripts/decision-checkpoints.mjs --json
 ```
 
 ## 输出内容
@@ -44,6 +46,7 @@ node .specforge/core/scripts/instructions.mjs --json
 - gate 状态和证据路径。
 - artifact graph：done、ready、blocked、partial。
 - 当前 blocker 和 owner。
+- 人工确认 checkpoint：open `[NEEDS ...]`、已确认项和风险接受候选。
 - 建议路由到哪个根级 `sf-*` 技能。
 - 如果是 requirements ready，说明是否需要先走 `sf-prd`。
 - 如果任一 gate 为 `REQUEST_CHANGES` / `REJECTED`，说明应回到哪个 artifact / `sf-*` 技能。
@@ -55,7 +58,7 @@ node .specforge/core/scripts/instructions.mjs --json
 - 没有 active work item、仓库已有代码且 wiki 基线为空时，推荐 `sf-steering`，先建立存量项目画像。
 - gate 缺证据时，状态视为 blocked。
 - gate 为 `REQUEST_CHANGES` / `REJECTED` 时，不推荐下游 artifact；先推荐修复路径。
-- `status.mjs`、`artifact-graph-status.mjs`、`instructions.mjs` 的 route / blocker 来自同一诊断逻辑；如果脚本输出与聊天记忆冲突，以脚本输出为准。
+- `status.mjs`、`artifact-graph-status.mjs`、`instructions.mjs`、`decision-checkpoints.mjs` 的 route / blocker / 人工确认线索来自同一诊断逻辑；如果脚本输出与聊天记忆冲突，以脚本输出为准。
 - archived work item 只在用户要求历史时读取。
 - 下一步必须是可执行动作。
 - 用户只说“继续”时推荐当前 ready artifact 对应的单个 `sf-*` 技能。
@@ -83,4 +86,5 @@ Ready artifact: <artifact or none>
 Route: <sf-*>
 Reason: <one sentence>
 Blockers: <none or list>
+Decision checkpoints: open=<n>, confirmed=<n>, risk_acceptance=<n>
 ```

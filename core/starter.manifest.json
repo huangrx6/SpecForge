@@ -59,6 +59,10 @@
       "to": "core/scripts/create-work.mjs"
     },
     {
+      "from": "scripts/decision-checkpoints.mjs",
+      "to": "core/scripts/decision-checkpoints.mjs"
+    },
+    {
       "from": "scripts/codebase-map.mjs",
       "to": "core/scripts/codebase-map.mjs"
     },

@@ -11,8 +11,9 @@
 1. **读取上下文**：首先读取业务最新请求和更高优先级指令。然后读取 `.specforge/AGENTS.md`、`.specforge/manifest.yaml`、`.specforge/registry.yaml`。
 2. **加载 active 项**：若有且只有一个 active work item，读取其 `work.yaml` 和当前 ready artifact。
 3. **健康检查与就绪判定**：自动推进或高风险动作前运行 `node .specforge/core/scripts/doctor.mjs`。运行 `node .specforge/core/scripts/instructions.mjs` 判断下一步。
-4. **Wiki-first 定位**：已有代码项目先读 `.specforge/wiki/00-index.md` 和相关知识项，提取入口路径、模块、API、数据、运行和风险线索。
-5. **按需加载**：只加载当前阶段需要的标准、模板、profile、wiki 和 wiki 指向的代码文件，避免上下文污染。
+4. **人工确认扫描**：遇到不确定、handoff、gate、verification 或上线前，运行 `node .specforge/core/scripts/decision-checkpoints.mjs` 查看 open `[NEEDS ...]`、已确认项和风险接受候选。
+5. **Wiki-first 定位**：已有代码项目先读 `.specforge/wiki/00-index.md` 和相关知识项，提取入口路径、模块、API、数据、运行和风险线索。
+6. **按需加载**：只加载当前阶段需要的标准、模板、profile、wiki 和 wiki 指向的代码文件，避免上下文污染。
 
 ## Work Item 命名与创建
 
