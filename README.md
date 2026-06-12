@@ -182,6 +182,7 @@ npx github:huangrx6/SpecForge init --dir .
 node .specforge/core/scripts/workflow-audit.mjs
 node .specforge/core/scripts/workflow-health.mjs
 node .specforge/core/scripts/artifact-quality.mjs
+node .specforge/core/scripts/wiki-quality.mjs
 node .specforge/core/scripts/stage-contract.mjs --overview
 node .specforge/core/scripts/stage-contract.mjs
 node .specforge/core/scripts/doctor.mjs
@@ -196,6 +197,7 @@ node .specforge/core/scripts/workflow-package.mjs
 npx github:huangrx6/SpecForge audit --dir .
 npx github:huangrx6/SpecForge health --dir .
 npx github:huangrx6/SpecForge quality --dir .
+npx github:huangrx6/SpecForge wiki-quality --dir .
 npx github:huangrx6/SpecForge roadmap --dir .
 npx github:huangrx6/SpecForge contract --dir .
 npx github:huangrx6/SpecForge doctor --dir .
@@ -444,6 +446,7 @@ node .specforge/core/scripts/gate.mjs code_review REQUEST_CHANGES
 node .specforge/core/scripts/workflow-audit.mjs
 node .specforge/core/scripts/workflow-health.mjs
 node .specforge/core/scripts/artifact-quality.mjs
+node .specforge/core/scripts/wiki-quality.mjs
 node .specforge/core/scripts/stage-contract.mjs --overview
 node .specforge/core/scripts/stage-contract.mjs
 node .specforge/core/scripts/doctor.mjs
@@ -461,9 +464,12 @@ node .specforge/core/scripts/workflow-package.mjs
 node .specforge/core/scripts/gate-preflight.mjs verification APPROVED --evidence 05-verification/report.md
 node .specforge/core/scripts/gate.mjs verification APPROVED --evidence 05-verification/report.md
 node .specforge/core/scripts/sync-wiki.mjs
+node .specforge/core/scripts/wiki-quality.mjs
 ```
 
 `render-work-report.mjs` 生成的 HTML 首屏是 Action Board：先给当前状态、下一步、最高优先级、复制命令和阅读顺序；完整 artifact 摘要、traceability、gate 和长表放在下方。Markdown artifact 仍然是事实源。
+
+`wiki-quality.mjs` 检查 `.specforge/wiki/` 的 frontmatter、`00-index.md` 引用、重复 current 项、日期 / 版本化命名和模板占位；`gate-preflight wiki_sync APPROVED` 会自动执行同类检查。结构性问题是 `FAIL`，内容薄或占位偏多是 `WARN`，需要在 wiki-sync evidence 中说明是否接受。
 
 在 SpecForge 源码仓库中：
 

@@ -161,9 +161,10 @@ const executionByArtifact = {
     ],
   },
   wiki_sync: {
-    tools: ["sf-wiki", "sync-wiki.mjs", "wiki index", "gate-preflight.mjs"],
+    tools: ["sf-wiki", "sync-wiki.mjs", "wiki-quality.mjs", "wiki index", "gate-preflight.mjs"],
     commands: [
       "node .specforge/core/scripts/sync-wiki.mjs",
+      "node .specforge/core/scripts/wiki-quality.mjs",
       "node .specforge/core/scripts/gate-preflight.mjs wiki_sync APPROVED --evidence 06-close/wiki-sync.md",
     ],
   },

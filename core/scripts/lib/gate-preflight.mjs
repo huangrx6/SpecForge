@@ -1,6 +1,7 @@
 import { artifactById, effectiveSchema, exists, loadSchema, parseField, readText } from "./specforge.mjs";
 import { evidenceSummary } from "./evidence.mjs";
 import { normalizeTraceabilityPolicy, traceabilityGapChecks } from "./traceability.mjs";
+import { wikiQualitySummary } from "./wiki-quality.mjs";
 import { workflowHealth } from "./workflow-health.mjs";
 
 function add(checks, status, code, message, route = "") {
@@ -111,6 +112,27 @@ export function gatePreflight(diagnosis, options = {}) {
       );
       for (const issue of evidence.issues) {
         add(checks, issue.severity, `evidence-${issue.code}`, issue.message, "evidence-summary");
+      }
+    }
+
+    if (gate === "wiki_sync") {
+      const wikiQuality = wikiQualitySummary();
+      add(
+        checks,
+        wikiQuality.exists ? "PASS" : "FAIL",
+        wikiQuality.exists ? "wiki-root-exists" : "wiki-root-missing",
+        wikiQuality.exists ? `Wiki root exists: ${wikiQuality.wiki_root}.` : `Wiki root is missing: ${wikiQuality.wiki_root}.`,
+        "wiki-quality",
+      );
+      add(
+        checks,
+        wikiQuality.files.includes("00-index.md") ? "PASS" : "FAIL",
+        wikiQuality.files.includes("00-index.md") ? "wiki-index-exists" : "wiki-index-missing",
+        wikiQuality.files.includes("00-index.md") ? "Wiki index exists: 00-index.md." : "Wiki index is missing: 00-index.md.",
+        "wiki-quality",
+      );
+      for (const wikiIssue of wikiQuality.issues) {
+        add(checks, wikiIssue.severity, `wiki-${wikiIssue.code}`, `${wikiIssue.file}: ${wikiIssue.message}`, "wiki-quality");
       }
     }
   } else {

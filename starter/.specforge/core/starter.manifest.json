@@ -59,6 +59,10 @@
       "to": "core/scripts/lib/traceability.mjs"
     },
     {
+      "from": "scripts/lib/wiki-quality.mjs",
+      "to": "core/scripts/lib/wiki-quality.mjs"
+    },
+    {
       "from": "scripts/lib/stage-contracts.mjs",
       "to": "core/scripts/lib/stage-contracts.mjs"
     },
@@ -153,6 +157,10 @@
     {
       "from": "scripts/sync-wiki.mjs",
       "to": "core/scripts/sync-wiki.mjs"
+    },
+    {
+      "from": "scripts/wiki-quality.mjs",
+      "to": "core/scripts/wiki-quality.mjs"
     },
     {
       "from": "scripts/traceability-summary.mjs",
