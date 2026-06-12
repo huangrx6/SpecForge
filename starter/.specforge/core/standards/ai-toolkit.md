@@ -105,7 +105,7 @@ Traceability 由 workflow schema 的 `traceability_policy` 控制：`off` 不提
 
 日常推进建议先运行 `node .specforge/core/scripts/workflow-audit.mjs` 或 `specforge audit --dir .`。它把 Action Summary、route、blocker、open decision、quality warning、traceability 和推荐命令合并成一页，适合作为人工确认、跨 Agent 接力和自动推进前的第一入口。没有 active work item 时，它只推荐 status / create-work / doctor 这类可执行入口，不推荐阶段命令。
 
-需要快速判断当前流程是否可继续时，运行 `node .specforge/core/scripts/workflow-health.mjs` 或 `specforge health --dir .`。它给出 health score、level、维度扣分和 Top priorities，用来排序下一步，不替代 gate evidence。
+需要快速判断当前流程是否可继续时，运行 `node .specforge/core/scripts/workflow-health.mjs` 或 `specforge health --dir .`。它给出 health score、level、维度扣分和 Top priorities；除 blocker、decision、traceability、gate 外，也会把 `quality-suite.mjs` 中 source、implementation、evidence、wiki、closure 等阶段感知质量缺口纳入健康分。health 用来排序下一步，不替代 gate evidence。
 
 需要一条命令判断“当前阶段质量是否够继续”时，运行 `node .specforge/core/scripts/quality-suite.mjs` 或 `specforge quality-suite --dir .`。它按 ready artifact 自动启用相关检查：早期只看可读性、决策和追踪；进入设计后看来源；进入实现后看 diff 账本；进入验证、wiki、关闭后再看证据、知识沉淀和 release / rollback。先看总表，再按 Recommended Commands 下钻专项脚本。
 
@@ -189,7 +189,7 @@ Markdown 仍是版本管理主格式；HTML / 可视化产物用于提升阅读�
 - 可用 `node .specforge/core/scripts/evidence-summary.mjs` 检查 verification report 中的证据强度分级、人工确认和外部补证记录。
 - 可用 `node .specforge/core/scripts/traceability-summary.mjs` 检查 source item、tasks、test cases 之间的追溯缺口；先作为提示使用，稳定后再考虑升级为 gate。
 - 可用 `node .specforge/core/scripts/workflow-audit.mjs` 生成一页流程审计摘要，先判断是否 BLOCKED / NEEDS_DECISION / NEEDS_ATTENTION，再进入具体阶段。
-- 可用 `node .specforge/core/scripts/workflow-health.mjs` 生成健康分和 Top priorities，帮助人和 Agent 快速决定先修 blocker、先问人、还是先补 traceability。
+- 可用 `node .specforge/core/scripts/workflow-health.mjs` 生成健康分、`quality_suite` 维度和 Top priorities，帮助人和 Agent 快速决定先修 blocker、先问人、先补 traceability，还是先下钻 source / implementation / evidence / wiki / closure 质量缺口。
 - 可用 `node .specforge/core/scripts/stage-contract.mjs --overview` 或 `specforge roadmap --dir .` 查看当前 workflow 每个 artifact 的状态、阶段契约、工具搭配、命令、人工确认点和退出标准；也可用 `--artifact tasks` 聚焦单阶段。
 - 可用 `node .specforge/core/scripts/gate-preflight.mjs <gate> APPROVED --evidence <path>` 在真正更新 gate 前做只读预检，适合本地审批、CI advisory check 和发布前复核。
 

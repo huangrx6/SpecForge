@@ -138,7 +138,7 @@ node .specforge/core/scripts/doctor.mjs
 | 优化方向 | 目标体验 | 技术落点 | 约束 |
 |---|---|---|---|
 | Audit-first | 用户和 Agent 先看一页就知道卡在哪里 | `workflow-audit.mjs` 先给 Action Summary，再汇总 route、blocker、decision、traceability、推荐命令 | audit 只提示，不私自推进 gate |
-| Health score | 用一个总览分数暴露当前流程是否能继续 | `workflow-health.mjs` 汇总 blocker、decision、quality、traceability、gate | score 只做排序和扫读，不替代 gate evidence |
+| Health score | 用一个总览分数暴露当前流程是否能继续 | `workflow-health.mjs` 汇总 blocker、decision、traceability、gate，并把 `quality-suite.mjs` 的阶段感知质量缺口纳入维度扣分 | score 只做排序和扫读，不替代 gate evidence |
 | Quality suite | 用一个阶段感知总入口决定该下钻哪类检查 | `quality-suite.mjs` 按 ready artifact 自动聚合 artifact、decision、traceability、source、implementation、evidence、wiki、closure | 先看 PASS / WARN / FAIL 总表，再按 Recommended Commands 跑专项脚本；不要早期强行启用后期 closure 噪音 |
 | Roadmap-first | 先看全流程每一步怎么配合，再看当前阶段细节 | `stage-contract.mjs --overview` / `specforge roadmap` 输出 artifact status、tools、commands、human decisions、exit | roadmap 是导航层，不替代 artifact 证据 |
 | Contract-first | 当前阶段先看输入、输出、人工确认和退出标准 | `stage-contract.mjs` 从 artifact id 输出阶段契约 | contract 是执行约束，不替代 artifact 证据 |

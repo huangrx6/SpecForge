@@ -88,9 +88,9 @@ function auditCommands(diagnosis) {
 
 function markdown(diagnosis) {
   const generated = localDateIso();
-  const health = workflowHealth(diagnosis);
-  const status = actionState(diagnosis, health);
   const qualitySuite = qualitySuiteSummary(diagnosis);
+  const health = workflowHealth(diagnosis, { qualitySuite });
+  const status = actionState(diagnosis, health);
 
   if (!diagnosis.work_item) {
     return `# SpecForge Workflow Audit
@@ -239,8 +239,8 @@ try {
   }
 
   if (json) {
-    const health = workflowHealth(diagnosis);
     const qualitySuite = qualitySuiteSummary(diagnosis);
+    const health = workflowHealth(diagnosis, { qualitySuite });
     console.log(JSON.stringify({ audit_status: actionState(diagnosis, health), health, quality_suite: qualitySuite, action_commands: auditCommands(diagnosis), diagnosis }, null, 2));
     process.exit(0);
   }

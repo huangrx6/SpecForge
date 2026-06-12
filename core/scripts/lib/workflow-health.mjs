@@ -1,3 +1,7 @@
+import { qualitySuiteSummary } from "./quality-suite.mjs";
+
+const qualityChecksCoveredElsewhere = new Set(["artifact-quality", "decision-quality", "traceability"]);
+
 function severityWeight(severity) {
   if (severity === "P0") return 40;
   if (severity === "P1") return 25;
@@ -14,11 +18,30 @@ function addPriority(priorities, severity, area, message, route = "") {
   priorities.push({ severity, area, message, route });
 }
 
-function healthLevel(score, diagnosis) {
+function actionableQualityChecks(qualitySuite) {
+  return (qualitySuite?.checks ?? []).filter((check) => !qualityChecksCoveredElsewhere.has(check.id));
+}
+
+function qualitySuitePenalty(qualitySuite) {
+  return clamp(
+    actionableQualityChecks(qualitySuite).reduce((sum, check) => {
+      if (check.status === "FAIL") return sum + 25;
+      if (check.status === "WARN") return sum + 6;
+      return sum;
+    }, 0),
+    0,
+    40,
+  );
+}
+
+function healthLevel(score, diagnosis, qualitySuite) {
   if (diagnosis.blockers?.some((blocker) => ["P0", "P1"].includes(blocker.severity))) return "blocked";
   if ((diagnosis.decision_checkpoints?.summary?.open ?? 0) > 0) return "needs_decision";
+  if (actionableQualityChecks(qualitySuite).some((check) => check.status === "FAIL")) return "at_risk";
   if (score < 70) return "at_risk";
-  if (score < 90 || (diagnosis.quality_warnings?.length ?? 0) > 0) return "needs_attention";
+  if (score < 90 || (diagnosis.quality_warnings?.length ?? 0) > 0 || actionableQualityChecks(qualitySuite).some((check) => check.status === "WARN")) {
+    return "needs_attention";
+  }
   return "healthy";
 }
 
@@ -44,7 +67,7 @@ function gatePenalty(gates = []) {
   return clamp(penalty, 0, 35);
 }
 
-export function workflowHealth(diagnosis) {
+export function workflowHealth(diagnosis, options = {}) {
   if (!diagnosis.work_item) {
     return {
       score: null,
@@ -66,6 +89,8 @@ export function workflowHealth(diagnosis) {
   const checkpoints = diagnosis.decision_checkpoints?.summary ?? { open: 0, risk_acceptance: 0 };
   const tracePolicy = diagnosis.traceability_policy ?? { mode: "advisory" };
   const traceability = tracePolicy.mode === "off" ? null : diagnosis.traceability;
+  const qualitySuite = options.qualitySuite ?? qualitySuiteSummary(diagnosis);
+  const qualitySuiteChecks = actionableQualityChecks(qualitySuite);
   const priorities = [];
 
   const blockerPenalty = clamp(blockers.reduce((sum, blocker) => sum + severityWeight(blocker.severity), 0), 0, 60);
@@ -73,7 +98,8 @@ export function workflowHealth(diagnosis) {
   const warningPenalty = clamp(nonTraceWarnings.reduce((sum, warning) => sum + severityWeight(warning.severity), 0), 0, 30);
   const tracePenalty = traceabilityPenalty(traceability);
   const gatesPenalty = gatePenalty(diagnosis.gates);
-  const score = clamp(100 - blockerPenalty - decisionPenalty - warningPenalty - tracePenalty - gatesPenalty, 0, 100);
+  const suitePenalty = qualitySuitePenalty(qualitySuite);
+  const score = clamp(100 - blockerPenalty - decisionPenalty - warningPenalty - tracePenalty - gatesPenalty - suitePenalty, 0, 100);
 
   for (const blocker of blockers.slice(0, 5)) {
     addPriority(priorities, blocker.severity, "blocker", blocker.message, blocker.route);
@@ -98,6 +124,16 @@ export function workflowHealth(diagnosis) {
 
   for (const warning of nonTraceWarnings.slice(0, 5)) {
     addPriority(priorities, warning.severity, "quality", warning.message, warning.route);
+  }
+
+  for (const qualityCheck of qualitySuiteChecks.filter((check) => ["FAIL", "WARN"].includes(check.status)).slice(0, 5)) {
+    addPriority(
+      priorities,
+      qualityCheck.status === "FAIL" ? "P1" : "P2",
+      qualityCheck.id,
+      `${qualityCheck.title}: ${qualityCheck.message}`,
+      qualityCheck.route,
+    );
   }
 
   if (priorities.length === 0 && diagnosis.ready_artifact) {
@@ -139,13 +175,32 @@ export function workflowHealth(diagnosis) {
       count: diagnosis.gates?.filter((gate) => ["REQUEST_CHANGES", "REJECTED"].includes(gate.status)).length ?? 0,
       penalty: gatesPenalty,
     },
+    {
+      name: "quality_suite",
+      status: qualitySuiteChecks.every((check) => check.status === "PASS") ? "pass" : qualitySuiteChecks.some((check) => check.status === "FAIL") ? "fail" : "needs_attention",
+      count: qualitySuiteChecks.filter((check) => ["FAIL", "WARN"].includes(check.status)).length,
+      penalty: suitePenalty,
+    },
   ];
 
   return {
     score,
-    level: healthLevel(score, diagnosis),
-    summary: `score=${score}/100; level=${healthLevel(score, diagnosis)}; route=${diagnosis.route}`,
+    level: healthLevel(score, diagnosis, qualitySuite),
+    summary: `score=${score}/100; level=${healthLevel(score, diagnosis, qualitySuite)}; route=${diagnosis.route}`,
     dimensions,
+    quality_suite: {
+      overall: qualitySuite.summary.overall,
+      failures: qualitySuite.summary.failures,
+      warnings: qualitySuite.summary.warnings,
+      actionable_checks: qualitySuiteChecks.map((check) => ({
+        id: check.id,
+        status: check.status,
+        failures: check.failures,
+        warnings: check.warnings,
+        route: check.route,
+      })),
+      penalty: suitePenalty,
+    },
     priorities: priorities.slice(0, 10),
   };
 }

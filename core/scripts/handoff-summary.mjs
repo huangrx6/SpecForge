@@ -59,9 +59,9 @@ function markdown(diagnosis) {
   const total = diagnosis.progress.total;
   const generated = localDateIso();
   const traceability = diagnosis.traceability;
-  const health = workflowHealth(diagnosis);
-  const state = actionState(diagnosis, health);
   const qualitySuite = qualitySuiteSummary(diagnosis);
+  const health = workflowHealth(diagnosis, { qualitySuite });
+  const state = actionState(diagnosis, health);
 
   return `# SpecForge Handoff: ${item.id}
 
