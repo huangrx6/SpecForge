@@ -6,6 +6,7 @@ import {
   diagnoseWorkItem,
   gateLine,
 } from "./lib/diagnostics.mjs";
+import { qualitySuiteSummary } from "./lib/quality-suite.mjs";
 import {
   computeArtifactStates,
   effectiveSchema,
@@ -90,6 +91,22 @@ function printDecisionCheckpoints(checkpoints) {
   if (summary.open > 5) console.log(`- ... ${summary.open - 5} more open decision(s)`);
 }
 
+function printQualitySuite(qualitySuite) {
+  if (!qualitySuite) return;
+  console.log(
+    `Quality suite: ${qualitySuite.summary.overall}; checks=${qualitySuite.summary.checked}; fail=${qualitySuite.summary.failures}; warn=${qualitySuite.summary.warnings}`,
+  );
+  const actionable = qualitySuite.checks.filter((check) => ["FAIL", "WARN"].includes(check.status)).slice(0, 5);
+  for (const check of actionable) {
+    console.log(`- [${check.status}] ${check.title}: ${check.message}`);
+    console.log(`  route: ${check.route ?? "N/A"}`);
+  }
+  if (qualitySuite.recommended_commands.length > 0) {
+    console.log("Quality commands:");
+    for (const command of qualitySuite.recommended_commands) console.log(`- ${command}`);
+  }
+}
+
 function printTraceability(traceability, policy) {
   if (!traceability) {
     console.log("Traceability: unavailable");
@@ -105,6 +122,7 @@ function printTraceability(traceability, policy) {
 }
 
 function printActiveSummary(diagnosis) {
+  const qualitySuite = qualitySuiteSummary(diagnosis);
   if (!diagnosis.work_item) {
     console.log(`Active work items: ${diagnosis.active_count}`);
     if (diagnosis.active_items.length > 0) {
@@ -114,6 +132,7 @@ function printActiveSummary(diagnosis) {
     console.log(`Reason: ${diagnosis.route_reason}`);
     printBlockers(diagnosis.blockers);
     printQualityWarnings(diagnosis.quality_warnings);
+    printQualitySuite(qualitySuite);
     printDecisionCheckpoints(diagnosis.decision_checkpoints);
     return;
   }
@@ -135,6 +154,7 @@ function printActiveSummary(diagnosis) {
   printTraceability(diagnosis.traceability, diagnosis.traceability_policy);
   printBlockers(diagnosis.blockers);
   printQualityWarnings(diagnosis.quality_warnings);
+  printQualitySuite(qualitySuite);
   printDecisionCheckpoints(diagnosis.decision_checkpoints);
 }
 
@@ -151,9 +171,10 @@ function printArchiveSummary(items) {
 function runStandardStatus() {
   const diagnosis = diagnoseWorkspace();
   const archive = archivedWorkItems();
+  const qualitySuite = qualitySuiteSummary(diagnosis);
 
   if (json) {
-    console.log(JSON.stringify({ ...diagnosis, archive }, null, 2));
+    console.log(JSON.stringify({ ...diagnosis, quality_suite: qualitySuite, archive }, null, 2));
     process.exit(0);
   }
 
@@ -203,6 +224,7 @@ function runGraphStatus() {
     defaultToLatestArchive: false,
   });
   const diagnosis = diagnoseWorkItem({ workItem: workItem.name, activeOnly: false });
+  const qualitySuite = qualitySuiteSummary(diagnosis);
   const workItemYaml = readText(`${workItem.base}/work.yaml`);
   const workflow = parseField(workItemYaml, "workflow") || "standard";
   const schema = effectiveSchema(loadSchema(workflow), workItemYaml);
@@ -253,6 +275,7 @@ function runGraphStatus() {
           route_reason: diagnosis.route_reason,
           blockers: diagnosis.blockers,
           quality_warnings: diagnosis.quality_warnings,
+          quality_suite: qualitySuite,
           traceability: diagnosis.traceability,
           decision_checkpoints: diagnosis.decision_checkpoints,
           readyArtifacts,
@@ -279,6 +302,7 @@ function runGraphStatus() {
   console.log(`Route: ${diagnosis.route}`);
   console.log(`Reason: ${diagnosis.route_reason}`);
   printTraceability(diagnosis.traceability, diagnosis.traceability_policy);
+  printQualitySuite(qualitySuite);
   if (diagnosis.blockers.length > 0) {
     console.log("Blockers:");
     for (const blocker of diagnosis.blockers) {

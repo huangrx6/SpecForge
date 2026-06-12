@@ -105,6 +105,8 @@ Traceability 由 workflow schema 的 `traceability_policy` 控制：`off` 不提
 
 每次进入下一阶段前运行 `node .specforge/core/scripts/instructions.mjs` 或 `specforge` 对应路由入口。instructions 除了 ready artifact、stage skill、standards、dependencies、outputs 和 gate commands，还会输出 Quality Suite 总态、失败 / 警告检查和推荐下钻命令；如果这里出现 FAIL，先按 quality route 处理或在 gate evidence 中记录人工接受理由。
 
+只需要快速看“现在到哪、是否可继续、质量是否亮红灯”时，先运行 `node .specforge/core/scripts/status.mjs` 或 `specforge doctor --dir .` 中的 status 段。status 会同时输出 active work item、route、gate、artifact graph、blocker、quality warning、Quality Suite 和人工确认 checkpoint；它是最轻的第一扫入口，发现质量 FAIL 后再按命令下钻。
+
 日常推进建议先运行 `node .specforge/core/scripts/workflow-audit.mjs` 或 `specforge audit --dir .`。它把 Action Summary、route、blocker、open decision、quality warning、traceability 和推荐命令合并成一页，适合作为人工确认、跨 Agent 接力和自动推进前的第一入口。没有 active work item 时，它只推荐 status / create-work / doctor 这类可执行入口，不推荐阶段命令。
 
 需要快速判断当前流程是否可继续时，运行 `node .specforge/core/scripts/workflow-health.mjs` 或 `specforge health --dir .`。它给出 health score、level、维度扣分和 Top priorities；除 blocker、decision、traceability、gate 外，也会把 `quality-suite.mjs` 中 source、implementation、evidence、wiki、closure 等阶段感知质量缺口纳入健康分。health 用来排序下一步，不替代 gate evidence。

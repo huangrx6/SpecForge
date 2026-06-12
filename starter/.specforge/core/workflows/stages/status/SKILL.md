@@ -23,6 +23,7 @@ description: SpecForge 内部状态技能。用于汇总 active work items、sta
 
 ```bash
 node .specforge/core/scripts/status.mjs
+node .specforge/core/scripts/quality-suite.mjs
 node .specforge/core/scripts/artifact-graph-status.mjs
 node .specforge/core/scripts/instructions.mjs
 node .specforge/core/scripts/decision-checkpoints.mjs
@@ -34,6 +35,7 @@ node .specforge/core/scripts/codebase-index.mjs --json
 
 ```bash
 node .specforge/core/scripts/status.mjs --json
+node .specforge/core/scripts/quality-suite.mjs --json
 node .specforge/core/scripts/artifact-graph-status.mjs --json
 node .specforge/core/scripts/instructions.mjs --json
 node .specforge/core/scripts/decision-checkpoints.mjs --json
@@ -46,6 +48,7 @@ node .specforge/core/scripts/decision-checkpoints.mjs --json
 - gate 状态和证据路径。
 - artifact graph：done、ready、blocked、partial。
 - 当前 blocker 和 owner。
+- Quality Suite 总态、失败 / 警告检查和推荐下钻命令。
 - 人工确认 checkpoint：open `[NEEDS ...]`、已确认项和风险接受候选。
 - 建议路由到哪个根级 `sf-*` 技能。
 - 如果是 requirements ready，说明是否需要先走 `sf-prd`。
@@ -86,5 +89,6 @@ Ready artifact: <artifact or none>
 Route: <sf-*>
 Reason: <one sentence>
 Blockers: <none or list>
+Quality suite: <PASS|WARN|FAIL>; checks=<n>; fail=<n>; warn=<n>
 Decision checkpoints: open=<n>, confirmed=<n>, risk_acceptance=<n>
 ```
