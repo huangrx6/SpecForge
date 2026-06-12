@@ -12,6 +12,7 @@ import { summarizeOutput } from "./lib/artifact-summary.mjs";
 import { actionCommands, actionReason, actionState, readingOrder, traceabilityPolicyLine, traceGapCount } from "./lib/action-board.mjs";
 import { diagnoseWorkItem, gateLine } from "./lib/diagnostics.mjs";
 import { workflowHealth } from "./lib/workflow-health.mjs";
+import { qualitySuiteSummary } from "./lib/quality-suite.mjs";
 
 const args = process.argv.slice(2);
 
@@ -238,12 +239,35 @@ function renderHealth(health) {
   `;
 }
 
-function renderActionBoard(diagnosis, health) {
+function renderQualitySuite(qualitySuite) {
+  if (!qualitySuite?.work_item) return `<p class="muted">No active work item quality suite.</p>`;
+  return `
+    <div class="summary" aria-label="Quality suite summary">
+      <div class="metric">Overall<strong>${renderStatusBadge(qualitySuite.summary.overall)}</strong></div>
+      <div class="metric">Checks<strong>${escapeHtml(qualitySuite.summary.checked)}</strong><span>${escapeHtml(qualitySuite.summary.skipped)} skipped by stage</span></div>
+      <div class="metric">Failures<strong>${escapeHtml(qualitySuite.summary.failures)}</strong></div>
+      <div class="metric">Warnings<strong>${escapeHtml(qualitySuite.summary.warnings)}</strong></div>
+    </div>
+    <h3>Recommended Commands</h3>
+    ${renderCommandBlock(qualitySuite.recommended_commands.length > 0 ? qualitySuite.recommended_commands : ["# none"])}
+    <table>
+      <thead><tr><th>Check</th><th>Status</th><th>Fail</th><th>Warn</th><th>Route</th><th>Message</th></tr></thead>
+      <tbody>
+        ${qualitySuite.checks
+          .map((item) => `<tr><td>${escapeHtml(item.title)}</td><td>${renderStatusBadge(item.status)}</td><td>${escapeHtml(item.failures)}</td><td>${escapeHtml(item.warnings)}</td><td>${escapeHtml(item.route ?? "N/A")}</td><td>${escapeHtml(item.message)}</td></tr>`)
+          .join("") || `<tr><td colspan="6">No checks.</td></tr>`}
+      </tbody>
+    </table>
+  `;
+}
+
+function renderActionBoard(diagnosis, health, qualitySuite) {
   const state = actionState(diagnosis, health);
   const topPriority = health.priorities?.[0];
   const openDecision = diagnosis.decision_checkpoints?.open?.[0];
   const blocker = diagnosis.blockers?.[0];
   const nextText = actionReason(diagnosis);
+  const commands = [...new Set([...actionCommands(diagnosis), ...(qualitySuite?.recommended_commands ?? [])])];
 
   return `
     <section id="action-board" class="action-board">
@@ -258,11 +282,12 @@ function renderActionBoard(diagnosis, health) {
         <article class="metric">Open Decisions<strong>${escapeHtml(diagnosis.decision_checkpoints?.summary?.open ?? 0)}</strong><span>${escapeHtml(openDecision?.marker ?? "none")}</span></article>
         <article class="metric">Blockers<strong>${escapeHtml(diagnosis.blockers?.length ?? 0)}</strong><span>${escapeHtml(blocker?.severity ?? "none")}</span></article>
         <article class="metric">Trace Gaps<strong>${escapeHtml(traceGapCount(diagnosis.traceability))}</strong><span>${escapeHtml(diagnosis.traceability_policy?.mode ?? "advisory")}</span></article>
+        <article class="metric">Quality<strong>${renderStatusBadge(qualitySuite?.summary?.overall ?? "N/A")}</strong><span>${escapeHtml(`${qualitySuite?.summary?.failures ?? 0} fail / ${qualitySuite?.summary?.warnings ?? 0} warn`)}</span></article>
       </div>
       <div class="grid two">
         <section class="card">
           <h3>Next Commands</h3>
-          ${renderCommandBlock(actionCommands(diagnosis))}
+          ${renderCommandBlock(commands)}
         </section>
         <section class="card">
           <h3>Read First</h3>
@@ -338,7 +363,8 @@ function render(diagnosis, workItemYaml, generatedAt) {
   const item = diagnosis.work_item;
   const title = `${item.id} - ${item.title || "SpecForge Work Report"}`;
   const progress = `${diagnosis.progress.done}/${diagnosis.progress.total}`;
-  const health = workflowHealth(diagnosis);
+  const qualitySuite = qualitySuiteSummary(diagnosis);
+  const health = workflowHealth(diagnosis, { qualitySuite });
   return `<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -532,6 +558,7 @@ function render(diagnosis, workItemYaml, generatedAt) {
       <a href="#action-board">Action Board</a>
       <a href="#route">Route</a>
       <a href="#health">Health</a>
+      <a href="#quality-suite">Quality Suite</a>
       <a href="#gates">Gates</a>
       <a href="#graph">Artifact Graph</a>
       <a href="#traceability">Traceability</a>
@@ -542,7 +569,7 @@ function render(diagnosis, workItemYaml, generatedAt) {
     </nav>
   </header>
   <main>
-    ${renderActionBoard(diagnosis, health)}
+    ${renderActionBoard(diagnosis, health, qualitySuite)}
 
     <section id="route">
       <h2>Route</h2>
@@ -555,6 +582,12 @@ function render(diagnosis, workItemYaml, generatedAt) {
       <h2>Workflow Health</h2>
       <p class="muted">A derived readiness score for scanning blockers, human decisions, quality warnings, traceability, and gates. It is advisory and does not replace gate evidence.</p>
       ${renderHealth(health)}
+    </section>
+
+    <section id="quality-suite">
+      <h2>Quality Suite</h2>
+      <p class="muted">Stage-aware quality checks for artifact readability, decision closure, traceability, source quality, implementation ledger, evidence, wiki, and closure readiness. Markdown artifacts remain the source of truth.</p>
+      ${renderQualitySuite(qualitySuite)}
     </section>
 
     <section id="gates">

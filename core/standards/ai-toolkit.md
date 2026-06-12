@@ -174,13 +174,13 @@ Markdown 仍是版本管理主格式；HTML / 可视化产物用于提升阅读�
 - HTML / 图表必须由 Markdown artifact 派生，不能成为唯一事实来源。
 - HTML 产物应放在对应 work item 的 `evidence/`、`ui-mockup-export/` 或报告目录，并在 Markdown 中登记路径。
 - 不把 token、cookie、密钥、个人隐私和生产敏感日志写入 HTML。
-- 可用 `node .specforge/core/scripts/render-work-report.mjs` 生成 `07-report/work-summary.html`，用于快速浏览 artifact graph、gate、blocker、quality warning 和关键 artifact 摘要。
+- 可用 `node .specforge/core/scripts/render-work-report.mjs` 生成 `07-report/work-summary.html`，用于快速浏览 Action Board、Quality Suite、artifact graph、gate、blocker、quality warning 和关键 artifact 摘要。
 - 可用 `node .specforge/core/scripts/artifact-quality.mjs` 检查 artifact 摘要、摘要长度、模板占位和长文档风险。
 - 可用 `node .specforge/core/scripts/source-quality.mjs` 检查 research 来源质量、technical design 版本事实和官方基准来源。
 - 可用 `node .specforge/core/scripts/wiki-quality.mjs` 检查 wiki frontmatter、索引引用、重复 current、日期 / 版本化命名、模板占位和导航证据。
 - 可用 `node .specforge/core/scripts/implementation-quality.mjs` 检查 tasks、implementation report、changed-files 和真实 git diff/status 对账。
 - 可用 `node .specforge/core/scripts/closure-quality.mjs` 检查 release、rollback、观察点、风险来源和补偿措施是否闭环。
-- HTML report 的首屏必须优先呈现 Action Board：当前状态、下一步理由、最高优先级、可复制命令和阅读顺序。Artifact excerpt、traceability 表和长矩阵放在下方，避免读者先被长文档淹没。
+- HTML report 的首屏必须优先呈现 Action Board：当前状态、下一步理由、最高优先级、质量总态、可复制命令和阅读顺序。Quality Suite、artifact excerpt、traceability 表和长矩阵放在下方，避免读者先被长文档淹没。
 - 可用 `node .specforge/core/scripts/handoff-summary.mjs --output <work-item>/07-report/handoff.md` 生成接力摘要，用于跨 Agent、跨线程或人工复盘。
 - Handoff summary 和 review package 必须先呈现 Action Summary：状态、下一步、健康度、open decisions、blockers、trace gaps、policy、下一组命令和阅读顺序；证据、图谱、artifact 摘录放在后面。
 - 可用 `node .specforge/core/scripts/workflow-package.mjs` 一键生成 review package、HTML report 和 handoff，适合审查、汇报、接力和关闭前复盘。
