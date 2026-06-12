@@ -90,6 +90,17 @@ function printDecisionCheckpoints(checkpoints) {
   if (summary.open > 5) console.log(`- ... ${summary.open - 5} more open decision(s)`);
 }
 
+function printTraceability(traceability) {
+  if (!traceability) {
+    console.log("Traceability: unavailable");
+    return;
+  }
+  const summary = traceability.summary;
+  console.log(
+    `Traceability: sources=${summary.source_items}, tasks=${summary.tasks}, verification=${summary.verification_items}, uncovered=${summary.uncovered_sources}, missing_trace=${summary.tasks_missing_trace}, missing_verification=${summary.tasks_missing_verification}, missing_testcase=${summary.tasks_without_testcase}`,
+  );
+}
+
 function printActiveSummary(diagnosis) {
   if (!diagnosis.work_item) {
     console.log(`Active work items: ${diagnosis.active_count}`);
@@ -118,6 +129,7 @@ function printActiveSummary(diagnosis) {
   console.log(`Reason: ${diagnosis.route_reason}`);
   console.log(`Gates: ${gateLine(diagnosis.gates)}`);
   console.log(`Graph: ${artifactLine(diagnosis.artifacts)}`);
+  printTraceability(diagnosis.traceability);
   printBlockers(diagnosis.blockers);
   printQualityWarnings(diagnosis.quality_warnings);
   printDecisionCheckpoints(diagnosis.decision_checkpoints);
@@ -238,6 +250,7 @@ function runGraphStatus() {
           route_reason: diagnosis.route_reason,
           blockers: diagnosis.blockers,
           quality_warnings: diagnosis.quality_warnings,
+          traceability: diagnosis.traceability,
           decision_checkpoints: diagnosis.decision_checkpoints,
           readyArtifacts,
           blockedArtifacts,
@@ -262,6 +275,7 @@ function runGraphStatus() {
   console.log(`Ready: ${readyArtifacts.length > 0 ? readyArtifacts.join(", ") : "none"}`);
   console.log(`Route: ${diagnosis.route}`);
   console.log(`Reason: ${diagnosis.route_reason}`);
+  printTraceability(diagnosis.traceability);
   if (diagnosis.blockers.length > 0) {
     console.log("Blockers:");
     for (const blocker of diagnosis.blockers) {

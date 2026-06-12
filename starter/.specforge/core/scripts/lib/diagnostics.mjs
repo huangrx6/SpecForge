@@ -14,6 +14,7 @@ import {
   readText,
   resolveWorkItem,
 } from "./specforge.mjs";
+import { traceabilitySummary } from "./traceability.mjs";
 import { readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
@@ -434,6 +435,57 @@ function qualityWarnings(workItemBase, schema) {
   return warnings;
 }
 
+function traceabilityWarnings(workItemBase) {
+  const traceability = traceabilitySummary(workItemBase);
+  const warnings = [];
+
+  if (traceability.summary.source_items > 0 && traceability.summary.tasks > 0 && traceability.summary.uncovered_sources > 0) {
+    warnings.push({
+      severity: "P2",
+      code: "traceability-source-uncovered",
+      route: "sf-tasking",
+      owner_artifact: "tasks",
+      path: "01-spec/tasks.md",
+      message: `traceability 有 ${traceability.summary.uncovered_sources} 个源项未被 tasks 的 _Trace:_ 覆盖，后续实现可能漏需求。`,
+    });
+  }
+
+  if (traceability.summary.tasks > 0 && traceability.summary.tasks_missing_trace > 0) {
+    warnings.push({
+      severity: "P2",
+      code: "traceability-task-missing-trace",
+      route: "sf-tasking",
+      owner_artifact: "tasks",
+      path: "01-spec/tasks.md",
+      message: `tasks.md 有 ${traceability.summary.tasks_missing_trace} 个任务缺少 _Trace:_ 来源 ID，code review 难以判断任务是否对应需求。`,
+    });
+  }
+
+  if (traceability.summary.tasks > 0 && traceability.summary.tasks_missing_verification > 0) {
+    warnings.push({
+      severity: "P2",
+      code: "traceability-task-missing-verification",
+      route: "sf-tasking",
+      owner_artifact: "tasks",
+      path: "01-spec/tasks.md",
+      message: `tasks.md 有 ${traceability.summary.tasks_missing_verification} 个任务缺少 _Verification:_ 验证方式，verification 阶段容易补证困难。`,
+    });
+  }
+
+  if (traceability.summary.tasks > 0 && traceability.summary.tasks_without_testcase > 0) {
+    warnings.push({
+      severity: "P3",
+      code: "traceability-task-missing-testcase",
+      route: "sf-verify",
+      owner_artifact: "verification",
+      path: "05-verification/test-cases.md",
+      message: `tasks.md 有 ${traceability.summary.tasks_without_testcase} 个任务尚未关联 _TestCase:_，进入 verification 前建议补齐 TC/PW ID。`,
+    });
+  }
+
+  return { traceability, warnings };
+}
+
 const openDecisionPattern = /\[(NEEDS (?:PRODUCT |UI |TECH |DEPENDENCY |TOOLING |CLARIFICATION|DECISION|SPEC)[^\]]*)\]/gi;
 const confirmedDecisionPattern =
   /\[(?:UI|TECH|DEPENDENCY|TOOLING|TECH DESIGN REVIEW) DECISION CONFIRMED\]|(?:Decision|Direction|Review|Dependency|Tooling) Status:\s*(?:confirmed|delegated_default|approved-for-requirements|existing_stack|scaffold_confirmed|not_required)|人工确认.{0,40}(已确认|接受|授权默认)/i;
@@ -698,7 +750,9 @@ export function diagnoseWorkItem(options = {}) {
   const gates = gateSummaries(schema, workItemYaml, workItem.base);
   const readyArtifact = nextReadyArtifact(schema, states);
   const blockers = buildBlockers({ readyArtifact, gates, workItemBase: workItem.base, workItemYaml });
-  const warnings = qualityWarnings(workItem.base, schema);
+  const quality = qualityWarnings(workItem.base, schema);
+  const traceability = traceabilityWarnings(workItem.base);
+  const warnings = [...quality, ...traceability.warnings];
   const checkpoints = decisionCheckpoints(workItem.base, schema);
   const doneCount = artifacts.filter((artifact) => artifact.status === "done").length;
   const readyArtifacts = artifacts.filter((artifact) => artifact.status === "ready").map((artifact) => artifact.id);
@@ -732,6 +786,7 @@ export function diagnoseWorkItem(options = {}) {
     gates,
     blockers,
     quality_warnings: warnings,
+    traceability: traceability.traceability,
     decision_checkpoints: checkpoints,
     route,
     route_reason: routeReason,

@@ -170,6 +170,49 @@ function renderArtifactCards(workItemBase, artifacts) {
     .join("");
 }
 
+function renderTraceability(traceability) {
+  if (!traceability) return `<p class="muted">No traceability summary available.</p>`;
+  const summary = traceability.summary;
+  const topGaps = [
+    ...traceability.gaps.uncovered_sources.slice(0, 5).map((item) => ({
+      type: "Uncovered source",
+      id: item.id,
+      location: `${item.path}:${item.line}`,
+      text: item.text,
+    })),
+    ...traceability.gaps.tasks_missing_trace.slice(0, 5).map((task) => ({
+      type: "Task missing trace",
+      id: task.id,
+      location: `${task.path}:${task.line}`,
+      text: task.title,
+    })),
+    ...traceability.gaps.tasks_missing_verification.slice(0, 5).map((task) => ({
+      type: "Task missing verification",
+      id: task.id,
+      location: `${task.path}:${task.line}`,
+      text: task.title,
+    })),
+  ].slice(0, 10);
+
+  return `
+    <div class="summary" aria-label="Traceability summary">
+      <div class="metric">Source Items<strong>${escapeHtml(summary.source_items)}</strong></div>
+      <div class="metric">Tasks<strong>${escapeHtml(summary.tasks)}</strong></div>
+      <div class="metric">Verification Items<strong>${escapeHtml(summary.verification_items)}</strong></div>
+      <div class="metric">Uncovered Sources<strong>${escapeHtml(summary.uncovered_sources)}</strong></div>
+      <div class="metric">Tasks Missing Trace<strong>${escapeHtml(summary.tasks_missing_trace)}</strong></div>
+      <div class="metric">Tasks Missing Verification<strong>${escapeHtml(summary.tasks_missing_verification)}</strong></div>
+      <div class="metric">Tasks Without TestCase<strong>${escapeHtml(summary.tasks_without_testcase)}</strong></div>
+    </div>
+    <table>
+      <thead><tr><th>Gap</th><th>ID</th><th>Location</th><th>Excerpt</th></tr></thead>
+      <tbody>
+        ${topGaps.map((gap) => `<tr><td>${escapeHtml(gap.type)}</td><td>${escapeHtml(gap.id)}</td><td>${escapeHtml(gap.location)}</td><td>${escapeHtml(gap.text)}</td></tr>`).join("") || `<tr><td colspan="4">No traceability gaps.</td></tr>`}
+      </tbody>
+    </table>
+  `;
+}
+
 function render(diagnosis, workItemYaml, generatedAt) {
   const item = diagnosis.work_item;
   const title = `${item.id} - ${item.title || "SpecForge Work Report"}`;
@@ -339,6 +382,7 @@ function render(diagnosis, workItemYaml, generatedAt) {
       <a href="#route">Route</a>
       <a href="#gates">Gates</a>
       <a href="#graph">Artifact Graph</a>
+      <a href="#traceability">Traceability</a>
       <a href="#warnings">Warnings</a>
       <a href="#decision-checkpoints">Decisions</a>
       <a href="#artifacts">Artifact Excerpts</a>
@@ -376,6 +420,12 @@ function render(diagnosis, workItemYaml, generatedAt) {
             .join("")}
         </tbody>
       </table>
+    </section>
+
+    <section id="traceability">
+      <h2>Traceability</h2>
+      <p class="muted">Source IDs, tasks, and verification IDs are summarized to expose gaps early. This is advisory unless a project promotes it to a gate.</p>
+      ${renderTraceability(diagnosis.traceability)}
     </section>
 
     <section id="warnings">
