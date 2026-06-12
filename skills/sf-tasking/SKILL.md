@@ -24,6 +24,7 @@ description: 生成或更新 SpecForge work item 的 tasks；用于 requirements
 - `.specforge/core/artifacts/templates/tasks.md`
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/product.md`
+- `.specforge/core/standards/ai-toolkit.md`
 - UI 适用时读取 `.specforge/core/standards/design.md`；若 `ui-design.md` 声明采用 PC 端业务系统规范，还要读取 `.specforge/core/standards/pc-ui-design-spec.md`。
 - technical design 适用时读取 `.specforge/core/standards/engineering.md` 和 `.specforge/core/profiles/README.md`。
 
@@ -67,6 +68,7 @@ node .specforge/core/scripts/create-artifact.mjs tasks
 4. UI 适用时把页面、组件、状态矩阵、Pencil 证据和视觉验证转成任务。
 5. PC 端业务系统规范适用时，把 token、布局尺寸、表格 / 表单 / 弹窗 / 抽屉、响应式验证转成任务。
 6. 存量模块任务的 `_Files:_` / `_Boundary:_` 应优先来自 wiki 和 technical design 的入口路径；如果只能写成“待查全仓”，退回 `sf-tech-design` 或 `sf-steering`。
+7. 按 `ai-toolkit.md` 的阶段质量条检查：任务必须能让 implementation、code_review 和 verification 共用，不得只是执行愿望清单。
 
 ### C. 拆任务图
 
@@ -74,7 +76,9 @@ node .specforge/core/scripts/create-artifact.mjs tasks
 2. W1：核心实现、UI 实现、数据 / 安全 / 权限 / 运行支持。
 3. W2：自动化测试、Playwright（有 UI 时**必须**）、启动 / 回滚 / 观察点、Wiki 回写提示。
 4. 标注 `_Depends:_` 和并行波次；并行任务不得共享同一主要写入文件。用 `[P]` 标记可并行执行的独立任务。
-5. 任务要小到一次 implementation 和一次 code review 可以聚焦完成。
+5. 填写 `任务图与执行策略`：每个任务的依赖、可并行性、主要写入边界、交付物和 review 焦点。
+6. 多 agent / SOLO / Trae / Codex 并行时，必须列出每个 worker 可认领任务和禁止同时修改的文件。
+7. 任务要小到一次 implementation 和一次 code review 可以聚焦完成。
 
 **UI 场景 Playwright 铁律**：`has_ui=true` 或存在浏览器流程时，W2 必须包含：
 - 先写 `05-verification/test-cases.md` 测试用例任务（覆盖成功路径、失败路径、边界状态）
@@ -122,6 +126,7 @@ node .specforge/core/scripts/create-artifact.mjs tasks
 - 每个 technical design `yes` 影响面都有任务承接；`no` / N/A 有理由；无关键 `unknown` 留给 implementation。
 - UI / PC 规范 / Playwright / 权限 / 数据 / 发布 / 回滚 / 可观测性任务在适用时单独列出。
 - 并行波次不会让多个任务同时写同一核心文件或共享未完成契约。
+- 任务图清楚说明依赖、可并行边界、交接证据和 review 焦点。
 - 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 
 ## 不做

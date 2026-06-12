@@ -22,6 +22,7 @@ description: 完成 SpecForge 关闭阶段；用于当前 workflow 已到 wiki_s
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/wiki.md`
 - `.specforge/core/standards/engineering.md`
+- `.specforge/core/standards/ai-toolkit.md`
 
 ## 启动扫描
 
@@ -76,6 +77,7 @@ node .specforge/core/scripts/create-artifact.mjs closure
    - 发布前检查。
    - 发布步骤或 N/A 理由。
    - 发布后观察点。
+   - HTML / 可视化报告链接（如有），并说明 Markdown artifact 仍是事实源。
    - 引用 verification、wiki sync、implementation report、code review。
 
 3. 写 `06-close/rollback.md`：
@@ -114,6 +116,7 @@ node .specforge/core/scripts/archive-work.mjs
 - `06-close/wiki-sync.md` 存在，wiki_sync gate 为 `APPROVED`。
 - `06-close/release.md`、`06-close/rollback.md` 已填写，不是空模板。
 - verification 残余风险、release 观察点、rollback 触发条件互相对齐。
+- 外部待补证、manual-confirmed、deferred 项已进入 release 观察点或 follow-up。
 - doctor 和 archive dry-run 通过。
 - archive 成功，work item 从 active 移到 archive，registry 状态正确。
 - 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，确认 workflow 已全部完成。

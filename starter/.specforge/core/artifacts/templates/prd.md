@@ -13,6 +13,17 @@
 - External Skill Inputs:
   - skill / trigger / normalized_to / notes:
 
+## 0.1 Product Decision Gate
+
+| 检查项 | 结论 | 证据 / 处理 |
+|---|---|---|
+| PRD Depth | prd-lite / prd-standard / prd-deep | |
+| 输出预算 | compact / standard / full | |
+| MVP 是否已确认 | confirmed / delegated_default / needs-decision | |
+| 是否存在高影响未决问题 | no / yes | |
+| 是否需要 UI / 技术 / 数据后续确认 | no / yes | |
+| 是否可进入 requirements | yes / no | |
+
 ## 1. Executive Summary
 
 - Problem Statement:

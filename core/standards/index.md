@@ -27,14 +27,14 @@
 
 | 阶段 / artifact | 必读标准 |
 |---|---|
-| intake / brief | `workflow.md`、`product.md` |
-| prd | `product.md`、`workflow.md` |
+| intake / brief | `workflow.md`、`product.md`、`ai-toolkit.md` |
+| prd | `product.md`、`workflow.md`、`ai-toolkit.md` |
 | research / gap_report | `product.md`、`engineering.md`、`workflow.md` |
 | steering / 存量项目画像 | `code-intelligence.md`、`wiki.md`、`workflow.md` |
-| requirements | `product.md`、`workflow.md` |
-| ui_design | `design.md`、`product.md`、`workflow.md`；PC 业务系统场景加读 `pc-ui-design-spec.md` |
-| technical_design | `engineering.md`、`workflow.md` |
-| tasks | `workflow.md`、`engineering.md` |
+| requirements | `product.md`、`workflow.md`、`ai-toolkit.md` |
+| ui_design | `design.md`、`product.md`、`workflow.md`、`ai-toolkit.md`；PC 业务系统场景加读 `pc-ui-design-spec.md` |
+| technical_design | `engineering.md`、`workflow.md`、`ai-toolkit.md` |
+| tasks | `workflow.md`、`engineering.md`、`ai-toolkit.md` |
 | spec_review | `workflow.md`、`product.md`、`design.md`、`engineering.md` |
 | implementation | `engineering.md`、`workflow.md` |
 | code_review | `engineering.md`、`workflow.md` |

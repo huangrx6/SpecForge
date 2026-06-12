@@ -30,6 +30,17 @@
 - 已查询的官方基准来源（如适用）：
 - 本次不展开的技术章节及理由：
 
+## 0.1 Design Quality Gate
+
+| 检查项 | 结论 | 证据 / 处理 |
+|---|---|---|
+| 设计规模 | compact / standard / full | |
+| 是否沿用现有架构 | yes / no / partial | |
+| 新增依赖是否已确认 | confirmed / delegated_default / existing_stack / not_required / pending | |
+| 是否存在更简单方案 | no / yes - rejected / yes - choose simpler | |
+| 关键契约是否可测试 | yes / no / N/A | |
+| 是否能直接拆 tasks | yes / no | |
+
 ## 1. 技术选型与依赖确认
 
 > 新项目、空仓库、技术栈缺失、新增 / 替换关键技术，或新增直接依赖 / SDK / 插件 / 组件库 / ORM / 驱动 / 测试库时必须先填写并等待确认。本次只沿用现有项目技术栈时，写清证据路径即可。未经确认的关键选型写真实 NEEDS_TECH_DECISION marker；未经确认的新增依赖写真实 NEEDS_DEPENDENCY_DECISION marker。二者都不能进入 tasking / spec_review approval / implementation。
@@ -169,6 +180,12 @@
 | 允许修改 | 禁止修改 | 原因 / 来源 |
 |---|---|---|
 | | | |
+
+### 架构决策记录 (ADR)
+
+| 决策 | 状态 | 上下文 | 被拒绝方案 | 后果 | 重新审视触发条件 |
+|---|---|---|---|---|---|
+| | proposed / accepted / rejected / superseded | | | | |
 
 ## 8. Frontend Engineering Design
 

@@ -29,6 +29,7 @@ description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户�
 
 - `.specforge/core/standards/workflow.md`：scope、artifact 边界和 gate 纪律。
 - `.specforge/core/standards/product.md`：候选池、MVP、PRD 和 requirements 边界。
+- `.specforge/core/standards/ai-toolkit.md`：人工确认点、输出预算、来源证据和轻量 / 标准分流。
 - 有 UI 方向时读取 `.specforge/core/standards/design.md`。
 - 有技术选型或依赖版本问题时读取 `.specforge/core/standards/engineering.md`。
 - `.specforge/core/skills/ORCHESTRATION.md`：第三方参考能力的总编排规则。
@@ -152,6 +153,7 @@ C) 不确定 → 先按 B 设计，留扩展点
 4. 需要第三方方法卡时，按 `references/external-skills.md` 选择并读取最小必要内容；只把它转成候选、风险、问题地图或后续阶段输入，不把第三方输出直接当结论。
 5. 建立问题地图：`[已明确] / [必须确认] / [可安全默认]`。
 6. 按固定维度排序 `[必须确认]`：核心目标/范围 > 体验方向 > 数据与安全 > 集成与依赖 > 交付验收。
+7. 写明输出预算：小型取舍只保留 1 个问题和 2-3 个选项；复杂取舍才展开方案对比和研究证据。
 
 ### B. 每轮对话循环
 
@@ -171,7 +173,8 @@ C) 不确定 → 先按 B 设计，留扩展点
 
 1. 写入或更新 `00-intake/brainstorm.md`：问题地图、事实证据、方案对比、推荐项、用户确认、明确延后 / 不做、未决问题。
 2. 同步更新 `00-intake/brief.md`：澄清记录、功能候选池、用户选择、外部研究摘要、PRD 决策和 Brainstorm 决策。
-3. 确认没有 `[NEEDS ... DECISION]` 阻断项；如仍有阻断项，输出暂停原因而不是路由到下游。
+3. 只有用户已确认、授权默认或明确延后的选择才能写入已批准结论；Agent recommendation 必须单独保留。
+4. 确认没有 `[NEEDS ... DECISION]` 阻断项；如仍有阻断项，输出暂停原因而不是路由到下游。
 
 ## 判定表
 

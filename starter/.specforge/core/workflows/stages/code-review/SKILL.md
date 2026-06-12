@@ -23,6 +23,7 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
 - 当前 `git status --short --untracked-files=all`、`git diff --name-only`、`git diff --stat`、关键文件 diff、测试输出或验证证据
 - `.specforge/core/standards/engineering.md`
 - `.specforge/core/standards/workflow.md`
+- `.specforge/core/standards/ai-toolkit.md`
 - `.specforge/core/skills/ORCHESTRATION.md`（需要外部 code review 参考时）
 - `.specforge/core/skills/quality/code-reviewer/SKILL.md`（需要安全、性能、正确性、可维护性补充检查清单时）
 
@@ -42,6 +43,7 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
 3. **建立任务覆盖矩阵**
    - 每个 `tasks.md` 任务检查状态、相关文件、实现证据和验证证据。
    - 每个完成任务的 `_Impact:_` 必须与真实 diff 和 implementation report 的 technical_design 影响面对账一致。
+   - 如 `tasks.md` 包含任务图，检查任务依赖、可并行边界、主要写入边界和真实 diff 是否一致。
    - 未完成任务不能靠口头说明通过。
 4. **三向对账**
    - 每个真实 diff 文件必须能追溯到 approved spec、`tasks.md` 的 `_Boundary:_` 或 implementation report 中的批准偏离说明。
@@ -110,6 +112,7 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
 - 问题按严重程度排序。
 - 问题优先列 bug、风险、越界和缺证据，不把风格建议放前面。
 - 批准时也要写残余风险和 verification 注意事项。
+- verification 注意事项必须标出弱证据、deferred 项、外部补证项和建议证据强度。
 - 未批准时说明下一步修复范围和 owner。
 
 ## 完成标准

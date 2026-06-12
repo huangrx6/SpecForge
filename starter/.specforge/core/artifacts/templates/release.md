@@ -24,6 +24,7 @@
 | verification gate 已批准 | 是 / 否 | |
 | wiki_sync gate 已批准 | 是 / 否 | |
 | verification 残余风险已进入观察点 | 是 / 否 / N/A | |
+| manual-confirmed / deferred 项已安排补证 | 是 / 否 / N/A | |
 | rollback 触发条件已覆盖关键风险 | 是 / 否 / N/A | |
 | doctor 通过 | 是 / 否 | |
 | release / rollback 已填写 | 是 / 否 | |
@@ -48,6 +49,12 @@
 | 观察项 | 方法 | 预期 | 负责人 |
 |---|---|---|---|
 | 日志 / 指标 / trace / 业务数据 | | | |
+
+## 6.1 外部补证与派生报告
+
+| 项 | 类型 | 路径 / 链接 | Owner | 触发条件 |
+|---|---|---|---|---|
+| manual-confirmed / deferred / HTML report / chart / dashboard | | | | |
 
 ## 7. 不涉及生产发布的说明
 

@@ -58,6 +58,14 @@ Status: PENDING
 |---|---|---|---|---|---|
 | T001 | | | | | pass / fail / N/A |
 
+### 任务图对账
+
+| 检查项 | 结果 | 证据 / 备注 |
+|---|---|---|
+| 任务依赖顺序与实际实现一致 | pass / fail / N/A | |
+| `[P]` / 可并行任务未争用主要写入文件 | pass / fail / N/A | |
+| 调整任务图已有 implementation report 说明 | pass / fail / N/A | |
+
 ## 6. Spec 符合性
 
 | Spec 条目 | 预期行为 / 约束 | 实现证据 | 缺口 |
@@ -108,7 +116,9 @@ Status: PENDING
 
 ## 11. 验证提示
 
--
+| 提示 | 建议证据强度 | 需要关注的 residual / deferred 项 |
+|---|---|---|
+| | proven / mocked / manual-confirmed / deferred | |
 
 ## 12. Wiki 影响
 

@@ -22,6 +22,7 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 - 可获得的测试输出、截图、日志、CI 链接或人工验证记录
 - `.specforge/core/standards/engineering.md`
 - `.specforge/core/standards/workflow.md`
+- `.specforge/core/standards/ai-toolkit.md`
 - `.specforge/core/standards/design.md`（存在 UI 影响时）
 - `.specforge/core/standards/pc-ui-design-spec.md`（`ui-design.md` 声明采用 PC 端业务系统规范时）
 - `.specforge/core/skills/README.md`（存在 UI / 浏览器验证时）
@@ -65,7 +66,8 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 7. **运行和交付验证**
    - 记录安装、构建、dev server / service 启动、环境变量、迁移、回滚、健康检查、日志 / 指标 / trace 中适用项。
 8. **跳过项闭环**
-   - 每个跳过项必须写明原因、影响、owner、重新验证触发条件和可接受期限。
+   - 每个跳过项必须写明原因、已有证据、证据强度、影响、owner、重新验证触发条件和可接受期限。
+   - 外部真实环境、第三方系统或低风险残余无法直接证明时，先请求人工确认；用户确认后标记 `manual-confirmed` / `deferred`。
    - 关键验收、P0 / P1 风险、安全 / 数据 / 权限 / 发布风险不能用无 owner 的跳过项通过 gate。
 9. **记录 CI**
    - 有 CI 时记录链接、状态、commit / run id 和失败摘要。
@@ -74,6 +76,7 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 ## 证据要求
 
 - 写明实际执行，不写“应该通过”。
+- 区分证据强度：`proven` / `mocked` / `manual-confirmed` / `deferred` / `missing`。
 - 失败测试不得标成通过。
 - 手工验证必须有步骤、环境和结果。
 - 跳过验证必须有理由、影响和 owner。
@@ -92,6 +95,7 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 - P0 / P1 code review finding 未解决。
 - 阻断测试失败。
 - 关键验收标准没有验证证据。
+- 关键验收证据为 `missing`，且没有低风险人工确认或外部补证计划。
 - code review 标记的 technical_design `yes` 影响面没有验证证据，或跳过项没有 owner、影响和重新验证触发条件。
 - UI 关键路径只测 happy path。
 - 有浏览器流程但未先写 `05-verification/test-cases.md` 和 Playwright 用例、未执行自动化操作，或只用单元测试 / 手工点击替代。
@@ -108,7 +112,7 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 
 | 状态 | 使用条件 |
 |---|---|
-| `APPROVED` | 关键验证通过，残余风险可接受且有 owner |
+| `APPROVED` | 关键验证通过，残余风险可接受且有 owner；外部待补证已人工确认 |
 | `REQUEST_CHANGES` | 缺证据、测试失败或需要实现补修 |
 | `REJECTED` | 实现明显不满足 spec 或风险不可接受，需要回到前序阶段 |
 

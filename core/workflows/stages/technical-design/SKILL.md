@@ -16,6 +16,7 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
 - `.specforge/core/standards/product.md`
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/engineering.md`
+- `.specforge/core/standards/ai-toolkit.md`
 - `.specforge/core/profiles/README.md`
 - 按影响面读取内部设计子模块；不要默认全量读取：
   - 前端工程、路由、组件、状态、API client 或构建：`.specforge/core/workflows/stages/technical-design/frontend-design.md`
@@ -58,16 +59,18 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
    - 只是沿用现有项目版本时，记录证据路径，例如 lockfile、package manifest、wiki 或代码入口。
 8. 选择 Tech Profiles，说明采用、部分采用或偏离理由；项目已有技术栈以 wiki 和代码事实优先。
 9. 对齐规则主基准：按影响面使用对应规则入口内的唯一主基准，并写清采用点、偏离理由和验证证据；无相关影响面时写 N/A。
-10. 按影响面展开工程设计，只展开 `yes` 的章节；`no` 的章节保留一行 N/A，不写空表：
+10. 填写 `Design Quality Gate`，确认设计规模、现有架构复用、新增依赖确认、更简单方案、契约可测试性和 tasks 可拆性。
+11. 中高风险或长期架构决策写 ADR 摘要；低风险小改写 N/A 和理由。
+12. 按影响面展开工程设计，只展开 `yes` 的章节；`no` 的章节保留一行 N/A，不写空表：
    - 前端工程结构、路由、组件边界、状态管理、API client。
    - 后端模块、服务边界、后台任务、并发和幂等。
    - 领域模型、实体、状态机和边界上下文。
    - API / SDK / 事件契约、鉴权和兼容性。
    - 数据库、索引、迁移、缓存和生命周期。
    - 配置、部署、可观测性、可靠性和回滚。
-11. 明确写入范围、禁止范围、失败模式和验证策略。
-12. 对高风险方案写备选方案和取舍理由。
-13. **初稿后核心决策 Review**：详细 technical design 初稿完成后，先向用户展示核心决策摘要并等待确认；确认前不得进入 tasking、spec_review approval 或 implementation。
+13. 明确写入范围、禁止范围、失败模式和验证策略。
+14. 对高风险方案写备选方案和取舍理由。
+15. **初稿后核心决策 Review**：详细 technical design 初稿完成后，先向用户展示核心决策摘要并等待确认；确认前不得进入 tasking、spec_review approval 或 implementation。
    - 摘要必须包含架构选择、新增 / 替换依赖、工具链选择、与现有架构冲突 / 变更、已知最大风险与缓解。
    - 用户确认后写入 `Core Decision Review Status: confirmed` 或表格项 `Core Decision Review Status | confirmed`，并保留 `[TECH DESIGN REVIEW CONFIRMED]`。
    - 用户授权默认时写 `delegated_default`，无技术影响时写 `not_required` 和 N/A 理由。
@@ -99,6 +102,7 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
 - 存量项目的读取计划包含 wiki 入口和 bounded code context，不要求实现者重新全仓定位。
 - reviewer 能判断实现是否偏离架构、接口、数据或安全要求。
 - 关键技术选型和新增直接依赖都有确认来源：现有项目证据、用户明确指定、用户授权默认、已确认脚手架或用户确认候选方案。
+- `Design Quality Gate` 能证明本设计最小充分、契约可测试、没有未确认新增依赖。
 - 初稿后的核心决策摘要已经被用户确认、用户授权默认，或明确 N/A。
 - tasks 可以从本文件和可选 `ui-design.md` 拆出可验证工作单元。
 - UI 细节只引用 `ui-design.md`，不在本文件重复维护。

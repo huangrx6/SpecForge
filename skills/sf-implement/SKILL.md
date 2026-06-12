@@ -20,6 +20,7 @@ description: 根据已批准的 SpecForge tasks 执行实现；用于 implementa
 - `.specforge/core/artifacts/templates/changed-files.md`
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/engineering.md`
+- `.specforge/core/standards/ai-toolkit.md`
 - 需要实现 UI 时读取 `.specforge/core/standards/design.md`；若 `ui-design.md` 声明采用 PC 端业务系统规范，还要读取 `.specforge/core/standards/pc-ui-design-spec.md`。
 
 ## 启动扫描
@@ -51,6 +52,8 @@ git status --short --untracked-files=all
 ### A. 先写实现计划
 
 1. 从 tasks 建立任务执行图：task -> batch -> `_Trace:_` -> `_Files:_` -> `_Boundary:_` -> `_Verification:_` -> `_Rollback:_` -> risk。
+   - 如果 tasks 已填写 `任务图与执行策略`，以其中依赖、并行边界和禁止同时修改文件为准。
+   - 若实际执行需要改变依赖或并行边界，停止并回到 `sf-tasking` 更新任务图。
 2. 从 `technical-design.md#0. 影响面与读取计划` 和相关 wiki 建立上下文边界：入口路径、关键符号 / 路由、上游 / 下游、测试位置和运行命令。
 3. 实现前只沿上述边界读取代码；不得为了“保险”重新全量扫描仓库。
 4. 若任务边界、验证方式、回滚信息不足以指导实现，停止并退回 `sf-tasking` 或 `sf-spec-review`。
@@ -102,6 +105,7 @@ git diff --stat
 
 - `03-implementation/plan.md`、`report.md`、`changed-files.md` 已填写。
 - tasks 中完成项有代码、验证或可信 N/A、变更文件登记和状态说明。
+- tasks 的任务图、实现顺序和真实 diff 一致；未按计划并行或调整顺序时已有说明。
 - technical design `yes / no / unknown` 影响面对账清楚。
 - 属于本 work item 的真实 git diff 均已登记；无关已有改动已排除并说明。
 - 没有把 `DONE_WITH_CONCERNS`、`BLOCKED`、`NEEDS_SPEC` 描述成已完成。

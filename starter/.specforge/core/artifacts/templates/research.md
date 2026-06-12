@@ -20,6 +20,15 @@
 |---|---|---|---|---|
 | | | | | |
 
+### 来源质量分级
+
+| 等级 | 定义 | 使用规则 |
+|---|---|---|
+| primary | 官方文档、标准、源码、release notes、项目 lockfile | 可作为技术决策主证据 |
+| secondary | 权威团队博客、厂商技术文章、成熟社区文档 | 可补充取舍，不单独决定关键方案 |
+| anecdotal | 论坛、社媒、个人经验、未验证 benchmark | 只能作为风险提示，必须交叉验证 |
+| stale / unknown | 过期、无日期、版本不明、无法复现 | 不用于关键选型；需要补证或降级置信度 |
+
 ## 3. 实验方法与可复现性 (Method & Reproducibility)
 - **实验假设**：
 - **PoC 范围**：
@@ -54,6 +63,16 @@
 - **被拒绝的备选方案**：
 - **采纳前置条件**：
 - **需要沉淀到 wiki 的长期知识**：
+
+### ADR 摘要
+
+| 项 | 内容 |
+|---|---|
+| Status | proposed / accepted / rejected / superseded |
+| Context | |
+| Decision | |
+| Consequences | |
+| Revisit trigger | |
 
 ## 8. 后续路由 (Next Workflow)
 | 后续 workflow | 触发条件 | 需要带入的 artifact / 证据 |

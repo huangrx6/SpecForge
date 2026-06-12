@@ -21,6 +21,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 - `.specforge/core/artifacts/schemas/<workflow>.json`
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/product.md`
+- `.specforge/core/standards/ai-toolkit.md`
 - `.specforge/core/standards/design.md`（存在 UI 影响时）
 - `.specforge/core/standards/pc-ui-design-spec.md`（`ui-design.md` 声明采用 PC 端业务系统规范时）
 - `.specforge/core/standards/engineering.md`
@@ -52,6 +53,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 6. **再列验证任务**：单元、集成、契约、E2E、页面 × 操作 × 角色矩阵、启动验证、回归验证、人工证据。采用 PC 端业务系统规范时，必须包含 token、布局尺寸、表格 / 表单 / 弹窗 / 抽屉、SVG 图标和响应式验证任务。
 7. **最后列运行任务**：配置、迁移、回滚、可观测性、告警、发布检查和 Wiki 回写提示。
 8. 标注依赖关系和并行波次。并行任务必须有不同主要写入边界。
+9. 填写任务图与执行策略：任务依赖、可并行性、主要写入边界、交付物、review 焦点和多 worker 禁止同时修改的文件。
 
 ## 任务格式要求
 
@@ -77,6 +79,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 ## 并行规则
 
 - 并行任务不得共享同一主要写入文件。
+- 可并行任务必须显式标记 `[P]` 或在任务图中说明；未标记时默认串行。
 - 共享契约、schema、类型、迁移、环境变量必须先完成再并行实现。
 - 验证任务不能藏在实现任务里。
 - `technical-design.md` 残留 `[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]` 或 `[NEEDS TOOLING DECISION]` 时停止，退回 `sf-tech-design` 确认选型、新增依赖或工具链，不生成任务。
@@ -121,6 +124,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 - tasks 能驱动 implementation。
 - 每个任务都有追踪来源、预期文件、验证、回滚和风险；边界、依赖、影响面和测试用例在适用任务上完整。
 - 每个任务都有预期写入文件边界和回滚提示；数据、权限、发布、依赖和迁移任务的回滚不能为空。
+- 任务图说明依赖、并行边界、交接证据和 review 焦点，多 agent 执行时不会争用核心文件。
 - 存量项目任务有可追溯的 wiki 入口，或明确说明本次为何不适用。
 - 每个 technical_design `yes` 影响面都有任务承接；`no` / N/A 有可信理由；无关键 `unknown` 留到实现阶段。
 - reviewer 可以用 tasks 判断实现是否完整。

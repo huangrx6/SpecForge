@@ -16,7 +16,7 @@ description: 执行 SpecForge code_review gate；用于 implementation 完成后
 - `references/review-gate-rubric.md`：diff 对账、spec compliance、外部 `code-reviewer` 使用、finding 分级和 gate 决策。
 - `.specforge/core/workflows/stages/code-review/SKILL.md`：内部代码审查母本。
 - `.specforge/core/artifacts/templates/code-review.md`：写入骨架。
-- `.specforge/core/standards/workflow.md`、`.specforge/core/standards/engineering.md`。
+- `.specforge/core/standards/workflow.md`、`.specforge/core/standards/engineering.md`、`.specforge/core/standards/ai-toolkit.md`。
 - `.specforge/core/skills/ORCHESTRATION.md`：外部 code review 参考边界。
 
 ## 启动扫描
@@ -69,9 +69,10 @@ node .specforge/core/scripts/create-artifact.mjs code_review
 
 1. 对照 `tasks.md` 每个完成任务的 `_Trace:_`、`_Files:_`、`_Verification:_`、`_Rollback:_`、`_Risk:_`。
 2. 每个完成任务必须能追溯到真实 diff 或可信 N/A，以及验证证据或可信 deferred 理由。
-3. 每个真实 diff 文件必须能追溯到 approved spec、task `_Boundary:_` 或 implementation report 中的批准偏离说明。
-4. 对存量模块，检查真实 diff 是否仍落在 wiki / technical design 指定的入口、模块和上下游边界内；不为 review 临时全仓扫描来补齐边界。
-5. `changed-files.md`、implementation report、真实 git diff 三者不一致时，先记 finding，不靠口头解释通过。
+3. 若 `tasks.md` 包含任务图，检查真实执行顺序、并行边界、主要写入边界和 diff 是否一致。
+4. 每个真实 diff 文件必须能追溯到 approved spec、task `_Boundary:_` 或 implementation report 中的批准偏离说明。
+5. 对存量模块，检查真实 diff 是否仍落在 wiki / technical design 指定的入口、模块和上下游边界内；不为 review 临时全仓扫描来补齐边界。
+6. `changed-files.md`、implementation report、真实 git diff 三者不一致时，先记 finding，不靠口头解释通过。
 
 ### C. Spec Compliance 先行
 
@@ -145,6 +146,7 @@ node .specforge/core/scripts/gate.mjs code_review REJECTED
 - `APPROVED` 时 gate 状态与 evidence 路径一致。
 - `REQUEST_CHANGES` / `REJECTED` 时 gate 状态已更新，evidence 保持 `null`。
 - `REQUEST_CHANGES` / `REJECTED` 时 findings 已明确列出需修复的问题和对应文件。
+- 批准时已给出 verification 注意事项，尤其是弱证据、deferred 项和外部补证项。
 - 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 
 ## 不做

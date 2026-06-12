@@ -24,6 +24,7 @@ description: SpecForge 内部关闭技能。用于 wiki_sync 已批准后，写 
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/wiki.md`
 - `.specforge/core/standards/engineering.md`
+- `.specforge/core/standards/ai-toolkit.md`
 
 ## 写入
 
@@ -44,6 +45,7 @@ description: SpecForge 内部关闭技能。用于 wiki_sync 已批准后，写 
    - 摘要本次交付了什么、影响哪些用户 / 模块 / 环境。
    - 记录发布前检查、发布步骤、发布后观察点。
    - 引用 verification gate、wiki_sync gate、implementation report 和 residual risks；不能只写“已完成”。
+   - 如果 verification 包含 `manual-confirmed`、`deferred` 或外部待补证项，必须进入发布后观察点或 follow-up。
    - 如果本次不涉及生产发布，写清 N/A 理由和交付状态。
 
 3. **写 rollback**
@@ -76,6 +78,7 @@ description: SpecForge 内部关闭技能。用于 wiki_sync 已批准后，写 
 
 - `release.md`、`rollback.md` 已填写，不是空模板。
 - release、rollback、wiki-sync 和 verification 证据互相一致。
+- release 观察点、rollback 触发条件和 verification 残余风险已对齐。
 - 归档前 doctor 和 archive dry-run 通过。
 - archive 成功，work item 从 active 移到 archive。
 - registry 中 active / archive 状态正确。

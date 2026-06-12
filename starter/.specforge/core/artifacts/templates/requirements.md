@@ -9,6 +9,17 @@
 | 归一化说明 | 第三方输出已转写为 SpecForge 需求；未直接复制外部模板 |
 | 影响面 flags 校准 | `has_ui` / `has_api` / `has_db` / `has_domain` / `needs_research` |
 
+## 0.1 Spec Quality Gate
+
+| 检查项 | 结论 | 证据 / 处理 |
+|---|---|---|
+| 工作流规模 | lite / feature / standard / deep | |
+| 输出预算 | compact / standard / full | |
+| 需求冲突扫描 | no-conflict / conflict-found | |
+| 可测试性扫描 | all-testable / has-untestable-items | |
+| 关键人工确认 | confirmed / delegated_default / pending / N/A | |
+| 下一阶段是否可直接开工 | yes / no | |
+
 ## 摘要
 
 ## 分析依据
@@ -96,6 +107,16 @@
 | ID | 需求 | 来源 | 优先级 | 验收标准 |
 |---|---|---|---|---|
 | REQ-001 | WHEN ..., THE SYSTEM SHALL ... | PRD / brief / user clarification | MUST / SHOULD / COULD | AC-001 |
+
+## 需求一致性检查
+
+| 检查维度 | 结论 | 冲突 / 风险 | 处理方式 |
+|---|---|---|---|
+| 用户目标 vs MVP | aligned / conflict / unknown | | |
+| 角色权限 | aligned / conflict / unknown | | |
+| 数据口径 / 生命周期 | aligned / conflict / unknown | | |
+| UI / API / 技术影响面 | aligned / conflict / unknown | | |
+| 验收标准与非目标 | aligned / conflict / unknown | | |
 
 ## 行为覆盖矩阵
 

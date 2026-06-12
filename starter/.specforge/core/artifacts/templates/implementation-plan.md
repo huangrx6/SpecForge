@@ -15,9 +15,9 @@
 
 ## 任务执行图
 
-| 任务 | 批次 | Trace | Boundary | Depends | Verification | 风险 |
-|---|---|---|---|---|---|---|
-| T001 | W0 | | | | | |
+| 任务 | 批次 | Trace | Boundary | Depends | 可并行 | Verification | 风险 |
+|---|---|---|---|---|---|---|---|
+| T001 | W0 | | | | yes / no | | |
 
 ## Technical Design 影响面实现计划
 

@@ -21,6 +21,7 @@ description: 更新 SpecForge 项目 Wiki；用于用户要求“回写知识库
 - `.specforge/core/standards/wiki.md`
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/engineering.md`
+- `.specforge/core/standards/ai-toolkit.md`
 - 涉及设计系统或 PC 端业务系统规范时读取 `.specforge/core/standards/design.md` 和 `.specforge/core/standards/pc-ui-design-spec.md`。
 - 涉及第三方 skill 长期事实时读取 `.specforge/core/skills/ORCHESTRATION.md`，只沉淀已被 SpecForge artifact 证实的稳定内容。
 
@@ -69,8 +70,9 @@ node .specforge/core/scripts/sync-wiki.mjs
 
 1. 提取候选长期事实。
 2. 按 `references/wiki-sync-rules.md#回写矩阵` 判断目标文件。
-3. 只影响一次性实现、临时日志、测试输出、截图或局部无复用备注时，在 `06-close/wiki-sync.md` 写 N/A 理由，不更新 wiki。
-4. 改变长期产品、架构、接口、数据、运行、设计系统、术语、风险时，必须更新对应 wiki 文件。
+3. 按 `ai-toolkit.md#持续演进` 判断是否至少有一个可复用事实；确实没有时写 `N/A - 无长期事实` 和理由。
+4. 只影响一次性实现、临时日志、测试输出、截图或局部无复用备注时，在 `06-close/wiki-sync.md` 写 N/A 理由，不更新 wiki。
+5. 改变长期产品、架构、接口、数据、运行、设计系统、术语、风险时，必须更新对应 wiki 文件。
 
 ### C. 更新 wiki
 

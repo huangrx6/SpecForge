@@ -26,6 +26,7 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
 - `core/profiles/README.md` 以及 `technical-design.md` 选中的技术选择卡
 - `.specforge/core/standards/engineering.md`
 - `.specforge/core/standards/workflow.md`
+- `.specforge/core/standards/ai-toolkit.md`
 - `.specforge/core/skills/README.md`（存在浏览器实现或验证辅助时）
 
 ## 写入
@@ -59,6 +60,8 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
    - 运行 `git status --short --untracked-files=all`，识别本次工作前已有改动；不要覆盖或回滚无关改动。
 2. **先写 implementation plan**
    - 从 tasks 提取批次、依赖、`_Impact:_`、`_Files:_`、`_Boundary:_`、`_Verification:_`、`_Rollback:_`、风险和预计变更文件。
+   - 如 tasks 包含 `任务图与执行策略`，必须按其中依赖、可并行边界、主要写入边界和交接证据执行。
+   - 需要调整任务依赖、并行边界或主要写入文件时，停止并退回 `sf-tasking`。
    - 从 `technical-design.md#0. 影响面与读取计划` 以及相关 wiki 提取 `yes` / `no` / `unknown`、入口路径、关键符号 / 路由、上游 / 下游、测试位置和运行命令，形成实现影响面对账计划。
    - 只沿上述 bounded context 读取代码；不得为了“保险”重新全量扫描仓库。
    - 如果任务边界不足以指导写入，停止回到 `sf-tasking` 或 `sf-spec-review`。
@@ -114,6 +117,7 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
 
 - 所有已实现任务有对应代码和证据。
 - tasks 勾选状态、实现报告、变更文件清单、technical_design 影响面对账和真实 git 状态一致。
+- 任务图、实际执行顺序、并行边界和真实 diff 一致；偏离已有说明。
 - 启动 / 构建 / 局部验证结果已记录。
 - implementation report 写清偏差、验证、已知缺口和 code review 重点。
 - 没有把未验证或未登记的实现描述为完成。

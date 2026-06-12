@@ -47,6 +47,16 @@
 | W1 | 核心实现 | 依赖 W0 契约和测试基线 | |
 | W2 | 集成、验证、运行收口 | 依赖 W1 核心行为 | |
 
+## 4.1 任务图与执行策略
+
+| 任务 | Depends on | 可并行 | 主要写入边界 | 交付物 | Review 焦点 |
+|---|---|---|---|---|---|
+| T001 | none | no / yes | | | |
+
+| Agent / Worker | 可认领任务 | 禁止同时修改 | 交接证据 |
+|---|---|---|---|
+| Codex / Trae / SOLO / 人工 | | | implementation report / changed files / test output |
+
 ## 5. 任务列表
 
 > 每个任务必须保留核心字段：`_Trace:_`、`_Files:_`、`_Verification:_`、`_Rollback:_`、`_Risk:_`。条件字段按任务性质添加：涉及 technical_design 影响面时加 `_Impact:_`；任务写入边界可能冲突、跨模块或并行执行时加 `_Boundary:_`；任务依赖其他任务时加 `_Depends:_`；已有或需要测试用例矩阵时加 `_TestCase:_`。条件字段不适用时可以省略，或写 N/A 理由。

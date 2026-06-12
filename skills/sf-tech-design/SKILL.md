@@ -23,6 +23,7 @@ description: 生成或更新 SpecForge work item 的 technical_design；用于 r
 - `.specforge/core/workflows/stages/technical-design/SKILL.md`：内部技术设计母本。
 - `.specforge/core/artifacts/templates/technical-design.md`：写入骨架。
 - `.specforge/core/standards/product.md`、`.specforge/core/standards/workflow.md`、`.specforge/core/standards/engineering.md`。
+- `.specforge/core/standards/ai-toolkit.md`：阶段质量条、输出预算、依赖确认、source-of-truth 和证据分级。
 - `.specforge/core/profiles/README.md`：技术选型维度、数据库选择矩阵和 profile selection 写法。
 
 ## 启动扫描
@@ -72,7 +73,9 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 2. 当前版本事实不能只靠记忆；新增或替换框架、SDK、云服务、数据库、部署平台、AI provider、模型、测试工具或安全相关依赖时，按 `references/technical-decision-guide.md#当前版本事实检查` 查询官方资料或读取 lockfile / manifest。
 3. 按影响面展开工程设计；不涉及的章节保留一行 N/A 理由，不写空表。
 4. 对齐规则主基准：按影响面写采用点、偏离理由和验证证据。
-5. 输出必须能直接支持 `sf-tasking`：每个技术决策都要能拆成任务、验证或明确 N/A。
+5. 填写 `Design Quality Gate`：设计规模、现有架构复用、新增依赖确认、更简单方案、契约可测试性和是否可拆 tasks。
+6. 中高风险或会改变长期架构的决策必须写 ADR 摘要；小改可写 `N/A - no long-lived architecture decision`。
+7. 输出必须能直接支持 `sf-tasking`：每个技术决策都要能拆成任务、验证或明确 N/A。
 
 ### D. 初稿后核心决策 Review
 
@@ -101,6 +104,7 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 - 无技术影响时，明确写出 N/A、理由和验证方式。
 - 技术栈选择引用 profile、现有项目证据或说明偏离理由。
 - 新项目、新增 / 替换关键技术、新增直接依赖或工具链选择都有用户确认、授权默认、沿用现有栈或已确认脚手架依据。
+- `Design Quality Gate` 证明设计最小充分、没有无根据新增依赖，且关键契约可测试。
 - 当前版本事实、规则基准采用点、偏离理由和验证证据已写入。
 - 初稿后的核心决策摘要已经被用户确认、用户授权默认，或明确 N/A。
 - **按需求规模裁剪**：单字段 / 单页面 / 配置类小需求，`Tech Profile Selection`、`Requirements Trace`、`核心决策摘要 Review` 等章节可省略或合并为一行摘要；沿用现有栈时不需要重复列出所有技术选型表格。目标是让文档可读可审批，而不是填满模板。

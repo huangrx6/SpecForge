@@ -19,6 +19,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - `.specforge/core/standards/design.md`（无障碍红线、信息架构、交互设计、视觉层级）
 - `.specforge/core/standards/pc-ui-design-spec.md`（PC 端业务系统、运营后台、管理系统、数据管理工具，或用户明确提供该规范时读取；具体数值优先于通用设计基准）
 - `.specforge/core/standards/workflow.md`
+- `.specforge/core/standards/ai-toolkit.md`
 - 现有页面、组件库、设计系统、Pencil 文件、截图、参考产品或用户提供的设计资料
 - 需要操作 Pencil 时读取 `core/skills/ui-ux/pencil/SKILL.md`
 - 需要补充 UX 研究、IA、交互、微文案或可访问性检查时读取 `core/skills/ui-ux/ux-designer/SKILL.md`
@@ -40,6 +41,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - **先区分设计模式。** Product UI、Brand Surface、Hybrid 的质量标准不同；管理端采用 shadcn/ui 时必须定义上层 Admin Component Contract，而不是直接拼官方基础组件。
 - **无障碍是底线而非附加功能。** 颜色对比度、键盘导航、语义标签和焦点管理必须在设计阶段纳入，而不是"实现后再补"。
 - **实现阶段不得重新发明视觉风格。** `ui-design.md` 和 Pencil 截图是后续实现与验证的依据。
+- **按规模裁剪。** 单页面小改写 compact UI 差异和验证点；多角色、多流程、高风险 UI 才展开完整状态矩阵、Pencil 证据和视觉质量报告。
 
 ## 设计流程（Discover → Define → Ideate → Prototype → Test → Handoff）
 
@@ -68,6 +70,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 ### 3. 构思与设计（Ideate）
 
 - **建立体验规格**：页面地图、入口出口、角色流程、主路径、异常路径。
+- **选择输出预算**：按 work item 风险写 compact / standard / full；不要为了小改生成难以审阅的完整设计报告。
 - **写组件封装契约**：管理端必须说明哪些页面级、资源级和状态级组件由项目封装；避免每个页面重复散落基础 `Button`、`Card`、`Table`。
 - 页面 × 状态矩阵：default、loading、empty、error、permission、disabled、success、boundary、responsive、a11y。
 - 明确不做项，防止实现阶段扩大 UI 范围。

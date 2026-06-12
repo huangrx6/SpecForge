@@ -21,6 +21,7 @@ description: SpecForge 内部 Wiki 同步技能。用于 closure 前判断 work 
 - `.specforge/core/standards/wiki.md`
 - `.specforge/core/standards/engineering.md`
 - `.specforge/core/standards/workflow.md`
+- `.specforge/core/standards/ai-toolkit.md`
 - `.specforge/core/standards/pc-ui-design-spec.md`（本次确认或落地 PC 端业务系统 UI 规范时）
 
 ## 写入
@@ -59,12 +60,13 @@ description: SpecForge 内部 Wiki 同步技能。用于 closure 前判断 work 
 ## 回写流程
 
 1. **收集候选事实**：从 PRD / requirements / ui_design / technical_design / implementation report / verification report 提取长期有效事实。
-2. **判定写入目标**：使用“判断维度”表选择唯一目标文件；一个知识项只维护一个 current 文件。
-3. **对照现有 wiki**：读取目标文件和 `00-index.md`，判断是更新当前事实、补充新章节，还是写 N/A。
-4. **检查最低完整度**：按 `.specforge/core/standards/wiki.md#最低完整度` 检查目标文件。架构、API、数据、运维文件缺少关键事实时，先补扫相关代码 / 配置 / 测试；仍缺失时写 `未确认`，并同步到 `08-risks.md` 或本次 wiki-sync 的缺口表。
-5. **处理冲突**：如果 artifact 与现有 wiki 冲突，以已批准并验证的最新 work item 为准；同时在 `06-decisions.md` 或目标文件中保留必要决策理由。
-6. **刷新元数据**：每个更新文件都刷新 frontmatter 的 `last_updated`、`source_work` 和 `status: current`。
-7. **同步索引**：新增或重命名 wiki 文件后更新 `00-index.md`；不得产生重复 current 条目。
+2. **判断复用价值**：至少沉淀一个未来 work item 会复用的事实；确实没有时写 `N/A - 无长期事实`，不要把过程流水账塞进 wiki。
+3. **判定写入目标**：使用“判断维度”表选择唯一目标文件；一个知识项只维护一个 current 文件。
+4. **对照现有 wiki**：读取目标文件和 `00-index.md`，判断是更新当前事实、补充新章节，还是写 N/A。
+5. **检查最低完整度**：按 `.specforge/core/standards/wiki.md#最低完整度` 检查目标文件。架构、API、数据、运维文件缺少关键事实时，先补扫相关代码 / 配置 / 测试；仍缺失时写 `未确认`，并同步到 `08-risks.md` 或本次 wiki-sync 的缺口表。
+6. **处理冲突**：如果 artifact 与现有 wiki 冲突，以已批准并验证的最新 work item 为准；同时在 `06-decisions.md` 或目标文件中保留必要决策理由。
+7. **刷新元数据**：每个更新文件都刷新 frontmatter 的 `last_updated`、`source_work` 和 `status: current`。
+8. **同步索引**：新增或重命名 wiki 文件后更新 `00-index.md`；不得产生重复 current 条目。
 
 ## 输出要求
 

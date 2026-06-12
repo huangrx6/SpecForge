@@ -24,6 +24,7 @@ description: 为新请求创建或整理 SpecForge work item；用于用户提�
 - `.specforge/core/workflows/stages/brainstorm/SKILL.md`：需要用户参与式取舍时的阶段母本。
 - `.specforge/core/standards/workflow.md`：上下文加载、workflow 分类、scope、命名和 gate 边界。
 - `.specforge/core/standards/product.md`：分析深度、PRD 决策、功能候选池、澄清和需求可测试性。
+- `.specforge/core/standards/ai-toolkit.md`：workflow 轻重分流、AI 工具链计划、人工确认和输出预算。
 
 ## 启动扫描
 
@@ -83,6 +84,7 @@ node .specforge/core/scripts/create-work.mjs --workflow issue --kind issue --par
 `brief.md` 必须包含：
 
 - 背景和目标。
+- AI 工具链计划：本 work item 每个阶段使用哪些 AI / 验证 / 可视化能力、产出什么证据、何处需要人工确认。
 - PRD 决策：是否需要 PRD、深度、原因和下一步。
 - Brainstorm 决策：`skip / light / deep`、原因和阻断项。
 - 分析深度、代码库探索、外部研究或跳过理由、澄清记录和分析综合。
@@ -116,6 +118,8 @@ node .specforge/core/scripts/create-work.mjs --workflow issue --kind issue --par
 
 - work item 已进入 `.specforge/work/active/`，或 Standalone / Lightweight 模式下输出了可导入内容。
 - brief 足以支撑 PRD 或 requirements。
+- brief 已按规模选择输出预算，避免为低风险小改生成过重流程。
+- brief 的 AI 工具链计划只列实际会使用的工具，并且能追溯到 artifact、验证或 wiki。
 - PRD 决策清楚：需要就标记 `PRD required: yes`，不需要就写明跳过理由。
 - Brainstorm 决策清楚：`skip / light / deep` 有理由。
 - `work.yaml` 的 `workflow` 和 `components` 已与 brief 影响面矩阵一致。

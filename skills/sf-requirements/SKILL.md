@@ -23,6 +23,7 @@ description: 生成或更新 SpecForge work item 的 requirements；用于 activ
 - `.specforge/core/workflows/stages/requirements/SKILL.md`：内部需求质量标准、停止条件和完成标准。
 - `.specforge/core/standards/product.md`：PRD 输入、候选功能、用户故事、验收标准和可测试需求。
 - `.specforge/core/standards/workflow.md`：范围、非目标、写入边界和中文协作。
+- `.specforge/core/standards/ai-toolkit.md`：spec source-of-truth、输出预算、阶段质量条和人工确认点。
 - `.specforge/core/skills/ORCHESTRATION.md`、`README.md`、`registry.json`：第三方 requirements skill 的选择、边界和来源风险。
 
 ## 启动扫描
@@ -62,6 +63,7 @@ node .specforge/core/scripts/create-artifact.mjs requirements
 3. 把 PRD / brief 中的用户故事、候选功能和验收种子转成 `REQ-*`、`AC-*`、NFR、非目标或待澄清项。
 4. 需求正文使用系统行为语言，不复制 PRD 原文，不写实现方案。
 5. 如需用户故事或验收样例，按 `references/requirements-authoring-guide.md#第三方 Skill 归一化` 读取 `user-stories`。
+6. 对中高复杂度需求执行一致性检查：用户目标、MVP、角色权限、数据口径、验收标准和非目标不得互相冲突；冲突必须回到用户确认。
 
 ### C. 写 requirements
 
@@ -69,8 +71,9 @@ node .specforge/core/scripts/create-artifact.mjs requirements
 2. 每条 `MUST` 需求至少有一个 `AC-*`。
 3. 适用时覆盖正常路径、失败路径、空状态、边界值、权限差异和重新验证触发条件。
 4. 涉及依赖或工具链选择时，写 `[NEEDS DEPENDENCY DECISION]` / `[NEEDS TOOLING DECISION]`，不要替用户选择。
-5. 标出非目标、依赖、风险、重新验证触发条件和已知歧义；无法确认的行为必须写 `[NEEDS CLARIFICATION]`，不得猜测或包装成已批准规格。
-6. **新增字段或数据变更时，必须枚举所有读取或展示该数据的页面**（不仅是新增/编辑表单，还包括列表页、详情页、只读视图、导出等），每个页面单独列为影响面，不得合并或遗漏。
+5. 填写 `Spec Quality Gate`，说明输出预算、冲突扫描、可测试性扫描和下一阶段是否可直接开工。
+6. 标出非目标、依赖、风险、重新验证触发条件和已知歧义；无法确认的行为必须写 `[NEEDS CLARIFICATION]`，不得猜测或包装成已批准规格。
+7. **新增字段或数据变更时，必须枚举所有读取或展示该数据的页面**（不仅是新增/编辑表单，还包括列表页、详情页、只读视图、导出等），每个页面单独列为影响面，不得合并或遗漏。
 
 ### D. 回写 flags 和路由
 
@@ -94,6 +97,7 @@ node .specforge/core/scripts/create-artifact.mjs requirements
 - `01-spec/requirements.md` 可以独立支撑后续影响面判断。
 - PRD 中每个已确认 MVP 能力都能追溯到 requirements 中的需求或非目标。
 - PRD 的每个验收种子都已转成最终 AC、NFR、非目标或待澄清项。
+- `Spec Quality Gate` 已证明需求可测试、无未处理冲突，且输出预算与 work item 规模匹配。
 - 每个 user-visible / operator-visible 行为都有验收标准。
 - 影响面 flags 已校准。
 - 所有未决问题都显式标记 `[NEEDS CLARIFICATION]`、`[NEEDS DEPENDENCY DECISION]` 或 `[NEEDS TOOLING DECISION]`。

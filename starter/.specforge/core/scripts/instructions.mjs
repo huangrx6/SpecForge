@@ -67,12 +67,12 @@ const contextByArtifact = {
 
 const standardsByArtifact = {
   intake: [standard("workflow.md"), standard("product.md"), standard("ai-toolkit.md")],
-  gap_report: [standard("workflow.md"), standard("product.md"), standard("engineering.md")],
-  research: [standard("workflow.md"), standard("product.md"), standard("engineering.md")],
-  requirements: [standard("workflow.md"), standard("product.md")],
-  ui_design: [standard("workflow.md"), standard("product.md"), standard("design.md")],
-  technical_design: [standard("workflow.md"), standard("engineering.md")],
-  tasks: [standard("workflow.md"), standard("engineering.md")],
+  gap_report: [standard("workflow.md"), standard("product.md"), standard("engineering.md"), standard("ai-toolkit.md")],
+  research: [standard("workflow.md"), standard("product.md"), standard("engineering.md"), standard("ai-toolkit.md")],
+  requirements: [standard("workflow.md"), standard("product.md"), standard("ai-toolkit.md")],
+  ui_design: [standard("workflow.md"), standard("product.md"), standard("design.md"), standard("ai-toolkit.md")],
+  technical_design: [standard("workflow.md"), standard("engineering.md"), standard("ai-toolkit.md")],
+  tasks: [standard("workflow.md"), standard("engineering.md"), standard("ai-toolkit.md")],
   spec_review: [standard("workflow.md"), standard("product.md"), standard("design.md"), standard("engineering.md")],
   implementation: [standard("workflow.md"), standard("engineering.md")],
   code_review: [standard("workflow.md"), standard("engineering.md")],

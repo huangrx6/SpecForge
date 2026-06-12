@@ -9,6 +9,7 @@
 | 工作项 | |
 | 是否影响长期知识 | 是 / 否 |
 | 判断依据 | |
+| 可复用事实结论 | 至少 1 项 / N/A - 无长期事实 |
 | 来源证据 | requirements / gap_report / ui_design / technical_design / implementation report / verification report |
 
 ## 2. 更新文件
@@ -78,7 +79,13 @@
 | 同一知识项只有一个 current 文件 | 是 / 否 | |
 | 所有更新文件 frontmatter 完整 | 是 / 否 | |
 
-## 10. Gate 更新
+## 10. 派生报告索引
+
+| 产物 | 路径 / 链接 | 来源 artifact | 是否回写 wiki | 理由 |
+|---|---|---|---|---|
+| HTML / chart / dashboard / screenshot report | | | yes / no | |
+
+## 11. Gate 更新
 
 APPROVED 时执行：
 

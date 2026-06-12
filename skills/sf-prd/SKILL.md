@@ -24,6 +24,7 @@ PRD 不是固定问卷。它是一份产品决策文档：先识别当前需求�
 - `.specforge/core/standards/product.md`：PRD 决策、功能候选、MVP、目标和指标。
 - `.specforge/core/standards/design.md`：用户流程和体验方向。
 - `.specforge/core/standards/workflow.md`：非目标、scope 和中文协作。
+- `.specforge/core/standards/ai-toolkit.md`：PRD 深度选择、输出预算、人工确认点和后续工具链衔接。
 - `.specforge/core/skills/ORCHESTRATION.md`、`README.md`、`registry.json`：第三方 PRD skill 的选择、边界和来源风险。
 
 ## 启动扫描
@@ -65,7 +66,8 @@ node .specforge/core/scripts/doctor.mjs
 2. 拆分 `MVP / 可选增强 / 后续版本`，写清非目标。
 3. 使用 `.specforge/core/artifacts/templates/prd.md` 或 `references/prd-authoring-guide.md#PRD 模板` 写入 `00-intake/prd.md`。
 4. 没有内容的章节写 `N/A` 并说明原因，不留空。
-5. 可进入 requirements 时，把 `Decision Status` 写为 `approved-for-requirements`；否则写 `needs-decision` 并暂停。
+5. 填写 `Product Decision Gate`：PRD 深度、输出预算、MVP 确认、高影响未决问题和是否可进入 requirements。
+6. 可进入 requirements 时，把 `Decision Status` 写为 `approved-for-requirements`；否则写 `needs-decision` 并暂停。
 
 ### D. 回写 brief 和路由
 
@@ -98,6 +100,7 @@ PRD 完成后，回写或补充 `00-intake/brief.md`：
 - `00-intake/prd.md` 存在且内容足以支撑 `sf-requirements`。
 - `Decision Status` 为 `approved-for-requirements`，或者明确标记为 `needs-decision` 并暂停。
 - 功能边界、非目标、成功指标、风险和路线图已有用户确认或明确默认假设。
+- `Product Decision Gate` 明确说明 PRD 是否 compact / standard / full，以及为什么。
 - 产品型需求的功能候选池已经裁剪为 MVP / 可选增强 / 后续版本。
 - AI 功能已经写明评估策略、人工兜底、安全隐私和成本边界。
 - `brief.md` 已同步，所有 `[NEEDS ... DECISION]` 已清除。

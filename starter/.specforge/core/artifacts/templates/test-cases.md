@@ -10,9 +10,9 @@
 
 ## 2. Test Case Matrix
 
-| ID | Type | Source | Preconditions | Steps | Assertions | Evidence Required | Automation | Risk |
-|---|---|---|---|---|---|---|---|---|
-| TC-001 | unit / integration / contract / playwright / startup / manual | | | | | command output / screenshot / trace / log / report | command / Playwright / manual | high / medium / low |
+| ID | Type | Source | Preconditions | Steps | Assertions | Evidence Required | Evidence Strength Target | Automation | Risk |
+|---|---|---|---|---|---|---|---|---|---|
+| TC-001 | unit / integration / contract / playwright / startup / manual | | | | | command output / screenshot / trace / log / report | proven / mocked / manual-confirmed / deferred | command / Playwright / manual | high / medium / low |
 
 ## 3. Playwright Cases
 
@@ -30,6 +30,6 @@
 
 ## 5. Skipped Or Deferred
 
-| ID | Reason | Impact | Owner | Revalidation Trigger |
-|---|---|---|---|---|
-| | | | | |
+| ID | Reason | Existing Evidence | Impact | Owner | Manual Confirmation Required | Revalidation Trigger |
+|---|---|---|---|---|---|---|
+| | | proven / mocked / none | | | yes / no | |
