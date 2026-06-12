@@ -1,4 +1,5 @@
 import { artifactById, effectiveSchema, exists, loadSchema, parseField, readText } from "./specforge.mjs";
+import { decisionQualitySummary } from "./decision-quality.mjs";
 import { evidenceSummary } from "./evidence.mjs";
 import { sourceQualitySummary } from "./source-quality.mjs";
 import { normalizeTraceabilityPolicy, traceabilityGapChecks } from "./traceability.mjs";
@@ -70,6 +71,24 @@ export function gatePreflight(diagnosis, options = {}) {
     const openDecisions = diagnosis.decision_checkpoints?.summary?.open ?? 0;
     if (openDecisions > 0) {
       add(checks, "FAIL", "open-decisions", `${openDecisions} open decision marker(s) remain. Generate a decision brief before approval.`, "decision-brief");
+    }
+
+    const decisionQuality = decisionQualitySummary(diagnosis);
+    add(
+      checks,
+      decisionQuality.summary.fail === 0 ? (decisionQuality.summary.warn === 0 ? "PASS" : "WARN") : "FAIL",
+      "decision-quality",
+      `Decision quality: open=${decisionQuality.summary.open}, confirmed=${decisionQuality.summary.confirmed}, risk=${decisionQuality.summary.risk_acceptance}, fail=${decisionQuality.summary.fail}, warn=${decisionQuality.summary.warn}.`,
+      "decision-quality",
+    );
+    for (const decisionIssue of decisionQuality.issues) {
+      add(
+        checks,
+        decisionIssue.severity,
+        `decision-${decisionIssue.code}`,
+        `${decisionIssue.path}:${decisionIssue.line} ${decisionIssue.message}`,
+        decisionIssue.route,
+      );
     }
 
     const tracePolicy = normalizeTraceabilityPolicy(schema);

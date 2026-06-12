@@ -23,6 +23,7 @@ Usage:
   specforge contract [--dir <path>] [--work-item <id>] [--artifact <id>] [--overview] [--json]
   specforge checkpoints [--dir <path>] [--work-item <id>] [--json]
   specforge decision-brief [--dir <path>] [--work-item <id>] [--json]
+  specforge decision-quality [--dir <path>] [--work-item <id>] [--json]
   specforge evidence [--dir <path>] [--work-item <id>] [--report <path>] [--json]
   specforge package [--dir <path>] [--work-item <id>] [--skip-derived] [--json]
   specforge gate-preflight [--dir <path>] <gate> [status] [--evidence <path>] [--work-item <id>] [--json] [--strict]
@@ -45,6 +46,7 @@ Examples:
   npx github:huangrx6/SpecForge contract --dir .
   npx github:huangrx6/SpecForge checkpoints --dir .
   npx github:huangrx6/SpecForge decision-brief --dir .
+  npx github:huangrx6/SpecForge decision-quality --dir .
   npx github:huangrx6/SpecForge evidence --dir .
   npx github:huangrx6/SpecForge package --dir .
   npx github:huangrx6/SpecForge gate-preflight --dir . verification APPROVED --evidence 05-verification/report.md
@@ -257,6 +259,20 @@ function decisionBrief() {
   runNode(briefPath, extraArgs, targetDir);
 }
 
+function decisionQuality() {
+  const targetDir = resolve(option("--dir", "."));
+  const qualityPath = join(targetDir, ".specforge/core/scripts/decision-quality.mjs");
+  if (!existsSync(qualityPath)) {
+    console.error(`Missing SpecForge decision quality script: ${qualityPath}`);
+    process.exit(1);
+  }
+  const extraArgs = [];
+  const workItem = option("--work-item");
+  if (workItem) extraArgs.push("--work-item", workItem);
+  if (args.includes("--json")) extraArgs.push("--json");
+  runNode(qualityPath, extraArgs, targetDir);
+}
+
 function evidence() {
   const targetDir = resolve(option("--dir", "."));
   const evidencePath = join(targetDir, ".specforge/core/scripts/evidence-summary.mjs");
@@ -407,6 +423,8 @@ if (command === "init") {
   checkpoints();
 } else if (command === "decision-brief") {
   decisionBrief();
+} else if (command === "decision-quality") {
+  decisionQuality();
 } else if (command === "evidence") {
   evidence();
 } else if (command === "package") {

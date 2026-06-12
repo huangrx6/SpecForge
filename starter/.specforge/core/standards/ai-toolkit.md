@@ -101,6 +101,8 @@ Traceability 由 workflow schema 的 `traceability_policy` 控制：`off` 不提
 
 当需要把确认点发给用户或负责人时，运行 `node .specforge/core/scripts/decision-brief.mjs` 或 `specforge decision-brief --dir .`。它把 top open decision、当前阶段契约、traceability、blocker、quality warning 和风险接受候选整理成一页，并给出可复制的回复格式。
 
+当需要判断人工确认是否足以支撑继续推进时，运行 `node .specforge/core/scripts/decision-quality.mjs` 或 `specforge decision-quality --dir .`。它检查 open decision、`delegated_default` 的默认理由 / 风险 / 回退触发条件，以及 `manual-confirmed` / `deferred` 的 owner、影响和重新验证触发条件。所有 gate preflight 在 `APPROVED` 前都会自动执行同类检查。
+
 日常推进建议先运行 `node .specforge/core/scripts/workflow-audit.mjs` 或 `specforge audit --dir .`。它把 Action Summary、route、blocker、open decision、quality warning、traceability 和推荐命令合并成一页，适合作为人工确认、跨 Agent 接力和自动推进前的第一入口。没有 active work item 时，它只推荐 status / create-work / doctor 这类可执行入口，不推荐阶段命令。
 
 需要快速判断当前流程是否可继续时，运行 `node .specforge/core/scripts/workflow-health.mjs` 或 `specforge health --dir .`。它给出 health score、level、维度扣分和 Top priorities，用来排序下一步，不替代 gate evidence。
@@ -175,6 +177,7 @@ Markdown 仍是版本管理主格式；HTML / 可视化产物用于提升阅读�
 - Handoff summary 和 review package 必须先呈现 Action Summary：状态、下一步、健康度、open decisions、blockers、trace gaps、policy、下一组命令和阅读顺序；证据、图谱、artifact 摘录放在后面。
 - 可用 `node .specforge/core/scripts/workflow-package.mjs` 一键生成 review package、HTML report 和 handoff，适合审查、汇报、接力和关闭前复盘。
 - 可用 `node .specforge/core/scripts/decision-brief.mjs` 生成面向人工审批 / 澄清 / 授权默认的决策包。
+- 可用 `node .specforge/core/scripts/decision-quality.mjs` 检查人工确认、授权默认和风险接受记录是否具备 owner、影响、理由和重新验证触发条件。
 - 可用 `node .specforge/core/scripts/evidence-summary.mjs` 检查 verification report 中的证据强度分级、人工确认和外部补证记录。
 - 可用 `node .specforge/core/scripts/traceability-summary.mjs` 检查 source item、tasks、test cases 之间的追溯缺口；先作为提示使用，稳定后再考虑升级为 gate。
 - 可用 `node .specforge/core/scripts/workflow-audit.mjs` 生成一页流程审计摘要，先判断是否 BLOCKED / NEEDS_DECISION / NEEDS_ATTENTION，再进入具体阶段。

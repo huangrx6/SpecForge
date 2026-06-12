@@ -119,8 +119,12 @@ const executionByArtifact = {
     commands: ["node .specforge/core/scripts/create-artifact.mjs gap_report", "node .specforge/core/scripts/decision-brief.mjs"],
   },
   requirements: {
-    tools: ["sf-requirements", "decision-checkpoints.mjs", "wiki product rules"],
-    commands: ["node .specforge/core/scripts/create-artifact.mjs requirements", "node .specforge/core/scripts/decision-checkpoints.mjs"],
+    tools: ["sf-requirements", "decision-checkpoints.mjs", "decision-quality.mjs", "wiki product rules"],
+    commands: [
+      "node .specforge/core/scripts/create-artifact.mjs requirements",
+      "node .specforge/core/scripts/decision-checkpoints.mjs",
+      "node .specforge/core/scripts/decision-quality.mjs",
+    ],
   },
   ui_design: {
     tools: ["sf-ui-design", "Pencil", "design standards", "visual verification screenshots"],
@@ -139,10 +143,11 @@ const executionByArtifact = {
     commands: ["node .specforge/core/scripts/create-artifact.mjs tasks", "node .specforge/core/scripts/traceability-summary.mjs"],
   },
   spec_review: {
-    tools: ["sf-spec-review", "traceability-summary.mjs", "source-quality.mjs", "decision-checkpoints.mjs", "gate-preflight.mjs"],
+    tools: ["sf-spec-review", "traceability-summary.mjs", "source-quality.mjs", "decision-quality.mjs", "decision-checkpoints.mjs", "gate-preflight.mjs"],
     commands: [
       "node .specforge/core/scripts/create-artifact.mjs spec_review",
       "node .specforge/core/scripts/source-quality.mjs",
+      "node .specforge/core/scripts/decision-quality.mjs",
       "node .specforge/core/scripts/gate-preflight.mjs spec_review APPROVED --evidence 02-spec-review/spec-review-v1.md",
     ],
   },
@@ -158,10 +163,11 @@ const executionByArtifact = {
     ],
   },
   verification: {
-    tools: ["sf-verify", "CI", "Playwright", "logs", "mock / real environment evidence"],
+    tools: ["sf-verify", "CI", "Playwright", "logs", "mock / real environment evidence", "decision-quality.mjs"],
     commands: [
       "node .specforge/core/scripts/create-artifact.mjs verification",
       "node .specforge/core/scripts/evidence-summary.mjs",
+      "node .specforge/core/scripts/decision-quality.mjs",
       "node .specforge/core/scripts/gate-preflight.mjs verification APPROVED --evidence 05-verification/report.md",
     ],
   },
@@ -174,9 +180,10 @@ const executionByArtifact = {
     ],
   },
   closure: {
-    tools: ["sf-close", "doctor.mjs", "workflow-package.mjs", "archive-work.mjs"],
+    tools: ["sf-close", "doctor.mjs", "decision-quality.mjs", "workflow-package.mjs", "archive-work.mjs"],
     commands: [
       "node .specforge/core/scripts/workflow-package.mjs",
+      "node .specforge/core/scripts/decision-quality.mjs",
       "node .specforge/core/scripts/doctor.mjs",
       "node .specforge/core/scripts/archive-work.mjs --dry-run",
     ],

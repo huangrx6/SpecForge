@@ -188,6 +188,7 @@ node .specforge/core/scripts/stage-contract.mjs --overview
 node .specforge/core/scripts/stage-contract.mjs
 node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/decision-brief.mjs
+node .specforge/core/scripts/decision-quality.mjs
 node .specforge/core/scripts/evidence-summary.mjs
 node .specforge/core/scripts/workflow-package.mjs
 ```
@@ -204,6 +205,7 @@ npx github:huangrx6/SpecForge roadmap --dir .
 npx github:huangrx6/SpecForge contract --dir .
 npx github:huangrx6/SpecForge doctor --dir .
 npx github:huangrx6/SpecForge decision-brief --dir .
+npx github:huangrx6/SpecForge decision-quality --dir .
 npx github:huangrx6/SpecForge evidence --dir .
 npx github:huangrx6/SpecForge package --dir .
 ```
@@ -457,6 +459,7 @@ node .specforge/core/scripts/status.mjs
 node .specforge/core/scripts/instructions.mjs
 node .specforge/core/scripts/decision-checkpoints.mjs
 node .specforge/core/scripts/decision-brief.mjs
+node .specforge/core/scripts/decision-quality.mjs
 node .specforge/core/scripts/evidence-summary.mjs
 node .specforge/core/scripts/source-quality.mjs
 node .specforge/core/scripts/traceability-summary.mjs
@@ -474,6 +477,8 @@ node .specforge/core/scripts/wiki-quality.mjs
 `render-work-report.mjs` 生成的 HTML 首屏是 Action Board：先给当前状态、下一步、最高优先级、复制命令和阅读顺序；完整 artifact 摘要、traceability、gate 和长表放在下方。Markdown artifact 仍然是事实源。
 
 `source-quality.mjs` 检查 `research.md` 的来源池和 `technical-design.md` 的版本事实 / 官方基准记录。缺少研究来源或权威度分级是 `FAIL`；轶事、过期、未知来源以及技术版本事实缺日期 / 来源是 `WARN`。`gate-preflight spec_review APPROVED` 会自动执行同类检查。
+
+`decision-quality.mjs` 检查人工确认记录是否闭环：open decision 会 `FAIL`；`delegated_default` 必须有默认理由、风险影响和回退 / 重新验证触发条件；`manual-confirmed` / `deferred` 必须有 owner、影响和重新验证触发条件。所有 `gate-preflight <gate> APPROVED` 都会自动执行同类检查。
 
 `wiki-quality.mjs` 检查 `.specforge/wiki/` 的 frontmatter、`00-index.md` 引用、重复 current 项、日期 / 版本化命名和模板占位；`gate-preflight wiki_sync APPROVED` 会自动执行同类检查。结构性问题是 `FAIL`，内容薄或占位偏多是 `WARN`，需要在 wiki-sync evidence 中说明是否接受。
 

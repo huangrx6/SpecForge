@@ -76,6 +76,7 @@ node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/instructions.mjs
 node .specforge/core/scripts/decision-checkpoints.mjs
 node .specforge/core/scripts/decision-brief.mjs
+node .specforge/core/scripts/decision-quality.mjs
 node .specforge/core/scripts/evidence-summary.mjs
 node .specforge/core/scripts/source-quality.mjs
 node .specforge/core/scripts/traceability-summary.mjs
@@ -140,6 +141,7 @@ node .specforge/core/scripts/doctor.mjs
 | Source-first | 外部事实、版本、标准和 ADR 决策有可信来源 | `source-quality.mjs`、research source grading、technical-design version facts | 缺来源或缺权威度阻断 spec_review；弱来源先 WARN，由 evidence 说明 |
 | Human-in-the-loop | 高影响未知灵活找人工确认，低风险可授权默认 | `decision-checkpoints.mjs`、`[NEEDS ...]`、`manual-confirmed`、`delegated_default` | 必须记录 owner、影响、回退和补证触发条件 |
 | Decision package | 让人工确认有上下文、有选项、有可复制回复格式 | `decision-brief.mjs` 汇总 top decision、contract、traceability、blockers、risk candidates | 人工回复必须能写回 artifact 或 gate evidence |
+| Decision quality | 防止假确认、空授权和不可追责风险接受 | `decision-quality.mjs` 检查 open decision、delegated default、manual-confirmed / deferred | 所有 gate preflight 自动检查；缺 owner、影响或触发条件不能批准 |
 | Lightweight artifacts | 人能读完，Agent 能接手 | `artifact-quality.mjs`、一页摘要、artifact summary、handoff、HTML Action Board | Markdown 仍是版本管理事实源，HTML 不能成为唯一证据；长文档必须有摘要或分层阅读入口 |
 | Wiki quality | 长期知识可追溯、无重复、可从索引进入 | `wiki-quality.mjs`、`00-index.md`、frontmatter、source_work | 结构断链阻断 wiki_sync；内容薄先 WARN，由 evidence 说明 |
 | Review package | 审查、接力、关闭前一键生成可交付材料 | `workflow-package.mjs` 输出 review-package、handoff、HTML report，三者都先给 Action Summary | 派生包引用 source artifacts，不替代 source of truth |
