@@ -5,6 +5,7 @@ import { artifactLine, diagnoseWorkspace, diagnoseWorkItem, gateLine } from "./l
 import { contractForArtifact, focusArtifactId } from "./lib/stage-contracts.mjs";
 import { workflowHealth } from "./lib/workflow-health.mjs";
 import { actionCommands, actionReason, actionState, readingOrder, traceGapCount, traceabilityPolicyLine } from "./lib/action-board.mjs";
+import { qualitySuiteSummary } from "./lib/quality-suite.mjs";
 import {
   abs,
   effectiveSchema,
@@ -54,9 +55,15 @@ function traceabilityLine(traceability) {
   return `sources=${summary.source_items}, tasks=${summary.tasks}, verification=${summary.verification_items}, uncovered=${summary.uncovered_sources}, missing_trace=${summary.tasks_missing_trace}, missing_verification=${summary.tasks_missing_verification}, missing_testcase=${summary.tasks_without_testcase}`;
 }
 
-function reviewPackageMarkdown(diagnosis, health, contract, traceability, generatedAt) {
+function qualitySuiteLine(qualitySuite) {
+  if (!qualitySuite?.work_item) return "not applicable";
+  return `${qualitySuite.summary.overall}; checks=${qualitySuite.summary.checked}; fail=${qualitySuite.summary.failures}; warn=${qualitySuite.summary.warnings}`;
+}
+
+function reviewPackageMarkdown(diagnosis, health, contract, traceability, qualitySuite, generatedAt) {
   const item = diagnosis.work_item;
   const state = actionState(diagnosis, health);
+  const commands = [...new Set([...actionCommands(diagnosis), ...(qualitySuite.recommended_commands ?? [])])];
   return `# SpecForge Review Package: ${item.id}
 
 ## Snapshot
@@ -79,12 +86,13 @@ function reviewPackageMarkdown(diagnosis, health, contract, traceability, genera
 - Open decisions: ${diagnosis.decision_checkpoints.summary.open}
 - Blockers: ${diagnosis.blockers.length}
 - Trace gaps: ${traceGapCount(traceability)}
+- Quality suite: ${qualitySuiteLine(qualitySuite)}
 - Traceability policy: ${traceabilityPolicyLine(diagnosis.traceability_policy)}
 
 Next commands:
 
 \`\`\`bash
-${actionCommands(diagnosis).join("\n")}
+${commands.join("\n")}
 \`\`\`
 
 Read first:
@@ -97,6 +105,7 @@ ${bullet(readingOrder(), "N/A", (item) => item)}
 - Health level: ${health.level}
 - Gates: ${gateLine(diagnosis.gates)}
 - Traceability: ${traceabilityLine(traceability)}
+- Quality suite: ${qualitySuiteLine(qualitySuite)}
 
 Top priorities:
 
@@ -136,6 +145,24 @@ Quality warnings:
 
 ${bullet(diagnosis.quality_warnings.slice(0, 12), "none", (warning) => `[${warning.severity}] ${warning.message} (route=${warning.route}; owner=${warning.owner_artifact})`)}
 
+## Quality Suite
+
+- Overall: ${qualitySuite.summary.overall}
+- Checks: ${qualitySuite.summary.checked}
+- Skipped by stage: ${qualitySuite.summary.skipped}
+- Failures: ${qualitySuite.summary.failures}
+- Warnings: ${qualitySuite.summary.warnings}
+
+Recommended quality commands:
+
+\`\`\`bash
+${qualitySuite.recommended_commands.length > 0 ? qualitySuite.recommended_commands.join("\n") : "# none"}
+\`\`\`
+
+Checks:
+
+${bullet(qualitySuite.checks, "none", (item) => `[${item.status}] ${item.title}: fail=${item.failures}, warn=${item.warnings}; route=${item.route ?? "N/A"}; ${item.message}`)}
+
 ## Artifact Graph
 
 - ${artifactLine(diagnosis.artifacts)}
@@ -149,7 +176,7 @@ ${bullet(diagnosis.quality_warnings.slice(0, 12), "none", (warning) => `[${warni
 ## Recommended Next Commands
 
 \`\`\`bash
-${actionCommands(diagnosis).join("\n")}
+${commands.join("\n")}
 \`\`\`
 `;
 }
@@ -190,13 +217,14 @@ try {
   const packagePath = `${reportDir}/review-package.md`;
   const htmlPath = `${reportDir}/work-summary.html`;
   const handoffPath = `${reportDir}/handoff.md`;
-  const health = workflowHealth(diagnosis);
+  const qualitySuite = qualitySuiteSummary(diagnosis);
+  const health = workflowHealth(diagnosis, { qualitySuite });
   const contract = activeContract(diagnosis);
   const traceability = diagnosis.traceability;
   const generatedAt = localDateIso();
 
   mkdirSync(dirname(abs(packagePath)), { recursive: true });
-  writeFileSync(abs(packagePath), reviewPackageMarkdown(diagnosis, health, contract, traceability, generatedAt), "utf8");
+  writeFileSync(abs(packagePath), reviewPackageMarkdown(diagnosis, health, contract, traceability, qualitySuite, generatedAt), "utf8");
 
   if (!skipDerived) {
     runScript("render-work-report.mjs", ["--work-item", item.id, "--output", htmlPath]);
@@ -209,6 +237,7 @@ try {
     html_report: skipDerived ? null : htmlPath,
     handoff: skipDerived ? null : handoffPath,
     health,
+    quality_suite: qualitySuite,
   };
 
   if (json) {

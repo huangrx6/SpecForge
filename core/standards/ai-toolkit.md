@@ -127,7 +127,7 @@ Traceability 由 workflow schema 的 `traceability_policy` 控制：`off` 不提
 
 进入具体阶段前建议运行 `node .specforge/core/scripts/stage-contract.mjs` 或 `specforge contract --dir .`。它把当前 artifact 的目标、应读取内容、必须产出、人工确认点、must prove 和 exit standard 单独列出，避免 Agent 只读长模板却漏掉阶段完成标准。
 
-交给他人审查、跨 Agent 接力或 close 前，运行 `node .specforge/core/scripts/workflow-package.mjs` 或 `specforge package --dir .`。它生成 `07-report/review-package.md`，并派生 `work-summary.html` 和 `handoff.md`，把健康度、阶段契约、人工决策、追踪缺口和下一步命令收束成一包。
+交给他人审查、跨 Agent 接力或 close 前，运行 `node .specforge/core/scripts/workflow-package.mjs` 或 `specforge package --dir .`。它生成 `07-report/review-package.md`，并派生 `work-summary.html` 和 `handoff.md`，把健康度、阶段契约、人工决策、追踪缺口、Quality Suite 和下一步命令收束成一包。
 
 ## 输出预算
 
@@ -182,7 +182,7 @@ Markdown 仍是版本管理主格式；HTML / 可视化产物用于提升阅读�
 - 可用 `node .specforge/core/scripts/closure-quality.mjs` 检查 release、rollback、观察点、风险来源和补偿措施是否闭环。
 - HTML report 的首屏必须优先呈现 Action Board：当前状态、下一步理由、最高优先级、质量总态、可复制命令和阅读顺序。Quality Suite、artifact excerpt、traceability 表和长矩阵放在下方，避免读者先被长文档淹没。
 - 可用 `node .specforge/core/scripts/handoff-summary.mjs --output <work-item>/07-report/handoff.md` 生成接力摘要，用于跨 Agent、跨线程或人工复盘。
-- Handoff summary 和 review package 必须先呈现 Action Summary：状态、下一步、健康度、open decisions、blockers、trace gaps、policy、下一组命令和阅读顺序；证据、图谱、artifact 摘录放在后面。
+- Handoff summary 和 review package 必须先呈现 Action Summary：状态、下一步、健康度、open decisions、blockers、trace gaps、Quality Suite、policy、下一组命令和阅读顺序；证据、图谱、artifact 摘录放在后面。
 - 可用 `node .specforge/core/scripts/workflow-package.mjs` 一键生成 review package、HTML report 和 handoff，适合审查、汇报、接力和关闭前复盘。
 - 可用 `node .specforge/core/scripts/decision-brief.mjs` 生成面向人工审批 / 澄清 / 授权默认的决策包。
 - 可用 `node .specforge/core/scripts/decision-quality.mjs` 检查人工确认、授权默认和风险接受记录是否具备 owner、影响、理由和重新验证触发条件。
