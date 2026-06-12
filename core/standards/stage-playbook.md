@@ -59,6 +59,7 @@ git status --short --untracked-files=all
 
 ```bash
 node .specforge/core/scripts/render-work-report.mjs
+node .specforge/core/scripts/handoff-summary.mjs --output <work-item>/07-report/handoff.md
 node .specforge/core/scripts/doctor.mjs
 ```
 
@@ -85,3 +86,4 @@ node .specforge/core/scripts/doctor.mjs
 2. 再看 `Decision checkpoints` 和 `Quality warnings`。
 3. 再看 traceability / task graph / verification evidence。
 4. 最后才读附录、长表和派生 HTML。
+5. 交给他人或新 Agent 前，生成 `handoff.md`，让接手者先看一页状态、下一步、阻断和证据入口。

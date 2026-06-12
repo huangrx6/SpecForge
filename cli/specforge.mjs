@@ -15,6 +15,7 @@ Usage:
   specforge init [--dir <path>] [--force]
   specforge doctor [--dir <path>]
   specforge checkpoints [--dir <path>] [--work-item <id>] [--json]
+  specforge handoff [--dir <path>] [--work-item <id>] [--output <path>] [--json]
   specforge report [--dir <path>] [--work-item <id>] [--output <path>]
 
 Examples:
@@ -23,6 +24,7 @@ Examples:
   npm exec --yes --package=git+ssh://git@git.company.com/team/specforge.git#v0.3.0-company.1 -- specforge init --dir .
   npx github:huangrx6/SpecForge doctor --dir .
   npx github:huangrx6/SpecForge checkpoints --dir .
+  npx github:huangrx6/SpecForge handoff --dir .
   npx github:huangrx6/SpecForge report --dir .
 `);
 }
@@ -114,6 +116,22 @@ function checkpoints() {
   runNode(checkpointsPath, extraArgs, targetDir);
 }
 
+function handoff() {
+  const targetDir = resolve(option("--dir", "."));
+  const handoffPath = join(targetDir, ".specforge/core/scripts/handoff-summary.mjs");
+  if (!existsSync(handoffPath)) {
+    console.error(`Missing SpecForge handoff script: ${handoffPath}`);
+    process.exit(1);
+  }
+  const extraArgs = [];
+  const workItem = option("--work-item");
+  const output = option("--output");
+  if (workItem) extraArgs.push("--work-item", workItem);
+  if (output) extraArgs.push("--output", output);
+  if (args.includes("--json")) extraArgs.push("--json");
+  runNode(handoffPath, extraArgs, targetDir);
+}
+
 if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
   usage();
   process.exit(0);
@@ -127,6 +145,8 @@ if (command === "init") {
   doctor();
 } else if (command === "checkpoints") {
   checkpoints();
+} else if (command === "handoff") {
+  handoff();
 } else if (command === "report") {
   report();
 } else {

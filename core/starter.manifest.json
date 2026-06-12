@@ -79,6 +79,10 @@
       "to": "core/scripts/gate.mjs"
     },
     {
+      "from": "scripts/handoff-summary.mjs",
+      "to": "core/scripts/handoff-summary.mjs"
+    },
+    {
       "from": "scripts/instructions.mjs",
       "to": "core/scripts/instructions.mjs"
     },
