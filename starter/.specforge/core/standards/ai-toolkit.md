@@ -89,7 +89,7 @@
 
 需要快速判断当前流程是否可继续时，运行 `node .specforge/core/scripts/workflow-health.mjs` 或 `specforge health --dir .`。它给出 health score、level、维度扣分和 Top priorities，用来排序下一步，不替代 gate evidence。
 
-准备批准 gate 前运行 `node .specforge/core/scripts/gate-preflight.mjs <gate> APPROVED --evidence <path>` 或 `specforge gate-preflight --dir . <gate> APPROVED --evidence <path>`。它按 policy-as-code 的方式把证据文件、artifact ready 状态、P0 / P1 blocker、open decision、traceability 和 health 汇总为 PASS / WARN / FAIL；预检不改写 gate，`FAIL` 不能继续批准，`WARN` 必须在 evidence 中说明接受或处理结果。
+准备批准 gate 前运行 `node .specforge/core/scripts/gate-preflight.mjs <gate> APPROVED --evidence <path>` 或 `specforge gate-preflight --dir . <gate> APPROVED --evidence <path>`。它按 policy-as-code 的方式把证据文件、artifact ready 状态、P0 / P1 blocker、open decision、traceability 和 health 汇总为 PASS / WARN / FAIL；预检不改写 gate，`FAIL` 不能继续批准，`WARN` 必须在 evidence 中说明接受或处理结果。预检通过后优先用 `specforge gate --dir . <gate> APPROVED --evidence <path>` 更新 gate。
 
 进入具体阶段前建议运行 `node .specforge/core/scripts/stage-contract.mjs` 或 `specforge contract --dir .`。它把当前 artifact 的目标、应读取内容、必须产出、人工确认点、must prove 和 exit standard 单独列出，避免 Agent 只读长模板却漏掉阶段完成标准。
 

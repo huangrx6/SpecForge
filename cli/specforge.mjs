@@ -21,6 +21,7 @@ Usage:
   specforge decision-brief [--dir <path>] [--work-item <id>] [--json]
   specforge package [--dir <path>] [--work-item <id>] [--skip-derived] [--json]
   specforge gate-preflight [--dir <path>] <gate> [status] [--evidence <path>] [--work-item <id>] [--json] [--strict]
+  specforge gate [--dir <path>] <gate> <status> [--evidence <path>] [--work-item <id>] [--strict-hooks]
   specforge handoff [--dir <path>] [--work-item <id>] [--output <path>] [--json]
   specforge report [--dir <path>] [--work-item <id>] [--output <path>]
   specforge traceability [--dir <path>] [--work-item <id>] [--json]
@@ -37,6 +38,7 @@ Examples:
   npx github:huangrx6/SpecForge decision-brief --dir .
   npx github:huangrx6/SpecForge package --dir .
   npx github:huangrx6/SpecForge gate-preflight --dir . verification APPROVED --evidence 05-verification/report.md
+  npx github:huangrx6/SpecForge gate --dir . verification APPROVED --evidence 05-verification/report.md
   npx github:huangrx6/SpecForge handoff --dir .
   npx github:huangrx6/SpecForge report --dir .
   npx github:huangrx6/SpecForge traceability --dir .
@@ -236,6 +238,36 @@ function gatePreflight() {
   runNode(preflightPath, [...positional, ...extraArgs], targetDir);
 }
 
+function gate() {
+  const targetDir = resolve(option("--dir", "."));
+  const gatePath = join(targetDir, ".specforge/core/scripts/gate.mjs");
+  if (!existsSync(gatePath)) {
+    console.error(`Missing SpecForge gate script: ${gatePath}`);
+    process.exit(1);
+  }
+  const positional = [];
+  const extraArgs = [];
+  const optionsWithValues = new Set(["--work-item", "--evidence"]);
+  for (let i = 1; i < args.length; i += 1) {
+    const arg = args[i];
+    if (arg === "--dir") {
+      i += 1;
+      continue;
+    }
+    if (optionsWithValues.has(arg)) {
+      extraArgs.push(arg, args[i + 1]);
+      i += 1;
+      continue;
+    }
+    if (arg.startsWith("--")) {
+      extraArgs.push(arg);
+      continue;
+    }
+    positional.push(arg);
+  }
+  runNode(gatePath, [...positional, ...extraArgs], targetDir);
+}
+
 function handoff() {
   const targetDir = resolve(option("--dir", "."));
   const handoffPath = join(targetDir, ".specforge/core/scripts/handoff-summary.mjs");
@@ -291,6 +323,8 @@ if (command === "init") {
   reviewPackage();
 } else if (command === "gate-preflight") {
   gatePreflight();
+} else if (command === "gate") {
+  gate();
 } else if (command === "handoff") {
   handoff();
 } else if (command === "report") {

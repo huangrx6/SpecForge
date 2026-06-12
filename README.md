@@ -419,8 +419,7 @@ flowchart LR
 node .specforge/core/scripts/gate-preflight.mjs code_review APPROVED \
   --evidence 04-code-review/code-review-v1.md
 
-node .specforge/core/scripts/gate.mjs code_review APPROVED \
-  --evidence 04-code-review/code-review-v1.md
+specforge gate --dir . code_review APPROVED --evidence 04-code-review/code-review-v1.md
 ```
 
 `gate-preflight` 只做审批前检查，不改写 `work.yaml`。它会汇总 evidence、artifact ready 状态、P0 / P1 blocker、open decision、traceability gaps 和 workflow health；`FAIL` 会返回非 0 退出码，`WARN` 默认只提醒，可用 `--strict` 在 CI 中阻断。
