@@ -35,6 +35,17 @@ const routesByCheck = {
   "closure-quality": "closure-quality",
 };
 
+const commandsByCheck = {
+  "artifact-quality": ["node .specforge/core/scripts/artifact-quality.mjs"],
+  "decision-quality": ["node .specforge/core/scripts/decision-brief.mjs", "node .specforge/core/scripts/decision-quality.mjs"],
+  "source-quality": ["node .specforge/core/scripts/source-quality.mjs"],
+  traceability: ["node .specforge/core/scripts/traceability-summary.mjs"],
+  "implementation-quality": ["node .specforge/core/scripts/implementation-quality.mjs"],
+  "evidence-summary": ["node .specforge/core/scripts/evidence-summary.mjs"],
+  "wiki-quality": ["node .specforge/core/scripts/wiki-quality.mjs"],
+  "closure-quality": ["node .specforge/core/scripts/closure-quality.mjs"],
+};
+
 function countIssues(issues = []) {
   return {
     failures: issues.filter((issue) => issue.severity === "FAIL").length,
@@ -255,6 +266,16 @@ function overallStatus(checks) {
   return "PASS";
 }
 
+function recommendedCommands(checks) {
+  return [
+    ...new Set(
+      checks
+        .filter((item) => ["FAIL", "WARN"].includes(item.status))
+        .flatMap((item) => commandsByCheck[item.id] ?? []),
+    ),
+  ];
+}
+
 export function qualitySuiteSummary(diagnosis) {
   if (!diagnosis.work_item) {
     return {
@@ -269,6 +290,7 @@ export function qualitySuiteSummary(diagnosis) {
         checked: 0,
         skipped: 0,
       },
+      recommended_commands: [],
     };
   }
 
@@ -306,6 +328,7 @@ export function qualitySuiteSummary(diagnosis) {
     route: diagnosis.route,
     ready_artifact: diagnosis.ready_artifact,
     checks,
+    recommended_commands: recommendedCommands(checks),
     summary: {
       overall: overallStatus(checks),
       failures,

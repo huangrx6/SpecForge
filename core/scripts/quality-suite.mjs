@@ -56,6 +56,12 @@ No active work item.
 |---|---:|---:|---:|---|---|
 ${suite.checks.map((item) => `| ${item.title} | ${item.status} | ${item.failures} | ${item.warnings} | ${item.route ?? "-"} | ${item.message.replace(/\|/g, "\\|")} |`).join("\n")}
 
+## Recommended Commands
+
+\`\`\`bash
+${suite.recommended_commands.length > 0 ? suite.recommended_commands.join("\n") : "# none"}
+\`\`\`
+
 ## Issues
 
 ${bullet(issueLines, "none", (issue) => `[${issue.severity}] ${issue.check} ${issue.path}: ${issue.message} (route=${issue.route ?? "-"})`)}
