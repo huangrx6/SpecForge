@@ -42,6 +42,7 @@
 ## 推荐命令节奏
 
 ```bash
+node .specforge/core/scripts/workflow-audit.mjs
 node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/instructions.mjs
 node .specforge/core/scripts/decision-checkpoints.mjs
@@ -84,7 +85,8 @@ node .specforge/core/scripts/doctor.mjs
 ## 产物读法
 
 1. 先读一页摘要。
-2. 再看 `Decision checkpoints` 和 `Quality warnings`。
-3. 再看 traceability / task graph / verification evidence。
-4. 最后才读附录、长表和派生 HTML。
-5. 交给他人或新 Agent 前，生成 `handoff.md`，让接手者先看一页状态、下一步、阻断和证据入口。
+2. 再看 `workflow-audit.mjs` 的 audit status、route 和 recommended commands。
+3. 再看 `Decision checkpoints` 和 `Quality warnings`。
+4. 再看 traceability / task graph / verification evidence。
+5. 最后才读附录、长表和派生 HTML。
+6. 交给他人或新 Agent 前，生成 `handoff.md`，让接手者先看一页状态、下一步、阻断和证据入口。

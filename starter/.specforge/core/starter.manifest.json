@@ -115,6 +115,10 @@
       "to": "core/scripts/traceability-summary.mjs"
     },
     {
+      "from": "scripts/workflow-audit.mjs",
+      "to": "core/scripts/workflow-audit.mjs"
+    },
+    {
       "from": "scripts/update-skills.mjs",
       "to": "core/scripts/update-skills.mjs"
     },

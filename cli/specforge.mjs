@@ -14,6 +14,7 @@ function usage() {
 Usage:
   specforge init [--dir <path>] [--force]
   specforge doctor [--dir <path>]
+  specforge audit [--dir <path>] [--work-item <id>] [--output <path>] [--json]
   specforge checkpoints [--dir <path>] [--work-item <id>] [--json]
   specforge handoff [--dir <path>] [--work-item <id>] [--output <path>] [--json]
   specforge report [--dir <path>] [--work-item <id>] [--output <path>]
@@ -24,6 +25,7 @@ Examples:
   npx github:huangrx6/SpecForge init --dir .
   npm exec --yes --package=git+ssh://git@git.company.com/team/specforge.git#v0.3.0-company.1 -- specforge init --dir .
   npx github:huangrx6/SpecForge doctor --dir .
+  npx github:huangrx6/SpecForge audit --dir .
   npx github:huangrx6/SpecForge checkpoints --dir .
   npx github:huangrx6/SpecForge handoff --dir .
   npx github:huangrx6/SpecForge report --dir .
@@ -86,6 +88,22 @@ function doctor() {
     process.exit(1);
   }
   runNode(doctorPath, [], targetDir);
+}
+
+function audit() {
+  const targetDir = resolve(option("--dir", "."));
+  const auditPath = join(targetDir, ".specforge/core/scripts/workflow-audit.mjs");
+  if (!existsSync(auditPath)) {
+    console.error(`Missing SpecForge workflow audit script: ${auditPath}`);
+    process.exit(1);
+  }
+  const extraArgs = [];
+  const workItem = option("--work-item");
+  const output = option("--output");
+  if (workItem) extraArgs.push("--work-item", workItem);
+  if (output) extraArgs.push("--output", output);
+  if (args.includes("--json")) extraArgs.push("--json");
+  runNode(auditPath, extraArgs, targetDir);
 }
 
 function report() {
@@ -159,6 +177,8 @@ if (command === "init") {
   initProject();
 } else if (command === "doctor") {
   doctor();
+} else if (command === "audit") {
+  audit();
 } else if (command === "checkpoints") {
   checkpoints();
 } else if (command === "handoff") {
