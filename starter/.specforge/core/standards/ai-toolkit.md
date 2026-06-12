@@ -101,7 +101,7 @@ Traceability 由 workflow schema 的 `traceability_policy` 控制：`off` 不提
 
 当需要把确认点发给用户或负责人时，运行 `node .specforge/core/scripts/decision-brief.mjs` 或 `specforge decision-brief --dir .`。它把 top open decision、当前阶段契约、traceability、blocker、quality warning 和风险接受候选整理成一页，并给出可复制的回复格式。
 
-日常推进建议先运行 `node .specforge/core/scripts/workflow-audit.mjs` 或 `specforge audit --dir .`。它把 route、blocker、open decision、quality warning、traceability 和推荐命令合并成一页，适合作为人工确认、跨 Agent 接力和自动推进前的第一入口。
+日常推进建议先运行 `node .specforge/core/scripts/workflow-audit.mjs` 或 `specforge audit --dir .`。它把 Action Summary、route、blocker、open decision、quality warning、traceability 和推荐命令合并成一页，适合作为人工确认、跨 Agent 接力和自动推进前的第一入口。没有 active work item 时，它只推荐 status / create-work / doctor 这类可执行入口，不推荐阶段命令。
 
 需要快速判断当前流程是否可继续时，运行 `node .specforge/core/scripts/workflow-health.mjs` 或 `specforge health --dir .`。它给出 health score、level、维度扣分和 Top priorities，用来排序下一步，不替代 gate evidence。
 

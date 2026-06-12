@@ -30,6 +30,14 @@ export function actionReason(diagnosis) {
 }
 
 export function actionCommands(diagnosis) {
+  if (!diagnosis.work_item) {
+    return [
+      "node .specforge/core/scripts/status.mjs",
+      'node .specforge/core/scripts/create-work.mjs --workflow <workflow> "<title>"',
+      "node .specforge/core/scripts/doctor.mjs",
+    ];
+  }
+
   const commands = ["node .specforge/core/scripts/workflow-audit.mjs", "node .specforge/core/scripts/stage-contract.mjs"];
   if (diagnosis.blockers?.length > 0) commands.push(`node .specforge/core/scripts/instructions.mjs ${diagnosis.blockers[0].owner_artifact ?? ""}`.trim());
   if ((diagnosis.decision_checkpoints?.summary?.open ?? 0) > 0) commands.push("node .specforge/core/scripts/decision-brief.mjs");

@@ -4,6 +4,7 @@ import { artifactLine, diagnoseWorkspace, diagnoseWorkItem, gateLine } from "./l
 import { contractForArtifact, focusArtifactId } from "./lib/stage-contracts.mjs";
 import { abs, effectiveSchema, loadSchema, localDateIso, parseField, readText, resolveWorkItem } from "./lib/specforge.mjs";
 import { workflowHealth } from "./lib/workflow-health.mjs";
+import { actionCommands, actionReason, actionState, readingOrder, traceGapCount, traceabilityPolicyLine } from "./lib/action-board.mjs";
 
 const args = process.argv.slice(2);
 const json = args.includes("--json");
@@ -16,33 +17,6 @@ function argValue(name) {
 function bullet(items, emptyText, renderItem) {
   if (!items || items.length === 0) return `- ${emptyText}`;
   return items.map((item) => `- ${renderItem(item)}`).join("\n");
-}
-
-function auditStatus(diagnosis) {
-  if (diagnosis.blockers?.some((blocker) => ["P0", "P1"].includes(blocker.severity))) return "BLOCKED";
-  if ((diagnosis.decision_checkpoints?.summary?.open ?? 0) > 0) return "NEEDS_DECISION";
-  if ((diagnosis.quality_warnings ?? []).length > 0) return "NEEDS_ATTENTION";
-  if (!diagnosis.work_item) return "READY_FOR_INTAKE";
-  return "READY";
-}
-
-function recommendedCommands(diagnosis) {
-  const commands = [
-    "node .specforge/core/scripts/doctor.mjs",
-    "node .specforge/core/scripts/workflow-health.mjs",
-    "node .specforge/core/scripts/stage-contract.mjs",
-    "node .specforge/core/scripts/instructions.mjs",
-    "node .specforge/core/scripts/decision-checkpoints.mjs",
-    "node .specforge/core/scripts/decision-brief.mjs",
-    "node .specforge/core/scripts/traceability-summary.mjs",
-  ];
-
-  if (diagnosis.work_item) {
-    commands.push("node .specforge/core/scripts/render-work-report.mjs");
-    commands.push("node .specforge/core/scripts/handoff-summary.mjs --output <work-item>/07-report/handoff.md");
-  }
-
-  return commands;
 }
 
 function topQualityWarnings(warnings) {
@@ -90,22 +64,25 @@ function priorityList(health) {
   return bullet(health.priorities?.slice(0, 5), "none", (item) => `[${item.severity}] ${item.area}: ${item.message} (route=${item.route || "N/A"})`);
 }
 
+function auditCommands(diagnosis) {
+  return actionCommands(diagnosis).filter((command) => !command.includes("workflow-audit.mjs"));
+}
+
 function markdown(diagnosis) {
   const generated = localDateIso();
-  const status = auditStatus(diagnosis);
   const health = workflowHealth(diagnosis);
+  const status = actionState(diagnosis, health);
 
   if (!diagnosis.work_item) {
     return `# SpecForge Workflow Audit
 
+## Action Summary
+
 - Audit status: ${status}
 - Health level: ${health.level}
 - Route: ${diagnosis.route}
+- Next: ${actionReason(diagnosis)}
 - Generated: ${generated}
-
-## Why
-
-${diagnosis.route_reason}
 
 ## Checks
 
@@ -120,10 +97,7 @@ ${priorityList(health)}
 ## Recommended Commands
 
 \`\`\`bash
-node .specforge/core/scripts/doctor.mjs
-node .specforge/core/scripts/workflow-health.mjs
-node .specforge/core/scripts/decision-brief.mjs
-node .specforge/core/scripts/instructions.mjs
+${auditCommands(diagnosis).join("\n")}
 \`\`\`
 `;
   }
@@ -146,9 +120,15 @@ node .specforge/core/scripts/instructions.mjs
 - Route: ${diagnosis.route}
 - Generated: ${generated}
 
-## Next Move
+## Action Summary
 
-${diagnosis.route_reason}
+- State: ${status}
+- Next: ${actionReason(diagnosis)}
+- Health: ${health.score}/100 (${health.level})
+- Open decisions: ${diagnosis.decision_checkpoints?.summary?.open ?? 0}
+- Blockers: ${diagnosis.blockers?.length ?? 0}
+- Trace gaps: ${traceGapCount(diagnosis.traceability)}
+- Traceability policy: ${traceabilityPolicyLine(diagnosis.traceability_policy)}
 
 Top priorities:
 
@@ -157,8 +137,12 @@ ${priorityList(health)}
 Recommended commands:
 
 \`\`\`bash
-${recommendedCommands(diagnosis).join("\n")}
+${auditCommands(diagnosis).join("\n")}
 \`\`\`
+
+Read first:
+
+${bullet(readingOrder(), "N/A", (item) => item)}
 
 ## Current Stage Contract
 
@@ -208,10 +192,7 @@ ${topQualityWarnings(diagnosis.quality_warnings)}
 
 ## Reading Order
 
-1. Resolve P0/P1 blockers or open decisions.
-2. Read the ready artifact and its immediate dependencies.
-3. Check traceability before implementation or verification.
-4. Generate HTML report only when handing off, reviewing, or closing.
+${readingOrder().map((item, index) => `${index + 1}. ${item}`).join("\n")}
 `;
 }
 
@@ -228,7 +209,8 @@ try {
   }
 
   if (json) {
-    console.log(JSON.stringify({ audit_status: auditStatus(diagnosis), diagnosis }, null, 2));
+    const health = workflowHealth(diagnosis);
+    console.log(JSON.stringify({ audit_status: actionState(diagnosis, health), health, action_commands: auditCommands(diagnosis), diagnosis }, null, 2));
     process.exit(0);
   }
 
