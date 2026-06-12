@@ -55,6 +55,10 @@
       "to": "core/scripts/lib/workflow-health.mjs"
     },
     {
+      "from": "scripts/lib/gate-preflight.mjs",
+      "to": "core/scripts/lib/gate-preflight.mjs"
+    },
+    {
       "from": "scripts/lib/diagnostics.mjs",
       "to": "core/scripts/lib/diagnostics.mjs"
     },
@@ -97,6 +101,10 @@
     {
       "from": "scripts/gate.mjs",
       "to": "core/scripts/gate.mjs"
+    },
+    {
+      "from": "scripts/gate-preflight.mjs",
+      "to": "core/scripts/gate-preflight.mjs"
     },
     {
       "from": "scripts/handoff-summary.mjs",

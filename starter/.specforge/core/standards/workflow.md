@@ -95,6 +95,7 @@ Brainstorm 和 PRD 都是 graph 外的澄清产物：`intake -> sf-brainstorm ->
 ## Gate 标准
 
 - required gate 必须有 evidence 文件，不能空批准。
+- 批准 gate 前先运行 `node .specforge/core/scripts/gate-preflight.mjs <gate> APPROVED --evidence <path>`。预检只读不改状态；`FAIL` 必须修复或退回，`WARN` 需要在 gate evidence 中说明是否接受。
 - `spec_review` 有两种模式：Artifact Review 可随时审查任一已有 spec 且不更新 gate；Gate Review 只在 requirements、适用的 ui_design / technical_design、tasks 足以直接实现时批准。
 - `code_review` 只在实现满足 approved spec、边界和测试证据时批准。
 - `verification` 必须先产出 `05-verification/test-cases.md`，再留下命令、结果、覆盖范围和未覆盖风险。

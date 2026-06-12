@@ -416,9 +416,14 @@ flowchart LR
 批准 gate 的脚本形式：
 
 ```bash
+node .specforge/core/scripts/gate-preflight.mjs code_review APPROVED \
+  --evidence 04-code-review/code-review-v1.md
+
 node .specforge/core/scripts/gate.mjs code_review APPROVED \
   --evidence 04-code-review/code-review-v1.md
 ```
+
+`gate-preflight` 只做审批前检查，不改写 `work.yaml`。它会汇总 evidence、artifact ready 状态、P0 / P1 blocker、open decision、traceability gaps 和 workflow health；`FAIL` 会返回非 0 退出码，`WARN` 默认只提醒，可用 `--strict` 在 CI 中阻断。
 
 非批准状态不绑定 evidence：
 
@@ -445,6 +450,7 @@ node .specforge/core/scripts/create-artifact.mjs requirements
 node .specforge/core/scripts/render-work-report.mjs
 node .specforge/core/scripts/handoff-summary.mjs --output <work-item>/07-report/handoff.md
 node .specforge/core/scripts/workflow-package.mjs
+node .specforge/core/scripts/gate-preflight.mjs verification APPROVED --evidence 05-verification/report.md
 node .specforge/core/scripts/gate.mjs verification APPROVED --evidence 05-verification/report.md
 node .specforge/core/scripts/sync-wiki.mjs
 ```

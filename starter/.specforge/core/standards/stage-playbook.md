@@ -113,6 +113,7 @@ node .specforge/core/scripts/doctor.mjs
 | Decision package | 让人工确认有上下文、有选项、有可复制回复格式 | `decision-brief.mjs` 汇总 top decision、contract、traceability、blockers、risk candidates | 人工回复必须能写回 artifact 或 gate evidence |
 | Lightweight artifacts | 人能读完，Agent 能接手 | 一页摘要、artifact summary、handoff、HTML reading layer | Markdown 仍是版本管理事实源，HTML 不能成为唯一证据 |
 | Review package | 审查、接力、关闭前一键生成可交付材料 | `workflow-package.mjs` 输出 review-package、handoff、HTML report | 派生包引用 source artifacts，不替代 source of truth |
+| Gate preflight | 审批前先跑只读 policy check | `gate-preflight.mjs` 输出 PASS / WARN / FAIL、证据和 return route | `FAIL` 不批准；`WARN` 必须被 evidence 解释 |
 | Stage quality policy | 不同 workflow 有不同质量条 | schema `quality_policy.section_checks`、diagnostics warnings | 不把 `lite` 套成完整 `feature` 流程 |
 | Evidence grading | gate 不是形式，证据强度和风险强度匹配 | verification evidence strength、mock / proven / manual-confirmed / deferred | `missing` 不能批准 gate；弱证据必须说明边界 |
 | Knowledge compaction | 关闭后下次不用重读全仓 | wiki sync、archive、handoff summary、长期事实索引 | 只沉淀未来会复用的信息，不写过程噪音 |
