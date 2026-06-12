@@ -5,7 +5,7 @@
 ## 目录原则
 
 - 少文件：优先合并成稳定入口，避免为了一个小检查项新增目录。
-- 一事一责：流程、产品、设计、工程、代码智能、Wiki 分开。
+- 一事一责：流程、阶段打法、产品、设计、工程、代码智能、Wiki 分开。
 - 可执行：每条标准都要能落到 artifact、gate、tasks 或 verification evidence。
 - 可偏离：项目事实优先于通用标准，但偏离必须写清理由和验证补偿。
 - 按需加载：Agent 只读当前阶段需要的标准，不全量加载。
@@ -15,6 +15,7 @@
 | 标准 | 什么时候读 | 主要回答 |
 |---|---|---|
 | `workflow.md` | intake、路由、gate、scope、上下文控制、关闭归档 | 当前到哪一步、能不能前进、边界在哪里 |
+| `stage-playbook.md` | 自动推进、handoff、长流程复盘、用户问“每一步怎么配合” | 每一步用什么 AI / 脚本 / 人工确认 / 证据契约 |
 | `product.md` | PRD、requirements、research、功能澄清、验收标准 | 用户到底要什么，哪些能力进入 MVP，如何验收 |
 | `design.md` | UI / UX、页面、交互、视觉风格、原型证据 | 用户看见什么，怎么操作，状态是否完整 |
 | `pc-ui-design-spec.md` | PC 端业务系统、运营后台、管理控制台、数据表格工具，或用户明确提供该规范 | 具体颜色、字号、行高、间距、组件尺寸和 HTML/CSS token |
@@ -27,19 +28,19 @@
 
 | 阶段 / artifact | 必读标准 |
 |---|---|
-| intake / brief | `workflow.md`、`product.md`、`ai-toolkit.md` |
-| prd | `product.md`、`workflow.md`、`ai-toolkit.md` |
-| research / gap_report | `product.md`、`engineering.md`、`workflow.md` |
+| intake / brief | `workflow.md`、`stage-playbook.md`、`product.md`、`ai-toolkit.md` |
+| prd | `product.md`、`workflow.md`、`stage-playbook.md`、`ai-toolkit.md` |
+| research / gap_report | `product.md`、`engineering.md`、`workflow.md`、`stage-playbook.md` |
 | steering / 存量项目画像 | `code-intelligence.md`、`wiki.md`、`workflow.md` |
-| requirements | `product.md`、`workflow.md`、`ai-toolkit.md` |
-| ui_design | `design.md`、`product.md`、`workflow.md`、`ai-toolkit.md`；PC 业务系统场景加读 `pc-ui-design-spec.md` |
-| technical_design | `engineering.md`、`workflow.md`、`ai-toolkit.md` |
-| tasks | `workflow.md`、`engineering.md`、`ai-toolkit.md` |
-| spec_review | `workflow.md`、`product.md`、`design.md`、`engineering.md` |
-| implementation | `engineering.md`、`workflow.md` |
-| code_review | `engineering.md`、`workflow.md` |
-| verification | `engineering.md`、`workflow.md`、`ai-toolkit.md` |
-| wiki_sync / closure | `wiki.md`、`workflow.md`、`ai-toolkit.md` |
+| requirements | `product.md`、`workflow.md`、`stage-playbook.md`、`ai-toolkit.md` |
+| ui_design | `design.md`、`product.md`、`workflow.md`、`stage-playbook.md`、`ai-toolkit.md`；PC 业务系统场景加读 `pc-ui-design-spec.md` |
+| technical_design | `engineering.md`、`workflow.md`、`stage-playbook.md`、`ai-toolkit.md` |
+| tasks | `workflow.md`、`engineering.md`、`stage-playbook.md`、`ai-toolkit.md` |
+| spec_review | `workflow.md`、`stage-playbook.md`、`product.md`、`design.md`、`engineering.md` |
+| implementation | `engineering.md`、`workflow.md`、`stage-playbook.md` |
+| code_review | `engineering.md`、`workflow.md`、`stage-playbook.md` |
+| verification | `engineering.md`、`workflow.md`、`stage-playbook.md`、`ai-toolkit.md` |
+| wiki_sync / closure | `wiki.md`、`workflow.md`、`stage-playbook.md`、`ai-toolkit.md` |
 
 ## 领域主基准与官方入口
 
