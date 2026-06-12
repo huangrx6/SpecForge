@@ -340,14 +340,14 @@ const defaultQualitySections = [
   {
     artifact: "technical_design",
     path: "01-spec/technical-design.md",
-    sections: ["Design Quality Gate", "架构决策记录"],
+    sections: ["一页摘要", "Design Quality Gate", "架构决策记录"],
     severity: "P2",
     message: "technical-design.md 缺少设计质量门禁或 ADR 摘要，任务拆解时可能缺少最小充分设计和长期决策依据。",
   },
   {
     artifact: "tasks",
     path: "01-spec/tasks.md",
-    sections: ["任务图与执行策略"],
+    sections: ["一页摘要", "任务图与执行策略"],
     severity: "P2",
     message: "tasks.md 缺少任务图与执行策略，多 agent / 并行实现时容易产生写入边界冲突。",
   },
@@ -361,14 +361,14 @@ const defaultQualitySections = [
   {
     artifact: "code_review",
     path: "04-code-review/code-review-v1.md",
-    sections: ["任务图对账", "验证提示"],
+    sections: ["一页摘要", "任务图对账", "验证提示"],
     severity: "P2",
     message: "code review 缺少任务图对账或验证提示，verification 可能拿不到弱证据、deferred 项和外部补证提示。",
   },
   {
     artifact: "verification",
     path: "05-verification/report.md",
-    sections: ["证据强度分级", "人工确认与外部补证"],
+    sections: ["一页摘要", "证据强度分级", "人工确认与外部补证"],
     severity: "P2",
     message: "verification report 缺少证据强度分级或人工确认记录，gate 风险接受依据不够清楚。",
   },

@@ -215,6 +215,7 @@
         "artifact": "ui_design",
         "path": "01-spec/ui-design.md",
         "sections": [
+          "一页摘要",
           "Interaction State Matrix",
           "Pencil 原型证据"
         ],
@@ -225,6 +226,7 @@
         "artifact": "technical_design",
         "path": "01-spec/technical-design.md",
         "sections": [
+          "一页摘要",
           "Design Quality Gate",
           "架构决策记录"
         ],
@@ -235,6 +237,7 @@
         "artifact": "tasks",
         "path": "01-spec/tasks.md",
         "sections": [
+          "一页摘要",
           "任务图与执行策略"
         ],
         "severity": "P2",
@@ -244,6 +247,7 @@
         "artifact": "spec_review",
         "path": "02-spec-review/spec-review-v1.md",
         "sections": [
+          "一页摘要",
           "Traceability Matrix",
           "Artifact Quality Review"
         ],
@@ -263,6 +267,7 @@
         "artifact": "code_review",
         "path": "04-code-review/code-review-v1.md",
         "sections": [
+          "一页摘要",
           "任务图对账",
           "验证提示"
         ],
@@ -273,6 +278,7 @@
         "artifact": "verification",
         "path": "05-verification/report.md",
         "sections": [
+          "一页摘要",
           "证据强度分级",
           "人工确认与外部补证"
         ],

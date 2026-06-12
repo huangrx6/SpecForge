@@ -2,6 +2,14 @@
 
 Status: PENDING
 
+## 0. 一页摘要
+
+- 审查结论：
+- 规格是否可实现：
+- 最大断链风险：
+- 必须补齐：
+- 下一步：
+
 ## 1. Review Scope
 
 | Item | Value |

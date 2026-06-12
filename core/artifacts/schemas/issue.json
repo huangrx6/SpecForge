@@ -136,6 +136,7 @@
         "artifact": "tasks",
         "path": "01-spec/tasks.md",
         "sections": [
+          "一页摘要",
           "任务图与执行策略"
         ],
         "severity": "P2",
@@ -154,6 +155,7 @@
         "artifact": "code_review",
         "path": "04-code-review/code-review-v1.md",
         "sections": [
+          "一页摘要",
           "任务图对账",
           "验证提示"
         ],
@@ -164,6 +166,7 @@
         "artifact": "verification",
         "path": "05-verification/report.md",
         "sections": [
+          "一页摘要",
           "证据强度分级",
           "人工确认与外部补证"
         ],
