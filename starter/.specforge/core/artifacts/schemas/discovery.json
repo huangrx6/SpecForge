@@ -62,5 +62,37 @@
       "wiki_sync",
       "closure"
     ]
+  },
+  "quality_policy": {
+    "section_checks": [
+      {
+        "artifact": "research",
+        "path": "01-spec/research.md",
+        "sections": [
+          "来源质量分级",
+          "ADR 摘要"
+        ],
+        "severity": "P2",
+        "message": "research.md 缺少来源质量分级或 ADR 摘要，后续方案可能无法区分官方证据、推断和长期决策。"
+      },
+      {
+        "artifact": "wiki_sync",
+        "path": "06-close/wiki-sync.md",
+        "sections": [
+          "派生报告索引"
+        ],
+        "severity": "P3",
+        "message": "wiki-sync.md 缺少派生报告索引，HTML / 图表等辅助产物的后续追踪可能不完整。"
+      },
+      {
+        "artifact": "closure",
+        "path": "06-close/release.md",
+        "sections": [
+          "外部补证与派生报告"
+        ],
+        "severity": "P3",
+        "message": "release.md 缺少外部补证与派生报告记录，manual-confirmed / deferred 项可能没有发布后观察承接。"
+      }
+    ]
   }
 }

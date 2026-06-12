@@ -424,6 +424,50 @@ export function validateSchema(schema, schemaName = schema.id ?? "schema") {
     if (!ids.has(dep)) errors.push(`${schemaName}: archive has unknown dependency ${dep}`);
   }
 
+  if (schema.quality_policy !== undefined) {
+    const policy = schema.quality_policy;
+    const sectionChecks = policy?.section_checks;
+    const outputsByArtifact = new Map(schema.artifacts.map((artifact) => [artifact.id, new Set(artifact.outputs ?? [])]));
+
+    if (!policy || typeof policy !== "object" || Array.isArray(policy)) {
+      errors.push(`${schemaName}: quality_policy must be an object`);
+    } else if (!Array.isArray(sectionChecks)) {
+      errors.push(`${schemaName}: quality_policy.section_checks must be an array`);
+    } else {
+      for (const [index, check] of sectionChecks.entries()) {
+        const label = `${schemaName}: quality_policy.section_checks[${index}]`;
+        if (!check || typeof check !== "object" || Array.isArray(check)) {
+          errors.push(`${label} must be an object`);
+          continue;
+        }
+        if (!check.artifact || !ids.has(check.artifact)) {
+          errors.push(`${label} has unknown artifact ${check.artifact ?? ""}`.trim());
+        }
+        if (
+          check.path !== undefined &&
+          (typeof check.path !== "string" || !outputsByArtifact.get(check.artifact)?.has(check.path))
+        ) {
+          errors.push(`${label} path must match an output of its artifact`);
+        }
+        if (!Array.isArray(check.sections) || check.sections.length === 0) {
+          errors.push(`${label} sections must be a non-empty array`);
+        } else {
+          for (const [sectionIndex, section] of check.sections.entries()) {
+            if (typeof section !== "string" || !section.trim()) {
+              errors.push(`${label} sections[${sectionIndex}] must be a non-empty string`);
+            }
+          }
+        }
+        if (check.severity !== undefined && !["P0", "P1", "P2", "P3"].includes(check.severity)) {
+          errors.push(`${label} severity must be P0, P1, P2, or P3`);
+        }
+        if (check.message !== undefined && (typeof check.message !== "string" || !check.message.trim())) {
+          errors.push(`${label} message must be a non-empty string`);
+        }
+      }
+    }
+  }
+
   const visiting = new Set();
   const visited = new Set();
   const byId = new Map(schema.artifacts.map((artifact) => [artifact.id, artifact]));

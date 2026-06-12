@@ -118,5 +118,75 @@
       "wiki_sync",
       "closure"
     ]
+  },
+  "quality_policy": {
+    "section_checks": [
+      {
+        "artifact": "requirements",
+        "path": "01-spec/requirements.md",
+        "sections": [
+          "Spec Quality Gate",
+          "需求一致性检查"
+        ],
+        "severity": "P2",
+        "message": "requirements.md 缺少质量门禁或一致性检查，后续设计可能仍要重新判断冲突和可测试性。"
+      },
+      {
+        "artifact": "tasks",
+        "path": "01-spec/tasks.md",
+        "sections": [
+          "任务图与执行策略"
+        ],
+        "severity": "P2",
+        "message": "tasks.md 缺少任务图与执行策略，多 agent / 并行实现时容易产生写入边界冲突。"
+      },
+      {
+        "artifact": "implementation",
+        "path": "03-implementation/report.md",
+        "sections": [
+          "任务图执行对账"
+        ],
+        "severity": "P2",
+        "message": "implementation report 缺少任务图执行对账，code review 难以判断实际实现顺序和并行边界是否符合 tasks。"
+      },
+      {
+        "artifact": "code_review",
+        "path": "04-code-review/code-review-v1.md",
+        "sections": [
+          "任务图对账",
+          "验证提示"
+        ],
+        "severity": "P2",
+        "message": "code review 缺少任务图对账或验证提示，verification 可能拿不到弱证据、deferred 项和外部补证提示。"
+      },
+      {
+        "artifact": "verification",
+        "path": "05-verification/report.md",
+        "sections": [
+          "证据强度分级",
+          "人工确认与外部补证"
+        ],
+        "severity": "P2",
+        "message": "verification report 缺少证据强度分级或人工确认记录，gate 风险接受依据不够清楚。"
+      },
+      {
+        "artifact": "wiki_sync",
+        "path": "06-close/wiki-sync.md",
+        "sections": [
+          "派生报告索引"
+        ],
+        "severity": "P3",
+        "message": "wiki-sync.md 缺少派生报告索引，HTML / 图表等辅助产物的后续追踪可能不完整。"
+      },
+      {
+        "artifact": "closure",
+        "path": "06-close/release.md",
+        "sections": [
+          "外部补证与派生报告"
+        ],
+        "severity": "P3",
+        "message": "release.md 缺少外部补证与派生报告记录，manual-confirmed / deferred 项可能没有发布后观察承接。"
+      }
+    ]
   }
 }

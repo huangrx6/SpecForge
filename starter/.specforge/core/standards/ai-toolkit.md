@@ -11,6 +11,7 @@
 | GitHub Copilot custom instructions / coding agent docs | https://docs.github.com/en/copilot | repository instructions、path-specific instructions、plan、test、review diff 是 agentic coding 的稳定器 | `.specforge/AGENTS.md` 和 stage skill 明确按阶段加载标准、运行命令和验证 |
 | Claude Code workflows / memory / subagents | https://docs.anthropic.com/en/docs/claude-code | 先探索代码库、计划、再实现；长期记忆是上下文而不是硬性配置；复杂探索可与主实现分离 | `sf-steering` / wiki 先给 bounded context；人工 gate 和 hooks 才是硬约束 |
 | RFC 2119 / Gherkin / OpenAPI / C4 | https://www.rfc-editor.org/rfc/rfc2119 / https://cucumber.io/docs/gherkin/ / https://spec.openapis.org/oas/latest.html / https://c4model.com/ | 需求关键词、Given/When/Then、API 契约和架构图都要结构化、可追溯、可检查 | requirements、technical design、verification 必须保留可测试语言、契约和追溯矩阵 |
+| OPA / GitHub Actions / Argo DAG / SLSA | https://www.openpolicyagent.org/docs / https://docs.github.com/actions / https://argo-workflows.readthedocs.io / https://slsa.dev/spec | policy-as-code、显式依赖图、DAG 执行和 provenance 能减少隐性流程判断 | workflow schema 承载 artifact DAG 和 `quality_policy`；诊断脚本按 schema 输出质量提醒 |
 
 ## 核心原则
 
@@ -48,6 +49,8 @@
 | Wiki / Close | 长期事实、release、rollback、archive | 重复 wiki、临时过程噪音 | 是否只沉淀未来会复用的信息 |
 
 `status` / `instructions` 可以输出非阻断 `quality_warnings`，用于提示已存在 artifact 缺少阶段质量条。它不是 gate，不替代人工判断；只有 P0 / P1 风险、缺 gate evidence、未确认关键决策等才进入 blocker。
+
+`quality_warnings` 必须来自当前 workflow schema 的 `quality_policy.section_checks`。不同 workflow 的质量条不同：`feature` / `standard` 可以要求完整 requirements、UI、technical design、spec review 和 verification 证据；`lite` 只保留轻量需求、任务图和证据闭环；`bugfix` / `issue` 重点检查 gap report 的复现、根因和规格缺口；`discovery` 重点检查来源质量和 ADR 摘要。不要把所有 workflow 都套同一张大表。
 
 ## 工具集地图
 

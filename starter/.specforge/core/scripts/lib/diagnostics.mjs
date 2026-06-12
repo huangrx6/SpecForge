@@ -329,53 +329,61 @@ function taskFieldSummary(workItemBase) {
   };
 }
 
-const qualitySections = [
+const defaultQualitySections = [
   {
     artifact: "requirements",
     path: "01-spec/requirements.md",
     sections: ["Spec Quality Gate", "需求一致性检查"],
+    severity: "P2",
     message: "requirements.md 缺少质量门禁或一致性检查，后续设计可能仍要重新判断冲突和可测试性。",
   },
   {
     artifact: "technical_design",
     path: "01-spec/technical-design.md",
     sections: ["Design Quality Gate", "架构决策记录"],
+    severity: "P2",
     message: "technical-design.md 缺少设计质量门禁或 ADR 摘要，任务拆解时可能缺少最小充分设计和长期决策依据。",
   },
   {
     artifact: "tasks",
     path: "01-spec/tasks.md",
     sections: ["任务图与执行策略"],
+    severity: "P2",
     message: "tasks.md 缺少任务图与执行策略，多 agent / 并行实现时容易产生写入边界冲突。",
   },
   {
     artifact: "implementation",
     path: "03-implementation/report.md",
     sections: ["任务图执行对账"],
+    severity: "P2",
     message: "implementation report 缺少任务图执行对账，code review 难以判断实际实现顺序和并行边界是否符合 tasks。",
   },
   {
     artifact: "code_review",
     path: "04-code-review/code-review-v1.md",
     sections: ["任务图对账", "验证提示"],
+    severity: "P2",
     message: "code review 缺少任务图对账或验证提示，verification 可能拿不到弱证据、deferred 项和外部补证提示。",
   },
   {
     artifact: "verification",
     path: "05-verification/report.md",
     sections: ["证据强度分级", "人工确认与外部补证"],
+    severity: "P2",
     message: "verification report 缺少证据强度分级或人工确认记录，gate 风险接受依据不够清楚。",
   },
   {
     artifact: "wiki_sync",
     path: "06-close/wiki-sync.md",
     sections: ["可复用事实结论", "派生报告索引"],
+    severity: "P2",
     message: "wiki-sync.md 缺少可复用事实结论或派生报告索引，长期知识沉淀和 HTML / 图表派生产物追踪不完整。",
   },
   {
     artifact: "closure",
     path: "06-close/release.md",
     sections: ["外部补证与派生报告"],
+    severity: "P2",
     message: "release.md 缺少外部补证与派生报告记录，manual-confirmed / deferred 项可能没有发布后观察承接。",
   },
 ];
@@ -385,16 +393,36 @@ function sectionExists(content, section) {
   return new RegExp(`^#{1,6}\\s+.*${escaped}`, "im").test(content) || content.includes(section);
 }
 
-function qualityWarnings(workItemBase) {
+function qualityChecksForSchema(schema) {
+  const schemaChecks = schema.quality_policy?.section_checks;
+  const checks = Array.isArray(schemaChecks) && schemaChecks.length > 0 ? schemaChecks : defaultQualitySections;
+  const artifactIds = new Set(schema.artifacts.map((artifact) => artifact.id));
+  const artifactById = new Map(schema.artifacts.map((artifact) => [artifact.id, artifact]));
+
+  return checks
+    .filter((check) => artifactIds.has(check.artifact))
+    .map((check) => {
+      const artifact = artifactById.get(check.artifact);
+      return {
+        ...check,
+        path: check.path ?? artifact?.outputs?.[0],
+        sections: check.sections ?? [],
+        severity: check.severity ?? "P2",
+      };
+    })
+    .filter((check) => check.path && check.sections.length > 0);
+}
+
+function qualityWarnings(workItemBase, schema) {
   const warnings = [];
-  for (const check of qualitySections) {
+  for (const check of qualityChecksForSchema(schema)) {
     const filePath = `${workItemBase}/${check.path}`;
     if (!exists(filePath)) continue;
     const content = readText(filePath);
     const missing = check.sections.filter((section) => !sectionExists(content, section));
     if (missing.length === 0) continue;
     warnings.push({
-      severity: "P2",
+      severity: check.severity,
       code: "quality-section-missing",
       route: routeByArtifact[check.artifact] ?? "sf-doctor",
       owner_artifact: check.artifact,
@@ -596,7 +624,7 @@ export function diagnoseWorkItem(options = {}) {
   const gates = gateSummaries(schema, workItemYaml, workItem.base);
   const readyArtifact = nextReadyArtifact(schema, states);
   const blockers = buildBlockers({ readyArtifact, gates, workItemBase: workItem.base, workItemYaml });
-  const warnings = qualityWarnings(workItem.base);
+  const warnings = qualityWarnings(workItem.base, schema);
   const doneCount = artifacts.filter((artifact) => artifact.status === "done").length;
   const readyArtifacts = artifacts.filter((artifact) => artifact.status === "ready").map((artifact) => artifact.id);
   const partialArtifacts = artifacts.filter((artifact) => artifact.status === "partial").map((artifact) => artifact.id);

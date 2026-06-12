@@ -5,6 +5,7 @@ import {
   normalizeEmptyActive,
   parseRegistryEntries,
   removeRegistryEntry,
+  validateSchema,
 } from "./lib/specforge.mjs";
 
 function testRegistrySingleActiveRemoval() {
@@ -34,8 +35,62 @@ function testArchiveAppend() {
   assert.equal(archive[0].status, "ARCHIVED");
 }
 
+function testQualityPolicyValidation() {
+  const valid = validateSchema({
+    id: "quality-policy-valid",
+    artifacts: [
+      {
+        id: "requirements",
+        stage: "01-spec",
+        title: "Requirements",
+        outputs: ["01-spec/requirements.md"],
+        requires: [],
+      },
+    ],
+    quality_policy: {
+      section_checks: [
+        {
+          artifact: "requirements",
+          path: "01-spec/requirements.md",
+          sections: ["Spec Quality Gate"],
+          severity: "P2",
+        },
+      ],
+    },
+  });
+  assert.deepEqual(valid, []);
+
+  const invalid = validateSchema({
+    id: "quality-policy-invalid",
+    artifacts: [
+      {
+        id: "requirements",
+        stage: "01-spec",
+        title: "Requirements",
+        outputs: ["01-spec/requirements.md"],
+        requires: [],
+      },
+    ],
+    quality_policy: {
+      section_checks: [
+        {
+          artifact: "missing",
+          path: "01-spec/not-owned.md",
+          sections: [],
+          severity: "P9",
+        },
+      ],
+    },
+  });
+  assert.ok(invalid.some((error) => error.includes("unknown artifact")));
+  assert.ok(invalid.some((error) => error.includes("path must match an output of its artifact")));
+  assert.ok(invalid.some((error) => error.includes("sections must be a non-empty array")));
+  assert.ok(invalid.some((error) => error.includes("severity must be P0, P1, P2, or P3")));
+}
+
 testRegistrySingleActiveRemoval();
 testRegistryKeepsOtherActiveEntries();
 testArchiveAppend();
+testQualityPolicyValidation();
 
 console.log("SpecForge self-test passed.");

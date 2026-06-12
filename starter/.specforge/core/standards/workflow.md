@@ -53,6 +53,8 @@ discovery: intake -> research -> wiki_sync -> closure
 
 Brainstorm 和 PRD 都是 graph 外的澄清产物：`intake -> sf-brainstorm -> sf-prd -> requirements`。Brainstorm 只在需要用户参与式取舍时出现；PRD 只在 brief 明确需要时出现。
 
+每个 workflow schema 除了定义 artifact DAG、apply 和 archive 条件，还必须定义适合该 workflow 的 `quality_policy.section_checks`。`status` / `instructions` 读取该策略输出非阻断质量提醒，避免 `lite`、`bugfix`、`discovery` 被套用同一套重型 feature 检查，也避免高风险 feature 缺少必要质量条。
+
 ## Artifact 与技能契约
 
 每一阶段只回答一个层级的问题，artifact 是否完成只以 artifact graph 计算出的 `done` 为准：
