@@ -47,6 +47,8 @@
 | Verification | test cases、证据分级、report、CI / local 结果 | 无证据批准 | 证据强度是否覆盖风险强度 |
 | Wiki / Close | 长期事实、release、rollback、archive | 重复 wiki、临时过程噪音 | 是否只沉淀未来会复用的信息 |
 
+`status` / `instructions` 可以输出非阻断 `quality_warnings`，用于提示已存在 artifact 缺少阶段质量条。它不是 gate，不替代人工判断；只有 P0 / P1 风险、缺 gate evidence、未确认关键决策等才进入 blocker。
+
 ## 工具集地图
 
 | 阶段 | 推荐工具 / 能力 | 主要用途 | 归一化产物 |

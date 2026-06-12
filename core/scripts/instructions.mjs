@@ -44,6 +44,17 @@ const requestedWorkItem = argValue("--work-item");
 const standard = (path) => `${layout.standards}/${path}`;
 const stageSkill = (path) => `${layout.stages}/${path}`;
 
+function printQualityWarnings(warnings = []) {
+  if (warnings.length === 0) return;
+  console.log("");
+  console.log("Quality warnings:");
+  for (const warning of warnings) {
+    console.log(`- [${warning.severity}] ${warning.message}`);
+    console.log(`  route: ${warning.route}; owner: ${warning.owner_artifact}`);
+    if (warning.missing_sections?.length > 0) console.log(`  missing: ${warning.missing_sections.join(", ")}`);
+  }
+}
+
 const stageSkillByArtifact = {
   intake: stageSkill("discovery/SKILL.md"),
   gap_report: stageSkill("gap-report/SKILL.md"),
@@ -116,6 +127,7 @@ try {
         active_count: workspaceDiagnosis.active_count,
         active_items: workspaceDiagnosis.active_items,
         blockers: workspaceDiagnosis.blockers,
+        quality_warnings: workspaceDiagnosis.quality_warnings ?? [],
       };
 
       if (json) {
@@ -133,6 +145,7 @@ try {
           console.log("Blockers:");
           for (const blocker of payload.blockers) console.log(`- [${blocker.severity}] ${blocker.message}`);
         }
+        printQualityWarnings(payload.quality_warnings);
       }
       process.exit(0);
     }
@@ -161,6 +174,7 @@ try {
       route: diagnosis.route,
       reason: diagnosis.route_reason,
       blockers: diagnosis.blockers,
+      quality_warnings: diagnosis.quality_warnings,
     };
 
     if (json) {
@@ -178,6 +192,7 @@ try {
         console.log(`- [${blocker.severity}] ${blocker.message}`);
         console.log(`  owner: ${blocker.owner_artifact}`);
       }
+      printQualityWarnings(payload.quality_warnings);
     }
     process.exit(0);
   }
@@ -202,6 +217,7 @@ try {
       },
       route: diagnosis.route,
       blockers: diagnosis.blockers,
+      quality_warnings: diagnosis.quality_warnings,
       context_files: schema.artifacts
         .flatMap((artifact) => artifact.outputs)
         .filter((output) => exists(`${workItem.base}/${output}`)),
@@ -218,6 +234,7 @@ try {
         console.log("Diagnostic blockers:");
         for (const blocker of payload.blockers) console.log(`- [${blocker.severity}] ${blocker.message} -> ${blocker.route}`);
       }
+      printQualityWarnings(payload.quality_warnings);
       console.log(`Tasks: ${payload.task_progress.done}/${payload.task_progress.total} done`);
       for (const task of payload.task_progress.pending) console.log(`- [ ] ${task}`);
       console.log("");
@@ -261,6 +278,7 @@ try {
     next_ready: schema.artifacts
       .filter((item) => states.get(item.id) === "ready")
       .map((item) => item.id),
+    quality_warnings: diagnosis.quality_warnings,
   };
 
   if (json) {
@@ -307,6 +325,7 @@ try {
       console.log(`Gate: ${payload.artifact.gate.name} = ${payload.artifact.gate.status}`);
       console.log(`Evidence: ${payload.artifact.gate.evidence ?? "null"}`);
     }
+    printQualityWarnings(payload.quality_warnings);
   }
 } catch (error) {
   console.error(error.message);

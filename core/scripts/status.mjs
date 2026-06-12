@@ -64,6 +64,21 @@ function printBlockers(blockers) {
   }
 }
 
+function printQualityWarnings(warnings) {
+  if (!warnings || warnings.length === 0) {
+    console.log("Quality warnings: none");
+    return;
+  }
+  console.log("Quality warnings:");
+  for (const warning of warnings) {
+    console.log(`- [${warning.severity}] ${warning.message}`);
+    console.log(`  owner: ${warning.owner_artifact}, route: ${warning.route}`);
+    if (warning.missing_sections?.length > 0) {
+      console.log(`  missing: ${warning.missing_sections.join(", ")}`);
+    }
+  }
+}
+
 function printActiveSummary(diagnosis) {
   if (!diagnosis.work_item) {
     console.log(`Active work items: ${diagnosis.active_count}`);
@@ -73,6 +88,7 @@ function printActiveSummary(diagnosis) {
     console.log(`Route: ${diagnosis.route}`);
     console.log(`Reason: ${diagnosis.route_reason}`);
     printBlockers(diagnosis.blockers);
+    printQualityWarnings(diagnosis.quality_warnings);
     return;
   }
 
@@ -91,6 +107,7 @@ function printActiveSummary(diagnosis) {
   console.log(`Gates: ${gateLine(diagnosis.gates)}`);
   console.log(`Graph: ${artifactLine(diagnosis.artifacts)}`);
   printBlockers(diagnosis.blockers);
+  printQualityWarnings(diagnosis.quality_warnings);
 }
 
 function printArchiveSummary(items) {
@@ -207,6 +224,7 @@ function runGraphStatus() {
           route: diagnosis.route,
           route_reason: diagnosis.route_reason,
           blockers: diagnosis.blockers,
+          quality_warnings: diagnosis.quality_warnings,
           readyArtifacts,
           blockedArtifacts,
           artifacts: artifactSummaries,
@@ -234,6 +252,12 @@ function runGraphStatus() {
     console.log("Blockers:");
     for (const blocker of diagnosis.blockers) {
       console.log(`- [${blocker.severity}] ${blocker.message} -> ${blocker.route}`);
+    }
+  }
+  if (diagnosis.quality_warnings?.length > 0) {
+    console.log("Quality warnings:");
+    for (const warning of diagnosis.quality_warnings) {
+      console.log(`- [${warning.severity}] ${warning.message} -> ${warning.route}`);
     }
   }
   console.log("");
