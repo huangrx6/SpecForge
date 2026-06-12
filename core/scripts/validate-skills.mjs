@@ -215,7 +215,8 @@ function runExternalValidation() {
     if (!Array.isArray(skill.doNotUseFor) || skill.doNotUseFor.length === 0) {
       errors.push(`${skill.id}: registry doNotUseFor must be a non-empty array`);
     }
-    if (!skill.source?.rawUrl) errors.push(`${skill.id}: registry source.rawUrl is required`);
+    const localAuthored = skill.source?.type === "local-authored";
+    if (!localAuthored && !skill.source?.rawUrl) errors.push(`${skill.id}: registry source.rawUrl is required`);
     if (!skill.source?.url) errors.push(`${skill.id}: registry source.url is required`);
     if (!skill.source?.repo) errors.push(`${skill.id}: registry source.repo is required`);
     if (!skill.source?.path) errors.push(`${skill.id}: registry source.path is required`);
@@ -246,7 +247,7 @@ function runExternalValidation() {
         errors.push(`${skill.id}: unsafe support file path ${file.path}`);
         continue;
       }
-      if (!file.rawUrl) errors.push(`${skill.id}: support file ${file.path} missing rawUrl`);
+      if (skill.source?.type !== "local-authored" && !file.rawUrl) errors.push(`${skill.id}: support file ${file.path} missing rawUrl`);
       const supportPath = join(skillDir, file.path);
       checkedFiles.push(file.path);
       if (!existsSync(supportPath)) errors.push(`${skill.id}: missing support file ${relative(supportPath)}`);

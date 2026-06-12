@@ -20,7 +20,7 @@
 | `product/` | 产品发现、机会树、方案取舍 | `opportunity-solution-tree` |
 | `prd/` | PRD 合成与产品范围整理 | `create-prd` |
 | `requirements/` | 用户故事、验收标准和可测试性 | `user-stories` |
-| `ui-ux/` | UX 研究、Pencil 原型、设计转代码参考 | `ux-designer`, `pencil` |
+| `ui-ux/` | UX 研究、设计语言、Pencil 原型、设计转代码参考 | `ux-designer`, `design-system`, `pencil` |
 | `research/` | 多来源研究综合 | `deep-research` |
 | `quality/` | Code review 与浏览器验证参考 | `code-reviewer`, `playwright-skill` |
 
@@ -32,6 +32,7 @@
 | `create-prd` | `prd/create-prd` | 上下文充分时合成 PRD | `00-intake/prd.md` |
 | `user-stories` | `requirements/user-stories` | 用户故事、3C / INVEST 和验收标准参考 | `01-spec/requirements.md` |
 | `pencil` | `ui-ux/pencil` | Pencil MCP 原型读写、组件复用、tokens、布局检查、截图导出和设计转代码参考 | `01-spec/ui-design.md`、`.pen` 源文件、导出截图、前端实现备注 |
+| `design-system` | `ui-ux/design-system` | 设计语言、foundations、组件规范、页面模式、shadcn-vue 映射、动效边界和去廉价感审查 | `01-spec/ui-design.md`、Pencil 输入、前端组件契约 |
 | `playwright-skill` | `quality/playwright-skill` | 浏览器 E2E、真实操作、截图和响应式验证 | `05-verification/test-cases.md`、`05-verification/report.md`、`05-verification/evidence/` |
 | `code-reviewer` | `quality/code-reviewer` | 安全、性能、正确性和可维护性的 code review 参考清单 | `04-code-review/code-review-v1.md`、`05-verification/report.md` |
 | `ux-designer` | `ui-ux/ux-designer` | 用户研究、信息架构、交互、可访问性和视觉层级参考 | `01-spec/research.md`、`01-spec/ui-design.md` |
@@ -43,6 +44,7 @@
 - PRD 只在需要机会树 / 功能候选 / 合成时参考 `opportunity-solution-tree` / `create-prd`。
 - Requirements 只在故事、验收或边界不足时参考 `user-stories`。
 - UI 正式原型固定为 Pencil；其他工具只能作为用户显式提供的外部输入。
+- UI 方向确认后，先用 `design-system` 收敛设计语言、token、组件契约和页面模式，再进入 Pencil 原型。
 - UX 参考只补充研究、流程和可访问性证据，不替代 Pencil 原型或 SpecForge UI artifact。
 - 深度研究参考必须绑定真实来源；遇到当前事实、法规、价格、版本或新闻时另行联网核验。
 - Code review 参考只补充检查维度，不替代 `sf-code-review` gate。

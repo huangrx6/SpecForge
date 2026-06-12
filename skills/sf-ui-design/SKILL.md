@@ -35,6 +35,7 @@ SpecForge 固定使用 **Pencil** 做正式 UI 原型。Figma、HTML、ASCII、�
 - `.specforge/core/standards/product.md`、`.specforge/core/standards/design.md`、`.specforge/core/standards/workflow.md`、`.specforge/core/standards/engineering.md`、`.specforge/core/standards/ai-toolkit.md`。
 - PC 端业务系统场景还要读取 `.specforge/core/standards/pc-ui-design-spec.md`；该文件的具体数值优先于通用 `design.md` 基准。
 - `.specforge/core/skills/ORCHESTRATION.md`、`README.md`、`registry.json`：第三方 skill 选择、边界和来源风险。
+- 需要提炼设计语言、去廉价感、shadcn-vue 映射、组件契约、页面模式或动效边界时读取 `.specforge/core/skills/ui-ux/design-system/SKILL.md`，再按需读取其 `foundations/`、`components/`、`pages/`、`prompts/`、`references/`。
 - 需要操作 Pencil 时读取 `.specforge/core/skills/ui-ux/pencil/SKILL.md`，再按需读取其 `references/*.md`。
 
 ## 启动扫描
@@ -75,7 +76,7 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
 2. 按 `ai-toolkit.md` 的输出预算裁剪：小 UI 改动写 compact 页面 / 状态差异；多角色、多流程或高风险 UI 才展开完整状态矩阵和视觉证据。
 3. 若采用 PC 端业务系统规范，按 `references/pc-business-system-spec.md` 填写 `ui-design.md#4` 的设计系统来源、核心 token、页面结构和组件约束。
 4. 若实现层采用 shadcn/ui 或场景是管理端，按 `references/admin-product-ui-contracts.md#Admin Component Contract` 写清 Admin Component Contract；shadcn 只作为 primitive / registry 层。
-5. 第三方 skill 只作为参考镜头，按 `references/ui-design-process.md#第三方 Skill 和 Reference 编排` 归一化到 SpecForge 结构。
+5. 第三方 skill 只作为参考镜头，按 `references/ui-design-process.md#第三方 Skill 和 Reference 编排` 归一化到 SpecForge 结构；设计语言、组件契约、页面模式和 shadcn-vue 映射优先从 `design-system` 读取。
 6. 每个参考产品、截图或设计稿都要写“采用什么、不采用什么、如何落地”。
 
 ### D. 创建、保存并校验 Pencil

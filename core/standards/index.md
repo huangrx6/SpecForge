@@ -17,7 +17,7 @@
 | `workflow.md` | intake、路由、gate、scope、上下文控制、关闭归档 | 当前到哪一步、能不能前进、边界在哪里 |
 | `stage-playbook.md` | 自动推进、handoff、长流程复盘、用户问“每一步怎么配合” | 每一步用什么 AI / 脚本 / 人工确认 / 证据契约 |
 | `product.md` | PRD、requirements、research、功能澄清、验收标准 | 用户到底要什么，哪些能力进入 MVP，如何验收 |
-| `design.md` | UI / UX、页面、交互、视觉风格、原型证据 | 用户看见什么，怎么操作，状态是否完整 |
+| `design.md` | UI / UX、页面、交互、视觉方向、原型证据 | 用户看见什么，怎么操作，状态是否完整；具体设计语言读 `core/skills/ui-ux/design-system` |
 | `pc-ui-design-spec.md` | PC 端业务系统、运营后台、管理控制台、数据表格工具，或用户明确提供该规范 | 具体颜色、字号、行高、间距、组件尺寸和 HTML/CSS token |
 | `engineering.md` | technical design、implementation、review、verification | 工程上怎么做才可靠、安全、可维护、可验证 |
 | `ai-toolkit.md` | intake、自动推进、人工确认、verification、wiki sync、AI 工具链沉淀 | 不同阶段用什么 AI 工具，证据强度如何分级，什么时候需要人工确认 |
@@ -33,7 +33,7 @@
 | research / gap_report | `product.md`、`engineering.md`、`workflow.md`、`stage-playbook.md` |
 | steering / 存量项目画像 | `code-intelligence.md`、`wiki.md`、`workflow.md` |
 | requirements | `product.md`、`workflow.md`、`stage-playbook.md`、`ai-toolkit.md` |
-| ui_design | `design.md`、`product.md`、`workflow.md`、`stage-playbook.md`、`ai-toolkit.md`；PC 业务系统场景加读 `pc-ui-design-spec.md` |
+| ui_design | `design.md`、`product.md`、`workflow.md`、`stage-playbook.md`、`ai-toolkit.md`、`core/skills/ui-ux/design-system`；PC 业务系统场景加读 `pc-ui-design-spec.md` |
 | technical_design | `engineering.md`、`workflow.md`、`stage-playbook.md`、`ai-toolkit.md` |
 | tasks | `workflow.md`、`engineering.md`、`stage-playbook.md`、`ai-toolkit.md` |
 | spec_review | `workflow.md`、`stage-playbook.md`、`product.md`、`design.md`、`engineering.md` |

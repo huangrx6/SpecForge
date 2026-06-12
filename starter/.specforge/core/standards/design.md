@@ -28,6 +28,7 @@
 - Brand Surface 可以参考 `design-taste-frontend` 的 anti-slop 视觉判断，但必须转译成 Visual Style Brief、页面规则和 Pencil 原型，不直接替代 SpecForge artifact。
 - Hybrid 必须把管理端和品牌展示页拆开确认：同一个产品可以有两套密度、色彩和动效边界，但不能在同一个工作区里混成四不像。
 - 当 Product UI 使用 shadcn/ui 时，shadcn 只是底层 primitive / registry / theming 工具，不等于设计方向；必须在 `ui-design.md` 写清上层管理端组件契约。
+- 设计语言、foundations、组件契约、页面模式、shadcn-vue 映射、动效边界和去廉价感审查，优先读取 `core/skills/ui-ux/design-system/SKILL.md`；本文件只保留触发条件、确认纪律和门禁。
 
 ## 风格确认
 

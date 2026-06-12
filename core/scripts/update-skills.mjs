@@ -226,6 +226,10 @@ function writeSnapshot(skill, content, supportFiles = []) {
 }
 
 async function updateSkill(skill, checkOnly) {
+  if (skill.source?.type === "local-authored") {
+    console.log(`跳过本地维护 skill ${skill.id}`);
+    return false;
+  }
   if (!skill.source?.rawUrl) throw new Error(`${skill.id}: registry 缺少 source.rawUrl。`);
   const content = adaptSnapshotContent(skill, normalize(await fetchText(skill.source.rawUrl)));
   validateSkillContent(skill, content);

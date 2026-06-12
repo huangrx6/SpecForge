@@ -15,6 +15,10 @@
       "to": "core/starter.manifest.json"
     },
     {
+      "from": "README.md",
+      "to": "core/README.md"
+    },
+    {
       "from": "artifacts/schemas",
       "to": "core/artifacts/schemas"
     },
@@ -37,6 +41,10 @@
     {
       "from": "scripts/lib/specforge.mjs",
       "to": "core/scripts/lib/specforge.mjs"
+    },
+    {
+      "from": "scripts/README.md",
+      "to": "core/scripts/README.md"
     },
     {
       "from": "scripts/lib/artifact-summary.mjs",
@@ -241,6 +249,10 @@
     {
       "from": "workflows/definitions",
       "to": "core/workflows/definitions"
+    },
+    {
+      "from": "workflows/README.md",
+      "to": "core/workflows/README.md"
     },
     {
       "from": "workflows/stages",

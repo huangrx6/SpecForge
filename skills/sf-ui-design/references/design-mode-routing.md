@@ -6,7 +6,7 @@
 
 | Design Mode | 适用场景 | 设计重点 | 读取顺序 |
 |---|---|---|---|
-| Product UI | 后台、SaaS、配置台、数据表格、审批、运营工具、内部平台 | 任务效率、信息密度、权限、状态、可维护组件 | `ui-design-process.md` -> `admin-product-ui-contracts.md`；PC 业务系统再读 `pc-business-system-spec.md` |
+| Product UI | 后台、SaaS、配置台、数据表格、审批、运营工具、内部平台 | 任务效率、信息密度、权限、状态、可维护组件 | `ui-design-process.md` -> `.specforge/core/skills/ui-ux/design-system/SKILL.md` -> `admin-product-ui-contracts.md`；PC 业务系统再读 `pc-business-system-spec.md` |
 | Brand Surface | 官网、landing、portfolio、品牌页、公开展示页、视觉 redesign | 品牌记忆点、首屏叙事、版式气质、视觉资产、动效边界 | `ui-design-process.md` -> 外部 `design-taste-frontend` reference |
 | Hybrid | 同时包含公开展示页和管理端，例如官网 + 控制台、客户门户 + 后台 | 把展示面和工作台分开设计，避免同一套规则互相污染 | 先拆分 Product UI / Brand Surface，再分别读取对应 reference |
 
@@ -23,6 +23,7 @@
 | 条件 | 读取 |
 |---|---|
 | 管理端 / 后台 / dashboard / data table / shadcn/ui | `admin-product-ui-contracts.md` |
+| 需要设计语言、foundations、组件契约、页面模式、shadcn-vue 映射或去廉价感审查 | `.specforge/core/skills/ui-ux/design-system/SKILL.md` |
 | PC 端业务系统、运营后台、审批台、配置台、数据管理系统 | `pc-business-system-spec.md` 和 `.specforge/core/standards/pc-ui-design-spec.md` |
 | landing、品牌页、作品集、官网、公开展示页 | 外部 `design-taste-frontend` skill/reference |
 | 需要创建、读取、截图或审查 `.pen` | `.specforge/core/skills/ui-ux/pencil/SKILL.md` |

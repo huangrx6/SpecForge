@@ -62,7 +62,7 @@ Traceability 由 workflow schema 的 `traceability_policy` 控制：`off` 不提
 |---|---|---|---|
 | Intake / 澄清 | `sf-intake`、`sf-brainstorm` | 判断需求类型、范围、风险、是否需要 PRD / UI / 技术设计 | `00-intake/brief.md`、`brainstorm.md` |
 | 产品与验收 | `sf-prd`、`sf-requirements` | 明确目标用户、MVP、验收标准、异常场景 | `prd.md`、`requirements.md` |
-| UI / 交互 | Pencil、`sf-ui-design` | 页面地图、状态矩阵、原型、截图证据 | `ui-design.md`、`.pen`、导出 PNG |
+| UI / 交互 | `sf-ui-design`、`design-system`、Pencil | 设计语言、页面地图、状态矩阵、原型、截图证据 | `ui-design.md`、`.pen`、导出 PNG |
 | 技术方案 | `sf-tech-design`、官方文档检索 | 架构、API、数据、权限、安全、配置、验证策略 | `technical-design.md` |
 | 任务拆解 | `sf-tasking` | 把规格拆成可实现、可验证、可回滚任务 | `tasks.md` |
 | 代码实现 | Codex、Trae、SOLO 模式 | 代码实现、重构、测试补充、并行推进 | 业务代码、`implementation report` |
@@ -80,6 +80,7 @@ Traceability 由 workflow schema 的 `traceability_policy` 控制：`off` 不提
 | Trae / SOLO | 多页面、多模块或重复性前端开发 | 按 tasks wave 拆窗口并行推进，统一回收 diff 和验证结果 | 每个窗口必须有文件边界、验证命令和回滚点 |
 | Pencil | UI design 正式原型 | 生成 / 修改 `.pen`，导出截图作为证据 | HTML / Figma / 截图只能做参考输入，不能替代 Pencil 正式证据 |
 | Playwright | 浏览器端 verification | 自动点击、输入、提交、截图和响应式检查 | 有浏览器流程时优先用真实操作证据，不只看组件静态渲染 |
+| design-system | UI design / frontend handoff | foundations、组件契约、页面模式、shadcn-vue 映射、动效和去廉价感审查 | 只读当前需要的文件，不把整套规范复制进 artifact |
 | 官方文档 / Web research | 新技术、外部接口、规范不确定时 | 优先官方文档、标准、源码和一手材料 | 搜索结论必须转译到 technical design / research，不作为口头记忆 |
 | Mock / fixture / fake provider | 外部环境不可访问时 | 证明协议、状态和失败态 | 只能标记 `mocked`，不能冒充真实环境 proven |
 | SpecForge scripts | 自动推进、审查、接力、关闭 | audit、health、contract、preflight、package、doctor | 脚本输出是流程证据入口，不替代人工确认或真实验证 |

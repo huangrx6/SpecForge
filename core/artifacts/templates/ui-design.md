@@ -78,7 +78,7 @@
 |---|---|
 | 用户确认 / 默认假设 | |
 | Design Mode | Product UI / Brand Surface / Hybrid |
-| UI stack / reference | 现有设计系统 / PC 业务系统规范 / shadcn/ui / design-taste-frontend / 其他 |
+| UI stack / reference | 现有设计系统 / `core/skills/ui-ux/design-system` / PC 业务系统规范 / shadcn-vue / design-taste-frontend / 其他 |
 | 产品气质 | |
 | 信息密度 | 宽松 / 标准 / 紧凑 |
 | 色彩方向 | |
