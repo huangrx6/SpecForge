@@ -141,7 +141,7 @@ node .specforge/core/scripts/doctor.mjs
 | Instructions-first | 每次真正进入阶段前看可执行入口 | `instructions.mjs` 输出 ready artifact、stage skill、standards、outputs、gate commands 和 Quality Suite | instructions 是下一步执行入口；Quality Suite FAIL 先下钻或写入 gate evidence |
 | Health score | 用一个总览分数暴露当前流程是否能继续 | `workflow-health.mjs` 汇总 blocker、decision、traceability、gate，并把 `quality-suite.mjs` 的阶段感知质量缺口纳入维度扣分 | score 只做排序和扫读，不替代 gate evidence |
 | Quality suite | 用一个阶段感知总入口决定该下钻哪类检查 | `quality-suite.mjs` 按 ready artifact 自动聚合 artifact、decision、traceability、source、implementation、evidence、wiki、closure | 先看 PASS / WARN / FAIL 总表，再按 Recommended Commands 跑专项脚本；不要早期强行启用后期 closure 噪音 |
-| Roadmap-first | 先看全流程每一步怎么配合，再看当前阶段细节 | `stage-contract.mjs --overview` / `specforge roadmap` 输出 artifact status、tools、commands、human decisions、exit | roadmap 是导航层，不替代 artifact 证据 |
+| Roadmap-first | 先看当前焦点，再看全流程每一步怎么配合 | `stage-contract.mjs --overview` / `specforge roadmap` 先输出 Current Focus、Quality Suite、must prove、human decisions，再输出 artifact status、tools、commands、exit | roadmap 是导航层，不替代 artifact 证据 |
 | Contract-first | 当前阶段先看输入、输出、人工确认和退出标准 | `stage-contract.mjs` 从 artifact id 输出阶段契约 | contract 是执行约束，不替代 artifact 证据 |
 | Trace-first | tasks 前发现需求、设计、验证断链 | `traceability_policy`、`traceability-summary.mjs` 和 HTML report Traceability section | `lite` 默认 advisory；复杂 workflow 可在 code_review / verification preflight 严格阻断 |
 | Source-first | 外部事实、版本、标准和 ADR 决策有可信来源 | `source-quality.mjs`、research source grading、technical-design version facts | 缺来源或缺权威度阻断 spec_review；弱来源先 WARN，由 evidence 说明 |

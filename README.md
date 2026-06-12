@@ -490,6 +490,8 @@ node .specforge/core/scripts/wiki-quality.mjs
 
 `workflow-health.mjs` 会把 `quality-suite.mjs` 中 source、implementation、evidence、wiki、closure 等阶段感知质量缺口纳入 `quality_suite` 维度和健康分；artifact、decision、traceability 已有独立维度，不重复扣分。
 
+`stage-contract.mjs --overview` / `specforge roadmap --dir .` 是流程导航层。输出会先给当前 work item、健康度和 Quality Suite，再用 Current Focus 聚焦当前 artifact 的状态、退出标准、必须证明的事项、人工确认点和质量热点，最后再展开完整 roadmap 表格。这样日常推进先看一屏即可知道下一步，不需要先读完整规格包。
+
 `source-quality.mjs` 检查 `research.md` 的来源池和 `technical-design.md` 的版本事实 / 官方基准记录。缺少研究来源或权威度分级是 `FAIL`；轶事、过期、未知来源以及技术版本事实缺日期 / 来源是 `WARN`。`gate-preflight spec_review APPROVED` 会自动执行同类检查。
 
 `decision-quality.mjs` 检查人工确认记录是否闭环：open decision 会 `FAIL`；`delegated_default` 必须有默认理由、风险影响和回退 / 重新验证触发条件；`manual-confirmed` / `deferred` 必须有 owner、影响和重新验证触发条件。所有 `gate-preflight <gate> APPROVED` 都会自动执行同类检查。

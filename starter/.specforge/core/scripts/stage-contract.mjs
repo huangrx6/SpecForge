@@ -3,6 +3,7 @@ import { contractsForSchema, contractForArtifact, focusArtifactId } from "./lib/
 import { effectiveSchema, loadSchema, parseField, readText, resolveWorkItem } from "./lib/specforge.mjs";
 import { actionCommands, actionReason, actionState, traceGapCount, traceabilityPolicyLine } from "./lib/action-board.mjs";
 import { workflowHealth } from "./lib/workflow-health.mjs";
+import { qualitySuiteSummary } from "./lib/quality-suite.mjs";
 
 const args = process.argv.slice(2);
 const json = args.includes("--json");
@@ -37,6 +38,26 @@ function roadmapRows(diagnosis, contracts) {
       exit: contract.exit,
     };
   });
+}
+
+function qualityIssueLines(qualitySuite) {
+  const issues = (qualitySuite?.checks ?? [])
+    .filter((check) => check.status !== "PASS")
+    .flatMap((check) =>
+      (check.issues ?? []).slice(0, 3).map((issue) => ({
+        check: check.title,
+        severity: issue.severity ?? check.status,
+        path: issue.path ?? "N/A",
+        message: issue.message ?? check.message,
+      })),
+    )
+    .slice(0, 5);
+
+  return bullet(
+    issues,
+    "none",
+    (issue) => `[${issue.severity}] ${issue.check}: ${issue.path} - ${issue.message}`,
+  );
 }
 
 export function contractMarkdown(contract) {
@@ -109,7 +130,11 @@ node .specforge/core/scripts/create-work.mjs --workflow <workflow> "<title>"
   }
 
   const health = workflowHealth(diagnosis);
+  const qualitySuite = qualitySuiteSummary(diagnosis);
   const rows = roadmapRows(diagnosis, contracts);
+  const focusArtifact = focusArtifactId(diagnosis);
+  const focusContract = contracts.find((contract) => contract.id === focusArtifact);
+  const focusStatus = (diagnosis.artifacts ?? []).find((artifact) => artifact.id === focusArtifact)?.status ?? "unknown";
 
   return `# SpecForge Workflow Roadmap: ${diagnosis.work_item.id}
 
@@ -117,6 +142,7 @@ node .specforge/core/scripts/create-work.mjs --workflow <workflow> "<title>"
 - Ready artifact: ${diagnosis.ready_artifact ?? "none"}
 - Route: ${diagnosis.route}
 - Health: ${health.score}/100 (${health.level})
+- Quality Suite: ${qualitySuite.summary.overall}; checked=${qualitySuite.summary.checked}; fail=${qualitySuite.summary.failures}; warn=${qualitySuite.summary.warnings}
 
 ## Action Summary
 
@@ -132,6 +158,26 @@ Recommended commands:
 \`\`\`bash
 ${actionCommands(diagnosis).join("\n")}
 \`\`\`
+
+## Current Focus
+
+- Artifact: ${focusContract ? `${focusContract.id} (${focusContract.title})` : focusArtifact ?? "N/A"}
+- Status: ${focusStatus}
+- Stage: ${focusContract?.stage ?? "N/A"}
+- Gate: ${focusContract?.gate ?? "N/A"}
+- Exit: ${focusContract?.exit ?? "N/A"}
+
+Must prove:
+
+${bullet(focusContract?.must_prove, "N/A")}
+
+Human decisions:
+
+${bullet(focusContract?.human_decisions, "none")}
+
+Quality hotspots:
+
+${qualityIssueLines(qualitySuite)}
 
 ## Roadmap
 
@@ -174,6 +220,7 @@ try {
 
   if (json) {
     const health = workflowHealth(diagnosis);
+    const qualitySuite = qualitySuiteSummary(diagnosis);
     console.log(
       JSON.stringify(
         {
@@ -182,6 +229,7 @@ try {
           contract,
           contracts: overview ? contracts : undefined,
           health: overview ? health : undefined,
+          quality_suite: overview ? qualitySuite : undefined,
           roadmap: overview && diagnosis.work_item ? roadmapRows(diagnosis, contracts) : undefined,
         },
         null,
