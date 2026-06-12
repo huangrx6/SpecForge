@@ -39,6 +39,10 @@
       "to": "core/scripts/lib/specforge.mjs"
     },
     {
+      "from": "scripts/lib/artifact-summary.mjs",
+      "to": "core/scripts/lib/artifact-summary.mjs"
+    },
+    {
       "from": "scripts/lib/diagnostics.mjs",
       "to": "core/scripts/lib/diagnostics.mjs"
     },

@@ -8,6 +8,7 @@ import {
   readText,
   resolveWorkItem,
 } from "./lib/specforge.mjs";
+import { summarizeOutput } from "./lib/artifact-summary.mjs";
 import { diagnoseWorkItem, gateLine } from "./lib/diagnostics.mjs";
 
 const args = process.argv.slice(2);
@@ -35,15 +36,6 @@ function slug(value) {
     .toLowerCase()
     .replace(/[^a-z0-9_-]+/g, "-")
     .replace(/^-+|-+$/g, "");
-}
-
-function firstNonEmptyLines(content, limit = 12) {
-  const lines = content
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line && !/^---$/.test(line))
-    .slice(0, limit);
-  return lines.length > 0 ? lines : ["No summary content yet."];
 }
 
 function renderLines(lines) {
@@ -155,11 +147,12 @@ function renderArtifactCards(workItemBase, artifacts) {
         .map((output) => {
           const path = output.output;
           const fileExists = exists(`${workItemBase}/${path}`);
-          const excerpt = fileExists ? firstNonEmptyLines(readText(`${workItemBase}/${path}`), 10) : ["Missing output."];
+          const summary = summarizeOutput(workItemBase, path, 10);
           return `
             <article class="output">
               <h4>${escapeHtml(path)} ${renderStatusBadge(fileExists ? "exists" : "missing")}</h4>
-              ${renderLines(excerpt)}
+              <p class="muted">${escapeHtml(summary.heading)} · ${escapeHtml(summary.source)}</p>
+              ${renderLines(summary.lines)}
             </article>
           `;
         })

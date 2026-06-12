@@ -1,5 +1,6 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
+import { summarizeOutput } from "./lib/artifact-summary.mjs";
 import { diagnoseWorkItem, diagnoseWorkspace, gateLine } from "./lib/diagnostics.mjs";
 import { abs, localDateIso, resolveWorkItem } from "./lib/specforge.mjs";
 
@@ -21,6 +22,22 @@ function artifactLine(artifact) {
   const missing = artifact.missingDeps.length > 0 ? `; missing=${artifact.missingDeps.join(", ")}` : "";
   const gate = artifact.gate ? `; gate=${artifact.gate}:${artifact.gateStatus}` : "";
   return `${artifact.id}: ${artifact.status} (stage=${artifact.stage}; requires=${deps}${missing}${gate})`;
+}
+
+function artifactSummaryLines(workItemBase, artifacts) {
+  const lines = [];
+  for (const artifact of artifacts) {
+    const summaries = artifact.outputs.map((output) => summarizeOutput(workItemBase, output.output, 6));
+    if (summaries.every((summary) => !summary.exists)) continue;
+    lines.push(`### ${artifact.id}`);
+    for (const summary of summaries) {
+      if (!summary.exists) continue;
+      lines.push(`- ${summary.path} (${summary.heading})`);
+      for (const line of summary.lines) lines.push(`  ${line}`);
+    }
+    lines.push("");
+  }
+  return lines.length > 0 ? lines.join("\n") : "- none";
 }
 
 function markdown(diagnosis) {
@@ -92,6 +109,10 @@ ${bullet(diagnosis.gates, "none", (gate) => `${gate.gate}: ${gate.status}; evide
 ## Artifact Graph
 
 ${bullet(diagnosis.artifacts, "none", artifactLine)}
+
+## Artifact Summaries
+
+${artifactSummaryLines(item.path, diagnosis.artifacts)}
 
 ## Source Of Truth
 
