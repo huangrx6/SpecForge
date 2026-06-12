@@ -87,6 +87,8 @@
 
 日常推进建议先运行 `node .specforge/core/scripts/workflow-audit.mjs` 或 `specforge audit --dir .`。它把 route、blocker、open decision、quality warning、traceability 和推荐命令合并成一页，适合作为人工确认、跨 Agent 接力和自动推进前的第一入口。
 
+需要快速判断当前流程是否可继续时，运行 `node .specforge/core/scripts/workflow-health.mjs` 或 `specforge health --dir .`。它给出 health score、level、维度扣分和 Top priorities，用来排序下一步，不替代 gate evidence。
+
 进入具体阶段前建议运行 `node .specforge/core/scripts/stage-contract.mjs` 或 `specforge contract --dir .`。它把当前 artifact 的目标、应读取内容、必须产出、人工确认点、must prove 和 exit standard 单独列出，避免 Agent 只读长模板却漏掉阶段完成标准。
 
 ## 输出预算
@@ -139,6 +141,7 @@ Markdown 仍是版本管理主格式；HTML / 可视化产物用于提升阅读�
 - 可用 `node .specforge/core/scripts/decision-brief.mjs` 生成面向人工审批 / 澄清 / 授权默认的决策包。
 - 可用 `node .specforge/core/scripts/traceability-summary.mjs` 检查 source item、tasks、test cases 之间的追溯缺口；先作为提示使用，稳定后再考虑升级为 gate。
 - 可用 `node .specforge/core/scripts/workflow-audit.mjs` 生成一页流程审计摘要，先判断是否 BLOCKED / NEEDS_DECISION / NEEDS_ATTENTION，再进入具体阶段。
+- 可用 `node .specforge/core/scripts/workflow-health.mjs` 生成健康分和 Top priorities，帮助人和 Agent 快速决定先修 blocker、先问人、还是先补 traceability。
 - 可用 `node .specforge/core/scripts/stage-contract.mjs --overview` 查看当前 workflow 每个 artifact 的阶段契约，或用 `--artifact tasks` 聚焦单阶段。
 
 ## 持续演进

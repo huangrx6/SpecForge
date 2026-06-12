@@ -15,6 +15,7 @@ Usage:
   specforge init [--dir <path>] [--force]
   specforge doctor [--dir <path>]
   specforge audit [--dir <path>] [--work-item <id>] [--output <path>] [--json]
+  specforge health [--dir <path>] [--work-item <id>] [--json]
   specforge contract [--dir <path>] [--work-item <id>] [--artifact <id>] [--overview] [--json]
   specforge checkpoints [--dir <path>] [--work-item <id>] [--json]
   specforge decision-brief [--dir <path>] [--work-item <id>] [--json]
@@ -28,6 +29,7 @@ Examples:
   npm exec --yes --package=git+ssh://git@git.company.com/team/specforge.git#v0.3.0-company.1 -- specforge init --dir .
   npx github:huangrx6/SpecForge doctor --dir .
   npx github:huangrx6/SpecForge audit --dir .
+  npx github:huangrx6/SpecForge health --dir .
   npx github:huangrx6/SpecForge contract --dir .
   npx github:huangrx6/SpecForge checkpoints --dir .
   npx github:huangrx6/SpecForge decision-brief --dir .
@@ -108,6 +110,20 @@ function audit() {
   if (output) extraArgs.push("--output", output);
   if (args.includes("--json")) extraArgs.push("--json");
   runNode(auditPath, extraArgs, targetDir);
+}
+
+function health() {
+  const targetDir = resolve(option("--dir", "."));
+  const healthPath = join(targetDir, ".specforge/core/scripts/workflow-health.mjs");
+  if (!existsSync(healthPath)) {
+    console.error(`Missing SpecForge workflow health script: ${healthPath}`);
+    process.exit(1);
+  }
+  const extraArgs = [];
+  const workItem = option("--work-item");
+  if (workItem) extraArgs.push("--work-item", workItem);
+  if (args.includes("--json")) extraArgs.push("--json");
+  runNode(healthPath, extraArgs, targetDir);
 }
 
 function report() {
@@ -214,6 +230,8 @@ if (command === "init") {
   doctor();
 } else if (command === "audit") {
   audit();
+} else if (command === "health") {
+  health();
 } else if (command === "contract") {
   contract();
 } else if (command === "checkpoints") {

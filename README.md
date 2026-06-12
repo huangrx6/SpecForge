@@ -180,6 +180,7 @@ npx github:huangrx6/SpecForge init --dir .
 
 ```bash
 node .specforge/core/scripts/workflow-audit.mjs
+node .specforge/core/scripts/workflow-health.mjs
 node .specforge/core/scripts/stage-contract.mjs
 node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/decision-brief.mjs
@@ -189,6 +190,7 @@ node .specforge/core/scripts/decision-brief.mjs
 
 ```bash
 npx github:huangrx6/SpecForge audit --dir .
+npx github:huangrx6/SpecForge health --dir .
 npx github:huangrx6/SpecForge contract --dir .
 npx github:huangrx6/SpecForge doctor --dir .
 npx github:huangrx6/SpecForge decision-brief --dir .
@@ -428,6 +430,7 @@ node .specforge/core/scripts/gate.mjs code_review REQUEST_CHANGES
 
 ```bash
 node .specforge/core/scripts/workflow-audit.mjs
+node .specforge/core/scripts/workflow-health.mjs
 node .specforge/core/scripts/stage-contract.mjs
 node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/status.mjs

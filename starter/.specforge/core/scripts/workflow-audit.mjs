@@ -3,6 +3,7 @@ import { dirname } from "node:path";
 import { artifactLine, diagnoseWorkspace, diagnoseWorkItem, gateLine } from "./lib/diagnostics.mjs";
 import { contractForArtifact, focusArtifactId } from "./lib/stage-contracts.mjs";
 import { abs, effectiveSchema, loadSchema, localDateIso, parseField, readText, resolveWorkItem } from "./lib/specforge.mjs";
+import { workflowHealth } from "./lib/workflow-health.mjs";
 
 const args = process.argv.slice(2);
 const json = args.includes("--json");
@@ -28,6 +29,7 @@ function auditStatus(diagnosis) {
 function recommendedCommands(diagnosis) {
   const commands = [
     "node .specforge/core/scripts/doctor.mjs",
+    "node .specforge/core/scripts/workflow-health.mjs",
     "node .specforge/core/scripts/stage-contract.mjs",
     "node .specforge/core/scripts/instructions.mjs",
     "node .specforge/core/scripts/decision-checkpoints.mjs",
@@ -69,14 +71,20 @@ function shortList(items) {
   return items.slice(0, 5).map((item) => `- ${item}`).join("\n");
 }
 
+function priorityList(health) {
+  return bullet(health.priorities?.slice(0, 5), "none", (item) => `[${item.severity}] ${item.area}: ${item.message} (route=${item.route || "N/A"})`);
+}
+
 function markdown(diagnosis) {
   const generated = localDateIso();
   const status = auditStatus(diagnosis);
+  const health = workflowHealth(diagnosis);
 
   if (!diagnosis.work_item) {
     return `# SpecForge Workflow Audit
 
 - Audit status: ${status}
+- Health level: ${health.level}
 - Route: ${diagnosis.route}
 - Generated: ${generated}
 
@@ -90,10 +98,15 @@ ${diagnosis.route_reason}
 - Quality warnings: ${diagnosis.quality_warnings?.length ?? 0}
 - Open decisions: ${diagnosis.decision_checkpoints?.summary?.open ?? 0}
 
+## Top Priorities
+
+${priorityList(health)}
+
 ## Recommended Commands
 
 \`\`\`bash
 node .specforge/core/scripts/doctor.mjs
+node .specforge/core/scripts/workflow-health.mjs
 node .specforge/core/scripts/decision-brief.mjs
 node .specforge/core/scripts/instructions.mjs
 \`\`\`
@@ -107,6 +120,8 @@ node .specforge/core/scripts/instructions.mjs
 ## Snapshot
 
 - Audit status: ${status}
+- Health score: ${health.score}/100
+- Health level: ${health.level}
 - Title: ${item.title || "N/A"}
 - Path: ${item.path}
 - Workflow: ${item.workflow}@${diagnosis.schema.version}
@@ -119,6 +134,10 @@ node .specforge/core/scripts/instructions.mjs
 ## Next Move
 
 ${diagnosis.route_reason}
+
+Top priorities:
+
+${priorityList(health)}
 
 Recommended commands:
 

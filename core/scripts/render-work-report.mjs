@@ -10,6 +10,7 @@ import {
 } from "./lib/specforge.mjs";
 import { summarizeOutput } from "./lib/artifact-summary.mjs";
 import { diagnoseWorkItem, gateLine } from "./lib/diagnostics.mjs";
+import { workflowHealth } from "./lib/workflow-health.mjs";
 
 const args = process.argv.slice(2);
 
@@ -213,6 +214,25 @@ function renderTraceability(traceability) {
   `;
 }
 
+function renderHealth(health) {
+  if (!health) return `<p class="muted">No workflow health summary available.</p>`;
+  return `
+    <div class="summary" aria-label="Workflow health summary">
+      <div class="metric">Health Score<strong>${escapeHtml(health.score ?? "N/A")}${health.score === null ? "" : "/100"}</strong></div>
+      <div class="metric">Health Level<strong>${escapeHtml(health.level)}</strong></div>
+      <div class="metric">Priorities<strong>${escapeHtml(health.priorities.length)}</strong></div>
+    </div>
+    <table>
+      <thead><tr><th>Dimension</th><th>Status</th><th>Count</th><th>Penalty</th></tr></thead>
+      <tbody>
+        ${health.dimensions.map((item) => `<tr><td>${escapeHtml(item.name)}</td><td>${renderStatusBadge(item.status)}</td><td>${escapeHtml(item.count)}</td><td>${escapeHtml(item.penalty)}</td></tr>`).join("") || `<tr><td colspan="4">No dimensions.</td></tr>`}
+      </tbody>
+    </table>
+    <h3>Top Priorities</h3>
+    ${renderList(health.priorities, "No priorities.", (item) => `<li>${renderStatusBadge(item.severity)} <strong>${escapeHtml(item.area)}</strong>: ${escapeHtml(item.message)} <span class="muted">route=${escapeHtml(item.route || "N/A")}</span></li>`)}
+  `;
+}
+
 function decisionKind(marker = "") {
   const normalized = String(marker).toUpperCase();
   if (normalized.includes("DEPENDENCY")) return "dependency";
@@ -275,6 +295,7 @@ function render(diagnosis, workItemYaml, generatedAt) {
   const item = diagnosis.work_item;
   const title = `${item.id} - ${item.title || "SpecForge Work Report"}`;
   const progress = `${diagnosis.progress.done}/${diagnosis.progress.total}`;
+  const health = workflowHealth(diagnosis);
   return `<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -433,11 +454,13 @@ function render(diagnosis, workItemYaml, generatedAt) {
       <div class="metric">Workflow<strong>${escapeHtml(item.workflow)}</strong></div>
       <div class="metric">Stage<strong>${escapeHtml(item.stage)}</strong></div>
       <div class="metric">Progress<strong>${escapeHtml(progress)}</strong></div>
+      <div class="metric">Health<strong>${escapeHtml(health.score ?? "N/A")}${health.score === null ? "" : "/100"}</strong></div>
       <div class="metric">Route<strong>${escapeHtml(diagnosis.route)}</strong></div>
       <div class="metric">Generated<strong>${escapeHtml(generatedAt)}</strong></div>
     </div>
     <nav aria-label="Report sections">
       <a href="#route">Route</a>
+      <a href="#health">Health</a>
       <a href="#gates">Gates</a>
       <a href="#graph">Artifact Graph</a>
       <a href="#traceability">Traceability</a>
@@ -453,6 +476,12 @@ function render(diagnosis, workItemYaml, generatedAt) {
       <p>${escapeHtml(diagnosis.route_reason)}</p>
       <p class="muted">Work path: ${escapeHtml(item.path)}</p>
       <p class="muted">Title source: ${escapeHtml(parseField(workItemYaml, "title") || "N/A")}</p>
+    </section>
+
+    <section id="health">
+      <h2>Workflow Health</h2>
+      <p class="muted">A derived readiness score for scanning blockers, human decisions, quality warnings, traceability, and gates. It is advisory and does not replace gate evidence.</p>
+      ${renderHealth(health)}
     </section>
 
     <section id="gates">

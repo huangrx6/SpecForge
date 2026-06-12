@@ -51,6 +51,10 @@
       "to": "core/scripts/lib/stage-contracts.mjs"
     },
     {
+      "from": "scripts/lib/workflow-health.mjs",
+      "to": "core/scripts/lib/workflow-health.mjs"
+    },
+    {
       "from": "scripts/lib/diagnostics.mjs",
       "to": "core/scripts/lib/diagnostics.mjs"
     },
@@ -129,6 +133,10 @@
     {
       "from": "scripts/workflow-audit.mjs",
       "to": "core/scripts/workflow-audit.mjs"
+    },
+    {
+      "from": "scripts/workflow-health.mjs",
+      "to": "core/scripts/workflow-health.mjs"
     },
     {
       "from": "scripts/update-skills.mjs",

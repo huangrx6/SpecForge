@@ -46,6 +46,7 @@
 
 ```bash
 node .specforge/core/scripts/workflow-audit.mjs
+node .specforge/core/scripts/workflow-health.mjs
 node .specforge/core/scripts/stage-contract.mjs
 node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/instructions.mjs
@@ -103,6 +104,7 @@ node .specforge/core/scripts/doctor.mjs
 | 优化方向 | 目标体验 | 技术落点 | 约束 |
 |---|---|---|---|
 | Audit-first | 用户和 Agent 先看一页就知道卡在哪里 | `workflow-audit.mjs` 汇总 route、blocker、decision、traceability、推荐命令 | audit 只提示，不私自推进 gate |
+| Health score | 用一个总览分数暴露当前流程是否能继续 | `workflow-health.mjs` 汇总 blocker、decision、quality、traceability、gate | score 只做排序和扫读，不替代 gate evidence |
 | Contract-first | 当前阶段先看输入、输出、人工确认和退出标准 | `stage-contract.mjs` 从 artifact id 输出阶段契约 | contract 是执行约束，不替代 artifact 证据 |
 | Trace-first | tasks 前发现需求、设计、验证断链 | `traceability-summary.mjs` 和 HTML report Traceability section | 稳定前先 P2/P3 warning，不默认阻断低风险需求 |
 | Human-in-the-loop | 高影响未知灵活找人工确认，低风险可授权默认 | `decision-checkpoints.mjs`、`[NEEDS ...]`、`manual-confirmed`、`delegated_default` | 必须记录 owner、影响、回退和补证触发条件 |
