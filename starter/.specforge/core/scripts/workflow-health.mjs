@@ -44,6 +44,17 @@ ${bullet(health.priorities, "none", (item) => `[${item.severity}] ${item.message
 |---|---|---|---|
 ${health.dimensions.map((item) => `| ${item.name} | ${item.status} | ${item.count} | ${item.penalty} |`).join("\n")}
 
+## Quality Suite
+
+- Overall: ${health.quality_suite?.overall ?? "N/A"}
+- Failures: ${health.quality_suite?.failures ?? 0}
+- Warnings: ${health.quality_suite?.warnings ?? 0}
+- Penalty: ${health.quality_suite?.penalty ?? 0}
+
+Actionable checks:
+
+${bullet(health.quality_suite?.actionable_checks, "none", (item) => `[${item.status}] ${item.id}: fail=${item.failures}, warn=${item.warnings} (route=${item.route ?? "N/A"})`)}
+
 ## Top Priorities
 
 ${bullet(health.priorities, "none", (item) => `[${item.severity}] ${item.area}: ${item.message} (route=${item.route || "N/A"})`)}
