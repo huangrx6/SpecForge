@@ -19,6 +19,7 @@ Usage:
   specforge contract [--dir <path>] [--work-item <id>] [--artifact <id>] [--overview] [--json]
   specforge checkpoints [--dir <path>] [--work-item <id>] [--json]
   specforge decision-brief [--dir <path>] [--work-item <id>] [--json]
+  specforge package [--dir <path>] [--work-item <id>] [--skip-derived] [--json]
   specforge handoff [--dir <path>] [--work-item <id>] [--output <path>] [--json]
   specforge report [--dir <path>] [--work-item <id>] [--output <path>]
   specforge traceability [--dir <path>] [--work-item <id>] [--json]
@@ -33,6 +34,7 @@ Examples:
   npx github:huangrx6/SpecForge contract --dir .
   npx github:huangrx6/SpecForge checkpoints --dir .
   npx github:huangrx6/SpecForge decision-brief --dir .
+  npx github:huangrx6/SpecForge package --dir .
   npx github:huangrx6/SpecForge handoff --dir .
   npx github:huangrx6/SpecForge report --dir .
   npx github:huangrx6/SpecForge traceability --dir .
@@ -187,6 +189,21 @@ function decisionBrief() {
   runNode(briefPath, extraArgs, targetDir);
 }
 
+function reviewPackage() {
+  const targetDir = resolve(option("--dir", "."));
+  const packagePath = join(targetDir, ".specforge/core/scripts/workflow-package.mjs");
+  if (!existsSync(packagePath)) {
+    console.error(`Missing SpecForge workflow package script: ${packagePath}`);
+    process.exit(1);
+  }
+  const extraArgs = [];
+  const workItem = option("--work-item");
+  if (workItem) extraArgs.push("--work-item", workItem);
+  if (args.includes("--skip-derived")) extraArgs.push("--skip-derived");
+  if (args.includes("--json")) extraArgs.push("--json");
+  runNode(packagePath, extraArgs, targetDir);
+}
+
 function handoff() {
   const targetDir = resolve(option("--dir", "."));
   const handoffPath = join(targetDir, ".specforge/core/scripts/handoff-summary.mjs");
@@ -238,6 +255,8 @@ if (command === "init") {
   checkpoints();
 } else if (command === "decision-brief") {
   decisionBrief();
+} else if (command === "package") {
+  reviewPackage();
 } else if (command === "handoff") {
   handoff();
 } else if (command === "report") {

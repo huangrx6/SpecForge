@@ -48,6 +48,7 @@
 node .specforge/core/scripts/workflow-audit.mjs
 node .specforge/core/scripts/workflow-health.mjs
 node .specforge/core/scripts/stage-contract.mjs
+node .specforge/core/scripts/workflow-package.mjs
 node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/instructions.mjs
 node .specforge/core/scripts/decision-checkpoints.mjs
@@ -68,6 +69,7 @@ git status --short --untracked-files=all
 ```bash
 node .specforge/core/scripts/render-work-report.mjs
 node .specforge/core/scripts/handoff-summary.mjs --output <work-item>/07-report/handoff.md
+node .specforge/core/scripts/workflow-package.mjs
 node .specforge/core/scripts/doctor.mjs
 ```
 
@@ -110,6 +112,7 @@ node .specforge/core/scripts/doctor.mjs
 | Human-in-the-loop | 高影响未知灵活找人工确认，低风险可授权默认 | `decision-checkpoints.mjs`、`[NEEDS ...]`、`manual-confirmed`、`delegated_default` | 必须记录 owner、影响、回退和补证触发条件 |
 | Decision package | 让人工确认有上下文、有选项、有可复制回复格式 | `decision-brief.mjs` 汇总 top decision、contract、traceability、blockers、risk candidates | 人工回复必须能写回 artifact 或 gate evidence |
 | Lightweight artifacts | 人能读完，Agent 能接手 | 一页摘要、artifact summary、handoff、HTML reading layer | Markdown 仍是版本管理事实源，HTML 不能成为唯一证据 |
+| Review package | 审查、接力、关闭前一键生成可交付材料 | `workflow-package.mjs` 输出 review-package、handoff、HTML report | 派生包引用 source artifacts，不替代 source of truth |
 | Stage quality policy | 不同 workflow 有不同质量条 | schema `quality_policy.section_checks`、diagnostics warnings | 不把 `lite` 套成完整 `feature` 流程 |
 | Evidence grading | gate 不是形式，证据强度和风险强度匹配 | verification evidence strength、mock / proven / manual-confirmed / deferred | `missing` 不能批准 gate；弱证据必须说明边界 |
 | Knowledge compaction | 关闭后下次不用重读全仓 | wiki sync、archive、handoff summary、长期事实索引 | 只沉淀未来会复用的信息，不写过程噪音 |

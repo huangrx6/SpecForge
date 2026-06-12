@@ -139,6 +139,10 @@
       "to": "core/scripts/workflow-health.mjs"
     },
     {
+      "from": "scripts/workflow-package.mjs",
+      "to": "core/scripts/workflow-package.mjs"
+    },
+    {
       "from": "scripts/update-skills.mjs",
       "to": "core/scripts/update-skills.mjs"
     },

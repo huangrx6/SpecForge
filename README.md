@@ -184,6 +184,7 @@ node .specforge/core/scripts/workflow-health.mjs
 node .specforge/core/scripts/stage-contract.mjs
 node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/decision-brief.mjs
+node .specforge/core/scripts/workflow-package.mjs
 ```
 
 或：
@@ -194,6 +195,7 @@ npx github:huangrx6/SpecForge health --dir .
 npx github:huangrx6/SpecForge contract --dir .
 npx github:huangrx6/SpecForge doctor --dir .
 npx github:huangrx6/SpecForge decision-brief --dir .
+npx github:huangrx6/SpecForge package --dir .
 ```
 
 ### 4. 在 Agent 中开始使用
@@ -442,6 +444,7 @@ node .specforge/core/scripts/create-work.mjs --workflow feature "新增审批记
 node .specforge/core/scripts/create-artifact.mjs requirements
 node .specforge/core/scripts/render-work-report.mjs
 node .specforge/core/scripts/handoff-summary.mjs --output <work-item>/07-report/handoff.md
+node .specforge/core/scripts/workflow-package.mjs
 node .specforge/core/scripts/gate.mjs verification APPROVED --evidence 05-verification/report.md
 node .specforge/core/scripts/sync-wiki.mjs
 ```
