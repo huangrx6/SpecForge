@@ -71,6 +71,21 @@ function shortList(items) {
   return items.slice(0, 5).map((item) => `- ${item}`).join("\n");
 }
 
+function suggestedEvidencePath(contract) {
+  const preferredByGate = {
+    spec_review: "spec-review-v1.md",
+    code_review: "code-review-v1.md",
+    verification: "report.md",
+    wiki_sync: "wiki-sync.md",
+  };
+  const preferred = preferredByGate[contract?.gate];
+  if (preferred) {
+    const match = contract.outputs?.find((output) => output.endsWith(preferred));
+    if (match) return match;
+  }
+  return contract?.outputs?.[0] ?? "<evidence-path>";
+}
+
 function priorityList(health) {
   return bullet(health.priorities?.slice(0, 5), "none", (item) => `[${item.severity}] ${item.area}: ${item.message} (route=${item.route || "N/A"})`);
 }
@@ -153,7 +168,14 @@ ${contract ? `- Artifact: ${contract.id} · ${contract.title}
 
 Must prove:
 
-${shortList(contract.must_prove)}` : "- N/A"}
+${shortList(contract.must_prove)}
+
+Gate commands:
+
+${contract.gate ? `\`\`\`bash
+node .specforge/core/scripts/gate-preflight.mjs ${contract.gate} APPROVED --evidence ${suggestedEvidencePath(contract)}
+specforge gate --dir . ${contract.gate} APPROVED --evidence ${suggestedEvidencePath(contract)}
+\`\`\`` : "- N/A"}` : "- N/A"}
 
 ## Gate And Graph
 

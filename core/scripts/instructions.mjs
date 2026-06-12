@@ -126,6 +126,22 @@ function outputRows(artifact) {
   }));
 }
 
+function suggestedEvidencePath(artifact, gate) {
+  if (gate?.evidence) return gate.evidence;
+  const preferredByGate = {
+    spec_review: "spec-review-v1.md",
+    code_review: "code-review-v1.md",
+    verification: "report.md",
+    wiki_sync: "wiki-sync.md",
+  };
+  const preferred = preferredByGate[gate?.name];
+  if (preferred) {
+    const match = artifact.outputs.find((output) => output.path.endsWith(preferred));
+    if (match) return match.path;
+  }
+  return artifact.outputs[0]?.path ?? "<evidence-path>";
+}
+
 let workItem;
 
 try {
@@ -340,9 +356,13 @@ try {
       console.log(`- ${output.path} (${output.exists ? "exists" : `template=${output.template}`})`);
     }
     if (payload.artifact.gate) {
+      const suggestedEvidence = suggestedEvidencePath(payload.artifact, payload.artifact.gate);
       console.log("");
       console.log(`Gate: ${payload.artifact.gate.name} = ${payload.artifact.gate.status}`);
       console.log(`Evidence: ${payload.artifact.gate.evidence ?? "null"}`);
+      console.log("Gate commands:");
+      console.log(`- node .specforge/core/scripts/gate-preflight.mjs ${payload.artifact.gate.name} APPROVED --evidence ${suggestedEvidence}`);
+      console.log(`- specforge gate --dir . ${payload.artifact.gate.name} APPROVED --evidence ${suggestedEvidence}`);
     }
     printQualityWarnings(payload.quality_warnings);
     printDecisionCheckpoints(payload.decision_checkpoints);
