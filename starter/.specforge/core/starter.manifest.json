@@ -79,6 +79,10 @@
       "to": "core/scripts/instructions.mjs"
     },
     {
+      "from": "scripts/render-work-report.mjs",
+      "to": "core/scripts/render-work-report.mjs"
+    },
+    {
       "from": "scripts/self-test.mjs",
       "to": "core/scripts/self-test.mjs"
     },

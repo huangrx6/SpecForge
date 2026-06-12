@@ -11,6 +11,7 @@
     "new:artifact": "node core/scripts/create-artifact.mjs",
     "instructions": "node core/scripts/instructions.mjs",
     "gate": "node core/scripts/gate.mjs",
+    "report": "node core/scripts/render-work-report.mjs",
     "archive": "node core/scripts/archive-work.mjs",
     "codebase:map": "node core/scripts/codebase-map.mjs",
     "codebase:index": "node core/scripts/codebase-index.mjs",

@@ -94,7 +94,13 @@ node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/archive-work.mjs --dry-run
 ```
 
-5. 归档：
+5. 如果需要给非研发人员、业务负责人或评审会快速阅读，生成派生 HTML 摘要，并在 `release.md#外部补证与派生报告` 或 `wiki-sync.md#派生报告索引` 登记路径：
+
+```bash
+node .specforge/core/scripts/render-work-report.mjs
+```
+
+6. 归档：
 
 ```bash
 node .specforge/core/scripts/archive-work.mjs

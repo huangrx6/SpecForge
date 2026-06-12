@@ -14,12 +14,14 @@ function usage() {
 Usage:
   specforge init [--dir <path>] [--force]
   specforge doctor [--dir <path>]
+  specforge report [--dir <path>] [--work-item <id>] [--output <path>]
 
 Examples:
   npx skills add https://github.com/huangrx6/SpecForge --skill '*' --agent codex --global
   npx github:huangrx6/SpecForge init --dir .
   npm exec --yes --package=git+ssh://git@git.company.com/team/specforge.git#v0.3.0-company.1 -- specforge init --dir .
   npx github:huangrx6/SpecForge doctor --dir .
+  npx github:huangrx6/SpecForge report --dir .
 `);
 }
 
@@ -80,6 +82,22 @@ function doctor() {
   runNode(doctorPath, [], targetDir);
 }
 
+function report() {
+  const targetDir = resolve(option("--dir", "."));
+  const reportPath = join(targetDir, ".specforge/core/scripts/render-work-report.mjs");
+  if (!existsSync(reportPath)) {
+    console.error(`Missing SpecForge report renderer: ${reportPath}`);
+    process.exit(1);
+  }
+  const extraArgs = [];
+  const workItem = option("--work-item");
+  const output = option("--output");
+  if (workItem) extraArgs.push("--work-item", workItem);
+  if (output) extraArgs.push("--output", output);
+  if (args.includes("--stdout")) extraArgs.push("--stdout");
+  runNode(reportPath, extraArgs, targetDir);
+}
+
 if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
   usage();
   process.exit(0);
@@ -91,6 +109,8 @@ if (command === "init") {
   initProject();
 } else if (command === "doctor") {
   doctor();
+} else if (command === "report") {
+  report();
 } else {
   usage();
   process.exit(1);

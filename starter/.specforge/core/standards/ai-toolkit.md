@@ -123,6 +123,7 @@ Markdown 仍是版本管理主格式；HTML / 可视化产物用于提升阅读�
 - HTML / 图表必须由 Markdown artifact 派生，不能成为唯一事实来源。
 - HTML 产物应放在对应 work item 的 `evidence/`、`ui-mockup-export/` 或报告目录，并在 Markdown 中登记路径。
 - 不把 token、cookie、密钥、个人隐私和生产敏感日志写入 HTML。
+- 可用 `node .specforge/core/scripts/render-work-report.mjs` 生成 `07-report/work-summary.html`，用于快速浏览 artifact graph、gate、blocker、quality warning 和关键 artifact 摘要。
 
 ## 持续演进
 

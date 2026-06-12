@@ -60,7 +60,15 @@ description: SpecForge 内部关闭技能。用于 wiki_sync 已批准后，写 
    node .specforge/core/scripts/archive-work.mjs --dry-run
    ```
 
-5. **归档**
+5. **派生 HTML 摘要（按需）**
+
+   面向非研发评审、周报或复盘时，可以生成 `07-report/work-summary.html`，并在 release / wiki-sync 的派生报告索引中登记。该文件只用于阅读，Markdown artifacts 仍是事实源。
+
+   ```bash
+   node .specforge/core/scripts/render-work-report.mjs
+   ```
+
+6. **归档**
 
    ```bash
    node .specforge/core/scripts/archive-work.mjs

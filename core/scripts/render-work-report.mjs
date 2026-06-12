@@ -1,0 +1,315 @@
+import { mkdirSync, writeFileSync } from "node:fs";
+import { dirname } from "node:path";
+import {
+  abs,
+  exists,
+  localDateIso,
+  parseField,
+  readText,
+  resolveWorkItem,
+} from "./lib/specforge.mjs";
+import { diagnoseWorkItem, gateLine } from "./lib/diagnostics.mjs";
+
+const args = process.argv.slice(2);
+
+function argValue(name) {
+  const index = args.indexOf(name);
+  return index === -1 ? undefined : args[index + 1];
+}
+
+const requestedWorkItem = argValue("--work-item");
+const requestedOutput = argValue("--output");
+const stdout = args.includes("--stdout");
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function slug(value) {
+  return String(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function firstNonEmptyLines(content, limit = 12) {
+  const lines = content
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line && !/^---$/.test(line))
+    .slice(0, limit);
+  return lines.length > 0 ? lines : ["No summary content yet."];
+}
+
+function renderLines(lines) {
+  return `<pre>${escapeHtml(lines.join("\n"))}</pre>`;
+}
+
+function renderStatusBadge(value) {
+  const normalized = String(value ?? "").toLowerCase();
+  const className = ["approved", "done", "pass"].includes(normalized)
+    ? "ok"
+    : ["request_changes", "rejected", "blocked", "fail"].includes(normalized)
+      ? "bad"
+      : ["ready", "partial", "pending"].includes(normalized)
+        ? "warn"
+        : "neutral";
+  return `<span class="badge ${className}">${escapeHtml(value || "N/A")}</span>`;
+}
+
+function renderList(items, emptyText, renderItem) {
+  if (!items || items.length === 0) return `<p class="muted">${escapeHtml(emptyText)}</p>`;
+  return `<ul>${items.map(renderItem).join("")}</ul>`;
+}
+
+function renderArtifactCards(workItemBase, artifacts) {
+  return artifacts
+    .map((artifact) => {
+      const outputs = artifact.outputs
+        .map((output) => {
+          const path = output.output;
+          const fileExists = exists(`${workItemBase}/${path}`);
+          const excerpt = fileExists ? firstNonEmptyLines(readText(`${workItemBase}/${path}`), 10) : ["Missing output."];
+          return `
+            <article class="output">
+              <h4>${escapeHtml(path)} ${renderStatusBadge(fileExists ? "exists" : "missing")}</h4>
+              ${renderLines(excerpt)}
+            </article>
+          `;
+        })
+        .join("");
+      const deps = artifact.requires.length > 0 ? artifact.requires.join(", ") : "none";
+      return `
+        <section class="card" id="artifact-${slug(artifact.id)}">
+          <h3>${escapeHtml(artifact.id)} · ${escapeHtml(artifact.title)}</h3>
+          <p>${renderStatusBadge(artifact.status)} <span class="muted">stage=${escapeHtml(artifact.stage)}; requires=${escapeHtml(deps)}</span></p>
+          ${artifact.gate ? `<p>Gate ${escapeHtml(artifact.gate)}: ${renderStatusBadge(artifact.gateStatus)} <span class="muted">${escapeHtml(artifact.gateEvidence ?? "no evidence")}</span></p>` : ""}
+          ${outputs}
+        </section>
+      `;
+    })
+    .join("");
+}
+
+function render(diagnosis, workItemYaml, generatedAt) {
+  const item = diagnosis.work_item;
+  const title = `${item.id} - ${item.title || "SpecForge Work Report"}`;
+  const progress = `${diagnosis.progress.done}/${diagnosis.progress.total}`;
+  return `<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${escapeHtml(title)}</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f8fb;
+      --panel: #ffffff;
+      --text: #20242a;
+      --muted: #667085;
+      --line: #d8dde8;
+      --accent: #245fce;
+      --ok: #137333;
+      --warn: #a15c00;
+      --bad: #b3261e;
+      --neutral: #4b5565;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 14px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    header {
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+      padding: 24px clamp(16px, 4vw, 48px);
+    }
+    main {
+      padding: 24px clamp(16px, 4vw, 48px) 48px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    h1, h2, h3, h4 { line-height: 1.25; margin: 0 0 12px; }
+    h1 { font-size: 28px; }
+    h2 { font-size: 20px; margin-top: 28px; }
+    h3 { font-size: 16px; }
+    h4 { font-size: 14px; }
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    nav a {
+      color: var(--accent);
+      text-decoration: none;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 6px 10px;
+      background: #fbfcff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel);
+      border: 1px solid var(--line);
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: #eef2f8; }
+    pre {
+      margin: 0;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #f4f6fa;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 10px;
+    }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .metric, .card, .output {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .metric strong {
+      display: block;
+      font-size: 18px;
+      margin-top: 4px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 14px;
+    }
+    .output { margin-top: 10px; }
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 12px;
+      border: 1px solid currentColor;
+      font-weight: 600;
+    }
+    .ok { color: var(--ok); }
+    .warn { color: var(--warn); }
+    .bad { color: var(--bad); }
+    .neutral { color: var(--neutral); }
+    .muted { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <header>
+    <p class="muted">SpecForge derived report · Markdown artifacts remain the source of truth</p>
+    <h1>${escapeHtml(title)}</h1>
+    <div class="summary" aria-label="Work item summary">
+      <div class="metric">Workflow<strong>${escapeHtml(item.workflow)}</strong></div>
+      <div class="metric">Stage<strong>${escapeHtml(item.stage)}</strong></div>
+      <div class="metric">Progress<strong>${escapeHtml(progress)}</strong></div>
+      <div class="metric">Route<strong>${escapeHtml(diagnosis.route)}</strong></div>
+      <div class="metric">Generated<strong>${escapeHtml(generatedAt)}</strong></div>
+    </div>
+    <nav aria-label="Report sections">
+      <a href="#route">Route</a>
+      <a href="#gates">Gates</a>
+      <a href="#graph">Artifact Graph</a>
+      <a href="#warnings">Warnings</a>
+      <a href="#artifacts">Artifact Excerpts</a>
+    </nav>
+  </header>
+  <main>
+    <section id="route">
+      <h2>Route</h2>
+      <p>${escapeHtml(diagnosis.route_reason)}</p>
+      <p class="muted">Work path: ${escapeHtml(item.path)}</p>
+      <p class="muted">Title source: ${escapeHtml(parseField(workItemYaml, "title") || "N/A")}</p>
+    </section>
+
+    <section id="gates">
+      <h2>Gates</h2>
+      <p>${escapeHtml(gateLine(diagnosis.gates))}</p>
+      <table>
+        <thead><tr><th>Gate</th><th>Status</th><th>Evidence</th><th>Evidence Exists</th></tr></thead>
+        <tbody>
+          ${diagnosis.gates
+            .map((gate) => `<tr><td>${escapeHtml(gate.gate)}</td><td>${renderStatusBadge(gate.status)}</td><td>${escapeHtml(gate.evidence ?? "N/A")}</td><td>${escapeHtml(gate.evidenceExists ? "yes" : "no")}</td></tr>`)
+            .join("") || `<tr><td colspan="4">No gates.</td></tr>`}
+        </tbody>
+      </table>
+    </section>
+
+    <section id="graph">
+      <h2>Artifact Graph</h2>
+      <table>
+        <thead><tr><th>Artifact</th><th>Status</th><th>Stage</th><th>Requires</th><th>Missing Deps</th></tr></thead>
+        <tbody>
+          ${diagnosis.artifacts
+            .map((artifact) => `<tr><td><a href="#artifact-${slug(artifact.id)}">${escapeHtml(artifact.id)}</a></td><td>${renderStatusBadge(artifact.status)}</td><td>${escapeHtml(artifact.stage)}</td><td>${escapeHtml(artifact.requires.join(", ") || "none")}</td><td>${escapeHtml(artifact.missingDeps.join(", ") || "none")}</td></tr>`)
+            .join("")}
+        </tbody>
+      </table>
+    </section>
+
+    <section id="warnings">
+      <h2>Blockers And Quality Warnings</h2>
+      <h3>Blockers</h3>
+      ${renderList(diagnosis.blockers, "No blockers.", (blocker) => `<li>${renderStatusBadge(blocker.severity)} ${escapeHtml(blocker.message)} <span class="muted">route=${escapeHtml(blocker.route)}</span></li>`)}
+      <h3>Quality Warnings</h3>
+      ${renderList(diagnosis.quality_warnings, "No quality warnings.", (warning) => `<li>${renderStatusBadge(warning.severity)} ${escapeHtml(warning.message)} <span class="muted">missing=${escapeHtml((warning.missing_sections ?? []).join(", ") || "N/A")}</span></li>`)}
+    </section>
+
+    <section id="artifacts">
+      <h2>Artifact Excerpts</h2>
+      <div class="grid">
+        ${renderArtifactCards(item.path, diagnosis.artifacts)}
+      </div>
+    </section>
+  </main>
+</body>
+</html>
+`;
+}
+
+try {
+  const workItem = resolveWorkItem({
+    workItem: requestedWorkItem,
+    activeOnly: false,
+    defaultToLatestArchive: true,
+  });
+  const diagnosis = diagnoseWorkItem({ workItem: workItem.name, activeOnly: false });
+  const workItemYaml = readText(`${workItem.base}/work.yaml`);
+  const generatedAt = localDateIso();
+  const html = render(diagnosis, workItemYaml, generatedAt);
+  const output = requestedOutput ?? `${workItem.base}/07-report/work-summary.html`;
+
+  if (stdout) {
+    console.log(html);
+  } else {
+    mkdirSync(dirname(abs(output)), { recursive: true });
+    writeFileSync(abs(output), html, "utf8");
+    console.log(`Rendered SpecForge work report: ${output}`);
+    console.log("Markdown artifacts remain the source of truth.");
+  }
+} catch (error) {
+  console.error(error.message);
+  process.exit(1);
+}
