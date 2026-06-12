@@ -181,6 +181,7 @@ npx github:huangrx6/SpecForge init --dir .
 ```bash
 node .specforge/core/scripts/workflow-audit.mjs
 node .specforge/core/scripts/workflow-health.mjs
+node .specforge/core/scripts/artifact-quality.mjs
 node .specforge/core/scripts/stage-contract.mjs --overview
 node .specforge/core/scripts/stage-contract.mjs
 node .specforge/core/scripts/doctor.mjs
@@ -194,6 +195,7 @@ node .specforge/core/scripts/workflow-package.mjs
 ```bash
 npx github:huangrx6/SpecForge audit --dir .
 npx github:huangrx6/SpecForge health --dir .
+npx github:huangrx6/SpecForge quality --dir .
 npx github:huangrx6/SpecForge roadmap --dir .
 npx github:huangrx6/SpecForge contract --dir .
 npx github:huangrx6/SpecForge doctor --dir .
@@ -441,6 +443,7 @@ node .specforge/core/scripts/gate.mjs code_review REQUEST_CHANGES
 ```bash
 node .specforge/core/scripts/workflow-audit.mjs
 node .specforge/core/scripts/workflow-health.mjs
+node .specforge/core/scripts/artifact-quality.mjs
 node .specforge/core/scripts/stage-contract.mjs --overview
 node .specforge/core/scripts/stage-contract.mjs
 node .specforge/core/scripts/doctor.mjs

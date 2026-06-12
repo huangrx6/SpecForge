@@ -105,6 +105,8 @@ Traceability 由 workflow schema 的 `traceability_policy` 控制：`off` 不提
 
 需要快速判断当前流程是否可继续时，运行 `node .specforge/core/scripts/workflow-health.mjs` 或 `specforge health --dir .`。它给出 health score、level、维度扣分和 Top priorities，用来排序下一步，不替代 gate evidence。
 
+需要判断 artifact 是否“人能读完”时，运行 `node .specforge/core/scripts/artifact-quality.mjs` 或 `specforge quality --dir .`。它检查已存在 artifact 的摘要 section、摘要长度、模板占位和长文档提示；结果也会进入 `quality_warnings`，帮助 audit / health / report 提前暴露阅读负担。
+
 准备批准 gate 前运行 `node .specforge/core/scripts/gate-preflight.mjs <gate> APPROVED --evidence <path>` 或 `specforge gate-preflight --dir . <gate> APPROVED --evidence <path>`。它按 policy-as-code 的方式把证据文件、artifact ready 状态、P0 / P1 blocker、open decision、traceability 和 health 汇总为 PASS / WARN / FAIL；预检不改写 gate，`FAIL` 不能继续批准，`WARN` 必须在 evidence 中说明接受或处理结果。预检通过后优先用 `specforge gate --dir . <gate> APPROVED --evidence <path>` 更新 gate。
 
 准备批准 verification gate 前，先运行 `node .specforge/core/scripts/evidence-summary.mjs` 或 `specforge evidence --dir .`。它解析 `05-verification/report.md#3.2 证据强度分级` 和 `#12 人工确认与外部补证`，汇总 proven / mocked / manual-confirmed / deferred / missing，并指出缺少证据、缺人工确认或缺 owner / 重新验证触发条件的问题。`gate-preflight verification APPROVED` 会自动执行同类检查；`missing` 或无可解析证据不能批准。
@@ -161,6 +163,7 @@ Markdown 仍是版本管理主格式；HTML / 可视化产物用于提升阅读�
 - HTML 产物应放在对应 work item 的 `evidence/`、`ui-mockup-export/` 或报告目录，并在 Markdown 中登记路径。
 - 不把 token、cookie、密钥、个人隐私和生产敏感日志写入 HTML。
 - 可用 `node .specforge/core/scripts/render-work-report.mjs` 生成 `07-report/work-summary.html`，用于快速浏览 artifact graph、gate、blocker、quality warning 和关键 artifact 摘要。
+- 可用 `node .specforge/core/scripts/artifact-quality.mjs` 检查 artifact 摘要、摘要长度、模板占位和长文档风险。
 - HTML report 的首屏必须优先呈现 Action Board：当前状态、下一步理由、最高优先级、可复制命令和阅读顺序。Artifact excerpt、traceability 表和长矩阵放在下方，避免读者先被长文档淹没。
 - 可用 `node .specforge/core/scripts/handoff-summary.mjs --output <work-item>/07-report/handoff.md` 生成接力摘要，用于跨 Agent、跨线程或人工复盘。
 - Handoff summary 和 review package 必须先呈现 Action Summary：状态、下一步、健康度、open decisions、blockers、trace gaps、policy、下一组命令和阅读顺序；证据、图谱、artifact 摘录放在后面。

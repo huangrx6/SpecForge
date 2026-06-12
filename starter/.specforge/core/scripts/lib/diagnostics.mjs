@@ -14,6 +14,7 @@ import {
   readText,
   resolveWorkItem,
 } from "./specforge.mjs";
+import { artifactQualitySummary } from "./artifact-quality.mjs";
 import { normalizeTraceabilityPolicy, traceabilityGapChecks, traceabilitySummary } from "./traceability.mjs";
 import { readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
@@ -451,6 +452,19 @@ function traceabilityWarnings(workItemBase, schema) {
   return { traceability, warnings, policy };
 }
 
+function artifactQualityWarnings(diagnosis) {
+  const quality = artifactQualitySummary(diagnosis);
+  const warnings = quality.issues.map((issue) => ({
+    severity: issue.severity === "INFO" ? "P3" : "P2",
+    code: `artifact-quality-${issue.code}`,
+    route: "artifact-quality",
+    owner_artifact: issue.artifact,
+    path: issue.path,
+    message: issue.message,
+  }));
+  return { quality, warnings };
+}
+
 const openDecisionPattern = /\[(NEEDS (?:PRODUCT |UI |TECH |DEPENDENCY |TOOLING |CLARIFICATION|DECISION|SPEC)[^\]]*)\]/gi;
 const confirmedDecisionPattern =
   /\[(?:UI|TECH|DEPENDENCY|TOOLING|TECH DESIGN REVIEW) DECISION CONFIRMED\]|(?:Decision|Direction|Review|Dependency|Tooling) Status:\s*(?:confirmed|delegated_default|approved-for-requirements|existing_stack|scaffold_confirmed|not_required)|人工确认.{0,40}(已确认|接受|授权默认)/i;
@@ -716,8 +730,12 @@ export function diagnoseWorkItem(options = {}) {
   const readyArtifact = nextReadyArtifact(schema, states);
   const blockers = buildBlockers({ readyArtifact, gates, workItemBase: workItem.base, workItemYaml });
   const quality = qualityWarnings(workItem.base, schema);
+  const artifactQuality = artifactQualityWarnings({
+    work_item: { path: workItem.base },
+    artifacts,
+  });
   const traceability = traceabilityWarnings(workItem.base, schema);
-  const warnings = [...quality, ...traceability.warnings];
+  const warnings = [...quality, ...artifactQuality.warnings, ...traceability.warnings];
   const checkpoints = decisionCheckpoints(workItem.base, schema);
   const doneCount = artifacts.filter((artifact) => artifact.status === "done").length;
   const readyArtifacts = artifacts.filter((artifact) => artifact.status === "ready").map((artifact) => artifact.id);
@@ -751,6 +769,7 @@ export function diagnoseWorkItem(options = {}) {
     gates,
     blockers,
     quality_warnings: warnings,
+    artifact_quality: artifactQuality.quality,
     traceability: traceability.traceability,
     traceability_policy: traceability.policy,
     decision_checkpoints: checkpoints,

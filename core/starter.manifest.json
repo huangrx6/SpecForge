@@ -43,6 +43,10 @@
       "to": "core/scripts/lib/artifact-summary.mjs"
     },
     {
+      "from": "scripts/lib/artifact-quality.mjs",
+      "to": "core/scripts/lib/artifact-quality.mjs"
+    },
+    {
       "from": "scripts/lib/action-board.mjs",
       "to": "core/scripts/lib/action-board.mjs"
     },
@@ -77,6 +81,10 @@
     {
       "from": "scripts/artifact-graph-status.mjs",
       "to": "core/scripts/artifact-graph-status.mjs"
+    },
+    {
+      "from": "scripts/artifact-quality.mjs",
+      "to": "core/scripts/artifact-quality.mjs"
     },
     {
       "from": "scripts/create-artifact.mjs",

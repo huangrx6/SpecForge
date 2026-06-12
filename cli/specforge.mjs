@@ -16,6 +16,7 @@ Usage:
   specforge doctor [--dir <path>]
   specforge audit [--dir <path>] [--work-item <id>] [--output <path>] [--json]
   specforge health [--dir <path>] [--work-item <id>] [--json]
+  specforge quality [--dir <path>] [--work-item <id>] [--json]
   specforge roadmap [--dir <path>] [--work-item <id>] [--json]
   specforge contract [--dir <path>] [--work-item <id>] [--artifact <id>] [--overview] [--json]
   specforge checkpoints [--dir <path>] [--work-item <id>] [--json]
@@ -35,6 +36,7 @@ Examples:
   npx github:huangrx6/SpecForge doctor --dir .
   npx github:huangrx6/SpecForge audit --dir .
   npx github:huangrx6/SpecForge health --dir .
+  npx github:huangrx6/SpecForge quality --dir .
   npx github:huangrx6/SpecForge roadmap --dir .
   npx github:huangrx6/SpecForge contract --dir .
   npx github:huangrx6/SpecForge checkpoints --dir .
@@ -134,6 +136,20 @@ function health() {
   if (workItem) extraArgs.push("--work-item", workItem);
   if (args.includes("--json")) extraArgs.push("--json");
   runNode(healthPath, extraArgs, targetDir);
+}
+
+function quality() {
+  const targetDir = resolve(option("--dir", "."));
+  const qualityPath = join(targetDir, ".specforge/core/scripts/artifact-quality.mjs");
+  if (!existsSync(qualityPath)) {
+    console.error(`Missing SpecForge artifact quality script: ${qualityPath}`);
+    process.exit(1);
+  }
+  const extraArgs = [];
+  const workItem = option("--work-item");
+  if (workItem) extraArgs.push("--work-item", workItem);
+  if (args.includes("--json")) extraArgs.push("--json");
+  runNode(qualityPath, extraArgs, targetDir);
 }
 
 function report() {
@@ -347,6 +363,8 @@ if (command === "init") {
   audit();
 } else if (command === "health") {
   health();
+} else if (command === "quality") {
+  quality();
 } else if (command === "roadmap") {
   roadmap();
 } else if (command === "contract") {
