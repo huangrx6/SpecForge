@@ -62,9 +62,90 @@ function renderStatusBadge(value) {
   return `<span class="badge ${className}">${escapeHtml(value || "N/A")}</span>`;
 }
 
+function statusClass(status) {
+  const normalized = String(status ?? "").toLowerCase();
+  if (["approved", "done", "pass"].includes(normalized)) return "ok";
+  if (["request_changes", "rejected", "blocked", "fail"].includes(normalized)) return "bad";
+  if (["ready", "partial", "pending"].includes(normalized)) return "warn";
+  return "neutral";
+}
+
 function renderList(items, emptyText, renderItem) {
   if (!items || items.length === 0) return `<p class="muted">${escapeHtml(emptyText)}</p>`;
   return `<ul>${items.map(renderItem).join("")}</ul>`;
+}
+
+function truncate(value, max = 22) {
+  const text = String(value ?? "");
+  return text.length > max ? `${text.slice(0, max - 1)}…` : text;
+}
+
+function renderArtifactFlow(artifacts) {
+  const nodeWidth = 210;
+  const nodeHeight = 70;
+  const gapX = 48;
+  const gapY = 46;
+  const perRow = 4;
+  const margin = 28;
+  const rows = Math.max(1, Math.ceil(artifacts.length / perRow));
+  const width = margin * 2 + perRow * nodeWidth + (perRow - 1) * gapX;
+  const height = margin * 2 + rows * nodeHeight + (rows - 1) * gapY;
+  const positions = new Map();
+
+  artifacts.forEach((artifact, index) => {
+    const row = Math.floor(index / perRow);
+    const col = index % perRow;
+    const x = margin + col * (nodeWidth + gapX);
+    const y = margin + row * (nodeHeight + gapY);
+    positions.set(artifact.id, { x, y });
+  });
+
+  const edges = artifacts
+    .flatMap((artifact) =>
+      artifact.requires.map((dependency) => {
+        const from = positions.get(dependency);
+        const to = positions.get(artifact.id);
+        if (!from || !to) return "";
+        const startX = from.x + nodeWidth;
+        const startY = from.y + nodeHeight / 2;
+        const endX = to.x;
+        const endY = to.y + nodeHeight / 2;
+        const midX = startX + Math.max(20, (endX - startX) / 2);
+        return `<path d="M ${startX} ${startY} C ${midX} ${startY}, ${midX} ${endY}, ${endX - 8} ${endY}" class="flow-edge" marker-end="url(#arrow)" />`;
+      }),
+    )
+    .join("");
+
+  const nodes = artifacts
+    .map((artifact) => {
+      const position = positions.get(artifact.id);
+      const title = `${artifact.id} · ${artifact.title}`;
+      return `
+        <a href="#artifact-${slug(artifact.id)}" aria-label="${escapeHtml(title)}">
+          <g class="flow-node ${statusClass(artifact.status)}" transform="translate(${position.x} ${position.y})">
+            <rect width="${nodeWidth}" height="${nodeHeight}" rx="8"></rect>
+            <text x="14" y="25" class="flow-title">${escapeHtml(truncate(artifact.id, 24))}</text>
+            <text x="14" y="47" class="flow-subtitle">${escapeHtml(truncate(artifact.title, 26))}</text>
+            <text x="${nodeWidth - 14}" y="25" text-anchor="end" class="flow-status">${escapeHtml(artifact.status)}</text>
+          </g>
+        </a>
+      `;
+    })
+    .join("");
+
+  return `
+    <div class="flow-wrap" role="img" aria-label="Artifact dependency graph">
+      <svg viewBox="0 0 ${width} ${height}" width="100%" height="auto">
+        <defs>
+          <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,6 L8,3 z" class="flow-arrow"></path>
+          </marker>
+        </defs>
+        ${edges}
+        ${nodes}
+      </svg>
+    </div>
+  `;
 }
 
 function renderArtifactCards(workItemBase, artifacts) {
@@ -119,6 +200,7 @@ function render(diagnosis, workItemYaml, generatedAt) {
       --warn: #a15c00;
       --bad: #b3261e;
       --neutral: #4b5565;
+      --flow-edge: #98a2b3;
     }
     * { box-sizing: border-box; }
     body {
@@ -215,6 +297,38 @@ function render(diagnosis, workItemYaml, generatedAt) {
     .bad { color: var(--bad); }
     .neutral { color: var(--neutral); }
     .muted { color: var(--muted); }
+    .flow-wrap {
+      overflow-x: auto;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 14px;
+    }
+    .flow-edge {
+      fill: none;
+      stroke: var(--flow-edge);
+      stroke-width: 2;
+    }
+    .flow-arrow { fill: var(--flow-edge); }
+    .flow-node rect {
+      fill: #ffffff;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+    .flow-node text {
+      fill: var(--text);
+      font-size: 13px;
+      dominant-baseline: middle;
+      pointer-events: none;
+    }
+    .flow-node .flow-title { font-weight: 700; }
+    .flow-node .flow-subtitle { fill: var(--muted); }
+    .flow-node .flow-status {
+      font-size: 11px;
+      font-weight: 700;
+      fill: currentColor;
+    }
   </style>
 </head>
 <body>
@@ -233,6 +347,7 @@ function render(diagnosis, workItemYaml, generatedAt) {
       <a href="#gates">Gates</a>
       <a href="#graph">Artifact Graph</a>
       <a href="#warnings">Warnings</a>
+      <a href="#decision-checkpoints">Decisions</a>
       <a href="#artifacts">Artifact Excerpts</a>
     </nav>
   </header>
@@ -259,6 +374,7 @@ function render(diagnosis, workItemYaml, generatedAt) {
 
     <section id="graph">
       <h2>Artifact Graph</h2>
+      ${renderArtifactFlow(diagnosis.artifacts)}
       <table>
         <thead><tr><th>Artifact</th><th>Status</th><th>Stage</th><th>Requires</th><th>Missing Deps</th></tr></thead>
         <tbody>
