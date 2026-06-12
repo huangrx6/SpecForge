@@ -111,7 +111,7 @@ node .specforge/core/scripts/doctor.mjs
 | Trace-first | tasks 前发现需求、设计、验证断链 | `traceability_policy`、`traceability-summary.mjs` 和 HTML report Traceability section | `lite` 默认 advisory；复杂 workflow 可在 code_review / verification preflight 严格阻断 |
 | Human-in-the-loop | 高影响未知灵活找人工确认，低风险可授权默认 | `decision-checkpoints.mjs`、`[NEEDS ...]`、`manual-confirmed`、`delegated_default` | 必须记录 owner、影响、回退和补证触发条件 |
 | Decision package | 让人工确认有上下文、有选项、有可复制回复格式 | `decision-brief.mjs` 汇总 top decision、contract、traceability、blockers、risk candidates | 人工回复必须能写回 artifact 或 gate evidence |
-| Lightweight artifacts | 人能读完，Agent 能接手 | 一页摘要、artifact summary、handoff、HTML reading layer | Markdown 仍是版本管理事实源，HTML 不能成为唯一证据 |
+| Lightweight artifacts | 人能读完，Agent 能接手 | 一页摘要、artifact summary、handoff、HTML Action Board | Markdown 仍是版本管理事实源，HTML 不能成为唯一证据 |
 | Review package | 审查、接力、关闭前一键生成可交付材料 | `workflow-package.mjs` 输出 review-package、handoff、HTML report | 派生包引用 source artifacts，不替代 source of truth |
 | Gate preflight | 审批前先跑只读 policy check | `gate-preflight.mjs` 输出 PASS / WARN / FAIL、证据和 return route | `FAIL` 不批准；`WARN` 必须被 evidence 解释 |
 | Stage quality policy | 不同 workflow 有不同质量条 | schema `quality_policy.section_checks`、diagnostics warnings | 不把 `lite` 套成完整 `feature` 流程 |

@@ -143,6 +143,7 @@ Markdown 仍是版本管理主格式；HTML / 可视化产物用于提升阅读�
 - HTML 产物应放在对应 work item 的 `evidence/`、`ui-mockup-export/` 或报告目录，并在 Markdown 中登记路径。
 - 不把 token、cookie、密钥、个人隐私和生产敏感日志写入 HTML。
 - 可用 `node .specforge/core/scripts/render-work-report.mjs` 生成 `07-report/work-summary.html`，用于快速浏览 artifact graph、gate、blocker、quality warning 和关键 artifact 摘要。
+- HTML report 的首屏必须优先呈现 Action Board：当前状态、下一步理由、最高优先级、可复制命令和阅读顺序。Artifact excerpt、traceability 表和长矩阵放在下方，避免读者先被长文档淹没。
 - 可用 `node .specforge/core/scripts/handoff-summary.mjs --output <work-item>/07-report/handoff.md` 生成接力摘要，用于跨 Agent、跨线程或人工复盘。
 - 可用 `node .specforge/core/scripts/workflow-package.mjs` 一键生成 review package、HTML report 和 handoff，适合审查、汇报、接力和关闭前复盘。
 - 可用 `node .specforge/core/scripts/decision-brief.mjs` 生成面向人工审批 / 澄清 / 授权默认的决策包。

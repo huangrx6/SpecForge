@@ -68,6 +68,10 @@ function renderList(items, emptyText, renderItem) {
   return `<ul>${items.map(renderItem).join("")}</ul>`;
 }
 
+function renderCommandBlock(commands) {
+  return `<pre><code>${escapeHtml(commands.join("\n"))}</code></pre>`;
+}
+
 function truncate(value, max = 22) {
   const text = String(value ?? "");
   return text.length > max ? `${text.slice(0, max - 1)}…` : text;
@@ -214,6 +218,11 @@ function renderTraceability(traceability) {
   `;
 }
 
+function traceabilityPolicyLine(policy) {
+  if (!policy) return "mode=advisory; enforced_gates=none";
+  return `mode=${policy.mode}; enforced_gates=${policy.enforced_gates?.length ? policy.enforced_gates.join(", ") : "none"}`;
+}
+
 function renderHealth(health) {
   if (!health) return `<p class="muted">No workflow health summary available.</p>`;
   return `
@@ -230,6 +239,66 @@ function renderHealth(health) {
     </table>
     <h3>Top Priorities</h3>
     ${renderList(health.priorities, "No priorities.", (item) => `<li>${renderStatusBadge(item.severity)} <strong>${escapeHtml(item.area)}</strong>: ${escapeHtml(item.message)} <span class="muted">route=${escapeHtml(item.route || "N/A")}</span></li>`)}
+  `;
+}
+
+function actionState(diagnosis, health) {
+  if (diagnosis.blockers?.some((blocker) => ["P0", "P1"].includes(blocker.severity))) return "BLOCKED";
+  if ((diagnosis.decision_checkpoints?.summary?.open ?? 0) > 0) return "NEEDS_DECISION";
+  if ((diagnosis.quality_warnings ?? []).length > 0 || health.level === "needs_attention" || health.level === "at_risk") return "NEEDS_ATTENTION";
+  return "READY";
+}
+
+function actionCommands(diagnosis) {
+  const commands = ["node .specforge/core/scripts/workflow-audit.mjs", "node .specforge/core/scripts/stage-contract.mjs"];
+  if (diagnosis.blockers?.length > 0) commands.push(`node .specforge/core/scripts/instructions.mjs ${diagnosis.blockers[0].owner_artifact ?? ""}`.trim());
+  if ((diagnosis.decision_checkpoints?.summary?.open ?? 0) > 0) commands.push("node .specforge/core/scripts/decision-brief.mjs");
+  if ((diagnosis.traceability?.summary?.uncovered_sources ?? 0) > 0 || (diagnosis.traceability?.summary?.tasks_missing_trace ?? 0) > 0) {
+    commands.push("node .specforge/core/scripts/traceability-summary.mjs");
+  }
+  if (diagnosis.ready_artifact) commands.push("node .specforge/core/scripts/instructions.mjs");
+  commands.push("node .specforge/core/scripts/workflow-package.mjs");
+  return [...new Set(commands)];
+}
+
+function renderActionBoard(diagnosis, health) {
+  const state = actionState(diagnosis, health);
+  const topPriority = health.priorities?.[0];
+  const openDecision = diagnosis.decision_checkpoints?.open?.[0];
+  const blocker = diagnosis.blockers?.[0];
+  const nextText = blocker?.message ?? openDecision?.text ?? diagnosis.route_reason;
+
+  return `
+    <section id="action-board" class="action-board">
+      <div>
+        <p class="eyebrow">Action Board</p>
+        <h2>${escapeHtml(state)}</h2>
+        <p>${escapeHtml(nextText)}</p>
+        <p class="muted">Route: ${escapeHtml(diagnosis.route)} · Ready artifact: ${escapeHtml(diagnosis.ready_artifact ?? "none")} · Traceability policy: ${escapeHtml(traceabilityPolicyLine(diagnosis.traceability_policy))}</p>
+      </div>
+      <div class="action-grid">
+        <article class="metric">Health<strong>${escapeHtml(health.score ?? "N/A")}${health.score === null ? "" : "/100"}</strong><span>${escapeHtml(health.level)}</span></article>
+        <article class="metric">Open Decisions<strong>${escapeHtml(diagnosis.decision_checkpoints?.summary?.open ?? 0)}</strong><span>${escapeHtml(openDecision?.marker ?? "none")}</span></article>
+        <article class="metric">Blockers<strong>${escapeHtml(diagnosis.blockers?.length ?? 0)}</strong><span>${escapeHtml(blocker?.severity ?? "none")}</span></article>
+        <article class="metric">Trace Gaps<strong>${escapeHtml((diagnosis.traceability?.summary?.uncovered_sources ?? 0) + (diagnosis.traceability?.summary?.tasks_missing_trace ?? 0) + (diagnosis.traceability?.summary?.tasks_missing_verification ?? 0))}</strong><span>${escapeHtml(diagnosis.traceability_policy?.mode ?? "advisory")}</span></article>
+      </div>
+      <div class="grid two">
+        <section class="card">
+          <h3>Next Commands</h3>
+          ${renderCommandBlock(actionCommands(diagnosis))}
+        </section>
+        <section class="card">
+          <h3>Read First</h3>
+          <ol>
+            <li>Resolve P0 / P1 blockers and the top open decision.</li>
+            <li>Read the current stage contract and ready artifact.</li>
+            <li>Check traceability before implementation or verification gates.</li>
+            <li>Use artifact excerpts only after the action summary is clear.</li>
+          </ol>
+          ${topPriority ? `<p class="muted">Top priority: [${escapeHtml(topPriority.severity)}] ${escapeHtml(topPriority.message)}</p>` : ""}
+        </section>
+      </div>
+    </section>
   `;
 }
 
@@ -398,6 +467,33 @@ function render(diagnosis, workItemYaml, generatedAt) {
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 14px;
     }
+    .two { grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); }
+    .action-board {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      margin-bottom: 24px;
+    }
+    .action-board h2 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .eyebrow {
+      margin: 0 0 4px;
+      color: var(--accent);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0;
+    }
+    ol { margin: 0; padding-left: 20px; }
     .output { margin-top: 10px; }
     .badge {
       display: inline-block;
@@ -459,6 +555,7 @@ function render(diagnosis, workItemYaml, generatedAt) {
       <div class="metric">Generated<strong>${escapeHtml(generatedAt)}</strong></div>
     </div>
     <nav aria-label="Report sections">
+      <a href="#action-board">Action Board</a>
       <a href="#route">Route</a>
       <a href="#health">Health</a>
       <a href="#gates">Gates</a>
@@ -471,6 +568,8 @@ function render(diagnosis, workItemYaml, generatedAt) {
     </nav>
   </header>
   <main>
+    ${renderActionBoard(diagnosis, health)}
+
     <section id="route">
       <h2>Route</h2>
       <p>${escapeHtml(diagnosis.route_reason)}</p>
@@ -512,7 +611,7 @@ function render(diagnosis, workItemYaml, generatedAt) {
 
     <section id="traceability">
       <h2>Traceability</h2>
-      <p class="muted">Source IDs, tasks, and verification IDs are summarized to expose gaps early. This is advisory unless a project promotes it to a gate.</p>
+      <p class="muted">Source IDs, tasks, and verification IDs are summarized to expose gaps early. Policy: ${escapeHtml(traceabilityPolicyLine(diagnosis.traceability_policy))}.</p>
       ${renderTraceability(diagnosis.traceability)}
     </section>
 

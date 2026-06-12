@@ -454,6 +454,8 @@ node .specforge/core/scripts/gate.mjs verification APPROVED --evidence 05-verifi
 node .specforge/core/scripts/sync-wiki.mjs
 ```
 
+`render-work-report.mjs` 生成的 HTML 首屏是 Action Board：先给当前状态、下一步、最高优先级、复制命令和阅读顺序；完整 artifact 摘要、traceability、gate 和长表放在下方。Markdown artifact 仍然是事实源。
+
 在 SpecForge 源码仓库中：
 
 ```bash
