@@ -12,6 +12,8 @@ const writeReport = args.includes("--write-report");
 const executeProvider = args.includes("--execute-provider");
 const requestedProvider = option("--provider", "auto");
 const requestedScanMode = option("--scan-mode", "ask");
+const requestedProfile = option("--profile", "");
+const includeCoreSkills = args.includes("--include-core-skills") || requestedProfile === "specforge-self-audit";
 
 function option(name, fallback) {
   const index = args.indexOf(name);
@@ -41,6 +43,86 @@ function commandPath(commands) {
     }
   }
   return null;
+}
+
+function runCommand(command, commandArgs = [], timeout = 5000) {
+  const result = spawnSync(command, commandArgs, {
+    cwd: root,
+    encoding: "utf8",
+    timeout,
+  });
+  return {
+    ok: result.status === 0,
+    status: result.status,
+    signal: result.signal ?? null,
+    stdout: result.stdout ?? "",
+    stderr: result.stderr ?? "",
+    text: `${result.stdout ?? ""}${result.stderr ?? ""}`.trim(),
+  };
+}
+
+function firstLine(text) {
+  return String(text ?? "")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .find(Boolean) ?? null;
+}
+
+function excerpt(text, length = 1200) {
+  return String(text ?? "").trim().slice(0, length);
+}
+
+function basicProviderHealth(detected) {
+  return {
+    status: detected ? "installed" : "missing",
+    ready: Boolean(detected),
+    installed: Boolean(detected),
+    version: null,
+    initialized: detected ? null : false,
+    index_status: detected ? "unknown" : "missing",
+    sync_status: detected ? "unknown" : "missing",
+    warnings: [],
+  };
+}
+
+function codegraphHealth(detected) {
+  if (!detected) return basicProviderHealth(null);
+
+  const versionResult = runCommand(detected.command, ["--version"], 3000);
+  const statusResult = runCommand(detected.command, ["status"], 8000);
+  const statusText = statusResult.text;
+  const normalized = statusText.toLowerCase();
+  const notInitialized = /not\s+initialized|no\s+codegraph|init\s+-i/.test(normalized);
+  const pendingSync = /pending\s+sync|needs?\s+sync|out\s+of\s+sync|stale/.test(normalized);
+  const initializing = /indexing|syncing|initializ/.test(normalized) && !notInitialized;
+  const ready = statusResult.ok && !notInitialized && !pendingSync && !initializing;
+  const warnings = [];
+
+  if (!versionResult.ok) warnings.push("CodeGraph CLI is installed but version detection failed.");
+  if (notInitialized) warnings.push("CodeGraph CLI is installed but the current project is not initialized. Run codegraph init -i before using it as a graph provider.");
+  if (pendingSync) warnings.push("CodeGraph index appears to need sync. Run codegraph sync or wait for sync before writing architecture facts.");
+  if (initializing) warnings.push("CodeGraph index is still initializing/syncing. Wait until status is clean before relying on graph facts.");
+  if (!statusResult.ok && !notInitialized) warnings.push("CodeGraph status check failed. Treat the graph provider as not ready until status succeeds.");
+
+  return {
+    status: ready
+      ? "ready"
+      : notInitialized
+        ? "not_initialized"
+        : pendingSync
+          ? "sync_required"
+          : initializing
+            ? "initializing"
+            : "status_failed",
+    ready,
+    installed: true,
+    version: firstLine(versionResult.text),
+    initialized: !notInitialized && statusResult.ok,
+    index_status: ready ? "available" : notInitialized ? "missing" : pendingSync ? "stale" : initializing ? "building" : "unknown",
+    sync_status: ready ? "clean" : pendingSync ? "pending" : initializing ? "running" : "unknown",
+    status_excerpt: excerpt(statusText),
+    warnings,
+  };
 }
 
 function hostPlatform() {
@@ -127,6 +209,8 @@ function runBootstrapMap() {
   const mapArgs = [join(scriptDir, "codebase-map.mjs"), "--json"];
   if (maxFiles) mapArgs.push("--max-files", maxFiles);
   if (maxCandidates) mapArgs.push("--max-candidates", maxCandidates);
+  if (includeCoreSkills) mapArgs.push("--include-core-skills");
+  if (requestedProfile) mapArgs.push("--profile", requestedProfile);
 
   const result = spawnSync(process.execPath, mapArgs, {
     cwd: root,
@@ -141,6 +225,7 @@ function runBootstrapMap() {
 
 function provider(id, label, kind, commands, role, recommendedFor) {
   const detected = commandPath(commands);
+  const health = id === "codegraph" ? codegraphHealth(detected) : basicProviderHealth(detected);
   return {
     id,
     label,
@@ -150,6 +235,7 @@ function provider(id, label, kind, commands, role, recommendedFor) {
     installed: Boolean(detected),
     command: detected?.command ?? commands[0],
     path: detected?.path ?? null,
+    health,
   };
 }
 
@@ -196,8 +282,28 @@ function providers() {
       installed: true,
       command: "node .specforge/core/scripts/codebase-map.mjs --json",
       path: join(scriptDir, "codebase-map.mjs"),
+      health: {
+        status: "ready",
+        ready: true,
+        installed: true,
+        version: null,
+        initialized: true,
+        index_status: "fallback",
+        sync_status: "not_applicable",
+        warnings: [],
+      },
     },
   ];
+}
+
+function providerReady(item) {
+  return Boolean(item?.installed) && (item.health?.ready ?? true);
+}
+
+function providerHealthWarnings(list) {
+  return list.flatMap((item) =>
+    (item.health?.warnings ?? []).map((warning) => `${item.label}: ${warning}`),
+  );
 }
 
 function selectProvider(list, scale) {
@@ -217,10 +323,17 @@ function selectProvider(list, scale) {
         warnings: [`Requested provider "${requestedProvider}" is not installed. Falling back to bootstrap-map.`],
       };
     }
+    if (!providerReady(requested)) {
+      return {
+        selected: list.find((item) => item.id === "bootstrap-map"),
+        status: "requested_provider_not_ready",
+        warnings: [`Requested provider "${requestedProvider}" is installed but not ready (${requested.health?.status ?? "unknown"}). Falling back to bootstrap-map.`],
+      };
+    }
     return { selected: requested, status: "provider_available", warnings: [] };
   }
 
-  const graphProvider = list.find((item) => item.kind === "graph" && item.installed);
+  const graphProvider = list.find((item) => item.kind === "graph" && providerReady(item));
   const packager = list.find((item) => item.id === "repomix" && item.installed);
   const fallback = list.find((item) => item.id === "bootstrap-map");
 
@@ -229,7 +342,7 @@ function selectProvider(list, scale) {
     return {
       selected: fallback,
       status: "blocked_large_without_provider",
-      warnings: ["Large codebase detected but no graph/MCP code intelligence provider is installed."],
+    warnings: ["Large codebase detected but no ready graph/MCP code intelligence provider is available."],
     };
   }
 
@@ -250,6 +363,10 @@ function graphProviderInstalled(providerList) {
   return providerList.some((item) => item.kind === "graph" && item.installed);
 }
 
+function graphProviderReady(providerList) {
+  return providerList.some((item) => item.kind === "graph" && providerReady(item));
+}
+
 function dependencyDecision(scanModeDecision, scale, providerList) {
   const selected = scanModeDecision.selected;
   if (!selected) {
@@ -262,12 +379,16 @@ function dependencyDecision(scanModeDecision, scale, providerList) {
   }
 
   const hasGraph = graphProviderInstalled(providerList);
-  if (selected.id === "baseline-deep" && scale === "large" && !hasGraph) {
+  const hasReadyGraph = graphProviderReady(providerList);
+  if (selected.id === "baseline-deep" && scale === "large" && !hasReadyGraph) {
     return {
-      status: "install_required",
-      requires_install: true,
+      status: hasGraph ? "provider_setup_required" : "install_required",
+      requires_install: !hasGraph,
+      requires_setup: hasGraph,
       required_provider: "graph",
-      message: "baseline-deep 在大型仓库中需要 graph provider；缺失时提供用户自己安装 / Agent 辅助安装两种方式。",
+      message: hasGraph
+        ? "baseline-deep 在大型仓库中需要 ready graph provider；已检测到 graph provider，但需要初始化或同步后才能继续。"
+        : "baseline-deep 在大型仓库中需要 graph provider；缺失时提供用户自己安装 / Agent 辅助安装两种方式。",
     };
   }
 
@@ -280,7 +401,7 @@ function dependencyDecision(scanModeDecision, scale, providerList) {
     };
   }
 
-  if ((selected.id === "baseline-standard" || selected.id === "change-focused" || selected.id === "bug-focused") && scale === "large" && !hasGraph) {
+  if ((selected.id === "baseline-standard" || selected.id === "change-focused" || selected.id === "bug-focused") && scale === "large" && !hasReadyGraph) {
     return {
       status: "install_optional",
       requires_install: false,
@@ -313,7 +434,16 @@ function nextActions(status, scale, selected, scanModeDecision, dependency) {
       `用户已选择 ${scanModeDecision.selected.id}；该模式在当前仓库规模下需要先安装 graph provider。`,
       "向用户展示两种安装方式：A. 用户自己安装；B. Agent 辅助安装。也允许用户改选其他 graph provider 或指定目标模块 / 业务域 / 错误路径。",
       "如果用户选择自己安装，只给出当前 OS 的安装命令、初始化命令和复查命令，然后等待用户完成后再继续。",
-      "如果用户选择 Agent 辅助安装，先确认授权，再按当前 OS 自动执行安装；安装后运行 codegraph init/status 和 codebase-index 复查。",
+      "如果用户选择 Agent 辅助安装，先确认授权，再按当前 OS 自动执行安装；安装后运行 codegraph init/sync/status 和 codebase-index 复查。",
+    ];
+  }
+
+  if (dependency.status === "provider_setup_required") {
+    return [
+      "暂停深度全仓理解，不要把已安装但未初始化 / 未同步的 graph provider 当作可用事实源。",
+      `用户已选择 ${scanModeDecision.selected.id}；该模式在当前仓库规模下需要先完成 graph provider 初始化或同步。`,
+      "运行 codegraph status 查看健康态；如未初始化，执行 codegraph init -i；如索引过期，执行 codegraph sync。",
+      "完成后重新运行 codebase-index.mjs --json，确认 provider health 为 ready 再继续写 wiki 当前事实。",
     ];
   }
 
@@ -404,6 +534,39 @@ function installOptions(providerList, dependency) {
     });
   }
 
+  if (dependency.requires_setup && codegraph?.installed) {
+    options.push({
+      id: "codegraph-setup",
+      label: "Initialize / sync CodeGraph",
+      recommended: true,
+      requires_user_confirmation: false,
+      host,
+      when: dependency.message,
+      setup_commands: [
+        "codegraph status",
+        "codegraph init -i",
+        "codegraph sync",
+        "node .specforge/core/scripts/codebase-index.mjs --json",
+      ],
+      choices: [
+        {
+          id: "user_setup",
+          label: "用户自己初始化",
+          action: "把 setup_commands 发给用户，等待用户初始化 / 同步并确认后再复查。",
+        },
+        {
+          id: "agent_setup",
+          label: "Agent 辅助初始化",
+          action: "在用户允许继续时由 Agent 执行 setup_commands，并复查 provider health。",
+        },
+      ],
+      notes: [
+        "Installed does not mean ready; only health.ready=true can be used as a graph evidence source.",
+        "Do not write wiki facts from stale or uninitialized graph output.",
+      ],
+    });
+  }
+
   return options;
 }
 
@@ -415,7 +578,9 @@ function normalizedContext(bootstrap, selected, status) {
   const modules = firstItems(bootstrap.source_roots ?? [], 12).map((item) => ({
     path: item.name,
     evidence: "bootstrap.source_roots",
-    source_files: item.count,
+    source_files: item.source_count ?? item.count,
+    source_count: item.source_count ?? item.count,
+    file_count: item.file_count ?? item.count,
   }));
 
   return {
@@ -442,6 +607,8 @@ function normalizedContext(bootstrap, selected, status) {
     risks:
       status === "blocked_large_without_provider"
         ? ["large codebase needs graph/MCP/SCIP provider or user-specified module boundary"]
+        : status === "requested_provider_not_ready"
+          ? ["requested graph provider is installed but not ready; initialize or sync it before relying on graph facts"]
         : [],
   };
 }
@@ -468,6 +635,19 @@ function payloadSummary(payload) {
     provider_status: payload.provider_status,
     scale: payload.bootstrap.scale,
     selected_provider: payload.selected_provider.id,
+    selected_provider_health: payload.selected_provider.health?.status ?? null,
+    provider_health: Object.fromEntries(
+      payload.providers.map((item) => [
+        item.id,
+        {
+          installed: item.installed,
+          status: item.health?.status ?? null,
+          ready: item.health?.ready ?? null,
+          initialized: item.health?.initialized ?? null,
+          sync_status: item.health?.sync_status ?? null,
+        },
+      ]),
+    ),
     requested_scan_mode: payload.requested_scan_mode,
     selected_scan_mode: payload.scan_mode_decision.selected?.id ?? null,
     dependency_status: payload.dependency_decision.status,
@@ -589,6 +769,7 @@ function renderReport(payload) {
 | Workflow status | ${payload.status} |
 | Provider status | ${payload.provider_status} |
 | Selected provider | ${selected.label} (\`${selected.id}\`) |
+| Selected provider health | ${selected.health?.status ?? "unknown"} |
 | Provider kind | ${selected.kind} |
 | Has codebase | ${normalized.has_codebase ? "yes" : "no"} |
 | Host platform | ${payload.host_platform.label} (\`${payload.host_platform.id}\`) |
@@ -608,10 +789,10 @@ ${payload.scan_modes.map((mode) => `### ${mode.id} — ${mode.label}
 
 ## 2. Provider 可用性
 
-| Provider | 类型 | 状态 | 命令 / 路径 | 用途 |
-|---|---|---|---|---|
+| Provider | 类型 | 状态 | 健康态 | 初始化 | 同步 | 命令 / 路径 | 用途 |
+|---|---|---|---|---|---|---|---|
 ${payload.providers
-  .map((item) => `| ${item.label} | ${item.kind} | ${item.installed ? "installed" : "missing"} | \`${item.path ?? item.command}\` | ${item.role} |`)
+  .map((item) => `| ${item.label} | ${item.kind} | ${item.installed ? "installed" : "missing"} | ${item.health?.status ?? "unknown"} | ${item.health?.initialized ?? "unknown"} | ${item.health?.sync_status ?? "unknown"} | \`${item.path ?? item.command}\` | ${item.role} |`)
   .join("\n")}
 
 ## 3. Provider 执行编排
@@ -635,14 +816,14 @@ ${payload.provider_plan.queries ? markdownList(payload.provider_plan.queries) : 
 ## 3.1 Provider 安装选项
 
 ${payload.install_options.length === 0 ? "- none" : payload.install_options
-    .map((item) => `- ${item.recommended ? "**推荐** " : ""}${item.label}（${item.host.label}）：\`${item.install_command}\`\n  - fallback: \`${item.fallback_command}\`\n  - post-install: ${item.post_install_commands.map((command) => `\`${command}\``).join(" → ")}\n  - requires user confirmation: ${item.requires_user_confirmation ? "yes" : "no"}`)
+    .map((item) => `- ${item.recommended ? "**推荐** " : ""}${item.label}（${item.host.label}）${item.install_command ? `：\`${item.install_command}\`` : ""}\n  - fallback: ${item.fallback_command ? `\`${item.fallback_command}\`` : "N/A"}\n  - setup/post-install: ${(item.post_install_commands ?? item.setup_commands ?? []).map((command) => `\`${command}\``).join(" → ")}\n  - requires user confirmation: ${item.requires_user_confirmation ? "yes" : "no"}`)
     .join("\n")}
 
 ## 4. Bootstrap Map 归一化
 
 ### 模块候选
 
-${markdownList(normalized.modules, (item) => `\`${item.path}\` — ${item.source_files} source files (${item.evidence})`)}
+${markdownList(normalized.modules, (item) => `\`${item.path}\` — ${item.source_count} source files / ${item.file_count} files (${item.evidence})`)}
 
 ### 入口候选
 
@@ -687,6 +868,7 @@ ${JSON.stringify(
     scan_mode_decision: payload.scan_mode_decision,
     dependency_decision: payload.dependency_decision,
     selected_provider: payload.selected_provider,
+    provider_health: payload.selected_provider.health,
     normalized_context: payload.normalized_context,
     provider_execution: payload.provider_execution,
   },
@@ -726,6 +908,7 @@ function printHuman(payload) {
   console.log(`Workflow status: ${payload.status}`);
   console.log(`Provider status: ${payload.provider_status}`);
   console.log(`Selected provider: ${payload.selected_provider.label} (${payload.selected_provider.id})`);
+  console.log(`Selected provider health: ${payload.selected_provider.health?.status ?? "unknown"}`);
   console.log(`Host platform: ${payload.host_platform.label} (${payload.host_platform.id})`);
   console.log(`Requested scan mode: ${payload.requested_scan_mode}`);
   console.log(`Scan mode status: ${payload.scan_mode_decision.status}`);
@@ -744,7 +927,8 @@ function printHuman(payload) {
   console.log("");
   console.log("Provider availability:");
   for (const item of payload.providers) {
-    console.log(`- ${item.label}: ${item.installed ? `installed (${item.command})` : `missing (${item.command})`} — ${item.kind}`);
+    const health = item.health?.status ? `, health=${item.health.status}` : "";
+    console.log(`- ${item.label}: ${item.installed ? `installed (${item.command})` : `missing (${item.command})`} — ${item.kind}${health}`);
   }
   console.log("");
   console.log(`Policy: ${payload.policy}`);
@@ -764,9 +948,10 @@ function printHuman(payload) {
           console.log(`    ${choice.action}`);
         }
       }
-      console.log(`  command: ${item.install_command}`);
-      console.log(`  fallback: ${item.fallback_command}`);
-      console.log(`  post-install: ${item.post_install_commands.join(" -> ")}`);
+      if (item.install_command) console.log(`  command: ${item.install_command}`);
+      if (item.fallback_command) console.log(`  fallback: ${item.fallback_command}`);
+      const commands = item.post_install_commands ?? item.setup_commands ?? [];
+      if (commands.length > 0) console.log(`  setup/post-install: ${commands.join(" -> ")}`);
       console.log(`  requires user confirmation: ${item.requires_user_confirmation ? "yes" : "no"}`);
     }
   }
@@ -789,7 +974,9 @@ try {
   const plan = providerPlan(selection.selected);
   const execution = runProvider(selection.selected, plan);
   const workflowStatus = scanModeDecision.selected ? selection.status : scanModeDecision.status;
-  const warnings = scanModeDecision.selected ? [...selection.warnings, ...scanModeDecision.warnings] : scanModeDecision.warnings;
+  const warnings = scanModeDecision.selected
+    ? [...selection.warnings, ...scanModeDecision.warnings, ...providerHealthWarnings(providerList)]
+    : [...scanModeDecision.warnings, ...providerHealthWarnings(providerList)];
   const payload = {
     kind: "specforge_codebase_intelligence",
     version: 1,

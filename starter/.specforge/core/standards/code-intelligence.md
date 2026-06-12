@@ -68,10 +68,10 @@ node .specforge/core/scripts/codebase-index.mjs --provider repomix --module src/
 
 SpecForge 中的使用规则：
 
-- `codebase-index.mjs` 检测到 `codegraph` CLI 时，将其视为 graph provider。
-- 项目未安装或未初始化 CodeGraph 时，必须展示两种方式：A. 用户自己安装；B. Agent 辅助安装 / 初始化。用户选择自己安装时，只给命令并等待用户完成；用户确认 Agent 辅助安装后，再按当前 OS 执行安装、`codegraph init -i` 和 `codegraph status`。
+- `codebase-index.mjs` 必须区分 `installed` 和 `ready`：检测到 `codegraph` CLI 只能说明已安装，只有 `health.ready=true`、`initialized=true` 且 `sync_status=clean` 时，才能把它当作 graph provider 证据源。
+- 项目未安装、未初始化或索引不同步时，必须展示两种方式：A. 用户自己安装 / 初始化 / 同步；B. Agent 辅助安装 / 初始化 / 同步。用户选择自己处理时，只给命令并等待用户完成；用户确认 Agent 辅助后，再按当前 OS 执行安装、`codegraph init -i`、`codegraph sync` 和 `codegraph status`。
 - macOS / Linux 使用 `curl -fsSL https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh | sh`；Windows 使用 `irm https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.ps1 | iex`；若用户不想执行远程脚本，可改用 `npx @colbymchenry/codegraph`。
-- steering 时先用 `codegraph_status` 检查索引健康；若有 pending sync，等待同步或运行 `codegraph sync` 后再下结论。
+- steering 时先用 `codebase-index.mjs --json` 或 `codegraph_status` 检查索引健康；若 `provider_health` 不是 `ready`，暂停深度图谱分析，先初始化或同步。
 - 分析新需求或 bug 时先从 wiki 取得目标模块和入口；wiki 不足时再用 `codegraph_context` 定位模块和入口，并用 `codegraph_trace` / `codegraph_impact` 分析调用链和影响面，最后只读取必要文件验证事实。
 - CodeGraph 输出仍是证据来源，进入 `.specforge/wiki/*.md` 前必须改写为当前事实。
 
@@ -110,9 +110,15 @@ SpecForge 中的使用规则：
 - `status=scan_mode_required` 时，不得继续解析 `bootstrap.languages`、`bootstrap.source_roots`、`bootstrap.candidates` 或启动多 Agent 探索。
 - 展示状态摘要时优先使用 `summary` 字段；`bootstrap` 是证据原始结构，字段类型可能随 scanner 演进变化。
 
-当用户选择的模式需要 provider，但当前未安装时：
+当用户选择的模式需要 provider，但当前未安装或未 ready 时：
 
-1. 展示安装选择：A. 用户自己安装；B. Agent 辅助安装。优先建议 CodeGraph，并说明当前系统对应安装命令。
-2. 用户选择自己安装时，给出安装、初始化、状态检查和 `codebase-index` 复查命令后等待；用户选择 Agent 辅助安装时，确认授权后自动执行这些命令。
+1. 展示处理选择：A. 用户自己安装 / 初始化 / 同步；B. Agent 辅助安装 / 初始化 / 同步。优先建议 CodeGraph，并说明当前系统对应命令。
+2. 用户选择自己处理时，给出安装、初始化、同步、状态检查和 `codebase-index` 复查命令后等待；用户选择 Agent 辅助时，确认授权后自动执行这些命令。
 3. 如果用户不安装 provider，询问是否改选轻量/标准/定向模式，或提供目标模块、业务域、报错路径后做局部理解。
 4. 后续 work item 只加载相关 wiki 和相关文件。
+
+已安装但未 ready 的常见状态：
+
+- `health.status=not_initialized`：运行 `codegraph init -i`，再运行 `codegraph status`。
+- `health.status=sync_required`：运行 `codegraph sync` 或等待自动同步完成，再复查。
+- `health.status=status_failed`：先不要用图谱结果写 wiki；查看 `status_excerpt`，必要时回退到 scoped bootstrap / rg。

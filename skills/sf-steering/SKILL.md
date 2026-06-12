@@ -85,15 +85,15 @@ node .specforge/core/scripts/codebase-index.mjs --write-report
 
 ## CodeGraph 用法
 
-检测到 `codegraph` CLI 或用户明确启用 CodeGraph 时，把它作为优先 graph provider。
+检测到 `codegraph` CLI 或用户明确启用 CodeGraph 时，先检查健康态；只有 `codebase-index.mjs --json` 中 CodeGraph `health.ready=true` 时，才把它作为优先 graph provider。
 
 - 先让用户选择扫描模式，不要因为 `blocked_large_without_provider` 就直接进入安装。
 - 只有用户选择的模式确实需要 provider 时，才展示安装路径。
-- 项目未安装或未初始化时，先读取 `codebase-index.mjs --json` 的 `host_platform` 和 `install_options`，必须向用户提供两种方式：A. 用户自己安装；B. Agent 辅助安装。也可以让用户改选其他 graph provider，或指定目标模块 / 业务域 / 报错路径。
-- 用户选择自己安装时，只输出当前 OS 对应安装命令、初始化命令和复查命令，等待用户完成后再继续，不要扩大扫描。
+- 项目未安装、未初始化或索引不同步时，先读取 `codebase-index.mjs --json` 的 `host_platform`、`summary.provider_health` / `providers[].health` 和 `install_options`，必须向用户提供两种方式：A. 用户自己安装 / 初始化 / 同步；B. Agent 辅助安装 / 初始化 / 同步。也可以让用户改选其他 graph provider，或指定目标模块 / 业务域 / 报错路径。
+- 用户选择自己处理时，只输出当前 OS 对应安装命令、初始化命令、同步命令和复查命令，等待用户完成后再继续，不要扩大扫描。
 - 用户确认要 Agent 辅助安装 CodeGraph 后，按当前 OS 执行安装：macOS / Linux 用 `curl -fsSL https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh | sh`；Windows 用 `irm https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.ps1 | iex`；若用户拒绝远程脚本，可用 `npx @colbymchenry/codegraph`。
-- 安装后自动运行 `codegraph init -i`、`codegraph status` 和 `node .specforge/core/scripts/codebase-index.mjs --json` 复查；复查通过前不要写 wiki 当前事实。
-- 进入 steering 前先检查 `codegraph_status` 或 `codegraph status`，确认索引健康和是否有 pending sync。
+- 安装或初始化后自动运行 `codegraph init -i`、`codegraph sync`、`codegraph status` 和 `node .specforge/core/scripts/codebase-index.mjs --json` 复查；复查通过前不要写 wiki 当前事实。
+- 进入 steering 前先检查 `codebase-index.mjs --json`、`codegraph_status` 或 `codegraph status`，确认 `health.status=ready` 且没有 pending sync。
 - baseline 模式优先用 `codegraph_context` 找模块、入口、路由、核心符号，再用 `codegraph_explore` 读取相关源码片段。
 - change-focused / bug-focused 模式优先用 `codegraph_trace` 和 `codegraph_impact` 分析调用链、影响面和可能受影响测试。
 - CodeGraph 结果只能作为证据；写入 wiki 前仍要用代码、配置、测试、CI、文档或用户确认做事实校验。

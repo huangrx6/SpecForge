@@ -6,6 +6,8 @@ const args = process.argv.slice(2);
 const asJson = args.includes("--json");
 const maxFiles = Number(option("--max-files", "25000"));
 const maxCandidates = Number(option("--max-candidates", "40"));
+const profile = option("--profile", "");
+const includeCoreSkills = args.includes("--include-core-skills") || profile === "specforge-self-audit";
 
 function option(name, fallback) {
   const index = args.indexOf(name);
@@ -36,7 +38,7 @@ const ignoredDirNames = new Set([
 const ignoredPathPrefixes = [
   "starter/.specforge/",
   "docs/legacy/",
-  "core/skills/",
+  ...(includeCoreSkills ? [] : ["core/skills/"]),
 ];
 
 const sourceExtensions = new Set([
@@ -224,6 +226,7 @@ const state = { files: [], truncated: false };
 walk(root, state);
 
 const byTopDirectory = new Map();
+const byTopSourceDirectory = new Map();
 const byExtension = new Map();
 const byLanguage = new Map();
 let sourceFileCount = 0;
@@ -234,6 +237,7 @@ for (const file of state.files) {
   if (file.ext) inc(byExtension, file.ext);
   if (file.source) {
     sourceFileCount += 1;
+    inc(byTopSourceDirectory, file.top);
     inc(byLanguage, languageByExtension.get(file.ext) ?? file.ext.slice(1).toUpperCase());
   }
   totalBytes += file.size;
@@ -274,14 +278,11 @@ const entryCandidates = candidate(
       /(^|\/)(main|index|app|server|bootstrap|cmd|manage)\.[a-z0-9]+$/i.test(file.path.replace(/\.(tsx|jsx)$/, ".ts"))),
 );
 
-const sourceRoots = topEntries(
-  new Map(
-    [...byTopDirectory.entries()].filter(([name]) =>
-      state.files.some((file) => file.top === name && file.source),
-    ),
-  ),
-  20,
-);
+const sourceRoots = topEntries(byTopSourceDirectory, 20).map((item) => ({
+  ...item,
+  source_count: item.count,
+  file_count: byTopDirectory.get(item.name) ?? item.count,
+}));
 
 const result = {
   kind: "specforge_bootstrap_codebase_map",
@@ -291,6 +292,10 @@ const result = {
     "does_not_resolve_call_chains",
     "does_not_replace_code_intelligence_provider",
   ],
+  options: {
+    include_core_skills: includeCoreSkills,
+    profile: profile || null,
+  },
   root,
   scanned_files: state.files.length,
   truncated: state.truncated,
