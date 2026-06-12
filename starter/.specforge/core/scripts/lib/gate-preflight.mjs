@@ -1,4 +1,5 @@
 import { artifactById, effectiveSchema, exists, loadSchema, parseField, readText } from "./specforge.mjs";
+import { normalizeTraceabilityPolicy, traceabilityGapChecks } from "./traceability.mjs";
 import { workflowHealth } from "./workflow-health.mjs";
 
 function add(checks, status, code, message, route = "") {
@@ -68,9 +69,21 @@ export function gatePreflight(diagnosis, options = {}) {
       add(checks, "FAIL", "open-decisions", `${openDecisions} open decision marker(s) remain. Generate a decision brief before approval.`, "decision-brief");
     }
 
-    const trace = diagnosis.traceability?.summary;
-    if (trace && gate !== "spec_review" && (trace.tasks_missing_trace > 0 || trace.tasks_missing_verification > 0)) {
-      add(checks, "WARN", "traceability-gaps", "Task traceability or verification links are incomplete.", "traceability-summary");
+    const tracePolicy = normalizeTraceabilityPolicy(schema);
+    const traceChecks = traceabilityGapChecks(diagnosis.traceability, tracePolicy);
+    const traceStrict = tracePolicy.mode === "strict" && tracePolicy.enforced_gates.includes(gate);
+    if (traceChecks.length > 0 && gate !== "spec_review") {
+      for (const traceCheck of traceChecks) {
+        add(
+          checks,
+          traceStrict ? "FAIL" : "WARN",
+          `traceability-${traceCheck.key.replaceAll("_", "-")}`,
+          traceStrict
+            ? `${traceCheck.message} traceability_policy=strict for gate ${gate}.`
+            : `${traceCheck.message} traceability_policy=${tracePolicy.mode}.`,
+          traceCheck.route,
+        );
+      }
     }
 
     if (health.score !== null && health.score < 70) {

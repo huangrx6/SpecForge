@@ -468,6 +468,41 @@ export function validateSchema(schema, schemaName = schema.id ?? "schema") {
     }
   }
 
+  if (schema.traceability_policy !== undefined) {
+    const policy = schema.traceability_policy;
+    const validModes = new Set(["off", "advisory", "strict"]);
+    const gateNames = new Set(schema.artifacts.filter((artifact) => artifact.gate).map((artifact) => artifact.gate));
+    const severityKeys = new Set(["uncovered_sources", "tasks_missing_trace", "tasks_missing_verification", "tasks_without_testcase"]);
+    if (!policy || typeof policy !== "object" || Array.isArray(policy)) {
+      errors.push(`${schemaName}: traceability_policy must be an object`);
+    } else {
+      if (policy.mode !== undefined && !validModes.has(policy.mode)) {
+        errors.push(`${schemaName}: traceability_policy.mode must be off, advisory, or strict`);
+      }
+      if (policy.enforced_gates !== undefined) {
+        if (!Array.isArray(policy.enforced_gates)) {
+          errors.push(`${schemaName}: traceability_policy.enforced_gates must be an array`);
+        } else {
+          for (const gate of policy.enforced_gates) {
+            if (!gateNames.has(gate)) errors.push(`${schemaName}: traceability_policy.enforced_gates has unknown gate ${gate}`);
+          }
+        }
+      }
+      if (policy.severities !== undefined) {
+        if (!policy.severities || typeof policy.severities !== "object" || Array.isArray(policy.severities)) {
+          errors.push(`${schemaName}: traceability_policy.severities must be an object`);
+        } else {
+          for (const [key, severity] of Object.entries(policy.severities)) {
+            if (!severityKeys.has(key)) errors.push(`${schemaName}: traceability_policy.severities has unknown key ${key}`);
+            if (!["P0", "P1", "P2", "P3"].includes(severity)) {
+              errors.push(`${schemaName}: traceability_policy.severities.${key} must be P0, P1, P2, or P3`);
+            }
+          }
+        }
+      }
+    }
+  }
+
   const visiting = new Set();
   const visited = new Set();
   const byId = new Map(schema.artifacts.map((artifact) => [artifact.id, artifact]));

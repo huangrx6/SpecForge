@@ -1,6 +1,5 @@
 import { diagnoseWorkItem, diagnoseWorkspace } from "./lib/diagnostics.mjs";
 import { resolveWorkItem } from "./lib/specforge.mjs";
-import { traceabilitySummary } from "./lib/traceability.mjs";
 
 const args = process.argv.slice(2);
 const json = args.includes("--json");
@@ -15,7 +14,7 @@ function bullet(items, emptyText, renderItem) {
   return items.map((item) => `- ${renderItem(item)}`).join("\n");
 }
 
-function markdown(diagnosis, traceability) {
+function markdown(diagnosis, traceability, policy) {
   if (!diagnosis.work_item) {
     return `# SpecForge Traceability\n\nNo active work item.\n\n- Route: ${diagnosis.route}\n- Reason: ${diagnosis.route_reason}\n`;
   }
@@ -32,6 +31,8 @@ function markdown(diagnosis, traceability) {
 - Tasks missing trace: ${summary.tasks_missing_trace}
 - Tasks missing verification: ${summary.tasks_missing_verification}
 - Tasks without testcase link: ${summary.tasks_without_testcase}
+- Policy mode: ${policy?.mode ?? "advisory"}
+- Enforced gates: ${policy?.enforced_gates?.length ? policy.enforced_gates.join(", ") : "none"}
 
 ## Uncovered Source Items
 
@@ -66,13 +67,14 @@ try {
     diagnosis = diagnoseWorkspace();
   }
 
-  const traceability = diagnosis.work_item ? traceabilitySummary(diagnosis.work_item.path) : null;
+  const traceability = diagnosis.work_item ? diagnosis.traceability : null;
+  const policy = diagnosis.traceability_policy;
   if (json) {
-    console.log(JSON.stringify({ work_item: diagnosis.work_item, traceability }, null, 2));
+    console.log(JSON.stringify({ work_item: diagnosis.work_item, traceability_policy: policy, traceability }, null, 2));
     process.exit(0);
   }
 
-  console.log(markdown(diagnosis, traceability));
+  console.log(markdown(diagnosis, traceability, policy));
 } catch (error) {
   console.error(error.message);
   process.exit(1);

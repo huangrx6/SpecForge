@@ -189,6 +189,13 @@
       "closure"
     ]
   },
+  "traceability_policy": {
+    "mode": "strict",
+    "enforced_gates": [
+      "code_review",
+      "verification"
+    ]
+  },
   "quality_policy": {
     "section_checks": [
       {

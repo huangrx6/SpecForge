@@ -63,6 +63,10 @@
       "closure"
     ]
   },
+  "traceability_policy": {
+    "mode": "off",
+    "enforced_gates": []
+  },
   "quality_policy": {
     "section_checks": [
       {

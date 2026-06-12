@@ -108,7 +108,7 @@ node .specforge/core/scripts/doctor.mjs
 | Audit-first | 用户和 Agent 先看一页就知道卡在哪里 | `workflow-audit.mjs` 汇总 route、blocker、decision、traceability、推荐命令 | audit 只提示，不私自推进 gate |
 | Health score | 用一个总览分数暴露当前流程是否能继续 | `workflow-health.mjs` 汇总 blocker、decision、quality、traceability、gate | score 只做排序和扫读，不替代 gate evidence |
 | Contract-first | 当前阶段先看输入、输出、人工确认和退出标准 | `stage-contract.mjs` 从 artifact id 输出阶段契约 | contract 是执行约束，不替代 artifact 证据 |
-| Trace-first | tasks 前发现需求、设计、验证断链 | `traceability-summary.mjs` 和 HTML report Traceability section | 稳定前先 P2/P3 warning，不默认阻断低风险需求 |
+| Trace-first | tasks 前发现需求、设计、验证断链 | `traceability_policy`、`traceability-summary.mjs` 和 HTML report Traceability section | `lite` 默认 advisory；复杂 workflow 可在 code_review / verification preflight 严格阻断 |
 | Human-in-the-loop | 高影响未知灵活找人工确认，低风险可授权默认 | `decision-checkpoints.mjs`、`[NEEDS ...]`、`manual-confirmed`、`delegated_default` | 必须记录 owner、影响、回退和补证触发条件 |
 | Decision package | 让人工确认有上下文、有选项、有可复制回复格式 | `decision-brief.mjs` 汇总 top decision、contract、traceability、blockers、risk candidates | 人工回复必须能写回 artifact 或 gate evidence |
 | Lightweight artifacts | 人能读完，Agent 能接手 | 一页摘要、artifact summary、handoff、HTML reading layer | Markdown 仍是版本管理事实源，HTML 不能成为唯一证据 |

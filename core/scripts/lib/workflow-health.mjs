@@ -64,7 +64,8 @@ export function workflowHealth(diagnosis) {
   const warnings = diagnosis.quality_warnings ?? [];
   const nonTraceWarnings = warnings.filter((warning) => !String(warning.code ?? "").startsWith("traceability-"));
   const checkpoints = diagnosis.decision_checkpoints?.summary ?? { open: 0, risk_acceptance: 0 };
-  const traceability = diagnosis.traceability;
+  const tracePolicy = diagnosis.traceability_policy ?? { mode: "advisory" };
+  const traceability = tracePolicy.mode === "off" ? null : diagnosis.traceability;
   const priorities = [];
 
   const blockerPenalty = clamp(blockers.reduce((sum, blocker) => sum + severityWeight(blocker.severity), 0), 0, 60);

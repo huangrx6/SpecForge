@@ -52,6 +52,8 @@
 
 `quality_warnings` 必须来自当前 workflow schema 的 `quality_policy.section_checks`。不同 workflow 的质量条不同：`feature` / `standard` 可以要求完整 requirements、UI、technical design、spec review 和 verification 证据；`lite` 只保留轻量需求、任务图和证据闭环；`bugfix` / `issue` 重点检查 gap report 的复现、根因和规格缺口；`discovery` 重点检查来源质量和 ADR 摘要。不要把所有 workflow 都套同一张大表。
 
+Traceability 由 workflow schema 的 `traceability_policy` 控制：`off` 不提示，`advisory` 只进入 warnings / health / report，`strict` 会在 `enforced_gates` 指定的 gate preflight 中升级为 `FAIL`。默认策略是复杂或高风险 workflow 在 `code_review`、`verification` 严格，小型 `lite` 保持 advisory，`discovery` 关闭实现链路追溯。
+
 ## 工具集地图
 
 | 阶段 | 推荐工具 / 能力 | 主要用途 | 归一化产物 |
