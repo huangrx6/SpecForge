@@ -38,6 +38,16 @@ ${bullet(contract.read, "N/A")}
 
 ${bullet(contract.produce, "N/A")}
 
+## Recommended Tools
+
+${bullet(contract.execution?.tools, "N/A")}
+
+## Recommended Commands
+
+\`\`\`bash
+${(contract.execution?.commands ?? ["node .specforge/core/scripts/stage-contract.mjs"]).join("\n")}
+\`\`\`
+
 ## Human Decisions
 
 ${bullet(contract.human_decisions, "none")}
@@ -67,9 +77,9 @@ function workflowOverviewMarkdown(diagnosis, contracts) {
 - Ready artifact: ${diagnosis.ready_artifact ?? "none"}
 - Route: ${diagnosis.route}
 
-| Artifact | Stage | Gate | Outputs | Exit |
-|---|---|---|---|---|
-${contracts.map((contract) => `| ${contract.id} | ${contract.stage} | ${contract.gate ?? "N/A"} | ${contract.outputs.join("<br>")} | ${contract.exit} |`).join("\n")}
+| Artifact | Stage | Gate | Tools | Outputs | Exit |
+|---|---|---|---|---|---|
+${contracts.map((contract) => `| ${contract.id} | ${contract.stage} | ${contract.gate ?? "N/A"} | ${(contract.execution?.tools ?? []).join("<br>")} | ${contract.outputs.join("<br>")} | ${contract.exit} |`).join("\n")}
 `;
 }
 

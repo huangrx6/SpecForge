@@ -105,6 +105,77 @@ const contractByArtifact = {
   },
 };
 
+const executionByArtifact = {
+  intake: {
+    tools: ["sf-intake", "status.mjs", "create-work.mjs", "codebase-index.mjs when repo context is unclear"],
+    commands: ["node .specforge/core/scripts/status.mjs", "node .specforge/core/scripts/create-work.mjs --workflow <workflow> \"<title>\""],
+  },
+  research: {
+    tools: ["sf-discovery", "official docs / primary sources", "repo search", "PoC or logs when available"],
+    commands: ["node .specforge/core/scripts/create-artifact.mjs research", "node .specforge/core/scripts/decision-brief.mjs"],
+  },
+  gap_report: {
+    tools: ["sf-discovery", "logs", "reproduction steps", "repo search"],
+    commands: ["node .specforge/core/scripts/create-artifact.mjs gap_report", "node .specforge/core/scripts/decision-brief.mjs"],
+  },
+  requirements: {
+    tools: ["sf-requirements", "decision-checkpoints.mjs", "wiki product rules"],
+    commands: ["node .specforge/core/scripts/create-artifact.mjs requirements", "node .specforge/core/scripts/decision-checkpoints.mjs"],
+  },
+  ui_design: {
+    tools: ["sf-ui-design", "Pencil", "design standards", "visual verification screenshots"],
+    commands: ["node .specforge/core/scripts/create-artifact.mjs ui_design", "node .specforge/core/scripts/stage-contract.mjs --artifact ui_design"],
+  },
+  technical_design: {
+    tools: ["sf-tech-design", "profiles", "official docs", "wiki architecture"],
+    commands: ["node .specforge/core/scripts/create-artifact.mjs technical_design", "node .specforge/core/scripts/stage-contract.mjs --artifact technical_design"],
+  },
+  tasks: {
+    tools: ["sf-tasking", "traceability-summary.mjs", "artifact graph"],
+    commands: ["node .specforge/core/scripts/create-artifact.mjs tasks", "node .specforge/core/scripts/traceability-summary.mjs"],
+  },
+  spec_review: {
+    tools: ["sf-spec-review", "traceability-summary.mjs", "decision-checkpoints.mjs", "gate-preflight.mjs"],
+    commands: [
+      "node .specforge/core/scripts/create-artifact.mjs spec_review",
+      "node .specforge/core/scripts/gate-preflight.mjs spec_review APPROVED --evidence 02-spec-review/spec-review-v1.md",
+    ],
+  },
+  implementation: {
+    tools: ["sf-implement", "Codex / Trae / SOLO", "instructions.mjs apply", "git diff"],
+    commands: ["node .specforge/core/scripts/instructions.mjs apply", "git status --short --untracked-files=all"],
+  },
+  code_review: {
+    tools: ["sf-code-review", "git diff", "test output", "gate-preflight.mjs"],
+    commands: [
+      "node .specforge/core/scripts/create-artifact.mjs code_review",
+      "node .specforge/core/scripts/gate-preflight.mjs code_review APPROVED --evidence 04-code-review/code-review-v1.md",
+    ],
+  },
+  verification: {
+    tools: ["sf-verify", "CI", "Playwright", "logs", "mock / real environment evidence"],
+    commands: [
+      "node .specforge/core/scripts/create-artifact.mjs verification",
+      "node .specforge/core/scripts/gate-preflight.mjs verification APPROVED --evidence 05-verification/report.md",
+    ],
+  },
+  wiki_sync: {
+    tools: ["sf-wiki", "sync-wiki.mjs", "wiki index", "gate-preflight.mjs"],
+    commands: [
+      "node .specforge/core/scripts/sync-wiki.mjs",
+      "node .specforge/core/scripts/gate-preflight.mjs wiki_sync APPROVED --evidence 06-close/wiki-sync.md",
+    ],
+  },
+  closure: {
+    tools: ["sf-close", "doctor.mjs", "workflow-package.mjs", "archive-work.mjs"],
+    commands: [
+      "node .specforge/core/scripts/workflow-package.mjs",
+      "node .specforge/core/scripts/doctor.mjs",
+      "node .specforge/core/scripts/archive-work.mjs --dry-run",
+    ],
+  },
+};
+
 function qualityChecksForArtifact(schema, artifactId) {
   return (schema.quality_policy?.section_checks ?? []).filter((check) => check.artifact === artifactId);
 }
@@ -135,6 +206,10 @@ export function contractForArtifact(schema, artifactId) {
     requires: artifact.requires ?? [],
     gate: artifact.gate ?? null,
     quality_checks: qualityChecksForArtifact(schema, artifactId),
+    execution: executionByArtifact[artifactId] ?? {
+      tools: ["stage skill", "workflow schema", "project wiki"],
+      commands: ["node .specforge/core/scripts/stage-contract.mjs"],
+    },
     ...base,
   };
 }
