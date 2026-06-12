@@ -46,6 +46,7 @@
 
 ```bash
 node .specforge/core/scripts/workflow-audit.mjs
+node .specforge/core/scripts/stage-contract.mjs
 node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/instructions.mjs
 node .specforge/core/scripts/decision-checkpoints.mjs
@@ -89,16 +90,18 @@ node .specforge/core/scripts/doctor.mjs
 
 1. 先读一页摘要。
 2. 再看 `workflow-audit.mjs` 的 audit status、route 和 recommended commands。
-3. 再看 `Decision checkpoints` 和 `Quality warnings`。
-4. 再看 traceability / task graph / verification evidence。
-5. 最后才读附录、长表和派生 HTML。
-6. 交给他人或新 Agent 前，生成 `handoff.md`，让接手者先看一页状态、下一步、阻断和证据入口。
+3. 再看 `stage-contract.mjs` 的当前阶段 goal / must prove / exit standard。
+4. 再看 `Decision checkpoints` 和 `Quality warnings`。
+5. 再看 traceability / task graph / verification evidence。
+6. 最后才读附录、长表和派生 HTML。
+7. 交给他人或新 Agent 前，生成 `handoff.md`，让接手者先看一页状态、下一步、阻断和证据入口。
 
 ## 后续雕琢路线
 
 | 优化方向 | 目标体验 | 技术落点 | 约束 |
 |---|---|---|---|
 | Audit-first | 用户和 Agent 先看一页就知道卡在哪里 | `workflow-audit.mjs` 汇总 route、blocker、decision、traceability、推荐命令 | audit 只提示，不私自推进 gate |
+| Contract-first | 当前阶段先看输入、输出、人工确认和退出标准 | `stage-contract.mjs` 从 artifact id 输出阶段契约 | contract 是执行约束，不替代 artifact 证据 |
 | Trace-first | tasks 前发现需求、设计、验证断链 | `traceability-summary.mjs` 和 HTML report Traceability section | 稳定前先 P2/P3 warning，不默认阻断低风险需求 |
 | Human-in-the-loop | 高影响未知灵活找人工确认，低风险可授权默认 | `decision-checkpoints.mjs`、`[NEEDS ...]`、`manual-confirmed`、`delegated_default` | 必须记录 owner、影响、回退和补证触发条件 |
 | Lightweight artifacts | 人能读完，Agent 能接手 | 一页摘要、artifact summary、handoff、HTML reading layer | Markdown 仍是版本管理事实源，HTML 不能成为唯一证据 |

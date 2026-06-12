@@ -15,6 +15,7 @@ Usage:
   specforge init [--dir <path>] [--force]
   specforge doctor [--dir <path>]
   specforge audit [--dir <path>] [--work-item <id>] [--output <path>] [--json]
+  specforge contract [--dir <path>] [--work-item <id>] [--artifact <id>] [--overview] [--json]
   specforge checkpoints [--dir <path>] [--work-item <id>] [--json]
   specforge handoff [--dir <path>] [--work-item <id>] [--output <path>] [--json]
   specforge report [--dir <path>] [--work-item <id>] [--output <path>]
@@ -26,6 +27,7 @@ Examples:
   npm exec --yes --package=git+ssh://git@git.company.com/team/specforge.git#v0.3.0-company.1 -- specforge init --dir .
   npx github:huangrx6/SpecForge doctor --dir .
   npx github:huangrx6/SpecForge audit --dir .
+  npx github:huangrx6/SpecForge contract --dir .
   npx github:huangrx6/SpecForge checkpoints --dir .
   npx github:huangrx6/SpecForge handoff --dir .
   npx github:huangrx6/SpecForge report --dir .
@@ -136,6 +138,23 @@ function checkpoints() {
   runNode(checkpointsPath, extraArgs, targetDir);
 }
 
+function contract() {
+  const targetDir = resolve(option("--dir", "."));
+  const contractPath = join(targetDir, ".specforge/core/scripts/stage-contract.mjs");
+  if (!existsSync(contractPath)) {
+    console.error(`Missing SpecForge stage contract script: ${contractPath}`);
+    process.exit(1);
+  }
+  const extraArgs = [];
+  const workItem = option("--work-item");
+  const artifact = option("--artifact");
+  if (workItem) extraArgs.push("--work-item", workItem);
+  if (artifact) extraArgs.push("--artifact", artifact);
+  if (args.includes("--overview")) extraArgs.push("--overview");
+  if (args.includes("--json")) extraArgs.push("--json");
+  runNode(contractPath, extraArgs, targetDir);
+}
+
 function handoff() {
   const targetDir = resolve(option("--dir", "."));
   const handoffPath = join(targetDir, ".specforge/core/scripts/handoff-summary.mjs");
@@ -179,6 +198,8 @@ if (command === "init") {
   doctor();
 } else if (command === "audit") {
   audit();
+} else if (command === "contract") {
+  contract();
 } else if (command === "checkpoints") {
   checkpoints();
 } else if (command === "handoff") {
