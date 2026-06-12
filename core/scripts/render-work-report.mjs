@@ -9,6 +9,7 @@ import {
   resolveWorkItem,
 } from "./lib/specforge.mjs";
 import { summarizeOutput } from "./lib/artifact-summary.mjs";
+import { actionCommands, actionReason, actionState, readingOrder, traceabilityPolicyLine, traceGapCount } from "./lib/action-board.mjs";
 import { diagnoseWorkItem, gateLine } from "./lib/diagnostics.mjs";
 import { workflowHealth } from "./lib/workflow-health.mjs";
 
@@ -218,11 +219,6 @@ function renderTraceability(traceability) {
   `;
 }
 
-function traceabilityPolicyLine(policy) {
-  if (!policy) return "mode=advisory; enforced_gates=none";
-  return `mode=${policy.mode}; enforced_gates=${policy.enforced_gates?.length ? policy.enforced_gates.join(", ") : "none"}`;
-}
-
 function renderHealth(health) {
   if (!health) return `<p class="muted">No workflow health summary available.</p>`;
   return `
@@ -242,31 +238,12 @@ function renderHealth(health) {
   `;
 }
 
-function actionState(diagnosis, health) {
-  if (diagnosis.blockers?.some((blocker) => ["P0", "P1"].includes(blocker.severity))) return "BLOCKED";
-  if ((diagnosis.decision_checkpoints?.summary?.open ?? 0) > 0) return "NEEDS_DECISION";
-  if ((diagnosis.quality_warnings ?? []).length > 0 || health.level === "needs_attention" || health.level === "at_risk") return "NEEDS_ATTENTION";
-  return "READY";
-}
-
-function actionCommands(diagnosis) {
-  const commands = ["node .specforge/core/scripts/workflow-audit.mjs", "node .specforge/core/scripts/stage-contract.mjs"];
-  if (diagnosis.blockers?.length > 0) commands.push(`node .specforge/core/scripts/instructions.mjs ${diagnosis.blockers[0].owner_artifact ?? ""}`.trim());
-  if ((diagnosis.decision_checkpoints?.summary?.open ?? 0) > 0) commands.push("node .specforge/core/scripts/decision-brief.mjs");
-  if ((diagnosis.traceability?.summary?.uncovered_sources ?? 0) > 0 || (diagnosis.traceability?.summary?.tasks_missing_trace ?? 0) > 0) {
-    commands.push("node .specforge/core/scripts/traceability-summary.mjs");
-  }
-  if (diagnosis.ready_artifact) commands.push("node .specforge/core/scripts/instructions.mjs");
-  commands.push("node .specforge/core/scripts/workflow-package.mjs");
-  return [...new Set(commands)];
-}
-
 function renderActionBoard(diagnosis, health) {
   const state = actionState(diagnosis, health);
   const topPriority = health.priorities?.[0];
   const openDecision = diagnosis.decision_checkpoints?.open?.[0];
   const blocker = diagnosis.blockers?.[0];
-  const nextText = blocker?.message ?? openDecision?.text ?? diagnosis.route_reason;
+  const nextText = actionReason(diagnosis);
 
   return `
     <section id="action-board" class="action-board">
@@ -280,7 +257,7 @@ function renderActionBoard(diagnosis, health) {
         <article class="metric">Health<strong>${escapeHtml(health.score ?? "N/A")}${health.score === null ? "" : "/100"}</strong><span>${escapeHtml(health.level)}</span></article>
         <article class="metric">Open Decisions<strong>${escapeHtml(diagnosis.decision_checkpoints?.summary?.open ?? 0)}</strong><span>${escapeHtml(openDecision?.marker ?? "none")}</span></article>
         <article class="metric">Blockers<strong>${escapeHtml(diagnosis.blockers?.length ?? 0)}</strong><span>${escapeHtml(blocker?.severity ?? "none")}</span></article>
-        <article class="metric">Trace Gaps<strong>${escapeHtml((diagnosis.traceability?.summary?.uncovered_sources ?? 0) + (diagnosis.traceability?.summary?.tasks_missing_trace ?? 0) + (diagnosis.traceability?.summary?.tasks_missing_verification ?? 0))}</strong><span>${escapeHtml(diagnosis.traceability_policy?.mode ?? "advisory")}</span></article>
+        <article class="metric">Trace Gaps<strong>${escapeHtml(traceGapCount(diagnosis.traceability))}</strong><span>${escapeHtml(diagnosis.traceability_policy?.mode ?? "advisory")}</span></article>
       </div>
       <div class="grid two">
         <section class="card">
@@ -290,10 +267,7 @@ function renderActionBoard(diagnosis, health) {
         <section class="card">
           <h3>Read First</h3>
           <ol>
-            <li>Resolve P0 / P1 blockers and the top open decision.</li>
-            <li>Read the current stage contract and ready artifact.</li>
-            <li>Check traceability before implementation or verification gates.</li>
-            <li>Use artifact excerpts only after the action summary is clear.</li>
+            ${readingOrder().map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
           </ol>
           ${topPriority ? `<p class="muted">Top priority: [${escapeHtml(topPriority.severity)}] ${escapeHtml(topPriority.message)}</p>` : ""}
         </section>

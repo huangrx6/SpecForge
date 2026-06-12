@@ -12,6 +12,8 @@
 | Claude Code workflows / memory / subagents | https://docs.anthropic.com/en/docs/claude-code | 先探索代码库、计划、再实现；长期记忆是上下文而不是硬性配置；复杂探索可与主实现分离 | `sf-steering` / wiki 先给 bounded context；人工 gate 和 hooks 才是硬约束 |
 | RFC 2119 / Gherkin / OpenAPI / C4 | https://www.rfc-editor.org/rfc/rfc2119 / https://cucumber.io/docs/gherkin/ / https://spec.openapis.org/oas/latest.html / https://c4model.com/ | 需求关键词、Given/When/Then、API 契约和架构图都要结构化、可追溯、可检查 | requirements、technical design、verification 必须保留可测试语言、契约和追溯矩阵 |
 | OPA / GitHub Actions / Argo DAG / SLSA | https://www.openpolicyagent.org/docs / https://docs.github.com/actions / https://argo-workflows.readthedocs.io / https://slsa.dev/spec | policy-as-code、显式依赖图、DAG 执行和 provenance 能减少隐性流程判断 | workflow schema 承载 artifact DAG 和 `quality_policy`；诊断脚本按 schema 输出质量提醒 |
+| NIST AI RMF / human oversight | https://www.nist.gov/itl/ai-risk-management-framework | AI 工作流需要人类监督、风险识别、记录和治理，而不是无条件自动推进 | `decision-brief`、manual-confirmed、risk acceptance、evidence strength 让人工确认可追溯 |
+| Runbook / handoff practice | https://sre.google/sre-book/table-of-contents/ | 交接材料要突出当前状态、下一步、owner、触发条件和恢复动作 | `workflow-package` / `handoff-summary` / HTML Action Board 先给行动摘要，再给证据 |
 
 ## 核心原则
 
@@ -69,6 +71,18 @@ Traceability 由 workflow schema 的 `traceability_policy` 控制：`off` 不提
 | 审查 | `sf-spec-review`、`sf-code-review` | 聚焦越界、缺陷、安全、测试缺口和规格偏离 | review evidence |
 | 验收 | `sf-verify` | 归集本地、mock、CI、真实环境和人工确认结果 | `verification report` |
 | 知识沉淀 | `sf-wiki`、`sf-close`、Wiki Sync | 长期事实、接口契约、配置、风险、回滚沉淀 | `.specforge/wiki/*.md`、release / rollback |
+
+## 推荐 AI 工具集
+
+| 工具 | 最适合阶段 | 使用方式 | SpecForge 约束 |
+|---|---|---|---|
+| Codex | 代码实现、代码审查、脚本化验证、跨文件重构 | 先读 stage contract、tasks、traceability，再改代码和跑验证 | 不越过 gate；发现规格缺口先回写 artifact |
+| Trae / SOLO | 多页面、多模块或重复性前端开发 | 按 tasks wave 拆窗口并行推进，统一回收 diff 和验证结果 | 每个窗口必须有文件边界、验证命令和回滚点 |
+| Pencil | UI design 正式原型 | 生成 / 修改 `.pen`，导出截图作为证据 | HTML / Figma / 截图只能做参考输入，不能替代 Pencil 正式证据 |
+| Playwright | 浏览器端 verification | 自动点击、输入、提交、截图和响应式检查 | 有浏览器流程时优先用真实操作证据，不只看组件静态渲染 |
+| 官方文档 / Web research | 新技术、外部接口、规范不确定时 | 优先官方文档、标准、源码和一手材料 | 搜索结论必须转译到 technical design / research，不作为口头记忆 |
+| Mock / fixture / fake provider | 外部环境不可访问时 | 证明协议、状态和失败态 | 只能标记 `mocked`，不能冒充真实环境 proven |
+| SpecForge scripts | 自动推进、审查、接力、关闭 | audit、health、contract、preflight、package、doctor | 脚本输出是流程证据入口，不替代人工确认或真实验证 |
 
 ## 人工确认点
 
@@ -145,6 +159,7 @@ Markdown 仍是版本管理主格式；HTML / 可视化产物用于提升阅读�
 - 可用 `node .specforge/core/scripts/render-work-report.mjs` 生成 `07-report/work-summary.html`，用于快速浏览 artifact graph、gate、blocker、quality warning 和关键 artifact 摘要。
 - HTML report 的首屏必须优先呈现 Action Board：当前状态、下一步理由、最高优先级、可复制命令和阅读顺序。Artifact excerpt、traceability 表和长矩阵放在下方，避免读者先被长文档淹没。
 - 可用 `node .specforge/core/scripts/handoff-summary.mjs --output <work-item>/07-report/handoff.md` 生成接力摘要，用于跨 Agent、跨线程或人工复盘。
+- Handoff summary 和 review package 必须先呈现 Action Summary：状态、下一步、健康度、open decisions、blockers、trace gaps、policy、下一组命令和阅读顺序；证据、图谱、artifact 摘录放在后面。
 - 可用 `node .specforge/core/scripts/workflow-package.mjs` 一键生成 review package、HTML report 和 handoff，适合审查、汇报、接力和关闭前复盘。
 - 可用 `node .specforge/core/scripts/decision-brief.mjs` 生成面向人工审批 / 澄清 / 授权默认的决策包。
 - 可用 `node .specforge/core/scripts/traceability-summary.mjs` 检查 source item、tasks、test cases 之间的追溯缺口；先作为提示使用，稳定后再考虑升级为 gate。

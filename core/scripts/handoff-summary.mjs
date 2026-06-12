@@ -1,9 +1,10 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { summarizeOutput } from "./lib/artifact-summary.mjs";
+import { actionCommands, actionReason, actionState, readingOrder, traceabilityPolicyLine, traceGapCount } from "./lib/action-board.mjs";
 import { diagnoseWorkItem, diagnoseWorkspace, gateLine } from "./lib/diagnostics.mjs";
 import { abs, localDateIso, resolveWorkItem } from "./lib/specforge.mjs";
-import { traceabilitySummary } from "./lib/traceability.mjs";
+import { workflowHealth } from "./lib/workflow-health.mjs";
 
 const args = process.argv.slice(2);
 const json = args.includes("--json");
@@ -51,7 +52,9 @@ function markdown(diagnosis) {
   const done = diagnosis.progress.done;
   const total = diagnosis.progress.total;
   const generated = localDateIso();
-  const traceability = traceabilitySummary(item.path);
+  const traceability = diagnosis.traceability;
+  const health = workflowHealth(diagnosis);
+  const state = actionState(diagnosis, health);
 
   return `# SpecForge Handoff: ${item.id}
 
@@ -67,18 +70,25 @@ function markdown(diagnosis) {
 - Route: ${diagnosis.route}
 - Generated: ${generated}
 
-## Next Step
+## Action Summary
 
-${diagnosis.route_reason}
+- State: ${state}
+- Next: ${actionReason(diagnosis)}
+- Health: ${health.score}/100 (${health.level})
+- Open decisions: ${checkpoints.summary.open}
+- Blockers: ${diagnosis.blockers.length}
+- Trace gaps: ${traceGapCount(traceability)}
+- Traceability policy: ${traceabilityPolicyLine(diagnosis.traceability_policy)}
 
 Recommended commands:
 
 \`\`\`bash
-node .specforge/core/scripts/doctor.mjs
-node .specforge/core/scripts/instructions.mjs
-node .specforge/core/scripts/decision-checkpoints.mjs
-node .specforge/core/scripts/artifact-graph-status.mjs
+${actionCommands(diagnosis).join("\n")}
 \`\`\`
+
+Read first:
+
+${bullet(readingOrder(), "N/A", (item) => item)}
 
 ## Blockers
 

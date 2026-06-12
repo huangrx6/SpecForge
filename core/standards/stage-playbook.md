@@ -13,6 +13,7 @@
 | OPA policy-as-code | 把流程规则声明成可检查数据 | workflow schema 定义 artifact DAG 和 `quality_policy` |
 | GitHub Actions / Argo DAG | 显式依赖、可视化状态和 gate | artifact graph、ready / blocked / done、gate evidence |
 | SLSA / NIST SSDF / AI RMF | provenance、验证证据、人类监督和风险接受 | evidence strength、decision checkpoints、manual-confirmed 记录 |
+| Runbook / handoff practice | 交接不是“转发文档”，而是让接手者知道状态、owner、下一步和验证协议 | Action Summary、recommended commands、read first 和 owner / trigger 记录 |
 | Google Engineering Practices | review 先讲缺陷、风险和可验证建议 | spec review / code review 以 findings 和 traceability 为核心 |
 
 ## 工作方式
@@ -41,6 +42,24 @@
 | Verification | 用证据证明风险已覆盖 | `sf-verify`、CI、Playwright、logs、mock / real env | 外部补证、跳过项、风险接受 | test-cases、report、证据强度、manual-confirmed 记录 | 证据强度覆盖风险强度，gate 可解释 |
 | Wiki Sync | 把长期事实回写知识库 | `sf-wiki`、wiki index、source artifacts | 哪些事实长期有效，哪些 N/A | wiki files、wiki-sync evidence | current wiki 唯一，不重复、不塞临时噪音 |
 | Close | 发布、回滚、报告和归档 | `sf-close`、doctor、report renderer、archive dry-run | 发布判断、回滚、外部观察 | release、rollback、HTML report、archive | doctor 通过，残余风险有 owner 和触发条件 |
+
+## 每阶段雕琢准则
+
+| 阶段 | 技术搭配怎么更好 | 约束怎么更强 | 输出怎么更好读 |
+|---|---|---|---|
+| Intake | 先跑 audit / status，再由 Agent 判断 workflow；需要用户时只问一个会改变路线的问题 | scope、workflow、components flags 必须可回溯到 brief | 5 行说明“做什么 / 不做什么 / 为什么走这个 workflow / 下一步” |
+| Brainstorm | 用候选方案表 + 风险表，不直接进入实现 | 每个方案必须有取舍和适用条件，不能只是同义改写 | 只保留 2-3 个可选方向和推荐理由 |
+| PRD | 用问题-用户-MVP-指标骨架，不写接口细节 | 成功指标和非目标必须可验证或可观察 | 一页摘要在前，路线图和背景放后 |
+| Requirements | 用 `REQ/AC/NFR` 和 Given / When / Then 风格描述行为 | MUST 必须可测试；冲突需求必须有 owner 或决策记录 | 每条需求只写行为和边界，不混入实现方案 |
+| UI Design | Pencil 做正式证据，截图 / 竞品 / HTML 只做输入参考 | 空、错、权限、加载、边界态必须有状态矩阵 | 页面地图和状态矩阵优先，视觉说明压缩到 token / component 级别 |
+| Technical Design | 用接口契约、数据契约、权限、安全、配置、迁移、回滚清单做设计 | 新依赖、新表、新权限、新外部调用必须有风险和验证方式 | 先给 ADR / 影响面 / 不做项，再展开细节 |
+| Tasks | 用 DAG / wave / boundary / trace，把任务拆到可并行和可回滚 | 每个任务必须有 `_Trace:_`、`_Files:_`、`_Verification:_`、`_Rollback:_`、`_Risk:_` | 按批次和文件边界读，不让实现者重新猜范围 |
+| Spec Review | 用 traceability 和 stage contract 找断链 | P0 / P1 必须有 return path；低风险残余必须人工接受 | findings-first，只列可定位、可修复、可验证问题 |
+| Implementation | Codex / Trae 负责执行，SpecForge 负责边界和证据 | 发现越界必须回写 tasks / spec，不能静默扩大 scope | implementation report 只写变更、验证、偏离和后续 |
+| Code Review | 用真实 diff、测试证据和任务对账 | 安全、权限、数据、回归缺口优先于风格建议 | 先 findings，后总结；每条 finding 有文件、影响、验证建议 |
+| Verification | 按风险选择 proven / mocked / manual-confirmed / deferred 证据 | `missing` 不能批准 gate；弱证据必须写边界和补证触发条件 | 把证据索引和结论放前，长日志放 evidence 目录 |
+| Wiki Sync | 只沉淀未来会复用的事实 | 临时过程、一次性日志、重复内容不得写入 wiki | 每条知识有来源 artifact、适用范围和过期条件 |
+| Close | 用 package / handoff / doctor / archive dry-run 收束 | release、rollback、残余风险、owner 缺一不可 | 先 Action Summary，再给归档路径和验证摘要 |
 
 ## 推荐命令节奏
 
@@ -112,7 +131,7 @@ node .specforge/core/scripts/doctor.mjs
 | Human-in-the-loop | 高影响未知灵活找人工确认，低风险可授权默认 | `decision-checkpoints.mjs`、`[NEEDS ...]`、`manual-confirmed`、`delegated_default` | 必须记录 owner、影响、回退和补证触发条件 |
 | Decision package | 让人工确认有上下文、有选项、有可复制回复格式 | `decision-brief.mjs` 汇总 top decision、contract、traceability、blockers、risk candidates | 人工回复必须能写回 artifact 或 gate evidence |
 | Lightweight artifacts | 人能读完，Agent 能接手 | 一页摘要、artifact summary、handoff、HTML Action Board | Markdown 仍是版本管理事实源，HTML 不能成为唯一证据 |
-| Review package | 审查、接力、关闭前一键生成可交付材料 | `workflow-package.mjs` 输出 review-package、handoff、HTML report | 派生包引用 source artifacts，不替代 source of truth |
+| Review package | 审查、接力、关闭前一键生成可交付材料 | `workflow-package.mjs` 输出 review-package、handoff、HTML report，三者都先给 Action Summary | 派生包引用 source artifacts，不替代 source of truth |
 | Gate preflight | 审批前先跑只读 policy check | `gate-preflight.mjs` 输出 PASS / WARN / FAIL、证据和 return route | `FAIL` 不批准；`WARN` 必须被 evidence 解释 |
 | Stage quality policy | 不同 workflow 有不同质量条 | schema `quality_policy.section_checks`、diagnostics warnings | 不把 `lite` 套成完整 `feature` 流程 |
 | Evidence grading | gate 不是形式，证据强度和风险强度匹配 | verification evidence strength、mock / proven / manual-confirmed / deferred | `missing` 不能批准 gate；弱证据必须说明边界 |

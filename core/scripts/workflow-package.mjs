@@ -3,8 +3,8 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { artifactLine, diagnoseWorkspace, diagnoseWorkItem, gateLine } from "./lib/diagnostics.mjs";
 import { contractForArtifact, focusArtifactId } from "./lib/stage-contracts.mjs";
-import { traceabilitySummary } from "./lib/traceability.mjs";
 import { workflowHealth } from "./lib/workflow-health.mjs";
+import { actionCommands, actionReason, actionState, readingOrder, traceGapCount, traceabilityPolicyLine } from "./lib/action-board.mjs";
 import {
   abs,
   effectiveSchema,
@@ -56,6 +56,7 @@ function traceabilityLine(traceability) {
 
 function reviewPackageMarkdown(diagnosis, health, contract, traceability, generatedAt) {
   const item = diagnosis.work_item;
+  const state = actionState(diagnosis, health);
   return `# SpecForge Review Package: ${item.id}
 
 ## Snapshot
@@ -69,6 +70,26 @@ function reviewPackageMarkdown(diagnosis, health, contract, traceability, genera
 - Ready artifact: ${diagnosis.ready_artifact ?? "none"}
 - Route: ${diagnosis.route}
 - Generated: ${generatedAt}
+
+## Action Summary
+
+- State: ${state}
+- Next: ${actionReason(diagnosis)}
+- Health: ${health.score}/100 (${health.level})
+- Open decisions: ${diagnosis.decision_checkpoints.summary.open}
+- Blockers: ${diagnosis.blockers.length}
+- Trace gaps: ${traceGapCount(traceability)}
+- Traceability policy: ${traceabilityPolicyLine(diagnosis.traceability_policy)}
+
+Next commands:
+
+\`\`\`bash
+${actionCommands(diagnosis).join("\n")}
+\`\`\`
+
+Read first:
+
+${bullet(readingOrder(), "N/A", (item) => item)}
 
 ## Readiness
 
@@ -128,11 +149,7 @@ ${bullet(diagnosis.quality_warnings.slice(0, 12), "none", (warning) => `[${warni
 ## Recommended Next Commands
 
 \`\`\`bash
-node .specforge/core/scripts/workflow-audit.mjs
-node .specforge/core/scripts/workflow-health.mjs
-node .specforge/core/scripts/stage-contract.mjs
-node .specforge/core/scripts/decision-brief.mjs
-node .specforge/core/scripts/traceability-summary.mjs
+${actionCommands(diagnosis).join("\n")}
 \`\`\`
 `;
 }
@@ -175,7 +192,7 @@ try {
   const handoffPath = `${reportDir}/handoff.md`;
   const health = workflowHealth(diagnosis);
   const contract = activeContract(diagnosis);
-  const traceability = traceabilitySummary(item.path);
+  const traceability = diagnosis.traceability;
   const generatedAt = localDateIso();
 
   mkdirSync(dirname(abs(packagePath)), { recursive: true });

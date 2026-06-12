@@ -43,6 +43,10 @@
       "to": "core/scripts/lib/artifact-summary.mjs"
     },
     {
+      "from": "scripts/lib/action-board.mjs",
+      "to": "core/scripts/lib/action-board.mjs"
+    },
+    {
       "from": "scripts/lib/traceability.mjs",
       "to": "core/scripts/lib/traceability.mjs"
     },
