@@ -15,6 +15,7 @@
 | 标准 | 什么时候读 | 主要回答 |
 |---|---|---|
 | `workflow.md` | intake、路由、gate、scope、上下文控制、关闭归档 | 当前到哪一步、能不能前进、边界在哪里 |
+| `operating-model.md` | 框架级改动、自动推进策略、人工确认、证据强度、上下文预算、复盘沉淀 | SpecForge 如何作为可审计、可演进的 AI 研发工作流运行 |
 | `stage-playbook.md` | 自动推进、handoff、长流程复盘、用户问“每一步怎么配合” | 每一步用什么 AI / 脚本 / 人工确认 / 证据契约 |
 | `product.md` | PRD、requirements、research、功能澄清、验收标准 | 用户到底要什么，哪些能力进入 MVP，如何验收 |
 | `design.md` | UI / UX、页面、交互、视觉方向、原型证据 | 用户看见什么，怎么操作，状态是否完整；具体设计语言读 `core/skills/ui-ux/design-system` |
@@ -22,16 +23,17 @@
 | `engineering.md` | technical design、implementation、review、verification | 工程上怎么做才可靠、安全、可维护、可验证 |
 | `ai-toolkit.md` | intake、自动推进、人工确认、verification、wiki sync、AI 工具链沉淀 | 不同阶段用什么 AI 工具，证据强度如何分级，什么时候需要人工确认 |
 | `code-intelligence.md` | 存量项目、老项目、大型代码库理解、项目画像 | 该用哪个 provider，什么时候暂停，如何把代码事实归一到 wiki |
+| `playwright.md` | verification、UI 自动化、浏览器流程、截图 / trace / console / network 证据 | 浏览器证据如何真实执行、脱敏归档和可复现 |
 | `wiki.md` | wiki sync、close、长期知识回写 | 哪些事实要沉淀，写到哪，何时更新 |
 
 ## 阶段到标准
 
 | 阶段 / artifact | 必读标准 |
 |---|---|
-| intake / brief | `workflow.md`、`stage-playbook.md`、`product.md`、`ai-toolkit.md` |
-| prd | `product.md`、`workflow.md`、`stage-playbook.md`、`ai-toolkit.md` |
+| intake / brief | `workflow.md`、`operating-model.md`、`stage-playbook.md`、`product.md`、`ai-toolkit.md` |
+| prd | `product.md`、`workflow.md`、`operating-model.md`、`stage-playbook.md`、`ai-toolkit.md` |
 | research / gap_report | `product.md`、`engineering.md`、`workflow.md`、`stage-playbook.md` |
-| steering / 存量项目画像 | `code-intelligence.md`、`wiki.md`、`workflow.md` |
+| steering / 存量项目画像 | `code-intelligence.md`、`wiki.md`、`workflow.md`、`operating-model.md` |
 | requirements | `product.md`、`workflow.md`、`stage-playbook.md`、`ai-toolkit.md` |
 | ui_design | `design.md`、`product.md`、`workflow.md`、`stage-playbook.md`、`ai-toolkit.md`、`core/skills/ui-ux/design-system`；PC 业务系统场景加读 `pc-ui-design-spec.md` |
 | technical_design | `engineering.md`、`workflow.md`、`stage-playbook.md`、`ai-toolkit.md` |
@@ -39,8 +41,8 @@
 | spec_review | `workflow.md`、`stage-playbook.md`、`product.md`、`design.md`、`engineering.md` |
 | implementation | `engineering.md`、`workflow.md`、`stage-playbook.md` |
 | code_review | `engineering.md`、`workflow.md`、`stage-playbook.md` |
-| verification | `engineering.md`、`workflow.md`、`stage-playbook.md`、`ai-toolkit.md` |
-| wiki_sync / closure | `wiki.md`、`workflow.md`、`stage-playbook.md`、`ai-toolkit.md` |
+| verification | `engineering.md`、`playwright.md`、`workflow.md`、`operating-model.md`、`stage-playbook.md`、`ai-toolkit.md` |
+| wiki_sync / closure | `wiki.md`、`workflow.md`、`operating-model.md`、`stage-playbook.md`、`ai-toolkit.md` |
 
 ## 领域主基准与官方入口
 

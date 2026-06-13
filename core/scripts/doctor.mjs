@@ -4,6 +4,7 @@ import { layout } from "./lib/specforge.mjs";
 
 const checks = [
   { name: "selftest", command: ["node", `${layout.tools}/self-test.mjs`] },
+  { name: "framework-audit", command: ["node", `${layout.tools}/framework-audit.mjs`] },
   { name: "validate", command: ["node", `${layout.tools}/validate-structure.mjs`] },
   { name: "status", command: ["node", `${layout.tools}/status.mjs`] },
   { name: "instructions", command: ["node", `${layout.tools}/instructions.mjs`] },

@@ -47,6 +47,10 @@
       "to": "core/scripts/README.md"
     },
     {
+      "from": "scripts/modules",
+      "to": "core/scripts/modules"
+    },
+    {
       "from": "scripts/lib/artifact-summary.mjs",
       "to": "core/scripts/lib/artifact-summary.mjs"
     },
@@ -145,6 +149,10 @@
     {
       "from": "scripts/evidence-summary.mjs",
       "to": "core/scripts/evidence-summary.mjs"
+    },
+    {
+      "from": "scripts/framework-audit.mjs",
+      "to": "core/scripts/framework-audit.mjs"
     },
     {
       "from": "scripts/codebase-map.mjs",

@@ -8,6 +8,7 @@
 |---|---|---|
 | `index.md` | 当前有哪些标准、每个阶段该读什么 | Agent / 维护者 |
 | `workflow.md` | work item 怎么推进、什么时候停、gate 如何批准 | 所有阶段 |
+| `operating-model.md` | SpecForge 如何控制深度、上下文、人机确认、证据和长期演进 | 所有阶段 / 维护者 |
 | `stage-playbook.md` | 每一步怎么配合、工具如何组合、阅读层如何降噪 | 自动推进 / 接力 |
 | `ai-toolkit.md` | AI 工具链如何选择、人工确认和证据如何回流 | Agent / 人工审查 |
 | `product.md` | 产品、PRD、需求和验收如何表达 | PRD / requirements |

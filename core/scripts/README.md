@@ -1,6 +1,6 @@
 # SpecForge Scripts
 
-`core/scripts/` 的根目录保留稳定命令入口，业务项目和 README 可以继续使用已有路径。脚本实现按下面模块理解；后续重构时，根目录脚本应逐步变成薄 wrapper，具体实现放入模块目录或 `lib/`。
+`core/scripts/` 的根目录保留稳定命令入口，业务项目和 README 可以继续使用已有路径。模块边界记录在 `modules/`，可复用逻辑放在 `lib/`；后续重构时，根目录脚本逐步变成薄 wrapper。
 
 ## 模块地图
 
@@ -12,18 +12,18 @@
 | `gates` | `gate.mjs` | 更新 gate 状态并触发 hook |
 | `reporting` | `render-work-report.mjs`, `workflow-package.mjs`, `handoff-summary.mjs`, `traceability-summary.mjs` | 生成 HTML / review package / handoff / traceability 摘要 |
 | `code-intelligence` | `codebase-map.mjs`, `codebase-index.mjs` | 存量项目代码画像、provider 检测、CodeGraph / Repomix 编排计划 |
-| `maintenance` | `doctor.mjs`, `self-test.mjs`, `sync-starter.mjs`, `update-skills.mjs`, `validate-structure.mjs`, `validate-skills.mjs`, `validate-external-skills.mjs` | 仓库健康、starter 同步、skill 更新和结构校验 |
+| `maintenance` | `doctor.mjs`, `self-test.mjs`, `framework-audit.mjs`, `sync-starter.mjs`, `update-skills.mjs`, `validate-structure.mjs`, `validate-skills.mjs`, `validate-external-skills.mjs` | 仓库健康、框架自审计、starter 同步、skill 更新和结构校验 |
 | `archive` | `archive-work.mjs` | work item 归档和 registry 更新 |
 
 ## 下一批模块化目标
 
 | 目标 | 建议内部模块 | 说明 |
 |---|---|---|
-| CodeGraph health | `scripts/code-intelligence/providers/codegraph.mjs` | 区分 installed / version / initialized / indexed / pending sync，不再把 CLI 存在当作图谱可用 |
+| CodeGraph health provider 抽取 | `scripts/modules/code-intelligence/providers/codegraph.mjs` | 当前 health 已在根入口实现；后续可抽成 provider 模块 |
 | Provider 事实归一 | `scripts/code-intelligence/provider-facts.mjs` | 统一记录 fact、source path、confidence、provider、query、timestamp、used_for_wiki |
-| 测试用例质量 | `scripts/quality/test-case-quality.mjs` | 已有根入口；后续可抽到内部模块并扩展覆盖率 / 追溯规则 |
-| Playwright 证据归档 | `scripts/quality/playwright-evidence.mjs` | 把临时脚本、stdout、截图、trace manifest 归档到 `05-verification/evidence/<run-id>/` |
-| XMind 测试设计 | `scripts/quality/xmind-export-check.mjs` | XMind 只做测试设计草图，必须导出 Markdown / JSON 并回到 test cases |
+| 测试用例质量扩展 | `scripts/modules/quality/test-case-quality.mjs` | 当前已有根入口；后续扩展覆盖率 / 追溯规则 |
+| Playwright 证据归档 | `scripts/modules/quality/playwright-evidence.mjs` | 把临时脚本、stdout、截图、trace manifest 归档到 `05-verification/evidence/<run-id>/` |
+| XMind 测试设计 | `scripts/modules/quality/xmind-export-check.mjs` | XMind 只做测试设计草图，必须导出 Markdown / JSON 并回到 test cases |
 
 ## 重构规则
 
