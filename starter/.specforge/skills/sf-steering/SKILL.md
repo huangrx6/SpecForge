@@ -46,7 +46,7 @@ node .specforge/core/scripts/codebase-index.mjs --write-report
 .specforge/work/inbox/codebase-intelligence.md
 ```
 
-读取内部阶段母本：
+读取内部阶段说明：
 
 ```text
 .specforge/skills/sf-steering/stages/steering/SKILL.md

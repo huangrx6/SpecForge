@@ -1,13 +1,13 @@
 # SpecForge Core
 
-`core/` 是 SpecForge 的可分发运行时母本。它包含流程定义、标准、技术选择卡、脚本、模板、内部阶段母本和经过审查的辅助 skill。
+`core/` 是 SpecForge 的可分发运行时母本。它包含流程定义、标准、技术选择卡、脚本、模板和经过审查的辅助 skill。
 
 ## 目录职责
 
 | 目录 | 放什么 | 不放什么 |
 |---|---|---|
 | `artifacts/` | artifact schema 和模板 | 阶段规则、长期项目知识 |
-| `workflows/` | workflow DAG、阶段母本和阶段完成标准 | 具体项目事实、第三方 skill 内容 |
+| `workflows/` | workflow DAG 和流程定义 | 阶段规则、具体项目事实、第三方 skill 内容 |
 | `standards/` | 跨阶段的原则、门禁、证据和质量标准 | 技术选择卡、一次性执行计划 |
 | `profiles/` | 可复用技术选择卡 | 长篇教程、UI 视觉规范 |
 | `scripts/` | CLI 后端脚本和共享库 | 项目业务脚本、一次性迁移脚本 |
@@ -20,7 +20,7 @@
 2. 想知道某阶段怎么做：读 `.specforge/skills/<stage-owner>/stages/<stage>/SKILL.md`。
 3. 想知道脚本怎么用：读 `scripts/README.md`。
 4. 想选技术栈：读 `profiles/README.md` 和对应 profile。
-5. 想调用 UI / 研究 / 测试等辅助能力：读 `skills/ORCHESTRATION.md`。
+5. 想调用 UI / 研究 / 测试等辅助能力：读 `core/skills/ORCHESTRATION.md`。
 
 ## 维护原则
 

@@ -67,7 +67,7 @@ description: <说明此技能做什么，以及什么时候使用>
 
 ## 维护规则
 
-- 阶段行为变化时，先更新对应 `skills/<stage-owner>/stages/<name>/SKILL.md`，再同步兼容镜像和 starter。
+- 阶段行为变化时，先更新对应 `skills/<stage-owner>/stages/<name>/SKILL.md`，再同步 starter。
 - gate、artifact、证据路径或入口映射变化时，同步 `skills/sf-router/workflow/drift-rules.json`；不要让 public skill 和 stage owner 各自维护一套说法。
 - 新增或重命名 stage 时，同步 `eval-fixtures.json` 和 `score-rubric.json`；前者定义阻断样例，后者定义质量评分关注点。
 - 不要把 UI 体验设计和技术架构设计重新合并成一个长期维护的 stage。

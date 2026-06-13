@@ -88,14 +88,52 @@ function issue(severity, code, message, path = null) {
 
 function missingCoreReferences(files) {
   const issues = [];
-  const re = /\.specforge\/core\/[A-Za-z0-9_./-]+/g;
+  const re = /\.specforge\/core\/[A-Za-z0-9_./#\u4e00-\u9fa5-]+/g;
   for (const file of files.filter((item) => /\.(md|mjs|json|yaml)$/.test(item))) {
     for (const match of read(file).matchAll(re)) {
       const raw = match[0].replace(/[),.;:`'"]+$/, "");
-      const target = raw.replace(".specforge/core", "core");
+      const target = raw.replace(".specforge/core", "core").split("#")[0];
       if (!exists(target)) issues.push(issue("FAIL", "missing-core-reference", `${raw} does not resolve to ${target}.`, file));
     }
   }
+  return issues;
+}
+
+function referencedPathIssues(files) {
+  const issues = [];
+  const pathLike = /`((?:core|skills|starter|cli|assets|README\.md|package\.json)\/?[A-Za-z0-9_./#\u4e00-\u9fa5-]*)`/g;
+  const pathCommand = /node\s+((?:core|skills|starter|cli)\/[A-Za-z0-9_.\/-]+)/g;
+  const placeholders = /[<>*{}$]|\.\.\.|\/\.\.\.?$/;
+  const futureOrExample = /\b(planned|future|example|sample|TBD|建议|候选|后续|新增|输出|生成|创建|归档|写入|目标|按需|可选|例如)\b/i;
+  const allowedExternalRegistryPath = /^skills\/[a-z0-9-]+\/SKILL\.md$/;
+
+  function normalizeReference(raw) {
+    const trimmed = raw.trim().replace(/[),.;:`'"]+$/, "");
+    if (!trimmed || placeholders.test(trimmed)) return null;
+    if (trimmed.includes("\n")) return null;
+    const target = trimmed.split("#")[0];
+    if (!target || target.endsWith("/")) return null;
+    if (allowedExternalRegistryPath.test(target)) return null;
+    return target;
+  }
+
+  for (const file of files.filter((item) => /\.(md|json|yaml|yml)$/.test(item))) {
+    const body = read(file);
+    const lines = body.split(/\r?\n/);
+    for (const [lineIndex, line] of lines.entries()) {
+      const candidates = [];
+      for (const match of line.matchAll(pathLike)) candidates.push(match[1]);
+      for (const match of line.matchAll(pathCommand)) candidates.push(match[1]);
+      for (const raw of candidates) {
+        const target = normalizeReference(raw);
+        if (!target) continue;
+        if (!exists(target) && !futureOrExample.test(line)) {
+          issues.push(issue("FAIL", "referenced-path-missing", `${raw} does not resolve to ${target}.`, `${file}:${lineIndex + 1}`));
+        }
+      }
+    }
+  }
+
   return issues;
 }
 
@@ -1003,6 +1041,7 @@ function standardsEvolutionIssues() {
 const files = walk(root);
 const checks = [
   { id: "core-references", issues: missingCoreReferences(files) },
+  { id: "referenced-paths", issues: referencedPathIssues(files) },
   { id: "profile-references", issues: missingProfileReferences(files) },
   { id: "profile-catalog", issues: profileCatalogIssues() },
   { id: "standards-index", issues: standardsIndexIssues() },
