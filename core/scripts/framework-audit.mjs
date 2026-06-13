@@ -414,6 +414,75 @@ function stageEvalFixtureIssues() {
   return issues;
 }
 
+function stageScoreRubricIssues() {
+  const issues = [];
+  const path = "core/workflows/stages/score-rubric.json";
+  if (!exists(path)) return [issue("FAIL", "stage-score-rubric-missing", `${path} is required for stage output evaluation governance.`, path)];
+
+  let payload;
+  try {
+    payload = JSON.parse(read(path));
+  } catch (error) {
+    return [issue("FAIL", "stage-score-rubric-invalid-json", `${path} is invalid JSON: ${error.message}.`, path)];
+  }
+
+  if (payload.version !== 1) {
+    issues.push(issue("WARN", "stage-score-rubric-version", `${path} should use version 1.`, path));
+  }
+
+  const dimensions = Array.isArray(payload.dimensions) ? payload.dimensions : [];
+  if (dimensions.length === 0) {
+    issues.push(issue("FAIL", "stage-score-rubric-dimensions-empty", `${path} must define dimensions.`, path));
+  }
+  const dimensionIds = new Set();
+  for (const dimension of dimensions) {
+    if (!dimension.id || !/^[a-z0-9][a-z0-9_]*$/.test(dimension.id)) {
+      issues.push(issue("FAIL", "stage-score-rubric-dimension-id-invalid", `Invalid rubric dimension id: ${dimension.id ?? "(missing)"}.`, path));
+      continue;
+    }
+    if (dimensionIds.has(dimension.id)) {
+      issues.push(issue("FAIL", "stage-score-rubric-dimension-duplicate", `${dimension.id} appears more than once in ${path}.`, path));
+    }
+    dimensionIds.add(dimension.id);
+    if (!dimension.description || !Array.isArray(dimension.strong_signals) || !Array.isArray(dimension.failure_signals)) {
+      issues.push(issue("FAIL", "stage-score-rubric-dimension-incomplete", `${dimension.id} must define description, strong_signals, and failure_signals.`, path));
+    }
+  }
+
+  const stageDirs = readdirSync(join(root, "core/workflows/stages"), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort();
+  const stageFocus = payload.stage_focus && typeof payload.stage_focus === "object" && !Array.isArray(payload.stage_focus)
+    ? payload.stage_focus
+    : {};
+  const minimumFocus = Number(payload.minimum_focus_dimensions ?? 3);
+
+  for (const stage of stageDirs) {
+    const focus = stageFocus[stage];
+    if (!Array.isArray(focus)) {
+      issues.push(issue("FAIL", "stage-score-rubric-stage-missing", `${stage} is missing from ${path} stage_focus.`, path));
+      continue;
+    }
+    if (focus.length < minimumFocus) {
+      issues.push(issue("FAIL", "stage-score-rubric-stage-focus-too-small", `${stage} must reference at least ${minimumFocus} focus dimensions.`, path));
+    }
+    for (const dimensionId of focus) {
+      if (!dimensionIds.has(dimensionId)) {
+        issues.push(issue("FAIL", "stage-score-rubric-stage-focus-unknown", `${stage} references unknown dimension ${dimensionId}.`, path));
+      }
+    }
+  }
+
+  for (const stage of Object.keys(stageFocus)) {
+    if (!stageDirs.includes(stage)) {
+      issues.push(issue("FAIL", "stage-score-rubric-unknown-stage", `${stage} is present in ${path} but no matching stage directory exists.`, path));
+    }
+  }
+
+  return issues;
+}
+
 function promptSkillDriftIssues() {
   const issues = [];
   const path = "core/workflows/stages/drift-rules.json";
@@ -695,6 +764,7 @@ const checks = [
   { id: "public-skills", issues: publicSkillIssues() },
   { id: "stage-skills", issues: stageSkillIssues() },
   { id: "stage-eval-fixtures", issues: stageEvalFixtureIssues() },
+  { id: "stage-score-rubric", issues: stageScoreRubricIssues() },
   { id: "prompt-skill-drift", issues: promptSkillDriftIssues() },
   { id: "schema-contracts", issues: schemaContractIssues() },
   { id: "placeholder-density", issues: placeholderIssues(files) },

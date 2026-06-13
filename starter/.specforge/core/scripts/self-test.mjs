@@ -177,6 +177,32 @@ function testStageEvalFixturesCoverStages() {
   }
 }
 
+function testStageScoreRubricCoversStages() {
+  const rubricPath = join(root, "core/workflows/stages/score-rubric.json");
+  const payload = JSON.parse(readFileSync(rubricPath, "utf8"));
+  assert.equal(payload.version, 1);
+  assert.ok(payload.dimensions.length >= 5);
+
+  const dimensionIds = new Set(payload.dimensions.map((dimension) => dimension.id));
+  for (const dimension of payload.dimensions) {
+    assert.ok(dimension.description, `${dimension.id} must define description`);
+    assert.ok(dimension.strong_signals.length > 0, `${dimension.id} must define strong_signals`);
+    assert.ok(dimension.failure_signals.length > 0, `${dimension.id} must define failure_signals`);
+  }
+
+  const stageDirs = readdirSync(join(root, "core/workflows/stages"), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort();
+  assert.deepEqual(Object.keys(payload.stage_focus).sort(), stageDirs);
+  for (const [stage, focus] of Object.entries(payload.stage_focus)) {
+    assert.ok(focus.length >= payload.minimum_focus_dimensions, `${stage} must have enough score focus dimensions`);
+    for (const dimensionId of focus) {
+      assert.ok(dimensionIds.has(dimensionId), `${stage} references unknown score dimension ${dimensionId}`);
+    }
+  }
+}
+
 function testPromptSkillDriftRules() {
   const rulesPath = join(root, "core/workflows/stages/drift-rules.json");
   const payload = JSON.parse(readFileSync(rulesPath, "utf8"));
@@ -272,6 +298,7 @@ testArchiveAppend();
 testQualityPolicyValidation();
 testWikiQualityGraphFactReferences();
 testStageEvalFixturesCoverStages();
+testStageScoreRubricCoversStages();
 testPromptSkillDriftRules();
 testArtifactQualityProfiles();
 

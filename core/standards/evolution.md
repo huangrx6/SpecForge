@@ -21,6 +21,7 @@
 | 产物降噪 | artifact quality、workflow package、HTML report、handoff summary | Markdown 是事实源，HTML 是阅读层 |
 | 证据分级 | evidence summary、test cases、verification report | proven / mocked / manual-confirmed / deferred / missing 必须区分 |
 | 阶段回归样例 | `core/workflows/stages/eval-fixtures.json`、self-test、framework audit | 每个 stage 都有最小通过样例和阻断样例，workflow 改动必须保持覆盖 |
+| 阶段评分器 | `core/workflows/stages/score-rubric.json`、framework audit、self-test | 每个 stage 都有评分关注点，便于后续 HTML 报告、CI 或人工 review 复用 |
 | Prompt / skill 漂移审计 | `core/workflows/stages/drift-rules.json`、framework audit、self-test | gate、artifact、证据路径、public skill 和 core stage 映射必须共享同一契约 |
 | Spec lint 规则化 | `artifact-quality.mjs` profile checks、quality suite、self-test | requirements / technical_design / tasks 的结构缺口、未决 marker 和任务核心字段必须提前暴露 |
 | 代码理解 | codebase index、provider facts、code intelligence profile、wiki quality graph fact check | provider 输出只能作为事实候选，必须带来源、置信度、用途和 wiki 引用 |
@@ -33,7 +34,6 @@
 |---|---|---|---|---|
 | P0 | 命令唯一事实源 | 减少标准文档重复和过期命令 | `framework-audit.mjs` 检查 standards 中脚本清单长度和失效命令 | 非命令目录型标准不再维护大段脚本清单 |
 | P0 | Wiki 回写辅助生成 | 存量项目事实可从 graph facts 半自动形成候选补丁 | `sync-wiki.mjs` 增加 dry-run candidate plan | 候选补丁只引用 `used_for_wiki=true` 且有 source path 的事实，并等待人工确认 |
-| P1 | 阶段评分器 | 让 agent workflow 可回归评估，而不是只靠感觉 | `eval-fixtures.json` 扩展 score rubric，输出 stage scorecard | 每个 stage 有 pass/fail 样例、评分维度、最小证据和退回信号 |
 | P1 | HTML 报告组件化 | 让非研发也能读懂复杂规格和验证矩阵 | report renderer 增加 action board、decision board、trace matrix 组件边界 | 首屏只显示当前状态、下一步、最高风险和可复制命令 |
 | P1 | Prompt pack 版本化 | 防止技能提示词越改越散，便于实验和回滚 | `core/prompts/` 或 `core/skills/**/prompts/` 增加版本、适用场景和变更日志 | 入口 skill 只引用 prompt pack，不复制长提示词 |
 | P2 | Interactive decision package | 人工确认更像审批包，而不是聊天追问 | `decision-brief.mjs` 输出可复制 A/B/accept-risk 回复和影响摘要 | 用户一句回复能被写回 artifact 或 gate evidence |
