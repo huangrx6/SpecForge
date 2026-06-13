@@ -47,6 +47,44 @@ node .specforge/core/scripts/codebase-index.mjs --write-report
 
 报告默认写入 active work item 的 `00-steering/codebase-intelligence.md`；没有 active work item 时写入 `.specforge/work/inbox/codebase-intelligence.md`。它不会把第三方工具输出原样写入 wiki。
 
+## Graph Facts 归一化
+
+CodeGraph / MCP / SCIP 查询结果必须先归一成 `graph_facts[]`，再进入 report、wiki 或后续设计。
+
+```json
+{
+  "graph_facts": [
+    {
+      "id": "GF-001",
+      "type": "call",
+      "subject": "orders.submit",
+      "relation": "calls",
+      "object": "payment.authorize",
+      "source_paths": ["src/orders/service.ts", "src/payments/client.ts"],
+      "provider": "codegraph",
+      "query": "codegraph_trace orders.submit payment.authorize",
+      "confidence": "high",
+      "indexed_at": "2026-06-13T10:00:00.000Z",
+      "used_for_wiki": true
+    }
+  ]
+}
+```
+
+导入方式：
+
+```bash
+node .specforge/core/scripts/codebase-index.mjs --provider codegraph --provider-facts 00-steering/graph-facts.json --write-report
+```
+
+规则：
+
+- `type` 使用 `module / entry / symbol / call / dependency / api / data / test / operation / risk`。
+- `source_paths` 必须指向当前仓库路径；没有路径的事实只能作为低置信度候选。
+- `confidence=high` 需要 ready provider、明确 query 和 source path。
+- `used_for_wiki=true` 的事实必须能写入唯一 current wiki 文件，且保留 fact id 或来源摘要。
+- Graph facts 只能表达关系和证据，不直接替代人工总结、requirements 或 technical design。
+
 ## Provider 执行编排
 
 `codebase-index.mjs` 默认只做检测、规划和归一化，不主动执行第三方 provider。需要执行时显式加：
@@ -61,6 +99,7 @@ node .specforge/core/scripts/codebase-index.mjs --provider repomix --module src/
 - Graph / MCP provider 由 Agent runtime 查询，本地 wrapper 只输出查询计划。
 - Provider 原始输出只能作为证据，不能直接粘贴进 wiki。
 - `normalized_context` 是后续 wiki 回写的输入边界。
+- `graph_facts[]` 是 CodeGraph / MCP / SCIP 事实进入 wiki、steering 和 technical design 的统一结构。
 
 ### CodeGraph
 

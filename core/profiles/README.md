@@ -38,6 +38,7 @@ profiles/
 | Database | `database/embedded-sqlite` | 桌面、本地优先、CLI、插件、边缘节点和单机工具 |
 | Capability | `capabilities/processing-ai-jobs` | 文件处理、批处理、LLM / AI 调用、限流和任务调度 |
 | Capability | `capabilities/architecture-patterns` | 分层、模块化单体、事件驱动、状态机和扩展点 |
+| Capability | `capabilities/code-intelligence-provider` | CodeGraph / MCP / SCIP / Repomix / bootstrap map 代码理解能力 |
 | Capability | `capabilities/security` | 鉴权、权限、敏感数据、签名、审计和输入输出安全 |
 | Capability | `capabilities/observability` | 日志、指标、trace、健康检查、告警和问题定位 |
 | Capability | `capabilities/testing` | 单元、集成、契约、E2E、浏览器自动化、测试数据和 CI |
@@ -46,7 +47,7 @@ profiles/
 
 1. 先判断本次是否真的需要 profile；纯文案、纯配置、小 bugfix 可写 N/A。
 2. 主栈只在受影响时选择：Frontend、Backend、Database。
-3. 横向能力按需选择；当前内置能力卡包括 `processing-ai-jobs`、`architecture-patterns`、`security`、`observability` 和 `testing`。
+3. 横向能力按需选择；当前内置能力卡包括 `processing-ai-jobs`、`architecture-patterns`、`code-intelligence-provider`、`security`、`observability` 和 `testing`。
 4. 如果项目已有技术栈，以 `.specforge/wiki/03-architecture.md` 为准；profile 只用于确认是否沿用或偏离。
 5. 使用 profile 之外的关键技术，必须写偏离原因、风险和验证方式。
 

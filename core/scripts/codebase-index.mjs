@@ -1,8 +1,9 @@
 import { spawnSync } from "node:child_process";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, isAbsolute, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { layout, localDateIso, resolveWorkItem } from "./lib/specforge.mjs";
+import { graphFactSummary, normalizeProviderFacts } from "./modules/code-intelligence/provider-facts.mjs";
 
 const root = process.cwd();
 const scriptDir = dirname(fileURLToPath(import.meta.url));
@@ -13,6 +14,7 @@ const executeProvider = args.includes("--execute-provider");
 const requestedProvider = option("--provider", "auto");
 const requestedScanMode = option("--scan-mode", "ask");
 const requestedProfile = option("--profile", "");
+const providerFactsPath = option("--provider-facts", "");
 const includeCoreSkills = args.includes("--include-core-skills") || requestedProfile === "specforge-self-audit";
 
 function option(name, fallback) {
@@ -69,7 +71,11 @@ function firstLine(text) {
 }
 
 function excerpt(text, length = 1200) {
-  return String(text ?? "").trim().slice(0, length);
+  return stripAnsi(text).trim().slice(0, length);
+}
+
+function stripAnsi(text) {
+  return String(text ?? "").replace(/\x1B\[[0-?]*[ -/]*[@-~]/g, "");
 }
 
 function basicProviderHealth(detected) {
@@ -304,6 +310,17 @@ function providerHealthWarnings(list) {
   return list.flatMap((item) =>
     (item.health?.warnings ?? []).map((warning) => `${item.label}: ${warning}`),
   );
+}
+
+function loadProviderFacts(selected) {
+  if (!providerFactsPath) return [];
+  const absolute = isAbsolute(providerFactsPath) ? providerFactsPath : join(root, providerFactsPath);
+  const raw = JSON.parse(readFileSync(absolute, "utf8"));
+  return normalizeProviderFacts(raw, {
+    provider: selected.id,
+    query: providerFactsPath,
+    indexed_at: new Date().toISOString(),
+  });
 }
 
 function selectProvider(list, scale) {
@@ -574,7 +591,7 @@ function firstItems(items = [], limit = 12) {
   return items.slice(0, limit);
 }
 
-function normalizedContext(bootstrap, selected, status) {
+function normalizedContext(bootstrap, selected, status, graphFacts = []) {
   const modules = firstItems(bootstrap.source_roots ?? [], 12).map((item) => ({
     path: item.name,
     evidence: "bootstrap.source_roots",
@@ -595,6 +612,8 @@ function normalizedContext(bootstrap, selected, status) {
     data_candidates: firstItems(bootstrap.candidates?.data ?? [], 20),
     test_candidates: firstItems(bootstrap.candidates?.tests ?? [], 20),
     operations_candidates: firstItems(bootstrap.candidates?.operations ?? [], 20),
+    graph_facts: firstItems(graphFacts, 50),
+    graph_fact_summary: graphFactSummary(graphFacts),
     wiki_targets: [
       ".specforge/wiki/01-project-overview.md",
       ".specforge/wiki/03-architecture.md",
@@ -659,6 +678,7 @@ function payloadSummary(payload) {
     data_candidates: payload.normalized_context.data_candidates.map(itemPath),
     test_candidates: payload.normalized_context.test_candidates.map(itemPath),
     operations_candidates: payload.normalized_context.operations_candidates.map(itemPath),
+    graph_fact_summary: payload.normalized_context.graph_fact_summary,
   };
 }
 
@@ -845,19 +865,33 @@ ${markdownList(normalized.test_candidates, (item) => `\`${item}\``)}
 
 ${markdownList(normalized.operations_candidates, (item) => `\`${item}\``)}
 
-## 5. Wiki 回写计划
+## 5. Graph Facts 归一化
+
+| 项 | 值 |
+|---|---|
+| Imported facts | ${normalized.graph_fact_summary.count} |
+| With source paths | ${normalized.graph_fact_summary.with_source_paths} |
+| Wiki candidates | ${normalized.graph_fact_summary.wiki_candidates} |
+| By type | \`${JSON.stringify(normalized.graph_fact_summary.by_type)}\` |
+| By confidence | \`${JSON.stringify(normalized.graph_fact_summary.by_confidence)}\` |
+
+| ID | Type | Subject | Relation | Object | Provider | Confidence | Source paths | Used for wiki |
+|---|---|---|---|---|---|---|---|---|
+${normalized.graph_facts.length === 0 ? "| N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A |" : normalized.graph_facts.map((fact) => `| ${fact.id} | ${fact.type} | ${fact.subject || "N/A"} | ${fact.relation || "N/A"} | ${fact.object || "N/A"} | ${fact.provider} | ${fact.confidence} | ${fact.source_paths.map((item) => `\`${item}\``).join("<br>") || "N/A"} | ${fact.used_for_wiki ? "yes" : "no"} |`).join("\n")}
+
+## 6. Wiki 回写计划
 
 ${markdownList(normalized.wiki_targets, (item) => `\`${item}\``)}
 
-## 6. 风险与停止条件
+## 7. 风险与停止条件
 
 ${markdownList([...payload.warnings, ...normalized.risks])}
 
-## 7. 下一步
+## 8. 下一步
 
 ${markdownList(payload.next_actions)}
 
-## 8. 原始 JSON 摘要
+## 9. 原始 JSON 摘要
 
 \`\`\`json
 ${JSON.stringify(
@@ -870,6 +904,7 @@ ${JSON.stringify(
     selected_provider: payload.selected_provider,
     provider_health: payload.selected_provider.health,
     normalized_context: payload.normalized_context,
+    graph_facts: payload.graph_facts,
     provider_execution: payload.provider_execution,
   },
   null,
@@ -973,6 +1008,7 @@ try {
   const dependency = dependencyDecision(scanModeDecision, bootstrap.scale, providerList);
   const plan = providerPlan(selection.selected);
   const execution = runProvider(selection.selected, plan);
+  const graphFacts = loadProviderFacts(selection.selected);
   const workflowStatus = scanModeDecision.selected ? selection.status : scanModeDecision.status;
   const warnings = scanModeDecision.selected
     ? [...selection.warnings, ...scanModeDecision.warnings, ...providerHealthWarnings(providerList)]
@@ -995,7 +1031,8 @@ try {
     policy: policyForScale(bootstrap.scale),
     next_actions: nextActions(selection.status, bootstrap.scale, selection.selected, scanModeDecision, dependency),
     warnings,
-    normalized_context: normalizedContext(bootstrap, selection.selected, selection.status),
+    graph_facts: graphFacts,
+    normalized_context: normalizedContext(bootstrap, selection.selected, selection.status, graphFacts),
     provider_plan: plan,
     provider_execution: execution,
     bootstrap,
