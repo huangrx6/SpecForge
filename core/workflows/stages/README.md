@@ -11,6 +11,8 @@ stages/<name>/
 └── SKILL.md
 ```
 
+跨 public skill、core stage 和 gate evidence 的术语契约保存在 `drift-rules.json`。修改 gate 名称、artifact id、证据路径或入口 skill 映射时，必须同步该文件并运行 framework audit。
+
 `SKILL.md` 必须包含 YAML frontmatter：
 
 ```yaml
@@ -66,6 +68,7 @@ description: <说明此技能做什么，以及什么时候使用>
 ## 维护规则
 
 - 阶段行为变化时，先更新 `core/workflows/stages/<name>/SKILL.md`，再更新对应 `skills/sf-*` skill。
+- gate、artifact、证据路径或入口映射变化时，同步 `core/workflows/stages/drift-rules.json`；不要让 public skill 和 core stage 各自维护一套说法。
 - 不要把 UI 体验设计和技术架构设计重新合并成一个长期维护的 stage。
 - 入口 skill 只保留运行时入口、动作、停止条件和完成标准，不复制内部技能的全部内容。
 - 业务项目通过 onboard 会获得本目录的发行快照，保证离线环境也能读取内部技能。

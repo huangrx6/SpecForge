@@ -176,11 +176,48 @@ function testStageEvalFixturesCoverStages() {
   }
 }
 
+function testPromptSkillDriftRules() {
+  const rulesPath = join(root, "core/workflows/stages/drift-rules.json");
+  const payload = JSON.parse(readFileSync(rulesPath, "utf8"));
+  assert.equal(payload.version, 1);
+  assert.ok(payload.gate_rules.length >= 4);
+  assert.ok(payload.artifact_terms.length >= 8);
+
+  const catalog = JSON.parse(readFileSync(join(root, "skills/catalog.json"), "utf8"));
+  const catalogSkills = new Map(catalog.skills.map((skill) => [skill.id, skill]));
+
+  for (const rule of payload.gate_rules) {
+    assert.ok(rule.gate, "gate rule must define gate");
+    assert.ok(rule.stage, `${rule.gate} must define stage`);
+    assert.ok(rule.public_skill, `${rule.gate} must define public_skill`);
+    assert.ok(rule.evidence, `${rule.gate} must define evidence`);
+    assert.ok(rule.approved_command.includes(`gate.mjs ${rule.gate} APPROVED --evidence ${rule.evidence}`));
+
+    const stageSkill = readFileSync(join(root, "core/workflows/stages", rule.stage, "SKILL.md"), "utf8");
+    const publicSkill = readFileSync(join(root, "skills", rule.public_skill, "SKILL.md"), "utf8");
+    assert.ok(stageSkill.includes(rule.gate), `${rule.stage} core skill must mention ${rule.gate}`);
+    assert.ok(stageSkill.includes(rule.evidence), `${rule.stage} core skill must mention ${rule.evidence}`);
+    assert.ok(publicSkill.includes(`.specforge/core/workflows/stages/${rule.stage}/SKILL.md`));
+    assert.ok(publicSkill.includes(rule.evidence), `${rule.public_skill} must mention ${rule.evidence}`);
+
+    const catalogSkill = catalogSkills.get(rule.public_skill);
+    assert.equal(catalogSkill.primary_stage, rule.stage);
+    assert.ok(catalogSkill.core_stages.includes(rule.stage));
+  }
+
+  for (const term of payload.artifact_terms) {
+    const catalogSkill = catalogSkills.get(term.public_skill);
+    assert.equal(catalogSkill.primary_stage, term.stage);
+    assert.ok(catalogSkill.core_stages.includes(term.stage));
+  }
+}
+
 testRegistrySingleActiveRemoval();
 testRegistryKeepsOtherActiveEntries();
 testArchiveAppend();
 testQualityPolicyValidation();
 testWikiQualityGraphFactReferences();
 testStageEvalFixturesCoverStages();
+testPromptSkillDriftRules();
 
 console.log("SpecForge self-test passed.");

@@ -414,6 +414,136 @@ function stageEvalFixtureIssues() {
   return issues;
 }
 
+function promptSkillDriftIssues() {
+  const issues = [];
+  const path = "core/workflows/stages/drift-rules.json";
+  if (!exists(path)) return [issue("FAIL", "prompt-skill-drift-rules-missing", `${path} is required to prevent prompt and skill terminology drift.`, path)];
+
+  let payload;
+  try {
+    payload = JSON.parse(read(path));
+  } catch (error) {
+    return [issue("FAIL", "prompt-skill-drift-rules-invalid-json", `${path} is invalid JSON: ${error.message}.`, path)];
+  }
+
+  if (payload.version !== 1) {
+    issues.push(issue("WARN", "prompt-skill-drift-rules-version", `${path} should use version 1.`, path));
+  }
+  if (!Array.isArray(payload.gate_rules) || payload.gate_rules.length === 0) {
+    issues.push(issue("FAIL", "prompt-skill-gate-rules-empty", `${path} must define gate_rules.`, path));
+  }
+  if (!Array.isArray(payload.artifact_terms) || payload.artifact_terms.length === 0) {
+    issues.push(issue("FAIL", "prompt-skill-artifact-terms-empty", `${path} must define artifact_terms.`, path));
+  }
+
+  const catalog = exists("skills/catalog.json") ? JSON.parse(read("skills/catalog.json")) : { skills: [] };
+  const catalogSkills = new Map((catalog.skills ?? []).map((skill) => [skill.id, skill]));
+  const artifactIds = new Set(
+    readdirSync(join(root, "core/artifacts/schemas"))
+      .filter((name) => name.endsWith(".json"))
+      .flatMap((name) => JSON.parse(read(`core/artifacts/schemas/${name}`)).artifacts.map((artifact) => artifact.id)),
+  );
+  const outputs = new Set(
+    readdirSync(join(root, "core/artifacts/schemas"))
+      .filter((name) => name.endsWith(".json"))
+      .flatMap((name) => JSON.parse(read(`core/artifacts/schemas/${name}`)).artifacts.flatMap((artifact) => artifact.outputs ?? [])),
+  );
+
+  const seenGates = new Set();
+  for (const rule of payload.gate_rules ?? []) {
+    for (const field of ["gate", "artifact", "stage", "public_skill", "evidence", "approved_command"]) {
+      if (!rule[field]) issues.push(issue("FAIL", "prompt-skill-gate-rule-field-missing", `Gate rule is missing ${field}.`, path));
+    }
+    if (!rule.gate) continue;
+    if (seenGates.has(rule.gate)) issues.push(issue("FAIL", "prompt-skill-gate-rule-duplicate", `${rule.gate} appears more than once in ${path}.`, path));
+    seenGates.add(rule.gate);
+    if (!artifactIds.has(rule.artifact)) {
+      issues.push(issue("FAIL", "prompt-skill-gate-artifact-unknown", `${rule.gate} references unknown artifact ${rule.artifact}.`, path));
+    }
+
+    const stagePath = `core/workflows/stages/${rule.stage}/SKILL.md`;
+    const publicSkillPath = `skills/${rule.public_skill}/SKILL.md`;
+    const publicStageLink = `.specforge/core/workflows/stages/${rule.stage}/SKILL.md`;
+    if (!exists(stagePath)) {
+      issues.push(issue("FAIL", "prompt-skill-gate-stage-missing", `${rule.gate} stage skill is missing: ${stagePath}.`, path));
+    } else {
+      const body = read(stagePath);
+      if (!body.includes(rule.gate)) {
+        issues.push(issue("FAIL", "prompt-skill-gate-name-missing-in-stage", `${stagePath} does not mention canonical gate ${rule.gate}.`, stagePath));
+      }
+      if (!body.includes(rule.evidence)) {
+        issues.push(issue("FAIL", "prompt-skill-gate-evidence-missing-in-stage", `${stagePath} does not mention canonical evidence ${rule.evidence}.`, stagePath));
+      }
+    }
+
+    if (!exists(publicSkillPath)) {
+      issues.push(issue("FAIL", "prompt-skill-gate-public-skill-missing", `${rule.gate} public skill is missing: ${publicSkillPath}.`, path));
+    } else {
+      const body = read(publicSkillPath);
+      if (!body.includes(publicStageLink)) {
+        issues.push(issue("FAIL", "prompt-skill-core-stage-link-missing", `${publicSkillPath} must link to ${publicStageLink}.`, publicSkillPath));
+      }
+      if (!body.includes(rule.gate)) {
+        issues.push(issue("FAIL", "prompt-skill-gate-name-missing-in-public-skill", `${publicSkillPath} does not mention canonical gate ${rule.gate}.`, publicSkillPath));
+      }
+      if (!body.includes(rule.evidence)) {
+        issues.push(issue("FAIL", "prompt-skill-gate-evidence-missing-in-public-skill", `${publicSkillPath} does not mention canonical evidence ${rule.evidence}.`, publicSkillPath));
+      }
+      const commandCount = rule.approved_command ? body.split(rule.approved_command).length - 1 : 0;
+      if (commandCount === 0) {
+        issues.push(issue("WARN", "prompt-skill-approved-command-missing", `${publicSkillPath} should include canonical command: ${rule.approved_command}.`, publicSkillPath));
+      }
+      if (commandCount > 1) {
+        issues.push(issue("WARN", "prompt-skill-approved-command-duplicated", `${publicSkillPath} repeats canonical command ${commandCount} times: ${rule.approved_command}.`, publicSkillPath));
+      }
+    }
+
+    const catalogSkill = catalogSkills.get(rule.public_skill);
+    if (!catalogSkill) {
+      issues.push(issue("FAIL", "prompt-skill-gate-catalog-missing", `${rule.public_skill} is not present in skills/catalog.json.`, "skills/catalog.json"));
+    } else {
+      if (catalogSkill.primary_stage !== rule.stage) {
+        issues.push(issue("FAIL", "prompt-skill-gate-primary-stage-drift", `${rule.public_skill} primary_stage is ${catalogSkill.primary_stage}, expected ${rule.stage}.`, "skills/catalog.json"));
+      }
+      if (!(catalogSkill.core_stages ?? []).includes(rule.stage)) {
+        issues.push(issue("FAIL", "prompt-skill-gate-core-stage-drift", `${rule.public_skill} core_stages must include ${rule.stage}.`, "skills/catalog.json"));
+      }
+    }
+  }
+
+  const seenArtifacts = new Set();
+  for (const term of payload.artifact_terms ?? []) {
+    for (const field of ["artifact", "stage", "public_skill", "output"]) {
+      if (!term[field]) issues.push(issue("FAIL", "prompt-skill-artifact-term-field-missing", `Artifact term is missing ${field}.`, path));
+    }
+    if (!term.artifact) continue;
+    if (seenArtifacts.has(term.artifact)) issues.push(issue("FAIL", "prompt-skill-artifact-term-duplicate", `${term.artifact} appears more than once in ${path}.`, path));
+    seenArtifacts.add(term.artifact);
+    if (!artifactIds.has(term.artifact)) {
+      issues.push(issue("FAIL", "prompt-skill-artifact-term-unknown", `${term.artifact} is not defined by a workflow schema.`, path));
+    }
+    if (term.output && !outputs.has(term.output)) {
+      issues.push(issue("FAIL", "prompt-skill-artifact-output-unknown", `${term.artifact} output ${term.output} is not owned by a workflow schema.`, path));
+    }
+    if (term.stage && !exists(`core/workflows/stages/${term.stage}/SKILL.md`)) {
+      issues.push(issue("FAIL", "prompt-skill-artifact-stage-missing", `${term.artifact} references missing stage ${term.stage}.`, path));
+    }
+    const catalogSkill = catalogSkills.get(term.public_skill);
+    if (!catalogSkill) {
+      issues.push(issue("FAIL", "prompt-skill-artifact-catalog-missing", `${term.public_skill} is not present in skills/catalog.json.`, "skills/catalog.json"));
+    } else {
+      if (catalogSkill.primary_stage !== term.stage) {
+        issues.push(issue("FAIL", "prompt-skill-artifact-primary-stage-drift", `${term.public_skill} primary_stage is ${catalogSkill.primary_stage}, expected ${term.stage}.`, "skills/catalog.json"));
+      }
+      if (!(catalogSkill.core_stages ?? []).includes(term.stage)) {
+        issues.push(issue("FAIL", "prompt-skill-artifact-core-stage-drift", `${term.public_skill} core_stages must include ${term.stage}.`, "skills/catalog.json"));
+      }
+    }
+  }
+
+  return issues;
+}
+
 function schemaContractIssues() {
   const issues = [];
   const schemaFiles = readdirSync(join(root, "core/artifacts/schemas"))
@@ -565,6 +695,7 @@ const checks = [
   { id: "public-skills", issues: publicSkillIssues() },
   { id: "stage-skills", issues: stageSkillIssues() },
   { id: "stage-eval-fixtures", issues: stageEvalFixtureIssues() },
+  { id: "prompt-skill-drift", issues: promptSkillDriftIssues() },
   { id: "schema-contracts", issues: schemaContractIssues() },
   { id: "placeholder-density", issues: placeholderIssues(files) },
   { id: "large-markdown", issues: largeMarkdownIssues(files) },
