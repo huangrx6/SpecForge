@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "id": "sf-brainstorm",
+  "layer": "product-discovery",
+  "primary_stage": "brainstorm",
+  "core_stages": [
+    "brainstorm"
+  ],
+  "purpose": "Explore fuzzy product, AI, UI, and technical choices with human confirmation.",
+  "constraints": [
+    {
+      "kind": "stage",
+      "stage": "brainstorm",
+      "path": "constraints/stages/brainstorm/SKILL.md"
+    }
+  ],
+  "scripts": [
+    "scripts/commands.json"
+  ]
+}

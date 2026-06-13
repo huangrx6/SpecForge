@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "id": "sf-doctor",
+  "layer": "router",
+  "primary_stage": "status",
+  "core_stages": [
+    "status"
+  ],
+  "purpose": "Inspect repository health, active work state, and next route.",
+  "constraints": [
+    {
+      "kind": "stage",
+      "stage": "status",
+      "path": "constraints/stages/status/SKILL.md"
+    },
+    {
+      "kind": "workflow",
+      "path": "constraints/workflow/drift-rules.json"
+    },
+    {
+      "kind": "workflow",
+      "path": "constraints/workflow/eval-fixtures.json"
+    },
+    {
+      "kind": "workflow",
+      "path": "constraints/workflow/README.md"
+    },
+    {
+      "kind": "workflow",
+      "path": "constraints/workflow/score-rubric.json"
+    }
+  ],
+  "scripts": [
+    "scripts/commands.json"
+  ]
+}

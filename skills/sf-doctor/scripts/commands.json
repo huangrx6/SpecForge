@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "skill": "sf-doctor",
+  "description": "Commands this skill package is expected to use. Keep this local to the skill so maintainers do not hunt through core/scripts.",
+  "commands": [
+    "node .specforge/core/scripts/artifact-graph-status.mjs",
+    "node .specforge/core/scripts/artifact-graph-status.mjs --json",
+    "node .specforge/core/scripts/codebase-index.mjs --json",
+    "node .specforge/core/scripts/decision-checkpoints.mjs",
+    "node .specforge/core/scripts/decision-checkpoints.mjs --json",
+    "node .specforge/core/scripts/doctor.mjs",
+    "node .specforge/core/scripts/gate.mjs code_review APPROVED --evidence 04-code-review/code-review-v1.md",
+    "node .specforge/core/scripts/gate.mjs spec_review APPROVED --evidence 02-spec-review/spec-review-v1.md",
+    "node .specforge/core/scripts/gate.mjs verification APPROVED --evidence 05-verification/report.md",
+    "node .specforge/core/scripts/gate.mjs wiki_sync APPROVED --evidence 06-close/wiki-sync.md",
+    "node .specforge/core/scripts/instructions.mjs",
+    "node .specforge/core/scripts/instructions.mjs --json",
+    "node .specforge/core/scripts/quality-suite.mjs",
+    "node .specforge/core/scripts/quality-suite.mjs --json",
+    "node .specforge/core/scripts/status.mjs",
+    "node .specforge/core/scripts/status.mjs --json"
+  ]
+}

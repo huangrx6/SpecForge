@@ -20,9 +20,10 @@
 | 人工确认 | decision checkpoints、decision brief、decision quality、gate preflight | open decision 不得被口头忽略；风险接受必须有 owner、影响和触发条件 |
 | 产物降噪 | artifact quality、workflow package、HTML report、handoff summary | Markdown 是事实源，HTML 是阅读层 |
 | 证据分级 | evidence summary、test cases、verification report | proven / mocked / manual-confirmed / deferred / missing 必须区分 |
-| 阶段回归样例 | `core/workflows/stages/eval-fixtures.json`、self-test、framework audit | 每个 stage 都有最小通过样例和阻断样例，workflow 改动必须保持覆盖 |
-| 阶段评分器 | `core/workflows/stages/score-rubric.json`、framework audit、self-test | 每个 stage 都有评分关注点，便于后续 HTML 报告、CI 或人工 review 复用 |
-| Prompt / skill 漂移审计 | `core/workflows/stages/drift-rules.json`、framework audit、self-test | gate、artifact、证据路径、public skill 和 core stage 映射必须共享同一契约 |
+| 技能包聚合 | `skills/<sf-*>/constraints/`、`skills/<sf-*>/scripts/commands.json`、framework audit | 每个入口技能聚合自己的约束、参考资料和脚本索引，core 目录仅作兼容镜像 |
+| 阶段回归样例 | `skills/sf-router/constraints/workflow/eval-fixtures.json`、self-test、framework audit | 每个 stage 都有最小通过样例和阻断样例，workflow 改动必须保持覆盖 |
+| 阶段评分器 | `skills/sf-router/constraints/workflow/score-rubric.json`、framework audit、self-test | 每个 stage 都有评分关注点，便于后续 HTML 报告、CI 或人工 review 复用 |
+| Prompt / skill 漂移审计 | `skills/sf-router/constraints/workflow/drift-rules.json`、framework audit、self-test | gate、artifact、证据路径、public skill 和 stage constraint 映射必须共享同一契约 |
 | Spec lint 规则化 | `artifact-quality.mjs` profile checks、quality suite、self-test | requirements / technical_design / tasks 的结构缺口、未决 marker 和任务核心字段必须提前暴露 |
 | 代码理解 | codebase index、provider facts、code intelligence profile、wiki quality graph fact check | provider 输出只能作为事实候选，必须带来源、置信度、用途和 wiki 引用 |
 | 外部入口治理 | `skills/catalog.json`、skills README、framework audit | 对外 skill 是稳定 API，目录、分层、阶段映射和文档必须可审计 |

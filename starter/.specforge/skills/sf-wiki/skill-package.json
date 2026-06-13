@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "id": "sf-wiki",
+  "layer": "delivery-gates",
+  "primary_stage": "wiki-sync",
+  "core_stages": [
+    "wiki-sync",
+    "steering"
+  ],
+  "purpose": "Sync long-lived project facts into .specforge/wiki.",
+  "constraints": [
+    {
+      "kind": "stage",
+      "stage": "steering",
+      "path": "constraints/stages/steering/SKILL.md"
+    },
+    {
+      "kind": "stage",
+      "stage": "wiki-sync",
+      "path": "constraints/stages/wiki-sync/SKILL.md"
+    }
+  ],
+  "scripts": [
+    "scripts/commands.json"
+  ]
+}

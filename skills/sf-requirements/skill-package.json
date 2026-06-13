@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "id": "sf-requirements",
+  "layer": "product-discovery",
+  "primary_stage": "requirements",
+  "core_stages": [
+    "requirements"
+  ],
+  "purpose": "Convert PRD, brief, and research into testable requirements.",
+  "constraints": [
+    {
+      "kind": "stage",
+      "stage": "requirements",
+      "path": "constraints/stages/requirements/SKILL.md"
+    }
+  ],
+  "scripts": [
+    "scripts/commands.json"
+  ]
+}

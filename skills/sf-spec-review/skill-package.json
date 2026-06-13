@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "id": "sf-spec-review",
+  "layer": "design-technical-planning",
+  "primary_stage": "spec-review",
+  "core_stages": [
+    "spec-review"
+  ],
+  "purpose": "Review specs and gate readiness before implementation.",
+  "constraints": [
+    {
+      "kind": "stage",
+      "stage": "spec-review",
+      "path": "constraints/stages/spec-review/SKILL.md"
+    }
+  ],
+  "scripts": [
+    "scripts/commands.json"
+  ]
+}

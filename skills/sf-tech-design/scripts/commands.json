@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "skill": "sf-tech-design",
+  "description": "Commands this skill package is expected to use. Keep this local to the skill so maintainers do not hunt through core/scripts.",
+  "commands": [
+    "node .specforge/core/scripts/create-artifact.mjs technical_design",
+    "node .specforge/core/scripts/instructions.mjs"
+  ]
+}

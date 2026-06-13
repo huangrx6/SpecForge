@@ -19,6 +19,10 @@
       "to": "core/README.md"
     },
     {
+      "from": "../skills",
+      "to": "skills"
+    },
+    {
       "from": "artifacts/schemas",
       "to": "core/artifacts/schemas"
     },

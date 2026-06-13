@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skill": "sf-implement",
+  "description": "Commands this skill package is expected to use. Keep this local to the skill so maintainers do not hunt through core/scripts.",
+  "commands": [
+    "node .specforge/core/scripts/create-artifact.mjs implementation",
+    "node .specforge/core/scripts/instructions.mjs",
+    "node .specforge/core/scripts/instructions.mjs -- apply",
+    "node .specforge/core/scripts/instructions.mjs apply"
+  ]
+}

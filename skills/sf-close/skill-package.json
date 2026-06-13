@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "id": "sf-close",
+  "layer": "delivery-gates",
+  "primary_stage": "closure",
+  "core_stages": [
+    "wiki-sync",
+    "closure"
+  ],
+  "purpose": "Finalize wiki sync, release, rollback, doctor checks, and archive.",
+  "constraints": [
+    {
+      "kind": "stage",
+      "stage": "closure",
+      "path": "constraints/stages/closure/SKILL.md"
+    },
+    {
+      "kind": "stage",
+      "stage": "wiki-sync",
+      "path": "constraints/stages/wiki-sync/SKILL.md"
+    }
+  ],
+  "scripts": [
+    "scripts/commands.json"
+  ]
+}

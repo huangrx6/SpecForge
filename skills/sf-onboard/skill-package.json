@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "id": "sf-onboard",
+  "layer": "project-setup",
+  "primary_stage": "steering",
+  "core_stages": [
+    "steering"
+  ],
+  "purpose": "Install or repair the .specforge project workspace.",
+  "constraints": [
+    {
+      "kind": "stage",
+      "stage": "steering",
+      "path": "constraints/stages/steering/SKILL.md"
+    }
+  ],
+  "scripts": [
+    "scripts/commands.json"
+  ]
+}

@@ -296,6 +296,85 @@ function publicSkillIssues() {
   return issues;
 }
 
+function skillPackageIssues() {
+  const issues = [];
+  const catalogPath = "skills/catalog.json";
+  if (!exists(catalogPath)) return [issue("FAIL", "skill-package-catalog-missing", `${catalogPath} is required before validating skill packages.`, catalogPath)];
+
+  let catalog;
+  try {
+    catalog = JSON.parse(read(catalogPath));
+  } catch (error) {
+    return [issue("FAIL", "skill-package-catalog-invalid-json", `${catalogPath} is invalid JSON: ${error.message}.`, catalogPath)];
+  }
+
+  for (const skill of catalog.skills ?? []) {
+    const packagePath = `skills/${skill.id}/skill-package.json`;
+    const commandsPath = `skills/${skill.id}/scripts/commands.json`;
+    if (!exists(packagePath)) {
+      issues.push(issue("FAIL", "skill-package-manifest-missing", `${skill.id} must keep related constraints and scripts in ${packagePath}.`, packagePath));
+      continue;
+    }
+    if (!exists(commandsPath)) {
+      issues.push(issue("FAIL", "skill-package-commands-missing", `${skill.id} must keep related script commands in ${commandsPath}.`, commandsPath));
+    }
+
+    let manifest;
+    try {
+      manifest = JSON.parse(read(packagePath));
+    } catch (error) {
+      issues.push(issue("FAIL", "skill-package-manifest-invalid-json", `${packagePath} is invalid JSON: ${error.message}.`, packagePath));
+      continue;
+    }
+
+    if (manifest.id !== skill.id) {
+      issues.push(issue("FAIL", "skill-package-id-mismatch", `${packagePath} id must be ${skill.id}.`, packagePath));
+    }
+    if (manifest.primary_stage !== skill.primary_stage) {
+      issues.push(issue("FAIL", "skill-package-primary-stage-mismatch", `${skill.id} primary_stage differs from skills/catalog.json.`, packagePath));
+    }
+
+    const constraints = Array.isArray(manifest.constraints) ? manifest.constraints : [];
+    const constraintPaths = new Set(constraints.map((item) => item.path));
+    for (const stage of skill.core_stages ?? []) {
+      if (!constraintPaths.has(`constraints/stages/${stage}/SKILL.md`)) {
+        issues.push(issue("FAIL", "skill-package-stage-constraint-missing", `${skill.id} must contain constraints/stages/${stage}/SKILL.md for its cataloged stage.`, packagePath));
+      }
+    }
+    for (const constraint of constraints) {
+      if (!constraint.path || constraint.path.startsWith("/") || constraint.path.includes("..")) {
+        issues.push(issue("FAIL", "skill-package-constraint-path-invalid", `${skill.id} has invalid constraint path: ${constraint.path ?? "(missing)"}.`, packagePath));
+        continue;
+      }
+      if (!exists(`skills/${skill.id}/${constraint.path}`)) {
+        issues.push(issue("FAIL", "skill-package-constraint-file-missing", `${skill.id} references missing constraint ${constraint.path}.`, packagePath));
+      }
+    }
+
+    if (exists(commandsPath)) {
+      let commands;
+      try {
+        commands = JSON.parse(read(commandsPath));
+      } catch (error) {
+        issues.push(issue("FAIL", "skill-package-commands-invalid-json", `${commandsPath} is invalid JSON: ${error.message}.`, commandsPath));
+        continue;
+      }
+      if (commands.skill !== skill.id) {
+        issues.push(issue("FAIL", "skill-package-commands-skill-mismatch", `${commandsPath} skill must be ${skill.id}.`, commandsPath));
+      }
+      for (const command of commands.commands ?? []) {
+        const match = String(command).match(/^node\s+\.specforge\/core\/scripts\/([A-Za-z0-9_.-]+\.mjs)\b/);
+        if (!match) continue;
+        if (!exists(`core/scripts/${match[1]}`)) {
+          issues.push(issue("FAIL", "skill-package-command-target-missing", `${skill.id} command points at missing core/scripts/${match[1]}.`, commandsPath));
+        }
+      }
+    }
+  }
+
+  return issues;
+}
+
 function stageSkillIssues() {
   const issues = [];
   const stagesRoot = join(root, "core/workflows/stages");
@@ -532,7 +611,8 @@ function promptSkillDriftIssues() {
 
     const stagePath = `core/workflows/stages/${rule.stage}/SKILL.md`;
     const publicSkillPath = `skills/${rule.public_skill}/SKILL.md`;
-    const publicStageLink = `.specforge/core/workflows/stages/${rule.stage}/SKILL.md`;
+    const publicStageLink = `.specforge/skills/${rule.public_skill}/constraints/stages/${rule.stage}/SKILL.md`;
+    const packagedStagePath = `skills/${rule.public_skill}/constraints/stages/${rule.stage}/SKILL.md`;
     if (!exists(stagePath)) {
       issues.push(issue("FAIL", "prompt-skill-gate-stage-missing", `${rule.gate} stage skill is missing: ${stagePath}.`, path));
     } else {
@@ -549,6 +629,9 @@ function promptSkillDriftIssues() {
       issues.push(issue("FAIL", "prompt-skill-gate-public-skill-missing", `${rule.gate} public skill is missing: ${publicSkillPath}.`, path));
     } else {
       const body = read(publicSkillPath);
+      if (!exists(packagedStagePath)) {
+        issues.push(issue("FAIL", "prompt-skill-packaged-stage-missing", `${rule.public_skill} must package ${packagedStagePath}.`, packagedStagePath));
+      }
       if (!body.includes(publicStageLink)) {
         issues.push(issue("FAIL", "prompt-skill-core-stage-link-missing", `${publicSkillPath} must link to ${publicStageLink}.`, publicSkillPath));
       }
@@ -762,6 +845,7 @@ const checks = [
   { id: "script-modules", issues: scriptModuleIssues() },
   { id: "package-scripts", issues: packageScriptIssues() },
   { id: "public-skills", issues: publicSkillIssues() },
+  { id: "skill-packages", issues: skillPackageIssues() },
   { id: "stage-skills", issues: stageSkillIssues() },
   { id: "stage-eval-fixtures", issues: stageEvalFixtureIssues() },
   { id: "stage-score-rubric", issues: stageScoreRubricIssues() },

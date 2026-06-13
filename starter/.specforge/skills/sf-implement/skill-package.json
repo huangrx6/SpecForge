@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "id": "sf-implement",
+  "layer": "delivery-gates",
+  "primary_stage": "implementation",
+  "core_stages": [
+    "implementation"
+  ],
+  "purpose": "Implement approved tasks and record implementation evidence.",
+  "constraints": [
+    {
+      "kind": "stage",
+      "stage": "implementation",
+      "path": "constraints/stages/implementation/SKILL.md"
+    }
+  ],
+  "scripts": [
+    "scripts/commands.json"
+  ]
+}

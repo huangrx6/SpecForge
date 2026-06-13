@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "id": "sf-intake",
+  "layer": "project-setup",
+  "primary_stage": "discovery",
+  "core_stages": [
+    "discovery",
+    "brainstorm"
+  ],
+  "purpose": "Classify incoming requests, choose workflow, and produce the initial brief.",
+  "constraints": [
+    {
+      "kind": "stage",
+      "stage": "brainstorm",
+      "path": "constraints/stages/brainstorm/SKILL.md"
+    },
+    {
+      "kind": "stage",
+      "stage": "discovery",
+      "path": "constraints/stages/discovery/SKILL.md"
+    }
+  ],
+  "scripts": [
+    "scripts/commands.json"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "id": "sf-tasking",
+  "layer": "design-technical-planning",
+  "primary_stage": "task-planning",
+  "core_stages": [
+    "task-planning"
+  ],
+  "purpose": "Turn approved specs into traceable, verifiable implementation tasks.",
+  "constraints": [
+    {
+      "kind": "stage",
+      "stage": "task-planning",
+      "path": "constraints/stages/task-planning/SKILL.md"
+    }
+  ],
+  "scripts": [
+    "scripts/commands.json"
+  ]
+}

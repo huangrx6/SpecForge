@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "id": "sf-code-review",
+  "layer": "delivery-gates",
+  "primary_stage": "code-review",
+  "core_stages": [
+    "code-review"
+  ],
+  "purpose": "Review implementation against specs, diffs, safety, and test evidence.",
+  "constraints": [
+    {
+      "kind": "stage",
+      "stage": "code-review",
+      "path": "constraints/stages/code-review/SKILL.md"
+    }
+  ],
+  "scripts": [
+    "scripts/commands.json"
+  ]
+}

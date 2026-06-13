@@ -1,0 +1,166 @@
+{
+  "version": 1,
+  "description": "Public SpecForge skill catalog. Directory names are stable public API; core stages and standards remain the internal source of truth.",
+  "layers": [
+    {
+      "id": "router",
+      "label": "Router",
+      "purpose": "Route requests, inspect health, and run automatic progression safely."
+    },
+    {
+      "id": "project-setup",
+      "label": "Project Setup",
+      "purpose": "Initialize SpecForge, build project memory, and create work items."
+    },
+    {
+      "id": "product-discovery",
+      "label": "Product / Discovery",
+      "purpose": "Clarify fuzzy ideas, research facts, write PRD, and produce testable requirements."
+    },
+    {
+      "id": "design-technical-planning",
+      "label": "Design / Technical Planning",
+      "purpose": "Produce UI design, technical design, tasks, and implementation readiness review."
+    },
+    {
+      "id": "delivery-gates",
+      "label": "Delivery Gates",
+      "purpose": "Implement, review, verify, sync knowledge, and close work items."
+    }
+  ],
+  "skills": [
+    {
+      "id": "sf-router",
+      "layer": "router",
+      "primary_stage": "status",
+      "core_stages": ["status", "discovery"],
+      "purpose": "Root router for choosing the correct SpecForge entry skill."
+    },
+    {
+      "id": "sf-doctor",
+      "layer": "router",
+      "primary_stage": "status",
+      "core_stages": ["status"],
+      "purpose": "Inspect repository health, active work state, and next route."
+    },
+    {
+      "id": "sf-work",
+      "layer": "router",
+      "primary_stage": "status",
+      "core_stages": ["status"],
+      "purpose": "Safely continue a work item through the next ready stages."
+    },
+    {
+      "id": "sf-onboard",
+      "layer": "project-setup",
+      "primary_stage": "steering",
+      "core_stages": ["steering"],
+      "purpose": "Install or repair the .specforge project workspace."
+    },
+    {
+      "id": "sf-steering",
+      "layer": "project-setup",
+      "primary_stage": "steering",
+      "core_stages": ["steering"],
+      "purpose": "Build a reusable project profile and wiki baseline for existing codebases."
+    },
+    {
+      "id": "sf-intake",
+      "layer": "project-setup",
+      "primary_stage": "discovery",
+      "core_stages": ["discovery", "brainstorm"],
+      "purpose": "Classify incoming requests, choose workflow, and produce the initial brief."
+    },
+    {
+      "id": "sf-brainstorm",
+      "layer": "product-discovery",
+      "primary_stage": "brainstorm",
+      "core_stages": ["brainstorm"],
+      "purpose": "Explore fuzzy product, AI, UI, and technical choices with human confirmation."
+    },
+    {
+      "id": "sf-discovery",
+      "layer": "product-discovery",
+      "primary_stage": "discovery",
+      "core_stages": ["discovery", "research", "gap-report"],
+      "purpose": "Research, reproduce, or diagnose facts before requirements or tasks."
+    },
+    {
+      "id": "sf-prd",
+      "layer": "product-discovery",
+      "primary_stage": "brainstorm",
+      "core_stages": ["brainstorm"],
+      "purpose": "Create or update the product requirements document."
+    },
+    {
+      "id": "sf-requirements",
+      "layer": "product-discovery",
+      "primary_stage": "requirements",
+      "core_stages": ["requirements"],
+      "purpose": "Convert PRD, brief, and research into testable requirements."
+    },
+    {
+      "id": "sf-ui-design",
+      "layer": "design-technical-planning",
+      "primary_stage": "ui-design",
+      "core_stages": ["ui-design"],
+      "purpose": "Create UI design, state matrix, design language, and Pencil evidence."
+    },
+    {
+      "id": "sf-tech-design",
+      "layer": "design-technical-planning",
+      "primary_stage": "technical-design",
+      "core_stages": ["technical-design"],
+      "purpose": "Create implementation-ready technical design and engineering decisions."
+    },
+    {
+      "id": "sf-tasking",
+      "layer": "design-technical-planning",
+      "primary_stage": "task-planning",
+      "core_stages": ["task-planning"],
+      "purpose": "Turn approved specs into traceable, verifiable implementation tasks."
+    },
+    {
+      "id": "sf-spec-review",
+      "layer": "design-technical-planning",
+      "primary_stage": "spec-review",
+      "core_stages": ["spec-review"],
+      "purpose": "Review specs and gate readiness before implementation."
+    },
+    {
+      "id": "sf-implement",
+      "layer": "delivery-gates",
+      "primary_stage": "implementation",
+      "core_stages": ["implementation"],
+      "purpose": "Implement approved tasks and record implementation evidence."
+    },
+    {
+      "id": "sf-code-review",
+      "layer": "delivery-gates",
+      "primary_stage": "code-review",
+      "core_stages": ["code-review"],
+      "purpose": "Review implementation against specs, diffs, safety, and test evidence."
+    },
+    {
+      "id": "sf-verify",
+      "layer": "delivery-gates",
+      "primary_stage": "verification",
+      "core_stages": ["verification"],
+      "purpose": "Run or collect verification evidence and decide the verification gate."
+    },
+    {
+      "id": "sf-wiki",
+      "layer": "delivery-gates",
+      "primary_stage": "wiki-sync",
+      "core_stages": ["wiki-sync", "steering"],
+      "purpose": "Sync long-lived project facts into .specforge/wiki."
+    },
+    {
+      "id": "sf-close",
+      "layer": "delivery-gates",
+      "primary_stage": "closure",
+      "core_stages": ["wiki-sync", "closure"],
+      "purpose": "Finalize wiki sync, release, rollback, doctor checks, and archive."
+    }
+  ]
+}

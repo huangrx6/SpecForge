@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "description": "Reusable scoring rubric for SpecForge stage outputs. Pass/fail fixtures catch blockers; this rubric explains what good looks like across stages.",
+  "scale": {
+    "min": 0,
+    "max": 5,
+    "passing": 4,
+    "guidance": "0=missing, 1=template residue, 2=partially useful, 3=usable with review, 4=ready for downstream work, 5=excellent and reusable."
+  },
+  "dimensions": [
+    {
+      "id": "intent_clarity",
+      "label": "Intent clarity",
+      "weight": 1,
+      "description": "The output states the user goal, scope, non-goals, and next action without forcing readers to infer them.",
+      "strong_signals": ["one-page summary", "explicit scope", "clear next route"],
+      "failure_signals": ["vague goal", "template-only summary", "missing next step"]
+    },
+    {
+      "id": "human_checkpoint",
+      "label": "Human checkpoint",
+      "weight": 1,
+      "description": "High-impact product, UI, technical, dependency, tooling, security, cost, or rollout choices are confirmed, delegated, or explicitly blocked.",
+      "strong_signals": ["confirmed decision marker", "delegated default with owner", "risk acceptance with trigger"],
+      "failure_signals": ["silent assumption", "unresolved NEEDS marker hidden in prose", "approval without owner"]
+    },
+    {
+      "id": "traceability",
+      "label": "Traceability",
+      "weight": 1,
+      "description": "Inputs, requirements, decisions, tasks, code changes, tests, and wiki facts can be followed through stable IDs or section references.",
+      "strong_signals": ["REQ/GAP/UI/TD/T task IDs", "source-to-task matrix", "evidence links"],
+      "failure_signals": ["uncovered source item", "task without trace", "claim without source"]
+    },
+    {
+      "id": "evidence_strength",
+      "label": "Evidence strength",
+      "weight": 1,
+      "description": "Claims are backed by appropriate proof and evidence levels are not mixed together.",
+      "strong_signals": ["proven/manual/deferred separated", "commands or screenshots recorded", "source quality noted"],
+      "failure_signals": ["untested approval", "mocked result treated as production proof", "external fact without source"]
+    },
+    {
+      "id": "implementation_readiness",
+      "label": "Implementation readiness",
+      "weight": 1,
+      "description": "The output gives implementers enough boundaries, files, contracts, rollback, risks, and verification hooks to proceed without re-discovery.",
+      "strong_signals": ["files and boundaries", "contract and rollback", "verification hook"],
+      "failure_signals": ["tasks too vague", "unknown technical impact", "no rollback path"]
+    },
+    {
+      "id": "reader_fit",
+      "label": "Reader fit",
+      "weight": 1,
+      "description": "The artifact is readable for its audience: short summary first, detail below, no duplicated process noise.",
+      "strong_signals": ["progressive disclosure", "action board", "concise tables"],
+      "failure_signals": ["wall of text", "duplicated command lists", "important blocker buried late"]
+    }
+  ],
+  "stage_focus": {
+    "brainstorm": ["intent_clarity", "human_checkpoint", "reader_fit"],
+    "closure": ["evidence_strength", "traceability", "reader_fit"],
+    "code-review": ["traceability", "evidence_strength", "implementation_readiness"],
+    "discovery": ["intent_clarity", "evidence_strength", "human_checkpoint"],
+    "gap-report": ["intent_clarity", "evidence_strength", "implementation_readiness"],
+    "implementation": ["traceability", "implementation_readiness", "evidence_strength"],
+    "requirements": ["intent_clarity", "human_checkpoint", "traceability"],
+    "research": ["evidence_strength", "intent_clarity", "reader_fit"],
+    "spec-review": ["traceability", "evidence_strength", "human_checkpoint"],
+    "status": ["intent_clarity", "reader_fit", "human_checkpoint"],
+    "steering": ["evidence_strength", "traceability", "reader_fit"],
+    "task-planning": ["traceability", "implementation_readiness", "evidence_strength"],
+    "technical-design": ["implementation_readiness", "human_checkpoint", "traceability"],
+    "ui-design": ["intent_clarity", "human_checkpoint", "reader_fit"],
+    "verification": ["evidence_strength", "traceability", "reader_fit"],
+    "wiki-sync": ["traceability", "evidence_strength", "reader_fit"]
+  },
+  "minimum_focus_dimensions": 3,
+  "minimum_passing_average": 4
+}

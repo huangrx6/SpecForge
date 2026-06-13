@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "id": "sf-prd",
+  "layer": "product-discovery",
+  "primary_stage": "brainstorm",
+  "core_stages": [
+    "brainstorm"
+  ],
+  "purpose": "Create or update the product requirements document.",
+  "constraints": [
+    {
+      "kind": "stage",
+      "stage": "brainstorm",
+      "path": "constraints/stages/brainstorm/SKILL.md"
+    },
+    {
+      "kind": "stage",
+      "stage": "discovery",
+      "path": "constraints/stages/discovery/SKILL.md"
+    }
+  ],
+  "scripts": [
+    "scripts/commands.json"
+  ]
+}
