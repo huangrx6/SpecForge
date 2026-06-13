@@ -2,6 +2,8 @@
 
 `core/scripts/` 的根目录保留稳定命令入口，业务项目和 README 可以继续使用已有路径。模块边界记录在 `modules/`，可复用逻辑放在 `lib/`；后续重构时，根目录脚本逐步变成薄 wrapper。
 
+本文件是脚本模块和命令入口的事实源。标准文档可以引用少量阶段节奏命令，但不要复制完整命令目录；需要完整脚本语义时，优先引用本文件和 `core/standards/ai-toolkit.md`。
+
 ## 模块地图
 
 | 模块 | 入口脚本 | 职责 |
@@ -20,7 +22,7 @@
 | 目标 | 建议内部模块 | 说明 |
 |---|---|---|
 | CodeGraph health provider 抽取 | `scripts/modules/code-intelligence/providers/codegraph.mjs` | 当前 health 已在根入口实现；后续可抽成 provider 模块 |
-| Provider 事实归一 | `scripts/code-intelligence/provider-facts.mjs` | 统一记录 fact、source path、confidence、provider、query、timestamp、used_for_wiki |
+| Provider 事实归一 | `scripts/modules/code-intelligence/provider-facts.mjs` | 统一记录 fact、source path、confidence、provider、query、timestamp、used_for_wiki |
 | 测试用例质量扩展 | `scripts/modules/quality/test-case-quality.mjs` | 当前已有根入口；后续扩展覆盖率 / 追溯规则 |
 | Playwright 证据归档 | `scripts/modules/quality/playwright-evidence.mjs` | 把临时脚本、stdout、截图、trace manifest 归档到 `05-verification/evidence/<run-id>/` |
 | XMind 测试设计 | `scripts/modules/quality/xmind-export-check.mjs` | XMind 只做测试设计草图，必须导出 Markdown / JSON 并回到 test cases |

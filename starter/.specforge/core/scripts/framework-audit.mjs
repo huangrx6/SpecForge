@@ -326,6 +326,74 @@ function largeMarkdownIssues(files) {
   return issues;
 }
 
+function standardsCommandIssues(files) {
+  const issues = [];
+  const commandCatalogs = new Set(["core/standards/ai-toolkit.md"]);
+  const commandMentionsByScript = new Map();
+  const standardFiles = files
+    .filter((item) => item.startsWith("core/standards/") && item.endsWith(".md"))
+    .sort();
+
+  for (const file of standardFiles) {
+    const body = read(file);
+    const scripts = [...body.matchAll(/node\s+\.specforge\/core\/scripts\/([A-Za-z0-9_.-]+\.mjs)/g)]
+      .map((match) => match[1]);
+
+    for (const script of scripts) {
+      const target = `core/scripts/${script}`;
+      if (!exists(target)) {
+        issues.push(issue("FAIL", "standard-command-target-missing", `${file} references missing ${target}.`, file));
+      }
+      if (!commandMentionsByScript.has(script)) commandMentionsByScript.set(script, new Set());
+      commandMentionsByScript.get(script).add(file);
+    }
+
+    if (!commandCatalogs.has(file) && scripts.length > 12) {
+      issues.push(issue(
+        "WARN",
+        "standard-command-list-too-long",
+        `${file} mentions ${scripts.length} script commands. Keep detailed command catalogs in core/scripts/README.md or ai-toolkit.md.`,
+        file,
+      ));
+    }
+  }
+
+  for (const [script, mentionFiles] of [...commandMentionsByScript.entries()].sort()) {
+    const nonCatalogFiles = [...mentionFiles].filter((file) => !commandCatalogs.has(file));
+    if (nonCatalogFiles.length > 4) {
+      issues.push(issue(
+        "WARN",
+        "standard-command-duplicated",
+        `${script} is repeated in ${nonCatalogFiles.length} non-catalog standard files: ${nonCatalogFiles.join(", ")}.`,
+        "core/standards",
+      ));
+    }
+  }
+
+  return issues;
+}
+
+function standardsEvolutionIssues() {
+  const issues = [];
+  const path = "core/standards/evolution.md";
+  if (!exists(path)) return [issue("FAIL", "framework-evolution-missing", `${path} must define the framework evolution backlog.`, path)];
+
+  const body = read(path);
+  for (const section of ["## 设计基准", "## 当前已固化", "## 下一批演进", "## 设计约束"]) {
+    if (!body.includes(section)) {
+      issues.push(issue("FAIL", "framework-evolution-section-missing", `${path} is missing ${section}.`, path));
+    }
+  }
+
+  for (const anchor of ["Spec-driven development", "Human-in-the-loop", "Progressive disclosure", "Agent evaluation"]) {
+    if (!body.includes(anchor)) {
+      issues.push(issue("WARN", "framework-evolution-anchor-missing", `${path} should track ${anchor} as an evolution principle.`, path));
+    }
+  }
+
+  return issues;
+}
+
 const files = walk(root);
 const checks = [
   { id: "core-references", issues: missingCoreReferences(files) },
@@ -342,6 +410,8 @@ const checks = [
   { id: "schema-contracts", issues: schemaContractIssues() },
   { id: "placeholder-density", issues: placeholderIssues(files) },
   { id: "large-markdown", issues: largeMarkdownIssues(files) },
+  { id: "standards-command-usage", issues: standardsCommandIssues(files) },
+  { id: "framework-evolution", issues: standardsEvolutionIssues() },
 ];
 const issues = checks.flatMap((check) => check.issues.map((item) => ({ ...item, check: check.id })));
 const summary = {

@@ -106,6 +106,7 @@ Wiki 不能只写一句概述。对于存量项目画像或重要 work item 回�
 
 - 只写当前事实，不写历史流水账。
 - 如果事实来自 work item，引用 work item id 和关键 artifact。
+- 如果事实来自 CodeGraph / MCP / SCIP provider 的 `graph_facts[]`，引用对应 `GF-*` id、provider、query 或 source path；不要只写“来自图谱”。
 - 更新已有文件优先，不为同一主题创建重复文件。
 - 旧事实被替代时直接改成当前状态，并保留必要决策理由。
 - 每个文件必须有 frontmatter：`title`、`kind`、`owner`、`last_updated`、`source_work`、`status`。
@@ -130,6 +131,7 @@ frontmatter 语义：
 | UI design 形成稳定设计系统或组件规则 | `design-system.md` | 不复制一次性线稿截图 |
 | technical design 形成长期架构 / API / 数据 / 运维事实 | `03-architecture.md`、`api-<domain>.md`、`04-data-model.md`、`05-operations.md` | 不复制临时实现计划 |
 | implementation 发现真实结构与设计不同 | 对应事实文件 + `06-decisions.md` | 不复制 commit diff |
+| `graph_facts[].used_for_wiki=true` | 对应架构 / 模块 / API / 数据 / 运维 / 风险文件，保留 `GF-*` id 和来源摘要 | 不复制 provider 原始报告或未确认关系 |
 | verification 暴露系统性风险或测试缺口 | `08-risks.md`、`05-operations.md` | 不复制完整测试日志 |
 | close 形成发布 / 回滚 / 运行注意事项 | `05-operations.md`、`08-risks.md` | 不复制 release / rollback 全文 |
 
@@ -139,5 +141,6 @@ frontmatter 语义：
 
 - 长期事实已写入对应 wiki 文件；或
 - 当前 work item 明确没有长期知识影响，并写出 N/A 理由。
+- 若 codebase-intelligence report 中存在 `used_for_wiki=true` 的 graph facts，wiki 必须引用对应 `GF-*` id，或在 `08-risks.md` 说明未采纳原因。
 
 不得用“暂无需要”空过 gate。

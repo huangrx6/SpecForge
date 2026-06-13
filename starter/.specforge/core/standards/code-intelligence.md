@@ -82,7 +82,7 @@ node .specforge/core/scripts/codebase-index.mjs --provider codegraph --provider-
 - `type` 使用 `module / entry / symbol / call / dependency / api / data / test / operation / risk`。
 - `source_paths` 必须指向当前仓库路径；没有路径的事实只能作为低置信度候选。
 - `confidence=high` 需要 ready provider、明确 query 和 source path。
-- `used_for_wiki=true` 的事实必须能写入唯一 current wiki 文件，且保留 fact id 或来源摘要。
+- `used_for_wiki=true` 的事实必须能写入唯一 current wiki 文件，且保留 `GF-*` fact id、provider、query 或 source path；`wiki-quality.mjs` 会提示候选事实未被 wiki 引用。
 - Graph facts 只能表达关系和证据，不直接替代人工总结、requirements 或 technical design。
 
 ## Provider 执行编排

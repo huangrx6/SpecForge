@@ -61,47 +61,31 @@
 | Wiki Sync | 只沉淀未来会复用的事实 | 临时过程、一次性日志、重复内容不得写入 wiki | 每条知识有来源 artifact、适用范围和过期条件 |
 | Close | 用 package / handoff / doctor / archive dry-run 收束 | release、rollback、残余风险、owner 缺一不可 | 先 Action Summary，再给归档路径和验证摘要 |
 
-## 推荐命令节奏
+## 命令入口
+
+本 playbook 只保留阶段节奏，不维护完整脚本说明。详细命令语义、适用时机和 CLI 对外入口以 `ai-toolkit.md` 与 `core/scripts/README.md` 为准，避免一个命令在多份标准中漂移。
+
+第一扫：
 
 ```bash
 node .specforge/core/scripts/workflow-audit.mjs
-node .specforge/core/scripts/workflow-health.mjs
-node .specforge/core/scripts/quality-suite.mjs
-node .specforge/core/scripts/artifact-quality.mjs
-node .specforge/core/scripts/closure-quality.mjs
-node .specforge/core/scripts/source-quality.mjs
-node .specforge/core/scripts/wiki-quality.mjs
 node .specforge/core/scripts/stage-contract.mjs --overview
-node .specforge/core/scripts/stage-contract.mjs
-node .specforge/core/scripts/workflow-package.mjs
-node .specforge/core/scripts/doctor.mjs
-node .specforge/core/scripts/instructions.mjs
-node .specforge/core/scripts/decision-checkpoints.mjs
-node .specforge/core/scripts/decision-brief.mjs
-node .specforge/core/scripts/decision-quality.mjs
-node .specforge/core/scripts/evidence-summary.mjs
-node .specforge/core/scripts/source-quality.mjs
-node .specforge/core/scripts/implementation-quality.mjs
-node .specforge/core/scripts/traceability-summary.mjs
-node .specforge/core/scripts/artifact-graph-status.mjs
+node .specforge/core/scripts/quality-suite.mjs
 ```
 
-进入实现前补看：
+进入实现前：
 
 ```bash
 node .specforge/core/scripts/instructions.mjs apply
 git status --short --untracked-files=all
 ```
 
-关闭前补看：
+关闭前：
 
 ```bash
-node .specforge/core/scripts/render-work-report.mjs
-node .specforge/core/scripts/handoff-summary.mjs --output <work-item>/07-report/handoff.md
 node .specforge/core/scripts/workflow-package.mjs
-node .specforge/core/scripts/closure-quality.mjs
-node .specforge/core/scripts/wiki-quality.mjs
 node .specforge/core/scripts/doctor.mjs
+node .specforge/core/scripts/archive-work.mjs --dry-run
 ```
 
 ## 轻重分流

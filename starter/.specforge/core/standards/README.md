@@ -9,6 +9,7 @@
 | `index.md` | 当前有哪些标准、每个阶段该读什么 | Agent / 维护者 |
 | `workflow.md` | work item 怎么推进、什么时候停、gate 如何批准 | 所有阶段 |
 | `operating-model.md` | SpecForge 如何控制深度、上下文、人机确认、证据和长期演进 | 所有阶段 / 维护者 |
+| `evolution.md` | SpecForge 后续如何按 SDD / HITL / Agent eval 思路继续演进 | 维护者 / 框架改造 |
 | `stage-playbook.md` | 每一步怎么配合、工具如何组合、阅读层如何降噪 | 自动推进 / 接力 |
 | `ai-toolkit.md` | AI 工具链如何选择、人工确认和证据如何回流 | Agent / 人工审查 |
 | `product.md` | 产品、PRD、需求和验收如何表达 | PRD / requirements |
@@ -26,6 +27,7 @@
 - 技术选型标准写在 `engineering.md`；可选技术组合写在 `profiles/`。
 - 测试证据原则写在 `engineering.md` / `playwright.md`；具体测试用例模板写在 `artifacts/templates/test-cases.md`。
 - 代码画像原则写在 `code-intelligence.md`；具体扫描命令由 `scripts/codebase-index.mjs` 输出。
+- 框架后续演进写在 `evolution.md`；阶段打法和日常命令不要把演进路线复制一遍。
 
 ## 写作规范
 

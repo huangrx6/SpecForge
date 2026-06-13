@@ -18,6 +18,8 @@ function markdown(quality) {
 - Current files: ${quality.summary.current_files}
 - Failures: ${quality.summary.fail}
 - Warnings: ${quality.summary.warn}
+- Graph fact reports: ${quality.graph_facts.reports.length}
+- Graph fact wiki candidates: ${quality.graph_facts.referenced_candidates}/${quality.graph_facts.wiki_candidates}
 
 ## Issues
 

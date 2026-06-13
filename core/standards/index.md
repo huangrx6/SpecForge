@@ -16,6 +16,7 @@
 |---|---|---|
 | `workflow.md` | intake、路由、gate、scope、上下文控制、关闭归档 | 当前到哪一步、能不能前进、边界在哪里 |
 | `operating-model.md` | 框架级改动、自动推进策略、人工确认、证据强度、上下文预算、复盘沉淀 | SpecForge 如何作为可审计、可演进的 AI 研发工作流运行 |
+| `evolution.md` | 框架级改造、审计规则扩展、工具链演进、长期路线图复盘 | SpecForge 下一批该优化什么、为什么优化、落到哪里 |
 | `stage-playbook.md` | 自动推进、handoff、长流程复盘、用户问“每一步怎么配合” | 每一步用什么 AI / 脚本 / 人工确认 / 证据契约 |
 | `product.md` | PRD、requirements、research、功能澄清、验收标准 | 用户到底要什么，哪些能力进入 MVP，如何验收 |
 | `design.md` | UI / UX、页面、交互、视觉方向、原型证据 | 用户看见什么，怎么操作，状态是否完整；具体设计语言读 `core/skills/ui-ux/design-system` |

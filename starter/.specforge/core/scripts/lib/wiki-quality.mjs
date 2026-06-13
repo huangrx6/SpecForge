@@ -1,6 +1,6 @@
 import { readdirSync } from "node:fs";
 import { basename } from "node:path";
-import { abs, exists, layout, readText } from "./specforge.mjs";
+import { abs, exists, layout, listWorkItems, readText } from "./specforge.mjs";
 
 const REQUIRED_FRONTMATTER = ["title", "kind", "owner", "last_updated", "source_work", "status"];
 const ALLOWED_KINDS = new Set([
@@ -68,6 +68,49 @@ function listWikiFiles(wikiRoot) {
     .sort();
 }
 
+function graphFactReportPaths() {
+  const paths = new Set([`${layout.workItems}/inbox/codebase-intelligence.md`]);
+  for (const kind of ["active", "archive"]) {
+    for (const name of listWorkItems(kind)) {
+      paths.add(`${layout.workItems}/${kind}/${name}/00-steering/codebase-intelligence.md`);
+    }
+  }
+  return [...paths].filter((path) => exists(path)).sort();
+}
+
+function parseJsonSummary(text) {
+  const match = text.match(/## 9\. 原始 JSON 摘要[\s\S]*?```json\r?\n([\s\S]*?)\r?\n```/);
+  if (!match) return null;
+  try {
+    return JSON.parse(match[1]);
+  } catch {
+    return null;
+  }
+}
+
+function graphFactsFromReports(reportPaths = graphFactReportPaths()) {
+  const facts = [];
+  for (const reportPath of reportPaths.filter((path) => exists(path))) {
+    const payload = parseJsonSummary(readText(reportPath));
+    const graphFacts = payload?.graph_facts ?? payload?.normalized_context?.graph_facts ?? [];
+    for (const fact of Array.isArray(graphFacts) ? graphFacts : []) {
+      facts.push({
+        id: String(fact.id ?? "").trim(),
+        type: String(fact.type ?? "").trim(),
+        subject: String(fact.subject ?? "").trim(),
+        relation: String(fact.relation ?? "").trim(),
+        object: String(fact.object ?? "").trim(),
+        provider: String(fact.provider ?? "").trim(),
+        confidence: String(fact.confidence ?? "").trim(),
+        source_paths: Array.isArray(fact.source_paths) ? fact.source_paths.filter(Boolean) : [],
+        used_for_wiki: Boolean(fact.used_for_wiki),
+        report_path: reportPath,
+      });
+    }
+  }
+  return facts;
+}
+
 export function wikiQualitySummary(options = {}) {
   const wikiRoot = options.wikiRoot ?? `${layout.workspace}/wiki`;
   const files = listWikiFiles(wikiRoot);
@@ -81,6 +124,7 @@ export function wikiQualitySummary(options = {}) {
       exists: false,
       files: [],
       entries: [],
+      graph_facts: { reports: [], total: 0, wiki_candidates: 0, referenced_candidates: 0 },
       issues,
       summary: { total_files: 0, current_files: 0, fail: 1, warn: 0, pass: 0 },
     };
@@ -168,20 +212,53 @@ export function wikiQualitySummary(options = {}) {
     }
   }
 
-  const fail = issues.filter((item) => item.severity === "FAIL").length;
-  const warn = issues.filter((item) => item.severity === "WARN").length;
+  const graphFacts = graphFactsFromReports(options.graphFactReports ?? graphFactReportPaths());
+  const wikiText = files.map((file) => readText(`${wikiRoot}/${file}`)).join("\n");
+  const wikiCandidates = graphFacts.filter((fact) => fact.used_for_wiki);
+
+  for (const fact of wikiCandidates) {
+    if (!fact.id) {
+      issues.push(issue("WARN", "graph-fact-id-missing", fact.report_path, "A graph fact marked used_for_wiki is missing an id."));
+      continue;
+    }
+    if (!wikiText.includes(fact.id)) {
+      issues.push(issue(
+        "WARN",
+        "graph-fact-wiki-reference-missing",
+        fact.report_path,
+        `Graph fact ${fact.id} is marked used_for_wiki but no wiki file references that fact id.`,
+      ));
+    }
+    if (fact.confidence === "high" && fact.source_paths.length === 0) {
+      issues.push(issue(
+        "WARN",
+        "graph-fact-source-path-missing",
+        fact.report_path,
+        `Graph fact ${fact.id} has high confidence but no source_paths.`,
+      ));
+    }
+  }
+
+  const finalFail = issues.filter((item) => item.severity === "FAIL").length;
+  const finalWarn = issues.filter((item) => item.severity === "WARN").length;
   return {
     wiki_root: wikiRoot,
     exists: true,
     files,
     entries,
+    graph_facts: {
+      reports: [...new Set(graphFacts.map((fact) => fact.report_path))],
+      total: graphFacts.length,
+      wiki_candidates: wikiCandidates.length,
+      referenced_candidates: wikiCandidates.filter((fact) => fact.id && wikiText.includes(fact.id)).length,
+    },
     issues,
     summary: {
       total_files: files.length,
       current_files: entries.filter((entry) => entry.status === "current").length,
-      fail,
-      warn,
-      pass: fail === 0 && warn === 0 ? 1 : 0,
+      fail: finalFail,
+      warn: finalWarn,
+      pass: finalFail === 0 && finalWarn === 0 ? 1 : 0,
     },
   };
 }
