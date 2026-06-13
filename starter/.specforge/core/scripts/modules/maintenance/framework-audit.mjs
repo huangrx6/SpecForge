@@ -229,6 +229,7 @@ function designSystemIssues() {
     "core/skills/ui-ux/design-system/references/aesthetic-directions.md",
     "core/skills/ui-ux/design-system/references/component-system.md",
     "core/skills/ui-ux/design-system/references/design-intelligence.md",
+    "core/skills/ui-ux/design-system/references/ux-research-ia.md",
     "core/skills/ui-ux/design-system/references/design-md-extraction.md",
     "core/skills/ui-ux/design-system/references/taste-review.md",
     "core/skills/ui-ux/design-system/references/layout-archetypes.md",
@@ -258,7 +259,14 @@ function designSystemAestheticIssues() {
     "## 5. 科技 / 未来类",
     "## 6. 潮流 / 个性类",
     "## 7. 自然 / 温柔类",
+    "## 8. 专业 / 可信类",
+    "## 9. 材质 / 3D 类",
+    "## 10. 插画 / 角色表现类",
+    "## 11. 图形 / 排版实验类",
+    "## 12. 地域 / 文化灵感类",
+    "## 13. 情绪 / 体验调性类",
     "## Business translation patterns",
+    "## Mixing rules",
   ]) {
     if (!body.includes(section)) {
       issues.push(issue("FAIL", "aesthetic-style-family-missing", `${path} is missing ${section}.`, path));

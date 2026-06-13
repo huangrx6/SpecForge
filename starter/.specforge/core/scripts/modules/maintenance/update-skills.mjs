@@ -57,17 +57,13 @@ function normalize(content) {
 }
 
 function adaptSnapshotContent(skill, content) {
-  if (skill.id === "code-reviewer" || skill.id === "ux-designer") {
+  if (skill.id === "code-reviewer") {
     return content.replace(
       /1\. \*\*Review \[AGENTS\.md\]\(AGENTS\.md\)\*\* for a complete compilation of all rules with examples/,
-      skill.id === "code-reviewer"
-        ? "1. **Start from this file** to decide whether the review needs security, performance, correctness, or maintainability depth"
-        : "1. **Start from this file** to decide whether the task needs research, IA, interaction, accessibility, or visual depth",
+      "1. **Start from this file** to decide whether the review needs security, performance, correctness, or maintainability depth",
     ).replace(
       "2. **Reference specific rules** from `rules/` directory for deep dives",
-      skill.id === "code-reviewer"
-        ? "2. **Reference only the specific rules** from `rules/` that match the current risk"
-        : "2. **Reference only the specific rules** from `rules/` that match the current design risk",
+      "2. **Reference only the specific rules** from `rules/` that match the current risk",
     );
   }
 

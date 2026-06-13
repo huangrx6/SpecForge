@@ -28,7 +28,7 @@
 
 | Skill | 读取内容 | 提取结果 | 归一化到 | 不能替代的确认 |
 |---|---|---|---|---|
-| opportunity-solution-tree / ux-designer / deep-research / user-stories / create-prd / playwright-skill / N/A | SKILL.md / references or rules path | 候选方案 / 风险提示 / 访谈镜头 / 研究问题 / 验收问题 / 后续阶段输入 | 问题地图 / 方案对比 / research / UI design 输入 / requirements 输入 / verification 输入 / N/A | 用户确认 MVP / UI 方向 / 技术路线 / 依赖 / 工具链 / 验收口径 |
+| opportunity-solution-tree / design-system / deep-research / user-stories / create-prd / playwright-skill / N/A | SKILL.md / references path | 候选方案 / 风险提示 / 访谈镜头 / 研究问题 / 验收问题 / 后续阶段输入 | 问题地图 / 方案对比 / research / UI design 输入 / requirements 输入 / verification 输入 / N/A | 用户确认 MVP / UI 方向 / 技术路线 / 依赖 / 工具链 / 验收口径 |
 
 ## 方案对比
 

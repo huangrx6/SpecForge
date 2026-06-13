@@ -42,7 +42,7 @@ description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户�
 常见参考包括：
 
 - `opportunity-solution-tree`：产品目标、用户机会、MVP、候选方向、实验和优先级取舍。
-- `ux-designer`：体验方向、用户旅程、信息架构、交互和可访问性。
+- `design-system`：体验方向、美学方向、用户旅程、信息架构、交互、可访问性和后续 UI design 输入。
 - `deep-research`：多来源研究、共识/争议和研究空白。
 - `user-stories`：用户故事、验收口径和边界条件。
 - `create-prd`：PRD handoff 检查、非目标和 release 分期覆盖。

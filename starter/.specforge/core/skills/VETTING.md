@@ -9,7 +9,6 @@
 | `create-prd` | `phuryn/pm-skills` | 0 | 可能保存到外部建议文件名或把 Technology 扩成技术方案 | 只作为 PRD 结构参考，归一化到 SpecForge PRD |
 | `user-stories` | `phuryn/pm-skills` | 0 | 可能带入 Sprint / backlog 表达 | 只保留 3C、INVEST 和验收标准方法 |
 | `opportunity-solution-tree` | `phuryn/pm-skills` | 5 | 可能把缺少证据的分数写成事实 | 只作为机会树、功能候选、实验和优先级方法，结论必须等用户确认 |
-| `ux-designer` | `Shubhamsaboo/awesome-llm-apps` | 5 | 可能虚构 persona 或跳过用户确认 | 只提供体验问题、风险和细化参考 |
 | `deep-research` | `Shubhamsaboo/awesome-llm-apps` | 0 | 可能把旧资料当事实 | 只提供研究组织方法，事实另行核验 |
 | `code-reviewer` | `Shubhamsaboo/awesome-llm-apps` | 6 | 可能输出模板化 finding | 只作为风险检查清单 |
 | `pencil` | `chiroro-jr/skills` | 8 | 依赖 Pencil MCP，且 upstream 引用未托管的 `frontend-design` | 本地裁剪为读取已确认 UI 方向和 SpecForge 设计标准，只用于 Pencil 原型、截图证据和设计转代码参考 |
@@ -49,3 +48,9 @@ node core/scripts/sync-starter.mjs --check
 - 不恢复多路 UI 生成 / Figma / getdesign / design-md / 独立竞品研究等能力，除非用户明确要求重新纳入默认流程。
 - 不保存、输出、转发 Cookie、token、密码、localStorage 或 sessionStorage 敏感信息。
 - 不让第三方 skill 替代用户确认、SpecForge artifact 模板或 gate evidence。
+
+## 已吸收并删除
+
+| Skill | 原来源 | 处理方式 |
+|---|---|---|
+| `ux-designer` | `Shubhamsaboo/awesome-llm-apps` | 已吸收为 `design-system/references/ux-research-ia.md`，不再托管独立第三方 skill，避免泛 UX 教程和 SpecForge UI 流程并行。 |

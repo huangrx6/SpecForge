@@ -19,24 +19,26 @@ description: SpecForge UI 设计规范 skill；用于提炼设计语言、建立
 ## 读取顺序
 
 1. 先读 `references/design-intelligence.md`，明确 subject、audience、single job、design mode 和一个可辩护的 signature。
-2. 再读 `foundations/README.md`，按需读 colors / typography / spacing / density / radius-shadow / motion / accessibility。
-3. 需要推荐风格方向时读 `references/aesthetic-directions.md` 和 `prompts/aesthetic-selection.md`，先推荐 2-3 个互斥美学风格，再把用户选择翻译成业务页面模式。
-4. Product UI / shadcn-vue 场景读 `references/shadcn-vue.md`、`references/tailwind-v4.md`、`components/README.md`、`references/component-system.md` 和相关 `components/*.md`。
-5. 页面设计读 `pages/*.md` 中最接近的模式；没有命中的页面先读 `pages/dashboard.md`、`pages/list-detail.md`、`pages/form-flow.md`。
-6. 需要从参考网站或截图提取风格时读 `references/design-md-extraction.md`，按 DESIGN.md 结构抽取 token、组件、布局和 do/don't。
-7. 需要生成或审查提示词时读 `prompts/ui-generation.md`、`prompts/design-language.md`、`prompts/sample-board.md`、`prompts/taste-critique.md`、`prompts/anti-cheapness-review.md`、`prompts/motion-design.md`。
-8. 需要给人看样例时读 `references/good-case.md`、`references/bad-case.md`、`references/sample-board-template.md`，形成“采用 / 不采用 / 原因 / 待确认”。
-9. 写入 `ui-design.md` 前读 `references/output-contract.md`，按 compact / standard / full 选择输出结构。
-10. 需要复杂动效或编排时读 `references/motion-gsap.md`；普通状态反馈优先使用 CSS transition。
+2. UX 证据、信息架构、交互恢复、微文案或可访问性不足时读 `references/ux-research-ia.md`。
+3. 再读 `foundations/README.md`，按需读 colors / typography / spacing / density / radius-shadow / motion / accessibility。
+4. 需要推荐风格方向时读 `references/aesthetic-directions.md` 和 `prompts/aesthetic-selection.md`，先推荐 3-5 个互斥美学风格（用户要求少量时 2-3 个），再把用户选择翻译成业务页面模式。
+5. Product UI / shadcn-vue 场景读 `references/shadcn-vue.md`、`references/tailwind-v4.md`、`components/README.md`、`references/component-system.md` 和相关 `components/*.md`。
+6. 页面设计读 `pages/*.md` 中最接近的模式；没有命中的页面先读 `pages/dashboard.md`、`pages/list-detail.md`、`pages/form-flow.md`。
+7. 需要从参考网站或截图提取风格时读 `references/design-md-extraction.md`，按 DESIGN.md 结构抽取 token、组件、布局和 do/don't。
+8. 需要生成或审查提示词时读 `prompts/ui-generation.md`、`prompts/design-language.md`、`prompts/sample-board.md`、`prompts/taste-critique.md`、`prompts/anti-cheapness-review.md`、`prompts/motion-design.md`。
+9. 需要给人看样例时读 `references/good-case.md`、`references/bad-case.md`、`references/sample-board-template.md`，形成“采用 / 不采用 / 原因 / 待确认”。
+10. 写入 `ui-design.md` 前读 `references/output-contract.md`，按 compact / standard / full 选择输出结构。
+11. 需要复杂动效或编排时读 `references/motion-gsap.md`；普通状态反馈优先使用 CSS transition。
 
 ## 工具链
 
 1. **Design intake**：提取宿主产品、目标用户、使用场景、实现栈、已有组件、约束和用户审美偏好。
 2. **Subject grounding**：用真实业务对象、行业材料、用户语言和场景物件推导视觉方向，不从通用 SaaS 模板开始。
-3. **Design mode**：判断 Product UI、Brand Surface 或 Hybrid；后台工具默认 Product UI，除非用户明确要求表达型品牌页面。
-4. **Reference extraction**：有参考网站/截图时，抽取 DESIGN.md 风格的 atmosphere、tokens、typography、components、layout、do/don't。
-5. **Aesthetic direction recommendation**：基于 `aesthetic-directions.md` 推荐 2-3 个互斥美学方向；方向必须是审美气质，例如极简主义、玩具感、水彩风、赛博朋克、森系，而不是 Operational Calm 这类业务模式。
-6. **Business translation**：用户选择美学后，再把它翻译成业务页面模式、组件气质、密度、状态、动效边界和 signature。
+3. **UX grounding**：需要时用 `ux-research-ia.md` 补齐用户、任务、信息架构、交互恢复、微文案和可访问性底线；关键未知必须回到人工确认。
+4. **Design mode**：判断 Product UI、Brand Surface 或 Hybrid；后台工具默认 Product UI，除非用户明确要求表达型品牌页面。
+5. **Reference extraction**：有参考网站/截图时，抽取 DESIGN.md 风格的 atmosphere、tokens、typography、components、layout、do/don't。
+6. **Aesthetic direction recommendation**：基于 `aesthetic-directions.md` 推荐 3-5 个互斥美学方向；方向必须是审美气质，例如极简主义、玩具感、水彩风、赛博朋克、森系，而不是 Operational Calm 这类业务模式。
+7. **Business translation**：用户选择美学后，再把它翻译成业务页面模式、组件气质、密度、状态、动效边界和 signature。
 7. **Self-critique pass**：先问“这个方案是不是任何同类产品都会长这样”，若是，必须替换 palette、type、layout 或 signature 中至少一项。
 8. **Human taste gate**：方向会影响视觉气质、信息架构或核心流程时，先让用户确认；低风险小改可写可逆默认。
 9. **Foundations pack**：把确认方向落成 semantic tokens、字体层级、空间密度、圆角阴影、动效、可访问性约束。

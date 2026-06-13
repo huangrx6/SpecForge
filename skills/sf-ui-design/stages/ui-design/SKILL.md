@@ -22,9 +22,8 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - `.specforge/core/standards/ai-toolkit.md`
 - 现有页面、组件库、设计系统、Pencil 文件、截图、参考产品或用户提供的设计资料
 - 需要操作 Pencil 时读取 `core/skills/ui-ux/pencil/SKILL.md`
-- 需要设计语言、去廉价感、shadcn-vue 映射、页面模式、样例板或动效边界时读取 `core/skills/ui-ux/design-system/SKILL.md`
-- 需要补充 UX 研究、IA、交互、微文案或可访问性检查时读取 `core/skills/ui-ux/ux-designer/SKILL.md`
-- 做视觉质量审查时优先读取项目设计系统、已确认 UI 方向和 `core/skills/ui-ux/ux-designer` 的相关规则；不再内置 `web-design-guidelines`
+- 需要设计语言、去廉价感、shadcn-vue 映射、页面模式、样例板、动效边界、UX 研究、IA、交互、微文案或可访问性检查时读取 `core/skills/ui-ux/design-system/SKILL.md`
+- 做视觉质量审查时优先读取项目设计系统、已确认 UI 方向和 `core/skills/ui-ux/design-system/references/ux-research-ia.md`；不再内置 `web-design-guidelines`
 
 ## 写入
 
@@ -51,7 +50,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - **判断 UI 影响**：检查页面、组件、路由、视觉状态、角色视图、响应式、可访问性和用户操作流。
 - 无 UI 影响时写 N/A、跳过理由和验证方式；不要继续生成风格或原型。
 - **提取用户画像**：从 `prd.md`、`brainstorm.md` 或 `requirements.md` 中提取目标用户画像（Persona），确认用户的目标、痛点和行为模式。
-- **按需参考 UX skill**：如果用户画像、信息架构、交互流程、微文案、可访问性或视觉层级证据不足，先读取 `core/skills/ui-ux/ux-designer/SKILL.md`，再按需读取相关 `rules/*.md`，并归一化为本文件内容。
+- **按需补齐 UX 证据**：如果用户画像、信息架构、交互流程、微文案、可访问性或视觉层级证据不足，读取 `core/skills/ui-ux/design-system/references/ux-research-ia.md`，并归一化为本文件内容。
 - **竞品与参考分析**：若有现有设计系统、品牌手册、页面、Pencil、Figma、截图或参考产品，提取可执行规则：布局、导航、密度、色彩、字体、表格、表单、反馈、空态和错误态。不要只贴链接；每个参考都要写"采用什么、不采用什么、如何落地"。
 - **PC 业务系统模板**：若产品是后台 / 管理系统 / 数据表格系统，或用户明确给出 PC 端 UI 规范，读取 `pc-ui-design-spec.md`，在 Visual Style Brief 中写入设计系统来源和核心 token；后续 Pencil、HTML/CSS、前端实现都不得擅自改这些数值。
 - **shadcn 管理端模式**：若实现层采用 shadcn/ui，把 shadcn 视为 primitive / registry / theming 层；在 UI design 中定义 App Shell、Resource Page、Entity Table、Detail/Form、State Feedback 和 Ops Pattern 的封装契约。
@@ -67,7 +66,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - **绘制信息架构（IA）**：定义主导航结构、页面层级、标签命名。遵循"5-7 项主导航"、"按用户心智模型分组"原则。
 - **定义 HMW 问题**：用"如何能"框架将用户痛点转化为设计机会。
 - 用户未确认前，不调用 Pencil，不创建完整页面方案，不写"我将使用某某风格"作为既定事实。
-- 如果需要用户在多个体验方向中取舍，退回 brainstorm；`ux-designer` 在 UI design 中只用于细化已确认方向，不用于绕过确认。
+- 如果需要用户在多个体验方向中取舍，退回 brainstorm；`ux-research-ia.md` 在 UI design 中只用于细化已确认方向，不用于绕过确认。
 - 用户确认后，在上游 artifact 留下可检索标记：`[UI DECISION CONFIRMED]` 或 `UI Direction Status: confirmed`，并记录用户选择、放弃项和影响。
 - 用户暂不确认且 UI 风险低时，可以只写默认假设和待确认点；默认假设必须可逆，不能推进到 Pencil 原型。
 

@@ -10,11 +10,10 @@
 | `create-prd` | `prd/create-prd` | PRD | 上下文充分时合成 PRD，整理背景、目标、用户、价值主张、范围、假设和 release | `00-intake/prd.md` |
 | `user-stories` | `requirements/user-stories` | Requirements | 用户故事、3C、INVEST、验收标准和可测试性参考 | `01-spec/requirements.md` |
 | `pencil` | `ui-ux/pencil` | UI Design | Pencil `.pen` 原型读写、组件复用、tokens、截图导出、布局检查和设计转代码参考 | `01-spec/ui-design.md`、`01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/` |
-| `design-system` | `ui-ux/design-system` | UI Design / Technical Design | 设计语言、foundations、组件规范、页面模式、shadcn-vue 映射、动效边界和去廉价感审查 | `01-spec/ui-design.md`、Pencil 输入、前端组件契约 |
+| `design-system` | `ui-ux/design-system` | Brainstorm / UI Design / Technical Design | 用户研究、信息架构、设计语言、foundations、组件规范、页面模式、shadcn-vue 映射、动效边界和去廉价感审查 | `00-intake/brainstorm.md`、`01-spec/ui-design.md`、Pencil 输入、前端组件契约 |
 | `test-design` | `quality/test-design` | Verification | 测试设计树、XMind / 白板导出、TC / PW 用例矩阵、自动化分层和证据目标 | `05-verification/test-design/`、`05-verification/test-cases.md`、`05-verification/report.md` |
 | `playwright-skill` | `quality/playwright-skill` | Verification | 浏览器 E2E、真实点击输入、角色流程、截图和响应式证据 | `05-verification/test-cases.md`、`05-verification/report.md`、`05-verification/evidence/` |
 | `code-reviewer` | `quality/code-reviewer` | Code Review | 安全、性能、正确性、可维护性和测试覆盖的补充检查清单 | `04-code-review/code-review-v1.md`、`05-verification/report.md` |
-| `ux-designer` | `ui-ux/ux-designer` | Brainstorm / Research / UI Design | 用户研究、体验方向取舍、信息架构、交互、可访问性和视觉层级参考 | `00-intake/brainstorm.md`、`01-spec/research.md`、`01-spec/ui-design.md` |
 | `deep-research` | `research/deep-research` | Research / Discovery | 多来源研究综合、引用、可信度和共识/争议拆解参考 | `01-spec/research.md` |
 
 ## 按需外部参考
@@ -47,7 +46,7 @@
 
 ### Brainstorm
 
-- 按本节判断是否参考 `opportunity-solution-tree`、`ux-designer`、`deep-research`、`user-stories`、`create-prd` 或 `playwright-skill`。
+- 按本节判断是否参考 `opportunity-solution-tree`、`design-system`、`deep-research`、`user-stories`、`create-prd` 或 `playwright-skill`。
 - 先读目标 skill 的 `SKILL.md`；只有问题落到具体子领域时，才读 `references/` 或 `rules/` 下的相关文件。
 - `opportunity-solution-tree` 的 references 只在需要时读取：新产品点子、存量产品点子、需求 triage、功能优先级或优先级框架。
 - 第三方输出必须先归一化成 SpecForge 问题地图、方案对比、用户确认记录或后续阶段输入；不得把第三方模板原样写进 `brainstorm.md`。
@@ -64,11 +63,11 @@
 - 正式原型固定使用 `pencil`。
 - 需要提炼设计语言、token、组件契约、页面模式、shadcn-vue 映射、动效边界或去廉价感审查时，先参考 `design-system`，再把结果转成 `ui-design.md` 和 Pencil 输入。
 - 读取 `pencil` 时，先确认 UI 方向已由用户确认；如果 upstream 提到 `frontend-design`，按 SpecForge 的 `design.md`、`sf-ui-design` 和已确认 UI 方向处理。
-- 方向已确认后，需要细化 persona、用户旅程、信息架构、微文案、可访问性或视觉层级时，可参考 `ux-designer`；需要把视觉语言落成 foundations / components / pages 时优先参考 `design-system`。两者输出都必须归一为 `01-spec/research.md` 或 `01-spec/ui-design.md`。
+- 方向已确认后，需要细化 persona-lite、用户旅程、信息架构、微文案、可访问性或视觉层级时，读取 `design-system/references/ux-research-ia.md`；需要把视觉语言落成 foundations / components / pages 时继续使用 `design-system` 的 aesthetic、foundations、components 和 pages 规则。输出必须归一为 `00-intake/brainstorm.md`、`01-spec/research.md` 或 `01-spec/ui-design.md`。
 - Brand Surface 可按需参考 `design-taste-frontend`，只提取视觉气质、版式和反模板化检查，不让它替代 Pencil 或 `ui-design.md`。
 - Product UI / 管理端采用 shadcn/ui 时，可按需参考 shadcn 官方 skill、registry docs 或组件 review skill；产出必须转成 Admin Component Contract、token 约束和实现任务。
 - Product UI / 管理端采用 shadcn-vue 时，先读 `design-system/references/shadcn-vue.md`，再决定 primitive、项目级 wrapper、状态矩阵和测试建议。
-- 如果读取 `ux-designer` 后发现关键体验方向仍需用户取舍，停止 UI design，退回 `sf-brainstorm`。
+- 如果读取 `design-system/references/ux-research-ia.md` 后发现关键体验方向仍需用户取舍，停止 UI design，退回 `sf-brainstorm`。
 - 有 UI 影响时必须留下页面地图、角色流程、状态矩阵、Pencil 源文件和导出截图。
 - 空 `.pen` / 空画布最多读取一次；确认空后立即创建第一屏，禁止空读循环。
 
@@ -104,6 +103,7 @@
 - Figma 创建 / 还原 / 设计系统规则。
 - getdesign、design-md、frontend-design 等多路 UI 生成或风格提取。
 - 独立竞品研究、用户研究、write-spec、write-a-prd。
+- `ux-designer`，其有效内容已吸收为 `design-system/references/ux-research-ia.md`。
 - DevTools 专用浏览器诊断 skill。
 
 如果用户明确提供 Figma 链接、要求竞品研究或需要浏览器诊断，Agent 可使用当前环境可用工具临时完成，但不能把这些能力重新当作 SpecForge 默认流程。

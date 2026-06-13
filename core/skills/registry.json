@@ -166,57 +166,6 @@
       ]
     },
     {
-      "id": "ux-designer",
-      "category": "ui-ux",
-      "localPath": "ui-ux/ux-designer",
-      "name": "ux-designer",
-      "role": "UX 研究与设计参考",
-      "trust": "高星社区来源，MIT 许可，已做静态审查",
-      "risk": "低",
-      "source": {
-        "type": "github-raw",
-        "repo": "Shubhamsaboo/awesome-llm-apps",
-        "path": "awesome_agent_skills/ux-designer/SKILL.md",
-        "url": "https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/awesome_agent_skills/ux-designer",
-        "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/ux-designer/SKILL.md",
-        "files": [
-          {
-            "path": "rules/accessibility.md",
-            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/ux-designer/rules/accessibility.md"
-          },
-          {
-            "path": "rules/information-architecture.md",
-            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/ux-designer/rules/information-architecture.md"
-          },
-          {
-            "path": "rules/interaction-design.md",
-            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/ux-designer/rules/interaction-design.md"
-          },
-          {
-            "path": "rules/research.md",
-            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/ux-designer/rules/research.md"
-          },
-          {
-            "path": "rules/visual-design.md",
-            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/ux-designer/rules/visual-design.md"
-          }
-        ]
-      },
-      "trigger": "当 brainstorm、ui_design 或 spec_review 需要补充用户研究、体验方向取舍、信息架构、交互流程、可访问性和视觉层级检查时参考；用于提升体验决策和 UI artifact 的 UX 证据质量。",
-      "normalizeTo": [
-        "01-spec/research.md#User Evidence",
-        "01-spec/ui-design.md#UX Rationale",
-        "01-spec/ui-design.md#Accessibility Review",
-        "05-verification/report.md#UI Coverage"
-      ],
-      "doNotUseFor": [
-        "替代 Pencil 正式原型",
-        "替代实现后的 UI 审查 gate",
-        "在没有用户确认时虚构 persona 或研究结论",
-        "把第三方模板标题原样写进 SpecForge artifact"
-      ]
-    },
-    {
       "id": "design-system",
       "category": "ui-ux",
       "localPath": "ui-ux/design-system",
@@ -230,52 +179,144 @@
         "path": "core/skills/ui-ux/design-system/SKILL.md",
         "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/ui-ux/design-system",
         "files": [
-          { "path": "foundations/README.md" },
-          { "path": "foundations/tokens.md" },
-          { "path": "foundations/colors.md" },
-          { "path": "foundations/typography.md" },
-          { "path": "foundations/spacing.md" },
-          { "path": "foundations/radius-shadow.md" },
-          { "path": "foundations/motion.md" },
-          { "path": "foundations/accessibility.md" },
-          { "path": "foundations/data-visualization.md" },
-          { "path": "foundations/responsive.md" },
-          { "path": "components/button.md" },
-          { "path": "components/card.md" },
-          { "path": "components/navbar.md" },
-          { "path": "components/form.md" },
-          { "path": "components/table.md" },
-          { "path": "components/dialog.md" },
-          { "path": "components/drawer.md" },
-          { "path": "components/tabs.md" },
-          { "path": "components/toast.md" },
-          { "path": "components/chart.md" },
-          { "path": "components/empty-state.md" },
-          { "path": "components/layout-shell.md" },
-          { "path": "components/filter-bar.md" },
-          { "path": "components/pagination.md" },
-          { "path": "components/status-badge.md" },
-          { "path": "components/menu.md" },
-          { "path": "pages/live-room.md" },
-          { "path": "pages/member.md" },
-          { "path": "pages/dashboard.md" },
-          { "path": "pages/list-detail.md" },
-          { "path": "pages/form-flow.md" },
-          { "path": "pages/login.md" },
-          { "path": "pages/async-job-import-export.md" },
-          { "path": "pages/brand-surface.md" },
-          { "path": "prompts/ui-generation.md" },
-          { "path": "prompts/design-language.md" },
-          { "path": "prompts/anti-cheapness-review.md" },
-          { "path": "prompts/motion-design.md" },
-          { "path": "prompts/shadcn-vue-implementation.md" },
-          { "path": "references/shadcn-vue.md" },
-          { "path": "references/pc-business-system.md" },
-          { "path": "references/tailwind-v4.md" },
-          { "path": "references/good-case.md" },
-          { "path": "references/bad-case.md" },
-          { "path": "references/design-review-rubric.md" },
-          { "path": "changelog.md" }
+          {
+            "path": "foundations/README.md"
+          },
+          {
+            "path": "foundations/tokens.md"
+          },
+          {
+            "path": "foundations/colors.md"
+          },
+          {
+            "path": "foundations/typography.md"
+          },
+          {
+            "path": "foundations/spacing.md"
+          },
+          {
+            "path": "foundations/radius-shadow.md"
+          },
+          {
+            "path": "foundations/motion.md"
+          },
+          {
+            "path": "foundations/accessibility.md"
+          },
+          {
+            "path": "foundations/data-visualization.md"
+          },
+          {
+            "path": "foundations/responsive.md"
+          },
+          {
+            "path": "components/button.md"
+          },
+          {
+            "path": "components/card.md"
+          },
+          {
+            "path": "components/navbar.md"
+          },
+          {
+            "path": "components/form.md"
+          },
+          {
+            "path": "components/table.md"
+          },
+          {
+            "path": "components/dialog.md"
+          },
+          {
+            "path": "components/drawer.md"
+          },
+          {
+            "path": "components/tabs.md"
+          },
+          {
+            "path": "components/toast.md"
+          },
+          {
+            "path": "components/chart.md"
+          },
+          {
+            "path": "components/empty-state.md"
+          },
+          {
+            "path": "components/layout-shell.md"
+          },
+          {
+            "path": "components/filter-bar.md"
+          },
+          {
+            "path": "components/pagination.md"
+          },
+          {
+            "path": "components/status-badge.md"
+          },
+          {
+            "path": "components/menu.md"
+          },
+          {
+            "path": "pages/live-room.md"
+          },
+          {
+            "path": "pages/member.md"
+          },
+          {
+            "path": "pages/dashboard.md"
+          },
+          {
+            "path": "pages/list-detail.md"
+          },
+          {
+            "path": "pages/form-flow.md"
+          },
+          {
+            "path": "pages/login.md"
+          },
+          {
+            "path": "pages/async-job-import-export.md"
+          },
+          {
+            "path": "pages/brand-surface.md"
+          },
+          {
+            "path": "prompts/ui-generation.md"
+          },
+          {
+            "path": "prompts/design-language.md"
+          },
+          {
+            "path": "prompts/anti-cheapness-review.md"
+          },
+          {
+            "path": "prompts/motion-design.md"
+          },
+          {
+            "path": "prompts/shadcn-vue-implementation.md"
+          },
+          {
+            "path": "references/shadcn-vue.md"
+          },
+          {
+            "path": "references/pc-business-system.md"
+          },
+          {
+            "path": "references/tailwind-v4.md"
+          },
+          {
+            "path": "references/good-case.md"
+          },
+          {
+            "path": "references/bad-case.md"
+          },
+          {
+            "path": "references/design-review-rubric.md"
+          },
+          {
+            "path": "changelog.md"
+          }
         ]
       },
       "trigger": "当 sf-ui-design 需要提炼设计语言、建立 token、选择组件模式、生成 shadcn-vue 组件契约、设计页面模式、引入动效边界或执行去廉价感审查时使用。",
@@ -382,9 +423,15 @@
         "path": "core/skills/quality/test-design/SKILL.md",
         "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/quality/test-design",
         "files": [
-          { "path": "references/test-design-tree.md" },
-          { "path": "references/automation-matrix.md" },
-          { "path": "references/xmind-export.md" }
+          {
+            "path": "references/test-design-tree.md"
+          },
+          {
+            "path": "references/automation-matrix.md"
+          },
+          {
+            "path": "references/xmind-export.md"
+          }
         ]
       },
       "trigger": "当 verification 需要从 requirements、gap report、tasks、UI design、technical design 或 code review notes 生成测试设计树、XMind / 白板导出、TC / PW 矩阵、自动化用例和证据目标时参考。",
