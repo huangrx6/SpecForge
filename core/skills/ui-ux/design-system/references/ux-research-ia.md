@@ -37,6 +37,7 @@
 - 桌面主导航默认控制在 5-7 项；移动底部导航控制在 3-5 项。
 - 导航模式需要确认：侧边、顶部、混合、tabs、命令面板、移动底部导航各有适用场景，不能默认“后台就侧边栏”。
 - 桌面主导航若采用 sidebar，应保持 fixed/sticky，不随主内容滚动；主内容、右侧辅助栏和局部列表应明确各自滚动区域。
+- 如果没有设计系统强制，UI 产物必须至少比较两种导航形态，并说明为什么当前推荐项更适合任务、角色和信息密度。
 - 层级超过 2 层时需要 breadcrumb、返回路径或上下文标题。
 - 标签使用用户语言：名词用于区域，动词用于动作。
 - 搜索适用于内容/对象超过 50 项的场景；搜索必须说明范围。
@@ -97,6 +98,8 @@ UX Research / Assumptions:
 
 Information Architecture:
 - Navigation:
+- Navigation alternatives:
+- Scroll regions:
 - Page hierarchy:
 - Labels:
 - Search / filters:

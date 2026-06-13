@@ -28,6 +28,8 @@
 - 每个字段必须定义：数据类型、是否可空、默认值、约束（唯一、外键、检查约束）。
 - 软删除（`deleted_at`）vs 硬删除：全局策略必须一致。
 - 时间戳字段规范：`created_at`、`updated_at`，时区统一（建议 UTC）。
+- 每张表 / Collection 必须说明 source of truth、数据 owner、生命周期、保留期和隐私等级。
+- 派生数据必须说明来源、刷新策略、过期语义和与源数据不一致时的处理。
 
 ### 索引策略
 
@@ -42,6 +44,8 @@
 - 迁移脚本必须有对应的**回滚脚本**（down migration）。
 - 大表迁移（如加列、加索引）需评估锁表风险，考虑在线迁移工具（`gh-ost`、`pg_repack`）。
 - 估算受影响行数和迁移时间窗口。
+- 写清迁移顺序：schema expand、代码兼容、数据回填、约束收紧、旧字段清理。
+- 写清迁移观察点：迁移耗时、错误数、锁等待、回填进度、回滚触发条件。
 
 ### 多存储介质
 
@@ -61,9 +65,11 @@
 - 选定数据库 profile，以及未选择 PostgreSQL / MySQL / SQLite 的理由（按相关性说明）。
 - 数据迁移方案和回滚脚本描述（有迁移时）。
 - 多存储介质方案（如涉及）。
+- 数据 owner、source of truth、retention / privacy、migration sequence、observability 和 rollback trigger。
 
 ## 停止条件
 
 - 领域模型（domain-design）尚未确定，无法决定 Schema 结构。
 - 大表迁移的锁表风险未评估且无法在维护窗口内完成。
 - 数据量级不明，无法评估索引和查询性能。
+- 数据 owner、源数据、保留期或回滚触发条件不清，且会影响生产数据安全。

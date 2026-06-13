@@ -15,11 +15,12 @@ description: 生成或更新 SpecForge work item 的 technical_design；用于 r
 2. 存在 `.specforge/` 但无 active work item：**Lightweight 模式**，可先做技术影响面、候选方案和风险草稿；需要落档时输出 `specforge-import-ready.md` 格式内容，或先路由 `sf-intake` 创建 work item。
 3. 不存在 `.specforge/`：**Standalone 模式**，不要运行 `.specforge/...` 命令；输出可导入的 `specforge-import-ready.md`，必须区分用户已确认、沿用现有栈、用户授权默认和 Agent recommendation。
 
-`sf-tech-design` 把 requirements 和可选 UI design 转成可实现、可审查、可验证的工程设计。它不负责画页面线稿或决定视觉风格。
+`sf-tech-design` 把 requirements 和可选 UI design 转成可实现、可审查、可验证、可运行、可维护的工程设计。它不负责画页面线稿或决定视觉风格。
 
 ## 必读
 
 - `references/technical-decision-guide.md`：影响面扫描、分批确认卡、依赖 / 工具链确认、版本事实检查、核心决策 review 和写作细则。
+- `references/architecture-contract.md`：架构视图、ADR、实施交接、运行态、维护演进和长期约束；本次涉及架构、跨模块、API、数据、任务、权限、部署或长期维护时必须读取。
 - `.specforge/skills/sf-tech-design/stages/technical-design/SKILL.md`：内部技术设计母本。
 - `.specforge/core/artifacts/templates/technical-design.md`：写入骨架。
 - `.specforge/core/standards/product.md`、`.specforge/core/standards/workflow.md`、`.specforge/core/standards/engineering.md`。
@@ -73,12 +74,15 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 1. 按模板填写 `01-spec/technical-design.md`。
 2. 当前版本事实不能只靠记忆；新增或替换框架、SDK、云服务、数据库、部署平台、AI provider、模型、测试工具或安全相关依赖时，按 `references/technical-decision-guide.md#当前版本事实检查` 查询官方资料或读取 lockfile / manifest。
 3. 按影响面展开工程设计；不涉及的章节保留一行 N/A 理由，不写空表。
-4. 对齐规则主基准：按影响面写采用点、偏离理由和验证证据。
-5. 填写 `Design Quality Gate`：设计规模、现有架构复用、新增依赖确认、更简单方案、契约可测试性和是否可拆 tasks。
-6. 若存在 UI / 前端工程影响，必须把 `ui-design.md#Design Contract Summary` 转成工程决策：token delivery、component source、project wrapper、shadcn-vue registry boundary、motion source、state ownership 和 visual verification hooks。
-7. React Bits 类灵感在 Vue 项目中不得直接照搬；优先评估 Vue Bits、Motion Vue、CSS transition 或现有动画工具。新增 Vue Bits、Motion、GSAP 等依赖必须走 dependency decision。
-8. 中高风险或会改变长期架构的决策必须写 ADR 摘要；小改可写 `N/A - no long-lived architecture decision`。
-9. 输出必须能直接支持 `sf-tasking`：每个技术决策都要能拆成任务、验证或明确 N/A。
+4. 对齐 `references/architecture-contract.md`：选择本次需要的最小 Architecture View（Context / Container / Component / Runtime / Data / Deployment），写清 boundary、responsibility、interface、state、data、security、operability、delivery、testability、maintainability 和 cost 中适用维度。
+5. 对齐规则主基准：按影响面写采用点、偏离理由和验证证据。
+6. 填写 `Design Quality Gate`：设计规模、现有架构复用、新增依赖确认、更简单方案、契约可测试性和是否可拆 tasks。
+7. 若存在 UI / 前端工程影响，必须把 `ui-design.md#Design Contract Summary` 转成工程决策：token delivery、component source、project wrapper、shadcn-vue registry boundary、motion source、state ownership 和 visual verification hooks。
+8. React Bits 类灵感在 Vue 项目中不得直接照搬；优先评估 Vue Bits、Motion Vue、CSS transition 或现有动画工具。新增 Vue Bits、Motion、GSAP 等依赖必须走 dependency decision。
+9. 中高风险、跨模块、长期维护、数据、安全、运行或质量属性决策必须写 ADR 摘要；ADR 包含 context、options、outcome、consequences、confidence 和 revisit trigger。小改可写 `N/A - no long-lived architecture decision`。
+10. 输出 Implementation Handoff：change slices、files/modules、sequence、test seams、feature flags / rollout、rollback seam、do-not-touch 和 open assumptions。
+11. 输出 Maintenance & Evolution：owner、change frequency、extension point、deprecation path、wiki target、technical debt、revisit trigger。
+12. 输出必须能直接支持 `sf-tasking`：每个技术决策都要能拆成任务、验证或明确 N/A。
 
 ### D. 初稿后核心决策 Review
 
@@ -98,6 +102,8 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 | 新项目、空仓库或关键技术缺失，但没有确认来源 | 停止 |
 | 新增 / 替换技术或依赖缺少版本事实、官方资料、lockfile 证据或明确风险说明 | 停止 |
 | UI 有前端实现影响，但 technical design 未承接 Design Contract Summary、token delivery、组件架构、动效来源或视觉验证面 | 停止 |
+| 跨模块 / API / 数据 / 权限 / 任务 / 集成 / 运行变更缺少 Architecture Contract、Implementation Handoff 或 Maintenance & Evolution | 停止 |
+| 设计只描述 happy path，没有失败模式、回滚、观察点或验证路径 | 停止 |
 | `technical-design.md` 仍残留 `[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]` 或 `[NEEDS TOOLING DECISION]` | 停止 |
 | `Core Decision Review Status` 不是 `confirmed`、`delegated_default` 或 `not_required` | 停止 |
 
@@ -111,6 +117,7 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 - `Design Quality Gate` 证明设计最小充分、没有无根据新增依赖，且关键契约可测试。
 - 当前版本事实、规则基准采用点、偏离理由和验证证据已写入。
 - 有 UI / 前端影响时，Design Contract Summary 已转成工程可执行的 token、wrapper、registry、motion 和 visual verification 方案。
+- 有架构或长期维护影响时，Architecture Contract、ADR、Implementation Handoff、Operability 和 Maintenance & Evolution 已写入或明确 N/A。
 - 初稿后的核心决策摘要已经被用户确认、用户授权默认，或明确 N/A。
 - **按需求规模裁剪**：单字段 / 单页面 / 配置类小需求，`Tech Profile Selection`、`Requirements Trace`、`核心决策摘要 Review` 等章节可省略或合并为一行摘要；沿用现有栈时不需要重复列出所有技术选型表格。目标是让文档可读可审批，而不是填满模板。
 - 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。

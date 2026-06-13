@@ -71,6 +71,21 @@
 - 不触碰：
 - 跨模块边界：
 
+## 7.1 Architecture Contract
+| 维度 | 结论 | 证据 / N/A |
+| --- | --- | --- |
+| Architecture view | Context / Container / Component / Runtime / Data / Deployment | |
+| Boundary | | |
+| Responsibility | | |
+| Interface | | |
+| State / lifecycle | | |
+| Data ownership | | |
+| Security / auth | | |
+| Operability | | |
+| Delivery / rollout | | |
+| Testability | | |
+| Maintainability / cost | | |
+
 ## 8. 关键设计
 | 主题 | 设计 | 风险 | 证据 |
 | --- | --- | --- | --- |
@@ -88,9 +103,21 @@
 | Visual verification | | | |
 
 ## 架构决策记录
-| 决策 | 备选 | 依据 | 回滚 |
-| --- | --- | --- | --- |
-| | | | |
+| 决策 | 备选 | 后果 | 信心 | 重看触发 |
+| --- | --- | --- | --- | --- |
+| | | | | |
+
+## Implementation Handoff
+| 项 | 内容 |
+| --- | --- |
+| Change slices | |
+| Files / modules | |
+| Sequence | |
+| Test seams | |
+| Feature flags / rollout | |
+| Rollback seam | |
+| Do-not-touch | |
+| Open assumptions | |
 
 ## 9. 契约与数据
 | 契约 / 数据 | 变更 | 兼容 | 验证 |
@@ -106,6 +133,18 @@
 | 失败模式 | 检测方式 | 回滚 / 降级 |
 | --- | --- | --- |
 | | | |
+
+## 12. Operability & Maintenance
+| 项 | 设计 |
+| --- | --- |
+| Logs / metrics / traces | |
+| Alerts / health checks | |
+| Owner / owning module | |
+| Extension point | |
+| Deprecation path | |
+| Wiki target | |
+| Technical debt | |
+| Revisit trigger | |
 
 ## 16. 技术验证策略
 | 风险 | 验证方式 | 证据 |

@@ -5,6 +5,7 @@
 - 吸收并替代独立 `ux-designer`：新增 `references/ux-research-ia.md`，沉淀用户研究、信息架构、交互恢复、微文案、可访问性和视觉层级规则。
 - 扩展 aesthetic directions 到 13 类，新增专业可信、材质/3D、插画/角色、图形/排版实验、地域文化灵感、情绪/体验调性等方向，并加入混搭规则。
 - aesthetic-selection prompt 改为默认推荐 3-5 个互斥美学方向，并要求跨气质筛选，避免只在同一类中换名字。
+- 强化导航决策：新增 sidebar / top nav / hybrid / tabs / command nav 等候选比较、滚动区域说明和人工确认要求；桌面主 sidebar 默认 fixed / sticky，不随主内容滚动。
 
 ## 0.6.0
 

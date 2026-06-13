@@ -1,6 +1,6 @@
 # Technical Decision Guide
 
-本文件保存技术影响面扫描、分批确认卡、依赖 / 工具链确认、版本事实检查、核心决策 review 和写作细则。`SKILL.md` 只保留入口执行顺序、门禁和产物边界。
+本文件保存技术影响面扫描、分批确认卡、依赖 / 工具链确认、版本事实检查、核心决策 review 和写作细则。`architecture-contract.md` 保存架构视图、实施交接、运行态和维护演进契约；`SKILL.md` 只保留入口执行顺序、门禁和产物边界。
 
 ## 影响面扫描
 
@@ -133,6 +133,20 @@
 4. 如果项目已有模式和规则主基准不同，优先项目事实，并在 `规则基准与偏离` 中写偏离理由。
 5. 不要另起并行规范章节或堆多个候选规范。
 
+## 架构契约输出
+
+中高风险、跨模块、API、数据、安全、运行或长期维护变更，不能只写代码结构。必须把设计压缩成可审查契约：
+
+| 输出 | 必须回答 | 写入位置 |
+|---|---|---|
+| Architecture view | 本次需要 Context / Container / Component / Runtime / Data / Deployment 中哪些视图，为什么足够 | `technical-design.md#7.1` |
+| Architecture Contract | 边界、职责、接口、状态、数据、安全、运行、交付、可测试性、可维护性和成本 | `technical-design.md#7.1` |
+| ADR | 决策上下文、备选方案、选择结果、后果、信心和重看触发 | `technical-design.md#架构决策记录` |
+| Implementation Handoff | change slices、files/modules、sequence、test seams、rollout、rollback、do-not-touch、open assumptions | `technical-design.md#Implementation Handoff` |
+| Maintenance & Evolution | owner、extension point、deprecation path、wiki target、technical debt、revisit trigger | `technical-design.md#12` |
+
+如果本次只是局部字段、小文案、已有实现的小修补，可以写 `N/A`；但必须说明为什么不会影响长期架构、运行态或维护成本。
+
 ## 核心决策摘要 Review
 
 详细 technical design 初稿完成后，不直接进入 tasking。先给用户看核心决策摘要，等待确认、调整或授权默认。
@@ -145,6 +159,7 @@
 | 架构选择 | | 为什么适合本次需求 |
 | 新增 / 替换依赖 | | 每项为什么必须引入，替代方案是什么 |
 | 工具链选择 | | 包管理器、组件库、样式、依赖管理、测试 runner 等 |
+| 架构契约 | | 边界、接口、运行态、维护演进是否清楚 |
 | 与现有架构冲突 / 变更 | | 如无则写 N/A |
 | 已知最大风险 | | 风险、影响、缓解和验证方式 |
 
@@ -165,5 +180,7 @@
 - 每个技术决策写确认来源、profile / 规则入口、回退或替换成本。
 - 每个新增依赖写用途、替代方案、风险和确认来源。
 - 每个 API / 数据 / 权限 / 生产风险都要有验证路径。
+- 每个跨模块或长期维护设计都要有实施交接、owner、extension point 和重看触发。
+- 运行态设计必须覆盖日志、指标、健康检查、告警或明确 N/A；不要只写“上线后观察”。
 - UI 细节只引用 `ui-design.md`，不要复制页面地图、视觉风格和交互状态。
 - 不把“常见最佳实践”当作用户确认，不把“Agent recommendation”写成已决定。

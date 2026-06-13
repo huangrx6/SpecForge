@@ -26,7 +26,15 @@ LayoutShell 定义应用骨架、导航、内容区和响应式规则。它决�
 | command / search nav | 专家用户、高频跳转 | 新手发现性弱 |
 | mobile bottom nav | 移动端 3-5 个高频入口 | 不适合深层管理系统 |
 
-默认桌面 sidebar 必须 fixed 或 sticky，不随主内容滚动；主内容滚动、侧栏保持定位。若故意让导航随内容滚动，必须写明原因和风险。
+输出 UI 方案前必须写 `Navigation Decision`：
+
+- Candidate A / B / C：至少包含一种非 sidebar 方案，除非已有设计系统强制 sidebar。
+- Recommended：推荐方案、为什么适合当前任务、为什么放弃其他方案。
+- Scroll regions：哪些区域 fixed / sticky，哪些区域 scroll。
+- Responsive collapse：桌面、平板、移动端分别如何收敛。
+- Human confirmation：用户确认、设计系统依据或低风险可逆默认。
+
+默认桌面 sidebar 必须 fixed 或 sticky，不随主内容滚动；主内容滚动、侧栏保持定位。若故意让导航随内容滚动，必须写明原因、风险、替代方案和用户确认。
 
 ## Variants
 
@@ -54,6 +62,7 @@ LayoutShell 定义应用骨架、导航、内容区和响应式规则。它决�
 - mobile safe area：顶部/底部/键盘
 - 固定区域高度稳定，内容变化不推动导航
 - 桌面 sidebar / topbar / command trigger 等全局导航区域不应被页面内容滚动带走
+- 对于长页面，优先使用 app-shell 固定导航 + main 独立滚动；不要让 body 滚动同时拖走主导航
 
 ## shadcn-vue mapping
 
@@ -77,6 +86,8 @@ LayoutShell 定义应用骨架、导航、内容区和响应式规则。它决�
 - 滚动区域混乱，头尾操作跟着滚走
 - sidebar 作为主导航却跟随页面内容滚动
 - 没和用户确认导航模式，就默认采用侧边栏或顶部导航
+- 只画一个 sidebar 方案，没有提供 top nav / hybrid / tabs / command nav 的取舍
+- 未声明滚动区，导致实现时导航、右侧栏、表格和内容一起滚动
 - 移动端没有安全区，输入栏被遮挡
 - sidebar 折叠后图标无 tooltip
 - 全局 loading 让页面空白

@@ -18,6 +18,7 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
 - `.specforge/core/standards/engineering.md`
 - `.specforge/core/standards/ai-toolkit.md`
 - `.specforge/core/profiles/README.md`
+- `.specforge/skills/sf-tech-design/references/architecture-contract.md`
 - 按影响面读取内部设计子模块；不要默认全量读取：
   - 前端工程、路由、组件、状态、API client 或构建：`.specforge/skills/sf-tech-design/stages/technical-design/frontend-design.md`
   - 后端模块、服务边界、后台任务、并发或幂等：`.specforge/skills/sf-tech-design/stages/technical-design/backend-design.md`
@@ -60,17 +61,21 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
 8. 选择 Tech Profiles，说明采用、部分采用或偏离理由；项目已有技术栈以 wiki 和代码事实优先。
 9. 对齐规则主基准：按影响面使用对应规则入口内的唯一主基准，并写清采用点、偏离理由和验证证据；无相关影响面时写 N/A。
 10. 填写 `Design Quality Gate`，确认设计规模、现有架构复用、新增依赖确认、更简单方案、契约可测试性和 tasks 可拆性。
-11. 中高风险或长期架构决策写 ADR 摘要；低风险小改写 N/A 和理由。
-12. 按影响面展开工程设计，只展开 `yes` 的章节；`no` 的章节保留一行 N/A，不写空表：
+11. 按 `architecture-contract.md` 选择最小架构视图：Context / Container / Component / Runtime sequence / Data flow / Deployment Ops；只选本次需要的视图，不为完整而堆图。
+12. 中高风险、跨模块、长期维护、数据、安全、运行或质量属性决策写 ADR 摘要；ADR 必须包含 context、options considered、outcome、consequences、confidence 和 revisit trigger。低风险小改写 N/A 和理由。
+13. 按影响面展开工程设计，只展开 `yes` 的章节；`no` 的章节保留一行 N/A，不写空表：
    - 前端工程结构、路由、组件边界、状态管理、API client。
    - 后端模块、服务边界、后台任务、并发和幂等。
    - 领域模型、实体、状态机和边界上下文。
    - API / SDK / 事件契约、鉴权和兼容性。
    - 数据库、索引、迁移、缓存和生命周期。
    - 配置、部署、可观测性、可靠性和回滚。
-13. 明确写入范围、禁止范围、失败模式和验证策略。
-14. 对高风险方案写备选方案和取舍理由。
-15. **初稿后核心决策 Review**：详细 technical design 初稿完成后，先向用户展示核心决策摘要并等待确认；确认前不得进入 tasking、spec_review approval 或 implementation。
+14. 写 `Architecture Contract`：boundary、responsibility、interface、state、data、security、operability、delivery、testability、maintainability、cost 中适用维度必须有结论或 N/A。
+15. 写 `Implementation Handoff`：change slices、files/modules、sequence、test seams、feature flags / rollout、rollback seam、do-not-touch 和 open assumptions，确保 `sf-tasking` 能直接拆任务。
+16. 写 `Maintenance & Evolution`：owner、change frequency、extension point、deprecation path、wiki target、technical debt、revisit trigger，避免只为一次实现设计。
+17. 明确写入范围、禁止范围、失败模式和验证策略。
+18. 对高风险方案写备选方案和取舍理由。
+19. **初稿后核心决策 Review**：详细 technical design 初稿完成后，先向用户展示核心决策摘要并等待确认；确认前不得进入 tasking、spec_review approval 或 implementation。
    - 摘要必须包含架构选择、新增 / 替换依赖、工具链选择、与现有架构冲突 / 变更、已知最大风险与缓解。
    - 用户确认后写入 `Core Decision Review Status: confirmed` 或表格项 `Core Decision Review Status | confirmed`，并保留 `[TECH DESIGN REVIEW CONFIRMED]`。
    - 用户授权默认时写 `delegated_default`，无技术影响时写 `not_required` 和 N/A 理由。
@@ -88,6 +93,8 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
 - 新增 / 替换技术或依赖缺少当前版本事实、官方资料、lockfile 证据或明确风险说明。
 - 涉及 API、安全、运行可靠性或可观测性，但没有说明规则主基准采用点。
 - API、数据迁移、权限或生产风险缺少验证路径。
+- 跨模块、API、数据、权限、任务、集成、运行或长期维护变更缺少 Architecture Contract、Implementation Handoff 或 Maintenance & Evolution。
+- 设计只描述 happy path，没有失败模式、回滚、观察点或验证路径。
 - `technical-design.md#0. 影响面与读取计划` 仍有会改变架构或上线风险的 `unknown`。
 - `technical-design.md` 仍残留 `[NEEDS TECH DECISION]`。
 - `technical-design.md` 仍残留 `[NEEDS DEPENDENCY DECISION]`。
@@ -103,6 +110,7 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
 - reviewer 能判断实现是否偏离架构、接口、数据或安全要求。
 - 关键技术选型和新增直接依赖都有确认来源：现有项目证据、用户明确指定、用户授权默认、已确认脚手架或用户确认候选方案。
 - `Design Quality Gate` 能证明本设计最小充分、契约可测试、没有未确认新增依赖。
+- 有架构或长期维护影响时，Architecture Contract、ADR、Implementation Handoff、Operability 和 Maintenance & Evolution 已写入或明确 N/A。
 - 初稿后的核心决策摘要已经被用户确认、用户授权默认，或明确 N/A。
 - tasks 可以从本文件和可选 `ui-design.md` 拆出可验证工作单元。
 - UI 细节只引用 `ui-design.md`，不在本文件重复维护。

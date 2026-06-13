@@ -1,6 +1,6 @@
 # NFR Design — 非功能需求设计子模块
 
-本子模块是 `sf-tech-design` 的内部参考，统筹**安全（Security）、可观测性（Observability）、部署（Deployment）和可靠性（Reliability）**四类非功能关切。
+本子模块是 `sf-tech-design` 的内部参考，统筹**安全（Security）、可观测性（Observability）、部署（Deployment）、可靠性（Reliability）、可维护性（Maintainability）和成本（Cost）**六类非功能关切。
 
 **只在本次 work item 对以下任一维度有实质影响时读取**，按需展开对应章节，不强制全量输出。同时读取 `.specforge/core/standards/engineering.md`。
 
@@ -125,6 +125,26 @@
 
 ---
 
+## 可维护性与成本（Maintainability & Cost）
+
+**触发条件**：变更引入新模块、新依赖、新运行组件、长期配置、复杂状态机、跨团队契约或明显资源成本。
+
+### 可维护性
+
+- Owner：模块、API、数据表、任务或配置项必须能定位到维护 owner。
+- Change frequency：说明高频变更点在哪里，是否需要配置化、插件化或保留简单代码路径。
+- Extension point：说明未来扩展应改哪里，不应复制粘贴哪里。
+- Deprecation path：新增替代能力时，写清旧能力保留、迁移和删除计划。
+- Documentation target：需要长期复用的事实写入 wiki 目标页，不把知识只留在 work item。
+
+### 成本
+
+- 新增外部服务、任务、缓存、索引、AI 调用或大文件处理时，说明资源成本、限额和预算保护。
+- 高成本路径需要限流、采样、批处理、缓存或人工审批中的至少一种控制。
+- 如果成本暂不可量化，写 open assumption 和 verification hook。
+
+---
+
 ## 必含产出（写入 technical-design.md 非功能需求章节）
 
 只输出本次 work item **实际涉及**的维度，不强制四个维度全量输出：
@@ -133,3 +153,4 @@
 - 涉及的日志 / 指标 / 告警规格。
 - 发布策略、配置变更和回滚方案。
 - 外部依赖的超时 / 重试 / 熔断参数。
+- 维护 owner、扩展点、废弃路径、wiki target、成本风险和预算保护。

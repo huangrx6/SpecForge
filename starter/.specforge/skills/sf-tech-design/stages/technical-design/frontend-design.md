@@ -32,6 +32,7 @@
 - 列出新增 / 修改路由、入口文件、布局层级和受影响页面。
 - 明确页面之间的数据传递方式：URL params、query、全局状态或后端状态。
 - 不在 technical design 重画 UI；只引用 `ui-design.md` 中的页面和状态编号。
+- 承接 `ui-design.md#Design Contract Summary` 的导航决策：说明 fixed / sticky / scroll 区域、移动端折叠和实现组件归属。
 
 ### 组件边界
 
@@ -41,6 +42,7 @@
 - 承接 `ui-design.md#Design Contract Summary`：明确 primitive、companion、project wrapper、pattern component 和 domain component 的层级。
 - 使用 shadcn-vue 时，说明 primitive 只承担可访问基础交互；权限、加载、错误、空态、远程数据、审计和批量操作进入 project wrapper。
 - 需要跨项目复用时，评估是否建立 shadcn-vue custom registry；registry 只分发稳定 wrapper / hooks / pages，不分发一次性页面拼装。
+- 每个新增 project wrapper 必须说明 owner、props/events、状态职责、测试接缝和未来扩展点。
 
 ### 状态与数据流
 
@@ -69,6 +71,7 @@
 - 路由 / 页面入口变更清单。
 - 组件边界和状态管理方案。
 - Design Contract Summary 的工程承接：token delivery、component source、registry boundary、motion source、state ownership。
+- Navigation / Layout handoff：导航模式、固定区、滚动区、移动端收敛和可验证截图点。
 - API client / 错误处理 / 加载重试策略。
 - 前端验证策略和需要 `sf-verify` 覆盖的页面状态。
 

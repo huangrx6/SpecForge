@@ -26,6 +26,8 @@ Foundations delta:
 Design Contract Summary:
 - Token source:
 - Component strategy:
+- Navigation decision:
+- Scroll regions:
 - Motion source:
 - Verification hooks:
 
@@ -86,6 +88,9 @@ Design Contract Summary:
 - Signature:
 - Token source:
 - Component strategy:
+- Navigation decision:
+- Navigation alternatives:
+- Scroll regions:
 - shadcn-vue primitive layer:
 - Project wrapper layer:
 - Motion source:
@@ -107,6 +112,8 @@ Component contract:
 
 Page pattern:
 - Layout archetype:
+- Navigation mode:
+- Fixed / sticky regions:
 - State matrix:
 - Responsive:
 - Microcopy:
