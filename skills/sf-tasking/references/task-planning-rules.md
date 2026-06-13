@@ -131,3 +131,6 @@ UI 适用时至少考虑：
 - verification 可以从 tasks 直接生成测试用例矩阵。
 - rollback 和 risk 没有空白。
 - 没有把 close 的 wiki 内容提前写成报告，只留下回写提示。
+- 运行 `node .specforge/core/scripts/artifact-quality.mjs` 后，tasks 相关 `FAIL` 已修复；`WARN` 已修复或在任务图中写明接受理由。
+
+`artifact-quality.mjs` 会检查真实 `Txxx`、核心字段、具体 trace、验证占位、必要 section 和摘要可读性。不要只看命令是否返回成功，要阅读 `Issues` 列表。

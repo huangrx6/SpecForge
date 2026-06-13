@@ -89,6 +89,13 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 1. 详细 technical design 初稿完成后，必须先向用户展示 `references/technical-decision-guide.md#核心决策摘要 Review`，等待确认、调整或授权默认。
 2. 确认前不得进入 `sf-tasking`、`sf-spec-review` approval 或 `sf-implement`。
 3. 用户确认后，在 `technical-design.md#1. 技术选型与依赖确认` 写 `Core Decision Review Status: confirmed` 或 `delegated_default` / `not_required`，并保留 `[TECH DESIGN REVIEW CONFIRMED]`。
+4. technical design 定稿前运行：
+
+```bash
+node .specforge/core/scripts/artifact-quality.mjs
+```
+
+5. 检查 `Issues`：technical_design 相关 `FAIL` 必须修复，尤其是 open decision、关键影响面 `unknown`、Architecture Contract / Implementation Handoff / Operability & Maintenance 空壳；`WARN` 必须修复或在 `Design Quality Gate` 中写明 owner、影响和接受理由。
 
 ## 判定表
 
@@ -119,6 +126,7 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 - 有 UI / 前端影响时，Design Contract Summary 已转成工程可执行的 token、wrapper、registry、motion 和 visual verification 方案。
 - 有架构或长期维护影响时，Architecture Contract、ADR、Implementation Handoff、Operability 和 Maintenance & Evolution 已写入或明确 N/A。
 - 初稿后的核心决策摘要已经被用户确认、用户授权默认，或明确 N/A。
+- `artifact-quality.mjs` 的 technical_design 相关 `FAIL` 已清零；`WARN` 已修复或在 `Design Quality Gate` 中有明确接受理由。
 - **按需求规模裁剪**：单字段 / 单页面 / 配置类小需求，`Tech Profile Selection`、`Requirements Trace`、`核心决策摘要 Review` 等章节可省略或合并为一行摘要；沿用现有栈时不需要重复列出所有技术选型表格。目标是让文档可读可审批，而不是填满模板。
 - 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 

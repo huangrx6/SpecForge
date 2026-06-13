@@ -105,6 +105,14 @@ node .specforge/core/scripts/create-artifact.mjs tasks
 
 字段适用性和写法见 `references/task-planning-rules.md#任务字段规则`。
 
+写完后运行：
+
+```bash
+node .specforge/core/scripts/artifact-quality.mjs
+```
+
+读取 `Issues`：tasks 相关 `FAIL` 必须修复，特别是无真实 `Txxx`、缺少 `_Trace:_` / `_Files:_` / `_Verification:_` / `_Rollback:_` / `_Risk:_` 或验证占位；`WARN` 必须修复或在任务图中写清接受理由。
+
 ## 停止条件
 
 | 条件 | Return path |
@@ -127,6 +135,7 @@ node .specforge/core/scripts/create-artifact.mjs tasks
 - UI / PC 规范 / Playwright / 权限 / 数据 / 发布 / 回滚 / 可观测性任务在适用时单独列出。
 - 并行波次不会让多个任务同时写同一核心文件或共享未完成契约。
 - 任务图清楚说明依赖、可并行边界、交接证据和 review 焦点。
+- `artifact-quality.mjs` 的 tasks 相关 `FAIL` 已清零；`WARN` 已修复或有明确接受理由。
 - 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 
 ## 不做

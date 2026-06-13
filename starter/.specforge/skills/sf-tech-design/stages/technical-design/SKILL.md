@@ -79,6 +79,7 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
    - 摘要必须包含架构选择、新增 / 替换依赖、工具链选择、与现有架构冲突 / 变更、已知最大风险与缓解。
    - 用户确认后写入 `Core Decision Review Status: confirmed` 或表格项 `Core Decision Review Status | confirmed`，并保留 `[TECH DESIGN REVIEW CONFIRMED]`。
    - 用户授权默认时写 `delegated_default`，无技术影响时写 `not_required` 和 N/A 理由。
+20. 定稿前运行 `node .specforge/core/scripts/artifact-quality.mjs`，读取 `Issues`；technical_design 相关 `FAIL` 必须修复，`WARN` 必须修复或在 `Design Quality Gate` 中说明接受理由。
 
 ## 停止条件
 
@@ -114,3 +115,4 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
 - 初稿后的核心决策摘要已经被用户确认、用户授权默认，或明确 N/A。
 - tasks 可以从本文件和可选 `ui-design.md` 拆出可验证工作单元。
 - UI 细节只引用 `ui-design.md`，不在本文件重复维护。
+- `artifact-quality.mjs` 未留下 technical_design 相关 `FAIL`，且 `WARN` 已处理或可追溯接受。

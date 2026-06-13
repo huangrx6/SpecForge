@@ -78,6 +78,13 @@ node .specforge/core/scripts/create-artifact.mjs requirements
 ### D. 回写 flags 和路由
 
 1. 按 `references/requirements-authoring-guide.md#影响面回写` 校准 `work.yaml` / `brief.md` 的 components flags。
+2. requirements 写完后运行：
+
+```bash
+node .specforge/core/scripts/artifact-quality.mjs
+```
+
+3. 检查 `Issues`：`FAIL` 必须修复后才能进入 UI / technical design / tasking；`WARN` 必须修复，或在 `Spec Quality Gate` 中写清 owner、影响和接受理由。
 
 ## 判定表
 
@@ -101,6 +108,7 @@ node .specforge/core/scripts/create-artifact.mjs requirements
 - 每个 user-visible / operator-visible 行为都有验收标准。
 - 影响面 flags 已校准。
 - 所有未决问题都显式标记 `[NEEDS CLARIFICATION]`、`[NEEDS DEPENDENCY DECISION]` 或 `[NEEDS TOOLING DECISION]`。
+- `artifact-quality.mjs` 的 requirements 相关 `FAIL` 已清零；`WARN` 已修复或在 `Spec Quality Gate` 中有明确接受理由。
 - **按需求规模裁剪**：单字段 / 单页面 / 配置类小需求，`PRD 转译边界`、`行为覆盖矩阵`、`用户流程` 等章节可省略或合并为一行摘要；不要为了填满模板而生成无意义内容。目标是让用户有审批欲望，而不是让文档看起来完整。
 - 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 

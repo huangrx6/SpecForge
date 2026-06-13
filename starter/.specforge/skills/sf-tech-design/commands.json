@@ -4,6 +4,7 @@
   "description": "Commands this skill package is expected to use.",
   "commands": [
     "node .specforge/core/scripts/create-artifact.mjs technical_design",
+    "node .specforge/core/scripts/artifact-quality.mjs",
     "node .specforge/core/scripts/instructions.mjs"
   ]
 }

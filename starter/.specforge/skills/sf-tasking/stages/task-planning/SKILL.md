@@ -55,6 +55,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 7. **最后列运行任务**：配置、迁移、回滚、可观测性、告警、发布检查和 Wiki 回写提示。
 8. 标注依赖关系和并行波次。并行任务必须有不同主要写入边界。
 9. 填写任务图与执行策略：任务依赖、可并行性、主要写入边界、交付物、review 焦点和多 worker 禁止同时修改的文件。
+10. 写完后运行 `node .specforge/core/scripts/artifact-quality.mjs`，读取 `Issues`；tasks 相关 `FAIL` 必须修复，`WARN` 必须修复或在任务图中说明接受理由。
 
 ## 任务格式要求
 
@@ -132,3 +133,4 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 - 每个 technical_design `yes` 影响面都有任务承接；`no` / N/A 有可信理由；无关键 `unknown` 留到实现阶段。
 - reviewer 可以用 tasks 判断实现是否完整。
 - verification 可以直接从 tasks 列出验证矩阵。
+- `artifact-quality.mjs` 未留下 tasks 相关 `FAIL`，且 `WARN` 已处理或可追溯接受。

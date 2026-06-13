@@ -39,6 +39,9 @@ description: SpecForge 内部需求技能。用于为 work item 生成清晰、�
 13. 如果需求会迫使技术设计选择包管理器、UI 组件库、样式方案、Python 依赖管理 / 虚拟环境、构建工具、测试 runner、任务运行器或 monorepo 工具，写 `[TOOLING DECISION REQUIRED]` 或 `[NEEDS TOOLING DECISION]`；不要在 requirements 中替用户选工程偏好。
 14. 校准 `work.yaml` 的 components flags：`has_ui`、`has_api`、`has_db`、`has_domain`、`has_ai`、`has_integration`、`needs_research`。
 15. 避免写文件名、类名、数据库字段等实现细节，除非用户请求本身就是契约变更。
+16. 写完后运行 `node .specforge/core/scripts/artifact-quality.mjs`，读取 `Issues`：
+    - requirements 相关 `FAIL` 必须修复后才能进入设计或 tasking。
+    - `WARN` 必须修复，或在 `Spec Quality Gate` 中写明 owner、影响和接受理由。
 
 ## 第三方 Skill 归一化
 
@@ -74,3 +77,4 @@ description: SpecForge 内部需求技能。用于为 work item 生成清晰、�
 - `work.yaml` 的 components flags 与 requirements 一致。
 - 所有未决问题都显式标记。
 - 没有把设计方案伪装成需求。
+- `artifact-quality.mjs` 未留下 requirements 相关 `FAIL`，且 `WARN` 已处理或可追溯接受。

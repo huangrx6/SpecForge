@@ -105,3 +105,17 @@ node .specforge/core/scripts/instructions.mjs
 - 验收标准描述输入、动作、期望结果。
 - 风险需求明确触发后续 design、security、testing 或 delivery 规则。
 - requirements 能解释为什么需要或不需要 `ui_design` / `technical_design`。
+
+## 质量脚本使用
+
+requirements 写完后运行：
+
+```bash
+node .specforge/core/scripts/artifact-quality.mjs
+```
+
+阅读 `Issues` 而不是只看命令是否成功。该脚本会检查真实 `REQ-*`、`AC-*`、必要 section、未决决策 marker、摘要长度和模板占位。处理规则：
+
+- `FAIL`：必须修复；不能带着 open decision、无真实需求、无真实验收标准进入后续设计。
+- `WARN`：优先修复；若是有意保留，必须在 `Spec Quality Gate` 写 owner、影响和接受理由。
+- `INFO`：通常是可读性提醒，例如产物过长；按需转成 HTML / review package / 附录分层。
