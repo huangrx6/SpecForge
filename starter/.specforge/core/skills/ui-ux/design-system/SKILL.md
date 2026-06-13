@@ -20,7 +20,7 @@ description: SpecForge UI 设计规范 skill；用于提炼设计语言、建立
 
 1. 先读 `references/design-intelligence.md`，明确 subject、audience、single job、design mode 和一个可辩护的 signature。
 2. 再读 `foundations/README.md`，按需读 colors / typography / spacing / density / radius-shadow / motion / accessibility。
-3. 需要推荐风格方向时读 `references/aesthetic-directions.md` 和 `prompts/aesthetic-selection.md`，按业务、用户、页面模式推荐 2-3 个互斥方向。
+3. 需要推荐风格方向时读 `references/aesthetic-directions.md` 和 `prompts/aesthetic-selection.md`，先推荐 2-3 个互斥美学风格，再把用户选择翻译成业务页面模式。
 4. Product UI / shadcn-vue 场景读 `references/shadcn-vue.md`、`references/tailwind-v4.md`、`components/README.md`、`references/component-system.md` 和相关 `components/*.md`。
 5. 页面设计读 `pages/*.md` 中最接近的模式；没有命中的页面先读 `pages/dashboard.md`、`pages/list-detail.md`、`pages/form-flow.md`。
 6. 需要从参考网站或截图提取风格时读 `references/design-md-extraction.md`，按 DESIGN.md 结构抽取 token、组件、布局和 do/don't。
@@ -35,8 +35,8 @@ description: SpecForge UI 设计规范 skill；用于提炼设计语言、建立
 2. **Subject grounding**：用真实业务对象、行业材料、用户语言和场景物件推导视觉方向，不从通用 SaaS 模板开始。
 3. **Design mode**：判断 Product UI、Brand Surface 或 Hybrid；后台工具默认 Product UI，除非用户明确要求表达型品牌页面。
 4. **Reference extraction**：有参考网站/截图时，抽取 DESIGN.md 风格的 atmosphere、tokens、typography、components、layout、do/don't。
-5. **Aesthetic direction recommendation**：基于 `aesthetic-directions.md` 推荐 2-3 个互斥美学方向；每个方向必须说明适用业务、页面模式、组件气质、风险和不适用场景。
-6. **Design language**：输出 2-3 个互斥方向，每个方向包含色彩、排版、密度、组件气质、动效边界、适合点、风险和 signature。
+5. **Aesthetic direction recommendation**：基于 `aesthetic-directions.md` 推荐 2-3 个互斥美学方向；方向必须是审美气质，例如极简主义、玩具感、水彩风、赛博朋克、森系，而不是 Operational Calm 这类业务模式。
+6. **Business translation**：用户选择美学后，再把它翻译成业务页面模式、组件气质、密度、状态、动效边界和 signature。
 7. **Self-critique pass**：先问“这个方案是不是任何同类产品都会长这样”，若是，必须替换 palette、type、layout 或 signature 中至少一项。
 8. **Human taste gate**：方向会影响视觉气质、信息架构或核心流程时，先让用户确认；低风险小改可写可逆默认。
 9. **Foundations pack**：把确认方向落成 semantic tokens、字体层级、空间密度、圆角阴影、动效、可访问性约束。

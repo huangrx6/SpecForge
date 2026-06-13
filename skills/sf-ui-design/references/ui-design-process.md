@@ -10,8 +10,8 @@ UI design 不是一上来画图。先判断哪些问题会改变页面结构、�
 
 1. 列出 `已确认事实 / 高影响未知 / 可安全默认`。
 2. 高影响未知优先问；低风险默认写入假设，不阻塞。
-3. 没有现成设计系统或确认方向时，给 2-3 个互斥体验方向，每个方向写适合点、风险、推荐理由和放弃代价。
-4. 用户确认体验方向后，立即写 `[UI DECISION CONFIRMED]` 或 `UI Direction Status: confirmed`，并记录确认来源。
+3. 没有现成设计系统或确认方向时，先给 2-3 个互斥美学方向，再说明每个方向如何翻译成业务页面模式；不要把业务模式当美学方向。
+4. 用户确认美学方向和业务翻译后，立即写 `[UI DECISION CONFIRMED]` 或 `UI Direction Status: confirmed`，并记录确认来源。
 5. 每轮只问会改变 UI 的关键问题或一小组强相关问题；问题数量不设硬上限，但要分轮收敛，并解释为什么这些问题会改变 UI design。
 
 常用镜头：
@@ -45,9 +45,9 @@ UI design 不是一上来画图。先判断哪些问题会改变页面结构、�
 
 - 只读取当前问题需要的 reference，不全量搬运外部 skill。
 - 第三方 persona、流程或模板只是候选，必须经过用户确认后才能写成 `[UI DECISION CONFIRMED]`。`design-system` 可以提供推荐方向，但不能替代人工视觉方向确认。
-- `design-system` 的 sample board 是人工感官确认材料：要写 2-3 个方向、样例描述、采用/不采用、推荐项和风险；不能只写“现代、简洁、高级”。
+- `design-system` 的 sample board 是人工感官确认材料：要写 2-3 个美学方向、样例描述、采用/不采用、推荐项和风险；不能只写“现代、简洁、高级”，也不能把 Operational Calm 这类业务模式当成美学。
 - `design-system` 的 design intelligence 是样例板前置条件：必须有 Subject、Audience、Single job、World material 和 Signature。
-- `design-system` 的 aesthetic directions 是人工选择入口：必须推荐 2-3 个互斥方向，并说明不适用场景。
+- `design-system` 的 aesthetic directions 是人工选择入口：必须推荐 2-3 个互斥审美风格，并说明不适用场景；用户选择后再翻译为业务页面模式。
 - 用户选择方向后，组件契约必须从 `components/README.md`、`references/component-system.md` 和具体组件文件中提取，不允许只写 primitive 名称。
 - DESIGN.md extraction 只抽取可执行设计规则，不复制外部品牌身份；输出必须包含 adopt / adapt / avoid。
 - 外部 skill 的内容要提取成 `体验方向候选 / 用户旅程风险 / 信息架构问题 / 可访问性约束 / 视觉 review 项`，不要原样复制模板标题。

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0
+
+- 重写 aesthetic-directions：将“美学方向”和“业务设计模式”拆开，补充简洁高级、可爱活泼、艺术氛围、复古怀旧、科技未来、潮流个性、自然温柔七类审美风格。
+- aesthetic-selection prompt 增加约束：先推荐纯审美风格，再做 business translation，禁止把 Operational Calm / Command Center 等业务模式当作美学。
+- sf-ui-design 流程更新为“美学方向确认 -> 业务翻译 -> 组件/页面约束”。
+
 ## 0.5.0
 
 - 组件规范统一升级为 Purpose / Structure / Variants / States / Density / shadcn-vue mapping / Content / Anti-patterns 八段式契约。

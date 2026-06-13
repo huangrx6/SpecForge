@@ -1,9 +1,11 @@
 # Aesthetic Selection Prompt
 
-用于根据业务内容向用户推荐多个美学方向，并把用户选择转成设计约束。
+用于根据业务内容向用户推荐多个真正的美学方向，并把用户选择转成设计约束。
+
+注意：美学方向不是业务设计模式。`极简主义 / 玩具感 / 水彩风 / 赛博朋克 / 森系` 是美学方向；`Operational Calm / Command Center / Data Instrument` 只能作为 business translation pattern。
 
 ```md
-请基于以下信息推荐 2-3 个互斥 UI 美学方向。
+请基于以下信息推荐 2-3 个互斥 UI 美学方向，并说明它们如何翻译到当前业务页面。
 
 输入：
 - Subject:
@@ -17,13 +19,15 @@
 
 输出：
 1. Direction cards
-   - Direction:
+   - Aesthetic direction:
+   - Feeling:
    - Why it fits:
    - Why it might fail:
-   - Signature:
+   - Visual language:
    - Foundations:
-   - Component language:
-   - Page patterns:
+   - Business translation pattern:
+   - Component impact:
+   - Page pattern impact:
    - Motion boundary:
    - Human question:
 2. Recommended direction
@@ -32,6 +36,8 @@
 
 要求：
 - 方向必须互斥。
-- 每个方向都要能映射到组件契约。
-- 不使用“现代、简洁、高级”作为唯一解释。
+- 每个方向必须是审美风格，不是业务模式。
+- 每个方向都要能映射到组件契约，但不能把组件语言当成审美本身。
+- 不使用“现代、简洁、高级”作为唯一解释；必须落到色彩、字体、形状、材质、插画、动效和反模式。
+- 如果是严肃后台，也可以推荐克制美学，如“极简主义 / 日式留白 / 极简科技风”，再翻译成高密业务 UI。
 ```

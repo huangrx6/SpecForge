@@ -1,55 +1,133 @@
 # Aesthetic Directions
 
-本文件用于给用户推荐多个可选美学方向。方向必须服务业务和页面模式，不是装饰风格列表。
+本文件是真正的“美学风格库”，用于让用户选择页面、品牌、头像、插画、空态、AI 助手形象或样例板的视觉气质。它不是业务页面模式库。
+
+关键区分：
+
+- **Aesthetic direction**：画面气质和审美语言，例如极简主义、玩具感、水彩风、赛博朋克、森系。
+- **Business translation**：把审美落到业务 UI 的方式，例如高密后台、AI 助手、诊断链路、数据看板、H5 现场工具。
+- **Design language**：用户选择审美后，生成 token、组件、页面、动效和文案约束。
+
+不要再把 `Operational Calm`、`Command Center`、`Data Instrument` 这类业务设计模式当成美学方向。它们只能作为“用户选定美学后的落地形态”。
 
 ## Recommendation protocol
 
-1. 根据 `Subject / Audience / Single job / World material` 先排除不适合方向。
-2. 推荐 2-3 个互斥方向，不要给同一方向换颜色。
-3. 每个方向必须包含：适合业务、视觉气质、组件语言、布局倾向、动效策略、风险、禁用场景。
-4. 用户选择后，把该方向映射到 foundations、components、pages、prompts 和 Pencil 原型约束。
+1. 先判断设计对象：Product UI / Brand Surface / Avatar-IP / Illustration / Empty State / Dashboard / Mobile H5。
+2. 从美学风格库推荐 2-3 个互斥方向；方向必须是审美气质，不是业务功能。
+3. 每个方向必须说明：感觉、适合对象、视觉语言、组件影响、动效倾向、风险、不适用场景。
+4. 用户选择后，再做 business translation：把审美方向翻译成 foundations、components、pages、prompts 和 Pencil 原型约束。
+5. 后台 / 政企 / 工具型产品可以使用克制审美，但仍要明确美学来源，例如“日式留白 + 极简科技风”，而不是只写“简洁高级”。
 
-## Product UI directions
+## 1. 简洁 / 高级类
 
-| Direction | Best for | Signature | Component language | Avoid |
+| Direction | Feeling | Visual language | Good for | Avoid |
 |---|---|---|---|---|
-| Operational Calm | 运营后台、审批、数据管理 | 稳定表格 + 精准状态 | compact, hairline border, restrained primary | 大面积 hero、彩色卡片 |
-| Command Center | AI 工具、全局搜索、快捷工具 | 命令面板 + 最近/推荐动作 | command palette, split inspector, keyboard-first | 工具入口全部大卡片 |
-| Diagnostic Chain | 故障诊断、工单、AI 问答 | 上下文卡 + 诊断步骤链 | timeline, source card, tool status | 只有聊天气泡 |
-| Data Instrument | 指标、监控、经营看板 | 指标仪表 + 异常入口 | metric card, table, chart, alert | 无口径指标卡 |
-| Structured Workflow | 导入、审批、配置向导 | stepper + summary + recover | stepper, form, result table | 长表单一屏到底 |
-| Knowledge Workspace | 文档、知识库、问答 | 左导航 + 语义标签 + 阅读面板 | tabs, tree, search, citation card | 只做普通文章页 |
-| Field Mobile | 外勤、现场办公、App 内 H5 | 底部主操作 + 状态提示 | touch target, sticky input, toast | 桌面缩小版 |
-| Secure Enterprise | 权限、政企、金融、审计 | 权限边界 + 变更摘要 | badge, audit table, confirmation | 模糊成功/失败状态 |
+| 极简主义 | 留白多、元素少、干净克制 | 少色、细线、低阴影、严格网格 | 工具后台、品牌页、作品集、设置页 | 信息复杂但没有层级设计 |
+| 现代高级感 | 简洁但更精致，有品牌感 | 大字号、精确间距、克制高光、优质素材 | 头像、品牌首页、会员页、AI 助手封面 | 堆渐变、堆玻璃、假高级 |
+| Notion 风 | 黑白线稿、轻松、手绘、办公感 | 手绘 icon、轻插画、黑白灰、轻量卡片 | 知识库、工作台、文档、团队协作 | 需要强品牌冲击或高科技感 |
+| 北欧风 | 温柔、浅色、自然、舒适 | 浅木色、低饱和、圆角、柔和日光 | 生活服务、会员、教育、轻办公 | 高压监控、金融审计、强运营后台 |
+| 日式留白 | 安静、清透、克制、有呼吸感 | 大留白、细分割、浅色块、缓慢动效 | 阅读、知识、品牌、政企展示 | 数据密度过高时留白失控 |
+| 轻奢风 | 简洁 + 少量精致装饰，成熟 | 深浅对比、金属细节、优雅 serif/衬线感 | 高价值服务、品牌会员、高端活动 | 普通后台、低价促销、儿童产品 |
 
-## Brand Surface directions
+## 2. 可爱 / 活泼类
 
-| Direction | Best for | Signature | Component language | Avoid |
+| Direction | Feeling | Visual language | Good for | Avoid |
 |---|---|---|---|---|
-| Editorial Authority | 专业服务、咨询、政企展示 | 强排版 + 证据段落 | serif/display title, reading band | 空泛大口号 |
-| Product Immersion | 产品、硬件、空间、场馆 | 真实产品图/场景为主角 | full-bleed media, grounded CTA | 抽象渐变 hero |
-| Technical Blueprint | 开发者工具、平台、AI 基建 | 代码/图谱/网格 | monospace labels, blueprint panels | 伪代码装饰 |
-| Warm Service | 会员、服务、客户关怀 | 温和文案 + 明确下一步 | soft surface, human copy, simple cards | 过度可爱 |
-| Civic Clarity | 政务、公共服务、运营保障 | 明确信息层级 + 可信状态 | direct labels, clear status, accessible contrast | 过度潮流风 |
-| Premium Restraint | 高价值产品、品牌页 | 大留白 + 少量精确视觉资产 | sparse CTA, strong type, quiet motion | 堆阴影和玻璃 |
+| 玩具感 | 像小摆件、盲盒、公仔，圆润可爱 | 3D 软质、圆角、实体小物、轻阴影 | AI 助手形象、头像、空态、活动入口 | 严肃政企审批和审计页面 |
+| 泡泡感 | 软、圆、轻盈、明亮 | 圆形、透明感、浅渐变、漂浮动效 | H5、欢迎页、儿童/轻娱乐、助手问候 | 高密表格和长表单 |
+| 童趣风 | 天真、简单、颜色活泼 | 粗线条、基础形状、明亮色块 | 教育、活动、轻量互动、游戏化任务 | B 端专业系统主界面 |
+| 卡通风 | 形象明确，亲和力强 | 明确角色、表情、故事性场景 | AI 角色、客服、引导页、空态 | 角色抢走业务信息 |
+| Kawaii 日系可爱 | 甜、萌、圆眼睛、软色彩 | 粉/奶/浅蓝、圆眼角色、小装饰 | 头像、IP、陪伴型助手、年轻用户 | 政务、严肃风控、专业报表 |
+| 手账风 | 随意、可爱、小贴纸感 | 贴纸、纸张、手写、便签、胶带 | 个人工具、计划、学习、活动页 | 大型企业后台主框架 |
+
+## 3. 艺术 / 氛围类
+
+| Direction | Feeling | Visual language | Good for | Avoid |
+|---|---|---|---|---|
+| 艺术线稿 | 简单线条，有审美和灵魂 | 细线、留白、单色或双色、轻构图 | 品牌插画、空态、说明页、头像 | 图标过多导致像素材库 |
+| 抽象艺术 | 不具象，像情绪 / 符号 | 几何、色块、模糊边界、符号化 | 品牌背景、封面、海报、情绪板 | 用户需要理解真实业务对象 |
+| 拼贴风 | 多元素组合，有设计感 | 图片、纸张、标签、裁切、层叠 | 活动页、品牌故事、专题页 | 管理后台、强可读表单 |
+| 版画风 | 粗线条、颗粒感、复古艺术感 | 高对比、粗轮廓、颗粒、手工纹理 | 海报、文化、城市、专题视觉 | 需要轻盈科技感的页面 |
+| 水彩风 | 柔和、透明、温暖 | 水痕、透明叠色、手工边缘 | 治愈、教育、生活服务、空态 | 数据密集或强操作页面 |
+| 油画风 | 厚重、质感强、偏艺术肖像 | 厚涂、纹理、光影、人物肖像 | 头像、人物品牌、艺术活动 | 系统 UI 主体和小尺寸图标 |
+| 纸雕风 | 层次感、手工感、干净立体 | 分层纸片、柔阴影、低饱和 | 空态、活动视觉、产品引导 | 复杂数据图表和高密列表 |
+
+## 4. 复古 / 怀旧类
+
+| Direction | Feeling | Visual language | Good for | Avoid |
+|---|---|---|---|---|
+| 复古海报风 | 色彩浓、构图强、年代感 | 大标题、粗边框、旧印刷色、强构图 | 活动页、宣传海报、专题页 | 日常后台和长文本阅读 |
+| 美式复古 | 旧广告、漫画、胶片感 | 半调网点、复古字体、广告插画 | 潮流品牌、活动、IP 包装 | 政企可信度场景 |
+| 港风复古 | 暖色、霓虹、旧照片氛围 | 暖色胶片、霓虹字、城市夜景 | 城市文旅、活动、品牌专题 | 极简工具和专业表格 |
+| Y2K | 千禧年、金属、亮色、未来复古 | 金属、亮粉蓝、网格、胶囊形 | 潮流、年轻化、头像、活动视觉 | 长期企业系统和严肃办公 |
+| 像素风 | 8-bit / 游戏机感 | 像素格、低分辨率图形、硬边 | 游戏化、成就、活动、头像 | 高级品牌和正式系统 |
+| 老动画风 | 手绘动画、颗粒、怀旧 | 胶片颗粒、手绘角色、暖色调 | 讲故事、角色 IP、活动页 | 高精度数据展示 |
+
+## 5. 科技 / 未来类
+
+| Direction | Feeling | Visual language | Good for | Avoid |
+|---|---|---|---|---|
+| 赛博朋克 | 霓虹、暗色、未来城市 | 暗底、霓虹、强对比、光效 | 活动、概念、游戏、未来品牌 | 政企后台、长时间办公 |
+| 极简科技风 | 冷静、蓝白灰、理性 | 蓝白灰、细线、网格、低动效 | AI 平台、数据系统、开发者工具 | 做成默认企业蓝模板 |
+| 玻璃拟态 | 半透明、磨砂、轻未来感 | blur、透明层、浅光、悬浮面板 | 展示页、轻量 dashboard、AI 入口 | 可读性差、层级过多 |
+| 金属未来感 | 银色、机械、硬朗 | 金属渐变、硬边、机械纹理 | 硬件、工业、机器人、未来品牌 | 柔和服务和亲和 H5 |
+| AI 感 / 数据感 | 光线、网格、节点、科技符号 | 节点、流光、数据线、动态网格 | AI 助手、知识图谱、诊断链路 | 只用抽象光效不展示业务对象 |
+
+## 6. 潮流 / 个性类
+
+| Direction | Feeling | Visual language | Good for | Avoid |
+|---|---|---|---|---|
+| 街头涂鸦 | 张扬、年轻、自由 | 手写字、喷漆、强色、自由排版 | 活动、潮流品牌、年轻社区 | 正式办公和复杂表单 |
+| 潮玩 IP | 可做头像，像品牌小角色 | 角色化、盲盒感、统一姿态 | AI 助手、客服形象、头像体系 | 角色和业务无关 |
+| 低幼丑萌 | 不完美但很有记忆点 | 夸张比例、粗糙线条、反精致 | 社交、年轻化、表情包、IP | 高端品牌和严肃业务 |
+| 酷感黑白 | 冷、简洁、有态度 | 黑白强对比、硬朗字体、锐利构图 | 个人品牌、作品集、潮流工具 | 温暖服务和低门槛政务 |
+| 反差萌 | 高级构图 + 可爱细节 | 克制版式 + 小角色/小贴纸 | AI 助手、空态、品牌微交互 | 可爱元素过量破坏专业感 |
+| 怪诞可爱 | 有点奇怪，但很有个性 | 奇异比例、意外元素、强记忆点 | IP、活动、头像、创意工具 | 严肃审批、医疗、金融 |
+
+## 7. 自然 / 温柔类
+
+| Direction | Feeling | Visual language | Good for | Avoid |
+|---|---|---|---|---|
+| 森系 | 自然、植物、柔和 | 绿色、植物纹理、自然光、手绘叶片 | 生活、健康、教育、公益 | 高科技和工业硬朗场景 |
+| 治愈风 | 安静、温暖、柔软 | 暖色、低对比、柔和角色、舒缓动效 | 客服、心理、生活服务、AI 陪伴 | 紧急告警和强操作后台 |
+| 云朵感 | 轻盈、白色、梦幻 | 白色、圆形、柔阴影、漂浮层 | 欢迎页、儿童、轻娱乐、空态 | 复杂数据密集页面 |
+| 奶油风 | 米白、浅黄、柔和高级 | 奶油色、柔圆角、低饱和、温暖材质 | 会员、生活服务、轻品牌、头像 | 易脏、对比不足、B 端高密表格 |
+| 清新插画风 | 干净明亮、亲和 | 明亮底色、简洁插画、轻量线条 | H5、活动、空态、帮助页 | 需要强权威或高端克制 |
+
+## Business translation patterns
+
+用户选择美学方向后，再选择或推导业务落地模式。下面这些不是美学方向，只是把审美翻译成产品 UI 的结构策略。
+
+| Pattern | Use when | Translation question |
+|---|---|---|
+| Operational Calm | 运营后台、审批、数据管理 | 该美学如何在高密表格、筛选和状态 badge 中保持克制？ |
+| Command Center | AI 工具、全局搜索、快捷工具 | 该美学如何影响 command palette、快捷工具和键盘优先体验？ |
+| Diagnostic Chain | 故障诊断、工单、AI 问答 | 该美学如何表现错误上下文、诊断步骤和来源证据？ |
+| Data Instrument | 指标、监控、经营看板 | 该美学如何影响图表色彩、指标卡、异常提示和口径说明？ |
+| Structured Workflow | 导入、审批、配置向导 | 该美学如何影响 stepper、summary、表单密度和恢复路径？ |
+| Knowledge Workspace | 文档、知识库、问答 | 该美学如何影响阅读面板、标签、引用卡和搜索体验？ |
+| Field Mobile | 外勤、现场办公、App 内 H5 | 该美学如何适配触控目标、底部操作、键盘和短时任务？ |
+| Secure Enterprise | 权限、政企、金融、审计 | 该美学如何保持可信、可访问、可审计，避免过度装饰？ |
 
 ## Direction output card
 
 ```md
-Direction:
+Aesthetic direction:
+Feeling:
 Why it fits:
 Why it might fail:
-Signature:
-Foundations:
+Visual language:
 - Palette:
 - Type:
-- Density:
-- Radius/shadow:
+- Shape:
+- Texture / material:
+- Illustration / icon:
 - Motion:
-Component language:
-- Primary components:
+Business translation:
+- Product pattern:
+- Component impact:
 - States to emphasize:
-- shadcn-vue primitives:
+- shadcn-vue primitive / companions / wrappers:
 Page patterns:
 Human question:
 ```

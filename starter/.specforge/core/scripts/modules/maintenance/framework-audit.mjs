@@ -244,6 +244,36 @@ function designSystemIssues() {
     .map((path) => issue("FAIL", "missing-design-system-file", `${path} is required by the design-system contract.`, path));
 }
 
+function designSystemAestheticIssues() {
+  const issues = [];
+  const path = "core/skills/ui-ux/design-system/references/aesthetic-directions.md";
+  if (!exists(path)) return [issue("FAIL", "missing-aesthetic-directions", `${path} is required.`, path)];
+
+  const body = read(path);
+  for (const section of [
+    "## 1. 简洁 / 高级类",
+    "## 2. 可爱 / 活泼类",
+    "## 3. 艺术 / 氛围类",
+    "## 4. 复古 / 怀旧类",
+    "## 5. 科技 / 未来类",
+    "## 6. 潮流 / 个性类",
+    "## 7. 自然 / 温柔类",
+    "## Business translation patterns",
+  ]) {
+    if (!body.includes(section)) {
+      issues.push(issue("FAIL", "aesthetic-style-family-missing", `${path} is missing ${section}.`, path));
+    }
+  }
+
+  for (const marker of ["Aesthetic direction", "Business translation", "不是业务页面模式库", "不要再把 `Operational Calm`"]) {
+    if (!body.includes(marker)) {
+      issues.push(issue("FAIL", "aesthetic-business-boundary-missing", `${path} must distinguish aesthetic style from business translation.`, path));
+    }
+  }
+
+  return issues;
+}
+
 function designSystemComponentDepthIssues() {
   const issues = [];
   const directory = join(root, "core/skills/ui-ux/design-system/components");
@@ -1119,6 +1149,7 @@ const checks = [
   { id: "profile-catalog", issues: profileCatalogIssues() },
   { id: "standards-index", issues: standardsIndexIssues() },
   { id: "design-system-contract", issues: designSystemIssues() },
+  { id: "design-system-aesthetic-contract", issues: designSystemAestheticIssues() },
   { id: "design-system-component-depth", issues: designSystemComponentDepthIssues() },
   { id: "test-design-contract", issues: testDesignIssues() },
   { id: "starter-manifest", issues: starterManifestIssues() },
