@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "skill": "sf-close",
+  "description": "Commands this skill package is expected to use.",
+  "commands": [
+    "node .specforge/core/scripts/archive-work.mjs",
+    "node .specforge/core/scripts/archive-work.mjs --dry-run",
+    "node .specforge/core/scripts/create-artifact.mjs closure",
+    "node .specforge/core/scripts/create-artifact.mjs wiki_sync",
+    "node .specforge/core/scripts/doctor.mjs",
+    "node .specforge/core/scripts/gate.mjs wiki_sync APPROVED --evidence 06-close/wiki-sync.md",
+    "node .specforge/core/scripts/instructions.mjs",
+    "node .specforge/core/scripts/render-work-report.mjs"
+  ]
+}

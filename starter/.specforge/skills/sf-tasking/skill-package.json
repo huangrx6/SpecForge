@@ -1,20 +1,26 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "sf-tasking",
   "layer": "design-technical-planning",
   "primary_stage": "task-planning",
-  "core_stages": [
-    "task-planning"
-  ],
   "purpose": "Turn approved specs into traceable, verifiable implementation tasks.",
-  "constraints": [
-    {
-      "kind": "stage",
-      "stage": "task-planning",
-      "path": "constraints/stages/task-planning/SKILL.md"
-    }
-  ],
-  "scripts": [
-    "scripts/commands.json"
-  ]
+  "owns": {
+    "stages": [
+      {
+        "stage": "task-planning",
+        "path": "stages/task-planning/SKILL.md"
+      }
+    ],
+    "workflow": []
+  },
+  "uses": {
+    "stages": [],
+    "workflow": [
+      {
+        "owner": "sf-router",
+        "path": "../sf-router/workflow/README.md"
+      }
+    ]
+  },
+  "commands": "commands.json"
 }

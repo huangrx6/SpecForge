@@ -20,7 +20,7 @@ description: 生成或更新 SpecForge work item 的 requirements；用于 activ
 ## 必读
 
 - `references/requirements-authoring-guide.md`：PRD 转译、第三方 skill、访谈镜头、写作细则和 flags 回写。
-- `.specforge/skills/sf-requirements/constraints/stages/requirements/SKILL.md`：内部需求质量标准、停止条件和完成标准。
+- `.specforge/skills/sf-requirements/stages/requirements/SKILL.md`：内部需求质量标准、停止条件和完成标准。
 - `.specforge/core/standards/product.md`：PRD 输入、候选功能、用户故事、验收标准和可测试需求。
 - `.specforge/core/standards/workflow.md`：范围、非目标、写入边界和中文协作。
 - `.specforge/core/standards/ai-toolkit.md`：spec source-of-truth、输出预算、阶段质量条和人工确认点。

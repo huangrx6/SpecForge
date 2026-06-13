@@ -21,7 +21,7 @@ node .specforge/core/scripts/doctor.mjs
 
 ## 内部技能母本
 
-每轮自动推进前，读取 `.specforge/skills/sf-work/constraints/stages/status/SKILL.md` 判断当前 ready artifact，再交给对应 `sf-*` 子技能；阶段细节由子技能继续读取自己的内部母本。
+每轮自动推进前，读取 `.specforge/skills/sf-doctor/stages/status/SKILL.md` 判断当前 ready artifact，再交给对应 `sf-*` 子技能；阶段细节由子技能继续读取自己的内部母本。
 
 ## 关联标准
 

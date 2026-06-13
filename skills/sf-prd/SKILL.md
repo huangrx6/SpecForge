@@ -19,8 +19,8 @@ PRD 不是固定问卷。它是一份产品决策文档：先识别当前需求�
 
 - `references/prd-authoring-guide.md`：PRD 深度、第三方 skill 编排、访谈镜头、PRD 模板和质量标准。
 - `.specforge/core/artifacts/templates/prd.md`：写入骨架。
-- `.specforge/skills/sf-prd/constraints/stages/brainstorm/SKILL.md`：候选功能池和用户确认纪律。
-- `.specforge/skills/sf-prd/constraints/stages/discovery/SKILL.md`：research / discovery 输入和跳过理由。
+- `.specforge/skills/sf-brainstorm/stages/brainstorm/SKILL.md`：候选功能池和用户确认纪律。
+- `.specforge/skills/sf-discovery/stages/discovery/SKILL.md`：research / discovery 输入和跳过理由。
 - `.specforge/core/standards/product.md`：PRD 决策、功能候选、MVP、目标和指标。
 - `.specforge/core/standards/design.md`：用户流程和体验方向。
 - `.specforge/core/standards/workflow.md`：非目标、scope 和中文协作。

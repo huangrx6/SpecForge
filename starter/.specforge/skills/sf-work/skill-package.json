@@ -1,36 +1,27 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "sf-work",
   "layer": "router",
   "primary_stage": "status",
-  "core_stages": [
-    "status"
-  ],
   "purpose": "Safely continue a work item through the next ready stages.",
-  "constraints": [
-    {
-      "kind": "stage",
-      "stage": "status",
-      "path": "constraints/stages/status/SKILL.md"
-    },
-    {
-      "kind": "workflow",
-      "path": "constraints/workflow/drift-rules.json"
-    },
-    {
-      "kind": "workflow",
-      "path": "constraints/workflow/eval-fixtures.json"
-    },
-    {
-      "kind": "workflow",
-      "path": "constraints/workflow/README.md"
-    },
-    {
-      "kind": "workflow",
-      "path": "constraints/workflow/score-rubric.json"
-    }
-  ],
-  "scripts": [
-    "scripts/commands.json"
-  ]
+  "owns": {
+    "stages": [],
+    "workflow": []
+  },
+  "uses": {
+    "stages": [
+      {
+        "stage": "status",
+        "owner": "sf-doctor",
+        "path": "../sf-doctor/stages/status/SKILL.md"
+      }
+    ],
+    "workflow": [
+      {
+        "owner": "sf-router",
+        "path": "../sf-router/workflow/README.md"
+      }
+    ]
+  },
+  "commands": "commands.json"
 }

@@ -29,7 +29,7 @@ node .specforge/core/scripts/artifact-graph-status.mjs
 
 ## 内部技能母本
 
-状态汇总和下一步判断前，读取 `.specforge/skills/sf-doctor/constraints/stages/status/SKILL.md`。状态字段、blocker 解释和路由建议以内置母本为准。
+状态汇总和下一步判断前，读取 `.specforge/skills/sf-doctor/stages/status/SKILL.md`。状态字段、blocker 解释和路由建议以内置母本为准。
 
 ## 关联标准
 

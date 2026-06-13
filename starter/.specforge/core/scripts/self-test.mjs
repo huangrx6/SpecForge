@@ -222,11 +222,11 @@ function testPromptSkillDriftRules() {
 
     const stageSkill = readFileSync(join(root, "core/workflows/stages", rule.stage, "SKILL.md"), "utf8");
     const publicSkill = readFileSync(join(root, "skills", rule.public_skill, "SKILL.md"), "utf8");
-    const packagedStage = join(root, "skills", rule.public_skill, "constraints/stages", rule.stage, "SKILL.md");
+    const packagedStage = join(root, "skills", rule.public_skill, "stages", rule.stage, "SKILL.md");
     assert.ok(stageSkill.includes(rule.gate), `${rule.stage} core skill must mention ${rule.gate}`);
     assert.ok(stageSkill.includes(rule.evidence), `${rule.stage} core skill must mention ${rule.evidence}`);
     assert.ok(readFileSync(packagedStage, "utf8").includes(rule.evidence), `${rule.public_skill} packaged stage must mention ${rule.evidence}`);
-    assert.ok(publicSkill.includes(`.specforge/skills/${rule.public_skill}/constraints/stages/${rule.stage}/SKILL.md`));
+    assert.ok(publicSkill.includes(`.specforge/skills/${rule.public_skill}/stages/${rule.stage}/SKILL.md`));
     assert.ok(publicSkill.includes(rule.evidence), `${rule.public_skill} must mention ${rule.evidence}`);
 
     const catalogSkill = catalogSkills.get(rule.public_skill);

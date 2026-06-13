@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "skill": "sf-onboard",
+  "description": "Commands this skill package is expected to use.",
+  "commands": [
+    "node .specforge/core/scripts/codebase-index.mjs --json",
+    "node .specforge/core/scripts/doctor.mjs"
+  ]
+}

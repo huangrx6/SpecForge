@@ -1,20 +1,26 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "sf-ui-design",
   "layer": "design-technical-planning",
   "primary_stage": "ui-design",
-  "core_stages": [
-    "ui-design"
-  ],
   "purpose": "Create UI design, state matrix, design language, and Pencil evidence.",
-  "constraints": [
-    {
-      "kind": "stage",
-      "stage": "ui-design",
-      "path": "constraints/stages/ui-design/SKILL.md"
-    }
-  ],
-  "scripts": [
-    "scripts/commands.json"
-  ]
+  "owns": {
+    "stages": [
+      {
+        "stage": "ui-design",
+        "path": "stages/ui-design/SKILL.md"
+      }
+    ],
+    "workflow": []
+  },
+  "uses": {
+    "stages": [],
+    "workflow": [
+      {
+        "owner": "sf-router",
+        "path": "../sf-router/workflow/README.md"
+      }
+    ]
+  },
+  "commands": "commands.json"
 }

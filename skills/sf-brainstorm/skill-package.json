@@ -1,20 +1,26 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "sf-brainstorm",
   "layer": "product-discovery",
   "primary_stage": "brainstorm",
-  "core_stages": [
-    "brainstorm"
-  ],
   "purpose": "Explore fuzzy product, AI, UI, and technical choices with human confirmation.",
-  "constraints": [
-    {
-      "kind": "stage",
-      "stage": "brainstorm",
-      "path": "constraints/stages/brainstorm/SKILL.md"
-    }
-  ],
-  "scripts": [
-    "scripts/commands.json"
-  ]
+  "owns": {
+    "stages": [
+      {
+        "stage": "brainstorm",
+        "path": "stages/brainstorm/SKILL.md"
+      }
+    ],
+    "workflow": []
+  },
+  "uses": {
+    "stages": [],
+    "workflow": [
+      {
+        "owner": "sf-router",
+        "path": "../sf-router/workflow/README.md"
+      }
+    ]
+  },
+  "commands": "commands.json"
 }

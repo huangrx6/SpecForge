@@ -1,26 +1,32 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "sf-close",
   "layer": "delivery-gates",
   "primary_stage": "closure",
-  "core_stages": [
-    "wiki-sync",
-    "closure"
-  ],
   "purpose": "Finalize wiki sync, release, rollback, doctor checks, and archive.",
-  "constraints": [
-    {
-      "kind": "stage",
-      "stage": "closure",
-      "path": "constraints/stages/closure/SKILL.md"
-    },
-    {
-      "kind": "stage",
-      "stage": "wiki-sync",
-      "path": "constraints/stages/wiki-sync/SKILL.md"
-    }
-  ],
-  "scripts": [
-    "scripts/commands.json"
-  ]
+  "owns": {
+    "stages": [
+      {
+        "stage": "closure",
+        "path": "stages/closure/SKILL.md"
+      }
+    ],
+    "workflow": []
+  },
+  "uses": {
+    "stages": [
+      {
+        "stage": "wiki-sync",
+        "owner": "sf-wiki",
+        "path": "../sf-wiki/stages/wiki-sync/SKILL.md"
+      }
+    ],
+    "workflow": [
+      {
+        "owner": "sf-router",
+        "path": "../sf-router/workflow/README.md"
+      }
+    ]
+  },
+  "commands": "commands.json"
 }

@@ -1,47 +1,45 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "sf-router",
   "layer": "router",
   "primary_stage": "status",
-  "core_stages": [
-    "status",
-    "discovery"
-  ],
   "purpose": "Root router for choosing the correct SpecForge entry skill.",
-  "constraints": [
-    {
-      "kind": "stage",
-      "stage": "brainstorm",
-      "path": "constraints/stages/brainstorm/SKILL.md"
-    },
-    {
-      "kind": "stage",
-      "stage": "discovery",
-      "path": "constraints/stages/discovery/SKILL.md"
-    },
-    {
-      "kind": "stage",
-      "stage": "status",
-      "path": "constraints/stages/status/SKILL.md"
-    },
-    {
-      "kind": "workflow",
-      "path": "constraints/workflow/drift-rules.json"
-    },
-    {
-      "kind": "workflow",
-      "path": "constraints/workflow/eval-fixtures.json"
-    },
-    {
-      "kind": "workflow",
-      "path": "constraints/workflow/README.md"
-    },
-    {
-      "kind": "workflow",
-      "path": "constraints/workflow/score-rubric.json"
-    }
-  ],
-  "scripts": [
-    "scripts/commands.json"
-  ]
+  "owns": {
+    "stages": [],
+    "workflow": [
+      {
+        "path": "workflow/drift-rules.json"
+      },
+      {
+        "path": "workflow/eval-fixtures.json"
+      },
+      {
+        "path": "workflow/score-rubric.json"
+      },
+      {
+        "path": "workflow/README.md"
+      }
+    ]
+  },
+  "uses": {
+    "stages": [
+      {
+        "stage": "brainstorm",
+        "owner": "sf-brainstorm",
+        "path": "../sf-brainstorm/stages/brainstorm/SKILL.md"
+      },
+      {
+        "stage": "discovery",
+        "owner": "sf-discovery",
+        "path": "../sf-discovery/stages/discovery/SKILL.md"
+      },
+      {
+        "stage": "status",
+        "owner": "sf-doctor",
+        "path": "../sf-doctor/stages/status/SKILL.md"
+      }
+    ],
+    "workflow": []
+  },
+  "commands": "commands.json"
 }

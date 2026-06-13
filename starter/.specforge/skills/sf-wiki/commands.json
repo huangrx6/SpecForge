@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "skill": "sf-wiki",
+  "description": "Commands this skill package is expected to use.",
+  "commands": [
+    "node .specforge/core/scripts/create-artifact.mjs wiki_sync",
+    "node .specforge/core/scripts/gate.mjs wiki_sync APPROVED --evidence 06-close/wiki-sync.md",
+    "node .specforge/core/scripts/gate.mjs wiki_sync REQUEST_CHANGES",
+    "node .specforge/core/scripts/instructions.mjs",
+    "node .specforge/core/scripts/sync-wiki.mjs"
+  ]
+}

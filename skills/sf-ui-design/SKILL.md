@@ -30,7 +30,7 @@ SpecForge 固定使用 **Pencil** 做正式 UI 原型。Figma、HTML、ASCII、�
 
 - `references/admin-product-ui-contracts.md`：Product UI / 管理端 / shadcn 场景的组件层级和 Admin Component Contract。
 - `references/pc-business-system-spec.md`：PC 端业务系统 UI 规范。用户提供或确认该规范、或项目是后台 / 管理系统 / 数据管理工具时读取。
-- `.specforge/skills/sf-ui-design/constraints/stages/ui-design/SKILL.md`：内部 UI 设计母本。
+- `.specforge/skills/sf-ui-design/stages/ui-design/SKILL.md`：内部 UI 设计母本。
 - `.specforge/core/artifacts/templates/ui-design.md`：写入骨架。
 - `.specforge/core/standards/product.md`、`.specforge/core/standards/design.md`、`.specforge/core/standards/workflow.md`、`.specforge/core/standards/engineering.md`、`.specforge/core/standards/ai-toolkit.md`。
 - PC 端业务系统场景还要读取 `.specforge/core/standards/pc-ui-design-spec.md`；该文件的具体数值优先于通用 `design.md` 基准。

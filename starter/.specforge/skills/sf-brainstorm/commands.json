@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "skill": "sf-brainstorm",
+  "description": "Commands this skill package is expected to use.",
+  "commands": [
+    "node .specforge/core/scripts/instructions.mjs"
+  ]
+}

@@ -1,20 +1,26 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "sf-requirements",
   "layer": "product-discovery",
   "primary_stage": "requirements",
-  "core_stages": [
-    "requirements"
-  ],
   "purpose": "Convert PRD, brief, and research into testable requirements.",
-  "constraints": [
-    {
-      "kind": "stage",
-      "stage": "requirements",
-      "path": "constraints/stages/requirements/SKILL.md"
-    }
-  ],
-  "scripts": [
-    "scripts/commands.json"
-  ]
+  "owns": {
+    "stages": [
+      {
+        "stage": "requirements",
+        "path": "stages/requirements/SKILL.md"
+      }
+    ],
+    "workflow": []
+  },
+  "uses": {
+    "stages": [],
+    "workflow": [
+      {
+        "owner": "sf-router",
+        "path": "../sf-router/workflow/README.md"
+      }
+    ]
+  },
+  "commands": "commands.json"
 }

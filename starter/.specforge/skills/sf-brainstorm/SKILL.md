@@ -23,7 +23,7 @@ description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户�
 2. 读取 `.specforge/registry.yaml`，确认是否已有 active work item。
 3. 有 active work item 时，读取 `00-intake/original-request.md`、`00-intake/brief.md`、可选 `00-intake/prd.md` 和已有 `00-intake/brainstorm.md`。
 4. 无 active work item 时，只做对话式 brainstorm；若用户要落档，先路由到 `sf-intake` 创建 work item。
-5. 读取 `.specforge/skills/sf-brainstorm/constraints/stages/brainstorm/SKILL.md`。
+5. 读取 `.specforge/skills/sf-brainstorm/stages/brainstorm/SKILL.md`。
 
 ## 关联标准
 

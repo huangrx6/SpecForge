@@ -21,7 +21,7 @@ description: 对新请求执行深度探索、缺陷根因分析或预研；用�
 
 ## 内部技能母本
 
-开始 discovery 前，读取 `.specforge/skills/sf-discovery/constraints/stages/discovery/SKILL.md`。brief 的必含内容、停止条件和完成标准以内置母本为准。
+开始 discovery 前，读取 `.specforge/skills/sf-discovery/stages/discovery/SKILL.md`。brief 的必含内容、停止条件和完成标准以内置母本为准。
 
 ## 关联标准
 

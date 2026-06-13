@@ -1,6 +1,6 @@
 # 阶段技能母本
 
-`core/workflows/stages/` 是兼容镜像和底层发行资产。日常维护优先进入对应 `skills/<sf-*>/constraints/stages/` 技能包；每个 `sf-*` 技能包聚合自己的入口说明、阶段约束、参考资料和脚本命令索引。
+`core/workflows/stages/` 是兼容镜像和底层发行资产。日常维护优先进入对应 `skills/<stage-owner>/stages/` 技能包；每个 stage 只能有一个 owner，其它 `sf-*` 技能通过 `skill-package.json#uses.stages` 引用 owner，不复制阶段文件。
 
 ## 结构约定
 
@@ -11,7 +11,7 @@ stages/<name>/
 └── SKILL.md
 ```
 
-跨 public skill、stage constraint 和 gate evidence 的术语契约保存在 `drift-rules.json`。修改 gate 名称、artifact id、证据路径或入口 skill 映射时，必须同步 `skills/sf-router/constraints/workflow/` 中的技能包副本，并运行 framework audit。阶段输出评分维度保存在 `score-rubric.json`，用于把“好输出长什么样”从主观感觉沉淀为可审计规则。
+跨 public skill、stage owner 和 gate evidence 的术语契约保存在 `drift-rules.json`。修改 gate 名称、artifact id、证据路径或入口 skill 映射时，必须同步 `skills/sf-router/workflow/`，并运行 framework audit。阶段输出评分维度保存在 `score-rubric.json`，用于把“好输出长什么样”从主观感觉沉淀为可审计规则。
 
 `SKILL.md` 必须包含 YAML frontmatter：
 
@@ -67,8 +67,8 @@ description: <说明此技能做什么，以及什么时候使用>
 
 ## 维护规则
 
-- 阶段行为变化时，先更新对应 `skills/<sf-*>/constraints/stages/<name>/SKILL.md`，再同步兼容镜像和 starter。
-- gate、artifact、证据路径或入口映射变化时，同步 `skills/sf-router/constraints/workflow/drift-rules.json`；不要让 public skill 和 stage constraint 各自维护一套说法。
+- 阶段行为变化时，先更新对应 `skills/<stage-owner>/stages/<name>/SKILL.md`，再同步兼容镜像和 starter。
+- gate、artifact、证据路径或入口映射变化时，同步 `skills/sf-router/workflow/drift-rules.json`；不要让 public skill 和 stage owner 各自维护一套说法。
 - 新增或重命名 stage 时，同步 `eval-fixtures.json` 和 `score-rubric.json`；前者定义阻断样例，后者定义质量评分关注点。
 - 不要把 UI 体验设计和技术架构设计重新合并成一个长期维护的 stage。
 - 入口 skill 保留运行时入口、动作、停止条件和完成标准；关联约束、脚本索引和参考资料放在同一个 `skills/<sf-*>/` 技能包内。

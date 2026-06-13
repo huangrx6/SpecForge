@@ -14,7 +14,7 @@ description: 执行 SpecForge code_review gate；用于 implementation 完成后
 ## 必读
 
 - `references/review-gate-rubric.md`：diff 对账、spec compliance、外部 `code-reviewer` 使用、finding 分级和 gate 决策。
-- `.specforge/skills/sf-code-review/constraints/stages/code-review/SKILL.md`：内部代码审查母本。
+- `.specforge/skills/sf-code-review/stages/code-review/SKILL.md`：内部代码审查母本。
 - `.specforge/core/artifacts/templates/code-review.md`：写入骨架。
 - `.specforge/core/standards/workflow.md`、`.specforge/core/standards/engineering.md`、`.specforge/core/standards/ai-toolkit.md`。
 - `.specforge/core/skills/ORCHESTRATION.md`：外部 code review 参考边界。

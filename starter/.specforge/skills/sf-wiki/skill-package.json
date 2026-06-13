@@ -1,26 +1,32 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "sf-wiki",
   "layer": "delivery-gates",
   "primary_stage": "wiki-sync",
-  "core_stages": [
-    "wiki-sync",
-    "steering"
-  ],
   "purpose": "Sync long-lived project facts into .specforge/wiki.",
-  "constraints": [
-    {
-      "kind": "stage",
-      "stage": "steering",
-      "path": "constraints/stages/steering/SKILL.md"
-    },
-    {
-      "kind": "stage",
-      "stage": "wiki-sync",
-      "path": "constraints/stages/wiki-sync/SKILL.md"
-    }
-  ],
-  "scripts": [
-    "scripts/commands.json"
-  ]
+  "owns": {
+    "stages": [
+      {
+        "stage": "wiki-sync",
+        "path": "stages/wiki-sync/SKILL.md"
+      }
+    ],
+    "workflow": []
+  },
+  "uses": {
+    "stages": [
+      {
+        "stage": "steering",
+        "owner": "sf-steering",
+        "path": "../sf-steering/stages/steering/SKILL.md"
+      }
+    ],
+    "workflow": [
+      {
+        "owner": "sf-router",
+        "path": "../sf-router/workflow/README.md"
+      }
+    ]
+  },
+  "commands": "commands.json"
 }

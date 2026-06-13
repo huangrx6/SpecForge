@@ -14,8 +14,8 @@ description: 完成 SpecForge 关闭阶段；用于当前 workflow 已到 wiki_s
 ## 必读
 
 - `references/closure-gate-checklist.md`：wiki sync 判断、release / rollback 对账、archive 和安装提示边界。
-- `.specforge/skills/sf-close/constraints/stages/wiki-sync/SKILL.md`
-- `.specforge/skills/sf-close/constraints/stages/closure/SKILL.md`
+- `.specforge/skills/sf-wiki/stages/wiki-sync/SKILL.md`
+- `.specforge/skills/sf-close/stages/closure/SKILL.md`
 - `.specforge/core/artifacts/templates/wiki-sync.md`
 - `.specforge/core/artifacts/templates/release.md`
 - `.specforge/core/artifacts/templates/rollback.md`

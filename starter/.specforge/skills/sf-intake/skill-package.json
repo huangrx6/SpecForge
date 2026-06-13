@@ -1,26 +1,32 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "sf-intake",
   "layer": "project-setup",
   "primary_stage": "discovery",
-  "core_stages": [
-    "discovery",
-    "brainstorm"
-  ],
   "purpose": "Classify incoming requests, choose workflow, and produce the initial brief.",
-  "constraints": [
-    {
-      "kind": "stage",
-      "stage": "brainstorm",
-      "path": "constraints/stages/brainstorm/SKILL.md"
-    },
-    {
-      "kind": "stage",
-      "stage": "discovery",
-      "path": "constraints/stages/discovery/SKILL.md"
-    }
-  ],
-  "scripts": [
-    "scripts/commands.json"
-  ]
+  "owns": {
+    "stages": [],
+    "workflow": []
+  },
+  "uses": {
+    "stages": [
+      {
+        "stage": "brainstorm",
+        "owner": "sf-brainstorm",
+        "path": "../sf-brainstorm/stages/brainstorm/SKILL.md"
+      },
+      {
+        "stage": "discovery",
+        "owner": "sf-discovery",
+        "path": "../sf-discovery/stages/discovery/SKILL.md"
+      }
+    ],
+    "workflow": [
+      {
+        "owner": "sf-router",
+        "path": "../sf-router/workflow/README.md"
+      }
+    ]
+  },
+  "commands": "commands.json"
 }

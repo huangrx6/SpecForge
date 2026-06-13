@@ -49,7 +49,7 @@ node .specforge/core/scripts/codebase-index.mjs --write-report
 读取内部阶段母本：
 
 ```text
-.specforge/skills/sf-steering/constraints/stages/steering/SKILL.md
+.specforge/skills/sf-steering/stages/steering/SKILL.md
 ```
 
 `codebase-index.mjs` 会检测 code intelligence provider，并在内部运行 `codebase-map.mjs` 生成 bootstrap map，还会输出 `normalized_context` 和 provider 执行 / 查询计划。`codebase-map.mjs` 只是 fallback scanner，不等于符号级理解。结论必须来自代码、配置、测试、CI、现有文档、provider 查询结果或用户确认。

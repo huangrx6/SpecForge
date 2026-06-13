@@ -24,9 +24,9 @@ description: SpecForge 工作流根入口。用于用户只说“sf”、询问�
 
 ## 内部技能母本
 
-- 状态判断优先读取 `.specforge/skills/sf-router/constraints/stages/status/SKILL.md`。
-- 新请求分诊或 discovery 判断优先读取 `.specforge/skills/sf-router/constraints/stages/discovery/SKILL.md`。
-- 模糊产品、UI、AI 或技术路线取舍优先读取 `.specforge/skills/sf-router/constraints/stages/brainstorm/SKILL.md`。
+- 状态判断优先读取 `.specforge/skills/sf-doctor/stages/status/SKILL.md`。
+- 新请求分诊或 discovery 判断优先读取 `.specforge/skills/sf-discovery/stages/discovery/SKILL.md`。
+- 模糊产品、UI、AI 或技术路线取舍优先读取 `.specforge/skills/sf-brainstorm/stages/brainstorm/SKILL.md`。
 - 根级 skill 只负责扫描和路由；阶段行为以对应内部 skill 为准。
 
 ## 体系速读

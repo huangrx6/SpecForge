@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "skill": "sf-ui-design",
+  "description": "Commands this skill package is expected to use.",
+  "commands": [
+    "node .specforge/core/scripts/create-artifact.mjs ui_design",
+    "node .specforge/core/scripts/instructions.mjs"
+  ]
+}

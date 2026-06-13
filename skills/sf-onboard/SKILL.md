@@ -14,7 +14,7 @@ description: 将新仓库或已有仓库接入 SpecForge；初始化唯一项目
 ## 必读
 
 - `references/structure-and-migration.md`：安装命令、标准骨架、starter 来源、覆盖规则和迁移映射。
-- `.specforge/skills/sf-onboard/constraints/stages/steering/SKILL.md`：项目画像、长期约束和 wiki 归档判断；仅在 `.specforge/` 已存在或初始化完成后读取。
+- `.specforge/skills/sf-steering/stages/steering/SKILL.md`：项目画像、长期约束和 wiki 归档判断；仅在 `.specforge/` 已存在或初始化完成后读取。
 - `.specforge/core/standards/workflow.md`：初始化边界、上下文加载和中文输出；仅在 `.specforge/` 已存在或初始化完成后读取。
 
 ## 核心原则

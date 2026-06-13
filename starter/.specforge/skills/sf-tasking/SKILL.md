@@ -20,7 +20,7 @@ description: 生成或更新 SpecForge work item 的 tasks；用于 requirements
 ## 必读
 
 - `references/task-planning-rules.md`：输入选择、任务字段、并行波次、UI / PC 规范、Playwright、Wiki 提示和停止条件。
-- `.specforge/skills/sf-tasking/constraints/stages/task-planning/SKILL.md`：内部任务规划母本。
+- `.specforge/skills/sf-tasking/stages/task-planning/SKILL.md`：内部任务规划母本。
 - `.specforge/core/artifacts/templates/tasks.md`
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/product.md`

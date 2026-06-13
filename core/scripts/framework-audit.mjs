@@ -308,11 +308,14 @@ function skillPackageIssues() {
     return [issue("FAIL", "skill-package-catalog-invalid-json", `${catalogPath} is invalid JSON: ${error.message}.`, catalogPath)];
   }
 
+  const manifests = new Map();
+  const ownedStages = new Map();
+
   for (const skill of catalog.skills ?? []) {
     const packagePath = `skills/${skill.id}/skill-package.json`;
-    const commandsPath = `skills/${skill.id}/scripts/commands.json`;
+    const commandsPath = `skills/${skill.id}/commands.json`;
     if (!exists(packagePath)) {
-      issues.push(issue("FAIL", "skill-package-manifest-missing", `${skill.id} must keep related constraints and scripts in ${packagePath}.`, packagePath));
+      issues.push(issue("FAIL", "skill-package-manifest-missing", `${skill.id} must keep related stages and scripts in ${packagePath}.`, packagePath));
       continue;
     }
     if (!exists(commandsPath)) {
@@ -326,28 +329,35 @@ function skillPackageIssues() {
       issues.push(issue("FAIL", "skill-package-manifest-invalid-json", `${packagePath} is invalid JSON: ${error.message}.`, packagePath));
       continue;
     }
+    manifests.set(skill.id, manifest);
 
     if (manifest.id !== skill.id) {
       issues.push(issue("FAIL", "skill-package-id-mismatch", `${packagePath} id must be ${skill.id}.`, packagePath));
+    }
+    if (manifest.version !== 2) {
+      issues.push(issue("FAIL", "skill-package-version-mismatch", `${packagePath} must use version 2 owner/use structure.`, packagePath));
     }
     if (manifest.primary_stage !== skill.primary_stage) {
       issues.push(issue("FAIL", "skill-package-primary-stage-mismatch", `${skill.id} primary_stage differs from skills/catalog.json.`, packagePath));
     }
 
-    const constraints = Array.isArray(manifest.constraints) ? manifest.constraints : [];
-    const constraintPaths = new Set(constraints.map((item) => item.path));
-    for (const stage of skill.core_stages ?? []) {
-      if (!constraintPaths.has(`constraints/stages/${stage}/SKILL.md`)) {
-        issues.push(issue("FAIL", "skill-package-stage-constraint-missing", `${skill.id} must contain constraints/stages/${stage}/SKILL.md for its cataloged stage.`, packagePath));
-      }
-    }
-    for (const constraint of constraints) {
-      if (!constraint.path || constraint.path.startsWith("/") || constraint.path.includes("..")) {
-        issues.push(issue("FAIL", "skill-package-constraint-path-invalid", `${skill.id} has invalid constraint path: ${constraint.path ?? "(missing)"}.`, packagePath));
+    const ownsStages = Array.isArray(manifest.owns?.stages) ? manifest.owns.stages : [];
+    const usesStages = Array.isArray(manifest.uses?.stages) ? manifest.uses.stages : [];
+    for (const owned of ownsStages) {
+      if (!owned.stage || !owned.path) {
+        issues.push(issue("FAIL", "skill-package-owned-stage-invalid", `${skill.id} has an incomplete owned stage entry.`, packagePath));
         continue;
       }
-      if (!exists(`skills/${skill.id}/${constraint.path}`)) {
-        issues.push(issue("FAIL", "skill-package-constraint-file-missing", `${skill.id} references missing constraint ${constraint.path}.`, packagePath));
+      if (owned.path !== `stages/${owned.stage}/SKILL.md`) {
+        issues.push(issue("FAIL", "skill-package-owned-stage-path-invalid", `${skill.id} owned stage ${owned.stage} path should be stages/${owned.stage}/SKILL.md.`, packagePath));
+      }
+      if (!exists(`skills/${skill.id}/${owned.path}`)) {
+        issues.push(issue("FAIL", "skill-package-owned-stage-file-missing", `${skill.id} owns missing stage file ${owned.path}.`, packagePath));
+      }
+      if (ownedStages.has(owned.stage)) {
+        issues.push(issue("FAIL", "skill-package-stage-owned-more-than-once", `${owned.stage} is owned by both ${ownedStages.get(owned.stage)} and ${skill.id}.`, packagePath));
+      } else {
+        ownedStages.set(owned.stage, skill.id);
       }
     }
 
@@ -369,6 +379,63 @@ function skillPackageIssues() {
           issues.push(issue("FAIL", "skill-package-command-target-missing", `${skill.id} command points at missing core/scripts/${match[1]}.`, commandsPath));
         }
       }
+    }
+
+    const ownsStageSet = new Set(ownsStages.map((entry) => entry.stage));
+    const usesStageMap = new Map(usesStages.map((entry) => [entry.stage, entry]));
+    for (const file of walk(join(root, "skills", skill.id)).filter((item) => item.endsWith(".md"))) {
+      const body = read(file);
+      for (const match of body.matchAll(/\.specforge\/skills\/([a-z0-9-]+)\/stages\/([A-Za-z0-9_-]+)\/SKILL\.md/g)) {
+        const owner = match[1];
+        const stage = match[2];
+        if (owner === skill.id && ownsStageSet.has(stage)) continue;
+        const used = usesStageMap.get(stage);
+        if (!used || used.owner !== owner) {
+          issues.push(issue("FAIL", "skill-package-doc-reference-not-declared", `${skill.id} references ${owner}/stages/${stage} but does not declare it in uses.stages.`, packagePath));
+        }
+      }
+    }
+  }
+
+  for (const skill of catalog.skills ?? []) {
+    const packagePath = `skills/${skill.id}/skill-package.json`;
+    const manifest = manifests.get(skill.id);
+    if (!manifest) continue;
+    const ownsStages = new Set((manifest.owns?.stages ?? []).map((entry) => entry.stage));
+    const usesStages = new Map((manifest.uses?.stages ?? []).map((entry) => [entry.stage, entry]));
+
+    for (const stage of skill.core_stages ?? []) {
+      if (ownsStages.has(stage)) continue;
+      const used = usesStages.get(stage);
+      if (!used) {
+        issues.push(issue("FAIL", "skill-package-stage-reference-missing", `${skill.id} must own or reference stage ${stage}.`, packagePath));
+        continue;
+      }
+      const owner = ownedStages.get(stage);
+      if (!owner) {
+        issues.push(issue("FAIL", "skill-package-stage-owner-missing", `${skill.id} references ${stage}, but no skill owns it.`, packagePath));
+        continue;
+      }
+      if (used.owner !== owner || used.path !== `../${owner}/stages/${stage}/SKILL.md`) {
+        issues.push(issue("FAIL", "skill-package-stage-reference-invalid", `${skill.id} should reference ${stage} as ../${owner}/stages/${stage}/SKILL.md.`, packagePath));
+      }
+      if (!exists(`skills/${owner}/stages/${stage}/SKILL.md`)) {
+        issues.push(issue("FAIL", "skill-package-stage-reference-target-missing", `${skill.id} references missing owner stage skills/${owner}/stages/${stage}/SKILL.md.`, packagePath));
+      }
+    }
+
+    const ownsWorkflow = manifest.owns?.workflow ?? [];
+    if (skill.id === "sf-router") {
+      for (const path of ["workflow/drift-rules.json", "workflow/eval-fixtures.json", "workflow/score-rubric.json", "workflow/README.md"]) {
+        if (!ownsWorkflow.some((entry) => entry.path === path)) {
+          issues.push(issue("FAIL", "skill-package-router-workflow-missing", `sf-router must own ${path}.`, packagePath));
+        }
+        if (!exists(`skills/sf-router/${path}`)) {
+          issues.push(issue("FAIL", "skill-package-router-workflow-file-missing", `sf-router workflow file is missing: ${path}.`, packagePath));
+        }
+      }
+    } else if (ownsWorkflow.length > 0) {
+      issues.push(issue("FAIL", "skill-package-workflow-duplicated", `${skill.id} should reference sf-router workflow instead of owning workflow files.`, packagePath));
     }
   }
 
@@ -611,8 +678,8 @@ function promptSkillDriftIssues() {
 
     const stagePath = `core/workflows/stages/${rule.stage}/SKILL.md`;
     const publicSkillPath = `skills/${rule.public_skill}/SKILL.md`;
-    const publicStageLink = `.specforge/skills/${rule.public_skill}/constraints/stages/${rule.stage}/SKILL.md`;
-    const packagedStagePath = `skills/${rule.public_skill}/constraints/stages/${rule.stage}/SKILL.md`;
+    const publicStageLink = `.specforge/skills/${rule.public_skill}/stages/${rule.stage}/SKILL.md`;
+    const packagedStagePath = `skills/${rule.public_skill}/stages/${rule.stage}/SKILL.md`;
     if (!exists(stagePath)) {
       issues.push(issue("FAIL", "prompt-skill-gate-stage-missing", `${rule.gate} stage skill is missing: ${stagePath}.`, path));
     } else {

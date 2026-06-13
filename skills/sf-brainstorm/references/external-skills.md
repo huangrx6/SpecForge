@@ -4,7 +4,7 @@
 
 ## 读取原则
 
-1. 先读 `sf-brainstorm/SKILL.md` 和 `.specforge/skills/sf-brainstorm/constraints/stages/brainstorm/SKILL.md`，再决定是否读取第三方 skill。
+1. 先读 `sf-brainstorm/SKILL.md` 和 `.specforge/skills/sf-brainstorm/stages/brainstorm/SKILL.md`，再决定是否读取第三方 skill。
 2. 默认最多选择 1 个主辅助 skill；确实跨产品取舍 + UX + 外部研究时，最多 2 个，并在 `brainstorm.md#第三方 Skill 使用记录` 写明原因。
 3. 先读目标 skill 的 `SKILL.md`；只有问题落到具体子领域时，才读 `references/` 或 `rules/` 下的相关文件。
 4. 第三方输出先转成 `问题地图 / 方案对比 / 用户确认记录 / 后续阶段输入`，不能原样复制模板标题、persona 或结论。

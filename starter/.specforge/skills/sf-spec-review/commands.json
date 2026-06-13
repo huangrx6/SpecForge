@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "skill": "sf-spec-review",
+  "description": "Commands this skill package is expected to use.",
+  "commands": [
+    "node .specforge/core/scripts/artifact-graph-status.mjs",
+    "node .specforge/core/scripts/create-artifact.mjs spec_review",
+    "node .specforge/core/scripts/gate.mjs spec_review <status> ...",
+    "node .specforge/core/scripts/gate.mjs spec_review APPROVED --evidence 02-spec-review/spec-review-v1.md",
+    "node .specforge/core/scripts/gate.mjs spec_review REJECTED",
+    "node .specforge/core/scripts/gate.mjs spec_review REQUEST_CHANGES",
+    "node .specforge/core/scripts/instructions.mjs"
+  ]
+}

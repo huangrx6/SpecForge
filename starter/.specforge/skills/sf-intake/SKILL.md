@@ -20,8 +20,8 @@ description: 为新请求创建或整理 SpecForge work item；用于用户提�
 ## 必读
 
 - `references/routing.md`：workflow 分类、brainstorm 分流、PRD 决策、follow-up 和 components flags。
-- `.specforge/skills/sf-intake/constraints/stages/discovery/SKILL.md`：discovery / research 输入输出和停止条件。
-- `.specforge/skills/sf-intake/constraints/stages/brainstorm/SKILL.md`：需要用户参与式取舍时的阶段母本。
+- `.specforge/skills/sf-discovery/stages/discovery/SKILL.md`：discovery / research 输入输出和停止条件。
+- `.specforge/skills/sf-brainstorm/stages/brainstorm/SKILL.md`：需要用户参与式取舍时的阶段母本。
 - `.specforge/core/standards/workflow.md`：上下文加载、workflow 分类、scope、命名和 gate 边界。
 - `.specforge/core/standards/product.md`：分析深度、PRD 决策、功能候选池、澄清和需求可测试性。
 - `.specforge/core/standards/ai-toolkit.md`：workflow 轻重分流、AI 工具链计划、人工确认和输出预算。

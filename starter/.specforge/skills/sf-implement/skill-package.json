@@ -1,20 +1,26 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "sf-implement",
   "layer": "delivery-gates",
   "primary_stage": "implementation",
-  "core_stages": [
-    "implementation"
-  ],
   "purpose": "Implement approved tasks and record implementation evidence.",
-  "constraints": [
-    {
-      "kind": "stage",
-      "stage": "implementation",
-      "path": "constraints/stages/implementation/SKILL.md"
-    }
-  ],
-  "scripts": [
-    "scripts/commands.json"
-  ]
+  "owns": {
+    "stages": [
+      {
+        "stage": "implementation",
+        "path": "stages/implementation/SKILL.md"
+      }
+    ],
+    "workflow": []
+  },
+  "uses": {
+    "stages": [],
+    "workflow": [
+      {
+        "owner": "sf-router",
+        "path": "../sf-router/workflow/README.md"
+      }
+    ]
+  },
+  "commands": "commands.json"
 }

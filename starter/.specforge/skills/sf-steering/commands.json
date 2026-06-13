@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skill": "sf-steering",
+  "description": "Commands this skill package is expected to use.",
+  "commands": [
+    "node .specforge/core/scripts/codebase-index.mjs --json",
+    "node .specforge/core/scripts/codebase-index.mjs --json --scan-mode <mode>",
+    "node .specforge/core/scripts/codebase-index.mjs --write-report",
+    "node .specforge/core/scripts/doctor.mjs"
+  ]
+}

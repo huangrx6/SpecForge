@@ -21,7 +21,7 @@ description: 审查 SpecForge 规格；用于随时 review 已存在的 PRD、re
 ## 必读
 
 - `references/spec-review-gate-rubric.md`：Artifact / Gate Review 执行细则、必审范围、finding 分级、退回路径。
-- `.specforge/skills/sf-spec-review/constraints/stages/spec-review/SKILL.md`：内部规格审查母本。
+- `.specforge/skills/sf-spec-review/stages/spec-review/SKILL.md`：内部规格审查母本。
 - `.specforge/core/artifacts/templates/spec-review.md`：写入骨架。
 - `.specforge/core/standards/workflow.md`、`product.md`、`design.md`、`engineering.md`。
 - `.specforge/core/profiles/README.md`：涉及技术选型和 profile 偏离时读取。

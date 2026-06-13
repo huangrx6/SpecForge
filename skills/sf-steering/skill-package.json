@@ -1,20 +1,26 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "sf-steering",
   "layer": "project-setup",
   "primary_stage": "steering",
-  "core_stages": [
-    "steering"
-  ],
   "purpose": "Build a reusable project profile and wiki baseline for existing codebases.",
-  "constraints": [
-    {
-      "kind": "stage",
-      "stage": "steering",
-      "path": "constraints/stages/steering/SKILL.md"
-    }
-  ],
-  "scripts": [
-    "scripts/commands.json"
-  ]
+  "owns": {
+    "stages": [
+      {
+        "stage": "steering",
+        "path": "stages/steering/SKILL.md"
+      }
+    ],
+    "workflow": []
+  },
+  "uses": {
+    "stages": [],
+    "workflow": [
+      {
+        "owner": "sf-router",
+        "path": "../sf-router/workflow/README.md"
+      }
+    ]
+  },
+  "commands": "commands.json"
 }

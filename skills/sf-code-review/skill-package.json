@@ -1,20 +1,26 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "sf-code-review",
   "layer": "delivery-gates",
   "primary_stage": "code-review",
-  "core_stages": [
-    "code-review"
-  ],
   "purpose": "Review implementation against specs, diffs, safety, and test evidence.",
-  "constraints": [
-    {
-      "kind": "stage",
-      "stage": "code-review",
-      "path": "constraints/stages/code-review/SKILL.md"
-    }
-  ],
-  "scripts": [
-    "scripts/commands.json"
-  ]
+  "owns": {
+    "stages": [
+      {
+        "stage": "code-review",
+        "path": "stages/code-review/SKILL.md"
+      }
+    ],
+    "workflow": []
+  },
+  "uses": {
+    "stages": [],
+    "workflow": [
+      {
+        "owner": "sf-router",
+        "path": "../sf-router/workflow/README.md"
+      }
+    ]
+  },
+  "commands": "commands.json"
 }

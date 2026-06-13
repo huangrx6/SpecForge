@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "skill": "sf-router",
+  "description": "Commands this skill package is expected to use.",
+  "commands": [
+    "node .specforge/core/scripts/artifact-graph-status.mjs",
+    "node .specforge/core/scripts/doctor.mjs",
+    "node .specforge/core/scripts/gate.mjs code_review APPROVED --evidence 04-code-review/code-review-v1.md",
+    "node .specforge/core/scripts/gate.mjs spec_review APPROVED --evidence 02-spec-review/spec-review-v1.md",
+    "node .specforge/core/scripts/gate.mjs verification APPROVED --evidence 05-verification/report.md",
+    "node .specforge/core/scripts/gate.mjs wiki_sync APPROVED --evidence 06-close/wiki-sync.md",
+    "node .specforge/core/scripts/instructions.mjs"
+  ]
+}

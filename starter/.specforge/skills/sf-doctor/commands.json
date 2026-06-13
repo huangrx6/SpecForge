@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "skill": "sf-doctor",
+  "description": "Commands this skill package is expected to use.",
+  "commands": [
+    "node .specforge/core/scripts/artifact-graph-status.mjs",
+    "node .specforge/core/scripts/artifact-graph-status.mjs --json",
+    "node .specforge/core/scripts/codebase-index.mjs --json",
+    "node .specforge/core/scripts/decision-checkpoints.mjs",
+    "node .specforge/core/scripts/decision-checkpoints.mjs --json",
+    "node .specforge/core/scripts/doctor.mjs",
+    "node .specforge/core/scripts/instructions.mjs",
+    "node .specforge/core/scripts/instructions.mjs --json",
+    "node .specforge/core/scripts/quality-suite.mjs",
+    "node .specforge/core/scripts/quality-suite.mjs --json",
+    "node .specforge/core/scripts/status.mjs",
+    "node .specforge/core/scripts/status.mjs --json"
+  ]
+}

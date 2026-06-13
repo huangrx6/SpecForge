@@ -1,32 +1,34 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "sf-discovery",
   "layer": "product-discovery",
   "primary_stage": "discovery",
-  "core_stages": [
-    "discovery",
-    "research",
-    "gap-report"
-  ],
   "purpose": "Research, reproduce, or diagnose facts before requirements or tasks.",
-  "constraints": [
-    {
-      "kind": "stage",
-      "stage": "discovery",
-      "path": "constraints/stages/discovery/SKILL.md"
-    },
-    {
-      "kind": "stage",
-      "stage": "gap-report",
-      "path": "constraints/stages/gap-report/SKILL.md"
-    },
-    {
-      "kind": "stage",
-      "stage": "research",
-      "path": "constraints/stages/research/SKILL.md"
-    }
-  ],
-  "scripts": [
-    "scripts/commands.json"
-  ]
+  "owns": {
+    "stages": [
+      {
+        "stage": "discovery",
+        "path": "stages/discovery/SKILL.md"
+      },
+      {
+        "stage": "gap-report",
+        "path": "stages/gap-report/SKILL.md"
+      },
+      {
+        "stage": "research",
+        "path": "stages/research/SKILL.md"
+      }
+    ],
+    "workflow": []
+  },
+  "uses": {
+    "stages": [],
+    "workflow": [
+      {
+        "owner": "sf-router",
+        "path": "../sf-router/workflow/README.md"
+      }
+    ]
+  },
+  "commands": "commands.json"
 }

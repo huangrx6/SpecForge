@@ -88,8 +88,8 @@
 
 - `skills/sf*/SKILL.md`
 - `skills/sf*/references/**`
-- `skills/<sf-*>/constraints/**`
-- `skills/<sf-*>/scripts/commands.json`
+- `skills/<skill>/**`
+- `skills/<skill>/commands.json`
 - `core/workflows/stages/**` compatibility mirrors
 - `core/skills/**`
 - `core/standards/**`

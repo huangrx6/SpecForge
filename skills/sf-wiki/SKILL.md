@@ -16,7 +16,7 @@ description: 更新 SpecForge 项目 Wiki；用于用户要求“回写知识库
 ## 必读
 
 - `references/wiki-sync-rules.md`：回写判断、目标文件选择、frontmatter、index 对账、gate 决策。
-- `.specforge/skills/sf-wiki/constraints/stages/wiki-sync/SKILL.md`
+- `.specforge/skills/sf-wiki/stages/wiki-sync/SKILL.md`
 - `.specforge/core/artifacts/templates/wiki-sync.md`
 - `.specforge/core/standards/wiki.md`
 - `.specforge/core/standards/workflow.md`

@@ -20,7 +20,7 @@ description: 生成或更新 SpecForge work item 的 technical_design；用于 r
 ## 必读
 
 - `references/technical-decision-guide.md`：影响面扫描、分批确认卡、依赖 / 工具链确认、版本事实检查、核心决策 review 和写作细则。
-- `.specforge/skills/sf-tech-design/constraints/stages/technical-design/SKILL.md`：内部技术设计母本。
+- `.specforge/skills/sf-tech-design/stages/technical-design/SKILL.md`：内部技术设计母本。
 - `.specforge/core/artifacts/templates/technical-design.md`：写入骨架。
 - `.specforge/core/standards/product.md`、`.specforge/core/standards/workflow.md`、`.specforge/core/standards/engineering.md`。
 - `.specforge/core/standards/ai-toolkit.md`：阶段质量条、输出预算、依赖确认、source-of-truth 和证据分级。
@@ -52,12 +52,12 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 2. 从 wiki 建立本次的读取计划：关联知识项、代码入口、上游 / 下游、测试位置、运行命令和需要补证的缺口。
 3. 把每个影响面写成 `yes / no / unknown`；会改变架构、数据、安全、成本或上线风险的 `unknown` 必须暂停澄清。
 4. 只读取本次需要的内部子模块和 profile，不默认全量读取：
-   - frontend：`.specforge/skills/sf-tech-design/constraints/stages/technical-design/frontend-design.md`
-   - backend：`.specforge/skills/sf-tech-design/constraints/stages/technical-design/backend-design.md`
-   - domain：`.specforge/skills/sf-tech-design/constraints/stages/technical-design/domain-design.md`
-   - API：`.specforge/skills/sf-tech-design/constraints/stages/technical-design/api-design.md`
-   - data：`.specforge/skills/sf-tech-design/constraints/stages/technical-design/data-design.md`
-   - NFR：`.specforge/skills/sf-tech-design/constraints/stages/technical-design/nfr-design.md`
+   - frontend：`.specforge/skills/sf-tech-design/stages/technical-design/frontend-design.md`
+   - backend：`.specforge/skills/sf-tech-design/stages/technical-design/backend-design.md`
+   - domain：`.specforge/skills/sf-tech-design/stages/technical-design/domain-design.md`
+   - API：`.specforge/skills/sf-tech-design/stages/technical-design/api-design.md`
+   - data：`.specforge/skills/sf-tech-design/stages/technical-design/data-design.md`
+   - NFR：`.specforge/skills/sf-tech-design/stages/technical-design/nfr-design.md`
 
 ### B. 先确认选型、依赖和工具链
 

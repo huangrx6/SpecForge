@@ -1,50 +1,26 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "sf-tech-design",
   "layer": "design-technical-planning",
   "primary_stage": "technical-design",
-  "core_stages": [
-    "technical-design"
-  ],
   "purpose": "Create implementation-ready technical design and engineering decisions.",
-  "constraints": [
-    {
-      "kind": "stage-support",
-      "stage": "technical-design",
-      "path": "constraints/stages/technical-design/api-design.md"
-    },
-    {
-      "kind": "stage-support",
-      "stage": "technical-design",
-      "path": "constraints/stages/technical-design/backend-design.md"
-    },
-    {
-      "kind": "stage-support",
-      "stage": "technical-design",
-      "path": "constraints/stages/technical-design/data-design.md"
-    },
-    {
-      "kind": "stage-support",
-      "stage": "technical-design",
-      "path": "constraints/stages/technical-design/domain-design.md"
-    },
-    {
-      "kind": "stage-support",
-      "stage": "technical-design",
-      "path": "constraints/stages/technical-design/frontend-design.md"
-    },
-    {
-      "kind": "stage-support",
-      "stage": "technical-design",
-      "path": "constraints/stages/technical-design/nfr-design.md"
-    },
-    {
-      "kind": "stage",
-      "stage": "technical-design",
-      "path": "constraints/stages/technical-design/SKILL.md"
-    }
-  ],
-  "scripts": [
-    "scripts/commands.json"
-  ]
+  "owns": {
+    "stages": [
+      {
+        "stage": "technical-design",
+        "path": "stages/technical-design/SKILL.md"
+      }
+    ],
+    "workflow": []
+  },
+  "uses": {
+    "stages": [],
+    "workflow": [
+      {
+        "owner": "sf-router",
+        "path": "../sf-router/workflow/README.md"
+      }
+    ]
+  },
+  "commands": "commands.json"
 }
