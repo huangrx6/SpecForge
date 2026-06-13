@@ -20,6 +20,7 @@
 | 人工确认 | decision checkpoints、decision brief、decision quality、gate preflight | open decision 不得被口头忽略；风险接受必须有 owner、影响和触发条件 |
 | 产物降噪 | artifact quality、workflow package、HTML report、handoff summary | Markdown 是事实源，HTML 是阅读层 |
 | 证据分级 | evidence summary、test cases、verification report | proven / mocked / manual-confirmed / deferred / missing 必须区分 |
+| 阶段回归样例 | `core/workflows/stages/eval-fixtures.json`、self-test、framework audit | 每个 stage 都有最小通过样例和阻断样例，workflow 改动必须保持覆盖 |
 | 代码理解 | codebase index、provider facts、code intelligence profile、wiki quality graph fact check | provider 输出只能作为事实候选，必须带来源、置信度、用途和 wiki 引用 |
 | 外部入口治理 | `skills/catalog.json`、skills README、framework audit | 对外 skill 是稳定 API，目录、分层、阶段映射和文档必须可审计 |
 | 框架自审 | framework audit、starter sync、skill validation、self-test | 框架改动必须同步 starter 并跑审计 |
@@ -31,7 +32,6 @@
 | P0 | 命令唯一事实源 | 减少标准文档重复和过期命令 | `framework-audit.mjs` 检查 standards 中脚本清单长度和失效命令 | 非命令目录型标准不再维护大段脚本清单 |
 | P0 | Wiki 回写辅助生成 | 存量项目事实可从 graph facts 半自动形成候选补丁 | `sync-wiki.mjs` 增加 dry-run candidate plan | 候选补丁只引用 `used_for_wiki=true` 且有 source path 的事实，并等待人工确认 |
 | P1 | HTML 报告组件化 | 让非研发也能读懂复杂规格和验证矩阵 | report renderer 增加 action board、decision board、trace matrix 组件边界 | 首屏只显示当前状态、下一步、最高风险和可复制命令 |
-| P1 | Stage eval fixtures | 用固定 work item 检查每个阶段是否按合同输出 | `self-test.mjs` 增加 stage fixture set | 每个 stage skill 至少有一个最小通过样例和一个失败样例 |
 | P1 | Prompt / skill drift audit | 防止 public skills、core stage skills 和 standards 说法不一致 | `framework-audit.mjs` 增加关键术语和 gate 规则一致性检查 | 同一 gate、artifact、证据术语只有一个规范表达 |
 | P2 | Interactive decision package | 人工确认更像审批包，而不是聊天追问 | `decision-brief.mjs` 输出可复制 A/B/accept-risk 回复和影响摘要 | 用户一句回复能被写回 artifact 或 gate evidence |
 | P2 | Visual workflow map | 长流程先看图，再看文档 | `stage-contract.mjs --overview` 输出 Mermaid / JSON graph | 每个 artifact 显示状态、owner、blocker、下一步命令 |

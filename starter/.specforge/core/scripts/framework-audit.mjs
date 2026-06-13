@@ -341,6 +341,79 @@ function stageSkillIssues() {
   return issues;
 }
 
+function stageEvalFixtureIssues() {
+  const issues = [];
+  const path = "core/workflows/stages/eval-fixtures.json";
+  if (!exists(path)) return [issue("FAIL", "stage-eval-fixtures-missing", `${path} is required for stage regression coverage.`, path)];
+
+  let payload;
+  try {
+    payload = JSON.parse(read(path));
+  } catch (error) {
+    return [issue("FAIL", "stage-eval-fixtures-invalid-json", `${path} is invalid JSON: ${error.message}.`, path)];
+  }
+
+  if (payload.version !== 1) {
+    issues.push(issue("WARN", "stage-eval-fixtures-version", `${path} should use version 1.`, path));
+  }
+
+  const stageDirs = readdirSync(join(root, "core/workflows/stages"), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort();
+  const artifactIds = new Set(
+    readdirSync(join(root, "core/artifacts/schemas"))
+      .filter((name) => name.endsWith(".json"))
+      .flatMap((name) => JSON.parse(read(`core/artifacts/schemas/${name}`)).artifacts.map((artifact) => artifact.id)),
+  );
+  const fixtures = Array.isArray(payload.fixtures) ? payload.fixtures : [];
+  const fixtureStages = new Set();
+
+  if (!Array.isArray(payload.fixtures) || payload.fixtures.length === 0) {
+    issues.push(issue("FAIL", "stage-eval-fixtures-empty", `${path} must define a non-empty fixtures array.`, path));
+  }
+
+  for (const fixture of fixtures) {
+    if (!fixture.stage) {
+      issues.push(issue("FAIL", "stage-eval-fixture-stage-missing", "A stage eval fixture is missing stage.", path));
+      continue;
+    }
+    if (fixtureStages.has(fixture.stage)) {
+      issues.push(issue("FAIL", "stage-eval-fixture-duplicate", `${fixture.stage} appears more than once in ${path}.`, path));
+    }
+    fixtureStages.add(fixture.stage);
+    if (!stageDirs.includes(fixture.stage)) {
+      issues.push(issue("FAIL", "stage-eval-fixture-unknown-stage", `${fixture.stage} does not match a core workflow stage directory.`, path));
+    }
+    if (fixture.artifact_id !== null && fixture.artifact_id !== undefined && !artifactIds.has(fixture.artifact_id)) {
+      issues.push(issue("FAIL", "stage-eval-fixture-unknown-artifact", `${fixture.stage} references unknown artifact ${fixture.artifact_id}.`, path));
+    }
+    if (!Array.isArray(fixture.pass?.given) || fixture.pass.given.length === 0) {
+      issues.push(issue("FAIL", "stage-eval-pass-given-missing", `${fixture.stage} pass fixture must define given.`, path));
+    }
+    if (!Array.isArray(fixture.pass?.expect) || fixture.pass.expect.length === 0) {
+      issues.push(issue("FAIL", "stage-eval-pass-expect-missing", `${fixture.stage} pass fixture must define expect.`, path));
+    }
+    if (!Array.isArray(fixture.pass?.assertions) || fixture.pass.assertions.length === 0) {
+      issues.push(issue("FAIL", "stage-eval-pass-assertions-missing", `${fixture.stage} pass fixture must define assertions.`, path));
+    }
+    if (!Array.isArray(fixture.fail?.given) || fixture.fail.given.length === 0) {
+      issues.push(issue("FAIL", "stage-eval-fail-given-missing", `${fixture.stage} fail fixture must define given.`, path));
+    }
+    if (!fixture.fail?.expect_signal) {
+      issues.push(issue("FAIL", "stage-eval-fail-signal-missing", `${fixture.stage} fail fixture must define expect_signal.`, path));
+    }
+  }
+
+  for (const stage of stageDirs) {
+    if (!fixtureStages.has(stage)) {
+      issues.push(issue("FAIL", "stage-eval-fixture-missing-stage", `${stage} is missing from ${path}.`, path));
+    }
+  }
+
+  return issues;
+}
+
 function schemaContractIssues() {
   const issues = [];
   const schemaFiles = readdirSync(join(root, "core/artifacts/schemas"))
@@ -491,6 +564,7 @@ const checks = [
   { id: "package-scripts", issues: packageScriptIssues() },
   { id: "public-skills", issues: publicSkillIssues() },
   { id: "stage-skills", issues: stageSkillIssues() },
+  { id: "stage-eval-fixtures", issues: stageEvalFixtureIssues() },
   { id: "schema-contracts", issues: schemaContractIssues() },
   { id: "placeholder-density", issues: placeholderIssues(files) },
   { id: "large-markdown", issues: largeMarkdownIssues(files) },

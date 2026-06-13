@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import {
   appendArchiveRegistryEntry,
@@ -7,6 +7,7 @@ import {
   normalizeEmptyActive,
   parseRegistryEntries,
   removeRegistryEntry,
+  root,
   validateSchema,
 } from "./lib/specforge.mjs";
 import { wikiQualitySummary } from "./lib/wiki-quality.mjs";
@@ -144,10 +145,42 @@ function testWikiQualityGraphFactReferences() {
   }
 }
 
+function testStageEvalFixturesCoverStages() {
+  const fixturesPath = join(root, "core/workflows/stages/eval-fixtures.json");
+  const payload = JSON.parse(readFileSync(fixturesPath, "utf8"));
+  assert.equal(payload.version, 1);
+
+  const stageDirs = readdirSync(join(root, "core/workflows/stages"), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort();
+  const fixtures = payload.fixtures ?? [];
+  const fixtureStages = fixtures.map((fixture) => fixture.stage).sort();
+  assert.deepEqual(fixtureStages, stageDirs);
+
+  const artifactIds = new Set();
+  for (const file of readdirSync(join(root, "core/artifacts/schemas")).filter((name) => name.endsWith(".json"))) {
+    const schema = JSON.parse(readFileSync(join(root, "core/artifacts/schemas", file), "utf8"));
+    for (const artifact of schema.artifacts ?? []) artifactIds.add(artifact.id);
+  }
+
+  for (const fixture of fixtures) {
+    assert.ok(fixture.pass?.given?.length > 0, `${fixture.stage} pass fixture must define given`);
+    assert.ok(fixture.pass?.expect?.length > 0, `${fixture.stage} pass fixture must define expect`);
+    assert.ok(fixture.pass?.assertions?.length > 0, `${fixture.stage} pass fixture must define assertions`);
+    assert.ok(fixture.fail?.given?.length > 0, `${fixture.stage} fail fixture must define given`);
+    assert.ok(fixture.fail?.expect_signal, `${fixture.stage} fail fixture must define expect_signal`);
+    if (fixture.artifact_id !== null) {
+      assert.ok(artifactIds.has(fixture.artifact_id), `${fixture.stage} references unknown artifact ${fixture.artifact_id}`);
+    }
+  }
+}
+
 testRegistrySingleActiveRemoval();
 testRegistryKeepsOtherActiveEntries();
 testArchiveAppend();
 testQualityPolicyValidation();
 testWikiQualityGraphFactReferences();
+testStageEvalFixturesCoverStages();
 
 console.log("SpecForge self-test passed.");
