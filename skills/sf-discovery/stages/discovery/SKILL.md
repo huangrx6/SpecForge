@@ -11,7 +11,7 @@ Discovery 是新工作的分诊和事实探索入口。它负责把原始诉求�
 
 - 用户原始请求和当前对话约束。
 - `.specforge/manifest.yaml`、`.specforge/registry.yaml`。
-- `.specforge/core/standards/workflow.md`、`.specforge/core/standards/workflow.md`、`.specforge/core/standards/product.md`。
+- `.specforge/core/standards/workflow.md`、`.specforge/core/standards/product.md`。
 - 新功能、复杂 bug、重构、API / DB / 架构调整必须读取 `.specforge/core/standards/product.md`。
 - 产品、页面、全栈应用、AI 功能或复杂功能必须读取 `.specforge/core/standards/product.md`。
 - 与请求直接相关的 `.specforge/wiki/` 文件。
@@ -35,6 +35,8 @@ Discovery 是新工作的分诊和事实探索入口。它负责把原始诉求�
 15. 没有 active work item 时，运行 `node .specforge/core/scripts/create-work.mjs --workflow <workflow> "工作项标题"`，已确定的影响面可用 `--has-ui false`、`--has-api true` 等参数写入。
 16. 如果 work item 已存在，根据 brief 的影响面矩阵同步更新 `work.yaml` 的 `components`；明确无 UI 或无技术影响时写 `false`，不确定时保留 `auto`。
 17. 写入 `00-intake/original-request.md` 和 `00-intake/brief.md`。
+18. ready artifact 是 `research`、或本次使用了外部来源 / 版本事实 / 政策 / 竞品 / 安全资料时，运行 `node .specforge/core/scripts/source-quality.mjs`；`FAIL` 必须修复，`WARN` 必须补强来源或记录 owner、影响和接受理由。
+19. 完成后运行 `node .specforge/core/scripts/instructions.mjs`，确认下一步 route 与 brief / work.yaml 一致。
 
 ## Workflow 分流
 
@@ -108,3 +110,4 @@ PRD 决策只写在 `brief.md`，不修改 artifact graph。需要 PRD 时，下
 - intake 产物足以支撑 PRD 或 requirements。
 - `brief.md` 已写清 PRD 决策和下一步路由。
 - 所有歧义都用 `[NEEDS CLARIFICATION: question]` 标记。
+- research / 外部来源适用时，`source-quality.mjs` 无 `FAIL`，`WARN` 已处理或可追溯接受。

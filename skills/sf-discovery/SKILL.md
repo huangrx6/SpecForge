@@ -18,6 +18,7 @@ description: 对新请求执行深度探索、缺陷根因分析或预研；用�
 3. 读取 `00-intake/original-request.md` 和已有 `brief.md`（如存在）。
 4. 运行 `node .specforge/core/scripts/doctor.mjs`。
 5. 运行 `node .specforge/core/scripts/instructions.mjs` 判断当前 ready artifact。
+6. 若 ready artifact 是 `research`，或本次 discovery 引入外部来源、版本事实、政策 / 竞品 / 安全 / SDK 资料，完成前运行 `node .specforge/core/scripts/source-quality.mjs`。
 
 ## 内部技能母本
 
@@ -45,6 +46,7 @@ description: 对新请求执行深度探索、缺陷根因分析或预研；用�
 5. 如果 ready artifact 是 `gap_report`，运行 `node .specforge/core/scripts/create-artifact.mjs gap_report`，并写清复现、当前行为、期望行为、根因、修复策略和回归测试。
 6. 如果 ready artifact 是 `research`，运行 `node .specforge/core/scripts/create-artifact.mjs research`，并写清研究问题、来源、实验、发现、决策和未解决问题。
 7. 其他 discovery 场景更新 `00-intake/brief.md`。
+8. 完成后运行 `node .specforge/core/scripts/instructions.mjs`；若存在 research 或外部来源，再运行 `node .specforge/core/scripts/source-quality.mjs` 并修复 `FAIL`，`WARN` 需补强来源或记录 owner、影响和接受理由。
 
 ## 停止条件
 
@@ -58,6 +60,8 @@ description: 对新请求执行深度探索、缺陷根因分析或预研；用�
 ## 完成标准
 
 - `brief.md` / `gap-report.md` / `research.md` 包含足以支撑下一步的分析证据。
+- research / 外部来源适用时，`source-quality.mjs` 无 `FAIL`；`WARN` 已补强或在 artifact 中写明接受理由。
+- `instructions.mjs` 已确认下一步 route，且 discovery 没有把需要用户取舍的问题包装成事实结论。
 
 ## 不做
 

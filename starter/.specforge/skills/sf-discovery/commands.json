@@ -7,6 +7,7 @@
     "node .specforge/core/scripts/create-artifact.mjs research",
     "node .specforge/core/scripts/create-work.mjs --workflow <workflow>",
     "node .specforge/core/scripts/doctor.mjs",
-    "node .specforge/core/scripts/instructions.mjs"
+    "node .specforge/core/scripts/instructions.mjs",
+    "node .specforge/core/scripts/source-quality.mjs"
   ]
 }

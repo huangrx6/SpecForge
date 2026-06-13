@@ -46,6 +46,14 @@ node .specforge/core/scripts/codebase-index.mjs --write-report
 .specforge/work/inbox/codebase-intelligence.md
 ```
 
+wiki 写入或刷新完成后运行：
+
+```bash
+node .specforge/core/scripts/wiki-quality.mjs
+```
+
+`FAIL` 必须修复；`WARN` 必须补齐当前事实、source work、owner、更新时间，或在 `08-risks.md` 写明缺口、影响和下一步证据来源。
+
 读取内部阶段说明：
 
 ```text
@@ -149,6 +157,7 @@ Wiki 只保留当前事实。不要按日期、版本或 work item 复制多份�
 - 代码库规模判断：small / medium / large。
 - 已更新的 wiki 文件。
 - codebase intelligence 证据报告路径。
+- `wiki-quality.mjs` 结果和剩余缺口。
 - 已确认的关键模块和入口。
 - 尚未确认的业务含义或风险。
 - 下一步建议路由：通常是 `sf-intake`；如果用户只是要求项目画像，则停在这里。
@@ -168,6 +177,7 @@ Wiki 只保留当前事实。不要按日期、版本或 work item 复制多份�
 - `03-architecture.md`、`04-data-model.md`、`05-operations.md` 和必要的 `api-<domain>.md` / `module-<name>.md` 达到最低完整度；缺口进入 `08-risks.md`。
 - 后续 `sf-intake` 能引用 wiki 判断影响面，不必重新理解全仓库。
 - 未确认内容写入 `08-risks.md` 或在输出中列为待确认，不混入当前事实。
+- `wiki-quality.mjs` 无 `FAIL`；`WARN` 已修复或在 `08-risks.md` 中记录 owner、影响和下一步证据来源。
 
 ## 不做
 

@@ -24,6 +24,7 @@ Steering 产出的 wiki 必须能作为后续任务入口：不仅写结论，�
 ```bash
 node .specforge/core/scripts/codebase-index.mjs --json
 node .specforge/core/scripts/codebase-index.mjs --write-report
+node .specforge/core/scripts/wiki-quality.mjs
 ```
 
 维护 SpecForge 源码仓库时使用：
@@ -155,6 +156,8 @@ Provider 输出只能作为证据来源，必须归一成 wiki 当前事实。
 
 Wiki 中每一项保持单文件、当前态。不要创建 `architecture-v2.md`、`module-x-20260518.md` 这类过程文件。
 
+写入或刷新 wiki 后运行 `node .specforge/core/scripts/wiki-quality.mjs`。`FAIL` 必须修复；`WARN` 必须补齐当前事实、source work、owner、更新时间，或在 `08-risks.md` 记录缺口、影响和下一步证据来源。
+
 ### 4.5 Wiki 完整度补扫
 
 写入前按 `.specforge/core/standards/wiki.md#最低完整度` 自检。以下情况不能直接完成：
@@ -202,3 +205,4 @@ Wiki 中每一项保持单文件、当前态。不要创建 `architecture-v2.md`
 - `03-architecture.md`、`04-data-model.md`、`05-operations.md` 和必要的 `api-<domain>.md` 达到最低完整度；不足项进入 `08-risks.md`。
 - 后续 work item 能引用 wiki 中的模块、API、数据和运行事实。
 - 未确认内容没有混进 wiki 当前事实。
+- `wiki-quality.mjs` 无 `FAIL`；`WARN` 已修复或在 `08-risks.md` 中可追溯接受。

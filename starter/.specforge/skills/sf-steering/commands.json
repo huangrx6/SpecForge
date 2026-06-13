@@ -6,6 +6,7 @@
     "node .specforge/core/scripts/codebase-index.mjs --json",
     "node .specforge/core/scripts/codebase-index.mjs --json --scan-mode <mode>",
     "node .specforge/core/scripts/codebase-index.mjs --write-report",
-    "node .specforge/core/scripts/doctor.mjs"
+    "node .specforge/core/scripts/doctor.mjs",
+    "node .specforge/core/scripts/wiki-quality.mjs"
   ]
 }
