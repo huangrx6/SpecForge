@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import {
   appendArchiveRegistryEntry,
@@ -16,6 +16,23 @@ import { wikiQualitySummary } from "./lib/wiki-quality.mjs";
 function writeFixture(path, content) {
   mkdirSync(join(path, ".."), { recursive: true });
   writeFileSync(path, content, "utf8");
+}
+
+function skillStageOwners() {
+  const skillsRoot = join(root, "skills");
+  return readdirSync(skillsRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .flatMap((entry) => {
+      const packagePath = join(skillsRoot, entry.name, "skill-package.json");
+      if (!existsSync(packagePath)) return [];
+      const manifest = JSON.parse(readFileSync(packagePath, "utf8"));
+      return (manifest.owns?.stages ?? []).map((owned) => ({
+        stage: owned.stage,
+        owner: entry.name,
+        path: join(skillsRoot, entry.name, owned.path),
+      }));
+    })
+    .sort((a, b) => a.stage.localeCompare(b.stage));
 }
 
 function testRegistrySingleActiveRemoval() {
@@ -147,14 +164,11 @@ function testWikiQualityGraphFactReferences() {
 }
 
 function testStageEvalFixturesCoverStages() {
-  const fixturesPath = join(root, "core/workflows/stages/eval-fixtures.json");
+  const fixturesPath = join(root, "skills/sf-router/workflow/eval-fixtures.json");
   const payload = JSON.parse(readFileSync(fixturesPath, "utf8"));
   assert.equal(payload.version, 1);
 
-  const stageDirs = readdirSync(join(root, "core/workflows/stages"), { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort();
+  const stageDirs = skillStageOwners().map((entry) => entry.stage);
   const fixtures = payload.fixtures ?? [];
   const fixtureStages = fixtures.map((fixture) => fixture.stage).sort();
   assert.deepEqual(fixtureStages, stageDirs);
@@ -178,7 +192,7 @@ function testStageEvalFixturesCoverStages() {
 }
 
 function testStageScoreRubricCoversStages() {
-  const rubricPath = join(root, "core/workflows/stages/score-rubric.json");
+  const rubricPath = join(root, "skills/sf-router/workflow/score-rubric.json");
   const payload = JSON.parse(readFileSync(rubricPath, "utf8"));
   assert.equal(payload.version, 1);
   assert.ok(payload.dimensions.length >= 5);
@@ -190,10 +204,7 @@ function testStageScoreRubricCoversStages() {
     assert.ok(dimension.failure_signals.length > 0, `${dimension.id} must define failure_signals`);
   }
 
-  const stageDirs = readdirSync(join(root, "core/workflows/stages"), { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort();
+  const stageDirs = skillStageOwners().map((entry) => entry.stage);
   assert.deepEqual(Object.keys(payload.stage_focus).sort(), stageDirs);
   for (const [stage, focus] of Object.entries(payload.stage_focus)) {
     assert.ok(focus.length >= payload.minimum_focus_dimensions, `${stage} must have enough score focus dimensions`);
@@ -204,7 +215,7 @@ function testStageScoreRubricCoversStages() {
 }
 
 function testPromptSkillDriftRules() {
-  const rulesPath = join(root, "core/workflows/stages/drift-rules.json");
+  const rulesPath = join(root, "skills/sf-router/workflow/drift-rules.json");
   const payload = JSON.parse(readFileSync(rulesPath, "utf8"));
   assert.equal(payload.version, 1);
   assert.ok(payload.gate_rules.length >= 4);
@@ -212,6 +223,7 @@ function testPromptSkillDriftRules() {
 
   const catalog = JSON.parse(readFileSync(join(root, "skills/catalog.json"), "utf8"));
   const catalogSkills = new Map(catalog.skills.map((skill) => [skill.id, skill]));
+  const owners = new Map(skillStageOwners().map((entry) => [entry.stage, entry]));
 
   for (const rule of payload.gate_rules) {
     assert.ok(rule.gate, "gate rule must define gate");
@@ -220,7 +232,9 @@ function testPromptSkillDriftRules() {
     assert.ok(rule.evidence, `${rule.gate} must define evidence`);
     assert.ok(rule.approved_command.includes(`gate.mjs ${rule.gate} APPROVED --evidence ${rule.evidence}`));
 
-    const stageSkill = readFileSync(join(root, "core/workflows/stages", rule.stage, "SKILL.md"), "utf8");
+    const stageOwner = owners.get(rule.stage);
+    assert.ok(stageOwner, `${rule.stage} must have a skill package owner`);
+    const stageSkill = readFileSync(stageOwner.path, "utf8");
     const publicSkill = readFileSync(join(root, "skills", rule.public_skill, "SKILL.md"), "utf8");
     const packagedStage = join(root, "skills", rule.public_skill, "stages", rule.stage, "SKILL.md");
     assert.ok(stageSkill.includes(rule.gate), `${rule.stage} core skill must mention ${rule.gate}`);

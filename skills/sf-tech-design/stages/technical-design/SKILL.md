@@ -19,12 +19,12 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
 - `.specforge/core/standards/ai-toolkit.md`
 - `.specforge/core/profiles/README.md`
 - 按影响面读取内部设计子模块；不要默认全量读取：
-  - 前端工程、路由、组件、状态、API client 或构建：`.specforge/core/workflows/stages/technical-design/frontend-design.md`
-  - 后端模块、服务边界、后台任务、并发或幂等：`.specforge/core/workflows/stages/technical-design/backend-design.md`
-  - 领域模型、实体或边界上下文：`.specforge/core/workflows/stages/technical-design/domain-design.md`
-  - API、SDK、事件或跨系统契约：`.specforge/core/workflows/stages/technical-design/api-design.md`
-  - DB、Schema、索引、迁移或数据流：`.specforge/core/workflows/stages/technical-design/data-design.md`
-  - 安全、可观测性、部署或可靠性：`.specforge/core/workflows/stages/technical-design/nfr-design.md`
+  - 前端工程、路由、组件、状态、API client 或构建：`.specforge/skills/sf-tech-design/stages/technical-design/frontend-design.md`
+  - 后端模块、服务边界、后台任务、并发或幂等：`.specforge/skills/sf-tech-design/stages/technical-design/backend-design.md`
+  - 领域模型、实体或边界上下文：`.specforge/skills/sf-tech-design/stages/technical-design/domain-design.md`
+  - API、SDK、事件或跨系统契约：`.specforge/skills/sf-tech-design/stages/technical-design/api-design.md`
+  - DB、Schema、索引、迁移或数据流：`.specforge/skills/sf-tech-design/stages/technical-design/data-design.md`
+  - 安全、可观测性、部署或可靠性：`.specforge/skills/sf-tech-design/stages/technical-design/nfr-design.md`
 
 ## 写入
 

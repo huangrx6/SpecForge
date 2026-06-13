@@ -31,6 +31,33 @@ function parseFrontmatter(content, file) {
   return fields;
 }
 
+function loadJson(file) {
+  try {
+    return JSON.parse(readFileSync(file, "utf8"));
+  } catch (error) {
+    errors.push(`${relative(file)}: invalid JSON (${error.message})`);
+    return null;
+  }
+}
+
+function listSkillPackages() {
+  const skillsRoot = join(root, layout.skills);
+  if (!existsSync(skillsRoot)) return [];
+  return readdirSync(skillsRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => {
+      const packagePath = join(skillsRoot, entry.name, "skill-package.json");
+      if (!existsSync(packagePath)) return null;
+      return {
+        id: entry.name,
+        packagePath,
+        manifest: loadJson(packagePath),
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.id.localeCompare(b.id));
+}
+
 // ----------------------------------------------------
 // INTERNAL SKILLS VALIDATION
 // ----------------------------------------------------
@@ -50,11 +77,8 @@ function runInternalValidation() {
   }
 
   function listStageSkillFiles() {
-    const stagesRoot = join(root, layout.stages);
-    if (!existsSync(stagesRoot)) return [];
-    return readdirSync(stagesRoot, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory())
-      .map((entry) => join(stagesRoot, entry.name, "SKILL.md"))
+    return listSkillPackages()
+      .flatMap((entry) => (entry.manifest?.owns?.stages ?? []).map((stage) => join(root, layout.skills, entry.id, stage.path)))
       .filter((file) => existsSync(file))
       .sort();
   }
@@ -84,40 +108,49 @@ function runInternalValidation() {
   for (const file of [...entrySkillFiles, ...stageSkillFiles]) validateSkill(file);
 
   const stageSkillMap = new Map([
-    ["brainstorm/SKILL.md", ["sf-brainstorm", "sf-intake", "sf-prd", "sf-requirements", "sf-ui-design", "sf-tech-design"]],
-    ["discovery/SKILL.md", ["sf-router", "sf-intake", "sf-discovery"]],
-    ["requirements/SKILL.md", ["sf-requirements"]],
-    ["ui-design/SKILL.md", ["sf-ui-design"]],
-    ["technical-design/SKILL.md", ["sf-tech-design"]],
-    ["task-planning/SKILL.md", ["sf-tasking"]],
-    ["spec-review/SKILL.md", ["sf-spec-review"]],
-    ["implementation/SKILL.md", ["sf-implement"]],
-    ["code-review/SKILL.md", ["sf-code-review"]],
-    ["verification/SKILL.md", ["sf-verify"]],
-    ["wiki-sync/SKILL.md", ["sf-wiki", "sf-close"]],
-    ["closure/SKILL.md", ["sf-close"]],
-    ["gap-report/SKILL.md", ["sf-discovery"]],
-    ["research/SKILL.md", ["sf-discovery"]],
-    ["status/SKILL.md", ["sf-doctor", "sf-work"]],
-    ["steering/SKILL.md", ["sf-steering", "sf-onboard", "sf-intake", "sf-wiki", "sf-close"]],
+    ["brainstorm", { owner: "sf-brainstorm", users: ["sf-brainstorm", "sf-intake", "sf-prd", "sf-requirements", "sf-ui-design", "sf-tech-design"] }],
+    ["discovery", { owner: "sf-discovery", users: ["sf-router", "sf-intake", "sf-discovery"] }],
+    ["requirements", { owner: "sf-requirements", users: ["sf-requirements"] }],
+    ["ui-design", { owner: "sf-ui-design", users: ["sf-ui-design"] }],
+    ["technical-design", { owner: "sf-tech-design", users: ["sf-tech-design"] }],
+    ["task-planning", { owner: "sf-tasking", users: ["sf-tasking"] }],
+    ["spec-review", { owner: "sf-spec-review", users: ["sf-spec-review"] }],
+    ["implementation", { owner: "sf-implement", users: ["sf-implement"] }],
+    ["code-review", { owner: "sf-code-review", users: ["sf-code-review"] }],
+    ["verification", { owner: "sf-verify", users: ["sf-verify"] }],
+    ["wiki-sync", { owner: "sf-wiki", users: ["sf-wiki", "sf-close"] }],
+    ["closure", { owner: "sf-close", users: ["sf-close"] }],
+    ["gap-report", { owner: "sf-discovery", users: ["sf-discovery"] }],
+    ["research", { owner: "sf-discovery", users: ["sf-discovery"] }],
+    ["status", { owner: "sf-doctor", users: ["sf-doctor", "sf-work"] }],
+    ["steering", { owner: "sf-steering", users: ["sf-steering", "sf-onboard", "sf-intake", "sf-wiki", "sf-close"] }],
   ]);
 
-  for (const [stageSkill, skills] of stageSkillMap) {
-    const stageSkillPath = join(root, layout.stages, stageSkill);
-    if (!existsSync(stageSkillPath)) errors.push(`missing stage skill: ${layout.stages}/${stageSkill}`);
-    for (const skill of skills) {
+  const packages = new Map(listSkillPackages().map((entry) => [entry.id, entry.manifest]));
+  for (const [stage, mapping] of stageSkillMap) {
+    const stageSkillPath = join(root, layout.skills, mapping.owner, "stages", stage, "SKILL.md");
+    if (!existsSync(stageSkillPath)) errors.push(`missing stage skill: ${layout.skills}/${mapping.owner}/stages/${stage}/SKILL.md`);
+    const ownerManifest = packages.get(mapping.owner);
+    const ownsStage = (ownerManifest?.owns?.stages ?? []).some((entry) => entry.stage === stage && entry.path === `stages/${stage}/SKILL.md`);
+    if (!ownsStage) errors.push(`${mapping.owner}: skill-package.json must own stage ${stage}`);
+    for (const skill of mapping.users) {
       const skillPath = join(root, layout.skills, skill, "SKILL.md");
-      if (!existsSync(skillPath)) errors.push(`stage skill ${stageSkill} points to missing entry skill: ${skill}`);
+      if (!existsSync(skillPath)) errors.push(`stage skill ${stage} points to missing entry skill: ${skill}`);
+      if (skill === mapping.owner) continue;
+      const usedStage = (packages.get(skill)?.uses?.stages ?? []).some(
+        (entry) => entry.stage === stage && entry.owner === mapping.owner && entry.path === `../${mapping.owner}/stages/${stage}/SKILL.md`,
+      );
+      if (!usedStage) errors.push(`${skill}: skill-package.json must reference ${mapping.owner}/stages/${stage}/SKILL.md`);
     }
   }
 
-  const stageReadme = join(root, layout.stages, "README.md");
+  const stageReadme = join(root, layout.skills, "sf-router/workflow/README.md");
   if (!existsSync(stageReadme)) {
-    errors.push(`missing ${layout.stages}/README.md`);
+    errors.push(`missing ${layout.skills}/sf-router/workflow/README.md`);
   } else {
     const readme = readFileSync(stageReadme, "utf8");
-    for (const [stageSkill] of stageSkillMap) {
-      if (!readme.includes(stageSkill.split("/")[0])) errors.push(`stage README missing mapping for ${stageSkill}`);
+    for (const [stage] of stageSkillMap) {
+      if (!readme.includes(stage)) errors.push(`stage workflow README missing mapping for ${stage}`);
     }
   }
 

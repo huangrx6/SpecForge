@@ -43,7 +43,7 @@ const requestedArtifact = positionalArgs()[0];
 const requestedWorkItem = argValue("--work-item");
 
 const standard = (path) => `${layout.standards}/${path}`;
-const stageSkill = (path) => `${layout.stages}/${path}`;
+const stageSkill = (owner, stage) => `${layout.stages}/${owner}/stages/${stage}/SKILL.md`;
 
 function printQualityWarnings(warnings = []) {
   if (warnings.length === 0) return;
@@ -86,19 +86,19 @@ function printQualitySuite(qualitySuite) {
 }
 
 const stageSkillByArtifact = {
-  intake: stageSkill("discovery/SKILL.md"),
-  gap_report: stageSkill("gap-report/SKILL.md"),
-  research: stageSkill("research/SKILL.md"),
-  requirements: stageSkill("requirements/SKILL.md"),
-  ui_design: stageSkill("ui-design/SKILL.md"),
-  technical_design: stageSkill("technical-design/SKILL.md"),
-  tasks: stageSkill("task-planning/SKILL.md"),
-  spec_review: stageSkill("spec-review/SKILL.md"),
-  implementation: stageSkill("implementation/SKILL.md"),
-  code_review: stageSkill("code-review/SKILL.md"),
-  verification: stageSkill("verification/SKILL.md"),
-  wiki_sync: stageSkill("wiki-sync/SKILL.md"),
-  closure: stageSkill("closure/SKILL.md"),
+  intake: stageSkill("sf-discovery", "discovery"),
+  gap_report: stageSkill("sf-discovery", "gap-report"),
+  research: stageSkill("sf-discovery", "research"),
+  requirements: stageSkill("sf-requirements", "requirements"),
+  ui_design: stageSkill("sf-ui-design", "ui-design"),
+  technical_design: stageSkill("sf-tech-design", "technical-design"),
+  tasks: stageSkill("sf-tasking", "task-planning"),
+  spec_review: stageSkill("sf-spec-review", "spec-review"),
+  implementation: stageSkill("sf-implement", "implementation"),
+  code_review: stageSkill("sf-code-review", "code-review"),
+  verification: stageSkill("sf-verify", "verification"),
+  wiki_sync: stageSkill("sf-wiki", "wiki-sync"),
+  closure: stageSkill("sf-close", "closure"),
 };
 
 const contextByArtifact = {

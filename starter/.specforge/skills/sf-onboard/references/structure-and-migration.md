@@ -71,7 +71,7 @@ npx skills add https://github.com/huangrx6/SpecForge --skill '*' --agent trae-cn
 | `.specforge/core/hooks/events/` | 默认 noop 生命周期钩子，业务项目可覆盖 |
 | `.specforge/skills/<skill>/` | 每个入口技能关联的阶段约束、workflow 约束和维护上下文 |
 | `.specforge/skills/<skill>/commands.json` | 每个入口技能关联的脚本命令索引 |
-| `.specforge/core/workflows/stages/` | 兼容镜像和底层发行资产；新维护优先进入 `.specforge/skills/<skill>/` |
+| `.specforge/skills/<skill>/stages/` | 阶段说明与技能包内约束；跨技能引用通过 `skill-package.json#uses.stages` 声明 |
 | `.specforge/core/skills/` | 经审查的外部 skill 快照和编排规则 |
 | `.specforge/wiki/` | 轻量长期知识库 |
 | `.specforge/work/inbox/` | 暂存请求 |

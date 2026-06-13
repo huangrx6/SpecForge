@@ -23,7 +23,7 @@ paths:
   standards: .specforge/core/standards
   tech_profiles: .specforge/core/profiles
   tools: .specforge/core/scripts
-  stages: .specforge/core/workflows/stages
+  stages: .specforge/skills
   hooks: .specforge/core/hooks/events
   project_hooks: .specforge/hooks/local
 

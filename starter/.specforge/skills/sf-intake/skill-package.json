@@ -19,6 +19,11 @@
         "stage": "discovery",
         "owner": "sf-discovery",
         "path": "../sf-discovery/stages/discovery/SKILL.md"
+      },
+      {
+        "stage": "steering",
+        "owner": "sf-steering",
+        "path": "../sf-steering/stages/steering/SKILL.md"
       }
     ],
     "workflow": [

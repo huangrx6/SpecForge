@@ -22,7 +22,7 @@
 
 ## 避免重复
 
-- 流程路由写在 `workflow.md`；具体阶段操作写在 `workflows/stages/<stage>/SKILL.md`。
+- 流程路由写在 `workflow.md`；具体阶段操作写在 `.specforge/skills/<stage-owner>/stages/<stage>/SKILL.md`。
 - UI 总原则写在 `design.md`；具体设计语言和组件细则交给 `core/skills/ui-ux/design-system`。
 - 技术选型标准写在 `engineering.md`；可选技术组合写在 `profiles/`。
 - 测试证据原则写在 `engineering.md` / `playwright.md`；具体测试用例模板写在 `artifacts/templates/test-cases.md`。

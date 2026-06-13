@@ -90,7 +90,7 @@
 - `skills/sf*/references/**`
 - `skills/<skill>/**`
 - `skills/<skill>/commands.json`
-- `core/workflows/stages/**` compatibility mirrors
+- `skills/<skill>/stages/**` stage owner packages
 - `core/skills/**`
 - `core/standards/**`
 

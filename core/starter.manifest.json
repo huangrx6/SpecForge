@@ -273,10 +273,6 @@
     {
       "from": "workflows/README.md",
       "to": "core/workflows/README.md"
-    },
-    {
-      "from": "workflows/stages",
-      "to": "core/workflows/stages"
     }
   ],
   "directories": [

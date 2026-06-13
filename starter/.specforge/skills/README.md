@@ -29,7 +29,7 @@
 
 - 外部 skill 保持薄入口：运行目录、必读文件、启动命令、完成标准和停止条件。
 - 每个入口技能是一个可维护的技能包：`skills/<sf-*>/SKILL.md` 是入口，`constraints/` 放该技能会读取的阶段约束，`commands.json` 放该技能关联的脚本命令。
-- `core/workflows/stages/` 仅保留兼容镜像和底层发行资产；维护入口优先看对应的 `skills/<skill>/`。
+- 阶段说明维护在对应 `skills/<skill>/stages/<stage>/` 下；跨技能引用通过 `skill-package.json#uses.stages` 声明。
 - 长期标准放在 `core/standards/`。
 - 技术选择卡放在 `core/profiles/`。
 - UI 设计语言和组件规范放在 `core/skills/ui-ux/design-system/`。

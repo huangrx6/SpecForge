@@ -14,7 +14,13 @@
     "workflow": []
   },
   "uses": {
-    "stages": [],
+    "stages": [
+      {
+        "stage": "brainstorm",
+        "owner": "sf-brainstorm",
+        "path": "../sf-brainstorm/stages/brainstorm/SKILL.md"
+      }
+    ],
     "workflow": [
       {
         "owner": "sf-router",

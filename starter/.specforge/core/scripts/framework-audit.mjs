@@ -32,6 +32,56 @@ function walk(directory, out = []) {
   return out;
 }
 
+function safeJson(path, fallback = null) {
+  try {
+    return JSON.parse(read(path));
+  } catch {
+    return fallback;
+  }
+}
+
+function skillPackages() {
+  const skillsRoot = join(root, "skills");
+  if (!existsSync(skillsRoot)) return [];
+  return readdirSync(skillsRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => {
+      const packagePath = `skills/${entry.name}/skill-package.json`;
+      if (!exists(packagePath)) return null;
+      return {
+        id: entry.name,
+        path: packagePath,
+        manifest: safeJson(packagePath),
+      };
+    })
+    .filter((entry) => entry?.manifest)
+    .sort((a, b) => a.id.localeCompare(b.id));
+}
+
+function stageOwnerMap() {
+  const owners = new Map();
+  for (const entry of skillPackages()) {
+    for (const owned of entry.manifest.owns?.stages ?? []) {
+      if (!owned.stage || !owned.path) continue;
+      owners.set(owned.stage, {
+        owner: entry.id,
+        relativePath: `skills/${entry.id}/${owned.path}`,
+      });
+    }
+  }
+  return owners;
+}
+
+function stageOwnerEntries() {
+  return [...stageOwnerMap().entries()]
+    .map(([stage, entry]) => ({ stage, ...entry }))
+    .sort((a, b) => a.stage.localeCompare(b.stage));
+}
+
+function routerWorkflowPath(name) {
+  return `skills/sf-router/workflow/${name}`;
+}
+
 function issue(severity, code, message, path = null) {
   return { severity, code, message, path };
 }
@@ -253,9 +303,10 @@ function publicSkillIssues() {
         if (skill.primary_stage && !skill.core_stages.includes(skill.primary_stage)) {
           issues.push(issue("WARN", "public-skill-primary-stage-not-in-core-stages", `${skill.id} primary_stage should also appear in core_stages.`, catalogPath));
         }
+        const stageOwners = stageOwnerMap();
         for (const stage of skill.core_stages) {
-          if (!exists(`core/workflows/stages/${stage}/SKILL.md`)) {
-            issues.push(issue("FAIL", "public-skill-core-stage-missing", `${skill.id} references missing core stage ${stage}.`, catalogPath));
+          if (!stageOwners.has(stage)) {
+            issues.push(issue("FAIL", "public-skill-core-stage-missing", `${skill.id} references stage ${stage}, but no skill package owns it.`, catalogPath));
           }
         }
       }
@@ -444,8 +495,8 @@ function skillPackageIssues() {
 
 function stageSkillIssues() {
   const issues = [];
-  const stagesRoot = join(root, "core/workflows/stages");
-  const readme = read("core/workflows/stages/README.md");
+  const readmePath = routerWorkflowPath("README.md");
+  const readme = exists(readmePath) ? read(readmePath) : "";
   const requiredArtifacts = [
     "intake",
     "research",
@@ -461,12 +512,10 @@ function stageSkillIssues() {
     "wiki_sync",
     "closure",
   ];
-  const stageDirs = readdirSync(stagesRoot, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort();
-  for (const stage of stageDirs) {
-    const skillPath = `core/workflows/stages/${stage}/SKILL.md`;
+  if (!exists(readmePath)) {
+    issues.push(issue("FAIL", "stage-workflow-readme-missing", `${readmePath} is required for stage alias governance.`, readmePath));
+  }
+  for (const { stage, relativePath: skillPath } of stageOwnerEntries()) {
     if (!exists(skillPath)) continue;
     const body = read(skillPath);
     if (!body.startsWith("---")) {
@@ -475,13 +524,13 @@ function stageSkillIssues() {
     if (!body.includes(`name: ${stage}`)) {
       issues.push(issue("WARN", "stage-skill-name-mismatch", `${skillPath} frontmatter should name the stage folder (${stage}).`, skillPath));
     }
-    if (!readme.includes(`\`${stage}/SKILL.md\``)) {
-      issues.push(issue("FAIL", "stage-skill-not-documented", `${stage}/SKILL.md is not documented in core/workflows/stages/README.md.`, "core/workflows/stages/README.md"));
+    if (!readme.includes(stage)) {
+      issues.push(issue("FAIL", "stage-skill-not-documented", `${stage} is not documented in ${readmePath}.`, readmePath));
     }
   }
   for (const artifact of requiredArtifacts) {
     if (!readme.includes(`\`${artifact}\``)) {
-      issues.push(issue("WARN", "stage-artifact-alias-missing", `${artifact} is not listed in the stage alias index.`, "core/workflows/stages/README.md"));
+      issues.push(issue("WARN", "stage-artifact-alias-missing", `${artifact} is not listed in the stage alias index.`, readmePath));
     }
   }
   return issues;
@@ -489,7 +538,7 @@ function stageSkillIssues() {
 
 function stageEvalFixtureIssues() {
   const issues = [];
-  const path = "core/workflows/stages/eval-fixtures.json";
+  const path = routerWorkflowPath("eval-fixtures.json");
   if (!exists(path)) return [issue("FAIL", "stage-eval-fixtures-missing", `${path} is required for stage regression coverage.`, path)];
 
   let payload;
@@ -503,10 +552,7 @@ function stageEvalFixtureIssues() {
     issues.push(issue("WARN", "stage-eval-fixtures-version", `${path} should use version 1.`, path));
   }
 
-  const stageDirs = readdirSync(join(root, "core/workflows/stages"), { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort();
+  const stageDirs = stageOwnerEntries().map((entry) => entry.stage);
   const artifactIds = new Set(
     readdirSync(join(root, "core/artifacts/schemas"))
       .filter((name) => name.endsWith(".json"))
@@ -529,7 +575,7 @@ function stageEvalFixtureIssues() {
     }
     fixtureStages.add(fixture.stage);
     if (!stageDirs.includes(fixture.stage)) {
-      issues.push(issue("FAIL", "stage-eval-fixture-unknown-stage", `${fixture.stage} does not match a core workflow stage directory.`, path));
+      issues.push(issue("FAIL", "stage-eval-fixture-unknown-stage", `${fixture.stage} does not match a skill-owned workflow stage.`, path));
     }
     if (fixture.artifact_id !== null && fixture.artifact_id !== undefined && !artifactIds.has(fixture.artifact_id)) {
       issues.push(issue("FAIL", "stage-eval-fixture-unknown-artifact", `${fixture.stage} references unknown artifact ${fixture.artifact_id}.`, path));
@@ -562,7 +608,7 @@ function stageEvalFixtureIssues() {
 
 function stageScoreRubricIssues() {
   const issues = [];
-  const path = "core/workflows/stages/score-rubric.json";
+  const path = routerWorkflowPath("score-rubric.json");
   if (!exists(path)) return [issue("FAIL", "stage-score-rubric-missing", `${path} is required for stage output evaluation governance.`, path)];
 
   let payload;
@@ -595,10 +641,7 @@ function stageScoreRubricIssues() {
     }
   }
 
-  const stageDirs = readdirSync(join(root, "core/workflows/stages"), { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort();
+  const stageDirs = stageOwnerEntries().map((entry) => entry.stage);
   const stageFocus = payload.stage_focus && typeof payload.stage_focus === "object" && !Array.isArray(payload.stage_focus)
     ? payload.stage_focus
     : {};
@@ -631,7 +674,7 @@ function stageScoreRubricIssues() {
 
 function promptSkillDriftIssues() {
   const issues = [];
-  const path = "core/workflows/stages/drift-rules.json";
+  const path = routerWorkflowPath("drift-rules.json");
   if (!exists(path)) return [issue("FAIL", "prompt-skill-drift-rules-missing", `${path} is required to prevent prompt and skill terminology drift.`, path)];
 
   let payload;
@@ -653,6 +696,7 @@ function promptSkillDriftIssues() {
 
   const catalog = exists("skills/catalog.json") ? JSON.parse(read("skills/catalog.json")) : { skills: [] };
   const catalogSkills = new Map((catalog.skills ?? []).map((skill) => [skill.id, skill]));
+  const stageOwners = stageOwnerMap();
   const artifactIds = new Set(
     readdirSync(join(root, "core/artifacts/schemas"))
       .filter((name) => name.endsWith(".json"))
@@ -676,12 +720,12 @@ function promptSkillDriftIssues() {
       issues.push(issue("FAIL", "prompt-skill-gate-artifact-unknown", `${rule.gate} references unknown artifact ${rule.artifact}.`, path));
     }
 
-    const stagePath = `core/workflows/stages/${rule.stage}/SKILL.md`;
+    const stagePath = stageOwners.get(rule.stage)?.relativePath;
     const publicSkillPath = `skills/${rule.public_skill}/SKILL.md`;
     const publicStageLink = `.specforge/skills/${rule.public_skill}/stages/${rule.stage}/SKILL.md`;
     const packagedStagePath = `skills/${rule.public_skill}/stages/${rule.stage}/SKILL.md`;
-    if (!exists(stagePath)) {
-      issues.push(issue("FAIL", "prompt-skill-gate-stage-missing", `${rule.gate} stage skill is missing: ${stagePath}.`, path));
+    if (!stagePath || !exists(stagePath)) {
+      issues.push(issue("FAIL", "prompt-skill-gate-stage-missing", `${rule.gate} stage skill has no owner or is missing: ${rule.stage}.`, path));
     } else {
       const body = read(stagePath);
       if (!body.includes(rule.gate)) {
@@ -744,7 +788,7 @@ function promptSkillDriftIssues() {
     if (term.output && !outputs.has(term.output)) {
       issues.push(issue("FAIL", "prompt-skill-artifact-output-unknown", `${term.artifact} output ${term.output} is not owned by a workflow schema.`, path));
     }
-    if (term.stage && !exists(`core/workflows/stages/${term.stage}/SKILL.md`)) {
+    if (term.stage && !stageOwners.has(term.stage)) {
       issues.push(issue("FAIL", "prompt-skill-artifact-stage-missing", `${term.artifact} references missing stage ${term.stage}.`, path));
     }
     const catalogSkill = catalogSkills.get(term.public_skill);
@@ -810,7 +854,7 @@ function schemaContractIssues() {
 
 function placeholderIssues(files) {
   const issues = [];
-  const targets = files.filter((item) => item.startsWith("core/standards/") || item.startsWith("skills/") || item.startsWith("core/workflows/stages/"));
+  const targets = files.filter((item) => item.startsWith("core/standards/") || item.startsWith("skills/"));
   for (const file of targets) {
     const count = read(file)
       .split(/\r?\n/)

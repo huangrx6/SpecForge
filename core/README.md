@@ -17,7 +17,7 @@
 ## 阅读顺序
 
 1. 想知道当前怎么推进：读 `standards/workflow.md` 和 `standards/stage-playbook.md`。
-2. 想知道某阶段怎么做：读 `workflows/stages/<stage>/SKILL.md`。
+2. 想知道某阶段怎么做：读 `.specforge/skills/<stage-owner>/stages/<stage>/SKILL.md`。
 3. 想知道脚本怎么用：读 `scripts/README.md`。
 4. 想选技术栈：读 `profiles/README.md` 和对应 profile。
 5. 想调用 UI / 研究 / 测试等辅助能力：读 `skills/ORCHESTRATION.md`。

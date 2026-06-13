@@ -1,6 +1,6 @@
 # 阶段技能母本
 
-`core/workflows/stages/` 是兼容镜像和底层发行资产。日常维护优先进入对应 `skills/<stage-owner>/stages/` 技能包；每个 stage 只能有一个 owner，其它 `sf-*` 技能通过 `skill-package.json#uses.stages` 引用 owner，不复制阶段文件。
+阶段说明统一维护在对应 `skills/<stage-owner>/stages/` 技能包中；每个 stage 只能有一个 owner，其它 `sf-*` 技能通过 `skill-package.json#uses.stages` 引用 owner，不复制阶段文件。
 
 ## 结构约定
 

@@ -19,6 +19,11 @@
         "stage": "wiki-sync",
         "owner": "sf-wiki",
         "path": "../sf-wiki/stages/wiki-sync/SKILL.md"
+      },
+      {
+        "stage": "steering",
+        "owner": "sf-steering",
+        "path": "../sf-steering/stages/steering/SKILL.md"
       }
     ],
     "workflow": [
