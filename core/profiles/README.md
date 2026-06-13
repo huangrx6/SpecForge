@@ -22,6 +22,26 @@ profiles/
 | Database | `database/rdbms-postgresql` | full | 事务、复杂查询、JSON 支持 | 无 |
 | Capability | `capabilities/processing-ai-jobs` | partial | 文件上传、批处理、LLM 调用 | 并发限制由需求决定 |
 
+## 内置 Profile 目录
+
+| 类型 | Profile | 主要适用 |
+|---|---|---|
+| Frontend | `frontend/react-vite-tailwind-ts` | 内部管理台、运营工具、复杂表单和重交互 SPA |
+| Frontend | `frontend/next-app-router-tailwind-ts` | SEO 页面、文档站、官网、Next 一体化应用和 BFF |
+| Frontend | `frontend/vue-vite-tailwind-ts` | 既有 Vue 生态、Element Plus / Naive UI / shadcn-vue 管理端 |
+| Backend | `backend/python-fastapi` | AI 服务、数据管道、异步 I/O 网关和快速中台 |
+| Backend | `backend/spring-boot-java` | 企业后端、复杂事务、权限体系和批处理集成 |
+| Backend | `backend/golang-standard` | 高并发 API、网关、worker、CLI 和轻量微服务 |
+| Backend | `backend/next-api-routes` | Next.js Route Handlers / BFF / Webhook / 轻量后端端点 |
+| Database | `database/rdbms-postgresql` | 强事务、复杂查询、JSONB、全文搜索、报表和云托管关系库 |
+| Database | `database/rdbms-mysql` | 既有 MySQL 生产体系、OLTP、主从、备份和成熟运维 |
+| Database | `database/embedded-sqlite` | 桌面、本地优先、CLI、插件、边缘节点和单机工具 |
+| Capability | `capabilities/processing-ai-jobs` | 文件处理、批处理、LLM / AI 调用、限流和任务调度 |
+| Capability | `capabilities/architecture-patterns` | 分层、模块化单体、事件驱动、状态机和扩展点 |
+| Capability | `capabilities/security` | 鉴权、权限、敏感数据、签名、审计和输入输出安全 |
+| Capability | `capabilities/observability` | 日志、指标、trace、健康检查、告警和问题定位 |
+| Capability | `capabilities/testing` | 单元、集成、契约、E2E、浏览器自动化、测试数据和 CI |
+
 ## 选择顺序
 
 1. 先判断本次是否真的需要 profile；纯文案、纯配置、小 bugfix 可写 N/A。

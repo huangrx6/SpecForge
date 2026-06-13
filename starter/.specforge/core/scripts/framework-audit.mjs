@@ -62,6 +62,22 @@ function missingProfileReferences(files) {
   return issues;
 }
 
+function profileCatalogIssues() {
+  const issues = [];
+  const readme = read("core/profiles/README.md");
+  const profilesRoot = join(root, "core/profiles");
+  const profileFiles = walk(profilesRoot)
+    .filter((file) => file.endsWith(".md") && file !== "core/profiles/README.md")
+    .map((file) => file.replace("core/profiles/", ""))
+    .sort();
+  for (const profile of profileFiles) {
+    if (!readme.includes(`\`${profile.replace(/\.md$/, "")}\``) && !readme.includes(`\`${profile}\``)) {
+      issues.push(issue("FAIL", "profile-not-cataloged", `${profile} is not listed in core/profiles/README.md.`, "core/profiles/README.md"));
+    }
+  }
+  return issues;
+}
+
 function standardsIndexIssues() {
   const issues = [];
   const standards = readdirSync(join(root, "core/standards")).filter((name) => name.endsWith(".md") && !["README.md", "index.md"].includes(name));
@@ -282,6 +298,7 @@ const files = walk(root);
 const checks = [
   { id: "core-references", issues: missingCoreReferences(files) },
   { id: "profile-references", issues: missingProfileReferences(files) },
+  { id: "profile-catalog", issues: profileCatalogIssues() },
   { id: "standards-index", issues: standardsIndexIssues() },
   { id: "design-system-contract", issues: designSystemIssues() },
   { id: "starter-manifest", issues: starterManifestIssues() },
