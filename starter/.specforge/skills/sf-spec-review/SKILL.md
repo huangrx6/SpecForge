@@ -33,6 +33,7 @@ description: 审查 SpecForge 规格；用于随时 review 已存在的 PRD、re
 ```bash
 node .specforge/core/scripts/artifact-graph-status.mjs
 node .specforge/core/scripts/instructions.mjs
+node .specforge/core/scripts/quality-suite.mjs
 ```
 
 2. 如果用户明确要求 review 某个已有 artifact，进入 Artifact Review。
@@ -56,6 +57,7 @@ node .specforge/core/scripts/create-artifact.mjs spec_review
 1. 建立 artifact availability matrix。
 2. 建立 traceability matrix：用户目标 / PRD / requirements / UI / technical design / tasks / verification 是否贯通。
 3. 任一必审 artifact 缺失、确认标记缺失或关键 `[NEEDS ...]` 未闭环时，不得批准。
+4. Gate Review 必须读取 `quality-suite.mjs` 输出；任何 `FAIL` 都要转成 P0/P1 finding，并按失败项 route 退回对应阶段。Artifact Review 按用户指定 artifact 读取相关质量脚本输出，例如 requirements / technical_design / tasks 对应 `artifact-quality.mjs`，research / technical_design 来源事实对应 `source-quality.mjs`。
 
 ### C. 做分 artifact 质量审查
 
@@ -99,12 +101,14 @@ node .specforge/core/scripts/gate.mjs spec_review REJECTED
 | 有 UI 影响但没有 Pencil `.pen`、截图、保存后重读或状态矩阵 | `REQUEST_CHANGES`，退回 `sf-ui-design` |
 | technical design 存在关键 `unknown` 或 `[NEEDS ... DECISION]` | `REQUEST_CHANGES`，通常退回 `sf-brainstorm` / `sf-tech-design` |
 | tasks 缺核心字段或无法追溯到需求 / 设计 / 验证 | `REQUEST_CHANGES`，退回 `sf-tasking` |
+| `quality-suite.mjs` 存在 FAIL | `REQUEST_CHANGES`，按失败项 route 退回对应 `sf-*` |
 | 只有 P2 / P3，且残余风险已记录 | 可 `APPROVED` |
 
 ## 完成标准
 
 - Artifact Review：review 文件存在，包含 scope、findings、是否可进入下一阶段和 return path；不更新 gate。
 - Gate Review：`spec-review-v1.md` 有明确 decision；`APPROVED` 时 gate 状态与 evidence 路径一致；未批准时 gate evidence 保持 `null`。
+- Gate Review：`quality-suite.mjs` 无 `FAIL`；如有 `WARN`，已在 review 中记录 residual risk、owner 或后续验证承接。
 - 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 
 ## 不做

@@ -42,6 +42,7 @@ Gate Review：
 
 - 写入 `02-spec-review/spec-review-v1.md`
 - 通过 `node .specforge/core/scripts/gate.mjs spec_review <status> ...` 更新门禁。`APPROVED` 必须带 `--evidence 02-spec-review/spec-review-v1.md`；`REQUEST_CHANGES` / `REJECTED` 不带 evidence。
+- 批准前必须运行 `node .specforge/core/scripts/quality-suite.mjs`；任何 `FAIL` 都转成 P0/P1 finding，并按失败项 route 退回对应阶段。Artifact Review 按被审 artifact 读取相关质量脚本输出作为辅助证据。
 
 ## 模式选择
 
@@ -117,6 +118,7 @@ Gate Review：
 - 必审 artifact 缺失，或 workflow / components 与 schema 计算结果矛盾。
 - 产品 / 页面 / 全栈应用没有功能候选池和用户选择记录。
 - 计划、设计或任务不能追溯到用户澄清、代码探索或外部研究结论。
+- quality suite 仍有 `FAIL`，或相关质量脚本的 `FAIL` 没有被转成 finding 和 return path。
 - 用户可见页面没有 Pencil 原型、导出截图、视觉质量 review 或可信 N/A。
 - UI 原型只是默认控件堆叠，未覆盖关键状态、权限、响应式或异常态。
 - 有 UI 影响但 `ui-design.md#9` 没有 Pencil 保存状态、保存后重读校验或截图证据。
@@ -174,5 +176,6 @@ Artifact Review：
 Gate Review：
 
 - gate evidence 文件存在。
+- `quality-suite.mjs` 无 `FAIL`；`WARN` 已在 review 中记录 residual risk、owner 或后续验证承接。
 - `APPROVED` 时 gate 状态和证据路径一致；`REQUEST_CHANGES` / `REJECTED` 时 gate 状态已更新且 evidence 为 `null`。
 - 未批准时明确下一步应回哪个 artifact。

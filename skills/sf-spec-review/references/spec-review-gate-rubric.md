@@ -13,7 +13,7 @@ Artifact Review 可以在任意时刻执行，但必须写明 scope 和“本次
 
 ## Gate Review 必审范围
 
-先读取 `work.yaml`、workflow schema 和 components flags，不要只凭文件存在判断。
+先读取 `work.yaml`、workflow schema 和 components flags，不要只凭文件存在判断。同时运行 `node .specforge/core/scripts/quality-suite.mjs`，把机器检查结果作为 review 输入；`FAIL` 不得被人工口头覆盖，必须转成 finding 和 return path。
 
 | 条件 | 必审 artifact |
 |---|---|
@@ -99,4 +99,5 @@ Return path 规则：
 - 所有必审 artifact 存在并通过。
 - 所有用户确认门禁都有来源。
 - UI / Tech / Tasks 的证据能支撑 implementation。
+- `quality-suite.mjs` 无 `FAIL`；`WARN` 已在 residual risk 或后续任务 / 验证中承接。
 - `APPROVED` gate 命令带 evidence；非批准命令不带 evidence。
