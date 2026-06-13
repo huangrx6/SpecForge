@@ -45,11 +45,23 @@ UI design 不是一上来画图。先判断哪些问题会改变页面结构、�
 
 - 只读取当前问题需要的 reference，不全量搬运外部 skill。
 - 第三方 persona、流程或模板只是候选，必须经过用户确认后才能写成 `[UI DECISION CONFIRMED]`。`design-system` 可以提供推荐方向，但不能替代人工视觉方向确认。
+- `design-system` 的 sample board 是人工感官确认材料：要写 2-3 个方向、样例描述、采用/不采用、推荐项和风险；不能只写“现代、简洁、高级”。
 - 外部 skill 的内容要提取成 `体验方向候选 / 用户旅程风险 / 信息架构问题 / 可访问性约束 / 视觉 review 项`，不要原样复制模板标题。
 - 会影响方向的内容放入 `高影响未知`；只是后续 UI 设计细节的内容放入 `可安全默认` 或 `sf-ui-design` 输入。
 - 用户已经明确确认 PC 端业务系统规范时，不再让 Agent 自行选择视觉风格；必须把该规范作为 design-system reference，并让具体数值覆盖通用 `design.md` 的默认 UI 基准。
 - 如果只是把已确认 UI 方向落成页面地图、状态矩阵和 Pencil 原型，不要再在 brainstorm 中写完整 UI design。
 - 涉及当前产品、竞品、法规、版本或安全事实时，第三方 skill 不能背书，必须另行查证或标为假设。
+
+## Design-system 工具链
+
+当 work item 有 UI 影响，且需要视觉语言、shadcn-vue、去廉价感、动效或页面模式时，按以下顺序使用 design-system：
+
+1. 读取 `core/skills/ui-ux/design-system/SKILL.md`。
+2. 按场景读取 foundations：后台优先 density、spacing、typography、colors；H5 补 responsive、content；品牌或大屏补 motion、data visualization。
+3. 读取相关 components 和 pages，形成项目级组件契约和页面模式。
+4. 使用 `prompts/sample-board.md` 形成 2-3 个可确认方向。
+5. 用户确认后进入 Pencil；没有确认且风险高时停止。
+6. Pencil 截图后使用 `prompts/visual-qa.md` 和 `references/design-review-rubric.md` 进行审查并修一轮。
 
 ## Pencil 保存与重读门禁
 
