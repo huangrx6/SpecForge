@@ -51,6 +51,13 @@
       "purpose": "Safely continue a work item through the next ready stages."
     },
     {
+      "id": "sf-report",
+      "layer": "router",
+      "primary_stage": "status",
+      "core_stages": ["status"],
+      "purpose": "Generate human-readable HTML reports and review packages from current artifacts."
+    },
+    {
       "id": "sf-onboard",
       "layer": "project-setup",
       "primary_stage": "steering",

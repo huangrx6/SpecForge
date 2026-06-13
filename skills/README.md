@@ -8,7 +8,7 @@
 
 | 分层 | Layer ID | Skills | 用途 |
 |---|---|---|---|
-| Router | `router` | `sf-router`, `sf-doctor`, `sf-work` | 判断当前状态、健康检查、一键推进 |
+| Router | `router` | `sf-router`, `sf-doctor`, `sf-work`, `sf-report` | 判断当前状态、健康检查、一键推进、生成 HTML 阅读报告 |
 | Project Setup | `project-setup` | `sf-onboard`, `sf-steering`, `sf-intake` | 接入项目、建立代码画像、创建 work item |
 | Product / Discovery | `product-discovery` | `sf-brainstorm`, `sf-discovery`, `sf-prd`, `sf-requirements` | 模糊需求、研究、PRD、可测试需求 |
 | Design / Technical Planning | `design-technical-planning` | `sf-ui-design`, `sf-tech-design`, `sf-tasking`, `sf-spec-review` | UI 设计、技术设计、任务拆解、规格审查 |
@@ -20,6 +20,7 @@
 |---|---|
 | “继续 / 自动推进 / 做完” | `sf-work` |
 | “现在到哪了 / 健康吗” | `sf-doctor` |
+| “生成 HTML 报告 / 整理成页面 / 评审材料 / 只看某个模块” | `sf-report` |
 | “新需求 / 新 bug / 帮我整理一下” | `sf-intake` |
 | “先想想方案 / 有点模糊” | `sf-brainstorm` |
 | “写 PRD / 需求 / 技术方案 / UI 设计” | 对应 `sf-prd` / `sf-requirements` / `sf-tech-design` / `sf-ui-design` |

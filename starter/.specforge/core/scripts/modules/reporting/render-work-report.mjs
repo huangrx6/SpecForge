@@ -463,76 +463,156 @@ function render(diagnosis, workItemYaml, generatedAt) {
   <style>
     :root {
       color-scheme: light;
-      --bg: #f7f8fb;
-      --panel: #ffffff;
-      --text: #20242a;
-      --muted: #667085;
-      --line: #d8dde8;
-      --accent: #245fce;
-      --ok: #137333;
-      --warn: #a15c00;
-      --bad: #b3261e;
-      --neutral: #4b5565;
-      --flow-edge: #98a2b3;
+      --bg: #f5f7f8;
+      --surface: #ffffff;
+      --surface-soft: #f8fafb;
+      --surface-tint: #eef6f3;
+      --text: #172026;
+      --text-strong: #0c151a;
+      --muted: #66747e;
+      --line: #d9e2e5;
+      --line-strong: #c2ced3;
+      --accent: #245e71;
+      --accent-strong: #184a59;
+      --accent-soft: #e4f1f3;
+      --ok: #16794f;
+      --ok-bg: #e6f5ee;
+      --warn: #a76614;
+      --warn-bg: #fff3dc;
+      --bad: #b42334;
+      --bad-bg: #fde8eb;
+      --neutral: #53606a;
+      --neutral-bg: #eef1f3;
+      --shadow: 0 18px 48px rgba(20, 38, 45, 0.08);
+      --shadow-soft: 0 8px 22px rgba(20, 38, 45, 0.06);
+      --flow-edge: #8aa0a8;
+      --radius-sm: 8px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --duration-fast: 140ms;
+      --duration-base: 220ms;
     }
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      background: var(--bg);
+      background:
+        radial-gradient(circle at 12% -10%, rgba(36, 94, 113, 0.12), transparent 32%),
+        linear-gradient(180deg, #edf5f4 0, #f5f7f8 280px),
+        var(--bg);
       color: var(--text);
-      font: 14px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font: 14px/1.62 Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
     header {
-      background: var(--panel);
-      border-bottom: 1px solid var(--line);
-      padding: 24px clamp(16px, 4vw, 48px);
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 28px clamp(16px, 4vw, 44px) 16px;
     }
     main {
-      padding: 24px clamp(16px, 4vw, 48px) 48px;
-      max-width: 1280px;
+      padding: 16px clamp(16px, 4vw, 44px) 56px;
+      max-width: 1320px;
       margin: 0 auto;
     }
-    h1, h2, h3, h4 { line-height: 1.25; margin: 0 0 12px; }
-    h1 { font-size: 28px; }
-    h2 { font-size: 20px; margin-top: 28px; }
-    h3 { font-size: 16px; }
-    h4 { font-size: 14px; }
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 16px;
+    h1, h2, h3, h4 {
+      color: var(--text-strong);
+      line-height: 1.25;
+      margin: 0 0 12px;
+      letter-spacing: 0;
     }
-    nav a {
+    h1 {
+      max-width: 920px;
+      font-size: 32px;
+      font-weight: 760;
+    }
+    h2 {
+      font-size: 20px;
+      margin-top: 34px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+    h3 { font-size: 16px; }
+    h4 { font-size: 14px; color: var(--neutral); }
+    p { margin: 0 0 12px; }
+    a {
       color: var(--accent);
       text-decoration: none;
+    }
+    a:hover { color: var(--accent-strong); }
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 18px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.88);
       border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 6px 10px;
-      background: #fbfcff;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(14px);
+    }
+    nav a {
+      color: var(--neutral);
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      padding: 7px 10px;
+      background: transparent;
+      font-size: 13px;
+      font-weight: 650;
+      transition: background var(--duration-fast) ease, border-color var(--duration-fast) ease, color var(--duration-fast) ease;
+    }
+    nav a:hover {
+      color: var(--accent-strong);
+      background: var(--accent-soft);
+      border-color: #c7e1e6;
+    }
+    main > section {
+      scroll-margin-top: 82px;
     }
     table {
       width: 100%;
+      margin: 12px 0 18px;
       border-collapse: collapse;
-      background: var(--panel);
+      background: var(--surface);
       border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
     }
     th, td {
       border-bottom: 1px solid var(--line);
-      padding: 10px 12px;
+      padding: 11px 13px;
       text-align: left;
       vertical-align: top;
     }
-    th { background: #eef2f8; }
+    tr:last-child td { border-bottom: 0; }
+    tbody tr {
+      transition: background var(--duration-fast) ease;
+    }
+    tbody tr:hover {
+      background: #fbfdfd;
+    }
+    th {
+      background: var(--surface-soft);
+      color: var(--neutral);
+      font-size: 12px;
+      font-weight: 760;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
     pre {
       margin: 0;
       overflow: auto;
       white-space: pre-wrap;
       word-break: break-word;
-      background: #f4f6fa;
+      background: #f7f9f9;
       border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 10px;
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      color: #263238;
+      font-size: 13px;
     }
     .summary {
       display: grid;
@@ -541,31 +621,50 @@ function render(diagnosis, workItemYaml, generatedAt) {
       margin-top: 16px;
     }
     .metric, .card, .output {
-      background: var(--panel);
+      background: var(--surface);
       border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 14px;
+      border-radius: var(--radius-md);
+      padding: 15px;
+      box-shadow: var(--shadow-soft);
+      transition: transform var(--duration-base) ease, box-shadow var(--duration-base) ease, border-color var(--duration-base) ease;
+    }
+    .card:hover, .output:hover {
+      border-color: var(--line-strong);
+      box-shadow: var(--shadow);
+      transform: translateY(-1px);
     }
     .metric strong {
       display: block;
-      font-size: 18px;
+      color: var(--text-strong);
+      font-size: 20px;
+      line-height: 1.2;
       margin-top: 4px;
+    }
+    .metric span {
+      display: block;
+      color: var(--muted);
+      margin-top: 4px;
+      font-size: 12px;
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 14px;
     }
     .two { grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); }
     .action-board {
-      background: var(--panel);
+      background: var(--surface);
       border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 18px;
-      margin-bottom: 24px;
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      margin-bottom: 26px;
+      box-shadow: var(--shadow);
     }
     .action-board h2 {
-      font-size: 24px;
+      border: 0;
+      padding: 0;
+      margin-top: 0;
+      font-size: 26px;
       margin-bottom: 8px;
     }
     .action-grid {
@@ -587,11 +686,15 @@ function render(diagnosis, workItemYaml, generatedAt) {
     .badge {
       display: inline-block;
       border-radius: 999px;
-      padding: 2px 8px;
+      padding: 3px 9px;
       font-size: 12px;
-      border: 1px solid currentColor;
-      font-weight: 600;
+      border: 1px solid transparent;
+      font-weight: 700;
     }
+    .badge.ok { color: var(--ok); background: var(--ok-bg); border-color: #bfe7d4; }
+    .badge.warn { color: var(--warn); background: var(--warn-bg); border-color: #f1d197; }
+    .badge.bad { color: var(--bad); background: var(--bad-bg); border-color: #f3b8c0; }
+    .badge.neutral { color: var(--neutral); background: var(--neutral-bg); border-color: #dce2e5; }
     .ok { color: var(--ok); }
     .warn { color: var(--warn); }
     .bad { color: var(--bad); }
@@ -599,11 +702,12 @@ function render(diagnosis, workItemYaml, generatedAt) {
     .muted { color: var(--muted); }
     .flow-wrap {
       overflow-x: auto;
-      background: var(--panel);
+      background: var(--surface);
       border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 10px;
+      border-radius: var(--radius-md);
+      padding: 12px;
       margin-bottom: 14px;
+      box-shadow: var(--shadow-soft);
     }
     .flow-edge {
       fill: none;
@@ -612,10 +716,12 @@ function render(diagnosis, workItemYaml, generatedAt) {
     }
     .flow-arrow { fill: var(--flow-edge); }
     .flow-node rect {
-      fill: #ffffff;
+      fill: var(--surface);
       stroke: currentColor;
       stroke-width: 2;
+      transition: fill var(--duration-fast) ease, stroke var(--duration-fast) ease;
     }
+    a:hover .flow-node rect { fill: var(--surface-tint); }
     .flow-node text {
       fill: var(--text);
       font-size: 13px;
@@ -628,6 +734,22 @@ function render(diagnosis, workItemYaml, generatedAt) {
       font-size: 11px;
       font-weight: 700;
       fill: currentColor;
+    }
+    @media (max-width: 720px) {
+      header { padding-top: 20px; }
+      h1 { font-size: 24px; }
+      nav { position: static; }
+      .two { grid-template-columns: 1fr; }
+      table { display: block; overflow-x: auto; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+      .card:hover, .output:hover { transform: none; }
     }
   </style>
 </head>

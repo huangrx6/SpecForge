@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "skill": "sf-report",
+  "description": "Commands this skill package is expected to use.",
+  "commands": [
+    "node .specforge/core/scripts/status.mjs",
+    "node .specforge/core/scripts/instructions.mjs",
+    "node .specforge/core/scripts/render-work-report.mjs",
+    "node .specforge/core/scripts/render-work-report.mjs --work-item <work-id>",
+    "node .specforge/core/scripts/workflow-package.mjs"
+  ]
+}

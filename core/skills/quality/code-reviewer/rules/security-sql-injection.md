@@ -45,10 +45,10 @@ def get_user(user_id):
 ```python
 def get_user(user_id: int) -> Optional[Dict[str, Any]]:
     """Safely retrieve user by ID.
-    
+
     Args:
         user_id: User ID to look up
-        
+
     Returns:
         User record or None if not found
     """

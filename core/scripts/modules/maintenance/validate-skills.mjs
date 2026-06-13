@@ -122,7 +122,7 @@ function runInternalValidation() {
     ["closure", { owner: "sf-close", users: ["sf-close"] }],
     ["gap-report", { owner: "sf-discovery", users: ["sf-discovery"] }],
     ["research", { owner: "sf-discovery", users: ["sf-discovery"] }],
-    ["status", { owner: "sf-doctor", users: ["sf-doctor", "sf-work"] }],
+    ["status", { owner: "sf-doctor", users: ["sf-doctor", "sf-work", "sf-report"] }],
     ["steering", { owner: "sf-steering", users: ["sf-steering", "sf-onboard", "sf-intake", "sf-wiki", "sf-close"] }],
   ]);
 
@@ -176,6 +176,7 @@ function runInternalValidation() {
       "sf-close",
       "sf-doctor",
       "sf-work",
+      "sf-report",
     ]) {
       if (!rootContent.includes(required)) errors.push(`${rootSkill}: missing route to ${required}`);
     }

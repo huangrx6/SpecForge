@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
   appendArchiveRegistryEntry,
@@ -7,6 +9,7 @@ import {
   normalizeEmptyActive,
   parseRegistryEntries,
   removeRegistryEntry,
+  layout,
   root,
   validateSchema,
 } from "../../lib/specforge.mjs";
@@ -19,7 +22,7 @@ function writeFixture(path, content) {
 }
 
 function skillStageOwners() {
-  const skillsRoot = join(root, "skills");
+  const skillsRoot = join(root, layout.skills);
   return readdirSync(skillsRoot, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .flatMap((entry) => {
@@ -164,7 +167,7 @@ function testWikiQualityGraphFactReferences() {
 }
 
 function testStageEvalFixturesCoverStages() {
-  const fixturesPath = join(root, "skills/sf-router/workflow/eval-fixtures.json");
+  const fixturesPath = join(root, layout.skills, "sf-router/workflow/eval-fixtures.json");
   const payload = JSON.parse(readFileSync(fixturesPath, "utf8"));
   assert.equal(payload.version, 1);
 
@@ -174,8 +177,8 @@ function testStageEvalFixturesCoverStages() {
   assert.deepEqual(fixtureStages, stageDirs);
 
   const artifactIds = new Set();
-  for (const file of readdirSync(join(root, "core/artifacts/schemas")).filter((name) => name.endsWith(".json"))) {
-    const schema = JSON.parse(readFileSync(join(root, "core/artifacts/schemas", file), "utf8"));
+  for (const file of readdirSync(join(root, layout.schemas)).filter((name) => name.endsWith(".json"))) {
+    const schema = JSON.parse(readFileSync(join(root, layout.schemas, file), "utf8"));
     for (const artifact of schema.artifacts ?? []) artifactIds.add(artifact.id);
   }
 
@@ -192,7 +195,7 @@ function testStageEvalFixturesCoverStages() {
 }
 
 function testStageScoreRubricCoversStages() {
-  const rubricPath = join(root, "skills/sf-router/workflow/score-rubric.json");
+  const rubricPath = join(root, layout.skills, "sf-router/workflow/score-rubric.json");
   const payload = JSON.parse(readFileSync(rubricPath, "utf8"));
   assert.equal(payload.version, 1);
   assert.ok(payload.dimensions.length >= 5);
@@ -215,13 +218,13 @@ function testStageScoreRubricCoversStages() {
 }
 
 function testPromptSkillDriftRules() {
-  const rulesPath = join(root, "skills/sf-router/workflow/drift-rules.json");
+  const rulesPath = join(root, layout.skills, "sf-router/workflow/drift-rules.json");
   const payload = JSON.parse(readFileSync(rulesPath, "utf8"));
   assert.equal(payload.version, 1);
   assert.ok(payload.gate_rules.length >= 4);
   assert.ok(payload.artifact_terms.length >= 8);
 
-  const catalog = JSON.parse(readFileSync(join(root, "skills/catalog.json"), "utf8"));
+  const catalog = JSON.parse(readFileSync(join(root, layout.skills, "catalog.json"), "utf8"));
   const catalogSkills = new Map(catalog.skills.map((skill) => [skill.id, skill]));
   const owners = new Map(skillStageOwners().map((entry) => [entry.stage, entry]));
 
@@ -235,8 +238,8 @@ function testPromptSkillDriftRules() {
     const stageOwner = owners.get(rule.stage);
     assert.ok(stageOwner, `${rule.stage} must have a skill package owner`);
     const stageSkill = readFileSync(stageOwner.path, "utf8");
-    const publicSkill = readFileSync(join(root, "skills", rule.public_skill, "SKILL.md"), "utf8");
-    const packagedStage = join(root, "skills", rule.public_skill, "stages", rule.stage, "SKILL.md");
+    const publicSkill = readFileSync(join(root, layout.skills, rule.public_skill, "SKILL.md"), "utf8");
+    const packagedStage = join(root, layout.skills, rule.public_skill, "stages", rule.stage, "SKILL.md");
     assert.ok(stageSkill.includes(rule.gate), `${rule.stage} core skill must mention ${rule.gate}`);
     assert.ok(stageSkill.includes(rule.evidence), `${rule.stage} core skill must mention ${rule.evidence}`);
     assert.ok(readFileSync(packagedStage, "utf8").includes(rule.evidence), `${rule.public_skill} packaged stage must mention ${rule.evidence}`);
@@ -347,6 +350,27 @@ function testTechnicalDesignContractQuality() {
   }
 }
 
+function testProjectInitDoctorSmoke() {
+  if (layout.kind !== "source") return;
+
+  const target = mkdtempSync(join(tmpdir(), "specforge-init-smoke-"));
+  try {
+    const result = spawnSync(process.execPath, ["cli/specforge.mjs", "init", "--dir", target], {
+      cwd: root,
+      encoding: "utf8",
+      maxBuffer: 10 * 1024 * 1024,
+    });
+    assert.equal(
+      result.status,
+      0,
+      `specforge init smoke failed\nERROR: ${result.error?.message ?? "none"}\nSIGNAL: ${result.signal ?? "none"}\nSTDOUT:\n${result.stdout ?? ""}\nSTDERR:\n${result.stderr ?? ""}`,
+    );
+    assert.equal(existsSync(join(target, ".specforge/core/scripts/doctor.mjs")), true);
+  } finally {
+    rmSync(target, { recursive: true, force: true });
+  }
+}
+
 testRegistrySingleActiveRemoval();
 testRegistryKeepsOtherActiveEntries();
 testArchiveAppend();
@@ -357,5 +381,6 @@ testStageScoreRubricCoversStages();
 testPromptSkillDriftRules();
 testArtifactQualityProfiles();
 testTechnicalDesignContractQuality();
+testProjectInitDoctorSmoke();
 
 console.log("SpecForge self-test passed.");

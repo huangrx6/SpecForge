@@ -38,10 +38,10 @@ from typing import Optional, Dict, Any
 
 def get_user(id: int) -> Optional[Dict[str, Any]]:
     """Fetch user by ID.
-    
+
     Args:
         id: User ID
-        
+
     Returns:
         User dict or None if not found
     """
@@ -49,11 +49,11 @@ def get_user(id: int) -> Optional[Dict[str, Any]]:
 
 def process_order(order: Dict[str, Any], discount: Optional[float] = None) -> float:
     """Calculate order total with optional discount.
-    
+
     Args:
         order: Order dictionary with 'total' key
         discount: Discount rate (0.0-1.0), e.g. 0.1 for 10% off
-        
+
     Returns:
         Final price after discount
     """

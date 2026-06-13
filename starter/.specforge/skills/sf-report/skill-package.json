@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "id": "sf-report",
+  "layer": "router",
+  "primary_stage": "status",
+  "purpose": "Generate human-readable HTML reports and review packages from current SpecForge artifacts.",
+  "owns": {
+    "stages": [],
+    "workflow": []
+  },
+  "uses": {
+    "stages": [
+      {
+        "stage": "status",
+        "owner": "sf-doctor",
+        "path": "../sf-doctor/stages/status/SKILL.md"
+      }
+    ],
+    "workflow": [
+      {
+        "owner": "sf-router",
+        "path": "../sf-router/workflow/README.md"
+      }
+    ]
+  },
+  "commands": "commands.json"
+}

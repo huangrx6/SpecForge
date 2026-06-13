@@ -27,11 +27,11 @@ Each query has network latency (~1-50ms), so 1000 queries = 1-50 seconds of wait
 # ❌ N+1 queries
 def get_posts_with_authors():
     posts = Post.objects.all()  # 1 query: SELECT * FROM posts
-    
+
     for post in posts:
         # N queries (one per post): SELECT * FROM users WHERE id = ?
         print(f"{post.title} by {post.author.name}")
-    
+
     return posts
 
 # With 100 posts: 101 database queries!
@@ -42,7 +42,7 @@ def get_posts_with_authors():
 // ❌ N+1 queries
 async function getPostsWithAuthors() {
   const posts = await Post.findAll();  // 1 query
-  
+
   for (const post of posts) {
     // N queries
     const author = await User.findByPk(post.authorId);
@@ -75,10 +75,10 @@ const resolvers = {
 def get_posts_with_authors():
     posts = Post.objects.select_related('author').all()
     # Single query: SELECT * FROM posts JOIN users ON posts.author_id = users.id
-    
+
     for post in posts:
         print(f"{post.title} by {post.author.name}")  # No extra query!
-    
+
     return posts
 ```
 
@@ -126,7 +126,7 @@ const userLoader = new DataLoader(async (userIds) => {
   const users = await db.users.findAll({
     where: { id: { in: userIds } }
   });
-  
+
   // Return in same order as requested
   return userIds.map(id => users.find(u => u.id === id));
 });
@@ -146,18 +146,18 @@ const resolvers = {
 # ✅ Fetch all at once
 def get_posts_with_authors():
     posts = Post.objects.all()
-    
+
     # Get all unique author IDs
     author_ids = {post.author_id for post in posts}
-    
+
     # Single query for all authors
     authors = User.objects.filter(id__in=author_ids)
     author_map = {author.id: author for author in authors}
-    
+
     # Attach authors to posts
     for post in posts:
         post.author = author_map[post.author_id]
-    
+
     return posts
 
 # 2 queries total (much better than N+1)

@@ -3,7 +3,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import { contractsForSchema } from "../../lib/stage-contracts.mjs";
-import { templateByOutput, validateSchema } from "../../lib/specforge.mjs";
+import { layout, templateByOutput, validateSchema } from "../../lib/specforge.mjs";
 
 const root = process.cwd();
 const args = process.argv.slice(2);
@@ -13,23 +13,57 @@ function normalize(path) {
   return path.replaceAll("\\", "/");
 }
 
+function materializedPath(path) {
+  const normalized = normalize(path);
+  if (layout.kind === "source") return normalized;
+  if (normalized === "core" || normalized.startsWith("core/")) return normalized.replace(/^core/, layout.runtime);
+  if (normalized === "skills" || normalized.startsWith("skills/")) return normalized.replace(/^skills/, layout.skills);
+  if (normalized === "starter/.specforge" || normalized.startsWith("starter/.specforge/")) {
+    return normalized.replace(/^starter\/\.specforge/, layout.workspace);
+  }
+  return normalized;
+}
+
+function virtualPath(path) {
+  const normalized = normalize(path);
+  if (layout.kind === "source") return normalized;
+  if (normalized === layout.runtime || normalized.startsWith(`${layout.runtime}/`)) return normalized.replace(layout.runtime, "core");
+  if (normalized === layout.skills || normalized.startsWith(`${layout.skills}/`)) return normalized.replace(layout.skills, "skills");
+  if (normalized === layout.workspace || normalized.startsWith(`${layout.workspace}/`)) return normalized.replace(layout.workspace, "starter/.specforge");
+  return normalized;
+}
+
+function absolute(path) {
+  return join(root, materializedPath(path));
+}
+
 function exists(path) {
-  return existsSync(join(root, path));
+  return existsSync(absolute(path));
 }
 
 function read(path) {
-  return readFileSync(join(root, path), "utf8");
+  return readFileSync(absolute(path), "utf8");
 }
 
 function walk(directory, out = []) {
-  for (const entry of readdirSync(directory, { withFileTypes: true })) {
-    const absolute = join(directory, entry.name);
-    const rel = normalize(relative(root, absolute));
+  const start = directory.startsWith(root) ? directory : absolute(directory);
+  if (!existsSync(start)) return out;
+  for (const entry of readdirSync(start, { withFileTypes: true })) {
+    const child = join(start, entry.name);
+    const rel = virtualPath(normalize(relative(root, child)));
     if ([".git", "node_modules", "starter/.specforge"].some((item) => rel === item || rel.startsWith(`${item}/`))) continue;
-    if (entry.isDirectory()) walk(absolute, out);
+    if (entry.isDirectory()) walk(child, out);
     if (entry.isFile()) out.push(rel);
   }
   return out;
+}
+
+function listDir(path, options) {
+  return readdirSync(absolute(path), options);
+}
+
+function fileSize(path) {
+  return statSync(absolute(path)).size;
 }
 
 function safeJson(path, fallback = null) {
@@ -41,7 +75,7 @@ function safeJson(path, fallback = null) {
 }
 
 function skillPackages() {
-  const skillsRoot = join(root, "skills");
+  const skillsRoot = absolute("skills");
   if (!existsSync(skillsRoot)) return [];
   return readdirSync(skillsRoot, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
@@ -106,6 +140,7 @@ function referencedPathIssues(files) {
   const placeholders = /[<>*{}$]|\.\.\.|\/\.\.\.?$/;
   const futureOrExample = /\b(planned|future|example|sample|TBD|建议|候选|后续|新增|输出|生成|创建|归档|写入|目标|按需|可选|例如)\b/i;
   const allowedExternalRegistryPath = /^skills\/[a-z0-9-]+\/SKILL\.md$/;
+  const allowedProjectSourceOnlyPaths = new Set(["README.md", "package.json", "cli/specforge.mjs", "core/scripts/sync-starter.mjs"]);
 
   function normalizeReference(raw) {
     const trimmed = raw.trim().replace(/[),.;:`'"]+$/, "");
@@ -127,6 +162,7 @@ function referencedPathIssues(files) {
       for (const raw of candidates) {
         const target = normalizeReference(raw);
         if (!target) continue;
+        if (layout.kind === "project" && allowedProjectSourceOnlyPaths.has(target)) continue;
         if (!exists(target) && !futureOrExample.test(line)) {
           issues.push(issue("FAIL", "referenced-path-missing", `${raw} does not resolve to ${target}.`, `${file}:${lineIndex + 1}`));
         }
@@ -153,7 +189,7 @@ function missingProfileReferences(files) {
 function profileCatalogIssues() {
   const issues = [];
   const readme = read("core/profiles/README.md");
-  const profilesRoot = join(root, "core/profiles");
+  const profilesRoot = absolute("core/profiles");
   const profileFiles = walk(profilesRoot)
     .filter((file) => file.endsWith(".md") && file !== "core/profiles/README.md")
     .map((file) => file.replace("core/profiles/", ""))
@@ -168,7 +204,7 @@ function profileCatalogIssues() {
 
 function standardsIndexIssues() {
   const issues = [];
-  const standards = readdirSync(join(root, "core/standards")).filter((name) => name.endsWith(".md") && !["README.md", "index.md"].includes(name));
+  const standards = listDir("core/standards").filter((name) => name.endsWith(".md") && !["README.md", "index.md"].includes(name));
   const index = read("core/standards/index.md");
   const readme = read("core/standards/README.md");
   for (const name of standards) {
@@ -285,7 +321,7 @@ function designSystemAestheticIssues() {
 
 function designSystemComponentDepthIssues() {
   const issues = [];
-  const directory = join(root, "core/skills/ui-ux/design-system/components");
+  const directory = absolute("core/skills/ui-ux/design-system/components");
   if (!existsSync(directory)) {
     return [issue("FAIL", "missing-component-directory", "design-system components directory is required.", "core/skills/ui-ux/design-system/components")];
   }
@@ -332,6 +368,7 @@ function testDesignIssues() {
 
 function starterManifestIssues() {
   const issues = [];
+  if (layout.kind !== "source") return issues;
   const manifest = JSON.parse(read("core/starter.manifest.json"));
   const targetSet = new Set((manifest.copy ?? []).map((entry) => entry.to));
   for (const entry of manifest.copy ?? []) {
@@ -368,10 +405,22 @@ function scriptModuleIssues() {
     gates: ["gate.mjs"],
     reporting: ["render-work-report.mjs", "workflow-package.mjs", "handoff-summary.mjs", "traceability-summary.mjs"],
     "code-intelligence": ["codebase-map.mjs", "codebase-index.mjs"],
-    maintenance: ["doctor.mjs", "self-test.mjs", "framework-audit.mjs", "sync-starter.mjs", "update-skills.mjs", "validate-structure.mjs", "validate-skills.mjs", "validate-external-skills.mjs"],
+    maintenance: [
+      "doctor.mjs",
+      "self-test.mjs",
+      "framework-audit.mjs",
+      ...(layout.kind === "source" ? ["sync-starter.mjs"] : []),
+      "update-skills.mjs",
+      "validate-structure.mjs",
+      "validate-skills.mjs",
+      "validate-external-skills.mjs",
+    ],
     archive: ["archive-work.mjs"],
   };
-  const moduleSupportFiles = new Set(["core/scripts/modules/code-intelligence/provider-facts.mjs"]);
+  const moduleSupportFiles = new Set([
+    "core/scripts/modules/code-intelligence/provider-facts.mjs",
+    ...(layout.kind === "project" ? ["core/scripts/modules/maintenance/sync-starter.mjs"] : []),
+  ]);
   const required = [
     "core/scripts/modules/README.md",
     "core/scripts/modules/routing/README.md",
@@ -412,7 +461,7 @@ function scriptModuleIssues() {
         }
       }
     }
-    const rootScripts = readdirSync(join(root, "core/scripts"))
+    const rootScripts = listDir("core/scripts")
       .filter((name) => name.endsWith(".mjs"))
       .sort();
     for (const script of rootScripts) {
@@ -420,7 +469,7 @@ function scriptModuleIssues() {
         issues.push(issue("FAIL", "root-script-not-mapped", `${script} is a root script but is not assigned to a module.`, "core/scripts/modules/README.md"));
       }
     }
-    for (const file of walk(join(root, "core/scripts/modules")).filter((item) => item.endsWith(".mjs")).sort()) {
+    for (const file of walk("core/scripts/modules").filter((item) => item.endsWith(".mjs")).sort()) {
       if (moduleSupportFiles.has(file)) continue;
       const match = file.match(/^core\/scripts\/modules\/([^/]+)\/([^/]+\.mjs)$/);
       if (!match) continue;
@@ -435,6 +484,7 @@ function scriptModuleIssues() {
 
 function packageScriptIssues() {
   const issues = [];
+  if (!exists("package.json")) return issues;
   const pkg = JSON.parse(read("package.json"));
   for (const [name, command] of Object.entries(pkg.scripts ?? {})) {
     for (const match of String(command).matchAll(/node\s+core\/scripts\/([A-Za-z0-9_.-]+\.mjs)/g)) {
@@ -454,7 +504,7 @@ function publicSkillIssues() {
   const issues = [];
   const readme = read("skills/README.md");
   const catalogPath = "skills/catalog.json";
-  const skillDirs = readdirSync(join(root, "skills"), { withFileTypes: true })
+  const skillDirs = listDir("skills", { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
     .sort();
@@ -640,7 +690,7 @@ function skillPackageIssues() {
 
     const ownsStageSet = new Set(ownsStages.map((entry) => entry.stage));
     const usesStageMap = new Map(usesStages.map((entry) => [entry.stage, entry]));
-    for (const file of walk(join(root, "skills", skill.id)).filter((item) => item.endsWith(".md"))) {
+    for (const file of walk(`skills/${skill.id}`).filter((item) => item.endsWith(".md"))) {
       const body = read(file);
       for (const match of body.matchAll(/\.specforge\/skills\/([a-z0-9-]+)\/stages\/([A-Za-z0-9_-]+)\/SKILL\.md/g)) {
         const owner = match[1];
@@ -760,7 +810,7 @@ function stageEvalFixtureIssues() {
 
   const stageDirs = stageOwnerEntries().map((entry) => entry.stage);
   const artifactIds = new Set(
-    readdirSync(join(root, "core/artifacts/schemas"))
+    listDir("core/artifacts/schemas")
       .filter((name) => name.endsWith(".json"))
       .flatMap((name) => JSON.parse(read(`core/artifacts/schemas/${name}`)).artifacts.map((artifact) => artifact.id)),
   );
@@ -904,12 +954,12 @@ function promptSkillDriftIssues() {
   const catalogSkills = new Map((catalog.skills ?? []).map((skill) => [skill.id, skill]));
   const stageOwners = stageOwnerMap();
   const artifactIds = new Set(
-    readdirSync(join(root, "core/artifacts/schemas"))
+    listDir("core/artifacts/schemas")
       .filter((name) => name.endsWith(".json"))
       .flatMap((name) => JSON.parse(read(`core/artifacts/schemas/${name}`)).artifacts.map((artifact) => artifact.id)),
   );
   const outputs = new Set(
-    readdirSync(join(root, "core/artifacts/schemas"))
+    listDir("core/artifacts/schemas")
       .filter((name) => name.endsWith(".json"))
       .flatMap((name) => JSON.parse(read(`core/artifacts/schemas/${name}`)).artifacts.flatMap((artifact) => artifact.outputs ?? [])),
   );
@@ -1015,7 +1065,7 @@ function promptSkillDriftIssues() {
 
 function schemaContractIssues() {
   const issues = [];
-  const schemaFiles = readdirSync(join(root, "core/artifacts/schemas"))
+  const schemaFiles = listDir("core/artifacts/schemas")
     .filter((name) => name.endsWith(".json"))
     .sort();
 
@@ -1074,7 +1124,7 @@ function largeMarkdownIssues(files) {
   const issues = [];
   for (const file of files.filter((item) => item.endsWith(".md") && (item.startsWith("core/standards/") || item.startsWith("core/artifacts/templates/")))) {
     const nonEmptyLines = read(file).split(/\r?\n/).filter((line) => line.trim()).length;
-    const size = statSync(join(root, file)).size;
+    const size = fileSize(file);
     if (nonEmptyLines > 450 || size > 30000) {
       issues.push(issue("WARN", "large-markdown", `${file} is large (${nonEmptyLines} non-empty lines, ${size} bytes). Consider splitting reader layer from fact source.`, file));
     }
@@ -1150,7 +1200,9 @@ function standardsEvolutionIssues() {
   return issues;
 }
 
-const files = walk(root);
+const files = layout.kind === "source"
+  ? walk(root)
+  : [...walk("core"), ...walk("skills")];
 const checks = [
   { id: "core-references", issues: missingCoreReferences(files) },
   { id: "referenced-paths", issues: referencedPathIssues(files) },

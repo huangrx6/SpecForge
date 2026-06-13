@@ -70,6 +70,7 @@ AI 工具技能：sf-router / sf-*  负责让 AI 工具知道怎么工作，可 
 |---|---|
 | 仓库没有 `.specforge/` | `sf-onboard` |
 | 问“现在到哪一步 / 健康状态 / 能不能继续” | `sf-doctor` |
+| 问“生成 HTML 报告 / 整理成页面 / 评审材料 / 只看某个模块” | `sf-report` |
 | 用户要求“理解项目 / 扫描项目 / 项目画像 / 架构地图 / 存量项目基线” | `sf-steering` |
 | 提出新需求、新 issue、新 bug、重构想法，且没有 active work item | `sf-intake` |
 | 用户要求“brainstorm / 头脑风暴 / 先讨论方案 / 帮我想想”，或现有 spec 出现未确认的产品、UI、AI、技术路线取舍 | `sf-brainstorm` |

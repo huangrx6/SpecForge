@@ -45,7 +45,7 @@ export const layout = hasSourceRuntime()
       projectHooks: ".specforge/hooks/local",
       starterManifest: ".specforge/core/starter.manifest.json",
       starter: ".specforge",
-      skills: ".",
+      skills: ".specforge/skills",
     };
 
 export function runtimePath(relativePath) {

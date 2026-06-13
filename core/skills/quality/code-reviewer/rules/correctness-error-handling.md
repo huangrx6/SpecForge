@@ -128,7 +128,7 @@ class UserNotFoundError extends Error {
 
 async function fetchUser(id: string): Promise<User> {
   let response: Response;
-  
+
   try {
     response = await fetch(`/api/users/${id}`, {
       signal: AbortSignal.timeout(5000)
@@ -139,14 +139,14 @@ async function fetchUser(id: string): Promise<User> {
     }
     throw new Error(`Network error fetching user ${id}: ${error}`);
   }
-  
+
   if (!response.ok) {
     if (response.status === 404) {
       throw new UserNotFoundError(id);
     }
     throw new Error(`HTTP ${response.status} fetching user ${id}`);
   }
-  
+
   try {
     return await response.json();
   } catch (error) {
@@ -172,7 +172,7 @@ try {
 
 ### Result Type (Rust-inspired)
 ```typescript
-type Result<T, E = Error> = 
+type Result<T, E = Error> =
   | { ok: true; value: T }
   | { ok: false; error: E };
 
