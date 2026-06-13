@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0
+
+- 新增 aesthetic directions 和 aesthetic selection prompt，用于按业务推荐 2-3 个互斥美学方向，并在用户选择后映射到 foundations、components、pages 和 Pencil 约束。
+- 新增 components/README 和 component-system reference，建立组件深度契约：anatomy、variants、states、layout、content、a11y、shadcn-vue、anti-patterns。
+- 全面加厚常见组件文档，覆盖按钮、卡片、表单、输入、选择器、表格、弹窗、抽屉、命令面板、导航、筛选、反馈、图表、空态等组件。
+- 更新 sf-ui-design 流程：先推荐美学方向，用户选择后再生成稳定组件契约和页面设计。
+
 ## 0.3.0
 
 - 增强设计判断层：新增 subject grounding、single job、world material、signature、default detector 和 self-critique pass。

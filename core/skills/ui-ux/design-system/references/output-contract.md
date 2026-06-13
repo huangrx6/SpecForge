@@ -13,6 +13,11 @@ Design intelligence:
 - Single job:
 - Signature:
 
+Aesthetic direction:
+- Selected direction:
+- Why selected:
+- Rejected directions:
+
 Foundations delta:
 - Tokens:
 - Density:
@@ -41,6 +46,13 @@ Design intelligence:
 - Signature:
 - Rejected defaults:
 
+Aesthetic direction:
+- Direction options:
+- Selected direction:
+- Component language:
+- Risk:
+- Human confirmation:
+
 UI Direction Options:
 - Direction A:
 - Direction B:
@@ -65,9 +77,15 @@ Foundations pack:
 Component contract:
 - Project component:
 - Primitive:
+- Anatomy:
+- Variants:
 - Props:
+- Events:
+- Slots:
 - States:
 - A11y:
+- Content rules:
+- Anti-patterns:
 
 Page pattern:
 - Layout archetype:

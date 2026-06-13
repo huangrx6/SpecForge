@@ -185,6 +185,7 @@ function standardsIndexIssues() {
 function designSystemIssues() {
   const required = [
     "core/skills/ui-ux/design-system/SKILL.md",
+    "core/skills/ui-ux/design-system/components/README.md",
     "core/skills/ui-ux/design-system/foundations/README.md",
     "core/skills/ui-ux/design-system/foundations/tokens.md",
     "core/skills/ui-ux/design-system/foundations/colors.md",
@@ -217,6 +218,7 @@ function designSystemIssues() {
     "core/skills/ui-ux/design-system/prompts/ui-generation.md",
     "core/skills/ui-ux/design-system/prompts/design-language.md",
     "core/skills/ui-ux/design-system/prompts/design-md-extraction.md",
+    "core/skills/ui-ux/design-system/prompts/aesthetic-selection.md",
     "core/skills/ui-ux/design-system/prompts/sample-board.md",
     "core/skills/ui-ux/design-system/prompts/anti-cheapness-review.md",
     "core/skills/ui-ux/design-system/prompts/taste-critique.md",
@@ -224,6 +226,8 @@ function designSystemIssues() {
     "core/skills/ui-ux/design-system/references/good-case.md",
     "core/skills/ui-ux/design-system/references/bad-case.md",
     "core/skills/ui-ux/design-system/references/design-review-rubric.md",
+    "core/skills/ui-ux/design-system/references/aesthetic-directions.md",
+    "core/skills/ui-ux/design-system/references/component-system.md",
     "core/skills/ui-ux/design-system/references/design-intelligence.md",
     "core/skills/ui-ux/design-system/references/design-md-extraction.md",
     "core/skills/ui-ux/design-system/references/taste-review.md",

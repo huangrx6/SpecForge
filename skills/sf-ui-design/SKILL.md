@@ -45,11 +45,12 @@ SpecForge 固定使用 **Pencil** 做正式 UI 原型。Figma、HTML、ASCII、�
 1. 读取 `design-system` 的 `SKILL.md`，判断是否需要 foundations、component contract、page pattern、sample board 或 motion review。
 2. 先完成 design intelligence：Subject、Audience、Single job、World material、Signature；缺少这些时不能直接画通用模板。
 3. 有参考网站 / 截图 / 品牌材料时，使用 DESIGN.md extraction 输出 atmosphere、tokens、typography、components、layout、motion、do/don't 和 adopt/adapt/avoid。
-4. 没有现成设计系统或用户确认方向时，先输出 2-3 个 UI direction options；方向会改变视觉气质、信息架构或组件形态时，等待人工确认。
+4. 没有现成设计系统或用户确认方向时，先读取 aesthetic directions，输出 2-3 个互斥 UI direction options；方向会改变视觉气质、信息架构或组件形态时，等待人工确认。
 5. 用户确认后，把方向落成 foundations pack：semantic token、密度、排版、圆角阴影、图标、文案、动效边界和可访问性约束。
-6. 管理端 / Vue / shadcn-vue 场景必须写 Admin Component Contract：项目级组件、shadcn-vue primitive、props、states、a11y、loading/empty/error/permission。
-7. Pencil 前先生成 sample board 摘要，说明采用什么、不采用什么、为什么适合宿主项目，并做 taste critique。
-8. Pencil 截图后用 design-system 的 visual QA / anti-cheapness rubric 做至少一轮审查和修正。
+6. 用户确认后读取 component system 和相关组件文件，把美学方向转成组件语言：项目级组件、shadcn-vue primitive、props、states、a11y、loading/empty/error/permission。
+7. 管理端 / Vue / shadcn-vue 场景必须写 Admin Component Contract：项目级组件、shadcn-vue primitive、props、states、a11y、loading/empty/error/permission。
+8. Pencil 前先生成 sample board 摘要，说明采用什么、不采用什么、为什么适合宿主项目，并做 taste critique。
+9. Pencil 截图后用 design-system 的 visual QA / anti-cheapness rubric 做至少一轮审查和修正。
 
 ## 启动扫描
 
@@ -79,7 +80,7 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
 ### B. 对齐体验方向
 
 1. 先按 `references/design-mode-routing.md` 判断 Design Mode，再按 `references/ui-design-process.md#UI 设计访谈` 列出 `已确认 / 高影响未知 / 可安全默认`。
-2. 没有现成设计系统或确认方向时，读取 design-system 的 design intelligence 和 sample board 规则，给 2-3 个互斥体验方向、推荐项、signature、样例描述和取舍；如果方向会影响信息架构、核心流程、组件形态或视觉气质，先向用户确认方向。
+2. 没有现成设计系统或确认方向时，读取 design-system 的 design intelligence、aesthetic directions 和 sample board 规则，给 2-3 个互斥体验方向、推荐项、signature、样例描述和取舍；如果方向会影响信息架构、核心流程、组件形态或视觉气质，先向用户确认方向。
 3. 用户确认后，立即在上游 artifact 或 `ui-design.md` 写入 `[UI DECISION CONFIRMED]` 或 `UI Direction Status: confirmed`，并记录来源。
 4. 用户未确认体验方向前，不创建 Pencil 原型，不写完整页面方案。
 
@@ -88,7 +89,7 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
 1. 写 Design Mode、Visual Style Brief、页面地图、信息架构、用户流程、微文案、状态矩阵、无障碍预审和明确不做项。
 2. 按 `ai-toolkit.md` 的输出预算裁剪：小 UI 改动写 compact 页面 / 状态差异；多角色、多流程或高风险 UI 才展开完整状态矩阵和视觉证据。
 3. 若采用 PC 端业务系统规范，按 `references/pc-business-system-spec.md` 填写 `ui-design.md#4` 的设计系统来源、核心 token、页面结构和组件约束。
-4. 若实现层采用 shadcn/ui 或场景是管理端，按 `references/admin-product-ui-contracts.md#Admin Component Contract` 写清 Admin Component Contract；shadcn 只作为 primitive / registry 层。
+4. 若实现层采用 shadcn/ui 或场景是管理端，先读取 design-system 的 `components/README.md`、`references/component-system.md` 和相关 `components/*.md`，再按 `references/admin-product-ui-contracts.md#Admin Component Contract` 写清 Admin Component Contract；shadcn 只作为 primitive / registry 层。
 5. 第三方 skill 只作为参考镜头，按 `references/ui-design-process.md#第三方 Skill 和 Reference 编排` 归一化到 SpecForge 结构；设计语言、组件契约、页面模式和 shadcn-vue 映射优先从 `design-system` 读取。
 6. 每个参考产品、截图或设计稿都要写“采用什么、不采用什么、如何落地”。
 7. `ui-design.md` 必须包含 sample board 或明确说明为什么不需要；有 sample board 时要记录方向、推荐项、signature、人工确认状态和放弃项。
@@ -123,7 +124,7 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
 - `01-spec/ui-design.md` 存在。
 - 有 UI 影响时，包含 Visual Style Brief、确认来源、页面地图、流程、状态矩阵、微文案、无障碍自查和明确不做项。
 - Product UI / 管理端 / shadcn 场景包含组件封装契约，能指导实现阶段复用项目级组件。
-- 需要设计语言或去廉价感时，包含 design-system 输出：design intelligence、foundations pack、sample board、组件契约、页面模式、taste critique 和 motion boundary。
+- 需要设计语言或去廉价感时，包含 design-system 输出：design intelligence、aesthetic direction、foundations pack、sample board、组件契约、页面模式、taste critique 和 motion boundary。
 - UI 方向确认可追溯；Agent recommendation 不能伪装成用户选择。
 - 有 UI 影响时，存在非空且保存后可重读的 `01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/*.png`，或明确 Pencil 阻断原因。
 - `ui-design.md#9. Pencil 原型证据` 记录 Pencil 保存状态、保存后重读校验和截图证据。

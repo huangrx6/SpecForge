@@ -1,13 +1,36 @@
 # Pagination
 
-## 规则
+分页用于数据浏览和性能控制，让用户理解当前范围和总量。
 
-- 列表多于一屏或数据量未知时必须说明分页 / 无限滚动策略。
-- Product UI 默认分页，便于定位和批量操作。
-- 页大小、总数、当前范围要清楚。
-- 筛选变化后回到第一页。
+## Anatomy
 
-## 不推荐
+page info / previous / next / page items / page size / total / jumper.
 
-- 后台表格默认无限滚动。
-- 没有总数和当前位置的“加载更多”。
+## Variants
+
+- simple pagination：上一页/下一页。
+- full pagination：页码、总数、page size。
+- cursor pagination：游标翻页。
+- infinite load：移动端或内容流。
+
+## States
+
+loading / first-page / last-page / empty / error / page-size-changing.
+
+## Rules
+
+- 表格页显示 total 和 page size。
+- 游标分页不能假装有总页数。
+- 切换 page size 后要回到合理页。
+- 移动端可简化为上一页/下一页。
+
+## shadcn-vue
+
+- Primitive: Pagination, Select, Button.
+- Project wrapper: TablePagination, CursorPagination.
+
+## Anti-patterns
+
+- 总数和筛选条件不一致。
+- loading 时页码跳动。
+- 无限加载没有结束提示。

@@ -40,6 +40,12 @@ Palette:
 Typography:
 Layout:
 Components:
+- Component contract:
+  - Anatomy:
+  - Variants:
+  - States:
+  - Content:
+  - A11y:
 Motion:
 Adopt:
 Avoid:

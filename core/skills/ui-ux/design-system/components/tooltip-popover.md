@@ -7,6 +7,7 @@ Tooltip 解释短操作，Popover 承载轻量交互。不要用 Tooltip 放长�
 - 用于 icon-only 按钮、字段缩写、图标状态。
 - 内容控制在一句话内。
 - 必须支持 keyboard focus。
+- 不放可点击内容。
 
 ## Popover
 
@@ -14,7 +15,17 @@ Tooltip 解释短操作，Popover 承载轻量交互。不要用 Tooltip 放长�
 - 有输入或操作时要能通过 Esc / 点击外部关闭。
 - 内容超过 320px 或需要提交确认时考虑 Dialog / Drawer。
 
-## shadcn-vue mapping
+## States
+
+closed / open / focused / overflow-adjusted / dismissed.
+
+## shadcn-vue
 
 - Primitive: Tooltip, Popover, HoverCard.
-- Project components: FieldHelp, ActionTooltip, FilterPopover.
+- Project wrapper: FieldHelp, ActionTooltip, FilterPopover, QuickDetailPopover.
+
+## Anti-patterns
+
+- Tooltip 承载长段说明。
+- Popover 里放复杂表单。
+- hover-only 信息在移动端不可访问。

@@ -1,14 +1,36 @@
 # Layout Shell
 
-## 管理端骨架
+Layout Shell 定义页面骨架、导航、内容宽度、滚动区和全局反馈。它决定页面是否稳定。
 
-- Sidebar / topbar / content / utility area 分工清晰。
-- 页面标题区包含对象、状态、主操作和上下文信息。
-- 筛选区、表格区、详情区、批量操作区位置稳定。
-- 大屏和移动端要定义折叠策略。
+## Anatomy
 
-## 避免
+app header / side nav / content header / main region / aside / footer / global toast / modal layer.
 
-- 首页 hero 化。
-- 每个 section 都套浮动卡片。
-- 主操作藏在更多菜单。
+## Variants
+
+- admin shell：顶部 + 侧边。
+- resource shell：标题 + toolbar + table。
+- mobile shell：顶部状态 + 内容 + 底部操作。
+- split shell：主列表 + inspector。
+
+## States
+
+loading / nav-collapsed / permission / offline / route-transition / dirty.
+
+## Layout
+
+- 页面滚动区必须明确，避免 body 和内部容器双滚动。
+- header / footer 固定时要给内容预留空间。
+- 移动端底部操作考虑 safe area。
+- 宽屏内容有最大宽度或分栏策略。
+
+## shadcn-vue
+
+- Primitive: Sidebar, Separator, ScrollArea, Toaster.
+- Project wrapper: AppShell, ResourceShell, MobileShell, SplitShell.
+
+## Anti-patterns
+
+- 页面 section 全部漂浮卡片化。
+- 固定导航遮挡内容。
+- 每个页面自己实现导航和间距。

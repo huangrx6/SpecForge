@@ -12,8 +12,23 @@
 
 - 可估算任务使用进度条；不可估算任务使用 spinner + 状态文案。
 - 异步任务超过 5 秒应给后台处理、刷新或通知策略。
+- 批量任务显示成功、失败、跳过数量。
 
-## shadcn-vue mapping
+## Variants
+
+table skeleton / card skeleton / form skeleton / async progress / step progress.
+
+## States
+
+loading / delayed / partial / retrying / completed / failed / canceled.
+
+## shadcn-vue
 
 - Primitive: Skeleton, Progress, Alert.
-- Project components: TableSkeleton, MetricSkeleton, AsyncJobProgress.
+- Project wrapper: TableSkeleton, MetricSkeleton, AsyncJobProgress, TaskProgress.
+
+## Anti-patterns
+
+- spinner 占满整页但没有说明。
+- loading 导致布局跳动。
+- 长任务无取消、后台处理或失败恢复。
