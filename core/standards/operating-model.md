@@ -95,3 +95,16 @@ node .specforge/core/scripts/framework-audit.mjs
 ```
 
 它检查悬空引用、profile 引用、standards 索引、design-system 契约和 starter manifest 覆盖。失败时不能声称框架优化完成。
+
+## 9. 外部实践锚点
+
+SpecForge 不复制外部框架的模板，但会吸收可执行思想：
+
+| 来源 | 吸收点 | SpecForge 落点 |
+|---|---|---|
+| GitHub Spec Kit | 先把目标、约束和计划说清，再进入实现 | `requirements`、`technical_design`、`tasks`、`spec_review` |
+| OpenAI Codex / AGENTS.md | 仓库本地规则应优先于通用规则，并可被 Agent 自动读取 | `.specforge/AGENTS.md`、`core/standards/`、`skills/sf-*` |
+| Model Context Protocol | resources / prompts / tools / elicitation 分层，人工确认是能力的一部分 | wiki / profiles / scripts / `confirmed` 协议 |
+| Playwright | 用户路径验证应使用可重复的 locator、trace、screenshot 和 network evidence | `test-cases.md`、`verification/report.md`、`core/standards/playwright.md` |
+
+外部来源只作为方法锚点；真实项目事实、版本、接口和风险必须以当前仓库证据、官方文档或用户确认记录为准。

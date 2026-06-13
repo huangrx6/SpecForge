@@ -6,7 +6,7 @@
 |---|---|---|
 | routing | `routing/` | `status.mjs`, `instructions.mjs`, `workflow-audit.mjs`, `workflow-health.mjs`, `stage-contract.mjs`, `artifact-graph-status.mjs` |
 | authoring | `authoring/` | `create-work.mjs`, `create-artifact.mjs`, `sync-wiki.mjs` |
-| quality | `quality/` | `quality-suite.mjs`, `artifact-quality.mjs`, `decision-quality.mjs`, `source-quality.mjs`, `implementation-quality.mjs`, `test-case-quality.mjs`, `evidence-summary.mjs`, `wiki-quality.mjs`, `closure-quality.mjs`, `gate-preflight.mjs` |
+| quality | `quality/` | `quality-suite.mjs`, `artifact-quality.mjs`, `decision-brief.mjs`, `decision-checkpoints.mjs`, `decision-quality.mjs`, `source-quality.mjs`, `implementation-quality.mjs`, `test-case-quality.mjs`, `evidence-summary.mjs`, `wiki-quality.mjs`, `closure-quality.mjs`, `gate-preflight.mjs` |
 | gates | `gates/` | `gate.mjs` |
 | reporting | `reporting/` | `render-work-report.mjs`, `workflow-package.mjs`, `handoff-summary.mjs`, `traceability-summary.mjs` |
 | code-intelligence | `code-intelligence/` | `codebase-map.mjs`, `codebase-index.mjs` |
