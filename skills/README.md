@@ -2,15 +2,17 @@
 
 `skills/` 是对外暴露给 Agent / Skills CLI 的稳定入口层。目录名是公共 API，不能为了整理观感随意重命名；真正的内部规则、模板和工具链放在 `core/`。
 
+机器可读目录见 `catalog.json`。README 面向人扫读，`catalog.json` 面向审计、CLI 和后续自动路由；新增、删除或重命名外部 skill 时必须同步两处。
+
 ## 使用分层
 
-| 分层 | Skills | 用途 |
-|---|---|---|
-| Router | `sf-router`, `sf-doctor`, `sf-work` | 判断当前状态、健康检查、一键推进 |
-| Project setup | `sf-onboard`, `sf-steering`, `sf-intake` | 接入项目、建立代码画像、创建 work item |
-| Product / discovery | `sf-brainstorm`, `sf-discovery`, `sf-prd`, `sf-requirements` | 模糊需求、研究、PRD、可测试需求 |
-| Design / technical planning | `sf-ui-design`, `sf-tech-design`, `sf-tasking`, `sf-spec-review` | UI 设计、技术设计、任务拆解、规格审查 |
-| Delivery gates | `sf-implement`, `sf-code-review`, `sf-verify`, `sf-wiki`, `sf-close` | 实现、代码审查、验证、知识沉淀、关闭归档 |
+| 分层 | Layer ID | Skills | 用途 |
+|---|---|---|---|
+| Router | `router` | `sf-router`, `sf-doctor`, `sf-work` | 判断当前状态、健康检查、一键推进 |
+| Project Setup | `project-setup` | `sf-onboard`, `sf-steering`, `sf-intake` | 接入项目、建立代码画像、创建 work item |
+| Product / Discovery | `product-discovery` | `sf-brainstorm`, `sf-discovery`, `sf-prd`, `sf-requirements` | 模糊需求、研究、PRD、可测试需求 |
+| Design / Technical Planning | `design-technical-planning` | `sf-ui-design`, `sf-tech-design`, `sf-tasking`, `sf-spec-review` | UI 设计、技术设计、任务拆解、规格审查 |
+| Delivery Gates | `delivery-gates` | `sf-implement`, `sf-code-review`, `sf-verify`, `sf-wiki`, `sf-close` | 实现、代码审查、验证、知识沉淀、关闭归档 |
 
 ## 入口选择
 
@@ -44,6 +46,7 @@ npm run audit:framework
 
 如果新增、删除或重命名 skill，必须同步：
 
+- `skills/catalog.json`
 - `core/scripts/validate-skills.mjs`
 - `core/skills/ORCHESTRATION.md`
 - `core/skills/README.md`

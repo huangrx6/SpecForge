@@ -197,16 +197,100 @@ function packageScriptIssues() {
 function publicSkillIssues() {
   const issues = [];
   const readme = read("skills/README.md");
+  const catalogPath = "skills/catalog.json";
   const skillDirs = readdirSync(join(root, "skills"), { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
     .sort();
+
+  let catalog = null;
+  if (!exists(catalogPath)) {
+    issues.push(issue("FAIL", "public-skill-catalog-missing", `${catalogPath} is required for public skill API governance.`, catalogPath));
+  } else {
+    try {
+      catalog = JSON.parse(read(catalogPath));
+    } catch (error) {
+      issues.push(issue("FAIL", "public-skill-catalog-invalid-json", `${catalogPath} is invalid JSON: ${error.message}.`, catalogPath));
+    }
+  }
+
+  const catalogSkills = new Map();
+  const catalogLayerIds = new Set();
+  if (catalog) {
+    if (catalog.version !== 1) {
+      issues.push(issue("WARN", "public-skill-catalog-version", `${catalogPath} should use version 1.`, catalogPath));
+    }
+
+    for (const layer of catalog.layers ?? []) {
+      if (!layer.id || !/^[a-z0-9][a-z0-9-]*$/.test(layer.id)) {
+        issues.push(issue("FAIL", "public-skill-layer-invalid", `Invalid public skill layer id: ${layer.id ?? "(missing)"}.`, catalogPath));
+        continue;
+      }
+      catalogLayerIds.add(layer.id);
+      if (!readme.includes(layer.label ?? layer.id)) {
+        issues.push(issue("WARN", "public-skill-layer-not-documented", `Layer ${layer.id} is not documented in skills/README.md.`, "skills/README.md"));
+      }
+    }
+
+    for (const skill of catalog.skills ?? []) {
+      if (!skill.id || !/^[a-z0-9][a-z0-9-]*$/.test(skill.id)) {
+        issues.push(issue("FAIL", "public-skill-catalog-id-invalid", `Invalid public skill id: ${skill.id ?? "(missing)"}.`, catalogPath));
+        continue;
+      }
+      if (catalogSkills.has(skill.id)) {
+        issues.push(issue("FAIL", "public-skill-catalog-duplicate", `${skill.id} appears more than once in ${catalogPath}.`, catalogPath));
+      }
+      catalogSkills.set(skill.id, skill);
+      if (!catalogLayerIds.has(skill.layer)) {
+        issues.push(issue("FAIL", "public-skill-catalog-layer-missing", `${skill.id} references unknown layer ${skill.layer}.`, catalogPath));
+      }
+      if (!skill.primary_stage) {
+        issues.push(issue("FAIL", "public-skill-primary-stage-missing", `${skill.id} is missing primary_stage.`, catalogPath));
+      }
+      if (!Array.isArray(skill.core_stages) || skill.core_stages.length === 0) {
+        issues.push(issue("FAIL", "public-skill-core-stages-missing", `${skill.id} must list core_stages.`, catalogPath));
+      } else {
+        if (skill.primary_stage && !skill.core_stages.includes(skill.primary_stage)) {
+          issues.push(issue("WARN", "public-skill-primary-stage-not-in-core-stages", `${skill.id} primary_stage should also appear in core_stages.`, catalogPath));
+        }
+        for (const stage of skill.core_stages) {
+          if (!exists(`core/workflows/stages/${stage}/SKILL.md`)) {
+            issues.push(issue("FAIL", "public-skill-core-stage-missing", `${skill.id} references missing core stage ${stage}.`, catalogPath));
+          }
+        }
+      }
+      if (!skill.purpose || skill.purpose.length < 24) {
+        issues.push(issue("WARN", "public-skill-purpose-too-short", `${skill.id} should have a concise purpose in ${catalogPath}.`, catalogPath));
+      }
+    }
+  }
+
   for (const skill of skillDirs) {
     if (!exists(`skills/${skill}/SKILL.md`)) {
       issues.push(issue("FAIL", "public-skill-missing-skill-md", `${skill} is missing SKILL.md.`, `skills/${skill}`));
+    } else {
+      const body = read(`skills/${skill}/SKILL.md`);
+      const name = body.match(/^name:\s*(.+)$/m)?.[1]?.trim();
+      if (name !== skill) {
+        issues.push(issue("FAIL", "public-skill-frontmatter-name-mismatch", `${skill} SKILL.md frontmatter name should be ${skill}.`, `skills/${skill}/SKILL.md`));
+      }
     }
     if (!readme.includes(`\`${skill}\``)) {
       issues.push(issue("FAIL", "public-skill-not-documented", `${skill} is not documented in skills/README.md.`, "skills/README.md"));
+    }
+    if (catalog && !catalogSkills.has(skill)) {
+      issues.push(issue("FAIL", "public-skill-not-cataloged", `${skill} is missing from ${catalogPath}.`, catalogPath));
+    }
+  }
+
+  if (catalog) {
+    for (const skill of catalogSkills.keys()) {
+      if (!skillDirs.includes(skill)) {
+        issues.push(issue("FAIL", "public-skill-catalog-points-missing-dir", `${skill} is cataloged but skills/${skill}/ is missing.`, catalogPath));
+      }
+      if (!readme.includes(`\`${skill}\``)) {
+        issues.push(issue("FAIL", "public-skill-catalog-not-in-readme", `${skill} is cataloged but not listed in skills/README.md.`, "skills/README.md"));
+      }
     }
   }
   return issues;

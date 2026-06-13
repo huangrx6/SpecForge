@@ -21,6 +21,7 @@
 | 产物降噪 | artifact quality、workflow package、HTML report、handoff summary | Markdown 是事实源，HTML 是阅读层 |
 | 证据分级 | evidence summary、test cases、verification report | proven / mocked / manual-confirmed / deferred / missing 必须区分 |
 | 代码理解 | codebase index、provider facts、code intelligence profile、wiki quality graph fact check | provider 输出只能作为事实候选，必须带来源、置信度、用途和 wiki 引用 |
+| 外部入口治理 | `skills/catalog.json`、skills README、framework audit | 对外 skill 是稳定 API，目录、分层、阶段映射和文档必须可审计 |
 | 框架自审 | framework audit、starter sync、skill validation、self-test | 框架改动必须同步 starter 并跑审计 |
 
 ## 下一批演进
