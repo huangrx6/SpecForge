@@ -11,6 +11,8 @@
 - 禁用风格：
 
 输出：
+- Subject / Audience / Single job:
+- World material:
 - 设计气质：
 - 信息密度：
 - 色彩语言：
@@ -18,6 +20,8 @@
 - 空间 / 栅格：
 - 组件形态：
 - 动效边界：
+- Signature:
+- Default detector:
 - 采用项：
 - 不采用项：
 - 需要人工确认的问题：

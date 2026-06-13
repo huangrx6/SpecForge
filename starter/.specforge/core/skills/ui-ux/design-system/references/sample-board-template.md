@@ -4,6 +4,19 @@
 
 ## Format
 
+### Design intelligence
+
+```md
+Subject:
+Audience:
+Single job:
+World material:
+Recommended signature:
+Rejected defaults:
+```
+
+### Direction table
+
 | Direction | Best for | Risk | Visual language | Components | Motion | Decision |
 |---|---|---|---|---|---|---|
 | A | 高频工具、后台效率 | 表达偏弱 | 冷静、中性、高密度 | Table, FilterBar, Drawer | CSS feedback | recommended |
@@ -16,3 +29,20 @@
 - Avoid: 明确不用哪些模板化做法。
 - Human question: 只问会改变方向的问题。
 - Implementation mapping: 对应 shadcn-vue primitive 和项目组件。
+
+## Direction card
+
+```md
+Direction:
+Signature:
+Atmosphere:
+Palette:
+Typography:
+Layout:
+Components:
+Motion:
+Adopt:
+Avoid:
+Risk:
+Human question:
+```

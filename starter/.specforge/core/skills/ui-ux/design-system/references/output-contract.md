@@ -1,0 +1,87 @@
+# Output Contract
+
+`sf-ui-design` 调用 design-system 后，至少把以下内容归一化写入 `ui-design.md`。
+
+## Compact
+
+用于小 UI 改动或局部组件：
+
+```md
+Design intelligence:
+- Subject:
+- Audience:
+- Single job:
+- Signature:
+
+Foundations delta:
+- Tokens:
+- Density:
+- Motion:
+
+Component contract:
+- Component:
+- States:
+- shadcn-vue primitive:
+
+Taste review:
+- Verdict:
+- Change:
+```
+
+## Standard
+
+用于新页面、H5、后台资源页、AI 助手：
+
+```md
+Design intelligence:
+- Subject:
+- Audience:
+- Single job:
+- World material:
+- Signature:
+- Rejected defaults:
+
+UI Direction Options:
+- Direction A:
+- Direction B:
+- Recommended:
+- Human confirmation:
+
+Design Reference Extraction:
+- Source:
+- Adopt:
+- Adapt:
+- Avoid:
+
+Foundations pack:
+- Palette:
+- Typography:
+- Density:
+- Spacing:
+- Radius / shadow:
+- Motion:
+- Accessibility:
+
+Component contract:
+- Project component:
+- Primitive:
+- Props:
+- States:
+- A11y:
+
+Page pattern:
+- Layout archetype:
+- State matrix:
+- Responsive:
+- Microcopy:
+
+Taste review:
+- Verdict:
+- Required fixes:
+```
+
+## Full
+
+用于品牌页、大屏、复杂多角色系统：
+
+- 在 Standard 之上补充 typography scale table、color role table、motion choreography、responsive artboards、Pencil sample board、visual QA evidence。

@@ -4,6 +4,10 @@
 
 | Source | Use |
 |---|---|
+| Anthropic frontend-design skill | subject grounding、signature、两轮 critique、反模板默认值 |
+| Taste Skill | taste review、archetype、动效和高级感反模式；仅吸收方法，不照搬夸张规则 |
+| getdesign.md / DESIGN.md | 从真实网站提取 atmosphere、tokens、components、layout、do/don't |
+| UI UX Pro Max | 行业匹配、style / palette / typography / anti-pattern 多维推荐 |
 | shadcn-vue Introduction | 组件分发和“构建自己的组件库”理念 |
 | shadcn-vue Theming | CSS variables 和 semantic theme tokens |
 | shadcn-vue Components | primitive 候选清单 |

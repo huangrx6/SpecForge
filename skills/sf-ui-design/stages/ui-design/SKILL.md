@@ -55,13 +55,13 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - **竞品与参考分析**：若有现有设计系统、品牌手册、页面、Pencil、Figma、截图或参考产品，提取可执行规则：布局、导航、密度、色彩、字体、表格、表单、反馈、空态和错误态。不要只贴链接；每个参考都要写"采用什么、不采用什么、如何落地"。
 - **PC 业务系统模板**：若产品是后台 / 管理系统 / 数据表格系统，或用户明确给出 PC 端 UI 规范，读取 `pc-ui-design-spec.md`，在 Visual Style Brief 中写入设计系统来源和核心 token；后续 Pencil、HTML/CSS、前端实现都不得擅自改这些数值。
 - **shadcn 管理端模式**：若实现层采用 shadcn/ui，把 shadcn 视为 primitive / registry / theming 层；在 UI design 中定义 App Shell、Resource Page、Entity Table、Detail/Form、State Feedback 和 Ops Pattern 的封装契约。
-- **design-system 工具链**：若需要设计语言或组件规范，读取 `design-system`，把 foundations、组件契约、页面模式、样例板、动效边界和去廉价感 review 归一化到 UI design。
+- **design-system 工具链**：若需要设计语言或组件规范，读取 `design-system`，把 design intelligence、DESIGN.md extraction、foundations、组件契约、页面模式、样例板、动效边界和去廉价感 review 归一化到 UI design。
 
 ### 2. 定义（Define）
 
 - **做 UI 设计访谈**：先列 `已确认 / 高影响未知 / 可安全默认`。
 - 没有现成设计系统时，给用户 2-3 个互斥体验方向，写清适合点、风险和推荐项；复杂项目可以扩展到 5 个方向，但不要机械凑数。
-- 方向选项必须像样例板：写清色彩、排版、密度、组件形态、关键页面片段、动效边界、采用/不采用理由和需要用户确认的问题。
+- 方向选项必须像样例板：写清 subject、audience、single job、signature、色彩、排版、密度、组件形态、关键页面片段、动效边界、采用/不采用理由和需要用户确认的问题。
 - 一轮只问会改变 UI 的关键问题，例如信息密度、主流程、角色差异、表单复杂度、错误反馈、数据展示方式。
 - **绘制信息架构（IA）**：定义主导航结构、页面层级、标签命名。遵循"5-7 项主导航"、"按用户心智模型分组"原则。
 - **定义 HMW 问题**：用"如何能"框架将用户痛点转化为设计机会。
@@ -75,6 +75,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - **建立体验规格**：页面地图、入口出口、角色流程、主路径、异常路径。
 - **选择输出预算**：按 work item 风险写 compact / standard / full；不要为了小改生成难以审阅的完整设计报告。
 - **建立 foundations pack**：把确认方向写成 semantic tokens、密度、排版、圆角阴影、图标、文案、动效和可访问性底线。
+- **建立 taste critique**：检查这个方向是否可以套到任意同类产品；如果可以，必须替换 signature、布局、排版或色彩策略中的至少一项。
 - **写组件封装契约**：管理端必须说明哪些页面级、资源级和状态级组件由项目封装；避免每个页面重复散落基础 `Button`、`Card`、`Table`。
 - 页面 × 状态矩阵：default、loading、empty、error、permission、disabled、success、boundary、responsive、a11y。
 - 明确不做项，防止实现阶段扩大 UI 范围。
@@ -124,7 +125,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 
 - `ui-design.md` 能让 reviewer 判断 UI 是否满足需求。
 - 有 UI 变更时，存在用户画像提取、Visual Style Brief、页面地图、信息架构、用户流程、微文案、状态矩阵、Pencil `.pen`、导出截图、无障碍自查和视觉质量修正记录。
-- 需要设计系统时，存在 foundations pack、sample board、人工确认状态、组件契约、页面模式和 motion boundary。
+- 需要设计系统时，存在 design intelligence、foundations pack、sample board、人工确认状态、组件契约、页面模式、taste critique 和 motion boundary。
 - Pencil `.pen` 保存后可重读，且 `ui-design.md#9. Pencil 原型证据` 记录保存状态、重读校验和截图证据。
 - 无 UI 影响时，N/A 理由和验证方式清楚。
 - 实现者能据此实现页面结构和交互状态。
