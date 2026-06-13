@@ -33,7 +33,7 @@ function markdown(diagnosis, quality) {
 
 ## Issues
 
-${bullet(quality.issues, "none", (issue) => `[${issue.severity}] ${issue.artifact}/${issue.path}: ${issue.message}`)}
+${bullet(quality.issues, "none", (issue) => `[${issue.severity}] ${issue.code} ${issue.artifact}/${issue.path}: ${issue.message}${issue.fix ? ` Fix: ${issue.fix}` : ""}`)}
 
 ## Outputs
 

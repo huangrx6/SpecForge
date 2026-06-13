@@ -10,6 +10,7 @@ import {
   root,
   validateSchema,
 } from "./lib/specforge.mjs";
+import { artifactQualitySummary } from "./lib/artifact-quality.mjs";
 import { wikiQualitySummary } from "./lib/wiki-quality.mjs";
 
 function writeFixture(path, content) {
@@ -212,6 +213,59 @@ function testPromptSkillDriftRules() {
   }
 }
 
+function testArtifactQualityProfiles() {
+  const base = mkdtempSync("tmp-specforge-artifact-quality-");
+  try {
+    const workItem = {
+      id: "20260613-feat-001-quality",
+      path: base,
+    };
+    const diagnosis = {
+      work_item: workItem,
+      artifacts: [
+        {
+          id: "requirements",
+          status: "ready",
+          outputs: ["01-spec/requirements.md"],
+        },
+        {
+          id: "tasks",
+          status: "ready",
+          outputs: ["01-spec/tasks.md"],
+        },
+      ],
+    };
+
+    writeFixture(
+      `${base}/01-spec/requirements.md`,
+      `# Requirements\n\n## 0.1 Spec Quality Gate\n\n## 边界\n\n## 影响面确认\n\n## 功能需求\n\n- [NEEDS CLARIFICATION: who is the user?]\n\n## 行为覆盖矩阵\n\n## 验收标准\n`,
+    );
+    writeFixture(
+      `${base}/01-spec/tasks.md`,
+      `# Tasks\n\n## 1. 规划输入\n\n## 2. 来源审计与覆盖矩阵\n\n## 4. 并行波次\n\n## 5. 任务列表\n\n- [ ] T001 [W0][实现] Do it.\n  _Trace:_ REQ\n  _Files:_ src/demo.ts\n\n## 6. 验证计划\n`,
+    );
+
+    const failing = artifactQualitySummary(diagnosis);
+    assert.ok(failing.issues.some((issue) => issue.code === "open-requirements-decision"));
+    assert.ok(failing.issues.some((issue) => issue.code === "requirements-no-real-req"));
+    assert.ok(failing.issues.some((issue) => issue.code === "task-core-field-missing"));
+
+    writeFixture(
+      `${base}/01-spec/requirements.md`,
+      `# Requirements\n\n## 0.1 Spec Quality Gate\n\n## 边界\n\n## 影响面确认\n\n## 功能需求\n\n| ID | 需求 | 来源 | 优先级 | 验收标准 |\n|---|---|---|---|---|\n| REQ-001 | WHEN user submits the form, THE SYSTEM SHALL save the request. | brief | MUST | AC-001 |\n\n## 行为覆盖矩阵\n\n| REQ | 正常路径 | 失败 / 空状态 | 边界值 | 权限差异 | 对应 AC |\n|---|---|---|---|---|---|\n| REQ-001 | save succeeds | save fails | empty title | same role | AC-001 |\n\n## 验收标准\n\n| ID | Given | When | Then | 验证方式 |\n|---|---|---|---|---|\n| AC-001 | valid request | submit | saved | automated test |\n`,
+    );
+    writeFixture(
+      `${base}/01-spec/tasks.md`,
+      `# Tasks\n\n## 1. 规划输入\n\n## 2. 来源审计与覆盖矩阵\n\n## 4. 并行波次\n\n## 5. 任务列表\n\n- [ ] T001 [W0][实现] Save request.\n  _Trace:_ REQ-001\n  _Files:_ src/demo.ts\n  _Verification:_ npm test -- save-request\n  _Rollback:_ revert src/demo.ts\n  _Risk:_ save regression\n\n## 6. 验证计划\n`,
+    );
+
+    const passing = artifactQualitySummary(diagnosis);
+    assert.equal(passing.issues.some((issue) => issue.severity === "FAIL"), false);
+  } finally {
+    rmSync(base, { recursive: true, force: true });
+  }
+}
+
 testRegistrySingleActiveRemoval();
 testRegistryKeepsOtherActiveEntries();
 testArchiveAppend();
@@ -219,5 +273,6 @@ testQualityPolicyValidation();
 testWikiQualityGraphFactReferences();
 testStageEvalFixturesCoverStages();
 testPromptSkillDriftRules();
+testArtifactQualityProfiles();
 
 console.log("SpecForge self-test passed.");
