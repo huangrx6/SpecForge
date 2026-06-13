@@ -1,130 +1,48 @@
-# PRD: <产品 / 功能名称>
+# PRD
 
-## 0. PRD Control
+## 一页摘要
+| 项 | 内容 |
+| --- | --- |
+| 产品问题 | |
+| 目标用户 | |
+| 核心价值 | |
+| MVP | |
+| 非目标 | |
+| Handoff | |
 
-- PRD Depth: prd-lite / prd-standard / prd-deep
-- Source Work Item:
-- Decision Status: draft / needs-decision / approved-for-requirements
-- Last Updated:
-- Assumptions:
-  - A1:
-- Brainstorm Evidence:
-  - `00-intake/brainstorm.md` / N/A:
-- External Skill Inputs:
-  - skill / trigger / normalized_to / notes:
+## 用户与场景
+- 用户：
+- 触发场景：
+- 当前痛点：
+- 成功时用户会看到：
 
-## 0.1 Product Decision Gate
+## 目标与非目标
+### Goals
+-
 
-| 检查项 | 结论 | 证据 / 处理 |
-|---|---|---|
-| PRD Depth | prd-lite / prd-standard / prd-deep | |
-| 输出预算 | compact / standard / full | |
-| MVP 是否已确认 | confirmed / delegated_default / needs-decision | |
-| 是否存在高影响未决问题 | no / yes | |
-| 是否需要 UI / 技术 / 数据后续确认 | no / yes | |
-| 是否可进入 requirements | yes / no | |
+### Non Goals
+-
 
-## 1. Executive Summary
+## MVP 范围
+| 能力 | 用户价值 | 必要性 | 备注 |
+| --- | --- | --- | --- |
+| | | | |
 
-- Problem Statement:
-- Proposed Solution:
-- Target Users:
-- Success Criteria:
-- Business KPI:
-- Primary Device / Channel:
-
-## 2. Background & Product Goals
-
-- 背景:
-- 当前痛点:
-- 产品目标:
-- 非目标:
-
-## 3. Users, Personas & Scenarios
-
-| 用户 / 角色 | 部门 / 组织 | 目标 | 当前痛点 | 典型场景 | 使用频率 / 设备 | 权限 / 责任 |
-|---|---|---|---|---|---|---|
-
-## 4. Scope & MVP Decision
-
-| 功能 | 阶段 | 用户价值 | 复杂度 | 风险 / 依赖 | 决策 |
-|---|---|---|---|---|---|
-
-## 5. Product Interview Evidence
-
-| Lens | Confirmed Facts | Open Decisions | Default Assumption |
-|---|---|---|---|
-
-## 6. User Stories & Acceptance Seeds
-
-> PRD 只写验收种子，不写最终 AC 编号。最终可测试验收标准由 `sf-requirements` 转写。
-
-| ID | User Story | Acceptance Seed | Priority |
-|---|---|---|---|
-
-## 7. Core User Flows
-
-### Flow: <名称>
-
+## 关键流程
 1.
 2.
 3.
 
-Exceptions:
+## 成功指标
+| 指标 | 口径 | 目标 |
+| --- | --- | --- |
+| | | |
 
-- 
+## 风险与开放问题
+| 风险 / 问题 | 影响 | 处理方式 |
+| --- | --- | --- |
+| | | |
 
-## 8. Metrics, Evaluation & Analytics
-
-- Product KPIs:
-- Business KPIs:
-- Data Metrics:
-- Quality Metrics:
-- Operational Metrics:
-- Tracking / Evidence:
-
-## 9. AI System Requirements (If Applicable)
-
-- AI Task:
-- Inputs / Outputs:
-- Prompt or Policy Controls:
-- Evaluation Strategy:
-- Human Review / Override:
-- Safety, Privacy & Cost Boundaries:
-
-## 10. Constraints, Dependencies & Risks
-
-| Item | Type | Impact | Mitigation / Owner |
-|---|---|---|---|
-
-### Data & Compliance Snapshot
-
-- Data Sources:
-- Refresh Cadence:
-- Sensitive Fields:
-- Masking / Approval / Audit:
-
-## 11. Rollout & Roadmap
-
-- MVP:
-- v1.1:
-- Later:
-- Rollback / Disable Strategy:
-
-## 12. Open Questions & Decisions
-
-| Question | Owner | Needed By | Status |
-|---|---|---|---|
-
-## 13. Handoff To Requirements
-
-- Requirements seeds:
-- Recommended components flags:
-- Notes for ui_design:
-- Notes for technical_design:
-- Notes for data / security:
-
-## PRD Boundary Notes
-
-- Do not write final requirement IDs, API fields, database fields, file paths, component splits, test commands, or implementation tasks here.
-- Any technical or UI note above is a constraint seed only; `sf-requirements`, `sf-ui-design`, and `sf-tech-design` own the final detailed artifacts.
+## Handoff To Requirements
+- 必须转成可测试需求的内容：
+- 可以延后的内容：
