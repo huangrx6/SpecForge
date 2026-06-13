@@ -47,6 +47,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 
 1. **建立来源审计矩阵**：列出所有来源需求、决策、风险和验收标准，确认每项至少有实现任务和验证任务。来源必须包含适用的 `GOAL / PRD / REQ / UI / TECH / RESEARCH / CONTEXT`，不能只写“见上游文档”。
 2. **建立技术影响面任务覆盖**：读取 `technical-design.md#0. 影响面与读取计划` 及其 wiki 入口，把每个 `yes` 影响面映射到实现任务和验证任务；`no` 写 N/A 理由；关键 `unknown` 退回澄清。
+   - 若存在 `technical-design.md#7.1 Architecture Contract`、`#Implementation Handoff` 或 `#12. Operability & Maintenance`，任务必须承接其中的 change slices、files/modules、test seams、rollout、rollback、owner、extension point、wiki target 和 revisit trigger。
 3. **先列失败优先 / 契约任务**：API、schema、类型、配置、迁移、权限、提示词、评估集、feature flag、环境变量。行为变更优先设计能先失败的测试或检查。
 4. **再列基础任务**：新项目脚手架、开发服务器冒烟、目录结构、共享客户端、测试基线。
 5. **再列实现任务**：按模块、层次、用户路径或状态机拆分。每个任务应小到一次实现和一次 review 可以聚焦完成。
@@ -84,6 +85,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 - 验证任务不能藏在实现任务里。
 - `technical-design.md` 残留 `[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]` 或 `[NEEDS TOOLING DECISION]` 时停止，退回 `sf-tech-design` 确认选型、新增依赖或工具链，不生成任务。
 - `technical-design.md` 的 `Core Decision Review Status` 不是 `confirmed`、`delegated_default` 或 `not_required` 时停止，退回 `sf-tech-design` 展示核心决策摘要并等待用户确认。
+- 技术影响适用但 `Architecture Contract`、`Implementation Handoff` 或 `Operability & Maintenance` 为空或只有模板占位时停止，退回 `sf-tech-design`。
 - 存在需要用户取舍的 `[NEEDS DECISION]`、`[NEEDS PRODUCT DECISION]` 或 `[NEEDS UI DECISION]` 时停止，退回 `sf-brainstorm`，不生成任务。
 - UI 状态、API 契约、数据迁移、权限、安全、发布任务必须单独列出。
 - 有浏览器流程、上传、提交、审批、下载、权限或错误提示时，必须列出 Playwright E2E 用例设计、脚本执行和证据登记任务；不能只列单元测试或人工验证；不得把 Playwright 写入"不在范围"。
@@ -112,6 +114,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 - bugfix / issue 缺少根因、修复策略或回归测试方向。
 - refactor 缺少行为不变边界或回归验证策略。
 - technical_design 中存在会影响架构、数据、安全、成本、外部契约、发布或可靠性的 `unknown`。
+- technical_design 缺少 Architecture Contract、Implementation Handoff、Operability & Maintenance，导致任务无法确定边界、顺序、验证、回滚或维护 owner。
 - 上游存在未确认的产品、体验或技术路线取舍。
 - technical_design 的 `yes` 影响面缺少实现任务或验证任务承接。
 - 存量模块缺少 wiki 入口、读取计划或可执行文件边界。

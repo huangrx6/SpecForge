@@ -80,6 +80,9 @@ Gate Review：
 - 是否先做技术影响面矩阵和读取计划。
 - 新项目、关键技术变化或新增直接依赖是否经过用户确认、用户授权默认、已确认脚手架或可信现有栈证据。
 - 初稿后的核心决策摘要是否已经由用户确认、用户授权默认，或明确 N/A。
+- Architecture Contract 是否说明边界、职责、接口、状态、数据、安全、运行、交付、可测试性和维护成本，或给出可信 N/A。
+- Implementation Handoff 是否足以拆出任务：change slices、files/modules、sequence、test seams、rollout、rollback、do-not-touch 和 open assumptions。
+- Operability & Maintenance 是否说明日志 / 指标 / 追踪、告警 / 健康检查、owner、扩展点、废弃路径、wiki target、技术债和重看触发。
 - 版本、框架、SDK、云服务、安全或依赖行为是否查了当前官方资料或写明跳过理由。
 - `unknown`、`[NEEDS DECISION]`、`[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]`、`[NEEDS TOOLING DECISION]` 是否仍在关键路径；如果是用户取舍问题，Return to 必须指向 `sf-brainstorm`。
 - API、数据、权限、配置、后台任务、可观测性、回滚和验证策略是否具体。
@@ -119,6 +122,7 @@ Gate Review：
 - 有 UI 影响但 `ui-design.md#9` 没有 Pencil 保存状态、保存后重读校验或截图证据。
 - `ui-design.md` 声明采用 PC 端业务系统规范，但未记录 `pc-ui-design-spec.md`、核心 token、HTML/CSS 约束或偏离项。
 - 技术影响面存在但 technical design 缺失、关键 `unknown` 未闭环、关键技术 / 新增依赖 / 工具链缺少确认来源，或初稿后核心决策摘要未确认。
+- technical design 缺少 Architecture Contract、Implementation Handoff 或 Operability & Maintenance，导致边界、任务拆解、回滚、运行观察或维护 owner 不可审查。
 - technical design 对 API、数据、权限、配置、NFR 风险只写默认处理。
 - tasks 缺少核心字段 `_Trace:_`、`_Files:_`、`_Verification:_`、`_Rollback:_`、`_Risk:_`，条件字段在适用任务上缺失，或 technical design `yes` 影响面没有任务承接。
 - 有浏览器流程、上传、提交、审批、下载、权限或错误提示，但 tasks / verification plan 没有 Playwright 用例、自动执行和证据要求。

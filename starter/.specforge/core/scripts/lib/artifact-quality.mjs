@@ -61,6 +61,62 @@ function addRequiredHeadingIssues(issues, content, outputPath, headings) {
   }
 }
 
+function getSectionBody(content, heading) {
+  const lines = content.split(/\r?\n/);
+  const start = lines.findIndex((line) => /^#{1,6}\s+/.test(line) && line.replace(/^#{1,6}\s+/, "").trim() === heading);
+  if (start === -1) return null;
+  const level = headingLevel(lines[start]);
+  let end = lines.length;
+  for (let index = start + 1; index < lines.length; index += 1) {
+    const nextLevel = headingLevel(lines[index]);
+    if (nextLevel > 0 && nextLevel <= level) {
+      end = index;
+      break;
+    }
+  }
+  return lines.slice(start + 1, end).join("\n");
+}
+
+function isMeaningfulCell(value) {
+  const trimmed = value.trim();
+  if (!trimmed) return false;
+  if (/^[-:| ]+$/.test(trimmed)) return false;
+  if (/^(内容|结论|设计|证据|证据\s*\/\s*N\/A|N\/A|TBD|待填写|请输入内容)$/i.test(trimmed)) return false;
+  if (/^(Context|Container|Component|Runtime|Data|Deployment)(\s*\/\s*(Context|Container|Component|Runtime|Data|Deployment))*$/i.test(trimmed)) return false;
+  return !placeholderPattern.test(trimmed);
+}
+
+function hasMeaningfulSectionContent(body) {
+  if (!body) return false;
+  if (/N\/A\s*[-：:]\s*\S{4,}/i.test(body)) return true;
+  for (const line of body.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    if (/^\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?$/.test(trimmed)) continue;
+    if (/^\|/.test(trimmed)) {
+      const cells = trimmed.split("|").map((cell) => cell.trim()).filter(Boolean);
+      if (cells.length < 2) continue;
+      const valueCells = cells.slice(1);
+      if (valueCells.some(isMeaningfulCell)) return true;
+      continue;
+    }
+    if (isRealContentLine(trimmed)) return true;
+  }
+  return false;
+}
+
+function addRequiredFilledSectionIssue(issues, content, outputPath, heading, code, fix) {
+  const body = getSectionBody(content, heading);
+  if (!body || !hasMeaningfulSectionContent(body)) {
+    issues.push({
+      severity: "FAIL",
+      code,
+      message: `${outputPath} 缺少可审查的 ${heading} 内容。`,
+      fix,
+    });
+  }
+}
+
 function isRealContentLine(line) {
   const trimmed = line.trim();
   if (!trimmed) return false;
@@ -138,6 +194,9 @@ function lintTechnicalDesign(content, outputPath) {
     "1. 技术选型与依赖确认",
     "3. Requirements Trace",
     "7. 总体架构与边界承诺",
+    "7.1 Architecture Contract",
+    "Implementation Handoff",
+    "12. Operability & Maintenance",
     "16. 技术验证策略",
   ]);
 
@@ -177,6 +236,30 @@ function lintTechnicalDesign(content, outputPath) {
       fix: "在 Requirements Trace 中写入来源 ID、技术设计响应和验证钩子。",
     });
   }
+  addRequiredFilledSectionIssue(
+    issues,
+    content,
+    outputPath,
+    "7.1 Architecture Contract",
+    "technical-design-architecture-contract-empty",
+    "补齐架构视图、边界、职责、接口、状态、数据、安全、运行、交付、可测试性和维护成本；无架构影响时写明确 N/A 理由。",
+  );
+  addRequiredFilledSectionIssue(
+    issues,
+    content,
+    outputPath,
+    "Implementation Handoff",
+    "technical-design-implementation-handoff-empty",
+    "补齐 change slices、files/modules、sequence、test seams、rollout、rollback、do-not-touch 和 open assumptions，确保 tasks 可直接拆解。",
+  );
+  addRequiredFilledSectionIssue(
+    issues,
+    content,
+    outputPath,
+    "12. Operability & Maintenance",
+    "technical-design-operability-maintenance-empty",
+    "补齐日志/指标/追踪、告警/健康检查、owner、扩展点、废弃路径、wiki target、技术债和重看触发；无运行维护影响时写明确 N/A 理由。",
+  );
   return issues;
 }
 

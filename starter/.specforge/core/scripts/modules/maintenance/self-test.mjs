@@ -308,6 +308,45 @@ function testArtifactQualityProfiles() {
   }
 }
 
+function testTechnicalDesignContractQuality() {
+  const base = mkdtempSync("tmp-specforge-tech-quality-");
+  try {
+    const diagnosis = {
+      work_item: {
+        id: "20260613-feat-002-tech-quality",
+        path: base,
+      },
+      artifacts: [
+        {
+          id: "technical_design",
+          status: "ready",
+          outputs: ["01-spec/technical-design.md"],
+        },
+      ],
+    };
+
+    writeFixture(
+      `${base}/01-spec/technical-design.md`,
+      `# Technical Design\n\n## 0. 影响面与读取计划\n\n## 0.1 Design Quality Gate\n\n## 1. 技术选型与依赖确认\nCore Decision Review Status: confirmed\n\n## 3. Requirements Trace\n\n| Requirement | Design Response | Verification |\n|---|---|---|\n| REQ-001 | keep existing service | unit test |\n\n## 7. 总体架构与边界承诺\n\n## 16. 技术验证策略\n`,
+    );
+
+    const missingContracts = artifactQualitySummary(diagnosis);
+    assert.ok(missingContracts.issues.some((issue) => issue.code === "technical-design-architecture-contract-empty"));
+    assert.ok(missingContracts.issues.some((issue) => issue.code === "technical-design-implementation-handoff-empty"));
+    assert.ok(missingContracts.issues.some((issue) => issue.code === "technical-design-operability-maintenance-empty"));
+
+    writeFixture(
+      `${base}/01-spec/technical-design.md`,
+      `# Technical Design\n\n## 0. 影响面与读取计划\n\n## 0.1 Design Quality Gate\n\n## 1. 技术选型与依赖确认\nCore Decision Review Status: confirmed\n\n## 3. Requirements Trace\n\n| Requirement | Design Response | Verification |\n|---|---|---|\n| REQ-001 | keep existing service | unit test |\n\n## 7. 总体架构与边界承诺\n\n## 7.1 Architecture Contract\n| 维度 | 结论 | 证据 / N/A |\n|---|---|---|\n| Boundary | service layer only | src/service.ts |\n\n## Implementation Handoff\n| 项 | 内容 |\n|---|---|\n| Change slices | service update, unit test |\n| Rollback seam | revert service change |\n\n## 12. Operability & Maintenance\n| 项 | 设计 |\n|---|---|\n| Owner / owning module | orders service |\n| Revisit trigger | error rate rises after release |\n\n## 16. 技术验证策略\n`,
+    );
+
+    const passing = artifactQualitySummary(diagnosis);
+    assert.equal(passing.issues.some((issue) => issue.severity === "FAIL"), false);
+  } finally {
+    rmSync(base, { recursive: true, force: true });
+  }
+}
+
 testRegistrySingleActiveRemoval();
 testRegistryKeepsOtherActiveEntries();
 testArchiveAppend();
@@ -317,5 +356,6 @@ testStageEvalFixturesCoverStages();
 testStageScoreRubricCoversStages();
 testPromptSkillDriftRules();
 testArtifactQualityProfiles();
+testTechnicalDesignContractQuality();
 
 console.log("SpecForge self-test passed.");
