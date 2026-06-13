@@ -55,7 +55,7 @@ git status --short --untracked-files=all
 1. 从 tasks 建立任务执行图：task -> batch -> `_Trace:_` -> `_Files:_` -> `_Boundary:_` -> `_Verification:_` -> `_Rollback:_` -> risk。
    - 如果 tasks 已填写 `任务图与执行策略`，以其中依赖、并行边界和禁止同时修改文件为准。
    - 若实际执行需要改变依赖或并行边界，停止并回到 `sf-tasking` 更新任务图。
-2. 从 `technical-design.md#0. 影响面与读取计划` 和相关 wiki 建立上下文边界：入口路径、关键符号 / 路由、上游 / 下游、测试位置和运行命令。
+2. 从 `technical-design.md#0. 影响面与读取计划`、`#7.1 Architecture Contract`、`#Implementation Handoff`、`#12. Operability & Maintenance` 和相关 wiki 建立上下文边界：入口路径、关键符号 / 路由、上游 / 下游、测试位置、运行命令、change slices、files/modules、test seams、rollout、rollback、owner 和 revisit trigger。
 3. 实现前只沿上述边界读取代码；不得为了“保险”重新全量扫描仓库。
 4. 若任务边界、验证方式、回滚信息不足以指导实现，停止并退回 `sf-tasking` 或 `sf-spec-review`。
 5. 若存在 `[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]`、关键 `unknown`，停止并退回 `sf-tech-design` 或 `sf-spec-review`。
@@ -74,8 +74,9 @@ git status --short --untracked-files=all
 2. UI 实现必须追溯到 `ui-design.md` 的页面地图、状态矩阵、Visual Style Brief、Pencil `.pen` 和导出截图。
 3. UI 实现必须追溯到 Design Contract Summary：token source、component strategy、shadcn-vue primitive layer、project wrapper layer、motion source、anti-slop rules 和 verification hooks。
 4. PC 端业务系统规范被采用时，HTML / CSS / 组件样式必须使用 `pc-ui-design-spec.md` token，不接受 UI 库默认主题或临时改值。
-5. 技术实现必须追溯到 `technical-design.md` 的 API、数据、安全、配置、运行、可观测性和验证策略。
-5. 每完成一个 task，运行对应快速验证或写明不能运行的原因；task 状态只能是 `DONE`、`DONE_WITH_CONCERNS`、`BLOCKED`、`NEEDS_SPEC`。
+5. 技术实现必须追溯到 `technical-design.md` 的 API、数据、安全、配置、运行、可观测性、Architecture Contract、Implementation Handoff、Operability & Maintenance 和验证策略。
+6. `Implementation Handoff` 中的 do-not-touch、rollback seam、open assumptions 必须在实现计划中复述；需要偏离时停止回到 `sf-tasking` / `sf-tech-design`。
+7. 每完成一个 task，运行对应快速验证或写明不能运行的原因；task 状态只能是 `DONE`、`DONE_WITH_CONCERNS`、`BLOCKED`、`NEEDS_SPEC`。
 
 ### D. 持续维护证据
 
@@ -100,6 +101,7 @@ git diff --stat
 | 需要修改 `_Boundary:_` 外文件 | 停止：超出批准范围 |
 | 存量项目任务需要先全仓查找才能知道改哪里 | 停止：退回 `sf-tasking` / `sf-tech-design` / `sf-steering` 补 wiki 和边界 |
 | technical design 仍有关键 `unknown` 或未确认技术 / 依赖决策 | 停止：技术决策未确认 |
+| Architecture Contract / Implementation Handoff / Operability & Maintenance 为空或与 tasks 边界冲突 | 停止：退回 `sf-tech-design` / `sf-tasking` |
 | UI 原型、Pencil 截图或 PC 规范 token 缺失但实现依赖它们 | 停止：UI 设计缺失 |
 | 快速验证失败且无法在当前 task 范围内修复 | 停止：说明原因，等待用户决策 |
 
@@ -109,6 +111,7 @@ git diff --stat
 - tasks 中完成项有代码、验证或可信 N/A、变更文件登记和状态说明。
 - tasks 的任务图、实现顺序和真实 diff 一致；未按计划并行或调整顺序时已有说明。
 - technical design `yes / no / unknown` 影响面对账清楚。
+- Architecture Contract、Implementation Handoff、Operability & Maintenance 的实现对账清楚，尤其是 rollback seam、owner、extension point 和 revisit trigger。
 - 属于本 work item 的真实 git diff 均已登记；无关已有改动已排除并说明。
 - 没有把 `DONE_WITH_CONCERNS`、`BLOCKED`、`NEEDS_SPEC` 描述成已完成。
 - 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。

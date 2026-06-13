@@ -11,7 +11,7 @@
 | requirements / gap report | 验收标准、bugfix 回归、失败模式 |
 | tasks | 每个 `_Verification:_` 有结果 |
 | ui-design | 页面、操作、角色、状态、Pencil 和视觉约束 |
-| technical-design | API、数据、权限、安全、配置、运行、NFR |
+| technical-design | API、数据、权限、安全、配置、运行、Architecture Contract、Implementation Handoff、Operability & Maintenance、NFR |
 | implementation report | 实际变更、偏离、快速验证 |
 | code review | findings、residual risks、verification notes |
 
@@ -52,6 +52,7 @@
 | 配置 / 启动 | build、typecheck、启动、健康检查 |
 | 后台任务 | 幂等、重试、失败恢复或日志证据 |
 | 可观测性 | 日志、指标、trace 或 dashboard 证据 |
+| 架构 / 实施 / 维护契约 | 边界未越界证明、rollout / rollback 验证、owner、extension point、wiki target、revisit trigger |
 
 强证据区域：安全、权限、数据、迁移、外部契约、生产配置、后台任务、AI 调用和发布风险。强证据区域不能只用“人工看过”批准。
 

@@ -63,6 +63,9 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
    - `yes` 影响面必须有对应代码 / 配置 / 文档变更和验证证据；若实现阶段决定不做，必须在 implementation report 中写明偏离、风险和退回路径。
    - `no` 影响面不得出现未经批准的真实 diff；例如 technical design 判定无数据影响，却新增 migration、schema、ORM model 或持久化字段。
    - `unknown` 不得直接落地实现；凡在 code review 才发现的架构、数据、安全、成本、外部契约、发布或可靠性未知项，必须退回 spec。
+   - `Architecture Contract`：真实 diff 必须落在批准的边界、职责、接口、状态、数据和安全范围内。
+   - `Implementation Handoff`：实现顺序、文件模块、test seams、rollout、rollback seam、do-not-touch 和 open assumptions 必须被实现报告或任务覆盖。
+   - `Operability & Maintenance`：owner、日志/指标/trace、health check、extension point、deprecation path、wiki target、technical debt 和 revisit trigger 不得丢失。
 8. **审查工程风险**
    - 安全、权限、输入校验、日志脱敏、secret、错误处理、并发、幂等、兼容性、配置默认值、新依赖、迁移和回滚。
 9. **审查验证证据**
@@ -79,6 +82,7 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
 - 真实 diff、changed-files、implementation report 三者不一致，且缺少可信解释。
 - technical_design 中为 `no` 的影响面出现未经批准的代码改动，或 `unknown` 被直接实现。
 - technical_design 中为 `yes` 的影响面缺少实现证据、验证证据或明确偏离说明。
+- technical_design 的 Architecture Contract、Implementation Handoff 或 Operability & Maintenance 被实现违反、遗漏或无法对账。
 - tasks 中 P0 / P1 / 核心任务未实现，或 implementation report 与实际 diff 不一致。
 - 完成任务的 `_Impact:_` 与真实 diff 或 implementation report 的影响面对账冲突。
 - required 测试、启动验证、迁移、权限或安全证据缺失。

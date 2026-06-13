@@ -21,6 +21,7 @@ description: SpecForge 内部关闭技能。用于 wiki_sync 已批准后，写 
 - `04-code-review/code-review-v1.md`
 - `03-implementation/report.md`
 - `03-implementation/changed-files.md`
+- `01-spec/technical-design.md`（存在时，用于 release observation、rollback seam、owner、revisit trigger）
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/wiki.md`
 - `.specforge/core/standards/engineering.md`
@@ -45,6 +46,7 @@ description: SpecForge 内部关闭技能。用于 wiki_sync 已批准后，写 
    - 摘要本次交付了什么、影响哪些用户 / 模块 / 环境。
    - 记录发布前检查、发布步骤、发布后观察点。
    - 引用 verification gate、wiki_sync gate、implementation report 和 residual risks；不能只写“已完成”。
+   - 对齐 technical design 的 release observation、owner、wiki target、technical debt 和 revisit trigger。
    - 如果 verification 包含 `manual-confirmed`、`deferred` 或外部待补证项，必须进入发布后观察点或 follow-up。
    - 如果本次不涉及生产发布，写清 N/A 理由和交付状态。
 
@@ -52,6 +54,7 @@ description: SpecForge 内部关闭技能。用于 wiki_sync 已批准后，写 
    - 写触发条件、回滚步骤、数据 / 配置回退、回滚后验证。
    - 如果无法回滚，必须写不可回滚原因、风险接受人和补偿措施。
    - 回滚触发条件必须覆盖 verification 残余风险、release 观察点和关键业务 / 技术指标。
+   - 回滚步骤必须对齐 technical design 的 rollback seam；不能只写“回滚代码”。
 
 4. **归档前检查**
 

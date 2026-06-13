@@ -60,6 +60,7 @@ description: SpecForge 内部 Wiki 同步技能。用于 closure 前判断 work 
 ## 回写流程
 
 1. **收集候选事实**：从 PRD / requirements / ui_design / technical_design / implementation report / verification report 提取长期有效事实。
+   - 从 `technical-design.md#7.1 Architecture Contract`、`#Implementation Handoff`、`#12. Operability & Maintenance` 提取 owner、boundary、interface、operability、extension point、deprecation path、wiki target、technical debt 和 revisit trigger。
 2. **判断复用价值**：至少沉淀一个未来 work item 会复用的事实；确实没有时写 `N/A - 无长期事实`，不要把过程流水账塞进 wiki。
 3. **判定写入目标**：使用“判断维度”表选择唯一目标文件；一个知识项只维护一个 current 文件。
 4. **对照现有 wiki**：读取目标文件和 `00-index.md`，判断是更新当前事实、补充新章节，还是写 N/A。
@@ -76,6 +77,7 @@ description: SpecForge 内部 Wiki 同步技能。用于 closure 前判断 work 
 - 同一知识项不得存在多个 current 文件；不得创建日期版、work item 版或 v2 版 wiki。
 - 说明没有更新的理由。
 - 写明契约变化、下游重新验证要求和来源证据。
+- 写明 Architecture Contract、Implementation Handoff、Operability & Maintenance 中哪些事实已回写，哪些 N/A，以及对应 wiki target。
 - 写明未确认缺口：缺失的 API、数据模型、架构链路、运行配置或证据不足项。
 - 本次若确认或实现了 PC 端业务系统 UI 规范，写明是否更新 `design-system.md`；不更新时说明该规范是否只是一次性页面约束。
 - 更新 `.specforge/wiki/00-index.md` 的当前知识项、摘要和最后同步时间。

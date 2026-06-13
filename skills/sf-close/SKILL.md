@@ -55,6 +55,7 @@ node .specforge/core/scripts/create-artifact.mjs wiki_sync
    - 架构、模块边界、API、事件、SDK。
    - 数据模型、配置、权限、安全。
    - 运行、发布、回滚、可观测性。
+   - technical design 的 rollout、rollback seam、owner、extension point、deprecation path、wiki target、technical debt、revisit trigger。
    - 决策、风险、技术债。
 4. 更新 `.specforge/wiki/` 中当前知识文件，或在 `06-close/wiki-sync.md` 写明不更新理由。
 5. 批准 gate：
@@ -79,12 +80,14 @@ node .specforge/core/scripts/create-artifact.mjs closure
    - 发布后观察点。
    - HTML / 可视化报告链接（如有），并说明 Markdown artifact 仍是事实源。
    - 引用 verification、wiki sync、implementation report、code review。
+   - 对齐 `technical-design.md#12. Operability & Maintenance` 的观察点、owner、wiki target 和 revisit trigger。
 
 3. 写 `06-close/rollback.md`：
    - 回滚触发条件。
    - 回滚步骤。
    - 数据 / 配置 / feature flag / 外部服务回退。
    - 回滚后验证。
+   - 对齐 `technical-design.md#Implementation Handoff` 的 rollback seam 和 `#12. Operability & Maintenance` 的 revisit trigger。
    - 不可回滚时写原因、风险接受人和补偿措施。
 
 4. 归档前检查：

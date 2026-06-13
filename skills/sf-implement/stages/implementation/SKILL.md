@@ -62,7 +62,7 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
    - 从 tasks 提取批次、依赖、`_Impact:_`、`_Files:_`、`_Boundary:_`、`_Verification:_`、`_Rollback:_`、风险和预计变更文件。
    - 如 tasks 包含 `任务图与执行策略`，必须按其中依赖、可并行边界、主要写入边界和交接证据执行。
    - 需要调整任务依赖、并行边界或主要写入文件时，停止并退回 `sf-tasking`。
-   - 从 `technical-design.md#0. 影响面与读取计划` 以及相关 wiki 提取 `yes` / `no` / `unknown`、入口路径、关键符号 / 路由、上游 / 下游、测试位置和运行命令，形成实现影响面对账计划。
+   - 从 `technical-design.md#0. 影响面与读取计划`、`#7.1 Architecture Contract`、`#Implementation Handoff`、`#12. Operability & Maintenance` 以及相关 wiki 提取 `yes` / `no` / `unknown`、入口路径、关键符号 / 路由、上游 / 下游、测试位置、运行命令、change slices、files/modules、test seams、rollout、rollback、owner 和 revisit trigger，形成实现影响面对账计划。
    - 只沿上述 bounded context 读取代码；不得为了“保险”重新全量扫描仓库。
    - 如果任务边界不足以指导写入，停止回到 `sf-tasking` 或 `sf-spec-review`。
    - 如果 `technical-design.md` 仍有 `[NEEDS TECH DECISION]` 或 `[NEEDS DEPENDENCY DECISION]`，停止回到 `sf-tech-design` 确认技术选型或新增依赖。
@@ -77,11 +77,13 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
    - 如果 `ui-design.md` 声明采用 PC 端业务系统规范，必须同时读取 `.specforge/core/standards/pc-ui-design-spec.md`；生成 HTML/CSS 或组件样式时严格使用该规范 token，不得使用 UI 库默认主题或临时改值。
    - Pencil 原型：读取导出截图和 `ui-design.md` 中的页面/状态矩阵，以原型为布局和交互参照实现。
    - 为 Playwright E2E 保留稳定可访问选择器：优先 role、label、可见文本；必要时补 `data-testid`。不能为了测试绕过真实用户路径。
-5. **实现技术变更前先读取 `technical-design.md`**，按其中的前后端边界、API、数据、权限、配置、NFR 和验证策略执行。
+5. **实现技术变更前先读取 `technical-design.md`**，按其中的前后端边界、API、数据、权限、配置、NFR、Architecture Contract、Implementation Handoff、Operability & Maintenance 和验证策略执行。
    - `yes` 影响面：必须落到代码 / 配置 / 文档变更、关联任务和快速验证。
    - `no` 影响面：不得出现未经批准的真实 diff；发现必须修改时停止退回 spec。
    - `unknown` 影响面：不得以实现代替澄清。
    - `[NEEDS TECH DECISION]` / `[NEEDS DEPENDENCY DECISION]`：不得以实现代替用户确认。
+   - `Implementation Handoff`：必须承接 change slices、files/modules、sequence、test seams、rollout、rollback seam、do-not-touch 和 open assumptions。
+   - `Operability & Maintenance`：必须承接 owner、extension point、deprecation path、wiki target、technical debt 和 revisit trigger。
 6. **按任务逐项实现，保持小步可审查**
    - 优先从 W0 的契约、脚手架、失败优先验证开始。
    - 行为变更默认采用失败优先验证：先新增或定位一个能失败的单元 / 集成 / 契约 / Playwright 用例，再写生产代码使其通过。确实无法先写失败用例时，必须在 report 中说明原因和替代证据。
@@ -110,6 +112,7 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
 - 发现设计错误、需求矛盾或 UI 原型 / technical design 缺失。
 - technical_design 影响面仍有关键 `unknown`，或实现需要修改被批准为 `no` 的影响面。
 - technical_design 仍残留 `[NEEDS TECH DECISION]` 或 `[NEEDS DEPENDENCY DECISION]`。
+- technical_design 的 Architecture Contract、Implementation Handoff 或 Operability & Maintenance 缺失、空置，或与 tasks / 实际实现边界冲突。
 - 涉及安全、权限、数据迁移、AI 调用、外部集成、生产配置或发布风险但缺少验证计划。
 - 既不能运行关键验证，也没有可接受的替代证据。
 
@@ -117,6 +120,7 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
 
 - 所有已实现任务有对应代码和证据。
 - tasks 勾选状态、实现报告、变更文件清单、technical_design 影响面对账和真实 git 状态一致。
+- implementation report 已对账 Architecture Contract、Implementation Handoff、Operability & Maintenance 中适用的边界、顺序、回滚、owner 和维护触发条件。
 - 任务图、实际执行顺序、并行边界和真实 diff 一致；偏离已有说明。
 - 启动 / 构建 / 局部验证结果已记录。
 - implementation report 写清偏差、验证、已知缺口和 code review 重点。

@@ -52,10 +52,10 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 4. **建立覆盖矩阵**
    - requirements / gap_report / tasks / code review notes 每项都要映射到验证方式和证据。
    - 每个 tasks 的 `_Verification:_` 必须有通过 / 失败 / 跳过及理由。
-   - code review 中 Technical Design 影响面实现审查的 `yes`、residual risk 和 verification notes 必须映射到验证证据或可信跳过理由。
+   - code review 中 Technical Design 影响面实现审查的 `yes`、Architecture Contract、Implementation Handoff、Operability & Maintenance、residual risk 和 verification notes 必须映射到验证证据或可信跳过理由。
 5. **按风险选择验证层级**
    - 单元、集成、契约、E2E、UI 手工、静态检查、构建、启动、配置、迁移、回滚、可观测性。
-   - 安全、权限、数据、迁移、外部契约、后台任务、发布配置、可观测性和可靠性属于强证据区域，不能只用“人工看过”批准。
+   - 安全、权限、数据、迁移、外部契约、后台任务、发布配置、可观测性、回滚、owner/revisit trigger 和可靠性属于强证据区域，不能只用“人工看过”批准。
 6. **UI 变更验证**
    - 构建页面 × 操作 × 角色 × 状态矩阵。
    - 覆盖默认、空、加载、成功、错误、权限不足、禁用、边界值和响应式中适用项。
@@ -71,7 +71,7 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
    - 典型闭环：创建 -> 提交审批 -> 审批通过 -> 执行 -> 查看结果 -> 下载。
    - 异常态如提交审批 400、执行失败、无权限、文件下载 403、网络超时也必须通过 Playwright 或契约 / 集成测试记录验证；UI 必须断言错误文案、按钮状态、页面是否停留以及是否展示后端 detail / fallback message。
 8. **运行和交付验证**
-   - 记录安装、构建、dev server / service 启动、环境变量、迁移、回滚、健康检查、日志 / 指标 / trace 中适用项。
+   - 记录安装、构建、dev server / service 启动、环境变量、迁移、回滚、健康检查、日志 / 指标 / trace、release observation、wiki target、revisit trigger 中适用项。
 9. **跳过项闭环**
    - 每个跳过项必须写明原因、已有证据、证据强度、影响、owner、重新验证触发条件和可接受期限。
    - 外部真实环境、第三方系统或低风险残余无法直接证明时，先请求人工确认；用户确认后标记 `manual-confirmed` / `deferred`。
@@ -104,6 +104,7 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 - 关键验收标准没有验证证据。
 - 关键验收证据为 `missing`，且没有低风险人工确认或外部补证计划。
 - code review 标记的 technical_design `yes` 影响面没有验证证据，或跳过项没有 owner、影响和重新验证触发条件。
+- technical_design 的 Architecture Contract、Implementation Handoff 或 Operability & Maintenance 中承诺的 rollout、rollback、观察点、owner、extension point、wiki target 或 revisit trigger 没有验证证据或可信跳过理由。
 - UI 关键路径只测 happy path。
 - 有浏览器流程但未先写 `05-verification/test-cases.md` 和 Playwright 用例、未执行自动化操作，或只用单元测试 / 手工点击替代。
 - 使用 XMind 但没有导出 Markdown / JSON，或导出内容未回填到 TC/PW 用例。

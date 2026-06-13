@@ -73,6 +73,7 @@ node .specforge/core/scripts/sync-wiki.mjs
 3. 按 `ai-toolkit.md#持续演进` 判断是否至少有一个可复用事实；确实没有时写 `N/A - 无长期事实` 和理由。
 4. 只影响一次性实现、临时日志、测试输出、截图或局部无复用备注时，在 `06-close/wiki-sync.md` 写 N/A 理由，不更新 wiki。
 5. 改变长期产品、架构、接口、数据、运行、设计系统、术语、风险时，必须更新对应 wiki 文件。
+6. 若 `technical-design.md#7.1 Architecture Contract`、`#Implementation Handoff` 或 `#12. Operability & Maintenance` 声明了 owner、extension point、deprecation path、wiki target、technical debt 或 revisit trigger，必须按其 wiki target 回写或在 `wiki-sync.md` 写明可信 N/A。
 
 ### C. 更新 wiki
 
@@ -105,6 +106,7 @@ node .specforge/core/scripts/gate.mjs wiki_sync REQUEST_CHANGES
 | verification 未批准，且处于 close 前 wiki_sync | 停止，回 `sf-verify` |
 | 只是一次性过程记录、日志、截图、临时调试 | 不更新 wiki，写 N/A 理由 |
 | 长期产品 / 架构 / API / 数据 / 运行 / 设计系统 / 风险变化 | 更新对应 wiki |
+| technical design 声明 wiki target、owner、extension point、deprecation path、technical debt 或 revisit trigger | 更新对应 wiki / `08-risks.md` / `06-decisions.md` |
 | artifact 与现有 wiki 冲突且无法判断最新事实 | `REQUEST_CHANGES` |
 | 会产生重复 current 文件 | 停止，合并到唯一目标文件 |
 

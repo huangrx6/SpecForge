@@ -79,7 +79,8 @@ node .specforge/core/scripts/create-artifact.mjs code_review
 1. feature / standard / lite：对照 requirements、适用 UI design、technical design。
 2. bugfix / issue：对照 gap report 的根因、修复策略和回归测试。
 3. refactor：对照 technical design 的行为不变边界和回归策略。
-4. 若实现与 approved spec 不一致，优先记录 P0 / P1，不用代码风格建议冲淡主要风险。
+4. 对照 `technical-design.md#7.1 Architecture Contract`、`#Implementation Handoff`、`#12. Operability & Maintenance`：真实 diff 是否落在架构边界内，是否按 change slices / sequence / do-not-touch 执行，是否保留 rollback seam、owner、extension point 和 revisit trigger。
+5. 若实现与 approved spec 不一致，优先记录 P0 / P1，不用代码风格建议冲淡主要风险。
 
 ### D. 外部 `code-reviewer` 联动
 
@@ -127,6 +128,8 @@ node .specforge/core/scripts/gate.mjs code_review REJECTED
 | `changed-files.md`、implementation report、真实 diff 不一致且缺少可信解释 | `REQUEST_CHANGES` |
 | technical design 的 `no` 影响面出现未经批准代码改动 | `REQUEST_CHANGES` |
 | technical design 的 `unknown` 被直接实现 | `REJECTED` 或退回 spec |
+| 真实 diff 违反 Architecture Contract、Implementation Handoff 的 do-not-touch / sequence / rollback seam | `REQUEST_CHANGES` 或 `REJECTED` |
+| 实现遗漏 Operability & Maintenance 中承诺的 owner、观察点、扩展点、废弃路径或 wiki target | `REQUEST_CHANGES` |
 | required 测试、启动、迁移、权限或安全证据缺失 | `REQUEST_CHANGES` |
 | 引入 secret、敏感日志、越权路径、危险默认配置或未受控外部调用 | `REJECTED` 或 `REQUEST_CHANGES` |
 | 只有 P2 / P3，且残余风险和 verification 提示清楚 | 可 `APPROVED` |

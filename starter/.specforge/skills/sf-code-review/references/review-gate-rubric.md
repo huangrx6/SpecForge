@@ -49,6 +49,9 @@
 - Technical design 的 `yes` 影响面是否有代码 / 配置 / 文档变更和验证证据。
 - Technical design 的 `no` 影响面是否出现未经批准 diff。
 - Technical design 的 `unknown` 是否被直接实现。
+- Architecture Contract 是否被真实 diff 遵守：边界、职责、接口、状态、数据、安全、运行和维护成本没有越界。
+- Implementation Handoff 是否被实现报告和 diff 承接：change slices、sequence、files/modules、test seams、rollout、rollback seam、do-not-touch 和 open assumptions。
+- Operability & Maintenance 是否被保留：日志 / 指标 / trace、health check、owner、extension point、deprecation path、wiki target、technical debt 和 revisit trigger。
 - 实现是否新增依赖、环境变量、迁移、外部调用或权限路径，而 spec 没批准。
 
 ## 外部 code-reviewer 联动
@@ -90,6 +93,7 @@
 | UI | 状态矩阵、权限视图、错误、loading、empty、a11y、响应式 |
 | 配置 / 环境 | env var、默认值、密钥处理、文档 |
 | 测试 | happy path、失败路径、边界、权限、回归、启动验证 |
+| 架构契约 | Architecture Contract、Implementation Handoff、Operability & Maintenance 是否被 diff / report / tasks 对账 |
 | Wiki | API、数据模型、配置、运行方式、产品规则或术语是否需要同步 |
 
 ## Finding 格式

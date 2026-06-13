@@ -61,7 +61,7 @@ node .specforge/core/scripts/create-artifact.mjs verification
 2. code review 的 residual risks / verification notes。
 3. requirements / gap report 的验收标准、回归和失败模式。
 4. ui design 的页面 × 操作 × 角色 × 状态矩阵。
-5. technical design 的 API、数据、权限、安全、配置、启动、回滚、可观测性和 NFR。
+5. technical design 的 API、数据、权限、安全、配置、启动、回滚、可观测性、Architecture Contract、Implementation Handoff、Operability & Maintenance 和 NFR。
 
 ### C. 执行验证
 
@@ -102,6 +102,7 @@ node .specforge/core/scripts/gate.mjs verification REJECTED
 | 使用 XMind 但没有导出 Markdown / JSON，或导出内容未回填到 TC/PW 用例 | `REQUEST_CHANGES` |
 | UI 只测 happy path、单角色或单状态 | `REQUEST_CHANGES` |
 | 安全、权限、数据迁移、配置、回滚或公共 API 缺强证据 | `REQUEST_CHANGES` |
+| Architecture Contract、Implementation Handoff 或 Operability & Maintenance 中的 rollout、rollback、观察点、owner、revisit trigger 未验证或未写跳过理由 | `REQUEST_CHANGES` |
 | 验证需要的启动、测试、回滚或风险入口在 wiki 中缺失且报告未记录补证方式 | `REQUEST_CHANGES` 或转 `sf-wiki` 补齐 |
 | 实现明显偏离 approved spec | `REJECTED` 或退回 spec |
 | 只有低风险跳过项，且 owner、影响、触发条件和人工确认清楚 | 可 `APPROVED` |
