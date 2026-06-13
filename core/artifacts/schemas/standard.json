@@ -140,6 +140,7 @@
       "title": "验证证据",
       "description": "记录测试、构建、手工验证、日志或其他可追溯证据。",
       "outputs": [
+        "05-verification/test-cases.md",
         "05-verification/report.md",
         "05-verification/ci-result.md"
       ],

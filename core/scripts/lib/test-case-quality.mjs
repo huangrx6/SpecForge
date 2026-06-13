@@ -1,4 +1,4 @@
-import { exists, readText } from "./specforge.mjs";
+import { exists, parseComponents, readText } from "./specforge.mjs";
 
 const evidenceLevels = new Set(["proven", "mocked", "manual-confirmed", "deferred", "missing"]);
 const riskLevels = new Set(["high", "medium", "low"]);
@@ -96,7 +96,51 @@ function parseReportCaseIds(workItemBase) {
   );
 }
 
-function classifyIssues(workItemBase, testCases, playwrightCases, designArtifacts, reportCaseIds) {
+function parseReportPlaywrightIds(workItemBase) {
+  const reportPath = `${workItemBase}/05-verification/report.md`;
+  if (!exists(reportPath)) return new Set();
+  const report = readText(reportPath);
+  return new Set(
+    parseTableRows(report, /^###\s+Playwright E2E 用例与执行/i, 9, /用例 ID|页面|流程/i)
+      .map((cells) => cells[0])
+      .filter((id) => /^PW-\d+/i.test(id)),
+  );
+}
+
+function readIfExists(path) {
+  return exists(path) ? readText(path) : "";
+}
+
+function explicitTrue(value) {
+  return ["true", "yes", "y", "1", "on"].includes(String(value ?? "").trim().toLowerCase());
+}
+
+function browserFlowRequired(workItemBase) {
+  const workYaml = readIfExists(`${workItemBase}/work.yaml`);
+  const components = parseComponents(workYaml);
+  const hasUi = explicitTrue(components.has_ui) || exists(`${workItemBase}/01-spec/ui-design.md`);
+  if (!hasUi) return false;
+
+  const content = [
+    readIfExists(`${workItemBase}/01-spec/requirements.md`),
+    readIfExists(`${workItemBase}/01-spec/gap-report.md`),
+    readIfExists(`${workItemBase}/01-spec/tasks.md`),
+    readIfExists(`${workItemBase}/01-spec/ui-design.md`),
+    readIfExists(`${workItemBase}/01-spec/technical-design.md`),
+    readIfExists(`${workItemBase}/04-code-review/code-review-v1.md`),
+  ].join("\n");
+
+  return /页面|按钮|表单|上传|提交|审批|下载|权限|路由|错误提示|登录|点击|弹窗|抽屉|响应式|upload|submit|approve|download|permission|route|form|button|login|click|modal|drawer|responsive|error/i.test(content);
+}
+
+function evidencePathCandidates(value) {
+  return String(value ?? "")
+    .split(/[,，\s]+/)
+    .map((item) => item.trim().replace(/[).;，。]+$/, ""))
+    .filter((item) => /^(05-verification\/|evidence\/).+/.test(item));
+}
+
+function classifyIssues(workItemBase, testCases, playwrightCases, designArtifacts, reportCaseIds, reportPlaywrightIds) {
   const issues = [];
 
   if (testCases.length === 0) {
@@ -104,6 +148,14 @@ function classifyIssues(workItemBase, testCases, playwrightCases, designArtifact
       severity: "FAIL",
       code: "no-test-cases",
       message: "05-verification/test-cases.md 缺少可解析的 TC-* 测试用例。",
+    });
+  }
+
+  if (browserFlowRequired(workItemBase) && playwrightCases.length === 0) {
+    issues.push({
+      severity: "FAIL",
+      code: "browser-flow-without-playwright",
+      message: "当前 work item 存在 UI / 浏览器流程信号，但 05-verification/test-cases.md 缺少 PW-* Playwright 用例。",
     });
   }
 
@@ -162,10 +214,26 @@ function classifyIssues(workItemBase, testCases, playwrightCases, designArtifact
     }
     if (isChoiceOrPlaceholder(playwrightCase.evidence)) {
       issues.push({
-        severity: "WARN",
+        severity: "FAIL",
         code: "playwright-evidence-not-declared",
         message: `${playwrightCase.id || "unknown"} 尚未声明截图 / trace / 日志证据路径。`,
       });
+    }
+    if (reportPlaywrightIds.size > 0 && !reportPlaywrightIds.has(playwrightCase.id)) {
+      issues.push({
+        severity: "WARN",
+        code: "playwright-case-not-in-report",
+        message: `${playwrightCase.id} 未出现在 verification report 的 Playwright E2E 用例与执行表中。`,
+      });
+    }
+    for (const evidencePath of evidencePathCandidates(playwrightCase.evidence)) {
+      if (!exists(`${workItemBase}/${evidencePath}`)) {
+        issues.push({
+          severity: "WARN",
+          code: "missing-playwright-evidence-path",
+          message: `${playwrightCase.id || "unknown"} 声明的证据路径不存在：${evidencePath}`,
+        });
+      }
     }
   }
 
@@ -214,7 +282,8 @@ export function testCaseQualitySummary(workItemBase, testCasePath = "05-verifica
   const playwrightCases = parsePlaywrightCases(content);
   const designArtifacts = parseTestDesignArtifacts(content);
   const reportCaseIds = parseReportCaseIds(workItemBase);
-  const issues = classifyIssues(workItemBase, testCases, playwrightCases, designArtifacts, reportCaseIds);
+  const reportPlaywrightIds = parseReportPlaywrightIds(workItemBase);
+  const issues = classifyIssues(workItemBase, testCases, playwrightCases, designArtifacts, reportCaseIds, reportPlaywrightIds);
 
   return {
     path: testCasePath,
@@ -227,6 +296,7 @@ export function testCaseQualitySummary(workItemBase, testCasePath = "05-verifica
       playwright_cases: playwrightCases.length,
       test_design_artifacts: designArtifacts.length,
       report_case_ids: reportCaseIds.size,
+      report_playwright_ids: reportPlaywrightIds.size,
     },
     issues,
   };

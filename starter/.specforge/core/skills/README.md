@@ -22,7 +22,7 @@
 | `requirements/` | 用户故事、验收标准和可测试性 | `user-stories` |
 | `ui-ux/` | UX 研究、设计语言、Pencil 原型、设计转代码参考 | `ux-designer`, `design-system`, `pencil` |
 | `research/` | 多来源研究综合 | `deep-research` |
-| `quality/` | Code review 与浏览器验证参考 | `code-reviewer`, `playwright-skill` |
+| `quality/` | Code review、测试设计与浏览器验证参考 | `code-reviewer`, `test-design`, `playwright-skill` |
 
 ## 保留 Skill
 
@@ -34,6 +34,7 @@
 | `pencil` | `ui-ux/pencil` | Pencil MCP 原型读写、组件复用、tokens、布局检查、截图导出和设计转代码参考 | `01-spec/ui-design.md`、`.pen` 源文件、导出截图、前端实现备注 |
 | `design-system` | `ui-ux/design-system` | 设计语言、foundations、组件规范、页面模式、shadcn-vue 映射、动效边界和去廉价感审查 | `01-spec/ui-design.md`、Pencil 输入、前端组件契约 |
 | `playwright-skill` | `quality/playwright-skill` | 浏览器 E2E、真实操作、截图和响应式验证 | `05-verification/test-cases.md`、`05-verification/report.md`、`05-verification/evidence/` |
+| `test-design` | `quality/test-design` | 测试设计树、XMind / 白板导出、TC / PW 用例矩阵和自动化分层策略 | `05-verification/test-design/`、`05-verification/test-cases.md`、`05-verification/report.md` |
 | `code-reviewer` | `quality/code-reviewer` | 安全、性能、正确性和可维护性的 code review 参考清单 | `04-code-review/code-review-v1.md`、`05-verification/report.md` |
 | `ux-designer` | `ui-ux/ux-designer` | 用户研究、信息架构、交互、可访问性和视觉层级参考 | `01-spec/research.md`、`01-spec/ui-design.md` |
 | `deep-research` | `research/deep-research` | 多来源研究综合、引用和共识/争议拆解参考 | `01-spec/research.md` |
@@ -48,6 +49,7 @@
 - UX 参考只补充研究、流程和可访问性证据，不替代 Pencil 原型或 SpecForge UI artifact。
 - 深度研究参考必须绑定真实来源；遇到当前事实、法规、价格、版本或新闻时另行联网核验。
 - Code review 参考只补充检查维度，不替代 `sf-code-review` gate。
+- Verification 前如需系统化测试设计、XMind / 白板导出、TC / PW 矩阵或自动化分层，先参考 `test-design`，再用 `test-case-quality.mjs` 检查。
 - Verification 有浏览器流程时必须有 Playwright 用例和真实自动化操作证据。
 - 第三方输出只当作参考笔记，不替代用户确认、SpecForge 模板或 gate evidence。
 

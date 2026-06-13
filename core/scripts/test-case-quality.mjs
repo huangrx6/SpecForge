@@ -30,6 +30,7 @@ function markdown(diagnosis, quality) {
 - Playwright cases: ${quality.summary?.playwright_cases ?? 0}
 - Test design artifacts: ${quality.summary?.test_design_artifacts ?? 0}
 - Report case ids: ${quality.summary?.report_case_ids ?? 0}
+- Report Playwright ids: ${quality.summary?.report_playwright_ids ?? 0}
 - Issues: ${quality.issues.length}
 
 ## Issues

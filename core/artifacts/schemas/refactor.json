@@ -85,6 +85,7 @@
       "title": "验证证据",
       "description": "确认功能无回归破坏",
       "outputs": [
+        "05-verification/test-cases.md",
         "05-verification/report.md",
         "05-verification/ci-result.md"
       ],

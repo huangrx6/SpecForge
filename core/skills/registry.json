@@ -369,6 +369,41 @@
       ]
     },
     {
+      "id": "test-design",
+      "category": "quality",
+      "localPath": "quality/test-design",
+      "name": "test-design",
+      "role": "测试设计树、XMind / 白板导出、TC / PW 用例矩阵和自动化分层策略",
+      "trust": "SpecForge 本地维护，结合测试设计、XMind 导出、Playwright 和 evidence grading 实践沉淀",
+      "risk": "低",
+      "source": {
+        "type": "local-authored",
+        "repo": "SpecForge",
+        "path": "core/skills/quality/test-design/SKILL.md",
+        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/quality/test-design",
+        "files": [
+          { "path": "references/test-design-tree.md" },
+          { "path": "references/automation-matrix.md" },
+          { "path": "references/xmind-export.md" }
+        ]
+      },
+      "trigger": "当 verification 需要从 requirements、gap report、tasks、UI design、technical design 或 code review notes 生成测试设计树、XMind / 白板导出、TC / PW 矩阵、自动化用例和证据目标时参考。",
+      "normalizeTo": [
+        "05-verification/test-design/test-design-tree.md",
+        "05-verification/test-design/test-design-tree.json",
+        "05-verification/test-cases.md#1.1 Test Design Artifacts",
+        "05-verification/test-cases.md#2. Test Case Matrix",
+        "05-verification/test-cases.md#3. Playwright Cases",
+        "05-verification/report.md#证据强度分级"
+      ],
+      "doNotUseFor": [
+        "替代 sf-verify gate",
+        "把 XMind、截图或白板当作唯一事实源",
+        "用 happy path 替代权限、错误、边界和回归路径",
+        "生成未追溯到来源的测试用例"
+      ]
+    },
+    {
       "id": "pencil",
       "category": "ui-ux",
       "localPath": "ui-ux/pencil",

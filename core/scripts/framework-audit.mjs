@@ -118,6 +118,18 @@ function designSystemIssues() {
     .map((path) => issue("FAIL", "missing-design-system-file", `${path} is required by the design-system contract.`, path));
 }
 
+function testDesignIssues() {
+  const required = [
+    "core/skills/quality/test-design/SKILL.md",
+    "core/skills/quality/test-design/references/test-design-tree.md",
+    "core/skills/quality/test-design/references/automation-matrix.md",
+    "core/skills/quality/test-design/references/xmind-export.md",
+  ];
+  return required
+    .filter((path) => !exists(path))
+    .map((path) => issue("FAIL", "missing-test-design-file", `${path} is required by the test-design contract.`, path));
+}
+
 function starterManifestIssues() {
   const issues = [];
   const manifest = JSON.parse(read("core/starter.manifest.json"));
@@ -301,6 +313,7 @@ const checks = [
   { id: "profile-catalog", issues: profileCatalogIssues() },
   { id: "standards-index", issues: standardsIndexIssues() },
   { id: "design-system-contract", issues: designSystemIssues() },
+  { id: "test-design-contract", issues: testDesignIssues() },
   { id: "starter-manifest", issues: starterManifestIssues() },
   { id: "script-modules", issues: scriptModuleIssues() },
   { id: "package-scripts", issues: packageScriptIssues() },

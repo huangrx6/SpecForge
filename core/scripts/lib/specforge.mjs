@@ -358,6 +358,7 @@ export const templateByOutput = new Map([
   ["03-implementation/report.md", "implementation-report.md"],
   ["03-implementation/changed-files.md", "changed-files.md"],
   ["04-code-review/code-review-v1.md", "code-review.md"],
+  ["05-verification/test-cases.md", "test-cases.md"],
   ["05-verification/report.md", "verification-report.md"],
   ["05-verification/ci-result.md", "ci-result.md"],
   ["06-close/wiki-sync.md", "wiki-sync.md"],

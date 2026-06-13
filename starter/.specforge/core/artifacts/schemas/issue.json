@@ -71,6 +71,7 @@
       "title": "验证证据",
       "description": "复测问题是否消失，记录回归覆盖、异常路径和监控观察。",
       "outputs": [
+        "05-verification/test-cases.md",
         "05-verification/report.md",
         "05-verification/ci-result.md"
       ],

@@ -25,7 +25,8 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 - `.specforge/core/standards/ai-toolkit.md`
 - `.specforge/core/standards/design.md`（存在 UI 影响时）
 - `.specforge/core/standards/pc-ui-design-spec.md`（`ui-design.md` 声明采用 PC 端业务系统规范时）
-- `.specforge/core/skills/README.md`（存在 UI / 浏览器验证时）
+- `.specforge/core/skills/README.md`（存在测试设计、XMind、UI / 浏览器验证时）
+- `.specforge/core/skills/quality/test-design/SKILL.md`（需要系统化测试设计、XMind / 白板导出、TC / PW 矩阵或自动化分层时）
 
 ## 写入
 
@@ -39,20 +40,23 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 1. **确认前置 gate**
    - `code_review` 必须为 `APPROVED`。
    - 读取 code review 的 findings、residual risks 和 verification notes。
-2. **先输出测试用例**
+2. **先做测试设计**
+   - 当需求、任务、UI 状态、技术风险或 review notes 较多时，先读取 `core/skills/quality/test-design/SKILL.md`。
+   - 产出 `05-verification/test-design/test-design-tree.md` 或 `.json`，再回填 TC / PW 到 `05-verification/test-cases.md`。
+   - XMind / 白板 / 表格只能作为测试设计草图；必须导出 Markdown / JSON 到 `05-verification/test-design/`，并把可执行用例回填到下方矩阵。
+3. **输出测试用例**
    - 在执行验证前写 `05-verification/test-cases.md`。
    - 用例必须从 requirements / gap_report / tasks / ui_design / technical_design / code review notes / 相关 wiki 的运行、风险和模块边界推导，不凭验证阶段临时想象。
    - 每个用例包含 ID、来源、前置条件、步骤、断言、证据类型、自动化方式和风险等级。
-   - XMind / 白板 / 表格只能作为测试设计草图；必须导出 Markdown / JSON 到 `05-verification/test-design/`，并把派生用例回填到 `05-verification/test-cases.md`。
    - 写完用例后运行 `node .specforge/core/scripts/test-case-quality.mjs`；失败项先修正，warning 写入 report 的风险 / owner / 重新验证触发条件。
-3. **建立覆盖矩阵**
+4. **建立覆盖矩阵**
    - requirements / gap_report / tasks / code review notes 每项都要映射到验证方式和证据。
    - 每个 tasks 的 `_Verification:_` 必须有通过 / 失败 / 跳过及理由。
    - code review 中 Technical Design 影响面实现审查的 `yes`、residual risk 和 verification notes 必须映射到验证证据或可信跳过理由。
-4. **按风险选择验证层级**
+5. **按风险选择验证层级**
    - 单元、集成、契约、E2E、UI 手工、静态检查、构建、启动、配置、迁移、回滚、可观测性。
    - 安全、权限、数据、迁移、外部契约、后台任务、发布配置、可观测性和可靠性属于强证据区域，不能只用“人工看过”批准。
-5. **UI 变更验证**
+6. **UI 变更验证**
    - 构建页面 × 操作 × 角色 × 状态矩阵。
    - 覆盖默认、空、加载、成功、错误、权限不足、禁用、边界值和响应式中适用项。
    - 每个单元格必须有实际测试结果：通过 / 失败 / 跳过及理由。
@@ -62,17 +66,17 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
    - 需要 console、network、DOM、a11y、performance 诊断时，优先使用 Playwright trace、console、network 和 screenshot 证据。
    - 浏览器证据优先归档到 `05-verification/evidence/<run-id>/`，至少记录脚本 / 命令、stdout 摘要、截图或 trace、console/network 摘要和相关 TC/PW ID。
    - 不读取、保存或输出 Cookie、token、密码、localStorage / sessionStorage 敏感数据。
-6. **业务闭环验证**
+7. **业务闭环验证**
    - E2E 必须覆盖完整业务闭环，不能只测 happy path。
    - 典型闭环：创建 -> 提交审批 -> 审批通过 -> 执行 -> 查看结果 -> 下载。
    - 异常态如提交审批 400、执行失败、无权限、文件下载 403、网络超时也必须通过 Playwright 或契约 / 集成测试记录验证；UI 必须断言错误文案、按钮状态、页面是否停留以及是否展示后端 detail / fallback message。
-7. **运行和交付验证**
+8. **运行和交付验证**
    - 记录安装、构建、dev server / service 启动、环境变量、迁移、回滚、健康检查、日志 / 指标 / trace 中适用项。
-8. **跳过项闭环**
+9. **跳过项闭环**
    - 每个跳过项必须写明原因、已有证据、证据强度、影响、owner、重新验证触发条件和可接受期限。
    - 外部真实环境、第三方系统或低风险残余无法直接证明时，先请求人工确认；用户确认后标记 `manual-confirmed` / `deferred`。
    - 关键验收、P0 / P1 风险、安全 / 数据 / 权限 / 发布风险不能用无 owner 的跳过项通过 gate。
-9. **记录 CI**
+10. **记录 CI**
    - 有 CI 时记录链接、状态、commit / run id 和失败摘要。
    - 没有可用 CI 时明确写 N/A，不凭空声明通过。
 
@@ -123,6 +127,7 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 ## 完成标准
 
 - verification report 足以支撑发布或关闭判断。
+- 使用 XMind / 白板 / 测试设计树时，`test-design/` 中存在 Markdown / JSON 导出，并已回填到 `test-cases.md#1.1 Test Design Artifacts`。
 - `test-case-quality.mjs` 无 failure；warning 已进入 verification report 的风险、owner 和重新验证触发条件。
 - `APPROVED` 时 verification gate 状态与证据一致。
 - `REQUEST_CHANGES` / `REJECTED` 时 gate 状态已更新且 evidence 为 `null`。

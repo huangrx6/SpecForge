@@ -11,6 +11,7 @@
 | `user-stories` | `requirements/user-stories` | Requirements | 用户故事、3C、INVEST、验收标准和可测试性参考 | `01-spec/requirements.md` |
 | `pencil` | `ui-ux/pencil` | UI Design | Pencil `.pen` 原型读写、组件复用、tokens、截图导出、布局检查和设计转代码参考 | `01-spec/ui-design.md`、`01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/` |
 | `design-system` | `ui-ux/design-system` | UI Design / Technical Design | 设计语言、foundations、组件规范、页面模式、shadcn-vue 映射、动效边界和去廉价感审查 | `01-spec/ui-design.md`、Pencil 输入、前端组件契约 |
+| `test-design` | `quality/test-design` | Verification | 测试设计树、XMind / 白板导出、TC / PW 用例矩阵、自动化分层和证据目标 | `05-verification/test-design/`、`05-verification/test-cases.md`、`05-verification/report.md` |
 | `playwright-skill` | `quality/playwright-skill` | Verification | 浏览器 E2E、真实点击输入、角色流程、截图和响应式证据 | `05-verification/test-cases.md`、`05-verification/report.md`、`05-verification/evidence/` |
 | `code-reviewer` | `quality/code-reviewer` | Code Review | 安全、性能、正确性、可维护性和测试覆盖的补充检查清单 | `04-code-review/code-review-v1.md`、`05-verification/report.md` |
 | `ux-designer` | `ui-ux/ux-designer` | Brainstorm / Research / UI Design | 用户研究、体验方向取舍、信息架构、交互、可访问性和视觉层级参考 | `00-intake/brainstorm.md`、`01-spec/research.md`、`01-spec/ui-design.md` |
@@ -86,6 +87,9 @@
 
 ### Verification
 
+- 需要从 requirements / gap / tasks / UI / technical design / code review notes 系统生成测试空间、XMind / 白板导出、TC / PW 用例或自动化分层时，先参考 `test-design`。
+- `test-design` 输出必须归一化到 `05-verification/test-design/` 和 `05-verification/test-cases.md`；XMind / 白板只能作为草图，必须导出 Markdown / JSON 并回填 TC / PW。
+- 测试设计完成后运行 `test-case-quality.mjs`；失败项先修正，warning 写入 verification report 的风险、owner 和重新验证触发条件。
 - 有浏览器页面、表单、上传、提交、审批、下载、权限、路由跳转或错误提示时，使用 `playwright-skill` 或等价 Playwright 脚本形成可重复证据。
 - 先写 `05-verification/test-cases.md`，再执行真实浏览器操作。
 - 断言 UI 文案、按钮状态、页面跳转、错误提示、列表刷新和关键网络响应中适用的部分。
