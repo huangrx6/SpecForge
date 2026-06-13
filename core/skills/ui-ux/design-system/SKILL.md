@@ -40,8 +40,8 @@ description: SpecForge UI 设计规范 skill；用于提炼设计语言、建立
 7. **Self-critique pass**：先问“这个方案是不是任何同类产品都会长这样”，若是，必须替换 palette、type、layout 或 signature 中至少一项。
 8. **Human taste gate**：方向会影响视觉气质、信息架构或核心流程时，先让用户确认；低风险小改可写可逆默认。
 9. **Foundations pack**：把确认方向落成 semantic tokens、字体层级、空间密度、圆角阴影、动效、可访问性约束。
-10. **Component system**：按 `components/README.md` 和 `references/component-system.md` 定义 anatomy、variants、states、layout、a11y、microcopy、shadcn-vue primitive 和项目级封装。
-11. **Component contract**：优先映射到 shadcn-vue primitive，再定义项目级组件；写清 props、variants、states、a11y 和 empty/error/loading。
+10. **Component system**：按 `components/README.md` 和 `references/component-system.md` 定义 structure、variants、states、density、content、a11y、shadcn-vue primitive / companion / project wrapper。
+11. **Component contract**：优先映射到 shadcn-vue primitive，再定义项目级组件；写清 props、events、slots、density、文案规则、empty/error/loading/permission/partial/stale 等复杂状态。
 12. **Page patterns**：选择页面模式，明确导航、主任务、状态矩阵、响应式、微文案和不做项。
 13. **Sample board**：生成可给人看的样例板，包含 2-3 张关键页面或关键组件片段的描述、采用/不采用理由和修改建议。
 14. **Taste review**：检查模板感、廉价渐变、无意义卡片、单色堆叠、默认控件、文案空泛、动效噪音和不可落地样式。

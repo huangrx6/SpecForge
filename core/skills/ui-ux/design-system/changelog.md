@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0
+
+- 组件规范统一升级为 Purpose / Structure / Variants / States / Density / shadcn-vue mapping / Content / Anti-patterns 八段式契约。
+- 全量扩写常见组件文档，补充复杂状态、业务变体、移动端密度、文案规则、项目 wrapper 和反廉价感规则。
+- component-system 增加 completeness matrix、project wrapper rule 和 content quality rules，避免只停留在 primitive 说明。
+- framework audit 增加组件章节完整性校验，防止后续组件文档退化为薄说明。
+
 ## 0.4.0
 
 - 新增 aesthetic directions 和 aesthetic selection prompt，用于按业务推荐 2-3 个互斥美学方向，并在用户选择后映射到 foundations、components、pages 和 Pencil 约束。

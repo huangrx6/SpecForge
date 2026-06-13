@@ -1,38 +1,65 @@
 # Tabs
 
-Tabs 用于同层级内容切换，不用于流程步骤。
+## Purpose
 
-## Anatomy
+Tabs 用于同一对象或同一任务下的并列视图切换。它不是主导航替代品，也不用于强顺序流程。
 
-list / trigger / active indicator / panel / count / badge / overflow.
+## Structure
+
+- list：tab group、active indicator、overflow
+- trigger：label、count/status、icon 可选
+- panel：对应内容区域，保持语义和焦点
+- keyboard：左右切换、Home/End
+- overflow：更多、横向滚动或二级菜单
+- persistence：URL query、local state 或默认项
 
 ## Variants
 
-- page tabs：页面内一级切换。
-- card tabs：局部区域切换。
-- segmented control：少量互斥模式。
-- status tabs：带数量的状态过滤。
+- content-tabs：详情页子视图
+- filter-tabs：状态快捷筛选
+- segmented-tabs：少量互斥模式
+- vertical-tabs：设置页或宽屏复杂配置
+- mobile-scroll-tabs：H5 横向滚动
+- status-tabs：带数量和异常状态
 
 ## States
 
-default / active / hover / focus / disabled / loading-count / overflow.
+- active、hover、focus、disabled
+- loading-panel：切换后局部加载
+- empty-panel、error-panel、permission-panel
+- overflowed：隐藏项可访问
+- count-updating：数量刷新不抖动
+- deep-link：URL 打开指定 tab
 
-## Rules
+## Density
 
-- Tab 数量 2-7 个。
-- 不用 tabs 表示流程步骤；流程用 stepper。
-- 当前项明确，不只靠颜色。
-- 移动端可横向滚动或转 segmented control。
-- Tab 内容需要懒加载时要有 loading。
+- compact：32px 高，适合表格上方筛选
+- default：40px，高频内容切换
+- large：44-48px，移动端触摸
+- tab gap 4-8px，active 指示器不改变布局
+- panel top spacing 12-16px，不塞卡片外壳
 
-## shadcn-vue
+## shadcn-vue mapping
 
-- Primitive: Tabs, Badge, ScrollArea.
-- Project wrapper: PageTabs, StatusTabs, SegmentedControl.
+- Primitive：Tabs、TabsList、TabsTrigger、TabsContent、Badge、ScrollArea
+- Companions：Select for mobile fallback、DropdownMenu for overflow
+- Project wrappers：ContentTabs、FilterTabs、StatusTabs、ResponsiveTabs
+- Props：items、modelValue、counts、disabledReason、lazy、persist
+- Events：update:modelValue、tab-click、panel-load
+
+## Content
+
+- label 使用名词：“概览”“成员”“日志”
+- 数量写在 badge：“待处理 12”
+- 禁用 tab 说明原因，不只灰掉
+- 状态筛选 tab 要和 FilterBar 同步
+- 不要使用过长 label，必要时进入更多菜单
 
 ## Anti-patterns
 
-- Tab 嵌套 Tab。
-- Tab 名称过长且不截断。
-- 切换后丢失筛选状态。
-- 用 Tab 承载权限不可见的内容但不提示。
+- 用 tabs 做步骤向导，用户可跳过依赖
+- tabs 嵌套 tabs，层级混乱
+- 切换后整页跳动或丢失滚动位置
+- tab label 只有图标没有说明
+- 移动端 8 个 tab 挤在一行
+- tab 内容差异太大，本应是导航

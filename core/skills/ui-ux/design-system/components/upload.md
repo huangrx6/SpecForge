@@ -1,41 +1,65 @@
 # Upload
 
-上传不是一个按钮，它是一条包含选择、校验、传输、失败恢复和结果反馈的流程。
-
 ## Purpose
 
-用于附件、图片、批量导入、模板文件、视频和现场材料上传。
+Upload 用于选择、校验、上传和管理文件。它必须说明格式、大小、数量、进度、失败恢复和安全限制。
 
-## Anatomy
+## Structure
 
-drop zone / file list / progress / validation message / retry / remove / template download / result summary.
+- dropzone / trigger：点击、拖拽、粘贴
+- file list：名称、大小、类型、状态、操作
+- validation：格式、大小、数量、病毒/敏感校验
+- progress：单文件和总进度
+- preview：图片、文档、表格摘要
+- actions：删除、重试、替换、下载
+- server result：解析成功、部分失败、导入报告
 
 ## Variants
 
-- single file：头像、附件。
-- multi file：材料、图片。
-- import file：Excel/CSV 导入。
-- media upload：图片/视频预览。
-
-## Contract
-
-- 写清文件类型、大小、数量、失败重试和删除规则。
-- 批量导入要有模板下载、校验结果和错误明细。
-- 上传进度必须可见；失败项可单独重试。
-- 拖拽区不要占据过大页面空间，除非上传是主任务。
+- single-file、multi-file、image-upload、avatar-upload
+- document-upload：PDF/Word/Excel
+- import-upload：上传后解析并入库
+- attachment-upload：表单附件
+- chunked-upload：大文件分片
+- paste-upload：截图或剪贴板
 
 ## States
 
-idle / dragging / uploading / partial-success / success / failed / validation-error / disabled.
+- idle、drag-over、selected、validating
+- uploading、uploaded、failed、retrying
+- partial-success、virus-risk、file-too-large
+- duplicate、unsupported-type、exceed-limit
+- preview-loading、parse-failed
 
-## shadcn-vue
+## Density
 
-- Primitive: Button, Progress, Alert, Table, Dialog.
-- Project wrapper: FileUploader, ImportPanel, UploadResultTable.
+- compact：按钮 + 文件名，适合表单附件
+- dropzone：高度 120-180px，适合首用上传
+- file row：40-56px，带进度 56-64px
+- mobile：使用系统选择器，操作按钮足够大
+- 多文件超过 5 个分组或折叠
+
+## shadcn-vue mapping
+
+- Primitive：Button、Progress、Alert、Card、Input、Toast/Sonner
+- Companions：Dropzone implementation、Table for import result、Dialog for preview
+- Project wrappers：FileUpload、ImageUpload、ImportUpload、AttachmentList
+- Props：accept、maxSize、maxCount、multiple、value、uploadState
+- Events：select、remove、upload、retry、preview、download
+
+## Content
+
+- 格式说明具体：“支持 .xlsx，单个文件不超过 20MB”
+- 失败原因写到文件行，不只 toast
+- 上传成功说明后续处理：“已上传，正在解析”
+- 导入结果显示成功/失败数量和下载失败明细
+- 删除附件要说明是否同时删除服务器文件
 
 ## Anti-patterns
 
-- 失败后只能重新开始。
-- 上传格式要求藏在错误后。
-- 进度条没有文件级状态。
-- 导入成功但不展示新增/失败数量。
+- 隐藏格式和大小限制，失败后才告知
+- 上传进度只显示全局，用户不知道哪个文件失败
+- 失败后必须重新选择所有文件
+- 文件名过长撑破布局
+- 预览和下载权限不清晰
+- 上传成功但后台解析失败没有反馈

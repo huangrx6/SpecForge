@@ -1,40 +1,64 @@
-# Select And Combobox
+# Select Combobox
 
-选择组件用于从可控集合中选值。不要用 Select 承载复杂对象搜索，也不要用 Combobox 承载 3 个以内的静态选项。
+## Purpose
 
-## Decision
+选择器用于从有限选项中选择；Combobox 用于可搜索、远程或大数量选择。不要用自由输入代替受控选项。
 
-| 场景 | 组件 |
-|---|---|
-| 2-8 个稳定选项 | Select |
-| 选项多、需要搜索 | Combobox |
-| 多选标签 | MultiSelect |
-| 命令式跳转或工具启动 | Command Palette |
+## Structure
 
-## Anatomy
+- trigger：当前值、placeholder、clear、loading
+- popover：search、option list、empty、create option
+- option：label、description、meta、disabled reason、selected check
+- multi-value：chips、折叠数量、清空
+- async：加载、错误、重试、分页或无限滚动
+- footer：新建、管理选项、最近使用
 
-trigger / selected value / placeholder / clear / list / group label / option meta / empty / loading / error.
+## Variants
 
-## Contract
-
-- 必须有 empty、loading、error、disabled 状态。
-- 远程搜索要说明 debounce、最小搜索字符数和空结果文案。
-- 选中项显示要能被扫描，避免只显示模糊名称。
-- 多选必须有上限、清除、批量删除和截断策略。
-- 级联选择要说明父子关系和重置规则。
+- single-select、multi-select、remote-search、creatable
+- cascader-like：层级关系，可用 Command 分组
+- native-select：移动端或简单枚举
+- tags-input：自由标签但需校验和去重
+- entity-picker：选择用户、组织、客户、工具
 
 ## States
 
-closed / open / focused / searching / selected / empty / no-result / loading / error / disabled / permission.
+- empty、open、focused、selected、disabled
+- loading-options、option-error、no-results
+- partial-selected：多选或树形选择
+- max-selected：达到上限
+- stale-options：选项过期或对象被删除
+- permission-limited：某些选项不可选
 
-## shadcn-vue
+## Density
 
-- Primitive: Select, Popover, Command, Checkbox.
-- Project wrapper: RemoteCombobox, UserPicker, OrgPicker, TagMultiSelect.
+- compact trigger：32px，筛选栏
+- default trigger：36-40px，表单
+- mobile：44px，popover 全宽或 bottom sheet
+- option height：32-40px，带描述 48-56px
+- 多选 chips 超过 2 行折叠为 +N
+
+## shadcn-vue mapping
+
+- Primitive：Select、Combobox、Command、Popover、TagsInput、NativeSelect、Checkbox
+- Companions：Avatar、Badge、Skeleton、Button
+- Project wrappers：EntitySelect、RemoteCombobox、MultiSelect、UserPicker、TagPicker
+- Props：mode、options、value、remote、searchable、clearable、max、disabledReason
+- Events：search、select、clear、create、load-more
+
+## Content
+
+- placeholder 写“选择预审批人”，不写“请选择”即可完事
+- 选项 label 用人能识别的名称，meta 放手机号/部门/编码
+- 无结果写“没有匹配的人员”，并保留搜索词
+- 不可选选项写原因：“已停用”“无权限”
+- 远程搜索提示输入门槛：“输入至少 2 个字搜索”
 
 ## Anti-patterns
 
-- 远程搜索没有 loading 和 no-result。
-- 选中项只显示姓名，不显示组织/手机号等消歧信息。
-- 多选标签撑爆一行。
-- 权限不足选项只是 disabled，没有解释。
+- 选项很多但没有搜索
+- 远程加载失败时 popover 空白
+- 多选值撑爆输入框
+- 用接口枚举值当展示文案
+- 清空和删除单项交互混乱
+- 移动端小弹层被键盘遮挡

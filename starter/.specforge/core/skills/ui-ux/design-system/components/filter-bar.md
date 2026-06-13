@@ -1,37 +1,65 @@
 # Filter Bar
 
-筛选栏用于缩小数据范围，并让用户理解当前列表为什么是这些数据。
+## Purpose
 
-## Anatomy
+FilterBar 帮助用户缩小数据范围和理解当前查询条件。它是列表/看板的数据入口，不应变成杂乱表单。
 
-keyword / primary filters / date range / advanced filters / active chips / reset / saved views / result count.
+## Structure
+
+- quick search：关键词、对象范围、清空
+- primary filters：状态、时间、负责人等高频条件
+- advanced filters：更多条件进入 popover/drawer
+- active chips：已选条件、数量、清空单项
+- actions：查询、重置、保存视图、导出
+- result summary：命中数量、更新时间或筛选摘要
 
 ## Variants
 
-- simple filter：搜索 + 1-3 个筛选。
-- advanced filter：popover / drawer。
-- saved view：常用筛选组合。
-- dashboard filter：全局时间、区域、组织。
+- simple：搜索 + 1-3 个条件
+- advanced：更多筛选折叠或抽屉
+- saved-view：常用视图、默认视图
+- faceted：多选标签、层级条件
+- date-heavy：时间范围为主
+- mobile-filter：按钮打开筛选抽屉
 
 ## States
 
-idle / filtering / active / empty-result / error / saved / unsaved-changes.
+- default、dirty、applied、loading、error
+- empty-options：某个筛选无可选项
+- invalid-range：时间或数值区间非法
+- saved-view-active、saved-view-modified
+- permission-limited：可选范围受角色限制
+- collapsed / expanded
 
-## Layout
+## Density
 
-- 常用筛选直接展示，高级筛选收起。
-- 当前筛选条件必须可见、可清除。
-- 移动端用 drawer，底部放应用/重置。
-- 日期和状态筛选要有默认值说明。
+- toolbar：高度 40-48px，适合列表上方
+- two-row：条件多时第二行显示 chips
+- drawer：移动端或复杂条件，底部固定应用按钮
+- chips 间距 6-8px，换行后不挤压表格
+- 高级条件不超过主视线，默认收起
 
-## shadcn-vue
+## shadcn-vue mapping
 
-- Primitive: Input, Select, Popover, Drawer, Badge, Button.
-- Project wrapper: FilterBar, AdvancedFilterDrawer, SavedViewTabs.
+- Primitive：Input、Select、Combobox、Popover、Calendar、Button、Badge、Command
+- Companions：Drawer、DropdownMenu、Separator
+- Project wrappers：FilterBar、SavedViewBar、AdvancedFilterDrawer、FilterChip
+- Props：filters、value、appliedValue、loading、savedViews、density
+- Events：search、apply、reset、save-view、remove-filter
+
+## Content
+
+- 搜索 placeholder 写范围：“搜索姓名、手机号、工单号”
+- chip 文案短而完整：“状态：处理中”
+- 重置动作写“清空筛选”，避免误解为清空数据
+- 时间范围显示绝对日期或“近 7 天”
+- 无可选项说明是权限、数据为空还是接口失败
 
 ## Anti-patterns
 
-- 筛选条件隐藏，用户不知道数据范围。
-- 重置只清部分条件。
-- 高级筛选一打开就是超长表单。
-- 筛选结果为 0 时没有恢复路径。
+- 筛选项和页面操作混在一起
+- 应用后看不到当前条件
+- 每改一个条件就自动刷新大表导致抖动
+- 高级筛选默认全展开，占据半屏
+- 筛选文案用字段名或接口枚举
+- 移动端横向挤压所有筛选控件

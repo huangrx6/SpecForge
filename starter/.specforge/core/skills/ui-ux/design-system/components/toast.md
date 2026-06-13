@@ -1,42 +1,67 @@
 # Toast
 
-Toast 用于短暂反馈，不承载关键流程和复杂决策。
-
 ## Purpose
 
-- 操作成功。
-- 可恢复错误的提示。
-- 异步任务开始/完成。
-- 复制、保存、发送等短反馈。
+Toast 用于轻量、短暂、非阻塞反馈。需要决策、长文本、错误恢复或权限说明时使用 Alert、Dialog 或页面内反馈。
 
-## Anatomy
+## Structure
 
-icon / title / description / action / close / severity / duration.
+- container：位置、堆叠、最大数量
+- icon/severity：success、info、warning、error、loading
+- title：结果或状态
+- description：必要原因或下一步
+- action：撤销、查看详情、重试
+- timeout：不同 severity 的停留时间
 
 ## Variants
 
-success / info / warning / error / loading / action-required.
+- success：完成反馈
+- info：系统提示
+- warning：可继续但需注意
+- error：失败和可恢复动作
+- loading：异步任务处理中
+- undo：可撤销操作
+- persistent：重要但不阻塞的异常
 
 ## States
 
-entering / visible / updating / dismissing / persisted.
+- enter、visible、hover-paused、dismissed
+- stacked：多个 toast 合并或队列
+- action-loading：重试/撤销处理中
+- offline：网络失败提示
+- duplicate：相同提示合并计数
+- route-change：跨页面是否保留
 
-## Rules
+## Density
 
-- 成功 toast 简短。
-- 错误 toast 要有下一步或追踪 ID。
-- 需要用户决策时用 dialog，不用 toast。
-- 多个 toast 要堆叠有序，不遮挡主操作。
-- 长任务 toast 应可跳转任务中心或详情。
+- desktop：右上或右下，宽 320-420px
+- mobile：顶部或底部安全区，宽度接近全屏
+- title 单行，description 最多两行
+- 同屏最多 3 个，更多合并
+- loading toast 可持久，成功后自动替换
 
-## shadcn-vue
+## shadcn-vue mapping
 
-- Primitive: Toast, Sonner, Button.
-- Project wrapper: AppToast, AsyncJobToast, ErrorToast.
+- Primitive：Toast / Sonner、Button、Progress、Spinner
+- Companions：Alert for persistent errors、Dialog for decisions、Inline field message for validation
+- Project wrappers：AppToast、AsyncToast、UndoToast、ErrorToast
+- Props：type、title、description、action、duration、id
+- Events：dismiss、action-click、timeout
+- Store：toast service 统一去重、合并和跨路由策略
+
+## Content
+
+- 成功：“已保存配置”
+- 错误：“保存失败，请重试”并配动作
+- 撤销：“已删除成员，可撤销”
+- 不要把字段校验错误全塞 toast
+- 长错误提供“查看详情”而不是 toast 展开一大段
 
 ## Anti-patterns
 
-- 表单错误只用 toast。
-- toast 遮挡底部输入栏。
-- 所有错误都写“操作失败”。
-- 关键确认只显示 2 秒就消失。
+- 所有反馈都用 toast，页面内没有状态
+- toast 挡住关键按钮或移动端输入栏
+- 错误 toast 只写“操作失败”
+- 多个相同 toast 连续刷屏
+- 需要用户确认却自动消失
+- toast 样式过度彩色，抢走主任务

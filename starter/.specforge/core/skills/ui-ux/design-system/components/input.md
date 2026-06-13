@@ -1,45 +1,65 @@
 # Input
 
-输入框用于用户输入文本或查询条件。搜索型、表单型、只读复制型和敏感型输入需要不同封装。
+## Purpose
 
-## Anatomy
+输入框用于短文本、数字、搜索和命令触发。它不是长说明、选择器或复杂对象编辑的替代品。
 
-| Part | Rule |
-|---|---|
-| Label | 与字段关联，placeholder 不替代 label |
-| Control | 输入区域，compact 32px / comfortable 36-40px / mobile 44px |
-| Prefix/Suffix | 搜索、单位、清除、复制、显示隐藏 |
-| Helper | 格式、范围、来源、隐私说明 |
-| Error | 告诉用户如何修复 |
+## Structure
+
+- label / external label：永远保留字段语义
+- control：输入区域、prefix、suffix、clear、visibility toggle
+- helper：格式、示例、限制、来源
+- message：错误、警告、成功、异步校验状态
+- counter：长度、额度、剩余次数等必要约束
+- addon：单位、域名、协议、货币符号等
 
 ## Variants
 
-- text input：普通文本。
-- search input：带搜索图标、清除按钮、loading。
-- mobile input：触控目标 44px，键盘类型匹配。
-- copyable input：只读 + copy action + copied feedback。
-- secret input：显示/隐藏、复制和安全提示。
-- token input：标签/关键词输入。
+- text、password、search、number、currency、phone、url
+- textarea：多行描述，带最小/最大高度
+- input-group：带前后缀、按钮或复制动作
+- otp / pin：短验证码或安全码
+- command-input：触发搜索、过滤、AI 提问
+- readonly-display：可复制但不可编辑的信息
 
 ## States
 
-default / hover / focus / filled / disabled / readonly / error / warning / loading / success.
+- empty、filled、focused、disabled、readonly、invalid
+- validating：手机号、账号、唯一性等异步校验
+- suggesting：显示自动补全或历史项
+- truncated：只读长文本用 tooltip 或复制
+- composition：中文输入法期间不要提前提交
+- clearable：清空后恢复 helper 和空态
+
+## Density
+
+- compact：28-32px，表格筛选和工具栏
+- default：36-40px，表单字段
+- large：44-48px，移动端输入和 AI 输入栏
+- textarea：最小 96px，长内容可 resize 或自动增高
+- addon 宽度固定，避免输入时布局抖动
+
+## shadcn-vue mapping
+
+- Primitive：Input、Textarea、InputGroup、Label、Field、Button、Tooltip
+- Companions：NumberField、PinInput、TagsInput、Command、Popover
+- Project wrappers：SmartInput、SearchInput、MoneyInput、PhoneInput、CopyInput、AiPromptInput
+- Props：type、modelValue、state、clearable、prefix、suffix、maxLength、validateStatus
+- Events：input、change、clear、enter、composition-start/end、copy
 
 ## Content
 
-- label 命名业务对象，不命名数据库字段。
-- placeholder 给例子，不给说明。
-- helper text 说明格式、范围、隐私或来源。
-- 错误文案告诉用户如何修复。
-
-## shadcn-vue
-
-- Primitive: Input, Label, FormControl, FormMessage.
-- Project wrapper: SearchInput, MobileInput, CopyableInput, SecretInput, TokenInput.
+- placeholder 写示例：“请输入 11 位手机号”，不写 label 重复项
+- helper 写规则和影响：“用于接收审批通知”
+- 错误要可执行：“手机号格式不正确”
+- 单位放 suffix，不混入输入值
+- 搜索框可写对象范围：“搜索客户、手机号或工单号”
 
 ## Anti-patterns
 
-- 大面积浅蓝底输入框伪装 focus。
-- 所有输入都无边框，用户无法判断可编辑区域。
-- focus 改变高度或推开布局。
-- 手机号/数字字段没有合适 keyboard。
+- 只靠 placeholder 表达字段含义
+- 把多个语义塞进一个输入框，例如姓名+手机号
+- 错误态只改红边，没有文字
+- prefix/suffix 和文字拥挤，移动端被遮挡
+- 数字输入没有单位、精度、最小最大值
+- AI 输入栏没有发送/处理中/失败重试状态

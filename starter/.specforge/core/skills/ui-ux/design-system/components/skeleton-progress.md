@@ -1,34 +1,64 @@
-# Skeleton And Progress
+# Skeleton Progress
 
-加载状态要降低焦虑，并保护布局稳定。
+## Purpose
 
-## Skeleton
+Skeleton 和 Progress 用于表达加载、处理和异步任务进度。它们必须降低等待焦虑，不制造假稳定感。
 
-- 骨架屏形状匹配最终内容，不用整页灰块。
-- 表格加载使用固定行数，避免页面高度跳动。
-- 首屏关键指标可以使用 shimmer，但不要所有区域同时闪。
+## Structure
 
-## Progress
-
-- 可估算任务使用进度条；不可估算任务使用 spinner + 状态文案。
-- 异步任务超过 5 秒应给后台处理、刷新或通知策略。
-- 批量任务显示成功、失败、跳过数量。
+- skeleton shape：匹配真实布局，不随机灰条
+- progress value：确定进度或不确定状态
+- status text：当前步骤、剩余或结果
+- cancel/retry：长任务可取消或重试
+- partial render：已加载内容先显示
+- error recovery：失败后保留上下文
 
 ## Variants
 
-table skeleton / card skeleton / form skeleton / async progress / step progress.
+- page-skeleton、table-skeleton、card-skeleton、form-skeleton
+- inline-spinner：按钮或小区域
+- determinate-progress：导入/生成/上传百分比
+- indeterminate-progress：等待接口或 AI 思考
+- step-progress：多阶段任务
+- optimistic-loading：短任务即时反馈
 
 ## States
 
-loading / delayed / partial / retrying / completed / failed / canceled.
+- loading、partial-loaded、long-wait、success、failed
+- cancelled、retrying、paused
+- background-running：任务离开页面仍继续
+- stale：加载结果过期
+- rate-limited：等待排队
 
-## shadcn-vue
+## Density
 
-- Primitive: Skeleton, Progress, Alert.
-- Project wrapper: TableSkeleton, MetricSkeleton, AsyncJobProgress, TaskProgress.
+- 短于 500ms 可不显示骨架，避免闪烁
+- 表格骨架行数 5-8 行，匹配列宽
+- 卡片骨架保持最终高度
+- 按钮 spinner 不改变按钮宽度
+- 长任务每 3-5 秒更新状态文案
+
+## shadcn-vue mapping
+
+- Primitive：Skeleton、Progress、Spinner、Toast/Sonner、Alert
+- Companions：Button、Card、Table
+- Project wrappers：PageSkeleton、TableSkeleton、AsyncProgress、GenerationProgress
+- Props：type、loading、progress、steps、message、cancellable
+- Events：cancel、retry、complete
+
+## Content
+
+- 状态文案具体：“正在生成诊断建议”
+- 长任务说明预计时间或当前阶段
+- 失败文案给恢复动作
+- 进度百分比必须真实，不伪造 99%
+- 后台任务完成可用 toast 通知
 
 ## Anti-patterns
 
-- spinner 占满整页但没有说明。
-- loading 导致布局跳动。
-- 长任务无取消、后台处理或失败恢复。
+- 所有加载都全屏遮罩，打断用户
+- 骨架形状和最终布局不一致
+- spinner 没有文字，用户不知道在等什么
+- 假进度条长期停在 99%
+- 失败后只消失不解释
+- 加载时布局高度跳动

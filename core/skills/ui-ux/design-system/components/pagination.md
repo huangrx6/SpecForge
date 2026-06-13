@@ -1,36 +1,66 @@
 # Pagination
 
-分页用于数据浏览和性能控制，让用户理解当前范围和总量。
+## Purpose
 
-## Anatomy
+分页帮助用户理解数据范围并在大列表中移动。它要和筛选、排序、总数、加载策略一致。
 
-page info / previous / next / page items / page size / total / jumper.
+## Structure
+
+- range：当前显示范围和总数
+- controls：首页/上一页/页码/下一页/末页
+- page size：每页条数，按场景可选
+- jump：大页数时跳转
+- loading：翻页中禁用重复操作
+- summary：筛选后总数、更新时间
 
 ## Variants
 
-- simple pagination：上一页/下一页。
-- full pagination：页码、总数、page size。
-- cursor pagination：游标翻页。
-- infinite load：移动端或内容流。
+- simple：上一页/下一页，移动端或轻列表
+- numbered：页码型后台列表
+- infinite：消息流/动态流，需加载边界
+- cursor：服务端 cursor，不展示总页数
+- virtual：大数据量滚动，保留已加载数量
+- compact-footer：表格内底部分页
 
 ## States
 
-loading / first-page / last-page / empty / error / page-size-changing.
+- default、loading、empty、first-page、last-page
+- page-size-changing、invalid-jump
+- total-unknown：无法获取总数
+- filter-reset：筛选变化回第一页
+- selection-retained：跨页选择需明确
+- error：翻页失败保留当前页
 
-## Rules
+## Density
 
-- 表格页显示 total 和 page size。
-- 游标分页不能假装有总页数。
-- 切换 page size 后要回到合理页。
-- 移动端可简化为上一页/下一页。
+- compact：高度 32px，表格 footer
+- default：36-40px
+- mobile：只展示上一页/下一页和范围
+- 页码超过 7 个使用省略
+- 分页和表格间距 12-16px
 
-## shadcn-vue
+## shadcn-vue mapping
 
-- Primitive: Pagination, Select, Button.
-- Project wrapper: TablePagination, CursorPagination.
+- Primitive：Pagination、Select、Button、Input
+- Companions：Tooltip、Skeleton、Table footer、URL query sync
+- Project wrappers：AppPagination、TablePagination、CursorPagination
+- Props：page、pageSize、total、loading、mode、pageSizeOptions
+- Events：page-change、page-size-change、jump
+- Store：与 URL query 或列表状态同步
+
+## Content
+
+- 显示“1-20 / 共 356 条”比只显示页码更有用
+- 未知总数写“已加载 120 条”
+- page size 文案写“每页 20 条”
+- 翻页失败写“加载第 3 页失败，请重试”
+- 跨页选择要提示“已选择全部 356 条”
 
 ## Anti-patterns
 
-- 总数和筛选条件不一致。
-- loading 时页码跳动。
-- 无限加载没有结束提示。
+- 筛选后仍停留在不存在的页码
+- 只展示页码，没有总数和范围
+- 页码按钮过密，移动端难点
+- 切页时表格高度跳动
+- 跨页选择语义不清
+- cursor 分页伪装成精确页码

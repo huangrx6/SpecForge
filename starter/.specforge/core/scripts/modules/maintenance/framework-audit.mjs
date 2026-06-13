@@ -244,6 +244,41 @@ function designSystemIssues() {
     .map((path) => issue("FAIL", "missing-design-system-file", `${path} is required by the design-system contract.`, path));
 }
 
+function designSystemComponentDepthIssues() {
+  const issues = [];
+  const directory = join(root, "core/skills/ui-ux/design-system/components");
+  if (!existsSync(directory)) {
+    return [issue("FAIL", "missing-component-directory", "design-system components directory is required.", "core/skills/ui-ux/design-system/components")];
+  }
+
+  const requiredSections = [
+    "## Purpose",
+    "## Structure",
+    "## Variants",
+    "## States",
+    "## Density",
+    "## shadcn-vue mapping",
+    "## Content",
+    "## Anti-patterns",
+  ];
+
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    if (!entry.isFile() || !entry.name.endsWith(".md") || entry.name === "README.md") continue;
+    const path = `core/skills/ui-ux/design-system/components/${entry.name}`;
+    const body = read(path);
+    for (const section of requiredSections) {
+      if (!body.includes(section)) {
+        issues.push(issue("FAIL", "component-contract-section-missing", `${path} is missing ${section}.`, path));
+      }
+    }
+    if (!body.includes("Primitive") || !body.includes("Companions") || !body.includes("Project wrappers")) {
+      issues.push(issue("FAIL", "component-shadcn-mapping-incomplete", `${path} must map primitives, companions, and project wrappers.`, path));
+    }
+  }
+
+  return issues;
+}
+
 function testDesignIssues() {
   const required = [
     "core/skills/quality/test-design/SKILL.md",
@@ -1084,6 +1119,7 @@ const checks = [
   { id: "profile-catalog", issues: profileCatalogIssues() },
   { id: "standards-index", issues: standardsIndexIssues() },
   { id: "design-system-contract", issues: designSystemIssues() },
+  { id: "design-system-component-depth", issues: designSystemComponentDepthIssues() },
   { id: "test-design-contract", issues: testDesignIssues() },
   { id: "starter-manifest", issues: starterManifestIssues() },
   { id: "script-modules", issues: scriptModuleIssues() },
