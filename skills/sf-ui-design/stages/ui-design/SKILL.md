@@ -64,6 +64,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - 用户选择方向后，必须把方向转成组件约束：组件 anatomy、variants、states、layout、content、a11y 和 shadcn-vue project wrapper。
 - 一轮只问会改变 UI 的关键问题，例如信息密度、主流程、角色差异、表单复杂度、错误反馈、数据展示方式。
 - **绘制信息架构（IA）**：定义主导航结构、页面层级、标签命名。遵循"5-7 项主导航"、"按用户心智模型分组"原则。
+- **确认导航模式**：主导航可以是 fixed sidebar、top nav、hybrid、tabs、command nav、mobile bottom nav 或无常驻导航。导航位置和滚动行为属于高影响 UX 决策；如果需求没有现成设计系统依据，需要给出 2-3 个选项和推荐理由让用户确认。桌面主 sidebar 通常 fixed/sticky，不应跟随内容滚动。
 - **定义 HMW 问题**：用"如何能"框架将用户痛点转化为设计机会。
 - 用户未确认前，不调用 Pencil，不创建完整页面方案，不写"我将使用某某风格"作为既定事实。
 - 如果需要用户在多个体验方向中取舍，退回 brainstorm；`ux-research-ia.md` 在 UI design 中只用于细化已确认方向，不用于绕过确认。
