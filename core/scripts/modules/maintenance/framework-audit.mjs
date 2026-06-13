@@ -234,6 +234,7 @@ function designSystemIssues() {
     "core/skills/ui-ux/design-system/references/taste-review.md",
     "core/skills/ui-ux/design-system/references/layout-archetypes.md",
     "core/skills/ui-ux/design-system/references/output-contract.md",
+    "core/skills/ui-ux/design-system/references/cross-stage-handoff.md",
     "core/skills/ui-ux/design-system/references/shadcn-vue.md",
     "core/skills/ui-ux/design-system/references/sample-board-template.md",
     "core/skills/ui-ux/design-system/references/motion-gsap.md",

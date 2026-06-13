@@ -21,7 +21,8 @@ description: 根据已批准的 SpecForge tasks 执行实现；用于 implementa
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/engineering.md`
 - `.specforge/core/standards/ai-toolkit.md`
-- 需要实现 UI 时读取 `.specforge/core/standards/design.md`；若 `ui-design.md` 声明采用 PC 端业务系统规范，还要读取 `.specforge/core/standards/pc-ui-design-spec.md`。
+- 需要实现 UI 时读取 `.specforge/core/standards/design.md`、`.specforge/core/skills/ui-ux/design-system/references/cross-stage-handoff.md` 和 `ui-design.md#Design Contract Summary`；若 `ui-design.md` 声明采用 PC 端业务系统规范，还要读取 `.specforge/core/standards/pc-ui-design-spec.md`。
+- UI 实现涉及 shadcn-vue、project wrapper、token、动效或组件状态时，按需读取 `.specforge/core/skills/ui-ux/design-system/references/component-system.md`、`references/shadcn-vue.md`、`foundations/tokens.md`、`foundations/motion.md` 和相关 `components/*.md`。
 
 ## 启动扫描
 
@@ -71,8 +72,9 @@ git status --short --untracked-files=all
 
 1. 每次编辑前确认目标文件在 `_Files:_` / `_Boundary:_` 或 approved UI / technical design 范围内。
 2. UI 实现必须追溯到 `ui-design.md` 的页面地图、状态矩阵、Visual Style Brief、Pencil `.pen` 和导出截图。
-3. PC 端业务系统规范被采用时，HTML / CSS / 组件样式必须使用 `pc-ui-design-spec.md` token，不接受 UI 库默认主题或临时改值。
-4. 技术实现必须追溯到 `technical-design.md` 的 API、数据、安全、配置、运行、可观测性和验证策略。
+3. UI 实现必须追溯到 Design Contract Summary：token source、component strategy、shadcn-vue primitive layer、project wrapper layer、motion source、anti-slop rules 和 verification hooks。
+4. PC 端业务系统规范被采用时，HTML / CSS / 组件样式必须使用 `pc-ui-design-spec.md` token，不接受 UI 库默认主题或临时改值。
+5. 技术实现必须追溯到 `technical-design.md` 的 API、数据、安全、配置、运行、可观测性和验证策略。
 5. 每完成一个 task，运行对应快速验证或写明不能运行的原因；task 状态只能是 `DONE`、`DONE_WITH_CONCERNS`、`BLOCKED`、`NEEDS_SPEC`。
 
 ### D. 持续维护证据

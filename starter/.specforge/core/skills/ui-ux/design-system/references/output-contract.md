@@ -23,6 +23,12 @@ Foundations delta:
 - Density:
 - Motion:
 
+Design Contract Summary:
+- Token source:
+- Component strategy:
+- Motion source:
+- Verification hooks:
+
 Component contract:
 - Component:
 - States:
@@ -74,6 +80,18 @@ Foundations pack:
 - Motion:
 - Accessibility:
 
+Design Contract Summary:
+- Design mode:
+- Aesthetic direction:
+- Signature:
+- Token source:
+- Component strategy:
+- shadcn-vue primitive layer:
+- Project wrapper layer:
+- Motion source:
+- Anti-slop rules:
+- Verification hooks:
+
 Component contract:
 - Project component:
 - Primitive:
@@ -103,3 +121,4 @@ Taste review:
 用于品牌页、大屏、复杂多角色系统：
 
 - 在 Standard 之上补充 typography scale table、color role table、motion choreography、responsive artboards、Pencil sample board、visual QA evidence。
+- 如果后续进入 technical design / implementation，还要补充 registry boundary、component contract matrix、state ownership、token delivery 和 visual verification plan。

@@ -5,7 +5,7 @@ description: SpecForge UI 设计规范 skill；用于提炼设计语言、建立
 
 # Design System Skill
 
-本 skill 负责把“好看的 UI 想法”转成可复用、可实现、可审查的设计语言。它不是 Pencil 操作 skill，也不是前端实现 skill；它为 `sf-ui-design` 提供设计判断、DESIGN.md 提取、组件契约、页面模式、提示词、样例板和审查基准。
+本 skill 负责把“好看的 UI 想法”转成可复用、可实现、可审查的设计语言。它不是 Pencil 操作 skill，也不是前端实现 skill；它为 `sf-ui-design` 提供设计判断、DESIGN.md 提取、组件契约、页面模式、提示词、样例板和审查基准，同时为 `sf-tech-design`、`sf-tasking`、`sf-implement` 和 `sf-verify` 提供可执行的 token、组件、动效和验证约束。
 
 ## 什么时候使用
 
@@ -15,6 +15,8 @@ description: SpecForge UI 设计规范 skill；用于提炼设计语言、建立
 - `sf-ui-design` 需要把用户截图、竞品、现有组件库或品牌素材转译成 `ui-design.md`。
 - 需要让人工先看 2-3 个样例方向，再确认是否符合宿主项目标准。
 - 需要从真实网站、品牌截图或参考项目中抽取 DESIGN.md 风格的设计语言。
+- 技术设计需要决定前端组件边界、shadcn-vue registry、project wrapper、token delivery 或动效依赖。
+- 实现阶段需要按 `ui-design.md` 落地 token、组件状态、wrapper、可访问性和视觉回归证据，避免重新发明视觉风格。
 
 ## 读取顺序
 
@@ -27,8 +29,9 @@ description: SpecForge UI 设计规范 skill；用于提炼设计语言、建立
 7. 需要从参考网站或截图提取风格时读 `references/design-md-extraction.md`，按 DESIGN.md 结构抽取 token、组件、布局和 do/don't。
 8. 需要生成或审查提示词时读 `prompts/ui-generation.md`、`prompts/design-language.md`、`prompts/sample-board.md`、`prompts/taste-critique.md`、`prompts/anti-cheapness-review.md`、`prompts/motion-design.md`。
 9. 需要给人看样例时读 `references/good-case.md`、`references/bad-case.md`、`references/sample-board-template.md`，形成“采用 / 不采用 / 原因 / 待确认”。
-10. 写入 `ui-design.md` 前读 `references/output-contract.md`，按 compact / standard / full 选择输出结构。
-11. 需要复杂动效或编排时读 `references/motion-gsap.md`；普通状态反馈优先使用 CSS transition。
+10. 需要跨阶段交付、前端技术设计、实现或验证时读 `references/cross-stage-handoff.md`。
+11. 写入 `ui-design.md` 前读 `references/output-contract.md`，按 compact / standard / full 选择输出结构，并保留 Design Contract Summary。
+12. 需要复杂动效或编排时读 `references/motion-gsap.md`；Vue 项目可参考 Vue Bits / Motion Vue，但新增依赖必须在 technical design 中确认。
 
 ## 工具链
 
@@ -47,7 +50,8 @@ description: SpecForge UI 设计规范 skill；用于提炼设计语言、建立
 12. **Page patterns**：选择页面模式，明确导航、主任务、状态矩阵、响应式、微文案和不做项。
 13. **Sample board**：生成可给人看的样例板，包含 2-3 张关键页面或关键组件片段的描述、采用/不采用理由和修改建议。
 14. **Taste review**：检查模板感、廉价渐变、无意义卡片、单色堆叠、默认控件、文案空泛、动效噪音和不可落地样式。
-15. **Handoff**：把设计语言、组件契约、页面模式和样例板归一化写入 `ui-design.md`，供 Pencil 和 implementation 使用。
+15. **Cross-stage handoff**：按 `references/cross-stage-handoff.md` 生成 Design Contract Summary，明确 token source、component strategy、shadcn-vue primitive / wrapper、motion source 和 verification hooks。
+16. **Handoff**：把设计语言、组件契约、页面模式和样例板归一化写入 `ui-design.md`，供 Pencil、technical design、tasking、implementation 和 verification 使用。
 
 ## 输出到 SpecForge
 
@@ -61,6 +65,7 @@ description: SpecForge UI 设计规范 skill；用于提炼设计语言、建立
 | 2-3 个方向样例、人工确认和放弃项 | `01-spec/ui-design.md#UI Direction Options` |
 | 去廉价感审查、修正动作 | `01-spec/ui-design.md#视觉质量 Review` |
 | Pencil 原型输入 | `01-spec/ui-mockup.pen` 和导出截图 |
+| Design Contract Summary、跨阶段 token / wrapper / motion / verification hooks | `01-spec/ui-design.md#Design Contract Summary`；后续由 `technical-design.md` 和 implementation 读取 |
 
 输出规模按 `references/output-contract.md` 选择 compact / standard / full，避免又回到大而难读的文档。
 
@@ -71,6 +76,7 @@ description: SpecForge UI 设计规范 skill；用于提炼设计语言、建立
 - Product UI 以清晰、密度、稳定和可重复使用为主，不做营销页式装饰。
 - Brand Surface 可以更有表达，但仍要有 token、网格、动效边界和内容策略。
 - shadcn-vue 是 primitive / registry / theme 基座，不等于完整设计系统；必须定义项目级组件 contract。
+- React Bits 类灵感在 Vue 项目中优先找 Vue Bits / Motion Vue / CSS transition 等对应实现；没有任务价值的动效不进入 Product UI。
 - Tailwind / CSS variables 是 token 承载层，不允许用大量一次性 arbitrary value 代替设计系统。
 - 动效服务状态变化、空间关系和反馈，不做分散注意力的装饰。
 - GSAP 只用于 timeline、复杂状态编排、品牌型动效或大屏动效；普通 hover、focus、collapse、toast 使用 CSS transition。
@@ -85,5 +91,6 @@ description: SpecForge UI 设计规范 skill；用于提炼设计语言、建立
 - 颜色、字体、间距、圆角、阴影、动效和组件形态可复用。
 - 关键页面至少覆盖 default / loading / empty / error / permission / success 中适用状态。
 - 组件契约能指导 shadcn-vue 或项目组件封装。
+- Design Contract Summary 能指导 technical design 选择组件架构、registry、token delivery、motion dependency 和验证面。
 - 有 sample board、人工确认状态、去廉价感 review 和至少一轮修正建议。
 - 生成的样例可以给人工确认，并能说明好在哪里、不好在哪里、为什么适合宿主项目。

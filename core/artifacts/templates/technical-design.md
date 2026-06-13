@@ -76,6 +76,17 @@
 | --- | --- | --- | --- |
 | | | | |
 
+## 前端设计系统承接
+| 项 | 决策 | 依据 | 验证 |
+| --- | --- | --- | --- |
+| Token delivery | | | |
+| Component source | | | |
+| Registry boundary | | | |
+| Project wrapper | | | |
+| Motion source | | | |
+| State ownership | | | |
+| Visual verification | | | |
+
 ## 架构决策记录
 | 决策 | 备选 | 依据 | 回滚 |
 | --- | --- | --- | --- |

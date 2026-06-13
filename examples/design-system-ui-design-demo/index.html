@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>城市生命线异常处置协同台</title>
+  <style>
+    :root {
+      --bg: #eef4f3;
+      --surface: #fbfcfa;
+      --panel: #f6f8f5;
+      --panel-2: #eef5f2;
+      --text: #172424;
+      --muted: #667776;
+      --line: #dce7e2;
+      --accent: #216bff;
+      --accent-2: #16a394;
+      --risk: #dc8b1e;
+      --danger: #d84c4c;
+      --success: #23866f;
+      --shadow: 0 18px 45px rgba(32, 64, 58, .12);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(120deg, rgba(255,255,255,.78), rgba(232,246,242,.72)),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 236px minmax(0, 1fr) 326px;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      padding: 22px 18px;
+      border-right: 1px solid var(--line);
+      background: rgba(251, 252, 250, .72);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #1e6bff, #16a394);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 12px 22px rgba(33,107,255,.2);
+    }
+
+    .brand strong { display: block; font-size: 16px; }
+    .brand span { color: var(--muted); font-size: 12px; }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 13px;
+      border-radius: 12px;
+      color: #435251;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .nav a.active {
+      color: var(--text);
+      background: #fff;
+      box-shadow: 0 10px 28px rgba(43, 69, 63, .08);
+    }
+
+    .nav small {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    main {
+      padding: 24px;
+      min-width: 0;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 26px;
+      line-height: 1.2;
+      font-weight: 760;
+    }
+
+    .sub {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pill, button {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--text);
+      padding: 9px 13px;
+      font-size: 13px;
+    }
+
+    button.primary {
+      border-color: transparent;
+      background: var(--text);
+      color: #fff;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(300px, .75fr);
+      gap: 18px;
+    }
+
+    .panel {
+      background: rgba(251, 252, 250, .86);
+      border: 1px solid rgba(220, 231, 226, .9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .map {
+      position: relative;
+      height: 438px;
+      overflow: hidden;
+      padding: 22px;
+    }
+
+    .contour {
+      position: absolute;
+      inset: 40px 38px 52px;
+      border-radius: 42% 58% 46% 54%;
+      background:
+        radial-gradient(circle at 66% 42%, rgba(220,139,30,.18) 0 8%, transparent 9%),
+        radial-gradient(circle at 42% 58%, rgba(33,107,255,.14) 0 6%, transparent 7%),
+        linear-gradient(145deg, #f7faf5, #e6f1ed);
+      box-shadow:
+        inset 0 0 0 1px rgba(47,83,76,.08),
+        inset 22px 18px 0 rgba(255,255,255,.54),
+        0 24px 55px rgba(39, 79, 73, .16);
+      transform: rotate(-5deg);
+    }
+
+    .contour::before, .contour::after {
+      content: "";
+      position: absolute;
+      inset: 34px;
+      border: 1px solid rgba(33,107,255,.18);
+      border-radius: 48% 52% 44% 56%;
+    }
+
+    .contour::after {
+      inset: 78px 92px;
+      border-color: rgba(22,163,148,.26);
+      transform: rotate(18deg);
+    }
+
+    .risk-node {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      width: 96px;
+      min-height: 64px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.88);
+      border: 1px solid var(--line);
+      box-shadow: 0 14px 30px rgba(44, 67, 63, .12);
+      font-size: 12px;
+      text-align: center;
+      animation: pulse 2.8s ease-in-out infinite;
+    }
+
+    .risk-node strong { display: block; font-size: 18px; color: var(--risk); }
+    .n1 { left: 19%; top: 25%; }
+    .n2 { left: 56%; top: 33%; animation-delay: .4s; }
+    .n3 { left: 39%; top: 66%; animation-delay: .9s; }
+
+    @keyframes pulse {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .risk-node { animation: none; }
+    }
+
+    .map-head {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 760;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 6px 9px;
+      background: #fff5e5;
+      color: #9c5d10;
+      font-size: 12px;
+      border: 1px solid #f4d6a6;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .metric {
+      padding: 16px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+
+    .metric span { color: var(--muted); font-size: 12px; }
+    .metric strong { display: block; margin-top: 8px; font-size: 24px; }
+
+    .stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .list {
+      padding: 18px;
+    }
+
+    .event {
+      display: grid;
+      grid-template-columns: 9px minmax(0,1fr) auto;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: center;
+    }
+
+    .event:last-child { border-bottom: 0; }
+    .dot { width: 9px; height: 9px; border-radius: 99px; background: var(--accent-2); }
+    .dot.warn { background: var(--risk); }
+    .dot.danger { background: var(--danger); }
+    .event strong { display: block; font-size: 14px; }
+    .event span { color: var(--muted); font-size: 12px; }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .tab {
+      padding: 14px 16px;
+      background: rgba(255,255,255,.68);
+      border: 1px solid var(--line);
+      border-radius: 15px;
+    }
+
+    .tab strong { display: block; }
+    .tab span { color: var(--muted); font-size: 12px; }
+    .tab.active { border-color: rgba(33,107,255,.38); box-shadow: 0 12px 24px rgba(33,107,255,.1); }
+
+    .table {
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+
+    th {
+      color: var(--muted);
+      background: var(--panel);
+      font-weight: 650;
+    }
+
+    .right-rail {
+      padding: 24px 20px;
+      background: rgba(251, 252, 250, .78);
+      border-left: 1px solid var(--line);
+    }
+
+    .ai-card {
+      padding: 18px;
+      border-radius: var(--radius);
+      background: #172424;
+      color: #fff;
+      box-shadow: 0 18px 36px rgba(23,36,36,.18);
+    }
+
+    .ai-card p {
+      color: rgba(255,255,255,.74);
+      line-height: 1.7;
+      font-size: 13px;
+    }
+
+    .timeline {
+      margin-top: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,.72);
+    }
+
+    .step strong { font-size: 13px; }
+    .step p { margin: 7px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+
+    @media (max-width: 1100px) {
+      .app { grid-template-columns: 76px minmax(0, 1fr); }
+      .sidebar { padding: 18px 10px; }
+      .brand div, .nav span, .nav small { display: none; }
+      .nav a { justify-content: center; }
+      .right-rail { grid-column: 2; border-left: 0; border-top: 1px solid var(--line); }
+      .grid { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 760px) {
+      .app { display: block; }
+      .sidebar { display: none; }
+      main { padding: 16px; }
+      .topbar { align-items: flex-start; gap: 14px; flex-direction: column; }
+      .tabs, .metrics { grid-template-columns: 1fr; }
+      .map { height: 360px; }
+      .right-rail { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="mark"></div>
+        <div>
+          <strong>生命线协同台</strong>
+          <span>City Ops Console</span>
+        </div>
+      </div>
+      <nav class="nav">
+        <a class="active" href="#"><span>态势总览</span><small>01</small></a>
+        <a href="#"><span>事件研判</span><small>02</small></a>
+        <a href="#"><span>资源调度</span><small>03</small></a>
+        <a href="#"><span>复盘中心</span><small>04</small></a>
+      </nav>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <div>
+          <h1>城市生命线异常处置协同台</h1>
+          <div class="sub">当前值班：A 组 · 数据更新 42 秒前 · 3 个事件需决策</div>
+        </div>
+        <div class="actions">
+          <span class="pill">郑州主城区</span>
+          <button>导出值班摘要</button>
+          <button class="primary">启动联合处置</button>
+        </div>
+      </div>
+
+      <section class="tabs">
+        <div class="tab active"><strong>态势总览</strong><span>风险热区与事件流</span></div>
+        <div class="tab"><strong>事件研判</strong><span>证据链与专家意见</span></div>
+        <div class="tab"><strong>资源调度</strong><span>队伍与物资匹配</span></div>
+        <div class="tab"><strong>复盘中心</strong><span>时间线与改进项</span></div>
+      </section>
+
+      <section class="grid">
+        <div class="stack">
+          <div class="panel map">
+            <div class="map-head">
+              <div>
+                <h2 class="panel-title">城市风险态势板</h2>
+                <div class="sub">以浅层地图表达空间关系，避免廉价深色大屏。</div>
+              </div>
+              <span class="tag">橙色预警 · 管网压力异常</span>
+            </div>
+            <div class="contour"></div>
+            <div class="risk-node n1"><span>北区泵站</span><strong>82</strong></div>
+            <div class="risk-node n2"><span>东环燃气</span><strong>71</strong></div>
+            <div class="risk-node n3"><span>中原电力</span><strong>64</strong></div>
+          </div>
+
+          <div class="metrics">
+            <div class="metric"><span>活跃事件</span><strong>18</strong></div>
+            <div class="metric"><span>高风险资产</span><strong>7</strong></div>
+            <div class="metric"><span>平均响应</span><strong>11m</strong></div>
+            <div class="metric"><span>处置完成率</span><strong>86%</strong></div>
+          </div>
+
+          <div class="panel table">
+            <table>
+              <thead>
+                <tr><th>调度对象</th><th>能力</th><th>距离</th><th>负载</th><th>建议动作</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>水务抢修二队</td><td>管网 / 泵站</td><td>2.4 km</td><td>低</td><td>优先派发</td></tr>
+                <tr><td>燃气联动专班</td><td>泄漏排查</td><td>4.8 km</td><td>中</td><td>待专家确认</td></tr>
+                <tr><td>电力应急车</td><td>移动供电</td><td>6.1 km</td><td>低</td><td>预置待命</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="stack">
+          <div class="panel list">
+            <h2 class="panel-title">正在处置</h2>
+            <div class="event"><div class="dot warn"></div><div><strong>北区泵站压力波动</strong><span>证据 6 条 · 需 15 分钟内决策</span></div><span class="tag">P1</span></div>
+            <div class="event"><div class="dot danger"></div><div><strong>东环燃气浓度异常</strong><span>视频 2 路 · 专家意见待补</span></div><span class="tag">P0</span></div>
+            <div class="event"><div class="dot"></div><div><strong>中原电力负载升高</strong><span>联动水务事件 · 可观察</span></div><span class="tag">P2</span></div>
+          </div>
+
+          <div class="panel list">
+            <h2 class="panel-title">复盘改进项</h2>
+            <div class="event"><div class="dot"></div><div><strong>补齐跨系统事件编号</strong><span>避免证据链跨平台断裂</span></div><span>进行中</span></div>
+            <div class="event"><div class="dot warn"></div><div><strong>优化专家确认超时规则</strong><span>超过 8 分钟自动升级提醒</span></div><span>待评审</span></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="right-rail">
+      <div class="ai-card">
+        <h2 class="panel-title">AI 研判摘要</h2>
+        <p>北区泵站压力波动与 18 分钟前降雨峰值相关，但东环燃气浓度异常不应合并处置。建议先派水务抢修二队，同时触发燃气专班独立排查。</p>
+        <button class="primary">生成处置方案</button>
+      </div>
+      <div class="timeline">
+        <div class="step"><strong>09:42 · 报警聚合</strong><p>接入水务、燃气、工单三类数据源，可信度 0.78。</p></div>
+        <div class="step"><strong>09:48 · 专家补充</strong><p>燃气异常需要现场复核，避免与水务事件误合并。</p></div>
+        <div class="step"><strong>09:53 · 调度建议</strong><p>推荐一主一备两条处置路径，并保留回滚观察点。</p></div>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

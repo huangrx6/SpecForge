@@ -25,6 +25,7 @@ description: 生成或更新 SpecForge work item 的 technical_design；用于 r
 - `.specforge/core/standards/product.md`、`.specforge/core/standards/workflow.md`、`.specforge/core/standards/engineering.md`。
 - `.specforge/core/standards/ai-toolkit.md`：阶段质量条、输出预算、依赖确认、source-of-truth 和证据分级。
 - `.specforge/core/profiles/README.md`：技术选型维度、数据库选择矩阵和 profile selection 写法。
+- 前端 / UI 会影响组件架构、token、组件库、registry、动效依赖或可视验证时，读取 `.specforge/core/skills/ui-ux/design-system/SKILL.md` 和 `.specforge/core/skills/ui-ux/design-system/references/cross-stage-handoff.md`；再按需读 `references/shadcn-vue.md`、`references/component-system.md`、`references/ui-toolchain.md`、`foundations/tokens.md`、`foundations/motion.md`。
 
 ## 启动扫描
 
@@ -74,8 +75,10 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 3. 按影响面展开工程设计；不涉及的章节保留一行 N/A 理由，不写空表。
 4. 对齐规则主基准：按影响面写采用点、偏离理由和验证证据。
 5. 填写 `Design Quality Gate`：设计规模、现有架构复用、新增依赖确认、更简单方案、契约可测试性和是否可拆 tasks。
-6. 中高风险或会改变长期架构的决策必须写 ADR 摘要；小改可写 `N/A - no long-lived architecture decision`。
-7. 输出必须能直接支持 `sf-tasking`：每个技术决策都要能拆成任务、验证或明确 N/A。
+6. 若存在 UI / 前端工程影响，必须把 `ui-design.md#Design Contract Summary` 转成工程决策：token delivery、component source、project wrapper、shadcn-vue registry boundary、motion source、state ownership 和 visual verification hooks。
+7. React Bits 类灵感在 Vue 项目中不得直接照搬；优先评估 Vue Bits、Motion Vue、CSS transition 或现有动画工具。新增 Vue Bits、Motion、GSAP 等依赖必须走 dependency decision。
+8. 中高风险或会改变长期架构的决策必须写 ADR 摘要；小改可写 `N/A - no long-lived architecture decision`。
+9. 输出必须能直接支持 `sf-tasking`：每个技术决策都要能拆成任务、验证或明确 N/A。
 
 ### D. 初稿后核心决策 Review
 
@@ -94,6 +97,7 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 | 存量项目 wiki 无法给出本次相关入口、边界或上下游 | 停止：路由 `sf-steering` 刷新 wiki |
 | 新项目、空仓库或关键技术缺失，但没有确认来源 | 停止 |
 | 新增 / 替换技术或依赖缺少版本事实、官方资料、lockfile 证据或明确风险说明 | 停止 |
+| UI 有前端实现影响，但 technical design 未承接 Design Contract Summary、token delivery、组件架构、动效来源或视觉验证面 | 停止 |
 | `technical-design.md` 仍残留 `[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]` 或 `[NEEDS TOOLING DECISION]` | 停止 |
 | `Core Decision Review Status` 不是 `confirmed`、`delegated_default` 或 `not_required` | 停止 |
 
@@ -106,6 +110,7 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 - 新项目、新增 / 替换关键技术、新增直接依赖或工具链选择都有用户确认、授权默认、沿用现有栈或已确认脚手架依据。
 - `Design Quality Gate` 证明设计最小充分、没有无根据新增依赖，且关键契约可测试。
 - 当前版本事实、规则基准采用点、偏离理由和验证证据已写入。
+- 有 UI / 前端影响时，Design Contract Summary 已转成工程可执行的 token、wrapper、registry、motion 和 visual verification 方案。
 - 初稿后的核心决策摘要已经被用户确认、用户授权默认，或明确 N/A。
 - **按需求规模裁剪**：单字段 / 单页面 / 配置类小需求，`Tech Profile Selection`、`Requirements Trace`、`核心决策摘要 Review` 等章节可省略或合并为一行摘要；沿用现有栈时不需要重复列出所有技术选型表格。目标是让文档可读可审批，而不是填满模板。
 - 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。

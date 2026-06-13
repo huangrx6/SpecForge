@@ -37,6 +37,20 @@
 - 动效语气：
 - 避免的廉价感：
 
+## Design Contract Summary
+| 项 | 内容 |
+| --- | --- |
+| Design mode | |
+| Aesthetic direction | |
+| Signature | |
+| Token source | |
+| Component strategy | |
+| shadcn-vue primitive layer | |
+| Project wrapper layer | |
+| Motion source | |
+| Anti-slop rules | |
+| Verification hooks | |
+
 ## 5. 信息架构
 | 区域 | 内容 | 优先级 | 备注 |
 | --- | --- | --- | --- |

@@ -13,7 +13,10 @@
 ## 必读输入
 
 - `01-spec/requirements.md`
-- `01-spec/ui-design.md`（存在时，只引用页面地图、状态矩阵、原型证据）
+- `01-spec/ui-design.md`（存在时，读取页面地图、状态矩阵、原型证据和 Design Contract Summary）
+- `.specforge/core/skills/ui-ux/design-system/references/cross-stage-handoff.md`
+- `.specforge/core/skills/ui-ux/design-system/references/component-system.md`
+- `.specforge/core/skills/ui-ux/design-system/references/shadcn-vue.md`（Vue / shadcn-vue 场景）
 - `.specforge/core/profiles/README.md`
 - 已选或候选前端 profile，例如：
   - `.specforge/core/profiles/frontend/react-vite-tailwind-ts.md`
@@ -35,12 +38,24 @@
 - 区分页面容器、业务组件、通用 UI 组件和框架组件。
 - 说明哪些复用现有组件，哪些新增业务组件，哪些不新增抽象。
 - 对复杂表单、列表、批量操作、上传/下载、审批流等写清组件职责。
+- 承接 `ui-design.md#Design Contract Summary`：明确 primitive、companion、project wrapper、pattern component 和 domain component 的层级。
+- 使用 shadcn-vue 时，说明 primitive 只承担可访问基础交互；权限、加载、错误、空态、远程数据、审计和批量操作进入 project wrapper。
+- 需要跨项目复用时，评估是否建立 shadcn-vue custom registry；registry 只分发稳定 wrapper / hooks / pages，不分发一次性页面拼装。
 
 ### 状态与数据流
 
 - 明确本地状态、服务端状态、缓存状态和 URL 状态的归属。
 - 说明 loading、empty、error、retry、disabled 状态由哪个组件或 hook 管理。
 - API client 必须有统一错误处理、鉴权处理和超时 / 取消策略。
+- UI 状态必须覆盖 design-system 的 default、loading、empty、filtered-empty、error、permission、success、stale、partial 中适用项。
+- 列出 state ownership：页面容器、project wrapper、domain hook、API client 或后端状态分别负责什么。
+
+### Token、动效与 registry
+
+- Token delivery：CSS variables、Tailwind theme、现有项目 token 或组件局部变量。
+- Motion source：CSS transition、Motion Vue、Vue Bits、GSAP 或现有动画工具；Product UI 默认不引入装饰型动效依赖。
+- React Bits 灵感在 Vue 项目中只作为概念参考，优先找 Vue Bits / Motion Vue 对应实现，并确认依赖、bundle、reduced motion 和可维护性。
+- Visual verification hooks：截图页面、关键状态、响应式断点、a11y 路径和动效 reduced-motion。
 
 ### 构建与测试
 
@@ -53,11 +68,13 @@
 - 前端 profile 选择或 N/A 理由。
 - 路由 / 页面入口变更清单。
 - 组件边界和状态管理方案。
+- Design Contract Summary 的工程承接：token delivery、component source、registry boundary、motion source、state ownership。
 - API client / 错误处理 / 加载重试策略。
 - 前端验证策略和需要 `sf-verify` 覆盖的页面状态。
 
 ## 停止条件
 
 - `ui-design.md` 标记有 UI 影响但尚未完成，无法判断页面 / 状态范围。
+- `ui-design.md` 有 Design Contract Summary 但 technical design 未承接 token / wrapper / motion / verification。
 - 项目已有组件库或设计系统未知，且本次会引入新组件范式。
 - 前端技术栈、包管理器或构建方式不确定，且会影响脚手架或依赖选择。

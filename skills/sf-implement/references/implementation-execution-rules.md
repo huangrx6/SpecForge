@@ -59,6 +59,7 @@
 
 读取顺序：
 
+0. `ui-design.md#Design Contract Summary`
 1. `ui-design.md#4 Visual Style Brief`
 2. `ui-design.md#5 信息架构`
 3. `ui-design.md#6 影响范围`
@@ -70,6 +71,10 @@
 
 - 以 Pencil 导出截图作为布局、密度、状态反馈和交互参照。
 - 不在实现阶段重新选择主色、字体、圆角、组件形态或信息密度。
+- 使用 Design Contract Summary 声明的 token source、component strategy、project wrapper、motion source 和 anti-slop rules。
+- 不直接在页面堆 shadcn-vue primitive；权限、加载、错误、空态、远程数据、审计或批量操作必须进入 project wrapper 或 domain component。
+- 不硬编码 hex / rgb / arbitrary spacing 来绕过 token；确需新增 token，回到 technical design 或 tasks 说明。
+- Vue 动效实现优先使用 CSS transition 或已确认的 Motion Vue / Vue Bits / GSAP 方案；未经确认不得新增动效依赖。
 - 保留可访问选择器：优先 role、label、可见文本；必要时补 `data-testid`。
 - 若 `ui-design.md` 声明采用 PC 端业务系统规范，读取 `pc-ui-design-spec.md` 并使用其 token。
 
@@ -83,6 +88,17 @@ PC 规范实现自检：
 | 字体 | 中文阿里巴巴普惠体，英文/数字 D-DIN EXP |
 | 主色 | `#277DEA`、hover `#4998FC`、active `#1D6BD0` |
 | HTML/CSS | 使用规范 token，不接受 UI 库默认主题 |
+
+Design-system 实现自检：
+
+| 项 | 通过标准 |
+|---|---|
+| Token | 使用 semantic token / CSS variables / Tailwind theme，不散落硬编码值 |
+| Wrapper | 页面级复杂交互通过 project wrapper 或 domain component 承接 |
+| State | default / loading / empty / error / permission / success 中适用项有实现路径 |
+| Motion | 符合 motion boundary，支持 reduced motion，动效服务状态或空间关系 |
+| Anti-slop | 无嵌套卡片、通用渐变、无意义 icon tile、灰字压彩底、文本溢出 |
+| Evidence | 截图、DOM、a11y、responsive 或 visual verification hooks 已记录 |
 
 ## 技术实现规则
 
