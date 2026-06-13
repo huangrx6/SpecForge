@@ -43,6 +43,26 @@ description: <说明此技能做什么，以及什么时候使用>
 
 > `brainstorm` 是 graph 外阶段：它可以生成 `00-intake/brainstorm.md` 并回写 brief，但不强制每个 work item 都经过它。`sf-prd` 不对应固定的内部 stage 技能母本；它读取 brief / brainstorm 的已确认选择后生成 PRD。
 
+## Artifact / Entry / Stage Alias
+
+外部入口、artifact id 和内部目录不总是一一同名；维护时先看本表，避免误以为缺少 stage。
+
+| Artifact id | Public entry | Internal stage directory | 说明 |
+|---|---|---|---|
+| `intake` | `sf-intake` | `status` / `steering` / `brainstorm` as needed | intake 是路由与建项动作，不是单一 stage skill |
+| `research` | `sf-discovery` | `research` | 研究结论和来源质量 |
+| `gap_report` | `sf-discovery` | `gap-report` | issue / bugfix 的现象、根因和修复方向 |
+| `requirements` | `sf-requirements` | `requirements` | 可测试行为规格 |
+| `ui_design` | `sf-ui-design` | `ui-design` | UI / UX 设计与 Pencil 证据 |
+| `technical_design` | `sf-tech-design` | `technical-design` | 技术方案和影响面 |
+| `tasks` | `sf-tasking` | `task-planning` | `tasks` 是 artifact 名；内部目录沿用动词式 planning 以表达拆解过程 |
+| `spec_review` | `sf-spec-review` | `spec-review` | 规格审查 gate |
+| `implementation` | `sf-implement` | `implementation` | 实现记录 |
+| `code_review` | `sf-code-review` | `code-review` | 代码审查 gate |
+| `verification` | `sf-verify` | `verification` | 验证 gate |
+| `wiki_sync` | `sf-wiki` | `wiki-sync` | 长期知识回写 gate |
+| `closure` | `sf-close` | `closure` | release / rollback / archive |
+
 ## 维护规则
 
 - 阶段行为变化时，先更新 `core/workflows/stages/<name>/SKILL.md`，再更新对应 `skills/sf-*` skill。

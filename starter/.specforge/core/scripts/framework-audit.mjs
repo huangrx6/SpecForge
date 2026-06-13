@@ -216,6 +216,21 @@ function stageSkillIssues() {
   const issues = [];
   const stagesRoot = join(root, "core/workflows/stages");
   const readme = read("core/workflows/stages/README.md");
+  const requiredArtifacts = [
+    "intake",
+    "research",
+    "gap_report",
+    "requirements",
+    "ui_design",
+    "technical_design",
+    "tasks",
+    "spec_review",
+    "implementation",
+    "code_review",
+    "verification",
+    "wiki_sync",
+    "closure",
+  ];
   const stageDirs = readdirSync(stagesRoot, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
@@ -232,6 +247,11 @@ function stageSkillIssues() {
     }
     if (!readme.includes(`\`${stage}/SKILL.md\``)) {
       issues.push(issue("FAIL", "stage-skill-not-documented", `${stage}/SKILL.md is not documented in core/workflows/stages/README.md.`, "core/workflows/stages/README.md"));
+    }
+  }
+  for (const artifact of requiredArtifacts) {
+    if (!readme.includes(`\`${artifact}\``)) {
+      issues.push(issue("WARN", "stage-artifact-alias-missing", `${artifact} is not listed in the stage alias index.`, "core/workflows/stages/README.md"));
     }
   }
   return issues;
