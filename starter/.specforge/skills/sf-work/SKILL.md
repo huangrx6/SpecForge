@@ -36,6 +36,7 @@ node .specforge/core/scripts/doctor.mjs
 ```bash
 node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/instructions.mjs
+node .specforge/core/scripts/quality-suite.mjs
 node .specforge/core/scripts/decision-checkpoints.mjs
 node .specforge/core/scripts/artifact-graph-status.mjs
 git status --short --untracked-files=all
@@ -49,6 +50,7 @@ git status --short --untracked-files=all
    - technical_design 有关键 `unknown` 时，暂停到 `sf-tech-design`。
    - technical_design 的核心决策摘要未确认、授权默认或标记 N/A 时，暂停到 `sf-tech-design`。
    - tasks 缺少核心字段，或条件字段无法覆盖 technical_design `yes` 影响面时，暂停到 `sf-tasking`。
+   - quality suite 为 `FAIL` 时，按失败项的 `route` 暂停到对应子技能；不要为了自动推进绕过 artifact / decision / source / evidence 质量失败。
    - implementation report、changed-files 和真实 git 状态不一致时，暂停到 `sf-implement`。
    - verification 有跳过项但没有 owner / 影响 / 重新验证条件 / 证据强度时，暂停到 `sf-verify`。
    - verification 的缺口属于真实环境、第三方系统或低风险残余时，先让 `sf-verify` 生成人工确认请求；用户确认后继续。
@@ -66,7 +68,7 @@ git status --short --untracked-files=all
    - verification：`sf-verify`
    - wiki_sync：`sf-wiki`
    - closure：`sf-close`
-4. 每完成一个 gate 或阶段后再次运行 doctor、`instructions.mjs`、`decision-checkpoints.mjs`、`artifact-graph-status.mjs` 和 `git status --short --untracked-files=all`。
+4. 每完成一个 gate 或阶段后再次运行 doctor、`instructions.mjs`、`quality-suite.mjs`、`decision-checkpoints.mjs`、`artifact-graph-status.mjs` 和 `git status --short --untracked-files=all`。
 5. ready artifact 进入 `closure` 后交给 `sf-close`，由 `sf-close` 负责 release、rollback、archive dry-run 和 archive。
 6. archive 成功后停止，并输出已完成 artifact、gate、验证和归档路径。
 
@@ -77,6 +79,7 @@ git status --short --untracked-files=all
 ```bash
 node .specforge/core/scripts/doctor.mjs
 node .specforge/core/scripts/instructions.mjs
+node .specforge/core/scripts/quality-suite.mjs
 node .specforge/core/scripts/decision-checkpoints.mjs
 node .specforge/core/scripts/artifact-graph-status.mjs
 ```
@@ -87,7 +90,7 @@ node .specforge/core/scripts/artifact-graph-status.mjs
 node .specforge/core/scripts/gate.mjs <gate> APPROVED --evidence <path>
 ```
 
-如果 `instructions.mjs` 显示依赖未满足、gate 不是 `APPROVED`、artifact 是 `blocked` / `partial`，或者 doctor 失败，必须停止并说明阻断原因。不要通过手写总结替代 gate evidence。
+如果 `instructions.mjs` 显示依赖未满足、quality suite 为 `FAIL`、gate 不是 `APPROVED`、artifact 是 `blocked` / `partial`，或者 doctor 失败，必须停止并说明阻断原因。不要通过手写总结替代 gate evidence。
 
 每轮推进都要更新或检查对应 artifact 文件；如果子技能只能给建议，不能产出完整证据，`sf-work` 必须暂停让用户决策。
 

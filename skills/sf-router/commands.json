@@ -9,6 +9,7 @@
     "node .specforge/core/scripts/gate.mjs spec_review APPROVED --evidence 02-spec-review/spec-review-v1.md",
     "node .specforge/core/scripts/gate.mjs verification APPROVED --evidence 05-verification/report.md",
     "node .specforge/core/scripts/gate.mjs wiki_sync APPROVED --evidence 06-close/wiki-sync.md",
-    "node .specforge/core/scripts/instructions.mjs"
+    "node .specforge/core/scripts/instructions.mjs",
+    "node .specforge/core/scripts/quality-suite.mjs"
   ]
 }

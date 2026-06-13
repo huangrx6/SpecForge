@@ -8,6 +8,7 @@
     "node .specforge/core/scripts/doctor.mjs",
     "node .specforge/core/scripts/gate.mjs <gate> APPROVED --evidence <path>",
     "node .specforge/core/scripts/instructions.mjs",
+    "node .specforge/core/scripts/quality-suite.mjs",
     "node .specforge/core/scripts/validate-structure.mjs"
   ]
 }

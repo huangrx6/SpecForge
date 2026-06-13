@@ -16,7 +16,7 @@ description: SpecForge 工作流根入口。用于用户只说“sf”、询问�
 1. 看是否存在 `.specforge/`。
 2. 存在时读取 `.specforge/AGENTS.md`；缺失则提示骨架不完整，先补齐或运行 `sf-onboard`。
 3. 运行 `node .specforge/core/scripts/doctor.mjs`。
-4. 有 active work item 时，再运行 `node .specforge/core/scripts/instructions.mjs`。
+4. 有 active work item 时，再运行 `node .specforge/core/scripts/instructions.mjs` 和 `node .specforge/core/scripts/quality-suite.mjs`。
 
 `sf-router` 只做路由，不写规格、不实现代码、不批准 gate。用户只说“继续”时，默认路由到当前 ready artifact 对应的单个 `sf-*` 技能；只有用户明确说“继续做完 / 自动推进 / 不要停”时，才路由到 `sf-work`。
 
@@ -107,6 +107,7 @@ AI 工具技能：sf-router / sf-*  负责让 AI 工具知道怎么工作，可 
 4. 有一个 active work item。
    - 读取 `00-intake/brief.md` 和可选 `00-intake/prd.md`。
    - 运行 `node .specforge/core/scripts/instructions.mjs`。
+   - 运行 `node .specforge/core/scripts/quality-suite.mjs`；如果总态为 `FAIL`，优先按 quality suite 中失败项的 `route` 回到对应 `sf-*`，不要只按 ready artifact 继续下游。
    - 先检查 gate 状态：
      - `spec_review=REQUEST_CHANGES/REJECTED`：读取 `02-spec-review/spec-review-v1.md` 的 `Return to` 字段，路由到对应阶段；无法判断时路由到 `sf-spec-review` 解释阻断。
      - `code_review=REQUEST_CHANGES/REJECTED`：路由到实现修复阶段；如果 finding 指向 spec 缺口，按 review 的 return path 路由到对应 spec 阶段。

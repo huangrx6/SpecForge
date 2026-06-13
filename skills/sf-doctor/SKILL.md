@@ -23,6 +23,7 @@ node .specforge/core/scripts/doctor.mjs
 
 ```bash
 node .specforge/core/scripts/instructions.mjs
+node .specforge/core/scripts/quality-suite.mjs
 node .specforge/core/scripts/status.mjs
 node .specforge/core/scripts/artifact-graph-status.mjs
 ```
