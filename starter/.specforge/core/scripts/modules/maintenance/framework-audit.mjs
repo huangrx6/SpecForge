@@ -442,6 +442,81 @@ function designSystemComponentDepthIssues() {
   return issues;
 }
 
+function requirementsSystemIssues() {
+  const issues = [];
+  const required = [
+    "core/skills/requirements/SKILL.md",
+    "core/skills/requirements/foundations/behavior-contract.md",
+    "core/skills/requirements/transforms/source-to-requirements.md",
+    "core/skills/requirements/references/anti-patterns.md",
+    "core/skills/requirements/prompts/acceptance-criteria.md",
+    "core/skills/requirements/patterns/role-permission.md",
+    "core/skills/requirements/patterns/workflow-state.md",
+    "core/skills/requirements/patterns/data-file.md",
+    "core/skills/requirements/patterns/ai-quality.md",
+    "core/skills/requirements/patterns/ui-impact.md",
+    "core/skills/requirements/patterns/integration-api.md",
+    "core/skills/requirements/patterns/ops-runtime.md",
+    "core/skills/requirements/patterns/runtime-ops.md",
+  ];
+
+  for (const path of required) {
+    if (!exists(path)) {
+      issues.push(issue("FAIL", "missing-requirements-system-file", `${path} is required by the requirements system contract.`, path));
+    }
+  }
+
+  const behaviorPath = "core/skills/requirements/foundations/behavior-contract.md";
+  if (exists(behaviorPath)) {
+    const body = read(behaviorPath);
+    for (const marker of ["## 1. Confirmation Boundary", "## 2. Requirement Language", "## 3. Testability", "## 4. Traceability", "## 5. Examples"]) {
+      if (!body.includes(marker)) {
+        issues.push(issue("FAIL", "requirements-behavior-marker-missing", `${behaviorPath} is missing ${marker}.`, behaviorPath));
+      }
+    }
+  }
+
+  const transformPath = "core/skills/requirements/transforms/source-to-requirements.md";
+  if (exists(transformPath)) {
+    const body = read(transformPath);
+    for (const marker of ["样例 1", "样例 2", "样例 3", "样例 4", "样例 5", "修写动作"]) {
+      if (!body.includes(marker)) {
+        issues.push(issue("FAIL", "requirements-transform-example-missing", `${transformPath} is missing ${marker}.`, transformPath));
+      }
+    }
+  }
+
+  const antiPath = "core/skills/requirements/references/anti-patterns.md";
+  if (exists(antiPath)) {
+    const body = read(antiPath);
+    for (const marker of ["Fail signal", "为什么危险", "自动修正动作", "修正流程", "修正示例"]) {
+      if (!body.includes(marker)) {
+        issues.push(issue("FAIL", "requirements-anti-pattern-fixer-missing", `${antiPath} is missing ${marker}.`, antiPath));
+      }
+    }
+  }
+
+  for (const path of [
+    "core/skills/requirements/patterns/role-permission.md",
+    "core/skills/requirements/patterns/workflow-state.md",
+    "core/skills/requirements/patterns/data-file.md",
+    "core/skills/requirements/patterns/ai-quality.md",
+    "core/skills/requirements/patterns/ui-impact.md",
+    "core/skills/requirements/patterns/integration-api.md",
+    "core/skills/requirements/patterns/ops-runtime.md",
+  ]) {
+    if (!exists(path)) continue;
+    const body = read(path);
+    for (const marker of ["## 什么时候使用", "## 必须问清", "## REQ", "## AC", "## 常见漏项"]) {
+      if (!body.includes(marker)) {
+        issues.push(issue("FAIL", "requirements-pattern-section-missing", `${path} is missing ${marker}.`, path));
+      }
+    }
+  }
+
+  return issues;
+}
+
 function testDesignIssues() {
   const required = [
     "core/skills/quality/test-design/SKILL.md",
@@ -1301,6 +1376,7 @@ const checks = [
   { id: "design-system-aesthetic-contract", issues: designSystemAestheticIssues() },
   { id: "design-system-palette-contract", issues: designSystemPaletteIssues() },
   { id: "design-system-component-depth", issues: designSystemComponentDepthIssues() },
+  { id: "requirements-system-contract", issues: requirementsSystemIssues() },
   { id: "test-design-contract", issues: testDesignIssues() },
   { id: "starter-manifest", issues: starterManifestIssues() },
   { id: "script-modules", issues: scriptModuleIssues() },

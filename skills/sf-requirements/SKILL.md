@@ -21,10 +21,8 @@ description: 生成或更新 SpecForge work item 的 requirements；用于 activ
 
 - `.specforge/core/skills/requirements/SKILL.md`：requirements 行为契约能力包入口，定义确认边界、转译规则、可测试性、追踪和下游 handoff。
 - `.specforge/core/skills/requirements/references/output-contract.md`：输出 profile、必填 section 和 REQ / AC 表格契约。
-- `.specforge/core/skills/requirements/foundations/confirmation-boundary.md`：确认类型、MUST / SHALL 可写入边界和 pending 处理。
-- `.specforge/core/skills/requirements/foundations/requirement-language.md`：RFC 2119、EARS、禁止模糊词和实现词。
-- `.specforge/core/skills/requirements/foundations/testability.md`：可测试性、Given / When / Then 和验证方式要求。
-- `.specforge/core/skills/requirements/foundations/traceability.md`：Source -> REQ -> AC -> downstream 追踪规则。
+- `.specforge/core/skills/requirements/foundations/behavior-contract.md`：确认边界、需求语言、可测试性、Given / When / Then、Source -> REQ -> AC -> downstream 追踪规则。
+- `.specforge/core/skills/requirements/foundations/confirmation-boundary.md`、`requirement-language.md`、`testability.md`、`traceability.md`：兼容入口；读到它们时继续读 `behavior-contract.md`。
 - `references/requirements-authoring-guide.md`：PRD 转译补充、第三方 skill 归一化、访谈镜头、写作细则和 flags 回写。
 - `.specforge/skills/sf-requirements/stages/requirements/SKILL.md`：内部需求质量标准、停止条件和完成标准。
 - `.specforge/core/standards/product.md`：PRD 输入、候选功能、用户故事、验收标准和可测试需求。
@@ -66,12 +64,13 @@ node .specforge/core/scripts/create-artifact.mjs requirements
 
 1. 先建立 `上游确认输入` 表：original request、brief、brainstorm、PRD、research、gap report、wiki 事实都必须标注确认类型。
 2. 只有 `user-confirmed` 和 `delegated-default` 可以转成 `MUST` / `SHALL` 行为需求；`agent-recommendation` 只能写成候选 / 建议，`pending` 必须留在未决问题。
-3. 按 `.specforge/core/skills/requirements/transforms/source-to-requirements.md` 和 `references/requirements-authoring-guide.md#PRD 转译规则` 显式完成来源转译。
+3. 按 `.specforge/core/skills/requirements/transforms/source-to-requirements.md` 的 before / after 样例和 `references/requirements-authoring-guide.md#PRD 转译规则` 显式完成来源转译。
 4. 从 brief 的 Wiki 上下文入口和相关 wiki 中提取既有产品规则、模块边界、API / 数据约束和已知风险，只转成需求约束或影响面，不展开全仓代码探索。
 5. 把 PRD / brief / brainstorm 中已确认的用户故事、候选功能和验收种子转成 `REQ-*`、`AC-*`、NFR、非目标、明确延后或待澄清项。
 6. 需求正文使用系统行为语言，不复制 PRD 原文，不写实现方案；优先使用 EARS 或 RFC 2119 层级表达。
 7. 如需用户故事或验收样例，按 `references/requirements-authoring-guide.md#第三方 Skill 归一化` 读取 `user-stories`，但它只补视角，不替代主 requirements 包。
-8. 对中高复杂度需求执行一致性检查：用户目标、MVP、角色权限、数据口径、验收标准和非目标不得互相冲突；冲突必须回到用户确认。
+8. 按需求风险读取 1-3 个 pattern 文件：角色 / 权限、状态流转、数据文件、AI 质量、UI 影响、集成 API、运行时约束；每个命中的 pattern 至少补一个常见漏项检查。
+9. 对中高复杂度需求执行一致性检查：用户目标、MVP、角色权限、数据口径、验收标准和非目标不得互相冲突；冲突必须回到用户确认。
 
 ### C. 写 requirements
 

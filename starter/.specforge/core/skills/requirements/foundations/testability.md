@@ -1,29 +1,5 @@
 # Testability
 
-requirements 必须能被测试、演示、检查或分析证明。验收标准不是愿望清单，而是可观察结果。
+本文件保留为兼容入口。完整执行规则已经合并到 `behavior-contract.md#3-testability`。
 
-## AC 结构
-
-| 字段 | 要求 |
-|---|---|
-| Given | 系统初始状态、数据、角色或前置条件 |
-| When | 用户动作、外部事件或系统触发 |
-| Then | 可观察输出：UI 状态、消息、文件、API 响应、审计记录、任务状态 |
-| 验证方式 | automated / manual / inspection / analysis / contract / E2E |
-
-## 覆盖要求
-
-- 每条 MUST 级 REQ 至少有一个 AC。
-- 核心流程必须覆盖正常路径。
-- 适用时补失败路径、空状态、边界值、权限差异和重新验证触发条件。
-- `Then` 不应只写内部实现，例如“数据库保存成功”；需要补外部可观察证据。
-
-## 不可测试项处理
-
-如果行为暂时不可测试：
-
-```md
-| 项 | 原因 | 影响 | Owner | 截止点 |
-|---|---|---|---|---|
-| | 缺数据 / 缺账号 / 缺研究 / 缺用户确认 | | | before ui_design / tech_design / tasks |
-```
+读取本文件时，继续读取 `behavior-contract.md`，并使用其中的 Given / When / Then、覆盖规则和不可测试项处理方式。

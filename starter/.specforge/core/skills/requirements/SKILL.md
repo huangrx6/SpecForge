@@ -20,25 +20,23 @@ description: SpecForge requirements 混合型能力包。用于把已确认的�
 ## 读取顺序
 
 1. 先读 `references/output-contract.md`，确认 compact / standard / full 输出 profile 和 `requirements.md` 的固定结构。
-2. 读取 `foundations/confirmation-boundary.md`，区分用户确认、授权默认、Agent 推荐和未决项。
-3. 读取 `foundations/requirement-language.md`，使用 RFC 2119 / EARS 风格写可测试行为。
-4. 读取 `transforms/source-to-requirements.md`，把 brief / brainstorm / PRD / research / gap 输入转成 REQ / AC / NFR / non-goal / pending。
-5. 需要验收标准时读 `foundations/testability.md` 和 `prompts/acceptance-criteria.md`，把验收种子转成 Given / When / Then / verification method。
-6. 需要按场景补覆盖时，按触发读取 `patterns/*.md`。
-7. 写入前读 `foundations/traceability.md` 和 `references/cross-stage-handoff.md`，建立 Source -> REQ -> AC -> downstream trace。
+2. 读取 `foundations/behavior-contract.md`，一次性建立 confirmation boundary、requirement language、testability 和 traceability。
+3. 读取 `transforms/source-to-requirements.md`，把 brief / brainstorm / PRD / research / gap 输入转成 REQ / AC / NFR / non-goal / pending，并参考 before / after 样例。
+4. 需要验收标准时读 `prompts/acceptance-criteria.md`，把验收种子转成 Given / When / Then / verification method。
+5. 需要按场景补覆盖时，按触发读取 `patterns/*.md`；优先读取与需求风险匹配的 1-3 个 pattern，不要全量加载。
+6. 写入前读 `references/cross-stage-handoff.md`，建立 Source -> REQ -> AC -> downstream trace。
+7. 旧文件 `foundations/confirmation-boundary.md`、`foundations/requirement-language.md`、`foundations/testability.md`、`foundations/traceability.md` 仅作为兼容入口；读到它们时继续读 `behavior-contract.md`。
 8. 写完后读 `references/quality-rubric.md` 和 `references/anti-patterns.md`，做需求质量审查。
 
 ## 能力地图
 
 | 能力 | 作用 | 产出 |
 |---|---|---|
-| Confirmation boundary | 判断哪些上游输入可进入需求 | `上游确认输入`、pending / non-goal |
-| Requirement language | 规范 MUST / SHOULD / MAY、EARS、SHALL 写法 | `REQ-*` |
+| Behavior contract | 判断哪些上游输入可进入需求，并规范 MUST / SHOULD / MAY、EARS、AC 和 trace | `上游确认输入`、`REQ-*`、`AC-*`、trace |
 | Source transform | PRD / brainstorm / research / gap 转译 | `Source -> Requirement 转译` |
 | Acceptance design | 验收种子转 Given / When / Then | `AC-*` |
-| Traceability | 建立 Source -> REQ -> AC -> downstream | trace matrix |
 | Scenario patterns | 权限、状态、数据、AI、UI、集成、运维覆盖 | 行为覆盖矩阵 / NFR |
-| Quality review | 检查歧义、不可测试、范围蔓延、实现细节 | Spec Quality Gate |
+| Quality review | 用 anti-pattern fixer 检查歧义、不可测试、范围蔓延、实现细节 | Spec Quality Gate |
 | Handoff | 给 UI / technical / tasks / verification 交接 | Downstream Handoff |
 
 ## 输出到 SpecForge

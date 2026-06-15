@@ -46,6 +46,9 @@
         "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/requirements",
         "files": [
           {
+            "path": "foundations/behavior-contract.md"
+          },
+          {
             "path": "foundations/confirmation-boundary.md"
           },
           {
@@ -95,6 +98,9 @@
           },
           {
             "path": "patterns/ops-runtime.md"
+          },
+          {
+            "path": "patterns/runtime-ops.md"
           },
           {
             "path": "references/output-contract.md"

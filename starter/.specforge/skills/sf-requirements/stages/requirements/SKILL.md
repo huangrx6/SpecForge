@@ -16,10 +16,8 @@ description: SpecForge 内部需求技能。用于为 work item 生成清晰、�
 - `01-spec/research.md` / `01-spec/gap-report.md`（存在时，只引用已查证事实、结论和回归种子）
 - `.specforge/core/skills/requirements/SKILL.md`
 - `.specforge/core/skills/requirements/references/output-contract.md`
-- `.specforge/core/skills/requirements/foundations/confirmation-boundary.md`
-- `.specforge/core/skills/requirements/foundations/requirement-language.md`
-- `.specforge/core/skills/requirements/foundations/testability.md`
-- `.specforge/core/skills/requirements/foundations/traceability.md`
+- `.specforge/core/skills/requirements/foundations/behavior-contract.md`
+- `.specforge/core/skills/requirements/foundations/confirmation-boundary.md`、`requirement-language.md`、`testability.md`、`traceability.md`（兼容入口；继续读 `behavior-contract.md`）
 - `.specforge/core/skills/requirements/transforms/source-to-requirements.md`
 - `.specforge/core/skills/requirements/references/cross-stage-handoff.md`
 - `.specforge/core/standards/product.md`
@@ -42,7 +40,7 @@ description: SpecForge 内部需求技能。用于为 work item 生成清晰、�
 6. 若存在 PRD，先提取产品目标、用户画像、核心场景、MVP 决策、验收种子和成功指标，再转译成系统可观察行为；不要原样复制 PRD。
 7. 从 brief / brainstorm 的候选功能池中整理用户已确认的 MVP、授权默认、明确延后项和 Agent recommendation。
 8. 如果候选功能没有经过用户确认，先列出选择问题，不要把默认 MVP 伪装成已确认需求。
-9. 按需求风险选择 pattern：角色 / 权限、状态流转、数据文件、AI 质量、UI 影响、集成 API、运行时约束。只读取与当前需求相关的 `core/skills/requirements/patterns/*.md`。
+9. 按需求风险选择 pattern：角色 / 权限、状态流转、数据文件、AI 质量、UI 影响、集成 API、运行时约束。只读取与当前需求相关的 `core/skills/requirements/patterns/*.md`，并把命中的常见漏项转成 AC、NFR、Out of Scope 或 Pending。
 10. 拆成功能需求、非功能需求、约束、非目标、明确延后和待澄清项。
 11. 为每条需求补可验证验收标准；适合时使用 Given/When/Then 或 EARS。每条 `MUST` / `SHALL` 需求至少覆盖正常路径，并按适用性补失败、空状态、边界值和权限差异。
 12. 建立 `REQ / AC Trace`：每条来源输入映射到 REQ / AC / NFR / Out of Scope / Pending / Deferred 之一，不能丢失。
