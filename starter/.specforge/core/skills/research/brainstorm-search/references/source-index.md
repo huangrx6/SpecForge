@@ -6,11 +6,11 @@
 
 | 问题类型 | 优先来源 | 说明 |
 |---|---|---|
-| npm 包版本、下载量、维护状态 | npmjs.com、npm trends | 看 weekly downloads 趋势、最后发版时间和版本分布 |
-| GitHub 维护健康度 | github.com repo → Issues / Pulse / Releases | 看 open issues 趋势、最近 commit、release 节奏、PR 响应速度 |
+| npm 包版本、下载量、维护状态 | npmjs.com、npmtrends.com、deps.dev | 看 weekly downloads 趋势、最后发版时间、版本分布、依赖图和 license / advisory 信号 |
+| GitHub 维护健康度 | github.com repo → Issues / Pulse / Releases、OpenSSF Scorecard | 看 open issues 趋势、最近 commit、release 节奏、PR 响应速度和供应链安全健康信号 |
 | 框架官方文档 | 各框架官网，例如 react.dev、vuejs.org、docs.astro.build | 必须读官网，不读 Medium 二手文章替代官网 |
 | 依赖兼容性 / peer deps | 包的 package.json、CHANGELOG.md、release notes | 版本锁定风险最常在 peer deps、breaking changes 和 migration guide |
-| 安全漏洞 | snyk.io/vuln、nvd.nist.gov、GitHub Security Advisories | 引入新依赖或升级关键包前查一遍 |
+| 安全漏洞 | osv.dev、deps.dev、GitHub Security Advisories、nvd.nist.gov、snyk.io/vuln | 引入新依赖或升级关键包前查一遍；开源包优先看 OSV / deps.dev 的精确版本映射，再交叉检查 NVD / GitHub / Snyk |
 | 性能基准 | Web Almanac、web.dev、MDN、Chrome Developer Blog | 优先使用有数据、日期和测试条件的来源 |
 
 ## 产品 / 竞品 / 市场
@@ -44,7 +44,7 @@
 
 | 问题类型 | 优先来源 | 说明 |
 |---|---|---|
-| 方案成熟度 / 社区采用 | README、Releases、Insights / Pulse、star-history.com | star 不是质量保证；必须结合 release 和 issue 质量 |
+| 方案成熟度 / 社区采用 | README、Releases、Insights / Pulse、star-history.com、OpenSSF Scorecard、deps.dev | star 不是质量保证；必须结合 release、issue 质量、依赖健康和安全维护信号 |
 | Issue 讨论 / 已知 bug | GitHub Issues（label: bug / wontfix / regression）、Discussions | 记录 issue 链接、状态、最后更新时间 |
 | 实际用法 | README examples、官方示例仓库、examples 目录 | 只引用能跑通或官方维护的示例 |
 | 社区共识 | Discussions、RFC 文档、maintainer comments | 共识必须来自多条证据，不来自单条高赞评论 |

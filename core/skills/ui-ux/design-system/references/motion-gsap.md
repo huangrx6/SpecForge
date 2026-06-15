@@ -69,24 +69,24 @@
 
 ```vue
 <script setup lang="ts">
-import { Motion } from "motion-v";
+import { motion } from "motion-v";
 </script>
 
 <template>
-  <Motion
+  <motion.div
     :initial="{ opacity: 0, y: 6 }"
     :animate="{ opacity: 1, y: 0 }"
     :exit="{ opacity: 0, y: 4 }"
     :transition="{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }"
   >
     <slot />
-  </Motion>
+  </motion.div>
 </template>
 ```
 
 ```vue
 <script setup lang="ts">
-import { Motion } from "motion-v";
+import { motion } from "motion-v";
 
 defineProps<{ index: number }>();
 
@@ -103,8 +103,7 @@ const staggerOffset = Math.min(baseDuration * 0.2, 0.04);
 </script>
 
 <template>
-  <Motion
-    as="li"
+  <motion.li
     :initial="{ opacity: 0, y: 8 }"
     :animate="{ opacity: 1, y: 0 }"
     :transition="{
@@ -114,7 +113,7 @@ const staggerOffset = Math.min(baseDuration * 0.2, 0.04);
     }"
   >
     <slot />
-  </Motion>
+  </motion.li>
 </template>
 ```
 
