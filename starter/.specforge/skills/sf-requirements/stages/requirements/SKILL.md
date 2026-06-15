@@ -40,7 +40,7 @@ description: SpecForge 内部需求技能。用于为 work item 生成清晰、�
 6. 若存在产品需求文档，先提取产品目标、用户画像、核心场景、最小可行版本决策、验收种子和成功指标，再转译成系统可观察行为；不要原样复制产品需求文档。
 7. 从简报 / 头脑风暴的候选功能池中整理用户已确认的最小可行版本、授权默认、明确延后项和 Agent 推荐。
 8. 如果候选功能没有经过用户确认，先列出选择问题，不要把默认最小可行版本伪装成已确认需求。
-9. 按需求风险选择 pattern：角色 / 权限、状态流转、数据文件、AI 质量、UI 影响、集成 API、运行时约束。只读取与当前需求相关的 `core/skills/requirements/patterns/*.md`，并把命中的常见漏项转成 AC、NFR、Out of Scope 或 Pending。
+9. 按需求风险选择 pattern：角色 / 权限、状态流转、数据文件、AI 质量、UI 影响、集成 API、运行时约束。只读取与当前需求相关的 `core/skills/requirements/patterns/*.md`，并把命中的常见漏项转成 AC、NFR、Out of Scope 或 Pending；在 `Applied Requirement Patterns` 记录使用了哪些 pattern、为什么使用以及对输出的影响。没有命中时写 N/A 理由。
 10. 拆成功能需求、非功能需求、约束、非目标、明确延后和待澄清项。
 11. 为每条需求补可验证验收标准；适合时使用 Given/When/Then 或 EARS。每条 `MUST` / `SHALL` 需求至少覆盖正常路径，并按适用性补失败、空状态、边界值和权限差异。
 12. 建立 `REQ / AC Trace`：每条来源输入映射到 REQ / AC / NFR / Out of Scope / Pending / Deferred 之一，不能丢失。

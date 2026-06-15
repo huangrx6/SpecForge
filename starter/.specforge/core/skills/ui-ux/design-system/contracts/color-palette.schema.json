@@ -26,7 +26,7 @@
     },
     "design_mode": {
       "type": "string",
-      "enum": ["Product UI", "Brand Surface", "Hybrid", "Avatar-IP", "Empty State", "Avatar-IP / Empty State"]
+      "enum": ["Product UI", "Brand Surface", "Hybrid", "Avatar-IP", "Empty State"]
     },
     "tokens": {
       "type": "object",
@@ -83,10 +83,26 @@
     "accessibility": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["requires_contrast_check", "dark_mode_ready"],
+      "required": ["requires_contrast_check", "dark_mode_ready", "contrast_checks"],
       "properties": {
         "requires_contrast_check": { "type": "boolean" },
-        "dark_mode_ready": { "type": "boolean" }
+        "dark_mode_ready": { "type": "boolean" },
+        "contrast_checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["pair", "ratio", "status"],
+            "properties": {
+              "pair": { "type": "string" },
+              "ratio": { "type": "string" },
+              "status": {
+                "type": "string",
+                "enum": ["pass", "fail", "not-checked"]
+              }
+            }
+          }
+        }
       }
     },
     "source": {

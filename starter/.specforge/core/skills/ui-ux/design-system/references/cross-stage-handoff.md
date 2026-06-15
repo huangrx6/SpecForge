@@ -90,7 +90,14 @@ Design Contract Summary:
     },
     "accessibility": {
       "requires_contrast_check": true,
-      "dark_mode_ready": false
+      "dark_mode_ready": false,
+      "contrast_checks": [
+        {
+          "pair": "text_on_surface",
+          "ratio": "",
+          "status": "not-checked"
+        }
+      ]
     },
     "source": "",
     "source_url": "",
@@ -114,6 +121,8 @@ Design Contract Summary:
 ```
 
 JSON 字段必须符合 `contracts/design-contract.schema.json`。如果某字段不适用，填空数组或明确 N/A 文本，不要省略字段。
+
+`design_mode` 只能是 `Product UI`、`Brand Surface`、`Hybrid`、`Avatar-IP` 或 `Empty State`。不要写 `Avatar-IP / Empty State`；两者同时适用时，用 `scope: "both"` 表达组合。
 
 ## Technical design additions
 

@@ -21,6 +21,7 @@
 4. 不允许只复制 `primary` 单色；必须读取 background、surface、text、muted、primary、secondary、accent、border、semantic、chart、usage_ratio、contrast_notes、avoid、source 和 license_note。
 5. 选定 palette 后写入 Design Contract JSON 的 `color_system`。
 6. 如果 palette 来自 Happy Hues / Color Hunt / Coolors 这类灵感来源，只能写 `source_type: inspiration`；进入实现前必须由 Agent 重新映射成 semantic tokens 并做 contrast check。
+7. `color_system.accessibility.contrast_checks` 必须记录实际检查结果；`requires_contrast_check: true` 不能替代 ratio / status。
 
 ## Palette Field Mapping
 
@@ -165,7 +166,24 @@ Color system:
   },
   "accessibility": {
     "requires_contrast_check": true,
-    "dark_mode_ready": false
+    "dark_mode_ready": false,
+    "contrast_checks": [
+      {
+        "pair": "text_on_surface",
+        "ratio": "12.1",
+        "status": "pass"
+      },
+      {
+        "pair": "text_muted_on_surface",
+        "ratio": "4.8",
+        "status": "pass"
+      },
+      {
+        "pair": "primary_button_text",
+        "ratio": "not checked",
+        "status": "not-checked"
+      }
+    ]
   },
   "source": "Tailwind Colors",
   "source_url": "https://tailwindcss.com/docs/customizing-colors",

@@ -41,6 +41,7 @@
 | 项 | 内容 |
 | --- | --- |
 | Design mode | |
+| Scope | avatar / empty_state / both，仅 Avatar-IP / Empty State 适用 |
 | Aesthetic direction | |
 | Signature | |
 | Color system | Palette: ; Usage ratio: ; Contrast checks: ; Avoid: |
@@ -87,7 +88,14 @@
     },
     "accessibility": {
       "requires_contrast_check": true,
-      "dark_mode_ready": false
+      "dark_mode_ready": false,
+      "contrast_checks": [
+        {
+          "pair": "text_on_surface",
+          "ratio": "",
+          "status": "not-checked"
+        }
+      ]
     },
     "source": "",
     "source_url": "",
@@ -141,9 +149,9 @@
 | | | | | | |
 
 ## 11. 组件契约
-| 组件 | Contract file | shadcn-vue 映射 | 变体 | 状态 | Motion | 反模式 |
-| --- | --- | --- | --- | --- | --- | --- |
-| | `01-spec/design/components/<component-name>.contract.md` | | | | | |
+| 组件 | Trace | Contract file | shadcn-vue 映射 | 变体 | 状态 | Motion | 反模式 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| | REQ/AC/UI | `01-spec/design/components/<component-name>.contract.md` | | | | | |
 
 ## 12. 视觉质量 Review
 - 对齐：

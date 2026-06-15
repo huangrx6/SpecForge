@@ -20,7 +20,7 @@ description: SpecForge UI 设计规范 skill；用于提炼设计语言、建立
 
 ## 读取顺序
 
-1. 先读 `references/design-mode-routing.md`，判断 Product UI、Brand Surface、Hybrid 或 Avatar-IP / Empty State，并决定本轮输出深度和禁止项。
+1. 先读 `references/design-mode-routing.md`，判断 Product UI、Brand Surface、Hybrid、Avatar-IP 或 Empty State，并决定本轮输出深度和禁止项。
 2. 再读 `references/design-intelligence.md`，明确 subject、audience、single job、design mode 和一个可辩护的 signature。
 3. UX 证据、信息架构、交互恢复、微文案或可访问性不足时读 `references/ux-research-ia.md`。
 4. 再读 `foundations/README.md`，按需读 colors / typography / spacing / density / radius-shadow / motion / accessibility。
@@ -41,7 +41,7 @@ description: SpecForge UI 设计规范 skill；用于提炼设计语言、建立
 1. **Design intake**：提取宿主产品、目标用户、使用场景、实现栈、已有组件、约束和用户审美偏好。
 2. **Subject grounding**：用真实业务对象、行业材料、用户语言和场景物件推导视觉方向，不从通用 SaaS 模板开始。
 3. **UX grounding**：需要时用 `ux-research-ia.md` 补齐用户、任务、信息架构、交互恢复、微文案和可访问性底线；关键未知必须回到人工确认。
-4. **Design mode routing**：用 `references/design-mode-routing.md` 判断 Product UI、Brand Surface、Hybrid 或 Avatar-IP / Empty State；后台工具默认 Product UI，除非用户明确要求表达型品牌页面且不破坏任务效率。
+4. **Design mode routing**：用 `references/design-mode-routing.md` 判断 Product UI、Brand Surface、Hybrid、Avatar-IP 或 Empty State；后台工具默认 Product UI，除非用户明确要求表达型品牌页面且不破坏任务效率。
 5. **Reference extraction**：有参考网站/截图时，抽取 DESIGN.md 风格的 atmosphere、tokens、typography、components、layout、do/don't。
 6. **Aesthetic direction recommendation**：基于 `aesthetic-directions.md` 推荐 3-5 个互斥美学方向；方向必须是审美气质，例如极简主义、玩具感、水彩风、赛博朋克、森系，而不是 Operational Calm 这类业务模式。
 7. **Business translation**：用户选择美学后，再把它翻译成业务页面模式、组件气质、密度、状态、动效边界和 signature。
@@ -81,7 +81,7 @@ description: SpecForge UI 设计规范 skill；用于提炼设计语言、建立
 - 先定义设计语言，再画页面；先定组件规则，再谈实现。
 - 每个 UI 方向必须有 subject、audience、single job 和 signature；没有 signature 的方向通常只是模板换皮。
 - Product UI 以清晰、密度、稳定和可重复使用为主，不做营销页式装饰。
-- 设计模式必须先路由：Product UI、Brand Surface、Hybrid、Avatar-IP / Empty State 不能混用质量标准。
+- 设计模式必须先路由：Product UI、Brand Surface、Hybrid、Avatar-IP、Empty State 不能混用质量标准；如果头像/IP 和空态都适用，在 Design Contract JSON 写 `scope: "both"`，不要把组合值写进 `design_mode`。
 - 色彩系统不能只有单点 hex；必须有 palette_id、semantic tokens、usage rules、contrast checks、source_url、license_note 和 avoid rules。
 - Brand Surface 可以更有表达，但仍要有 token、网格、动效边界和内容策略。
 - shadcn-vue 是 primitive / registry / theme 基座，不等于完整设计系统；必须定义项目级组件 contract。

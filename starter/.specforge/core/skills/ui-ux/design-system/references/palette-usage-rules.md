@@ -9,7 +9,8 @@
 | Product UI | >= 70% | <= 15% | <= 5% | <= 5% | optional <= 5% | 低饱和 neutral + 克制 primary；状态色只表达状态。 |
 | Brand Surface | >= 45% | <= 25% | <= 20% | <= 5% | <= 15% | 可以有强 signature，但正文和表单区域必须回到高对比 token。 |
 | Hybrid | >= 60% | <= 15% | <= 10% | <= 5% | <= 10% | Product UI 的信息纪律 + Brand Surface 的一个 signature。 |
-| Avatar-IP / Empty State | >= 55% | <= 15% | <= 20% | <= 10% | scoped | 只影响空态、头像、IP 或低频入口，不写入全局控件 token。 |
+| Avatar-IP | >= 55% | <= 15% | <= 20% | <= 10% | scoped | 只影响头像、IP 或局部角色反馈，不写入全局控件 token。 |
+| Empty State | >= 55% | <= 15% | <= 20% | <= 10% | scoped | 只影响空态插画、文案和恢复动作，不写入全局控件 token。 |
 
 ## Source Discipline
 
@@ -44,6 +45,8 @@
 - AI 助手、工作台首页和低频入口可以更有记忆点，但不能干扰主任务、状态识别和可访问性。
 
 ## Avatar-IP / Empty State Rules
+
+Design Contract JSON 的 `design_mode` 必须使用 `Avatar-IP` 或 `Empty State` 中的单一稳定值；如果两者同时适用，用 `scope: "both"` 表达组合，不要写 `Avatar-IP / Empty State`。
 
 - IP / 插画 palette 只在 avatar、empty state、onboarding、low-frequency entry 生效。
 - 不把插画中的高饱和色写进按钮、表格、导航和状态色。

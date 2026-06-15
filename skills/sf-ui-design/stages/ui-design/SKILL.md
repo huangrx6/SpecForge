@@ -57,7 +57,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - **PC 业务系统模板**：若产品是后台 / 管理系统 / 数据表格系统，或用户明确给出 PC 端 UI 规范，读取 `pc-ui-design-spec.md`，在 Visual Style Brief 中写入设计系统来源和核心 token；后续 Pencil、HTML/CSS、前端实现都不得擅自改这些数值。
 - **shadcn 管理端模式**：若实现层采用 shadcn/ui，把 shadcn 视为 primitive / registry / theming 层；在 UI design 中定义 App Shell、Resource Page、Entity Table、Detail/Form、State Feedback 和 Ops Pattern 的封装契约。
 - **design-system 工具链**：若需要设计语言或组件规范，读取 `design-system`，把 design intelligence、美学方向推荐、DESIGN.md extraction、foundations、组件契约、页面模式、样例板、动效边界和去廉价感 review 归一化到 UI design。
-- **Design mode routing**：先判断 Product UI、Brand Surface、Hybrid 或 Avatar-IP / Empty State；后台、审批、数据表格和高频工作台默认 Product UI，不把品牌页视觉直接套到控件层。
+- **Design mode routing**：先判断 Product UI、Brand Surface、Hybrid、Avatar-IP 或 Empty State；后台、审批、数据表格和高频工作台默认 Product UI，不把品牌页视觉直接套到控件层。头像/IP 与空态同时适用时用 `scope: "both"`，不要把组合值写入 `design_mode`。
 - **Color system**：从 palette library 选完整色阶，按 Product UI / Brand Surface / Hybrid 的比例纪律映射 semantic tokens；不能只输出 background / surface / text / primary / accent 单点色。
 
 ### 2. 定义（Define）

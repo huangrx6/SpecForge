@@ -1,10 +1,21 @@
-import { exists, readText } from "./specforge.mjs";
+import { exists, layout, readText } from "./specforge.mjs";
 
 const summaryHeadings = ["一页摘要", "摘要", "Executive Summary", "Decision Summary", "判定摘要", "发布摘要", "回滚摘要", "CI 摘要"];
 const unresolvedDecisionPattern = /\[(?:NEEDS (?:CLARIFICATION|PRODUCT DECISION|UI DECISION|TECH DECISION|DEPENDENCY DECISION|TOOLING DECISION)|DEPENDENCY DECISION REQUIRED|TOOLING DECISION REQUIRED)[^\]]*\]/i;
 const placeholderPattern = /\.\.\.|<[^>]+>|请输入内容|待填写|待补充|TBD|example|示例|real marker if needed|yes\s*\/\s*no|pass\s*\/\s*fail/i;
 const taskPattern = /^\s*[-*]\s+\[[ xX]\]\s+(T\d{3})\b(.+)$/;
 const taskFieldPattern = /^\s*_(Trace|Files|Verification|Rollback|Risk|Impact|Boundary|Depends|TestCase):_\s*(.*)$/i;
+const designModeValues = new Set(["Product UI", "Brand Surface", "Hybrid", "Avatar-IP", "Empty State"]);
+const designScopeValues = new Set(["avatar", "empty_state", "both"]);
+const contrastStatusValues = new Set(["pass", "fail", "not-checked"]);
+const highSeverityVisualDetectors = new Set([
+  "Generic SaaS shell",
+  "Card soup",
+  "Fake premium gradient",
+  "Motion noise",
+  "State missing",
+  "Low contrast subtlety",
+]);
 
 function headingLevel(line) {
   return line.match(/^(#{1,6})\s+/)?.[1]?.length ?? 0;
@@ -64,6 +75,27 @@ function addRequiredHeadingIssues(issues, content, outputPath, headings) {
 function getSectionBody(content, heading) {
   const lines = content.split(/\r?\n/);
   const start = lines.findIndex((line) => /^#{1,6}\s+/.test(line) && line.replace(/^#{1,6}\s+/, "").trim() === heading);
+  if (start === -1) return null;
+  const level = headingLevel(lines[start]);
+  let end = lines.length;
+  for (let index = start + 1; index < lines.length; index += 1) {
+    const nextLevel = headingLevel(lines[index]);
+    if (nextLevel > 0 && nextLevel <= level) {
+      end = index;
+      break;
+    }
+  }
+  return lines.slice(start + 1, end).join("\n");
+}
+
+function getSectionBodyLoose(content, headingText) {
+  const lines = content.split(/\r?\n/);
+  const normalizedHeading = headingText.trim().toLowerCase();
+  const start = lines.findIndex((line) => {
+    if (!/^#{1,6}\s+/.test(line)) return false;
+    const text = line.replace(/^#{1,6}\s+/, "").replace(/^\d+(?:\.\d+)*\.\s+/, "").trim().toLowerCase();
+    return text === normalizedHeading;
+  });
   if (start === -1) return null;
   const level = headingLevel(lines[start]);
   let end = lines.length;
@@ -142,6 +174,7 @@ function lintRequirements(content, outputPath) {
   const issues = [];
   addRequiredHeadingIssues(issues, content, outputPath, [
     "0.1 Spec Quality Gate",
+    "Applied Requirement Patterns",
     "上游确认输入",
     "Source -> Requirement 转译",
     "边界",
@@ -368,8 +401,241 @@ function lintTasks(content, outputPath) {
   return issues;
 }
 
+function parseDesignContractJson(content) {
+  const blocks = [...content.matchAll(/```json\s*([\s\S]*?)```/g)];
+  const parseErrors = [];
+  for (const block of blocks) {
+    try {
+      const value = JSON.parse(block[1]);
+      if (value && typeof value === "object" && (value.design_mode || value.color_system)) {
+        return { contract: value, parseErrors };
+      }
+    } catch (error) {
+      parseErrors.push(error.message);
+    }
+  }
+  return { contract: null, parseErrors };
+}
+
+function paletteIds() {
+  const path = `${layout.runtime}/skills/ui-ux/design-system/data/aesthetic-palettes.csv`;
+  if (!exists(path)) return new Set();
+  const lines = readText(path).split(/\r?\n/).filter((line) => line.trim());
+  return new Set(lines.slice(1).map((line) => line.split(",")[0]?.trim()).filter(Boolean));
+}
+
+function addMissingFields(issues, object, fields, outputPath, owner, code = "design-contract-field-missing") {
+  const missing = fields.filter((field) => !Object.prototype.hasOwnProperty.call(object ?? {}, field));
+  if (missing.length > 0) {
+    issues.push({
+      severity: "FAIL",
+      code,
+      message: `${outputPath} 的 ${owner} 缺少字段：${missing.join(", ")}。`,
+      fix: "按 design-contract.schema.json 补齐字段；不适用时填空数组或明确 N/A 文本，不要省略字段。",
+    });
+  }
+}
+
+function lintContrastChecks(issues, accessibility, outputPath) {
+  if (!accessibility || typeof accessibility !== "object") {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-accessibility-missing",
+      message: `${outputPath} 的 color_system.accessibility 缺失。`,
+      fix: "补齐 requires_contrast_check、dark_mode_ready 和 contrast_checks。",
+    });
+    return;
+  }
+
+  addMissingFields(issues, accessibility, ["requires_contrast_check", "dark_mode_ready", "contrast_checks"], outputPath, "color_system.accessibility");
+  if (!Array.isArray(accessibility.contrast_checks) || accessibility.contrast_checks.length === 0) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-contrast-checks-missing",
+      message: `${outputPath} 没有记录 contrast_checks。`,
+      fix: "至少记录 text_on_surface、text_muted_on_surface、primary_button_text 等关键 token pair 的 ratio 和 status。",
+    });
+    return;
+  }
+
+  let checked = 0;
+  for (const [index, check] of accessibility.contrast_checks.entries()) {
+    const pair = String(check?.pair ?? "").trim();
+    const ratio = String(check?.ratio ?? "").trim();
+    const status = String(check?.status ?? "").trim();
+    if (!pair || !ratio || !contrastStatusValues.has(status)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-contrast-check-invalid",
+        message: `${outputPath} 的 contrast_checks[${index}] 不完整或 status 非法。`,
+        fix: "每条 contrast check 必须包含 pair、ratio 和 status: pass / fail / not-checked。",
+      });
+      continue;
+    }
+    if (status !== "not-checked") checked += 1;
+    if ((status === "pass" || status === "fail") && !/\d/.test(ratio)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-contrast-ratio-missing",
+        message: `${outputPath} 的 ${pair} 标记为 ${status}，但 ratio 没有可读数值。`,
+        fix: "写入实际对比度，例如 4.8 或 4.8:1。",
+      });
+    }
+  }
+
+  if (accessibility.requires_contrast_check === true && checked === 0) {
+    issues.push({
+      severity: "WARN",
+      code: "design-contract-contrast-not-checked",
+      message: `${outputPath} 要求 contrast check，但所有 contrast_checks 都还是 not-checked。`,
+      fix: "在进入 technical design / implementation 前补齐至少正文、弱文案、按钮文字和非文本 UI 的对比度结果。",
+    });
+  }
+}
+
+function lintVisualQaDetectors(issues, content, outputPath) {
+  const body = getSectionBodyLoose(content, "Visual QA Detectors");
+  if (!body) {
+    issues.push({
+      severity: "WARN",
+      code: "ui-design-visual-qa-detectors-missing",
+      message: `${outputPath} 缺少 Visual QA Detectors section。`,
+      fix: "按 visual-qa-detectors.md 输出 detector、result、evidence 和 fix / accepted reason。",
+    });
+    return;
+  }
+
+  for (const line of body.split(/\r?\n/)) {
+    if (!line.trim().startsWith("|")) continue;
+    if (/^\|?\s*:?-{3,}:?/.test(line)) continue;
+    const rawCells = line.split("|").map((cell) => cell.trim());
+    const cells = rawCells[0] === "" ? rawCells.slice(1, -1) : rawCells;
+    if (cells.length < 4 || /^detector$/i.test(cells[0])) continue;
+    const [detector, result, , fix] = cells;
+    if (!highSeverityVisualDetectors.has(detector)) continue;
+    if (!/\b(issue|fail|failed|high|block)\b/i.test(result)) continue;
+    if (!isMeaningfulCell(fix)) {
+      issues.push({
+        severity: "FAIL",
+        code: "ui-design-high-visual-qa-unresolved",
+        message: `${outputPath} 的 high severity visual QA detector 未给出修复动作或接受理由：${detector}。`,
+        fix: "修复 detector 对应问题，或在 Fix / Accepted reason 写明为什么接受该风险以及后续验证方式。",
+      });
+    }
+  }
+}
+
+function lintUiDesign(content, outputPath) {
+  const issues = [];
+  addRequiredHeadingIssues(issues, content, outputPath, ["Design Contract Summary"]);
+
+  const { contract, parseErrors } = parseDesignContractJson(content);
+  if (!contract) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-json-missing",
+      message: `${outputPath} 缺少可解析的 Design Contract JSON block。`,
+      fix: "在 Design Contract Summary 后输出 ```json fenced block，并包含 design_mode 与 color_system。",
+    });
+    if (parseErrors.length > 0) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-json-invalid",
+        message: `${outputPath} 存在 JSON fenced block，但无法解析：${parseErrors[0]}。`,
+        fix: "修正 JSON 语法；不要在 JSON block 内写注释或 Markdown。",
+      });
+    }
+    lintVisualQaDetectors(issues, content, outputPath);
+    return issues;
+  }
+
+  addMissingFields(issues, contract, [
+    "design_mode",
+    "aesthetic_direction",
+    "signature",
+    "color_system",
+    "token_source",
+    "component_strategy",
+    "shadcn_vue",
+    "motion",
+    "verification_hooks",
+    "anti_slop_rules",
+  ], outputPath, "Design Contract JSON");
+
+  if (!designModeValues.has(contract.design_mode)) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-invalid-design-mode",
+      message: `${outputPath} 的 design_mode 非稳定枚举：${contract.design_mode ?? "missing"}。`,
+      fix: "design_mode 只允许 Product UI、Brand Surface、Hybrid、Avatar-IP、Empty State；组合关系写 scope。",
+    });
+  }
+  if (["Avatar-IP", "Empty State"].includes(contract.design_mode) && contract.scope && !designScopeValues.has(contract.scope)) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-invalid-scope",
+      message: `${outputPath} 的 scope 非法：${contract.scope}。`,
+      fix: "Avatar-IP / Empty State 组合只能写 scope: avatar / empty_state / both。",
+    });
+  }
+
+  const color = contract.color_system;
+  addMissingFields(issues, color, [
+    "palette_id",
+    "aesthetic_direction",
+    "design_mode",
+    "tokens",
+    "usage_rules",
+    "accessibility",
+    "source",
+    "source_url",
+    "license_note",
+  ], outputPath, "color_system");
+
+  if (color && color.design_mode !== contract.design_mode) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-color-mode-mismatch",
+      message: `${outputPath} 的 design_mode 与 color_system.design_mode 不一致。`,
+      fix: "让两个字段使用同一个稳定 design mode；不要使用 Avatar-IP / Empty State 组合值。",
+    });
+  }
+
+  const ids = paletteIds();
+  if (ids.size > 0 && color?.palette_id && !ids.has(color.palette_id)) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-unknown-palette",
+      message: `${outputPath} 的 palette_id 不存在于 aesthetic-palettes.csv：${color.palette_id}。`,
+      fix: "改用 data/aesthetic-palettes.csv 中存在的 palette_id，或先把新 palette 记录进 palette library。",
+    });
+  }
+  for (const field of ["source", "source_url", "license_note"]) {
+    if (!isMeaningfulCell(String(color?.[field] ?? ""))) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-source-field-missing",
+        message: `${outputPath} 的 color_system.${field} 缺失或仍像占位。`,
+        fix: "记录 palette 来源、入口 URL 和 license / redistribution note。",
+      });
+    }
+  }
+  if (color?.source_url && !/^https?:\/\//i.test(color.source_url)) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-source-url-invalid",
+      message: `${outputPath} 的 color_system.source_url 不是可追溯 URL。`,
+      fix: "写入 Radix、Tailwind、ColorBrewer、Happy Hues 等来源入口 URL。",
+    });
+  }
+  lintContrastChecks(issues, color?.accessibility, outputPath);
+  lintVisualQaDetectors(issues, content, outputPath);
+  return issues;
+}
+
 function profileIssues(artifactId, content, outputPath) {
   if (artifactId === "requirements") return lintRequirements(content, outputPath);
+  if (artifactId === "ui_design") return lintUiDesign(content, outputPath);
   if (artifactId === "technical_design") return lintTechnicalDesign(content, outputPath);
   if (artifactId === "tasks") return lintTasks(content, outputPath);
   return [];

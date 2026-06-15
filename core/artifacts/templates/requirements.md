@@ -27,6 +27,11 @@
 | 边界明确 | | |
 | 风险可验证 | | |
 
+## Applied Requirement Patterns
+| Pattern | Why used | Output impact |
+| --- | --- | --- |
+| role-permission / workflow-state / data-file / ai-quality / ui-impact / integration-api / runtime-ops | | |
+
 ## 上游确认输入
 | 来源 | 决策 / 事实 | 确认类型 | 可进入需求 | 处理 |
 | --- | --- | --- | --- | --- |

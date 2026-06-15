@@ -16,7 +16,7 @@
 
 ## 0.8.0
 
-- 新增 `references/design-mode-routing.md`，把 Product UI、Brand Surface、Hybrid 和 Avatar-IP / Empty State 作为第一步路由，防止审美方向误套到不合适的 UI 场景。
+- 新增 `references/design-mode-routing.md`，把 Product UI、Brand Surface、Hybrid、Avatar-IP 和 Empty State 作为第一步路由，防止审美方向误套到不合适的 UI 场景。
 - 新增 `contracts/design-contract.schema.json`，要求 Design Contract Summary 同时输出 Markdown 和 machine-readable JSON。
 - 新增 `references/visual-qa-detectors.md`，把去模板感、去廉价感和状态缺失变成可执行 detector。
 - 新增 `contracts/component-contract.template.md`，定义 `01-spec/design/components/<component-name>.contract.md` 的独立组件契约格式。

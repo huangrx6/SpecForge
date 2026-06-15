@@ -104,19 +104,27 @@
             "path": "foundations/behavior-contract.md"
           },
           {
-            "path": "foundations/confirmation-boundary.md"
+            "path": "foundations/confirmation-boundary.md",
+            "deprecated": true,
+            "redirectTo": "foundations/behavior-contract.md#1-confirmation-boundary"
           },
           {
             "path": "foundations/nfr-taxonomy.md"
           },
           {
-            "path": "foundations/requirement-language.md"
+            "path": "foundations/requirement-language.md",
+            "deprecated": true,
+            "redirectTo": "foundations/behavior-contract.md#2-requirement-language"
           },
           {
-            "path": "foundations/testability.md"
+            "path": "foundations/testability.md",
+            "deprecated": true,
+            "redirectTo": "foundations/behavior-contract.md#3-testability"
           },
           {
-            "path": "foundations/traceability.md"
+            "path": "foundations/traceability.md",
+            "deprecated": true,
+            "redirectTo": "foundations/behavior-contract.md#4-traceability"
           },
           {
             "path": "transforms/source-to-requirements.md"

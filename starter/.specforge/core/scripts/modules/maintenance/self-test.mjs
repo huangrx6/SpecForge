@@ -350,6 +350,112 @@ function testTechnicalDesignContractQuality() {
   }
 }
 
+function testUiDesignContractQuality() {
+  const base = mkdtempSync("tmp-specforge-ui-quality-");
+  try {
+    const diagnosis = {
+      work_item: {
+        id: "20260613-feat-003-ui-quality",
+        path: base,
+      },
+      artifacts: [
+        {
+          id: "ui_design",
+          status: "ready",
+          outputs: ["01-spec/ui-design.md"],
+        },
+      ],
+    };
+
+    writeFixture(
+      `${base}/01-spec/ui-design.md`,
+      `# UI Design\n\n## Design Contract Summary\n\nDesign Contract JSON:\n\n\`\`\`json\n{\"design_mode\":\"Avatar-IP / Empty State\"}\n\`\`\`\n\n## 13. Visual QA Detectors\n| Detector | Result | Evidence | Fix / Accepted reason |\n| --- | --- | --- | --- |\n| Generic SaaS shell | issue | screenshot | |\n`,
+    );
+
+    const failing = artifactQualitySummary(diagnosis);
+    assert.ok(failing.issues.some((issue) => issue.code === "design-contract-json-missing" || issue.code === "design-contract-invalid-design-mode"));
+    assert.ok(failing.issues.some((issue) => issue.code === "ui-design-high-visual-qa-unresolved"));
+
+    const contract = {
+      design_mode: "Product UI",
+      aesthetic_direction: "极简科技风",
+      signature: {
+        type: "structural",
+        description: "Dense split-panel workflow with status-first table hierarchy.",
+      },
+      color_system: {
+        palette_id: "minimal-tech",
+        aesthetic_direction: "极简科技风",
+        design_mode: "Product UI",
+        tokens: {
+          background: "#F8FAFC",
+          surface: "#FFFFFF",
+          surface_muted: "#EEF4FF",
+          text: "#0F172A",
+          text_muted: "#64748B",
+          primary: "#2563EB",
+          secondary: "#DBEAFE",
+          accent: "#14B8A6",
+          border: "#CBD5E1",
+          success: "#16A34A",
+          warning: "#F59E0B",
+          danger: "#DC2626",
+          chart: ["#2563EB", "#14B8A6", "#7C3AED"],
+        },
+        usage_rules: {
+          primary_usage: "主行动、当前状态和关键高亮；不铺满页面",
+          accent_usage: "诊断链路、局部高亮和图表辅助",
+          background_usage: "工作区保持 neutral surface",
+          avoid: ["default enterprise blue template"],
+        },
+        accessibility: {
+          requires_contrast_check: true,
+          dark_mode_ready: false,
+          contrast_checks: [
+            {
+              pair: "text_on_surface",
+              ratio: "12.1",
+              status: "pass",
+            },
+            {
+              pair: "text_muted_on_surface",
+              ratio: "4.8",
+              status: "pass",
+            },
+          ],
+        },
+        source: "Tailwind Colors",
+        source_url: "https://tailwindcss.com/docs/customizing-colors",
+        license_note: "curated token mapping; verify source license before redistribution",
+      },
+      token_source: "existing",
+      component_strategy: "primitive + wrapper",
+      shadcn_vue: {
+        primitive_layer: ["Table", "Button"],
+        project_wrapper_layer: ["ResourceTable"],
+      },
+      motion: {
+        layer_1_css: ["button active"],
+        layer_2_motion_vue: [],
+        layer_3_gsap: [],
+        reduced_motion: "remove travel / keep opacity",
+      },
+      verification_hooks: ["screenshot default/loading/empty/error/permission states"],
+      anti_slop_rules: ["no card soup", "no fake premium gradient"],
+    };
+
+    writeFixture(
+      `${base}/01-spec/ui-design.md`,
+      `# UI Design\n\n## Design Contract Summary\n\nDesign Contract JSON:\n\n\`\`\`json\n${JSON.stringify(contract, null, 2)}\n\`\`\`\n\n## 13. Visual QA Detectors\n| Detector | Result | Evidence | Fix / Accepted reason |\n| --- | --- | --- | --- |\n| Generic SaaS shell | ok | screenshot | not present |\n| Card soup | ok | screenshot | not present |\n| Fake premium gradient | ok | screenshot | not present |\n| Motion noise | ok | motion review | not present |\n| State missing | ok | state matrix | all required states covered |\n`,
+    );
+
+    const passing = artifactQualitySummary(diagnosis);
+    assert.equal(passing.issues.some((issue) => issue.severity === "FAIL"), false);
+  } finally {
+    rmSync(base, { recursive: true, force: true });
+  }
+}
+
 function testProjectInitDoctorSmoke() {
   if (layout.kind !== "source") return;
 
@@ -381,6 +487,7 @@ testStageScoreRubricCoversStages();
 testPromptSkillDriftRules();
 testArtifactQualityProfiles();
 testTechnicalDesignContractQuality();
+testUiDesignContractQuality();
 testProjectInitDoctorSmoke();
 
 console.log("SpecForge self-test passed.");

@@ -219,6 +219,7 @@ function standardsIndexIssues() {
 }
 
 function designSystemIssues() {
+  const issues = [];
   const required = [
     "core/skills/ui-ux/design-system/SKILL.md",
     "core/skills/ui-ux/design-system/contracts/design-contract.schema.json",
@@ -289,9 +290,55 @@ function designSystemIssues() {
     "core/skills/ui-ux/design-system/references/ui-toolchain.md",
     "core/skills/ui-ux/design-system/changelog.md",
   ];
-  return required
+  issues.push(...required
     .filter((path) => !exists(path))
-    .map((path) => issue("FAIL", "missing-design-system-file", `${path} is required by the design-system contract.`, path));
+    .map((path) => issue("FAIL", "missing-design-system-file", `${path} is required by the design-system contract.`, path)));
+
+  const schemaPath = "core/skills/ui-ux/design-system/contracts/design-contract.schema.json";
+  if (exists(schemaPath)) {
+    const schema = read(schemaPath);
+    for (const marker of ['"Product UI"', '"Brand Surface"', '"Hybrid"', '"Avatar-IP"', '"Empty State"', '"contrast_checks"', '"scope"']) {
+      if (!schema.includes(marker)) {
+        issues.push(issue("FAIL", "design-contract-schema-marker-missing", `${schemaPath} must include ${marker}.`, schemaPath));
+      }
+    }
+    if (schema.includes('"Avatar-IP / Empty State"')) {
+      issues.push(issue("FAIL", "design-contract-combined-mode-enum", `${schemaPath} must not allow combined design_mode enum values. Use scope instead.`, schemaPath));
+    }
+  }
+
+  const colorSchemaPath = "core/skills/ui-ux/design-system/contracts/color-palette.schema.json";
+  if (exists(colorSchemaPath)) {
+    const schema = read(colorSchemaPath);
+    if (!schema.includes('"contrast_checks"')) {
+      issues.push(issue("FAIL", "color-palette-contrast-checks-missing", `${colorSchemaPath} must require contrast_checks.`, colorSchemaPath));
+    }
+    if (schema.includes('"Avatar-IP / Empty State"')) {
+      issues.push(issue("FAIL", "color-palette-combined-mode-enum", `${colorSchemaPath} must not allow combined design_mode enum values.`, colorSchemaPath));
+    }
+  }
+
+  const componentTemplatePath = "core/skills/ui-ux/design-system/contracts/component-contract.template.md";
+  if (exists(componentTemplatePath)) {
+    const template = read(componentTemplatePath);
+    for (const marker of ["## Trace", "Related REQ", "Related AC", "Related UI section", "Related design contract"]) {
+      if (!template.includes(marker)) {
+        issues.push(issue("FAIL", "component-contract-trace-marker-missing", `${componentTemplatePath} is missing ${marker}.`, componentTemplatePath));
+      }
+    }
+  }
+
+  const artifactQualityPath = "core/scripts/lib/artifact-quality.mjs";
+  if (exists(artifactQualityPath)) {
+    const body = read(artifactQualityPath);
+    for (const marker of ["lintUiDesign", "design-contract-json-missing", "design-contract-unknown-palette", "ui-design-high-visual-qa-unresolved"]) {
+      if (!body.includes(marker)) {
+        issues.push(issue("FAIL", "ui-design-artifact-quality-marker-missing", `${artifactQualityPath} must check ${marker}.`, artifactQualityPath));
+      }
+    }
+  }
+
+  return issues;
 }
 
 function designSystemAestheticIssues() {
@@ -476,6 +523,45 @@ function requirementsSystemIssues() {
     }
   }
 
+  for (const [path, target] of [
+    ["core/skills/requirements/foundations/confirmation-boundary.md", "behavior-contract.md#1-confirmation-boundary"],
+    ["core/skills/requirements/foundations/requirement-language.md", "behavior-contract.md#2-requirement-language"],
+    ["core/skills/requirements/foundations/testability.md", "behavior-contract.md#3-testability"],
+    ["core/skills/requirements/foundations/traceability.md", "behavior-contract.md#4-traceability"],
+  ]) {
+    if (!exists(path)) continue;
+    const body = read(path);
+    if (!body.includes("Deprecated compatibility entry") || !body.includes(target)) {
+      issues.push(issue("FAIL", "requirements-legacy-foundation-not-redirect", `${path} must be a deprecated redirect to ${target}.`, path));
+    }
+  }
+
+  const outputPath = "core/skills/requirements/references/output-contract.md";
+  if (exists(outputPath)) {
+    const body = read(outputPath);
+    for (const marker of ["Applied Requirement Patterns", "inline trace required", "独立 Trace table", "downstream trace"]) {
+      if (!body.includes(marker)) {
+        issues.push(issue("FAIL", "requirements-output-contract-trace-marker-missing", `${outputPath} is missing ${marker}.`, outputPath));
+      }
+    }
+  }
+
+  const registryPath = "core/skills/registry.json";
+  if (exists(registryPath)) {
+    const registry = read(registryPath);
+    for (const marker of [
+      '"path": "foundations/confirmation-boundary.md",\n            "deprecated": true',
+      '"path": "foundations/requirement-language.md",\n            "deprecated": true',
+      '"path": "foundations/testability.md",\n            "deprecated": true',
+      '"path": "foundations/traceability.md",\n            "deprecated": true',
+      '"redirectTo": "foundations/behavior-contract.md#1-confirmation-boundary"',
+    ]) {
+      if (!registry.includes(marker)) {
+        issues.push(issue("FAIL", "requirements-registry-legacy-foundation-not-deprecated", `${registryPath} must mark legacy requirements foundation files as deprecated redirects.`, registryPath));
+      }
+    }
+  }
+
   const transformPath = "core/skills/requirements/transforms/source-to-requirements.md";
   if (exists(transformPath)) {
     const body = read(transformPath);
@@ -489,7 +575,7 @@ function requirementsSystemIssues() {
   const antiPath = "core/skills/requirements/references/anti-patterns.md";
   if (exists(antiPath)) {
     const body = read(antiPath);
-    for (const marker of ["Fail signal", "为什么危险", "自动修正动作", "修正流程", "修正示例"]) {
+    for (const marker of ["Severity", "Fail signal", "为什么危险", "自动修正动作", "修正流程", "修正示例", "P0", "P1", "P2"]) {
       if (!body.includes(marker)) {
         issues.push(issue("FAIL", "requirements-anti-pattern-fixer-missing", `${antiPath} is missing ${marker}.`, antiPath));
       }

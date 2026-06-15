@@ -4,6 +4,14 @@
 
 组件契约用于让 `sf-tasking`、`sf-implement` 和 `sf-verify` 读取稳定的 primitive、wrapper、states、props、events、slots、motion 和验证证据。不要只在 `ui-design.md` 写一句“使用 Button / Table / Dialog”。
 
+## Trace
+
+- Source:
+- Related REQ:
+- Related AC:
+- Related UI section:
+- Related design contract:
+
 ## Identity
 
 - Purpose:

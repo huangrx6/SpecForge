@@ -13,7 +13,7 @@
 
 `sf-ui-design` 至少要输出 Project component；复杂页面输出 Pattern / Domain component。
 
-复杂、复用或跨页面组件必须独立落档到 `01-spec/design/components/<component-name>.contract.md`，模板见 `contracts/component-contract.template.md`。`ui-design.md` 只保留组件矩阵和链接，不要让实现阶段从散文里猜 props、events、slots 和状态责任。
+复杂、复用或跨页面组件必须独立落档到 `01-spec/design/components/<component-name>.contract.md`，模板见 `contracts/component-contract.template.md`。`ui-design.md` 只保留组件矩阵和链接，不要让实现阶段从散文里猜 props、events、slots 和状态责任。每个组件契约必须填写 `Trace`，说明来源、相关 REQ / AC、UI section 和 Design Contract；没有业务来源的组件不能进入实现任务。
 
 ## Contract fields
 

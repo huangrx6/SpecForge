@@ -7,6 +7,8 @@
 - Markdown 版 `Design Contract Summary`：给人类 reviewer 快速阅读。
 - `Design Contract JSON`：给 `sf-tech-design`、`sf-tasking`、`sf-implement` 和 `sf-verify` 稳定读取。字段必须符合 `contracts/design-contract.schema.json`。
 
+`design_mode` 只允许写 `Product UI`、`Brand Surface`、`Hybrid`、`Avatar-IP`、`Empty State`。不要写组合值；头像/IP 与空态同时适用时，在 JSON 中增加 `scope: "both"`。
+
 ## Compact
 
 用于小 UI 改动或局部组件：
@@ -31,6 +33,7 @@ Foundations delta:
 Design Contract Summary:
 - Design mode:
 - Color system:
+- Scope (Avatar-IP / Empty State only):
 - Token source:
 - Component strategy:
 - Navigation decision:
@@ -79,7 +82,14 @@ Design Contract JSON:
     },
     "accessibility": {
       "requires_contrast_check": true,
-      "dark_mode_ready": false
+      "dark_mode_ready": false,
+      "contrast_checks": [
+        {
+          "pair": "text_on_surface",
+          "ratio": "",
+          "status": "not-checked"
+        }
+      ]
     },
     "source": "",
     "source_url": "",
@@ -160,6 +170,7 @@ Design Contract Summary:
 - Aesthetic direction:
 - Signature:
 - Color system:
+- Scope (Avatar-IP / Empty State only):
 - Token source:
 - Component strategy:
 - Navigation decision:
@@ -212,7 +223,14 @@ Design Contract JSON:
     },
     "accessibility": {
       "requires_contrast_check": true,
-      "dark_mode_ready": false
+      "dark_mode_ready": false,
+      "contrast_checks": [
+        {
+          "pair": "text_on_surface",
+          "ratio": "",
+          "status": "not-checked"
+        }
+      ]
     },
     "source": "",
     "source_url": "",
