@@ -11,6 +11,15 @@
 5. 涉及当前事实、版本、法规、价格、竞品、安全或漏洞时，必须另行查可靠来源；参考 skill 不提供事实背书，除非它明确要求实际联网查证并记录来源。
 6. 查证外部事实时优先读取 `.specforge/core/skills/brainstorm/research-source/SKILL.md`，把搜索计划、来源、日期、结论和置信度写入 `brainstorm.md#当前事实与研究证据`。
 
+## 子 Skill 调用预算
+
+| Execution profile | 默认读取 | 条件触发 | 单轮预算 |
+|---|---|---|---|
+| `skip` | 无 | 无 | 0 |
+| `light` | `problem-framing`；需要排序时读 `decision-matrix` | 事实会改变推荐时读 `research-source`；输出容易散时读 `output-shaping` | 最多新增 2 个子 skill |
+| `deep` | `problem-framing`、`divergent-thinking`、`critic-review`、`decision-matrix` | 按需读 `analogy-thinking`、`scenario-simulation`、`research-source`、`execution-planning` | 最多新增 2 个子 skill；需要更多先说明原因 |
+| `research-heavy` | `problem-framing`、`research-source` | 证据足以形成候选后读 `decision-matrix`；需要失败路径压测时读 `scenario-simulation` | 最多新增 2 个子 skill；不足以推荐时升级 research |
+
 ## Brainstorm 包内链路
 
 先根据当前任务选择执行 profile，再选择子 skill。profile 写入 `brainstorm.md#执行配置`。

@@ -23,8 +23,12 @@
 | 决策项 | 结论 | 依据 |
 | --- | --- | --- |
 | 是否需要 brainstorm | | |
+| Brainstorm mode | skip / light / deep | |
+| Execution profile | skip / light / deep / research-heavy | |
 | 需要人工确认的问题 | | |
 | 已选方向 | | |
+| 可安全默认项 | | |
+| 明确延后项 | | |
 
 ## 范围
 ### In Scope

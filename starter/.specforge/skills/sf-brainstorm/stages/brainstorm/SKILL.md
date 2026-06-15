@@ -39,10 +39,22 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
 3. 不把参考 skill 的 persona、PRD、故事、审查清单、测试建议或技术推荐写成已确认，除非用户明确确认。
 4. 用户确认后，立即写入对应确认状态或真实 confirmed marker。
 
+## 子 Skill 调用预算
+
+预算用于控制上下文和避免“为了完整而完整”。先按 profile 读取最小必要子 skill；单轮最多新增读取 2 个子 skill，需要更多时先在 `brainstorm.md#执行配置` 说明原因和预期输出。
+
+| Execution profile | 默认读取 | 条件触发 | 不读时的记录 |
+|---|---|---|---|
+| `skip` | 无 | 无 | 写跳过理由和下一步路由 |
+| `light` | `problem-framing`；需要排序时读 `decision-matrix` | 只有事实会改变推荐时读 `research-source`；只有输出会变散时读 `output-shaping` | 未使用的类比、场景、研究 section 写 `N/A + 理由` |
+| `deep` | `problem-framing`、`divergent-thinking`、`critic-review`、`decision-matrix` | 按需读 `analogy-thinking`、`scenario-simulation`、`research-source`、`execution-planning` | 说明未读子 skill 不影响推荐可信度 |
+| `research-heavy` | `problem-framing`、`research-source` | 证据足以形成候选后才读 `decision-matrix`；需要失败路径压测时读 `scenario-simulation` | 不足以推荐时写 `unclear`、未查证项和升级条件 |
+
 ## 过程
 
 0. **读取 Brainstorm 模式。**
    - 从 `00-intake/brief.md#Brainstorm 决策` 读取 `Brainstorm mode: skip / light / deep`。
+   - 从同一表读取 `Execution profile: skip / light / deep / research-heavy`；如果为空，则根据 `Brainstorm mode` 和事实风险推导，并回写 brief。
    - `skip` 时不要强行 brainstorm，回到 brief 指定下一步。
    - `light` 时执行框定、候选和收敛，但不做五维全量发散。
    - `deep` 时必须先做 Phase 1 发散，再做 Phase 2 聚焦。
