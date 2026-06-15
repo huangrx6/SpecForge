@@ -57,7 +57,7 @@ function renderStatusBadge(value) {
       : ["ready", "partial", "pending"].includes(normalized)
         ? "warn"
         : "neutral";
-  return `<span class="badge ${className}">${escapeHtml(value || "N/A")}</span>`;
+  return `<span class="badge ${className}">${escapeHtml(displayValue(value || "N/A"))}</span>`;
 }
 
 function statusClass(status) {
@@ -75,6 +75,107 @@ function renderList(items, emptyText, renderItem) {
 
 function renderCommandBlock(commands) {
   return `<pre><code>${escapeHtml(commands.join("\n"))}</code></pre>`;
+}
+
+const valueLabels = new Map([
+  ["N/A", "不适用"],
+  ["none", "无"],
+  ["unknown", "未知"],
+  ["exists", "已存在"],
+  ["missing", "缺失"],
+  ["yes", "是"],
+  ["no", "否"],
+  ["PASS", "通过"],
+  ["WARN", "警告"],
+  ["FAIL", "失败"],
+  ["READY", "可继续"],
+  ["BLOCKED", "已阻断"],
+  ["NEEDS_DECISION", "需要人工确认"],
+  ["NEEDS_ATTENTION", "需要关注"],
+  ["READY_FOR_INTAKE", "可进入 Intake"],
+  ["APPROVED", "已批准"],
+  ["REQUEST_CHANGES", "需修改"],
+  ["REJECTED", "已拒绝"],
+  ["PENDING", "待处理"],
+  ["ready", "可继续"],
+  ["blocked", "已阻断"],
+  ["partial", "部分完成"],
+  ["pending", "待处理"],
+  ["done", "已完成"],
+  ["pass", "通过"],
+  ["fail", "失败"],
+  ["healthy", "健康"],
+  ["at_risk", "有风险"],
+  ["needs_attention", "需要关注"],
+  ["needs_decision", "需要决策"],
+  ["ready_for_intake", "可进入 Intake"],
+  ["advisory", "建议模式"],
+]);
+
+const artifactLabels = new Map([
+  ["prd", "产品需求文档"],
+  ["requirements", "需求规格"],
+  ["ui_design", "界面设计"],
+  ["technical_design", "技术设计"],
+  ["tasks", "任务拆分"],
+  ["spec_review", "规格评审"],
+  ["implementation", "实现记录"],
+  ["code_review", "代码评审"],
+  ["verification", "验证报告"],
+  ["wiki_sync", "知识沉淀"],
+  ["closure", "关闭归档"],
+  ["research", "调研"],
+  ["gap_report", "问题分析"],
+]);
+
+const dimensionLabels = new Map([
+  ["blockers", "阻断项"],
+  ["human_decisions", "人工决策"],
+  ["quality_warnings", "质量提醒"],
+  ["traceability", "追踪关系"],
+  ["gates", "门禁"],
+  ["quality_suite", "质量套件"],
+  ["blocker", "阻断项"],
+  ["decision", "决策"],
+  ["quality", "质量"],
+  ["verification", "验证"],
+  ["testcase", "测试用例"],
+  ["next", "下一步"],
+]);
+
+const qualityCheckLabels = new Map([
+  ["artifact-quality", "产物可读性"],
+  ["decision-quality", "决策质量"],
+  ["source-quality", "来源质量"],
+  ["traceability", "追踪关系"],
+  ["implementation-quality", "实现账本"],
+  ["test-case-quality", "测试用例质量"],
+  ["evidence-summary", "证据摘要"],
+  ["wiki-quality", "Wiki 质量"],
+  ["closure-quality", "关闭材料质量"],
+]);
+
+function displayValue(value) {
+  const text = String(value ?? "");
+  return valueLabels.get(text) ?? valueLabels.get(text.toLowerCase()) ?? text;
+}
+
+function artifactName(id, fallback = "") {
+  const label = artifactLabels.get(String(id));
+  return label ? `${label}（${id}）` : fallback ? `${fallback}（${id}）` : id;
+}
+
+function displayListValue(items) {
+  if (!items || items.length === 0) return "无";
+  return items.map((item) => artifactLabels.get(item) ?? item).join(", ");
+}
+
+function displayHealthDimension(name) {
+  return dimensionLabels.get(String(name)) ?? name;
+}
+
+function displayQualityCheck(item) {
+  return qualityCheckLabels.get(String(item?.id ?? "")) ?? item?.title ?? "";
 }
 
 function activeContract(diagnosis, workItemYaml) {
@@ -133,8 +234,8 @@ function renderArtifactFlow(artifacts) {
           <g class="flow-node ${statusClass(artifact.status)}" transform="translate(${position.x} ${position.y})">
             <rect width="${nodeWidth}" height="${nodeHeight}" rx="8"></rect>
             <text x="14" y="25" class="flow-title">${escapeHtml(truncate(artifact.id, 24))}</text>
-            <text x="14" y="47" class="flow-subtitle">${escapeHtml(truncate(artifact.title, 26))}</text>
-            <text x="${nodeWidth - 14}" y="25" text-anchor="end" class="flow-status">${escapeHtml(artifact.status)}</text>
+            <text x="14" y="47" class="flow-subtitle">${escapeHtml(truncate(artifactLabels.get(artifact.id) ?? artifact.title, 26))}</text>
+            <text x="${nodeWidth - 14}" y="25" text-anchor="end" class="flow-status">${escapeHtml(displayValue(artifact.status))}</text>
           </g>
         </a>
       `;
@@ -142,7 +243,7 @@ function renderArtifactFlow(artifacts) {
     .join("");
 
   return `
-    <div class="flow-wrap" role="img" aria-label="Artifact dependency graph">
+    <div class="flow-wrap" role="img" aria-label="产物依赖图">
       <svg viewBox="0 0 ${width} ${height}" width="100%" height="auto">
         <defs>
           <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
@@ -173,12 +274,12 @@ function renderArtifactCards(workItemBase, artifacts) {
           `;
         })
         .join("");
-      const deps = artifact.requires.length > 0 ? artifact.requires.join(", ") : "none";
+      const deps = displayListValue(artifact.requires);
       return `
         <section class="card" id="artifact-${slug(artifact.id)}">
-          <h3>${escapeHtml(artifact.id)} · ${escapeHtml(artifact.title)}</h3>
-          <p>${renderStatusBadge(artifact.status)} <span class="muted">stage=${escapeHtml(artifact.stage)}; requires=${escapeHtml(deps)}</span></p>
-          ${artifact.gate ? `<p>Gate ${escapeHtml(artifact.gate)}: ${renderStatusBadge(artifact.gateStatus)} <span class="muted">${escapeHtml(artifact.gateEvidence ?? "no evidence")}</span></p>` : ""}
+          <h3>${escapeHtml(artifactName(artifact.id, artifact.title))}</h3>
+          <p>${renderStatusBadge(artifact.status)} <span class="muted">阶段=${escapeHtml(displayValue(artifact.stage))}; 依赖=${escapeHtml(deps)}</span></p>
+          ${artifact.gate ? `<p>门禁 ${escapeHtml(artifact.gate)}：${renderStatusBadge(artifact.gateStatus)} <span class="muted">${escapeHtml(artifact.gateEvidence ?? "无证据")}</span></p>` : ""}
           ${outputs}
         </section>
       `;
@@ -187,23 +288,23 @@ function renderArtifactCards(workItemBase, artifacts) {
 }
 
 function renderTraceability(traceability) {
-  if (!traceability) return `<p class="muted">No traceability summary available.</p>`;
+  if (!traceability) return `<p class="muted">暂无追踪关系摘要。</p>`;
   const summary = traceability.summary;
   const topGaps = [
     ...traceability.gaps.uncovered_sources.slice(0, 5).map((item) => ({
-      type: "Uncovered source",
+      type: "未覆盖来源",
       id: item.id,
       location: `${item.path}:${item.line}`,
       text: item.text,
     })),
     ...traceability.gaps.tasks_missing_trace.slice(0, 5).map((task) => ({
-      type: "Task missing trace",
+      type: "任务缺少 Trace",
       id: task.id,
       location: `${task.path}:${task.line}`,
       text: task.title,
     })),
     ...traceability.gaps.tasks_missing_verification.slice(0, 5).map((task) => ({
-      type: "Task missing verification",
+      type: "任务缺少 Verification",
       id: task.id,
       location: `${task.path}:${task.line}`,
       text: task.title,
@@ -211,60 +312,60 @@ function renderTraceability(traceability) {
   ].slice(0, 10);
 
   return `
-    <div class="summary" aria-label="Traceability summary">
-      <div class="metric">Source Items<strong>${escapeHtml(summary.source_items)}</strong></div>
-      <div class="metric">Tasks<strong>${escapeHtml(summary.tasks)}</strong></div>
-      <div class="metric">Verification Items<strong>${escapeHtml(summary.verification_items)}</strong></div>
-      <div class="metric">Uncovered Sources<strong>${escapeHtml(summary.uncovered_sources)}</strong></div>
-      <div class="metric">Tasks Missing Trace<strong>${escapeHtml(summary.tasks_missing_trace)}</strong></div>
-      <div class="metric">Tasks Missing Verification<strong>${escapeHtml(summary.tasks_missing_verification)}</strong></div>
-      <div class="metric">Tasks Without TestCase<strong>${escapeHtml(summary.tasks_without_testcase)}</strong></div>
+    <div class="summary" aria-label="追踪关系摘要">
+      <div class="metric">来源项<strong>${escapeHtml(summary.source_items)}</strong></div>
+      <div class="metric">任务<strong>${escapeHtml(summary.tasks)}</strong></div>
+      <div class="metric">验证项<strong>${escapeHtml(summary.verification_items)}</strong></div>
+      <div class="metric">未覆盖来源<strong>${escapeHtml(summary.uncovered_sources)}</strong></div>
+      <div class="metric">缺少 Trace 的任务<strong>${escapeHtml(summary.tasks_missing_trace)}</strong></div>
+      <div class="metric">缺少 Verification 的任务<strong>${escapeHtml(summary.tasks_missing_verification)}</strong></div>
+      <div class="metric">未关联测试用例的任务<strong>${escapeHtml(summary.tasks_without_testcase)}</strong></div>
     </div>
     <table>
-      <thead><tr><th>Gap</th><th>ID</th><th>Location</th><th>Excerpt</th></tr></thead>
+      <thead><tr><th>缺口</th><th>ID</th><th>位置</th><th>摘录</th></tr></thead>
       <tbody>
-        ${topGaps.map((gap) => `<tr><td>${escapeHtml(gap.type)}</td><td>${escapeHtml(gap.id)}</td><td>${escapeHtml(gap.location)}</td><td>${escapeHtml(gap.text)}</td></tr>`).join("") || `<tr><td colspan="4">No traceability gaps.</td></tr>`}
+        ${topGaps.map((gap) => `<tr><td>${escapeHtml(gap.type)}</td><td>${escapeHtml(gap.id)}</td><td>${escapeHtml(gap.location)}</td><td>${escapeHtml(gap.text)}</td></tr>`).join("") || `<tr><td colspan="4">暂无追踪关系缺口。</td></tr>`}
       </tbody>
     </table>
   `;
 }
 
 function renderHealth(health) {
-  if (!health) return `<p class="muted">No workflow health summary available.</p>`;
+  if (!health) return `<p class="muted">暂无流程健康度摘要。</p>`;
   return `
-    <div class="summary" aria-label="Workflow health summary">
-      <div class="metric">Health Score<strong>${escapeHtml(health.score ?? "N/A")}${health.score === null ? "" : "/100"}</strong></div>
-      <div class="metric">Health Level<strong>${escapeHtml(health.level)}</strong></div>
-      <div class="metric">Priorities<strong>${escapeHtml(health.priorities.length)}</strong></div>
+    <div class="summary" aria-label="流程健康度摘要">
+      <div class="metric">健康分<strong>${escapeHtml(health.score ?? "N/A")}${health.score === null ? "" : "/100"}</strong></div>
+      <div class="metric">健康等级<strong>${escapeHtml(displayValue(health.level))}</strong></div>
+      <div class="metric">优先事项<strong>${escapeHtml(health.priorities.length)}</strong></div>
     </div>
     <table>
-      <thead><tr><th>Dimension</th><th>Status</th><th>Count</th><th>Penalty</th></tr></thead>
+      <thead><tr><th>维度</th><th>状态</th><th>数量</th><th>扣分</th></tr></thead>
       <tbody>
-        ${health.dimensions.map((item) => `<tr><td>${escapeHtml(item.name)}</td><td>${renderStatusBadge(item.status)}</td><td>${escapeHtml(item.count)}</td><td>${escapeHtml(item.penalty)}</td></tr>`).join("") || `<tr><td colspan="4">No dimensions.</td></tr>`}
+        ${health.dimensions.map((item) => `<tr><td>${escapeHtml(displayHealthDimension(item.name))}</td><td>${renderStatusBadge(item.status)}</td><td>${escapeHtml(item.count)}</td><td>${escapeHtml(item.penalty)}</td></tr>`).join("") || `<tr><td colspan="4">暂无健康度维度。</td></tr>`}
       </tbody>
     </table>
-    <h3>Top Priorities</h3>
-    ${renderList(health.priorities, "No priorities.", (item) => `<li>${renderStatusBadge(item.severity)} <strong>${escapeHtml(item.area)}</strong>: ${escapeHtml(item.message)} <span class="muted">route=${escapeHtml(item.route || "N/A")}</span></li>`)}
+    <h3>优先处理项</h3>
+    ${renderList(health.priorities, "暂无优先处理项。", (item) => `<li>${renderStatusBadge(item.severity)} <strong>${escapeHtml(displayHealthDimension(item.area))}</strong>：${escapeHtml(item.message)} <span class="muted">路由=${escapeHtml(item.route || "N/A")}</span></li>`)}
   `;
 }
 
 function renderQualitySuite(qualitySuite) {
-  if (!qualitySuite?.work_item) return `<p class="muted">No active work item quality suite.</p>`;
+  if (!qualitySuite?.work_item) return `<p class="muted">当前没有 active work item 的质量套件结果。</p>`;
   return `
-    <div class="summary" aria-label="Quality suite summary">
-      <div class="metric">Overall<strong>${renderStatusBadge(qualitySuite.summary.overall)}</strong></div>
-      <div class="metric">Checks<strong>${escapeHtml(qualitySuite.summary.checked)}</strong><span>${escapeHtml(qualitySuite.summary.skipped)} skipped by stage</span></div>
-      <div class="metric">Failures<strong>${escapeHtml(qualitySuite.summary.failures)}</strong></div>
-      <div class="metric">Warnings<strong>${escapeHtml(qualitySuite.summary.warnings)}</strong></div>
+    <div class="summary" aria-label="质量套件摘要">
+      <div class="metric">总体结果<strong>${renderStatusBadge(qualitySuite.summary.overall)}</strong></div>
+      <div class="metric">检查项<strong>${escapeHtml(qualitySuite.summary.checked)}</strong><span>${escapeHtml(qualitySuite.summary.skipped)} 项按阶段跳过</span></div>
+      <div class="metric">失败<strong>${escapeHtml(qualitySuite.summary.failures)}</strong></div>
+      <div class="metric">警告<strong>${escapeHtml(qualitySuite.summary.warnings)}</strong></div>
     </div>
-    <h3>Recommended Commands</h3>
-    ${renderCommandBlock(qualitySuite.recommended_commands.length > 0 ? qualitySuite.recommended_commands : ["# none"])}
+    <h3>建议命令</h3>
+    ${renderCommandBlock(qualitySuite.recommended_commands.length > 0 ? qualitySuite.recommended_commands : ["# 无"])}
     <table>
-      <thead><tr><th>Check</th><th>Status</th><th>Fail</th><th>Warn</th><th>Route</th><th>Message</th></tr></thead>
+      <thead><tr><th>检查项</th><th>状态</th><th>失败</th><th>警告</th><th>路由</th><th>说明</th></tr></thead>
       <tbody>
         ${qualitySuite.checks
-          .map((item) => `<tr><td>${escapeHtml(item.title)}</td><td>${renderStatusBadge(item.status)}</td><td>${escapeHtml(item.failures)}</td><td>${escapeHtml(item.warnings)}</td><td>${escapeHtml(item.route ?? "N/A")}</td><td>${escapeHtml(item.message)}</td></tr>`)
-          .join("") || `<tr><td colspan="6">No checks.</td></tr>`}
+          .map((item) => `<tr><td>${escapeHtml(displayQualityCheck(item))}</td><td>${renderStatusBadge(item.status)}</td><td>${escapeHtml(item.failures)}</td><td>${escapeHtml(item.warnings)}</td><td>${escapeHtml(item.route ?? "N/A")}</td><td>${escapeHtml(item.message)}</td></tr>`)
+          .join("") || `<tr><td colspan="6">暂无检查项。</td></tr>`}
       </tbody>
     </table>
   `;
@@ -275,7 +376,7 @@ function renderQualityHotspots(qualitySuite) {
     .filter((check) => check.status !== "PASS")
     .flatMap((check) =>
       (check.issues ?? []).slice(0, 3).map((issue) => ({
-        check: check.title,
+        check: displayQualityCheck(check),
         severity: issue.severity ?? check.status,
         path: issue.path ?? "N/A",
         message: issue.message ?? check.message,
@@ -285,33 +386,33 @@ function renderQualityHotspots(qualitySuite) {
 
   return renderList(
     issues,
-    "No quality hotspots.",
+    "暂无质量热点。",
     (item) => `<li>${renderStatusBadge(item.severity)} <strong>${escapeHtml(item.check)}</strong> <span class="muted">${escapeHtml(item.path)}</span><br>${escapeHtml(item.message)}</li>`,
   );
 }
 
 function renderCurrentFocus(diagnosis, contract, qualitySuite) {
   const artifact = (diagnosis.artifacts ?? []).find((item) => item.id === contract?.id);
-  if (!contract) return `<p class="muted">No current stage contract available.</p>`;
+  if (!contract) return `<p class="muted">暂无当前阶段契约。</p>`;
 
   return `
-    <div class="summary" aria-label="Current focus summary">
-      <div class="metric">Artifact<strong>${escapeHtml(contract.id)}</strong><span>${escapeHtml(contract.title)}</span></div>
-      <div class="metric">Status<strong>${renderStatusBadge(artifact?.status ?? "unknown")}</strong><span>${escapeHtml(contract.stage)}</span></div>
-      <div class="metric">Gate<strong>${escapeHtml(contract.gate ?? "N/A")}</strong></div>
-      <div class="metric">Quality<strong>${renderStatusBadge(qualitySuite.summary.overall)}</strong><span>${escapeHtml(`${qualitySuite.summary.failures} fail / ${qualitySuite.summary.warnings} warn`)}</span></div>
+    <div class="summary" aria-label="当前焦点摘要">
+      <div class="metric">当前产物<strong>${escapeHtml(contract.id)}</strong><span>${escapeHtml(artifactLabels.get(contract.id) ?? contract.title)}</span></div>
+      <div class="metric">状态<strong>${renderStatusBadge(artifact?.status ?? "unknown")}</strong><span>${escapeHtml(displayValue(contract.stage))}</span></div>
+      <div class="metric">门禁<strong>${escapeHtml(contract.gate ?? "N/A")}</strong></div>
+      <div class="metric">质量<strong>${renderStatusBadge(qualitySuite.summary.overall)}</strong><span>${escapeHtml(`${qualitySuite.summary.failures} 失败 / ${qualitySuite.summary.warnings} 警告`)}</span></div>
     </div>
     <div class="grid two">
       <section class="card">
-        <h3>Exit Standard</h3>
+        <h3>退出标准</h3>
         <p>${escapeHtml(contract.exit)}</p>
-        <h3>Must Prove</h3>
+        <h3>必须证明</h3>
         ${renderList(contract.must_prove, "N/A", (item) => `<li>${escapeHtml(item)}</li>`)}
       </section>
       <section class="card">
-        <h3>Human Decisions</h3>
-        ${renderList(contract.human_decisions, "none", (item) => `<li>${escapeHtml(item)}</li>`)}
-        <h3>Quality Hotspots</h3>
+        <h3>人工决策</h3>
+        ${renderList(contract.human_decisions, "无", (item) => `<li>${escapeHtml(item)}</li>`)}
+        <h3>质量热点</h3>
         ${renderQualityHotspots(qualitySuite)}
       </section>
     </div>
@@ -329,29 +430,29 @@ function renderActionBoard(diagnosis, health, qualitySuite) {
   return `
     <section id="action-board" class="action-board">
       <div>
-        <p class="eyebrow">Action Board</p>
-        <h2>${escapeHtml(state)}</h2>
+        <p class="eyebrow">行动面板</p>
+        <h2>${escapeHtml(displayValue(state))}</h2>
         <p>${escapeHtml(nextText)}</p>
-        <p class="muted">Route: ${escapeHtml(diagnosis.route)} · Ready artifact: ${escapeHtml(diagnosis.ready_artifact ?? "none")} · Traceability policy: ${escapeHtml(traceabilityPolicyLine(diagnosis.traceability_policy))}</p>
+        <p class="muted">路由：${escapeHtml(diagnosis.route)} · 就绪产物：${escapeHtml(artifactLabels.get(diagnosis.ready_artifact) ?? diagnosis.ready_artifact ?? "无")} · 追踪策略：${escapeHtml(traceabilityPolicyLine(diagnosis.traceability_policy))}</p>
       </div>
       <div class="action-grid">
-        <article class="metric">Health<strong>${escapeHtml(health.score ?? "N/A")}${health.score === null ? "" : "/100"}</strong><span>${escapeHtml(health.level)}</span></article>
-        <article class="metric">Open Decisions<strong>${escapeHtml(diagnosis.decision_checkpoints?.summary?.open ?? 0)}</strong><span>${escapeHtml(openDecision?.marker ?? "none")}</span></article>
-        <article class="metric">Blockers<strong>${escapeHtml(diagnosis.blockers?.length ?? 0)}</strong><span>${escapeHtml(blocker?.severity ?? "none")}</span></article>
-        <article class="metric">Trace Gaps<strong>${escapeHtml(traceGapCount(diagnosis.traceability))}</strong><span>${escapeHtml(diagnosis.traceability_policy?.mode ?? "advisory")}</span></article>
-        <article class="metric">Quality<strong>${renderStatusBadge(qualitySuite?.summary?.overall ?? "N/A")}</strong><span>${escapeHtml(`${qualitySuite?.summary?.failures ?? 0} fail / ${qualitySuite?.summary?.warnings ?? 0} warn`)}</span></article>
+        <article class="metric">健康度<strong>${escapeHtml(health.score ?? "N/A")}${health.score === null ? "" : "/100"}</strong><span>${escapeHtml(displayValue(health.level))}</span></article>
+        <article class="metric">待确认决策<strong>${escapeHtml(diagnosis.decision_checkpoints?.summary?.open ?? 0)}</strong><span>${escapeHtml(openDecision?.marker ?? "无")}</span></article>
+        <article class="metric">阻断项<strong>${escapeHtml(diagnosis.blockers?.length ?? 0)}</strong><span>${escapeHtml(blocker?.severity ?? "无")}</span></article>
+        <article class="metric">追踪缺口<strong>${escapeHtml(traceGapCount(diagnosis.traceability))}</strong><span>${escapeHtml(displayValue(diagnosis.traceability_policy?.mode ?? "advisory"))}</span></article>
+        <article class="metric">质量<strong>${renderStatusBadge(qualitySuite?.summary?.overall ?? "N/A")}</strong><span>${escapeHtml(`${qualitySuite?.summary?.failures ?? 0} 失败 / ${qualitySuite?.summary?.warnings ?? 0} 警告`)}</span></article>
       </div>
       <div class="grid two">
         <section class="card">
-          <h3>Next Commands</h3>
+          <h3>下一步命令</h3>
           ${renderCommandBlock(commands)}
         </section>
         <section class="card">
-          <h3>Read First</h3>
+          <h3>优先阅读</h3>
           <ol>
             ${readingOrder().map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
           </ol>
-          ${topPriority ? `<p class="muted">Top priority: [${escapeHtml(topPriority.severity)}] ${escapeHtml(topPriority.message)}</p>` : ""}
+          ${topPriority ? `<p class="muted">最高优先级：[${escapeHtml(topPriority.severity)}] ${escapeHtml(topPriority.message)}</p>` : ""}
         </section>
       </div>
     </section>
@@ -360,24 +461,24 @@ function renderActionBoard(diagnosis, health, qualitySuite) {
 
 function decisionKind(marker = "") {
   const normalized = String(marker).toUpperCase();
-  if (normalized.includes("DEPENDENCY")) return "dependency";
-  if (normalized.includes("TOOLING")) return "tooling";
-  if (normalized.includes("TECH")) return "technical direction";
-  if (normalized.includes("UI")) return "UI direction";
-  if (normalized.includes("PRODUCT")) return "product direction";
-  if (normalized.includes("CLARIFICATION")) return "clarification";
-  return "decision";
+  if (normalized.includes("DEPENDENCY")) return "依赖决策";
+  if (normalized.includes("TOOLING")) return "工具链决策";
+  if (normalized.includes("TECH")) return "技术方向";
+  if (normalized.includes("UI")) return "界面方向";
+  if (normalized.includes("PRODUCT")) return "产品方向";
+  if (normalized.includes("CLARIFICATION")) return "澄清问题";
+  return "普通决策";
 }
 
 function responseOptions(marker = "") {
   const kind = decisionKind(marker);
-  if (kind === "dependency") return "approve dependency / reject dependency / ask for alternatives / defer with owner";
-  if (kind === "tooling") return "approve tooling / keep existing tooling / ask for comparison / defer with trigger";
-  if (kind === "technical direction") return "approve design direction / choose simpler option / ask for ADR / defer";
-  if (kind === "UI direction") return "approve direction / request prototype / choose alternate flow / mark no UI impact";
-  if (kind === "product direction") return "approve MVP / narrow scope / split follow-up / reject";
-  if (kind === "clarification") return "answer question / mark N/A / authorize default / defer";
-  return "approve / reject / ask for more evidence / defer";
+  if (kind === "依赖决策") return "批准依赖 / 拒绝依赖 / 要求备选方案 / 指定负责人后延后";
+  if (kind === "工具链决策") return "批准工具链 / 沿用现有工具链 / 要求补充对比 / 指定触发条件后延后";
+  if (kind === "技术方向") return "批准设计方向 / 选择更简单方案 / 要求补充 ADR / 延后";
+  if (kind === "界面方向") return "批准方向 / 要求补充原型 / 选择其他流程 / 标记无 UI 影响";
+  if (kind === "产品方向") return "批准 MVP / 收窄范围 / 拆成后续事项 / 拒绝";
+  if (kind === "澄清问题") return "回答问题 / 标记不适用 / 授权默认方案 / 延后";
+  return "批准 / 拒绝 / 要求更多证据 / 延后";
 }
 
 function approvalBoundary(diagnosis, contract) {
@@ -386,7 +487,7 @@ function approvalBoundary(diagnosis, contract) {
 }
 
 function renderHumanRequest(diagnosis, contract, topDecision) {
-  if (!topDecision) return renderLines(["No open decision markers. No human reply is required right now."]);
+  if (!topDecision) return renderLines(["当前没有待处理决策点，暂时不需要人工回复。"]);
   return renderLines([
     "请确认 SpecForge 当前决策点：",
     "",
@@ -399,12 +500,12 @@ function renderHumanRequest(diagnosis, contract, topDecision) {
     "",
     "建议直接按下面格式回复：",
     "",
-    "Decision:",
-    "Scope:",
-    "Rationale:",
-    "Risk acceptance: yes / no / N/A",
-    "Owner:",
-    "Revalidation trigger:",
+    "决策：",
+    "范围：",
+    "理由：",
+    "是否接受风险：是 / 否 / 不适用",
+    "负责人：",
+    "重新验证触发条件：",
   ]);
 }
 
@@ -414,34 +515,34 @@ function renderDecisionBrief(diagnosis, contract) {
 
   if (!topDecision) {
     return `
-      <p class="muted">No open decision markers. Use this section when a future gate or stage needs human approval, clarification, or risk acceptance.</p>
+      <p class="muted">当前没有待处理决策点。后续阶段需要人工批准、澄清或风险接受时，这里会生成可直接转发的确认材料。</p>
       <p><code>node .specforge/core/scripts/decision-brief.mjs</code></p>
     `;
   }
 
   return `
-    <div class="summary" aria-label="Decision brief summary">
-      <div class="metric">Open Decisions<strong>${escapeHtml(checkpoints.summary.open)}</strong></div>
-      <div class="metric">Decision Kind<strong>${escapeHtml(decisionKind(topDecision.marker))}</strong></div>
-      <div class="metric">Risk Candidates<strong>${escapeHtml(checkpoints.summary.risk_acceptance)}</strong></div>
-      <div class="metric">Command<strong>decision-brief</strong></div>
+    <div class="summary" aria-label="决策简报摘要">
+      <div class="metric">待处理决策<strong>${escapeHtml(checkpoints.summary.open)}</strong></div>
+      <div class="metric">决策类型<strong>${escapeHtml(decisionKind(topDecision.marker))}</strong></div>
+      <div class="metric">风险接受候选<strong>${escapeHtml(checkpoints.summary.risk_acceptance)}</strong></div>
+      <div class="metric">命令<strong>decision-brief</strong></div>
     </div>
     <section class="card">
-      <h3>Top Decision</h3>
-      <h4>Human Request</h4>
+      <h3>最高优先级决策</h3>
+      <h4>人工确认请求</h4>
       ${renderHumanRequest(diagnosis, contract, topDecision)}
       <p>${renderStatusBadge(topDecision.marker)} <span class="muted">${escapeHtml(topDecision.path)}:${escapeHtml(topDecision.line)}</span></p>
       <p>${escapeHtml(topDecision.text)}</p>
-      <p><strong>Acceptable responses:</strong> ${escapeHtml(responseOptions(topDecision.marker))}</p>
-      <p><strong>Approval boundary:</strong> ${escapeHtml(approvalBoundary(diagnosis, contract))}</p>
-      <h4>Reply Format</h4>
+      <p><strong>可接受回复：</strong>${escapeHtml(responseOptions(topDecision.marker))}</p>
+      <p><strong>批准边界：</strong>${escapeHtml(approvalBoundary(diagnosis, contract))}</p>
+      <h4>回复格式</h4>
       ${renderLines([
-        "Decision: approve / reject / choose option / defer / ask for more evidence",
-        "Scope:",
-        "Rationale:",
-        "Risk acceptance: yes / no / N/A",
-        "Owner:",
-        "Revalidation trigger:",
+        "决策：批准 / 拒绝 / 选择某方案 / 延后 / 要求更多证据",
+        "范围：",
+        "理由：",
+        "是否接受风险：是 / 否 / 不适用",
+        "负责人：",
+        "重新验证触发条件：",
       ])}
     </section>
   `;
@@ -449,7 +550,7 @@ function renderDecisionBrief(diagnosis, contract) {
 
 function render(diagnosis, workItemYaml, generatedAt) {
   const item = diagnosis.work_item;
-  const title = `${item.id} - ${item.title || "SpecForge Work Report"}`;
+  const title = `${item.id} - ${item.title || "SpecForge 工作报告"}`;
   const progress = `${diagnosis.progress.done}/${diagnosis.progress.total}`;
   const qualitySuite = qualitySuiteSummary(diagnosis);
   const health = workflowHealth(diagnosis, { qualitySuite });
@@ -755,120 +856,120 @@ function render(diagnosis, workItemYaml, generatedAt) {
 </head>
 <body>
   <header>
-    <p class="muted">SpecForge derived report · Markdown artifacts remain the source of truth</p>
+    <p class="muted">SpecForge 派生阅读报告 · Markdown 产物仍是事实源</p>
     <h1>${escapeHtml(title)}</h1>
-    <div class="summary" aria-label="Work item summary">
-      <div class="metric">Workflow<strong>${escapeHtml(item.workflow)}</strong></div>
-      <div class="metric">Stage<strong>${escapeHtml(item.stage)}</strong></div>
-      <div class="metric">Progress<strong>${escapeHtml(progress)}</strong></div>
-      <div class="metric">Health<strong>${escapeHtml(health.score ?? "N/A")}${health.score === null ? "" : "/100"}</strong></div>
-      <div class="metric">Route<strong>${escapeHtml(diagnosis.route)}</strong></div>
-      <div class="metric">Generated<strong>${escapeHtml(generatedAt)}</strong></div>
+    <div class="summary" aria-label="工作项摘要">
+      <div class="metric">流程<strong>${escapeHtml(item.workflow)}</strong></div>
+      <div class="metric">阶段<strong>${escapeHtml(displayValue(item.stage))}</strong></div>
+      <div class="metric">进度<strong>${escapeHtml(progress)}</strong></div>
+      <div class="metric">健康度<strong>${escapeHtml(health.score ?? "N/A")}${health.score === null ? "" : "/100"}</strong></div>
+      <div class="metric">路由<strong>${escapeHtml(diagnosis.route)}</strong></div>
+      <div class="metric">生成时间<strong>${escapeHtml(generatedAt)}</strong></div>
     </div>
-    <nav aria-label="Report sections">
-      <a href="#action-board">Action Board</a>
-      <a href="#current-focus">Current Focus</a>
-      <a href="#route">Route</a>
-      <a href="#health">Health</a>
-      <a href="#quality-suite">Quality Suite</a>
-      <a href="#gates">Gates</a>
-      <a href="#graph">Artifact Graph</a>
-      <a href="#traceability">Traceability</a>
-      <a href="#warnings">Warnings</a>
-      <a href="#decision-checkpoints">Decisions</a>
-      <a href="#decision-brief">Decision Brief</a>
-      <a href="#artifacts">Artifact Excerpts</a>
+    <nav aria-label="报告章节">
+      <a href="#action-board">行动面板</a>
+      <a href="#current-focus">当前焦点</a>
+      <a href="#route">路由</a>
+      <a href="#health">健康度</a>
+      <a href="#quality-suite">质量套件</a>
+      <a href="#gates">门禁</a>
+      <a href="#graph">产物图</a>
+      <a href="#traceability">追踪关系</a>
+      <a href="#warnings">阻断与提醒</a>
+      <a href="#decision-checkpoints">决策点</a>
+      <a href="#decision-brief">决策简报</a>
+      <a href="#artifacts">产物摘要</a>
     </nav>
   </header>
   <main>
     ${renderActionBoard(diagnosis, health, qualitySuite)}
 
     <section id="current-focus">
-      <h2>Current Focus</h2>
-      <p class="muted">The smallest useful reading layer for the current stage: what is being produced, what must be proven, what needs human judgment, and which quality issues should be fixed first.</p>
+      <h2>当前焦点</h2>
+      <p class="muted">当前阶段最小可读层：正在产出什么、必须证明什么、哪些内容需要人工判断，以及哪些质量问题应优先处理。</p>
       ${renderCurrentFocus(diagnosis, contract, qualitySuite)}
     </section>
 
     <section id="route">
-      <h2>Route</h2>
+      <h2>路由</h2>
       <p>${escapeHtml(diagnosis.route_reason)}</p>
-      <p class="muted">Work path: ${escapeHtml(item.path)}</p>
-      <p class="muted">Title source: ${escapeHtml(parseField(workItemYaml, "title") || "N/A")}</p>
+      <p class="muted">工作目录：${escapeHtml(item.path)}</p>
+      <p class="muted">标题来源：${escapeHtml(parseField(workItemYaml, "title") || "N/A")}</p>
     </section>
 
     <section id="health">
-      <h2>Workflow Health</h2>
-      <p class="muted">A derived readiness score for scanning blockers, human decisions, quality warnings, traceability, and gates. It is advisory and does not replace gate evidence.</p>
+      <h2>流程健康度</h2>
+      <p class="muted">用于快速扫描阻断项、人工决策、质量提醒、追踪关系和门禁状态的派生就绪分。它只做辅助判断，不替代门禁证据。</p>
       ${renderHealth(health)}
     </section>
 
     <section id="quality-suite">
-      <h2>Quality Suite</h2>
-      <p class="muted">Stage-aware quality checks for artifact readability, decision closure, traceability, source quality, implementation ledger, evidence, wiki, and closure readiness. Markdown artifacts remain the source of truth.</p>
+      <h2>质量套件</h2>
+      <p class="muted">按当前阶段检查产物可读性、决策闭环、追踪关系、来源质量、实现账本、验证证据、Wiki 和关闭就绪度。Markdown 产物仍是事实源。</p>
       ${renderQualitySuite(qualitySuite)}
     </section>
 
     <section id="gates">
-      <h2>Gates</h2>
+      <h2>门禁</h2>
       <p>${escapeHtml(gateLine(diagnosis.gates))}</p>
       <table>
-        <thead><tr><th>Gate</th><th>Status</th><th>Evidence</th><th>Evidence Exists</th></tr></thead>
+        <thead><tr><th>门禁</th><th>状态</th><th>证据</th><th>证据是否存在</th></tr></thead>
         <tbody>
           ${diagnosis.gates
-            .map((gate) => `<tr><td>${escapeHtml(gate.gate)}</td><td>${renderStatusBadge(gate.status)}</td><td>${escapeHtml(gate.evidence ?? "N/A")}</td><td>${escapeHtml(gate.evidenceExists ? "yes" : "no")}</td></tr>`)
-            .join("") || `<tr><td colspan="4">No gates.</td></tr>`}
+            .map((gate) => `<tr><td>${escapeHtml(gate.gate)}</td><td>${renderStatusBadge(gate.status)}</td><td>${escapeHtml(gate.evidence ?? "N/A")}</td><td>${escapeHtml(gate.evidenceExists ? "是" : "否")}</td></tr>`)
+            .join("") || `<tr><td colspan="4">暂无门禁。</td></tr>`}
         </tbody>
       </table>
     </section>
 
     <section id="graph">
-      <h2>Artifact Graph</h2>
+      <h2>产物依赖图</h2>
       ${renderArtifactFlow(diagnosis.artifacts)}
       <table>
-        <thead><tr><th>Artifact</th><th>Status</th><th>Stage</th><th>Requires</th><th>Missing Deps</th></tr></thead>
+        <thead><tr><th>产物</th><th>状态</th><th>阶段</th><th>依赖</th><th>缺失依赖</th></tr></thead>
         <tbody>
           ${diagnosis.artifacts
-            .map((artifact) => `<tr><td><a href="#artifact-${slug(artifact.id)}">${escapeHtml(artifact.id)}</a></td><td>${renderStatusBadge(artifact.status)}</td><td>${escapeHtml(artifact.stage)}</td><td>${escapeHtml(artifact.requires.join(", ") || "none")}</td><td>${escapeHtml(artifact.missingDeps.join(", ") || "none")}</td></tr>`)
+            .map((artifact) => `<tr><td><a href="#artifact-${slug(artifact.id)}">${escapeHtml(artifactName(artifact.id, artifact.title))}</a></td><td>${renderStatusBadge(artifact.status)}</td><td>${escapeHtml(displayValue(artifact.stage))}</td><td>${escapeHtml(displayListValue(artifact.requires))}</td><td>${escapeHtml(displayListValue(artifact.missingDeps))}</td></tr>`)
             .join("")}
         </tbody>
       </table>
     </section>
 
     <section id="traceability">
-      <h2>Traceability</h2>
-      <p class="muted">Source IDs, tasks, and verification IDs are summarized to expose gaps early. Policy: ${escapeHtml(traceabilityPolicyLine(diagnosis.traceability_policy))}.</p>
+      <h2>追踪关系</h2>
+      <p class="muted">这里汇总来源 ID、任务和验证 ID，用来尽早暴露缺口。策略：${escapeHtml(traceabilityPolicyLine(diagnosis.traceability_policy))}。</p>
       ${renderTraceability(diagnosis.traceability)}
     </section>
 
     <section id="warnings">
-      <h2>Blockers And Quality Warnings</h2>
-      <h3>Blockers</h3>
-      ${renderList(diagnosis.blockers, "No blockers.", (blocker) => `<li>${renderStatusBadge(blocker.severity)} ${escapeHtml(blocker.message)} <span class="muted">route=${escapeHtml(blocker.route)}</span></li>`)}
-      <h3>Quality Warnings</h3>
-      ${renderList(diagnosis.quality_warnings, "No quality warnings.", (warning) => `<li>${renderStatusBadge(warning.severity)} ${escapeHtml(warning.message)} <span class="muted">missing=${escapeHtml((warning.missing_sections ?? []).join(", ") || "N/A")}</span></li>`)}
+      <h2>阻断项与质量提醒</h2>
+      <h3>阻断项</h3>
+      ${renderList(diagnosis.blockers, "暂无阻断项。", (blocker) => `<li>${renderStatusBadge(blocker.severity)} ${escapeHtml(blocker.message)} <span class="muted">路由=${escapeHtml(blocker.route)}</span></li>`)}
+      <h3>质量提醒</h3>
+      ${renderList(diagnosis.quality_warnings, "暂无质量提醒。", (warning) => `<li>${renderStatusBadge(warning.severity)} ${escapeHtml(warning.message)} <span class="muted">缺失=${escapeHtml((warning.missing_sections ?? []).join(", ") || "N/A")}</span></li>`)}
     </section>
 
     <section id="decision-checkpoints">
-      <h2>Decision Checkpoints</h2>
+      <h2>决策点</h2>
       <p>
         ${renderStatusBadge(`open=${diagnosis.decision_checkpoints?.summary?.open ?? 0}`)}
         ${renderStatusBadge(`confirmed=${diagnosis.decision_checkpoints?.summary?.confirmed ?? 0}`)}
         ${renderStatusBadge(`risk=${diagnosis.decision_checkpoints?.summary?.risk_acceptance ?? 0}`)}
       </p>
-      <h3>Open Decisions</h3>
-      ${renderList(diagnosis.decision_checkpoints?.open, "No open decision markers.", (item) => `<li><strong>${escapeHtml(item.marker)}</strong> <span class="muted">${escapeHtml(item.path)}:${escapeHtml(item.line)}</span><br>${escapeHtml(item.text)}</li>`)}
-      <h3>Risk Acceptance Candidates</h3>
-      ${renderList(diagnosis.decision_checkpoints?.risk_acceptance, "No risk acceptance candidates.", (item) => `<li><span class="muted">${escapeHtml(item.path)}:${escapeHtml(item.line)}</span><br>${escapeHtml(item.text)}</li>`)}
+      <h3>待处理决策</h3>
+      ${renderList(diagnosis.decision_checkpoints?.open, "暂无待处理决策标记。", (item) => `<li><strong>${escapeHtml(item.marker)}</strong> <span class="muted">${escapeHtml(item.path)}:${escapeHtml(item.line)}</span><br>${escapeHtml(item.text)}</li>`)}
+      <h3>风险接受候选</h3>
+      ${renderList(diagnosis.decision_checkpoints?.risk_acceptance, "暂无风险接受候选。", (item) => `<li><span class="muted">${escapeHtml(item.path)}:${escapeHtml(item.line)}</span><br>${escapeHtml(item.text)}</li>`)}
     </section>
 
     <section id="decision-brief">
-      <h2>Decision Brief</h2>
-      <p class="muted">A compact, human-facing approval package for open decisions. Markdown remains the source of truth; this section is generated from current markers and diagnostics.</p>
+      <h2>决策简报</h2>
+      <p class="muted">面向人工确认的轻量审批材料。Markdown 仍是事实源；本区块由当前决策标记和诊断信息生成。</p>
       ${renderDecisionBrief(diagnosis, contract)}
     </section>
 
     <section id="artifacts">
-      <h2>Artifact Excerpts</h2>
+      <h2>产物摘要</h2>
       <div class="grid">
         ${renderArtifactCards(item.path, diagnosis.artifacts)}
       </div>
@@ -896,8 +997,8 @@ try {
   } else {
     mkdirSync(dirname(abs(output)), { recursive: true });
     writeFileSync(abs(output), html, "utf8");
-    console.log(`Rendered SpecForge work report: ${output}`);
-    console.log("Markdown artifacts remain the source of truth.");
+    console.log(`已生成 SpecForge 工作报告：${output}`);
+    console.log("Markdown 产物仍是事实源。");
   }
 } catch (error) {
   console.error(error.message);
