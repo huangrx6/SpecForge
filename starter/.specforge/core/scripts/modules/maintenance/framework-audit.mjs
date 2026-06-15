@@ -225,6 +225,9 @@ function designSystemIssues() {
     "core/skills/ui-ux/design-system/contracts/color-palette.schema.json",
     "core/skills/ui-ux/design-system/contracts/component-contract.template.md",
     "core/skills/ui-ux/design-system/data/aesthetic-palettes.csv",
+    "core/skills/ui-ux/design-system/data/ui-color-scales.csv",
+    "core/skills/ui-ux/design-system/data/aesthetic-palette-candidates.csv",
+    "core/skills/ui-ux/design-system/data/chart-palettes.csv",
     "core/skills/ui-ux/design-system/components/README.md",
     "core/skills/ui-ux/design-system/foundations/README.md",
     "core/skills/ui-ux/design-system/foundations/tokens.md",
@@ -267,6 +270,7 @@ function designSystemIssues() {
     "core/skills/ui-ux/design-system/references/bad-case.md",
     "core/skills/ui-ux/design-system/references/design-mode-routing.md",
     "core/skills/ui-ux/design-system/references/color-system.md",
+    "core/skills/ui-ux/design-system/references/palette-source-index.md",
     "core/skills/ui-ux/design-system/references/palette-usage-rules.md",
     "core/skills/ui-ux/design-system/references/visual-qa-detectors.md",
     "core/skills/ui-ux/design-system/references/design-review-rubric.md",
@@ -336,8 +340,25 @@ function designSystemPaletteIssues() {
   const headers = lines[0]?.split(",") ?? [];
   for (const header of [
     "palette_id",
-    "aesthetic",
-    "mode",
+    "aesthetic_id",
+    "display_name",
+    "design_mode",
+    "best_for",
+    "background",
+    "surface",
+    "surface_2",
+    "text",
+    "muted",
+    "primary",
+    "secondary",
+    "accent",
+    "border",
+    "success",
+    "warning",
+    "danger",
+    "chart_1",
+    "chart_2",
+    "chart_3",
     "neutral_scale",
     "primary_scale",
     "accent_scale",
@@ -346,6 +367,9 @@ function designSystemPaletteIssues() {
     "usage_ratio",
     "contrast_notes",
     "avoid",
+    "source",
+    "source_url",
+    "license_note",
   ]) {
     if (!headers.includes(header)) {
       issues.push(issue("FAIL", "palette-column-missing", `${path} is missing column ${header}.`, path));
@@ -357,9 +381,27 @@ function designSystemPaletteIssues() {
     issues.push(issue("FAIL", "palette-count-too-low", `${path} must include at least 20 palette rows.`, path));
   }
 
-  for (const marker of ["neutral_scale", "primary_scale", "accent_scale", "semantic_scale", "usage_ratio", "contrast_notes", "avoid"]) {
-    if (!read(path).includes(marker)) {
+  const body = read(path);
+  for (const marker of ["background", "surface_2", "chart_3", "source_url", "license_note", "neutral_scale", "primary_scale", "accent_scale", "semantic_scale", "usage_ratio", "contrast_notes", "avoid"]) {
+    if (!body.includes(marker)) {
       issues.push(issue("FAIL", "palette-contract-marker-missing", `${path} must include ${marker}.`, path));
+    }
+  }
+
+  for (const paletteId of ["minimal", "notion", "japanese-ma", "minimal-tech", "ai-data", "toy", "bubble", "watercolor", "forest", "luxury", "cyberpunk", "glass", "poster-retro", "black-white-cool"]) {
+    if (!body.includes(`${paletteId},`)) {
+      issues.push(issue("FAIL", "palette-id-missing", `${path} must include palette_id ${paletteId}.`, path));
+    }
+  }
+
+  for (const supportPath of [
+    "core/skills/ui-ux/design-system/data/ui-color-scales.csv",
+    "core/skills/ui-ux/design-system/data/aesthetic-palette-candidates.csv",
+    "core/skills/ui-ux/design-system/data/chart-palettes.csv",
+    "core/skills/ui-ux/design-system/references/palette-source-index.md",
+  ]) {
+    if (!exists(supportPath)) {
+      issues.push(issue("FAIL", "palette-source-file-missing", `${supportPath} is required by the palette source contract.`, supportPath));
     }
   }
   return issues;

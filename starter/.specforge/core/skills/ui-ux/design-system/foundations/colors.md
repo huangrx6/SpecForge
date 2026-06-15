@@ -3,8 +3,12 @@
 色彩不再只给单点 hex。需要专业配色时，先读：
 
 - `references/color-system.md`
+- `references/palette-source-index.md`
 - `references/palette-usage-rules.md`
 - `data/aesthetic-palettes.csv`
+- `data/ui-color-scales.csv`
+- `data/aesthetic-palette-candidates.csv`
+- `data/chart-palettes.csv`
 - `contracts/color-palette.schema.json`
 
 `foundations/colors.md` 只保存全局原则；具体 palette 从 palette library 选择，最后映射到 semantic token。
@@ -23,12 +27,11 @@
 
 每个进入 Design Contract 的 palette 至少包含：
 
-- `neutral`：50 / 100 / 200 / 300 / 500 / 700 / 900
-- `primary`：50 / 100 / 300 / 500 / 700
-- `accent`：50 / 100 / 300 / 500 / 700
-- `semantic`：success / warning / danger / info
-- `chart`：可区分的图表序列方向
-- `usage_ratio`：不同 design mode 下的色彩占比
+- `palette_id` 和 `aesthetic_direction`
+- `tokens`：background / surface / surface_muted / text / text_muted / primary / secondary / accent / border / success / warning / danger / chart
+- `usage_rules`：primary、accent、background 的使用边界
+- `accessibility`：contrast check / dark mode ready 标记
+- `source_url` 和 `license_note`
 - `avoid`：禁止组合和错误使用场景
 
 ## 去廉价感规则
@@ -40,6 +43,7 @@
 - Product UI 默认 neutral >= 70%，primary <= 15%，accent <= 5%。
 - Brand Surface 可以有 signature 色，但正文、表单和导航必须回到高对比 token。
 - Hybrid 只允许一个 signature，工作区回到 Product UI 纪律。
+- 图表色必须来自 chart tokens，不直接复用按钮主色。
 
 ## SpecForge 输出
 
@@ -48,12 +52,11 @@
 ```text
 Color language:
 - Palette id:
-- Brand:
-- Surface:
-- Text:
-- Border:
-- States:
-- Usage ratio:
+- Aesthetic direction:
+- Tokens:
+- Usage rules:
+- Accessibility:
+- Source / license note:
 - Contrast checks:
 - Do not use:
 ```

@@ -62,17 +62,36 @@
   },
   "color_system": {
     "palette_id": "",
-    "mode": "Product UI",
-    "token_mapping": {
-      "background": "neutral-50",
-      "surface": "neutral-50",
-      "text": "neutral-900",
-      "primary": "primary-500",
-      "accent": "accent-500"
+    "aesthetic_direction": "",
+    "design_mode": "Product UI",
+    "tokens": {
+      "background": "",
+      "surface": "",
+      "surface_muted": "",
+      "text": "",
+      "text_muted": "",
+      "primary": "",
+      "secondary": "",
+      "accent": "",
+      "border": "",
+      "success": "",
+      "warning": "",
+      "danger": "",
+      "chart": []
     },
-    "usage_ratio": "",
-    "contrast_checks": [],
-    "avoid": []
+    "usage_rules": {
+      "primary_usage": "",
+      "accent_usage": "",
+      "background_usage": "",
+      "avoid": []
+    },
+    "accessibility": {
+      "requires_contrast_check": true,
+      "dark_mode_ready": false
+    },
+    "source": "",
+    "source_url": "",
+    "license_note": ""
   },
   "token_source": "existing",
   "component_strategy": "primitive + wrapper",

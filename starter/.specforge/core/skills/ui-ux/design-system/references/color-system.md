@@ -1,52 +1,92 @@
 # Color System
 
-本文件把 aesthetic palette seed 升级为可执行色彩系统。不要再从单点 hex 直接生成 UI；先选 palette，再映射 token，再按 design mode 套用使用比例和对比度规则。
+本文件把 aesthetic palette seed 升级为可执行色彩系统。不要从单点 hex 直接生成 UI；先选 palette，再映射 semantic tokens，再按 design mode 套用使用比例、对比度规则和来源许可纪律。
 
-## Three-layer Model
+## Six-layer Model
 
 | Layer | 文件 | 作用 |
 | --- | --- | --- |
-| Palette library | `data/aesthetic-palettes.csv` | 每个 aesthetic direction 的 neutral / primary / accent / semantic / chart 色阶、使用比例和 avoid rules。 |
-| Token mapping | 本文件 | 把 palette 色阶映射到 semantic tokens、状态 tokens、dark mode、hover / active / disabled。 |
+| Source index | `references/palette-source-index.md` | 判断 Radix / Tailwind / Happy Hues / Color Hunt / ColorBrewer 等来源只能做什么，是否需要 license note。 |
+| Palette library | `data/aesthetic-palettes.csv` | 每个 aesthetic direction 的 token 候选、色阶线索、使用比例、source / license note 和 avoid rules。 |
+| Scale library | `data/ui-color-scales.csv` | UI 色阶来源索引，用于 Product UI、dark mode、状态色和实现侧 Tailwind / CSS variables 映射。 |
+| Inspiration candidates | `data/aesthetic-palette-candidates.csv` | Happy Hues / Color Hunt / Coolors 等灵感来源，只能作为候选，不能直接散落 hex。 |
+| Chart palettes | `data/chart-palettes.csv` | 图表 / 地图 / 大屏配色来源，和按钮主色、状态色分离。 |
 | Usage rules | `references/palette-usage-rules.md` | Product UI / Brand Surface / Hybrid / Avatar-IP 的比例、禁用组合和审查纪律。 |
 
 ## Palette Selection Protocol
 
 1. 先读 `references/design-mode-routing.md` 得到 `design_mode`。
-2. 再根据用户选择或推荐的 aesthetic direction，从 `data/aesthetic-palettes.csv` 选 `palette_id`。
+2. 再根据用户选择或推荐的 aesthetic direction，从 `references/aesthetic-directions.md#Palette ID Mapping` 和 `data/aesthetic-palettes.csv` 选 `palette_id`。
 3. 如果没有完全命中，选择同 mode 下最近的 palette，并记录 `palette_source: derived from <palette_id>`。
-4. 不允许只复制 `primary` 单色；必须读取 neutral、primary、accent、semantic、chart、usage_ratio、contrast_notes 和 avoid。
+4. 不允许只复制 `primary` 单色；必须读取 background、surface、text、muted、primary、secondary、accent、border、semantic、chart、usage_ratio、contrast_notes、avoid、source 和 license_note。
 5. 选定 palette 后写入 Design Contract JSON 的 `color_system`。
+6. 如果 palette 来自 Happy Hues / Color Hunt / Coolors 这类灵感来源，只能写 `source_type: inspiration`；进入实现前必须由 Agent 重新映射成 semantic tokens 并做 contrast check。
 
-## Token Mapping
+## Palette Field Mapping
+
+| Palette 字段 | Token |
+| --- | --- |
+| `background` | `--color-bg` |
+| `surface` | `--color-surface` |
+| `surface_2` | `--color-surface-muted` |
+| `text` | `--color-text` |
+| `muted` | `--color-text-muted` |
+| `primary` | `--color-primary` |
+| `secondary` | `--color-secondary` |
+| `accent` | `--color-accent` |
+| `border` | `--color-border` |
+| `success` | `--color-success` |
+| `warning` | `--color-warning` |
+| `danger` | `--color-danger` |
+| `chart_1` | `--color-chart-1` |
+| `chart_2` | `--color-chart-2` |
+| `chart_3` | `--color-chart-3` |
+
+## Semantic Mapping
 
 | Token | Product UI mapping | Brand Surface mapping | Notes |
 | --- | --- | --- | --- |
-| `--color-bg` | neutral-50 | neutral-50 / neutral-900 | 页面主背景，不用 primary 大面积铺底。 |
-| `--color-surface` | neutral-50 / neutral-100 | neutral-50 / primary-50 / accent-50 | 内容容器；Brand Surface 也要保留正文可读面。 |
-| `--color-surface-muted` | neutral-100 | neutral-100 / accent-50 | 次级背景、hover 区域。 |
-| `--color-border` | neutral-200 / neutral-300 | neutral-200 / primary-100 | 分隔和控件边界，不能低到不可见。 |
-| `--color-text` | neutral-900 | neutral-900 or neutral-50 | 正文必须满足 contrast。 |
-| `--color-text-muted` | neutral-700 / neutral-500 | neutral-700 / neutral-300 | 辅助文字仍需可读，不能用 decorative accent。 |
-| `--color-primary` | primary-500 / primary-700 | primary-500 | 主操作、导航选中、关键强调。 |
-| `--color-primary-hover` | primary-700 | primary-700 / primary-300 on dark | hover 必须可感知但不改变语义。 |
-| `--color-primary-active` | primary-700 / neutral-900 mix | primary-700 | active 态比 hover 更明确。 |
-| `--color-accent` | accent-500 limited | accent-500 / accent-300 | Product UI 中 accent 不做主按钮色。 |
-| `--color-disabled-bg` | neutral-100 / neutral-200 | neutral-100 / neutral-800 | disabled 不只靠 opacity。 |
-| `--color-disabled-text` | neutral-500 | neutral-500 / neutral-400 | 必须和 enabled 文案明显不同。 |
-| `--color-focus-ring` | primary-300 + outline | primary-300 / accent-300 | focus ring 不用低对比阴影替代。 |
-| `--color-success` | semantic success | semantic success | 状态色只表达状态。 |
-| `--color-warning` | semantic warning | semantic warning | warning 不等于品牌金色。 |
-| `--color-danger` | semantic danger | semantic danger | danger 不能被 accent 替代。 |
-| `--color-info` | semantic info | semantic info | 信息提示和品牌主色可相同，但需语义明确。 |
+| `--color-bg` | palette `background` | palette `background` / dark background | 页面主背景，不用 primary 大面积铺底。 |
+| `--color-surface` | palette `surface` | palette `surface` / opaque fallback | 内容容器；Brand Surface 也要保留正文可读面。 |
+| `--color-surface-muted` | palette `surface_2` | palette `surface_2` / controlled accent surface | 次级背景、hover 区域。 |
+| `--color-border` | palette `border` | palette `border` | 分隔和控件边界，不能低到不可见。 |
+| `--color-text` | palette `text` | palette `text` | 正文必须满足 contrast。 |
+| `--color-text-muted` | palette `muted` | palette `muted` only on safe surface | 辅助文字仍需可读，不能用 decorative accent。 |
+| `--color-primary` | palette `primary` | palette `primary` | 主操作、导航选中、关键强调。 |
+| `--color-secondary` | palette `secondary` | palette `secondary` | 次级行动或柔和强调，不能抢主操作。 |
+| `--color-accent` | palette `accent` limited | palette `accent` | Product UI 中 accent 不做主按钮色。 |
+| `--color-focus-ring` | derived from primary | primary / accent with contrast | focus ring 不用低对比阴影替代。 |
+| `--color-success` | palette `success` | palette `success` | 状态色只表达状态。 |
+| `--color-warning` | palette `warning` | palette `warning` | warning 不等于品牌金色。 |
+| `--color-danger` | palette `danger` | palette `danger` | danger 不能被 accent 替代。 |
+| `--color-chart-*` | chart tokens only | chart tokens only | 图表色不能直接复用按钮主色；chart token 也不能表达状态，除非图表语义就是状态。 |
+
+## Use Rules
+
+1. 不允许直接把 aesthetic palette 的 hex 散落到页面。
+2. 必须先映射为 semantic tokens，再由 Tailwind / CSS variables / theme config 承载。
+3. Product UI 中 `primary` 只能用于主行动、当前状态和关键高亮，不能大面积铺底。
+4. Brand Surface 可以更强表达，但正文、按钮、表单、导航和状态色仍必须可读。
+5. 深色、玻璃拟态、赛博朋克方向必须额外检查 contrast、blur fallback 和 reduced motion。
+6. 图表色不能直接复用按钮主色，必须使用 `--color-chart-*`。
+7. 状态色和品牌色分离：`danger` 不能做装饰红，`warning` 不能被品牌金色替代。
+
+## Forbidden Combinations
+
+- 不允许 “紫蓝渐变 + 玻璃 + 大圆角 + 阴影” 成为默认组合。
+- 不允许高密后台使用 5 个以上高饱和色。
+- 不允许文本使用 muted 色放在彩色背景上。
+- 不允许状态色和品牌色混用，例如 danger 被拿来做装饰。
+- 不允许每个卡片都有不同 pastel icon background。
+- 不允许在 Product UI 中把 Color Hunt / Happy Hues 的灵感色直接写进组件 class。
 
 ## Contrast Rules
 
 - 普通正文和控件文字目标：至少 4.5:1。
 - 大字号文本目标：至少 3:1。
 - 非文本 UI 组件和图形对象目标：至少 3:1。
-- 如果 palette 的 `primary-500` 或 `accent-500` 不能承载小字号文字，只能用于背景、边框、图形或大字号标题。
-- `semantic_scale` 必须为状态提供可读 foreground / background 对；状态 badge 推荐用 50/100 背景 + 700 文案，或深底 + 白字并验证 contrast。
+- 如果 palette 的 `primary` 或 `accent` 不能承载小字号文字，只能用于背景、边框、图形或大字号标题。
+- 状态 badge 推荐用浅背景 + 深文案，或深底 + 白字并验证 contrast。
 - 对比度检查必须针对最终 token 组合，不是只检查 palette 单色。
 
 ## OKLCH Guidance
@@ -61,27 +101,38 @@
 
 | State | Derivation |
 | --- | --- |
-| default | primary-500 on light, primary-300 or primary-400 on dark after contrast check |
-| hover | light mode 用 primary-700 或 surface-muted；dark mode 用更高 lightness 的 primary |
+| default | primary on light, lighter primary on dark after contrast check |
+| hover | light mode 用 primary darkening 或 surface-muted；dark mode 用更高 lightness 的 primary |
 | active | 比 hover 更深或更高对比，不只加阴影 |
-| selected | primary-50 / primary-100 背景 + primary-700 文案，或明确左边界 |
-| disabled | neutral-100/200 bg + neutral-500 text；禁用态不能只靠透明度 |
+| selected | secondary 背景 + primary 文案，或明确左边界 |
+| disabled | surface_2 bg + muted text；禁用态不能只靠透明度 |
 | focus | outline / ring 明确可见，不能被 box shadow 和渐变淹没 |
-| error | semantic danger，不用 brand / accent 替代 |
+| error | danger，不用 brand / accent 替代 |
 
 ## Required Output
 
 ```md
 Color system:
 - Palette id:
+- Aesthetic direction:
 - Design mode:
-- Neutral scale:
-- Primary scale:
-- Accent scale:
-- Semantic scale:
-- Chart scale:
+- Tokens:
+  - background:
+  - surface:
+  - surface_muted:
+  - text:
+  - text_muted:
+  - primary:
+  - secondary:
+  - accent:
+  - border:
+  - success:
+  - warning:
+  - danger:
+  - chart:
 - Usage ratio:
 - Token mapping:
+- Source / license note:
 - Contrast checks:
 - Forbidden combinations:
 ```
@@ -89,17 +140,36 @@ Color system:
 ```json
 "color_system": {
   "palette_id": "minimal-tech",
-  "mode": "Product UI",
-  "token_mapping": {
-    "background": "neutral-50",
-    "surface": "neutral-50",
-    "text": "neutral-900",
-    "primary": "primary-500",
-    "accent": "accent-500"
+  "aesthetic_direction": "极简科技风",
+  "design_mode": "Product UI",
+  "tokens": {
+    "background": "#F8FAFC",
+    "surface": "#FFFFFF",
+    "surface_muted": "#EEF4FF",
+    "text": "#0F172A",
+    "text_muted": "#64748B",
+    "primary": "#2563EB",
+    "secondary": "#DBEAFE",
+    "accent": "#14B8A6",
+    "border": "#CBD5E1",
+    "success": "#16A34A",
+    "warning": "#F59E0B",
+    "danger": "#DC2626",
+    "chart": ["#2563EB", "#14B8A6", "#7C3AED"]
   },
-  "usage_ratio": "neutral 75 / primary 15 / accent 5 / semantic 5",
-  "contrast_checks": ["text on background >= 4.5:1", "focus ring >= 3:1"],
-  "avoid": ["default enterprise blue template"]
+  "usage_rules": {
+    "primary_usage": "主行动、当前状态和关键高亮；不铺满页面",
+    "accent_usage": "诊断链路、局部高亮和图表辅助",
+    "background_usage": "工作区保持 neutral surface",
+    "avoid": ["default enterprise blue template"]
+  },
+  "accessibility": {
+    "requires_contrast_check": true,
+    "dark_mode_ready": false
+  },
+  "source": "Tailwind Colors",
+  "source_url": "https://tailwindcss.com/docs/customizing-colors",
+  "license_note": "curated token mapping; verify source license before redistribution"
 }
 ```
 
@@ -107,6 +177,15 @@ Color system:
 
 | Source | URL | Used for |
 | --- | --- | --- |
+| Radix Colors | https://www.radix-ui.com/colors | Product UI 12-step UI scale、dark mode、alpha variants 和 accessible text discipline。 |
+| Tailwind Colors | https://tailwindcss.com/docs/customizing-colors | Tailwind implementation scale 和 OKLCH-aware CSS variable mapping。 |
+| Material 3 Color | https://m3.material.io/styles/color/overview | Brand source color -> role colors / tonal palette discipline。 |
+| IBM Carbon Color Tokens | https://carbondesignsystem.com/elements/color/tokens/ | Enterprise Product UI token discipline and status color separation。 |
+| Happy Hues | https://www.happyhues.co/ | Brand Surface / empty state contextual inspiration; not a full token system。 |
+| Color Hunt | https://colorhunt.co/ | Aesthetic palette inspiration seed; normalize before use。 |
+| ColorBrewer | https://colorbrewer2.org/ | Chart / map / dashboard palette source; prefer colorblind-safe options。 |
+| Adobe Color Contrast Analyzer | https://color.adobe.com/create/color-contrast-analyzer | Contrast validation tool。 |
+| Coolors | https://coolors.co/ | Human palette generation and contrast preview tool。 |
 | WCAG 2.2 Contrast Minimum | https://www.w3.org/TR/WCAG22/#contrast-minimum | 4.5:1 normal text and 3:1 large text threshold. |
 | WCAG 2.2 Non-text Contrast | https://www.w3.org/TR/WCAG22/#non-text-contrast | 3:1 UI component and graphical object threshold. |
 | MDN OKLCH | https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch | OKLCH syntax and lightness / chroma / hue model. |

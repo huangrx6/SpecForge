@@ -19,7 +19,7 @@
   "properties": {
     "design_mode": {
       "type": "string",
-      "enum": ["Product UI", "Brand Surface", "Hybrid", "Avatar-IP / Empty State"]
+      "enum": ["Product UI", "Brand Surface", "Hybrid", "Avatar-IP", "Empty State", "Avatar-IP / Empty State"]
     },
     "aesthetic_direction": {
       "type": "string"
@@ -45,30 +45,88 @@
     "color_system": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["palette_id", "mode", "token_mapping", "usage_ratio", "contrast_checks", "avoid"],
+      "required": [
+        "palette_id",
+        "aesthetic_direction",
+        "design_mode",
+        "tokens",
+        "usage_rules",
+        "accessibility",
+        "source",
+        "source_url",
+        "license_note"
+      ],
       "properties": {
-        "palette_id": {
-          "type": "string"
-        },
-        "mode": {
+        "palette_id": { "type": "string" },
+        "aesthetic_direction": { "type": "string" },
+        "design_mode": {
           "type": "string",
-          "enum": ["Product UI", "Brand Surface", "Hybrid", "Avatar-IP / Empty State"]
+          "enum": ["Product UI", "Brand Surface", "Hybrid", "Avatar-IP", "Empty State", "Avatar-IP / Empty State"]
         },
-        "token_mapping": {
+        "tokens": {
           "type": "object",
-          "additionalProperties": { "type": "string" }
+          "additionalProperties": false,
+          "required": [
+            "background",
+            "surface",
+            "surface_muted",
+            "text",
+            "text_muted",
+            "primary",
+            "secondary",
+            "accent",
+            "border",
+            "success",
+            "warning",
+            "danger",
+            "chart"
+          ],
+          "properties": {
+            "background": { "type": "string" },
+            "surface": { "type": "string" },
+            "surface_muted": { "type": "string" },
+            "text": { "type": "string" },
+            "text_muted": { "type": "string" },
+            "primary": { "type": "string" },
+            "secondary": { "type": "string" },
+            "accent": { "type": "string" },
+            "border": { "type": "string" },
+            "success": { "type": "string" },
+            "warning": { "type": "string" },
+            "danger": { "type": "string" },
+            "chart": {
+              "type": "array",
+              "minItems": 3,
+              "items": { "type": "string" }
+            }
+          }
         },
-        "usage_ratio": {
-          "type": "string"
+        "usage_rules": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["primary_usage", "accent_usage", "background_usage", "avoid"],
+          "properties": {
+            "primary_usage": { "type": "string" },
+            "accent_usage": { "type": "string" },
+            "background_usage": { "type": "string" },
+            "avoid": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
         },
-        "contrast_checks": {
-          "type": "array",
-          "items": { "type": "string" }
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["requires_contrast_check", "dark_mode_ready"],
+          "properties": {
+            "requires_contrast_check": { "type": "boolean" },
+            "dark_mode_ready": { "type": "boolean" }
+          }
         },
-        "avoid": {
-          "type": "array",
-          "items": { "type": "string" }
-        }
+        "source": { "type": "string" },
+        "source_url": { "type": "string" },
+        "license_note": { "type": "string" }
       }
     },
     "component_strategy": {

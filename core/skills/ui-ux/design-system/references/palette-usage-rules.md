@@ -11,6 +11,14 @@
 | Hybrid | >= 60% | <= 15% | <= 10% | <= 5% | <= 10% | Product UI 的信息纪律 + Brand Surface 的一个 signature。 |
 | Avatar-IP / Empty State | >= 55% | <= 15% | <= 20% | <= 10% | scoped | 只影响空态、头像、IP 或低频入口，不写入全局控件 token。 |
 
+## Source Discipline
+
+- `source`、`source_url`、`license_note` 是 palette contract 的一部分，不是备注。
+- Radix / Tailwind / Material / Carbon 可作为 UI 色阶和角色色纪律来源；外部色值进入项目前仍要归一化为本仓库 token。
+- Happy Hues / Color Hunt / Coolors 只能作为 aesthetic candidate；不能直接把它们的 hex 写入页面或组件 class。
+- ColorBrewer 只优先进入 `--color-chart-*`；不要把 chart palette 拿去做 Button primary 或状态色。
+- License 不确定时写 `inspiration only`，并在 Design Contract 中记录需要人工确认。
+
 ## Product UI Rules
 
 - neutral 占页面 70% 以上；表格、表单、审批、配置、审计默认 75-85%。
@@ -58,6 +66,8 @@
 | Check | Evidence |
 | --- | --- |
 | Palette completeness | neutral / primary / accent / semantic / chart 色阶齐全 |
+| Token completeness | background / surface / text / primary / secondary / accent / border / status / chart tokens 齐全 |
+| Source evidence | source_url 和 license_note 已写入 Design Contract JSON |
 | Mode match | palette mode 与 Design Mode Routing 一致 |
 | Usage ratio | Product UI neutral >= 70%；Brand Surface 高 chroma 有 neutral 阅读区 |
 | Contrast | 正文 4.5:1，large text 3:1，UI component 3:1 |

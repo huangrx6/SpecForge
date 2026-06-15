@@ -1,66 +1,115 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/huangrx6/SpecForge/core/skills/ui-ux/design-system/contracts/color-palette.schema.json",
-  "title": "SpecForge Aesthetic Palette Row",
+  "title": "SpecForge Color Palette Contract",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "palette_id",
-    "aesthetic",
-    "mode",
-    "neutral_scale",
-    "primary_scale",
-    "accent_scale",
-    "semantic_scale",
-    "chart_scale",
-    "usage_ratio",
-    "contrast_notes",
-    "avoid"
+    "aesthetic_direction",
+    "design_mode",
+    "tokens",
+    "usage_rules",
+    "accessibility",
+    "source",
+    "source_url",
+    "license_note"
   ],
   "properties": {
     "palette_id": {
       "type": "string",
       "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
     },
-    "aesthetic": {
+    "aesthetic_direction": {
       "type": "string",
       "minLength": 1
     },
-    "mode": {
+    "design_mode": {
       "type": "string",
-      "enum": ["Product UI", "Brand Surface", "Hybrid", "Avatar-IP / Empty State"]
+      "enum": ["Product UI", "Brand Surface", "Hybrid", "Avatar-IP", "Empty State", "Avatar-IP / Empty State"]
     },
-    "neutral_scale": {
-      "type": "string",
-      "pattern": "50:#([0-9A-Fa-f]{6}).*100:#([0-9A-Fa-f]{6}).*200:#([0-9A-Fa-f]{6}).*300:#([0-9A-Fa-f]{6}).*500:#([0-9A-Fa-f]{6}).*700:#([0-9A-Fa-f]{6}).*900:#([0-9A-Fa-f]{6})"
+    "tokens": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "background",
+        "surface",
+        "surface_muted",
+        "text",
+        "text_muted",
+        "primary",
+        "secondary",
+        "accent",
+        "border",
+        "success",
+        "warning",
+        "danger",
+        "chart"
+      ],
+      "properties": {
+        "background": { "$ref": "#/$defs/hex" },
+        "surface": { "$ref": "#/$defs/hexOrAlphaHex" },
+        "surface_muted": { "$ref": "#/$defs/hexOrAlphaHex" },
+        "text": { "$ref": "#/$defs/hex" },
+        "text_muted": { "$ref": "#/$defs/hex" },
+        "primary": { "$ref": "#/$defs/hex" },
+        "secondary": { "$ref": "#/$defs/hexOrAlphaHex" },
+        "accent": { "$ref": "#/$defs/hex" },
+        "border": { "$ref": "#/$defs/hexOrAlphaHex" },
+        "success": { "$ref": "#/$defs/hex" },
+        "warning": { "$ref": "#/$defs/hex" },
+        "danger": { "$ref": "#/$defs/hex" },
+        "chart": {
+          "type": "array",
+          "minItems": 3,
+          "items": { "$ref": "#/$defs/hex" }
+        }
+      }
     },
-    "primary_scale": {
-      "type": "string",
-      "pattern": "50:#([0-9A-Fa-f]{6}).*100:#([0-9A-Fa-f]{6}).*300:#([0-9A-Fa-f]{6}).*500:#([0-9A-Fa-f]{6}).*700:#([0-9A-Fa-f]{6})"
+    "usage_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary_usage", "accent_usage", "background_usage", "avoid"],
+      "properties": {
+        "primary_usage": { "type": "string", "minLength": 1 },
+        "accent_usage": { "type": "string", "minLength": 1 },
+        "background_usage": { "type": "string", "minLength": 1 },
+        "avoid": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
     },
-    "accent_scale": {
-      "type": "string",
-      "pattern": "50:#([0-9A-Fa-f]{6}).*100:#([0-9A-Fa-f]{6}).*300:#([0-9A-Fa-f]{6}).*500:#([0-9A-Fa-f]{6}).*700:#([0-9A-Fa-f]{6})"
+    "accessibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requires_contrast_check", "dark_mode_ready"],
+      "properties": {
+        "requires_contrast_check": { "type": "boolean" },
+        "dark_mode_ready": { "type": "boolean" }
+      }
     },
-    "semantic_scale": {
-      "type": "string",
-      "pattern": "success:#([0-9A-Fa-f]{6}).*warning:#([0-9A-Fa-f]{6}).*danger:#([0-9A-Fa-f]{6}).*info:#([0-9A-Fa-f]{6})"
-    },
-    "chart_scale": {
+    "source": {
       "type": "string",
       "minLength": 1
     },
-    "usage_ratio": {
+    "source_url": {
       "type": "string",
-      "minLength": 1
+      "format": "uri"
     },
-    "contrast_notes": {
+    "license_note": {
       "type": "string",
       "minLength": 1
+    }
+  },
+  "$defs": {
+    "hex": {
+      "type": "string",
+      "pattern": "^#[0-9A-Fa-f]{6}$"
     },
-    "avoid": {
+    "hexOrAlphaHex": {
       "type": "string",
-      "minLength": 1
+      "pattern": "^#[0-9A-Fa-f]{6}(?:[0-9A-Fa-f]{2})?$"
     }
   }
 }

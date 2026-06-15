@@ -65,17 +65,36 @@ Design Contract Summary:
   },
   "color_system": {
     "palette_id": "",
-    "mode": "Product UI",
-    "token_mapping": {
-      "background": "neutral-50",
-      "surface": "neutral-50",
-      "text": "neutral-900",
-      "primary": "primary-500",
-      "accent": "accent-500"
+    "aesthetic_direction": "",
+    "design_mode": "Product UI",
+    "tokens": {
+      "background": "",
+      "surface": "",
+      "surface_muted": "",
+      "text": "",
+      "text_muted": "",
+      "primary": "",
+      "secondary": "",
+      "accent": "",
+      "border": "",
+      "success": "",
+      "warning": "",
+      "danger": "",
+      "chart": []
     },
-    "usage_ratio": "",
-    "contrast_checks": [],
-    "avoid": []
+    "usage_rules": {
+      "primary_usage": "",
+      "accent_usage": "",
+      "background_usage": "",
+      "avoid": []
+    },
+    "accessibility": {
+      "requires_contrast_check": true,
+      "dark_mode_ready": false
+    },
+    "source": "",
+    "source_url": "",
+    "license_note": ""
   },
   "token_source": "existing",
   "component_strategy": "primitive + wrapper",
@@ -101,7 +120,7 @@ JSON 字段必须符合 `contracts/design-contract.schema.json`。如果某字�
 前端相关 technical design 必须回答：
 
 - Token delivery：CSS variables、Tailwind theme、组件局部变量还是现有项目 token。
-- Color system：palette_id、neutral / primary / accent / semantic / chart 色阶、usage ratio、contrast checks 和 avoid rules。
+- Color system：palette_id、aesthetic_direction、semantic token mapping、usage rules、contrast / dark mode flags、source_url 和 license_note。
 - Component source：现有组件、shadcn-vue primitive、自建 registry、项目 wrapper、domain component。
 - Component contract files：读取 `01-spec/design/components/<component-name>.contract.md`，确认 primitive、companions、project wrapper、states、props、events、slots、motion 和 verification。
 - Registry boundary：是否需要 shadcn-vue custom registry；registry item 负责什么，项目代码负责什么。

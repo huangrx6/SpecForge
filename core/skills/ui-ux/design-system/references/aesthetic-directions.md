@@ -18,6 +18,31 @@
 4. 用户选择后，再做 business translation：把审美方向翻译成 foundations、components、pages、prompts 和 Pencil 原型约束。
 5. 后台 / 政企 / 工具型产品可以使用克制审美，但仍要明确美学来源，例如“日式留白 + 极简科技风”，而不是只写“简洁高级”。
 
+## Palette ID Mapping
+
+美学方向不能只停留在气质描述；推荐或确认方向后，必须从 `data/aesthetic-palettes.csv` 选择一个 `palette_id`，并按 `references/color-system.md` 映射成 semantic tokens。
+
+| Direction | Recommended palette IDs |
+| --- | --- |
+| 极简主义 | `minimal`, `japanese-ma` |
+| Notion 风 | `notion` |
+| 玩具感 | `toy`, `bubble` |
+| 水彩风 | `watercolor` |
+| 森系 | `forest` |
+| 赛博朋克 | `cyberpunk` |
+| 极简科技风 | `minimal-tech`, `ai-data` |
+| 玻璃拟态 | `glass` |
+| 轻奢风 | `luxury` |
+| 复古海报风 | `poster-retro` |
+| 酷感黑白 | `black-white-cool` |
+| 政企可信风 | `enterprise-trust`, `minimal` |
+| 金融专业风 | `finance-pro`, `minimal` |
+| 医疗健康风 | `medical-clean`, `minimal-tech` |
+| 工业秩序风 | `industrial-order`, `data-command` |
+| 法务合规风 | `legal-compliance`, `minimal` |
+
+如果用户给的是“高级、清透、森系、赛博朋克”这类气质词，先映射 palette id，再输出 token contract；不要在页面里自由挑 hex。
+
 ## 1. 简洁 / 高级类
 
 | Direction | Feeling | Visual language | Good for | Avoid |
@@ -196,7 +221,7 @@ Feeling:
 Why it fits:
 Why it might fail:
 Visual language:
-- Palette:
+- Palette id:
 - Type:
 - Shape:
 - Texture / material:

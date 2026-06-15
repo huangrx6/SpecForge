@@ -24,7 +24,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - 需要操作 Pencil 时读取 `core/skills/ui-ux/pencil/SKILL.md`
 - 需要设计语言、去廉价感、shadcn-vue 映射、页面模式、样例板、动效边界、UX 研究、IA、交互、微文案或可访问性检查时读取 `core/skills/ui-ux/design-system/SKILL.md`
 - 使用 design-system 时先读取 `core/skills/ui-ux/design-system/references/design-mode-routing.md`；交接后续阶段前输出 Design Contract Summary 的 Markdown 表和符合 `core/skills/ui-ux/design-system/contracts/design-contract.schema.json` 的 JSON block。
-- 配色必须读取 `core/skills/ui-ux/design-system/references/color-system.md`、`references/palette-usage-rules.md` 和 `data/aesthetic-palettes.csv`，并把 palette_id、色阶、usage ratio、contrast checks 和 avoid rules 写入 Design Contract JSON。
+- 配色必须读取 `core/skills/ui-ux/design-system/references/color-system.md`、`references/palette-source-index.md`、`references/palette-usage-rules.md`、`data/aesthetic-palettes.csv`、`data/ui-color-scales.csv` 和 `data/chart-palettes.csv`，并把 palette_id、semantic tokens、usage rules、accessibility、source_url、license_note、contrast checks 和 avoid rules 写入 Design Contract JSON。
 - 做视觉质量审查时优先读取项目设计系统、已确认 UI 方向和 `core/skills/ui-ux/design-system/references/ux-research-ia.md`；不再内置 `web-design-guidelines`
 
 ## 写入

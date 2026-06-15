@@ -297,6 +297,15 @@
             "path": "data/aesthetic-palettes.csv"
           },
           {
+            "path": "data/ui-color-scales.csv"
+          },
+          {
+            "path": "data/aesthetic-palette-candidates.csv"
+          },
+          {
+            "path": "data/chart-palettes.csv"
+          },
+          {
             "path": "foundations/README.md"
           },
           {
@@ -421,6 +430,9 @@
           },
           {
             "path": "references/color-system.md"
+          },
+          {
+            "path": "references/palette-source-index.md"
           },
           {
             "path": "references/palette-usage-rules.md"

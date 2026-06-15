@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.0
+
+- 将 `data/aesthetic-palettes.csv` 调整为 Agent 查询友好的 semantic token 结构，新增 background、surface、text、primary、secondary、accent、status、chart、source_url 和 license_note 等字段，同时保留色阶线索。
+- 新增 `references/palette-source-index.md`、`data/ui-color-scales.csv`、`data/aesthetic-palette-candidates.csv` 和 `data/chart-palettes.csv`，区分 UI 色阶、灵感 palette、图表 palette、校验工具和许可边界。
+- `contracts/color-palette.schema.json` 与 Design Contract JSON 改为 `tokens / usage_rules / accessibility / source` 结构，避免后续阶段继续从自由文本推断颜色。
+- `references/aesthetic-directions.md` 新增 Palette ID Mapping，让“美学方向 -> palette_id -> semantic token -> 可访问性检查”形成闭环。
+- framework audit 增加 palette source contract 校验，检查关键 palette id、token 字段、source_url、license_note 和新数据文件。
+
 ## 0.9.0
 
 - 新增 `data/aesthetic-palettes.csv`，提供 20 个 aesthetic palette，每个包含 neutral / primary / accent / semantic / chart 色阶、usage ratio、contrast notes 和 avoid rules。
