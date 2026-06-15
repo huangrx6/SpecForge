@@ -8,6 +8,7 @@
     "design_mode",
     "aesthetic_direction",
     "signature",
+    "color_system",
     "token_source",
     "component_strategy",
     "shadcn_vue",
@@ -40,6 +41,35 @@
     "token_source": {
       "type": "string",
       "enum": ["existing", "new", "delta"]
+    },
+    "color_system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["palette_id", "mode", "token_mapping", "usage_ratio", "contrast_checks", "avoid"],
+      "properties": {
+        "palette_id": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["Product UI", "Brand Surface", "Hybrid", "Avatar-IP / Empty State"]
+        },
+        "token_mapping": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "usage_ratio": {
+          "type": "string"
+        },
+        "contrast_checks": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "avoid": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
     },
     "component_strategy": {
       "type": "string",

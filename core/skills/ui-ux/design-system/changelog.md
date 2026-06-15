@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.0
+
+- 新增 `data/aesthetic-palettes.csv`，提供 20 个 aesthetic palette，每个包含 neutral / primary / accent / semantic / chart 色阶、usage ratio、contrast notes 和 avoid rules。
+- 新增 `references/color-system.md`、`references/palette-usage-rules.md` 和 `contracts/color-palette.schema.json`，把配色升级为 palette library -> token mapping -> usage rules 三层结构。
+- Design Contract JSON 增加 `color_system`，让后续阶段稳定读取 palette_id、token mapping、contrast checks 和禁止组合。
+
 ## 0.8.0
 
 - 新增 `references/design-mode-routing.md`，把 Product UI、Brand Surface、Hybrid 和 Avatar-IP / Empty State 作为第一步路由，防止审美方向误套到不合适的 UI 场景。

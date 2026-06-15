@@ -288,7 +288,13 @@
             "path": "contracts/design-contract.schema.json"
           },
           {
+            "path": "contracts/color-palette.schema.json"
+          },
+          {
             "path": "contracts/component-contract.template.md"
+          },
+          {
+            "path": "data/aesthetic-palettes.csv"
           },
           {
             "path": "foundations/README.md"
@@ -414,6 +420,12 @@
             "path": "references/design-mode-routing.md"
           },
           {
+            "path": "references/color-system.md"
+          },
+          {
+            "path": "references/palette-usage-rules.md"
+          },
+          {
             "path": "references/visual-qa-detectors.md"
           },
           {
@@ -436,7 +448,7 @@
           }
         ]
       },
-      "trigger": "当 sf-ui-design 需要判断 Product UI / Brand Surface / Hybrid 模式、提炼设计语言、建立 token、生成机器可读 Design Contract、选择组件模式、生成 shadcn-vue 组件契约、设计页面模式、引入动效边界或执行视觉 QA 审查时使用。",
+      "trigger": "当 sf-ui-design 需要判断 Product UI / Brand Surface / Hybrid 模式、提炼设计语言、建立专业色阶和 token、生成机器可读 Design Contract、选择组件模式、生成 shadcn-vue 组件契约、设计页面模式、引入动效边界或执行视觉 QA 审查时使用。",
       "normalizeTo": [
         "01-spec/ui-design.md#Visual Style Brief",
         "01-spec/ui-design.md#Design Contract Summary",

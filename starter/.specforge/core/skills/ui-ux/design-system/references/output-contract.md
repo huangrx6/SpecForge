@@ -30,6 +30,7 @@ Foundations delta:
 
 Design Contract Summary:
 - Design mode:
+- Color system:
 - Token source:
 - Component strategy:
 - Navigation decision:
@@ -50,6 +51,20 @@ Design Contract JSON:
   "signature": {
     "type": "structural",
     "description": ""
+  },
+  "color_system": {
+    "palette_id": "",
+    "mode": "Product UI",
+    "token_mapping": {
+      "background": "neutral-50",
+      "surface": "neutral-50",
+      "text": "neutral-900",
+      "primary": "primary-500",
+      "accent": "accent-500"
+    },
+    "usage_ratio": "",
+    "contrast_checks": [],
+    "avoid": []
   },
   "token_source": "existing",
   "component_strategy": "primitive + wrapper",
@@ -112,6 +127,7 @@ Design Reference Extraction:
 - Avoid:
 
 Foundations pack:
+- Color system:
 - Palette:
 - Typography:
 - Density:
@@ -124,6 +140,7 @@ Design Contract Summary:
 - Design mode:
 - Aesthetic direction:
 - Signature:
+- Color system:
 - Token source:
 - Component strategy:
 - Navigation decision:
@@ -148,6 +165,20 @@ Design Contract JSON:
   "signature": {
     "type": "structural",
     "description": ""
+  },
+  "color_system": {
+    "palette_id": "",
+    "mode": "Product UI",
+    "token_mapping": {
+      "background": "neutral-50",
+      "surface": "neutral-50",
+      "text": "neutral-900",
+      "primary": "primary-500",
+      "accent": "accent-500"
+    },
+    "usage_ratio": "",
+    "contrast_checks": [],
+    "avoid": []
   },
   "token_source": "existing",
   "component_strategy": "primitive + wrapper",

@@ -222,7 +222,9 @@ function designSystemIssues() {
   const required = [
     "core/skills/ui-ux/design-system/SKILL.md",
     "core/skills/ui-ux/design-system/contracts/design-contract.schema.json",
+    "core/skills/ui-ux/design-system/contracts/color-palette.schema.json",
     "core/skills/ui-ux/design-system/contracts/component-contract.template.md",
+    "core/skills/ui-ux/design-system/data/aesthetic-palettes.csv",
     "core/skills/ui-ux/design-system/components/README.md",
     "core/skills/ui-ux/design-system/foundations/README.md",
     "core/skills/ui-ux/design-system/foundations/tokens.md",
@@ -264,6 +266,8 @@ function designSystemIssues() {
     "core/skills/ui-ux/design-system/references/good-case.md",
     "core/skills/ui-ux/design-system/references/bad-case.md",
     "core/skills/ui-ux/design-system/references/design-mode-routing.md",
+    "core/skills/ui-ux/design-system/references/color-system.md",
+    "core/skills/ui-ux/design-system/references/palette-usage-rules.md",
     "core/skills/ui-ux/design-system/references/visual-qa-detectors.md",
     "core/skills/ui-ux/design-system/references/design-review-rubric.md",
     "core/skills/ui-ux/design-system/references/aesthetic-directions.md",
@@ -320,6 +324,44 @@ function designSystemAestheticIssues() {
     }
   }
 
+  return issues;
+}
+
+function designSystemPaletteIssues() {
+  const issues = [];
+  const path = "core/skills/ui-ux/design-system/data/aesthetic-palettes.csv";
+  if (!exists(path)) return [issue("FAIL", "missing-aesthetic-palettes", `${path} is required.`, path)];
+
+  const lines = read(path).split(/\r?\n/).filter((line) => line.trim());
+  const headers = lines[0]?.split(",") ?? [];
+  for (const header of [
+    "palette_id",
+    "aesthetic",
+    "mode",
+    "neutral_scale",
+    "primary_scale",
+    "accent_scale",
+    "semantic_scale",
+    "chart_scale",
+    "usage_ratio",
+    "contrast_notes",
+    "avoid",
+  ]) {
+    if (!headers.includes(header)) {
+      issues.push(issue("FAIL", "palette-column-missing", `${path} is missing column ${header}.`, path));
+    }
+  }
+
+  const rows = lines.slice(1);
+  if (rows.length < 20) {
+    issues.push(issue("FAIL", "palette-count-too-low", `${path} must include at least 20 palette rows.`, path));
+  }
+
+  for (const marker of ["neutral_scale", "primary_scale", "accent_scale", "semantic_scale", "usage_ratio", "contrast_notes", "avoid"]) {
+    if (!read(path).includes(marker)) {
+      issues.push(issue("FAIL", "palette-contract-marker-missing", `${path} must include ${marker}.`, path));
+    }
+  }
   return issues;
 }
 
@@ -1215,6 +1257,7 @@ const checks = [
   { id: "standards-index", issues: standardsIndexIssues() },
   { id: "design-system-contract", issues: designSystemIssues() },
   { id: "design-system-aesthetic-contract", issues: designSystemAestheticIssues() },
+  { id: "design-system-palette-contract", issues: designSystemPaletteIssues() },
   { id: "design-system-component-depth", issues: designSystemComponentDepthIssues() },
   { id: "test-design-contract", issues: testDesignIssues() },
   { id: "starter-manifest", issues: starterManifestIssues() },

@@ -37,6 +37,7 @@ SpecForge 固定使用 **Pencil** 做正式 UI 原型。Figma、HTML、ASCII、�
 - `.specforge/core/skills/ORCHESTRATION.md`、`README.md`、`registry.json`：第三方 skill 选择、边界和来源风险。
 - 需要提炼设计语言、去廉价感、shadcn-vue 映射、组件契约、页面模式或动效边界时读取 `.specforge/core/skills/ui-ux/design-system/SKILL.md`，再按需读取其 `foundations/`、`components/`、`pages/`、`prompts/`、`references/`。
 - 进入 design-system 后，先读取 `.specforge/core/skills/ui-ux/design-system/references/design-mode-routing.md`；交接给后续阶段前读取 `.specforge/core/skills/ui-ux/design-system/contracts/design-contract.schema.json` 和 `references/output-contract.md`。
+- 涉及配色、风格方向或 token 时，读取 `.specforge/core/skills/ui-ux/design-system/references/color-system.md`、`references/palette-usage-rules.md` 和 `data/aesthetic-palettes.csv`，不要只写单点 hex。
 - 需要操作 Pencil 时读取 `.specforge/core/skills/ui-ux/pencil/SKILL.md`，再按需读取其 `references/*.md`。
 
 ## 设计系统工具链
@@ -49,10 +50,11 @@ SpecForge 固定使用 **Pencil** 做正式 UI 原型。Figma、HTML、ASCII、�
 4. 有参考网站 / 截图 / 品牌材料时，使用 DESIGN.md extraction 输出 atmosphere、tokens、typography、components、layout、motion、do/don't 和 adopt/adapt/avoid。
 5. 没有现成设计系统或用户确认方向时，先读取 aesthetic directions，输出 2-3 个互斥 UI direction options；方向会改变视觉气质、信息架构或组件形态时，等待人工确认。
 6. 用户确认后，把方向落成 foundations pack：semantic token、密度、排版、圆角阴影、图标、文案、动效边界和可访问性约束。
-7. 用户确认后读取 component system 和相关组件文件，把美学方向转成组件语言：项目级组件、shadcn-vue primitive、props、states、a11y、loading/empty/error/permission。
-8. 管理端 / Vue / shadcn-vue 场景必须写 Admin Component Contract：项目级组件、shadcn-vue primitive、props、states、a11y、loading/empty/error/permission；复杂或复用组件必须写 `01-spec/design/components/<component-name>.contract.md`。
-9. Pencil 前先生成 sample board 摘要，说明采用什么、不采用什么、为什么适合宿主项目，并做 taste critique。
-10. Pencil 截图后用 design-system 的 `references/visual-qa-detectors.md` 做至少一轮审查和修正。
+7. 配色必须从 palette library 选 `palette_id`，输出 neutral / primary / accent / semantic / chart 色阶、usage ratio、contrast checks 和 avoid rules。
+8. 用户确认后读取 component system 和相关组件文件，把美学方向转成组件语言：项目级组件、shadcn-vue primitive、props、states、a11y、loading/empty/error/permission。
+9. 管理端 / Vue / shadcn-vue 场景必须写 Admin Component Contract：项目级组件、shadcn-vue primitive、props、states、a11y、loading/empty/error/permission；复杂或复用组件必须写 `01-spec/design/components/<component-name>.contract.md`。
+10. Pencil 前先生成 sample board 摘要，说明采用什么、不采用什么、为什么适合宿主项目，并做 taste critique。
+11. Pencil 截图后用 design-system 的 `references/visual-qa-detectors.md` 做至少一轮审查和修正。
 
 ## 启动扫描
 
@@ -97,7 +99,8 @@ node .specforge/core/scripts/create-artifact.mjs ui_design
 7. `ui-design.md` 必须包含 sample board 或明确说明为什么不需要；有 sample board 时要记录方向、推荐项、signature、人工确认状态和放弃项。
 8. 有参考网站、截图或品牌材料时，必须包含 Design Reference Extraction，并写明 adopt / adapt / avoid。
 9. Design Contract Summary 必须同时包含 Markdown 表和符合 `design-contract.schema.json` 的 JSON block。
-10. 复杂 / 复用组件必须新增或更新 `01-spec/design/components/<component-name>.contract.md`；小改不需要时在组件契约表写 N/A 理由。
+10. Design Contract JSON 必须包含 `color_system`：`palette_id`、`token_mapping`、`usage_ratio`、`contrast_checks` 和 `avoid`。
+11. 复杂 / 复用组件必须新增或更新 `01-spec/design/components/<component-name>.contract.md`；小改不需要时在组件契约表写 N/A 理由。
 
 ### D. 创建、保存并校验 Pencil
 

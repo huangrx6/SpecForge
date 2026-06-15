@@ -24,6 +24,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - 需要操作 Pencil 时读取 `core/skills/ui-ux/pencil/SKILL.md`
 - 需要设计语言、去廉价感、shadcn-vue 映射、页面模式、样例板、动效边界、UX 研究、IA、交互、微文案或可访问性检查时读取 `core/skills/ui-ux/design-system/SKILL.md`
 - 使用 design-system 时先读取 `core/skills/ui-ux/design-system/references/design-mode-routing.md`；交接后续阶段前输出 Design Contract Summary 的 Markdown 表和符合 `core/skills/ui-ux/design-system/contracts/design-contract.schema.json` 的 JSON block。
+- 配色必须读取 `core/skills/ui-ux/design-system/references/color-system.md`、`references/palette-usage-rules.md` 和 `data/aesthetic-palettes.csv`，并把 palette_id、色阶、usage ratio、contrast checks 和 avoid rules 写入 Design Contract JSON。
 - 做视觉质量审查时优先读取项目设计系统、已确认 UI 方向和 `core/skills/ui-ux/design-system/references/ux-research-ia.md`；不再内置 `web-design-guidelines`
 
 ## 写入
@@ -57,6 +58,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - **shadcn 管理端模式**：若实现层采用 shadcn/ui，把 shadcn 视为 primitive / registry / theming 层；在 UI design 中定义 App Shell、Resource Page、Entity Table、Detail/Form、State Feedback 和 Ops Pattern 的封装契约。
 - **design-system 工具链**：若需要设计语言或组件规范，读取 `design-system`，把 design intelligence、美学方向推荐、DESIGN.md extraction、foundations、组件契约、页面模式、样例板、动效边界和去廉价感 review 归一化到 UI design。
 - **Design mode routing**：先判断 Product UI、Brand Surface、Hybrid 或 Avatar-IP / Empty State；后台、审批、数据表格和高频工作台默认 Product UI，不把品牌页视觉直接套到控件层。
+- **Color system**：从 palette library 选完整色阶，按 Product UI / Brand Surface / Hybrid 的比例纪律映射 semantic tokens；不能只输出 background / surface / text / primary / accent 单点色。
 
 ### 2. 定义（Define）
 
@@ -116,6 +118,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - **记录所有设计决策**：确认来源、选择、放弃项和影响，方便 reviewer 和实现者理解设计意图。
 - **交互状态文档化**：所有页面/组件的状态（default、hover、focus、active、disabled、error、loading、empty、success）必须有明确描述。
 - **机器可读交接**：`Design Contract Summary` 必须包含 JSON block，供 technical design、tasking、implementation 和 verification 读取。
+- **色彩交接**：JSON block 必须包含 `color_system`，供后续阶段校验 token、对比度、dark mode 和禁止组合。
 
 ## 停止条件
 
@@ -136,6 +139,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - 有 UI 变更时，存在用户画像提取、Visual Style Brief、页面地图、信息架构、用户流程、微文案、状态矩阵、Pencil `.pen`、导出截图、无障碍自查和视觉质量修正记录。
 - 需要设计系统时，存在 design intelligence、aesthetic direction、foundations pack、sample board、人工确认状态、组件契约、页面模式、taste critique 和 motion boundary。
 - Design Contract Summary 同时包含 Markdown 表和 machine-readable JSON block。
+- Design Contract JSON 包含 `color_system`，且 palette 不只是单点 hex。
 - 复杂 / 复用组件有独立 component contract 文件，或写明 N/A 理由。
 - Pencil `.pen` 保存后可重读，且 `ui-design.md#9. Pencil 原型证据` 记录保存状态、重读校验和截图证据。
 - 无 UI 影响时，N/A 理由和验证方式清楚。

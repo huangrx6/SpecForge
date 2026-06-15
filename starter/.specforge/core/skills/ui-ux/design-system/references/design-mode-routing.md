@@ -28,6 +28,15 @@
 | Hybrid | 展示面与工作面边界、共享 token、隔离 token、入口转场、任务不被装饰打断的证据 | structural / interaction |
 | Avatar-IP / Empty State | 使用范围、插画 / IP 资产边界、空态文案、回到主任务的操作 | material / typographic |
 
+## Color Routing
+
+| Design mode | Palette discipline |
+| --- | --- |
+| Product UI | 读 `references/color-system.md` 和 `references/palette-usage-rules.md`；neutral >= 70%，primary <= 15%，accent <= 5%。 |
+| Brand Surface | 可以使用更强 signature 色，但正文、表单和导航必须回到高对比 neutral surface。 |
+| Hybrid | Product UI 的信息纪律 + 一个 Brand Surface signature；展示区和工作区 token 要说明共享或隔离。 |
+| Avatar-IP / Empty State | palette 只影响 IP / 插画 / 空态，不写入全局控件 token。 |
+
 ## Stop Signals
 
 - Product UI 输出里出现大面积玻璃拟态、品牌 hero、装饰插画主导首屏，但没有任务效率理由。

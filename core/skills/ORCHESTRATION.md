@@ -11,7 +11,7 @@
 | `requirements` | `requirements` | Requirements | 行为契约、确认边界、来源转译、REQ / AC 追踪、NFR 和下游 handoff 主能力包 | `01-spec/requirements.md` |
 | `user-stories` | `requirements/user-stories` | Requirements | 用户故事、3C、INVEST、验收标准和可测试性补充参考 | `01-spec/requirements.md` |
 | `pencil` | `ui-ux/pencil` | UI Design | Pencil `.pen` 原型读写、组件复用、tokens、截图导出、布局检查和设计转代码参考 | `01-spec/ui-design.md`、`01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/` |
-| `design-system` | `ui-ux/design-system` | Brainstorm / UI Design / Technical Design | 用户研究、信息架构、设计模式路由、设计语言、foundations、机器可读 Design Contract、组件规范、页面模式、shadcn-vue 映射、动效边界和视觉 QA 审查 | `00-intake/brainstorm.md`、`01-spec/ui-design.md`、`01-spec/design/components/*.contract.md`、Pencil 输入、前端组件契约 |
+| `design-system` | `ui-ux/design-system` | Brainstorm / UI Design / Technical Design | 用户研究、信息架构、设计模式路由、设计语言、专业色阶、foundations、机器可读 Design Contract、组件规范、页面模式、shadcn-vue 映射、动效边界和视觉 QA 审查 | `00-intake/brainstorm.md`、`01-spec/ui-design.md`、`01-spec/design/components/*.contract.md`、Pencil 输入、前端组件契约 |
 | `problem-framing` | `brainstorm/problem-framing` | Brainstorm | 把模糊请求重构为目标、受众、约束、假设和必须确认问题 | `00-intake/brainstorm.md#问题重构`、`#问题地图` |
 | `research-source` | `brainstorm/research-source` | Brainstorm / Research | 当前事实查证、来源选择、证据表、置信度和未查证项 | `00-intake/brainstorm.md#当前事实与研究证据` |
 | `divergent-thinking` | `brainstorm/divergent-thinking` | Brainstorm | 从多种视角发散候选方向，避免过早收敛 | `00-intake/brainstorm.md#发散方向池` |
@@ -93,10 +93,11 @@
 ### UI Design
 
 - 正式原型固定使用 `pencil`。
-- 需要提炼设计语言、token、组件契约、页面模式、shadcn-vue 映射、动效边界或视觉 QA 审查时，先参考 `design-system`，再把结果转成 `ui-design.md`、Design Contract JSON、组件契约文件和 Pencil 输入。
+- 需要提炼设计语言、palette 色阶、token、组件契约、页面模式、shadcn-vue 映射、动效边界或视觉 QA 审查时，先参考 `design-system`，再把结果转成 `ui-design.md`、Design Contract JSON、组件契约文件和 Pencil 输入。
 - 读取 `pencil` 时，先确认 UI 方向已由用户确认；如果 upstream 提到 `frontend-design`，按 SpecForge 的 `design.md`、`sf-ui-design` 和已确认 UI 方向处理。
 - 方向已确认后，需要细化 persona-lite、用户旅程、信息架构、微文案、可访问性或视觉层级时，读取 `design-system/references/ux-research-ia.md`；需要把视觉语言落成 foundations / components / pages 时继续使用 `design-system` 的 aesthetic、foundations、components 和 pages 规则。输出必须归一为 `00-intake/brainstorm.md`、`01-spec/research.md` 或 `01-spec/ui-design.md`。
 - design-system 必须先判断 Product UI / Brand Surface / Hybrid / Avatar-IP 模式；后台、审批、数据表格和高频工作台默认 Product UI，不把品牌页视觉直接套到控件层。
+- design-system 配色必须从 `data/aesthetic-palettes.csv` 和 `references/color-system.md` 生成完整色阶、usage ratio、contrast checks 和 avoid rules，不能只给单点 hex。
 - Brand Surface 可按需参考 `design-taste-frontend`，只提取视觉气质、版式和反模板化检查，不让它替代 Pencil 或 `ui-design.md`。
 - Product UI / 管理端采用 shadcn/ui 时，可按需参考 shadcn 官方 skill、registry docs 或组件 review skill；产出必须转成 Admin Component Contract、token 约束和实现任务。
 - Product UI / 管理端采用 shadcn-vue 时，先读 `design-system/references/shadcn-vue.md`，再决定 primitive、项目级 wrapper、状态矩阵和测试建议。

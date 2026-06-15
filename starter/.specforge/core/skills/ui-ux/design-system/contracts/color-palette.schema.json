@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/huangrx6/SpecForge/core/skills/ui-ux/design-system/contracts/color-palette.schema.json",
+  "title": "SpecForge Aesthetic Palette Row",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "palette_id",
+    "aesthetic",
+    "mode",
+    "neutral_scale",
+    "primary_scale",
+    "accent_scale",
+    "semantic_scale",
+    "chart_scale",
+    "usage_ratio",
+    "contrast_notes",
+    "avoid"
+  ],
+  "properties": {
+    "palette_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "aesthetic": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["Product UI", "Brand Surface", "Hybrid", "Avatar-IP / Empty State"]
+    },
+    "neutral_scale": {
+      "type": "string",
+      "pattern": "50:#([0-9A-Fa-f]{6}).*100:#([0-9A-Fa-f]{6}).*200:#([0-9A-Fa-f]{6}).*300:#([0-9A-Fa-f]{6}).*500:#([0-9A-Fa-f]{6}).*700:#([0-9A-Fa-f]{6}).*900:#([0-9A-Fa-f]{6})"
+    },
+    "primary_scale": {
+      "type": "string",
+      "pattern": "50:#([0-9A-Fa-f]{6}).*100:#([0-9A-Fa-f]{6}).*300:#([0-9A-Fa-f]{6}).*500:#([0-9A-Fa-f]{6}).*700:#([0-9A-Fa-f]{6})"
+    },
+    "accent_scale": {
+      "type": "string",
+      "pattern": "50:#([0-9A-Fa-f]{6}).*100:#([0-9A-Fa-f]{6}).*300:#([0-9A-Fa-f]{6}).*500:#([0-9A-Fa-f]{6}).*700:#([0-9A-Fa-f]{6})"
+    },
+    "semantic_scale": {
+      "type": "string",
+      "pattern": "success:#([0-9A-Fa-f]{6}).*warning:#([0-9A-Fa-f]{6}).*danger:#([0-9A-Fa-f]{6}).*info:#([0-9A-Fa-f]{6})"
+    },
+    "chart_scale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "usage_ratio": {
+      "type": "string",
+      "minLength": 1
+    },
+    "contrast_notes": {
+      "type": "string",
+      "minLength": 1
+    },
+    "avoid": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

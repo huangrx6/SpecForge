@@ -43,6 +43,7 @@
 | Design mode | |
 | Aesthetic direction | |
 | Signature | |
+| Color system | Palette: ; Usage ratio: ; Contrast checks: ; Avoid: |
 | Token source | |
 | Component strategy | |
 | shadcn-vue primitive layer | |
@@ -58,6 +59,20 @@
   "signature": {
     "type": "structural",
     "description": ""
+  },
+  "color_system": {
+    "palette_id": "",
+    "mode": "Product UI",
+    "token_mapping": {
+      "background": "neutral-50",
+      "surface": "neutral-50",
+      "text": "neutral-900",
+      "primary": "primary-500",
+      "accent": "accent-500"
+    },
+    "usage_ratio": "",
+    "contrast_checks": [],
+    "avoid": []
   },
   "token_source": "existing",
   "component_strategy": "primitive + wrapper",
