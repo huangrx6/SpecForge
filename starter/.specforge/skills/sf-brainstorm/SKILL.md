@@ -50,11 +50,13 @@ description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户�
 - `decision-matrix`：按价值、成本、风险、落地性、可扩展性和置信度收敛排序。
 - `output-shaping`：控制 brainstorm 输出形态，避免自由散文式结论。
 - `execution-planning`：把推荐方向转成下一步行动、交接和验证入口。
-- `opportunity-solution-tree`：产品目标、用户机会、MVP、候选方向、实验和优先级取舍。
+- `product`：产品目标、用户机会、MVP 推荐、候选方向、实验和优先级取舍。
+- `opportunity-solution-tree`：外部 OST 参考；只补机会树、实验和优先级视角。
 - `design-system`：体验方向、美学方向、用户旅程、信息架构、交互、可访问性和后续 UI design 输入。
 - `research-source`：当前事实查证、来源优先级、证据表和未查证项。
 - `user-stories`：用户故事、验收口径和边界条件。
-- `create-prd`：PRD 交接检查、非目标和 release 分期覆盖。
+- `prd`：PRD 交接检查、非目标、Product Decision Gate 和 requirements handoff。
+- `create-prd`：外部 PRD 参考；只补 8 段式 PRD、非目标和 release 分期覆盖。
 - `playwright-skill`：只在 brainstorm 需要提前识别验证风险时参考，正式执行仍交给后续阶段。
 
 参考 skill 的输出必须先归一化为 `问题地图 / 方案对比 / 用户确认记录 / 后续阶段输入`。它不能替代用户确认，也不能原样落入 `brainstorm.md`；事实类结论必须按 `research-source` 的证据契约记录来源。

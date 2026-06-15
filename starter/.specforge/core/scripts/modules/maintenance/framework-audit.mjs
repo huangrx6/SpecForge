@@ -517,6 +517,141 @@ function requirementsSystemIssues() {
   return issues;
 }
 
+function prdSystemIssues() {
+  const issues = [];
+  const required = [
+    "core/skills/prd/SKILL.md",
+    "core/skills/prd/foundations/product-decision-boundary.md",
+    "core/skills/prd/foundations/prd-language.md",
+    "core/skills/prd/foundations/assumption-ledger.md",
+    "core/skills/prd/foundations/decision-status.md",
+    "core/skills/prd/transforms/brief-to-prd.md",
+    "core/skills/prd/transforms/brainstorm-to-prd.md",
+    "core/skills/prd/transforms/research-to-prd.md",
+    "core/skills/prd/transforms/product-discovery-to-prd.md",
+    "core/skills/prd/patterns/b2b-operator-data-product.md",
+    "core/skills/prd/patterns/ai-feature.md",
+    "core/skills/prd/patterns/workflow-approval.md",
+    "core/skills/prd/patterns/dashboard-report.md",
+    "core/skills/prd/patterns/internal-tool.md",
+    "core/skills/prd/patterns/integration-platform.md",
+    "core/skills/prd/references/output-contract.md",
+    "core/skills/prd/references/quality-rubric.md",
+    "core/skills/prd/references/anti-patterns.md",
+    "core/skills/prd/references/external-prd-skill-normalization.md",
+    "core/skills/prd/contracts/prd-decision.schema.json",
+    "core/skills/prd/prompts/product-interview.md",
+    "core/skills/prd/prompts/mvp-slicing.md",
+    "core/skills/prd/prompts/open-question-review.md",
+  ];
+
+  for (const path of required) {
+    if (!exists(path)) {
+      issues.push(issue("FAIL", "missing-prd-system-file", `${path} is required by the PRD system contract.`, path));
+    }
+  }
+
+  const skillPath = "core/skills/prd/SKILL.md";
+  if (exists(skillPath)) {
+    const body = read(skillPath);
+    for (const marker of ["PRD 是产品决策文档", "PRD 不负责", "Product Decision Gate", "Handoff To Requirements"]) {
+      if (!body.includes(marker)) {
+        issues.push(issue("FAIL", "prd-skill-boundary-marker-missing", `${skillPath} is missing ${marker}.`, skillPath));
+      }
+    }
+  }
+
+  const outputPath = "core/skills/prd/references/output-contract.md";
+  if (exists(outputPath)) {
+    const body = read(outputPath);
+    for (const marker of ["prd-lite", "prd-standard", "prd-deep", "Product Decision Summary", "Scope & MVP Decision", "Product Decision Gate", "Handoff To Requirements"]) {
+      if (!body.includes(marker)) {
+        issues.push(issue("FAIL", "prd-output-contract-marker-missing", `${outputPath} is missing ${marker}.`, outputPath));
+      }
+    }
+  }
+
+  const antiPath = "core/skills/prd/references/anti-patterns.md";
+  if (exists(antiPath)) {
+    const body = read(antiPath);
+    for (const marker of ["Recommendation as decision", "Requirements leakage", "Metric theater", "Fix Order"]) {
+      if (!body.includes(marker)) {
+        issues.push(issue("FAIL", "prd-anti-pattern-marker-missing", `${antiPath} is missing ${marker}.`, antiPath));
+      }
+    }
+  }
+
+  return issues;
+}
+
+function productSystemIssues() {
+  const issues = [];
+  const required = [
+    "core/skills/product/SKILL.md",
+    "core/skills/product/foundations/product-discovery-boundary.md",
+    "core/skills/product/foundations/opportunity-language.md",
+    "core/skills/product/foundations/outcome-metric.md",
+    "core/skills/product/foundations/evidence-levels.md",
+    "core/skills/product/transforms/request-to-opportunity-map.md",
+    "core/skills/product/transforms/feedback-to-feature-pool.md",
+    "core/skills/product/transforms/brainstorm-to-product-discovery.md",
+    "core/skills/product/transforms/product-discovery-to-prd.md",
+    "core/skills/product/patterns/b2b-operator-data-product.md",
+    "core/skills/product/patterns/ai-agent-product.md",
+    "core/skills/product/patterns/dashboard-analytics.md",
+    "core/skills/product/patterns/workflow-ops.md",
+    "core/skills/product/patterns/internal-platform.md",
+    "core/skills/product/references/output-contract.md",
+    "core/skills/product/references/prioritization-methods.md",
+    "core/skills/product/references/experiment-design.md",
+    "core/skills/product/references/quality-rubric.md",
+    "core/skills/product/references/anti-patterns.md",
+    "core/skills/product/references/external-ost-normalization.md",
+    "core/skills/product/contracts/product-discovery.schema.json",
+    "core/skills/product/prompts/opportunity-interview.md",
+    "core/skills/product/prompts/feature-triage.md",
+    "core/skills/product/prompts/mvp-slicing.md",
+  ];
+
+  for (const path of required) {
+    if (!exists(path)) {
+      issues.push(issue("FAIL", "missing-product-system-file", `${path} is required by the product discovery system contract.`, path));
+    }
+  }
+
+  const skillPath = "core/skills/product/SKILL.md";
+  if (exists(skillPath)) {
+    const body = read(skillPath);
+    for (const marker of ["Product Discovery System Skill", "不直接写完整 PRD", "不替用户确认 MVP", "MVP Recommendation"]) {
+      if (!body.includes(marker)) {
+        issues.push(issue("FAIL", "product-skill-boundary-marker-missing", `${skillPath} is missing ${marker}.`, skillPath));
+      }
+    }
+  }
+
+  const outputPath = "core/skills/product/references/output-contract.md";
+  if (exists(outputPath)) {
+    const body = read(outputPath);
+    for (const marker of ["Profile Selection", "Opportunity Map", "Candidate Feature Pool", "Prioritization Matrix", "MVP Recommendation", "Experiment / Validation Plan", "Handoff"]) {
+      if (!body.includes(marker)) {
+        issues.push(issue("FAIL", "product-output-contract-marker-missing", `${outputPath} is missing ${marker}.`, outputPath));
+      }
+    }
+  }
+
+  const antiPath = "core/skills/product/references/anti-patterns.md";
+  if (exists(antiPath)) {
+    const body = read(antiPath);
+    for (const marker of ["Feature-first discovery", "Fake score", "MVP as recommendation", "PRD leakage"]) {
+      if (!body.includes(marker)) {
+        issues.push(issue("FAIL", "product-anti-pattern-marker-missing", `${antiPath} is missing ${marker}.`, antiPath));
+      }
+    }
+  }
+
+  return issues;
+}
+
 function testDesignIssues() {
   const required = [
     "core/skills/quality/test-design/SKILL.md",
@@ -1377,6 +1512,8 @@ const checks = [
   { id: "design-system-palette-contract", issues: designSystemPaletteIssues() },
   { id: "design-system-component-depth", issues: designSystemComponentDepthIssues() },
   { id: "requirements-system-contract", issues: requirementsSystemIssues() },
+  { id: "prd-system-contract", issues: prdSystemIssues() },
+  { id: "product-system-contract", issues: productSystemIssues() },
   { id: "test-design-contract", issues: testDesignIssues() },
   { id: "starter-manifest", issues: starterManifestIssues() },
   { id: "script-modules", issues: scriptModuleIssues() },

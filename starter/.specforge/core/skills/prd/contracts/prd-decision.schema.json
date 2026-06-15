@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/huangrx6/SpecForge/core/skills/prd/contracts/prd-decision.schema.json",
+  "title": "SpecForge PRD Decision Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "prd_depth",
+    "decision_status",
+    "source_artifacts",
+    "problem",
+    "target_users",
+    "mvp",
+    "non_goals",
+    "success_criteria",
+    "assumptions",
+    "open_questions",
+    "requirements_seeds",
+    "handoff"
+  ],
+  "properties": {
+    "prd_depth": {
+      "type": "string",
+      "enum": ["prd-lite", "prd-standard", "prd-deep"]
+    },
+    "decision_status": {
+      "type": "string",
+      "enum": ["draft", "needs-decision", "research-needed", "delegated-default", "approved-for-requirements", "blocked-by-conflict"]
+    },
+    "source_artifacts": { "type": "array", "items": { "type": "string" } },
+    "problem": { "type": "string" },
+    "target_users": { "type": "array", "items": { "type": "string" } },
+    "mvp": { "type": "array", "items": { "type": "string" } },
+    "non_goals": { "type": "array", "items": { "type": "string" } },
+    "success_criteria": { "type": "array", "items": { "type": "string" } },
+    "assumptions": { "type": "array", "items": { "type": "string" } },
+    "open_questions": { "type": "array", "items": { "type": "string" } },
+    "requirements_seeds": { "type": "array", "items": { "type": "string" } },
+    "handoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ui_design", "technical_design", "data_security", "verification"],
+      "properties": {
+        "ui_design": { "type": "array", "items": { "type": "string" } },
+        "technical_design": { "type": "array", "items": { "type": "string" } },
+        "data_security": { "type": "array", "items": { "type": "string" } },
+        "verification": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

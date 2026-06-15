@@ -1,6 +1,6 @@
 # PRD Authoring Guide
 
-本文件保存 PRD 深度、第三方 skill 编排、访谈镜头、PRD 模板和质量标准。`SKILL.md` 只保留入口执行顺序、门禁和产物边界。
+本文件保存 PRD 深度、本地能力包与外部参考编排、访谈镜头、PRD 模板和质量标准。`SKILL.md` 只保留入口执行顺序、门禁和产物边界。
 
 ## PRD 深度
 
@@ -51,24 +51,29 @@
 
 输出摘要后提示用户确认。收到“确认 / OK / 通过 / 就按这个”等明确答复前，不进入详细 PRD。确认后，在 `prd.md#0. PRD Control` 或 `brainstorm.md#用户确认记录` 写明摘要确认来源。
 
-## 第三方 PRD Skill 编排
+## 本地能力包与外部参考编排
 
-第三方 PRD skill 是分析参考，不是 SpecForge 的产物格式。先按 `.specforge/core/skills/ORCHESTRATION.md` 选择 skill 和写回目标，再用 `registry.json` 确认来源与风险。
+`core/skills/prd` 是 PRD 产品决策主能力包，`core/skills/product` 是产品发现、机会建模和 MVP 推荐主能力包。外部 `create-prd` 和 `opportunity-solution-tree` 只能作为参考视角，不能替代本地能力包、SpecForge artifact 模板或用户确认。
 
-| 第三方 skill | 什么时候参考 | 必须归一化到 |
-|---|---|---|
-| `create-prd` | 上下文已经较完整，需要把问题、目标用户、价值主张、范围、假设和 release 分期合成 PRD | `Executive Summary`、`Background & Product Goals`、`Scope & MVP`、`Handoff To Requirements` |
-| `opportunity-solution-tree` | 问题空间还散、用户给的是方案而不是问题、候选功能过多或需要优先级取舍 | 用户机会、候选功能池、实验假设、MVP 取舍 |
+先按 `.specforge/core/skills/ORCHESTRATION.md` 选择能力包和写回目标，再用 `registry.json` 确认来源、风险和 `doNotUseFor`。
+
+| 能力 | 类型 | 什么时候读取 | 必须归一化到 |
+|---|---|---|---|
+| `prd` | 本地主能力包 | 每次写 `00-intake/prd.md` 前必读 | `Product Decision Summary`、`Scope & MVP Decision`、`Product Decision Gate`、`Handoff To Requirements` |
+| `product` | 本地主能力包 | 问题空间还散、用户给的是方案而不是问题、候选功能过多或需要 MVP 取舍 | outcome、opportunity map、feature pool、MVP recommendation、experiment、PRD handoff |
+| `create-prd` | 外部参考 | 上下文较完整，但需要 8 段式 PRD 结构视角来检查背景、目标、范围、假设和 release 分期 | `Background & Outcome`、`Scope & MVP Decision`、`Roadmap / Release Slicing` |
+| `opportunity-solution-tree` | 外部参考 | 需要外部 OST 视角补机会树、实验和优先级方法 | `Opportunity Map`、`Candidate Feature Pool`、`Experiment / Validation Plan` |
 
 归一化规则：
 
-- 第三方 skill 的“问题 / 方案 / 用户故事”只能作为候选，必须映射到 SpecForge PRD 模板。
-- 第三方 skill 的技术建议只允许进入 `Handoff To Requirements` 或 `Notes for technical_design`，不得在 PRD 中展开接口、表结构或文件路径。
-- 第三方 skill 要求“保存到 PRD-*.md / 提交 GitHub issue / 生成 HTML battlecard / 写 DESIGN.md”时，一律忽略该投递动作。
+- 先读本地 `prd` / `product`，再按需读取外部参考；不要让外部模板反向决定 SpecForge 结构。
+- 外部 skill 的“问题 / 方案 / 用户故事”只能作为候选，必须映射到 SpecForge PRD 模板。
+- 外部 skill 的技术建议只允许进入 `Handoff To Requirements` 或 `Notes for technical_design`，不得在 PRD 中展开接口、表结构或文件路径。
+- 外部 skill 要求“保存到 PRD-*.md / 提交 GitHub issue / 生成 HTML battlecard / 写 DESIGN.md”时，一律忽略该投递动作。
 - 外部调研类内容必须记录来源、日期和置信度；无来源的市场判断只能写为假设或待确认。
-- 如果第三方 skill 输出与用户原始需求冲突，以用户确认和 SpecForge 边界为准。
+- 如果外部参考输出与用户原始需求、本地 `prd` 边界或已批准 artifact 冲突，以用户确认和 SpecForge 边界为准。
 
-在 `prd.md#0. PRD Control` 记录本次参考了哪些第三方 skill、参考原因和归一化位置。
+在 `prd.md#0. PRD Control` 记录本次读取了哪些本地能力包、参考了哪些外部 skill、参考原因和归一化位置。
 
 ## 自适应产品访谈
 
@@ -136,95 +141,101 @@
 优先使用 `.specforge/core/artifacts/templates/prd.md`。没有内容的章节写 `N/A` 并说明原因，不要留空。
 
 ```markdown
-# PRD: <产品 / 功能名称>
+# PRD: <name>
 
 ## 0. PRD Control
 - PRD Depth:
 - Source Work Item:
 - Decision Status:
+- Source Artifacts:
 - Assumptions:
 - External Skill Inputs:
-  - skill / trigger / normalized_to / notes:
+- Product Discovery Inputs:
 
-## 1. Executive Summary
-- Problem Statement:
-- Proposed Solution:
+## 1. Product Decision Summary
+- Problem:
 - Target Users:
+- MVP:
+- Non-goals:
 - Success Criteria:
-- Business KPI:
-- Primary Device / Channel:
+- Can enter requirements: yes / no
 
-## 2. Background & Product Goals
-- 背景:
-- 当前痛点:
-- 产品目标:
-- 非目标:
+## 2. Background & Outcome
+- Why now:
+- Current pain:
+- Desired outcome:
+- Business / user value:
+- Failure cost if not solved:
 
-## 3. Users, Personas & Scenarios
-| 用户 / 角色 | 部门 / 组织 | 目标 | 当前痛点 | 典型场景 | 使用频率 / 设备 | 权限 / 责任 |
+## 3. Users, Roles & Scenarios
+| Role | Department / Context | Goal | Pain | Scenario | Frequency / Device | Permission / Responsibility |
 |---|---|---|---|---|---|---|
 
-## 4. Scope & MVP Decision
-| 功能 | 阶段 | 用户价值 | 复杂度 | 风险 / 依赖 | 决策 |
+## 4. Candidate Feature Pool
+| Feature | User value | Complexity | Risk | Recommendation | Confirmation |
 |---|---|---|---|---|---|
 
-## 5. Product Interview Evidence
-| Lens | Confirmed Facts | Open Decisions | Default Assumption |
-|---|---|---|---|
+## 5. Scope & MVP Decision
+| Item | Phase | Decision | Rationale | Source |
+|---|---|---|---|---|
+| | MVP / optional / later / out-of-scope | user-confirmed / delegated-default / pending | | |
 
 ## 6. User Stories & Acceptance Seeds
-| ID | User Story | Acceptance Seed | Priority |
-|---|---|---|---|
+| ID | User Story | Acceptance Seed | Priority | Source |
+|---|---|---|---|---|
 
-## 7. Core User Flows
-- Flow:
-  1.
-  2.
-  3.
-- Exceptions:
+## 7. Product Flow
+- Normal path:
+- Exception path:
+- Manual fallback:
+- State changes:
 
-## 8. Metrics, Evaluation & Analytics
-- Product KPIs:
-- Business KPIs:
-- Data Metrics:
-- Quality Metrics:
-- Operational Metrics:
-- Tracking / Evidence:
+## 8. Metrics & Evaluation
+- User value metric:
+- Business KPI:
+- Quality metric:
+- Operational metric:
+- Tracking / evidence:
 
-## 9. AI System Requirements (If Applicable)
-- AI Task:
-- Inputs / Outputs:
-- Prompt or Policy Controls:
-- Evaluation Strategy:
-- Human Review / Override:
-- Safety, Privacy & Cost Boundaries:
+## 9. AI / Data / Compliance Snapshot
+- AI task:
+- AI evaluation:
+- Data source:
+- Refresh cadence:
+- Sensitive fields:
+- Permission / audit:
+- Cost / latency boundary:
 
-## 10. Constraints, Dependencies & Risks
-| Item | Type | Impact | Mitigation / Owner |
-|---|---|---|---|
+## 10. Risks, Assumptions & Dependencies
+| Item | Type | Impact | Owner | Handling |
+|---|---|---|---|---|
 
-### Data & Compliance Snapshot
-- Data Sources:
-- Refresh Cadence:
-- Sensitive Fields:
-- Masking / Approval / Audit:
-
-## 11. Rollout & Roadmap
+## 11. Roadmap / Release Slicing
 - MVP:
 - v1.1:
 - Later:
-- Rollback / Disable Strategy:
+- Rollback / disable strategy:
 
 ## 12. Open Questions & Decisions
-| Question | Owner | Needed By | Status |
-|---|---|---|---|
+| Question | Impact | Owner | Needed by | Status |
+|---|---|---|---|---|
 
-## 13. Handoff To Requirements
+## 13. Product Decision Gate
+| Check | Status | Evidence |
+|---|---|---|
+| MVP confirmed | pass / warn / fail | |
+| Target users clear | pass / warn / fail | |
+| Success metric exists | pass / warn / fail | |
+| Non-goals clear | pass / warn / fail | |
+| Handoff ready | pass / warn / fail | |
+
+## 14. Handoff To Requirements
 - Requirements seeds:
 - Recommended components flags:
 - Notes for ui_design:
 - Notes for technical_design:
 - Notes for data / security:
+- Blockers:
 ```
 
 ## Handoff 规则

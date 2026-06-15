@@ -1,7 +1,59 @@
 {
   "version": 1,
-  "description": "SpecForge 托管的最小参考 skill 集合，包含本地维护 skill 和经过审查的第三方快照。它们是参考能力，不是工作流阶段。",
+  "description": "SpecForge 托管的最小能力包与参考 skill 集合，包含本地维护能力包和经过审查的第三方快照。它们不是工作流阶段，输出必须归一化为 SpecForge artifact。",
   "skills": [
+    {
+      "id": "prd",
+      "category": "prd",
+      "localPath": "prd",
+      "name": "prd",
+      "role": "SpecForge PRD 产品决策主能力包",
+      "trust": "SpecForge 本地维护，连接 brief / brainstorm / product discovery / research 到 requirements",
+      "risk": "低",
+      "source": {
+        "type": "local-authored",
+        "repo": "SpecForge",
+        "path": "core/skills/prd/SKILL.md",
+        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/prd",
+        "files": [
+          { "path": "foundations/product-decision-boundary.md" },
+          { "path": "foundations/prd-language.md" },
+          { "path": "foundations/assumption-ledger.md" },
+          { "path": "foundations/decision-status.md" },
+          { "path": "transforms/brief-to-prd.md" },
+          { "path": "transforms/brainstorm-to-prd.md" },
+          { "path": "transforms/research-to-prd.md" },
+          { "path": "transforms/product-discovery-to-prd.md" },
+          { "path": "patterns/b2b-operator-data-product.md" },
+          { "path": "patterns/ai-feature.md" },
+          { "path": "patterns/workflow-approval.md" },
+          { "path": "patterns/dashboard-report.md" },
+          { "path": "patterns/internal-tool.md" },
+          { "path": "patterns/integration-platform.md" },
+          { "path": "references/output-contract.md" },
+          { "path": "references/quality-rubric.md" },
+          { "path": "references/anti-patterns.md" },
+          { "path": "references/external-prd-skill-normalization.md" },
+          { "path": "contracts/prd-decision.schema.json" },
+          { "path": "prompts/product-interview.md" },
+          { "path": "prompts/mvp-slicing.md" },
+          { "path": "prompts/open-question-review.md" }
+        ]
+      },
+      "trigger": "sf-prd 每次写 00-intake/prd.md 时必读；用于形成 Product Decision Summary、Scope & MVP、Non-goals、Success Criteria、Risk 和 Handoff To Requirements。",
+      "normalizeTo": [
+        "00-intake/prd.md",
+        "00-intake/prd.md#Product Decision Summary",
+        "00-intake/prd.md#Scope & MVP Decision",
+        "00-intake/prd.md#Handoff To Requirements"
+      ],
+      "doNotUseFor": [
+        "替代 sf-requirements 的 REQ / AC / NFR",
+        "写 API / DB / UI / technical design",
+        "替用户批准 MVP",
+        "执行外部 create-prd 的文件保存动作"
+      ]
+    },
     {
       "id": "create-prd",
       "category": "prd",
@@ -25,8 +77,11 @@
         "00-intake/prd.md#Handoff To Requirements"
       ],
       "doNotUseFor": [
+        "替代 core/skills/prd/SKILL.md",
         "替代 sf-prd 模板",
         "自动保存 PRD-[product-name].md 到任意路径",
+        "直接决定 MVP",
+        "直接进入 requirements",
         "把 Technology 小节扩写成 technical design",
         "跳过用户确认产品范围和非目标"
       ]
@@ -172,6 +227,57 @@
       ]
     },
     {
+      "id": "product",
+      "category": "product",
+      "localPath": "product",
+      "name": "product",
+      "role": "SpecForge 产品发现、机会建模、功能取舍和 MVP 切分主能力包",
+      "trust": "SpecForge 本地维护，连接模糊请求、用户反馈、brainstorm 和 PRD",
+      "risk": "低",
+      "source": {
+        "type": "local-authored",
+        "repo": "SpecForge",
+        "path": "core/skills/product/SKILL.md",
+        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/product",
+        "files": [
+          { "path": "foundations/product-discovery-boundary.md" },
+          { "path": "foundations/opportunity-language.md" },
+          { "path": "foundations/outcome-metric.md" },
+          { "path": "foundations/evidence-levels.md" },
+          { "path": "transforms/request-to-opportunity-map.md" },
+          { "path": "transforms/feedback-to-feature-pool.md" },
+          { "path": "transforms/brainstorm-to-product-discovery.md" },
+          { "path": "transforms/product-discovery-to-prd.md" },
+          { "path": "patterns/b2b-operator-data-product.md" },
+          { "path": "patterns/ai-agent-product.md" },
+          { "path": "patterns/dashboard-analytics.md" },
+          { "path": "patterns/workflow-ops.md" },
+          { "path": "patterns/internal-platform.md" },
+          { "path": "references/output-contract.md" },
+          { "path": "references/prioritization-methods.md" },
+          { "path": "references/experiment-design.md" },
+          { "path": "references/quality-rubric.md" },
+          { "path": "references/anti-patterns.md" },
+          { "path": "references/external-ost-normalization.md" },
+          { "path": "contracts/product-discovery.schema.json" },
+          { "path": "prompts/opportunity-interview.md" },
+          { "path": "prompts/feature-triage.md" },
+          { "path": "prompts/mvp-slicing.md" }
+        ]
+      },
+      "trigger": "sf-brainstorm 或 sf-prd 需要产品发现、机会建模、功能优先级或 MVP 切分时必读。",
+      "normalizeTo": [
+        "00-intake/brainstorm.md",
+        "00-intake/prd.md",
+        "00-intake/brief.md"
+      ],
+      "doNotUseFor": [
+        "替代 PRD、requirements、UI design 或 technical design",
+        "替用户确认 MVP",
+        "伪造用户研究、baseline、RICE 或 Opportunity Score"
+      ]
+    },
+    {
       "id": "opportunity-solution-tree",
       "category": "product",
       "localPath": "product/opportunity-solution-tree",
@@ -216,9 +322,13 @@
         "00-intake/brief.md#Feature Candidates"
       ],
       "doNotUseFor": [
+        "替代 core/skills/product/SKILL.md",
         "替代用户确认 MVP 或产品方向",
         "把客户提出的功能直接当解决方案",
         "在没有研究证据时伪造 Opportunity Score",
+        "自动决定 MVP",
+        "把 Solution candidate 写成已确认需求",
+        "替代 PRD 或 requirements",
         "替代 sf-requirements 或技术设计"
       ]
     },

@@ -1,48 +1,100 @@
-# PRD
+# PRD: <name>
 
-## 一页摘要
-| 项 | 内容 |
-| --- | --- |
-| 产品问题 | |
-| 目标用户 | |
-| 核心价值 | |
-| MVP | |
-| 非目标 | |
-| Handoff | |
+## 0. PRD Control
+- PRD Depth:
+- Source Work Item:
+- Decision Status:
+- Source Artifacts:
+- Assumptions:
+- External Skill Inputs:
+- Product Discovery Inputs:
 
-## 用户与场景
-- 用户：
-- 触发场景：
-- 当前痛点：
-- 成功时用户会看到：
+## 1. Product Decision Summary
+- Problem:
+- Target Users:
+- MVP:
+- Non-goals:
+- Success Criteria:
+- Can enter requirements: yes / no
 
-## 目标与非目标
-### Goals
--
+## 2. Background & Outcome
+- Why now:
+- Current pain:
+- Desired outcome:
+- Business / user value:
+- Failure cost if not solved:
 
-### Non Goals
--
+## 3. Users, Roles & Scenarios
+| Role | Department / Context | Goal | Pain | Scenario | Frequency / Device | Permission / Responsibility |
+|---|---|---|---|---|---|---|
+| | | | | | | |
 
-## MVP 范围
-| 能力 | 用户价值 | 必要性 | 备注 |
-| --- | --- | --- | --- |
-| | | | |
+## 4. Candidate Feature Pool
+| Feature | User value | Complexity | Risk | Recommendation | Confirmation |
+|---|---|---|---|---|---|
+| | | | | | |
 
-## 关键流程
-1.
-2.
-3.
+## 5. Scope & MVP Decision
+| Item | Phase | Decision | Rationale | Source |
+|---|---|---|---|---|
+| | MVP / optional / later / out-of-scope | user-confirmed / delegated-default / pending | | |
 
-## 成功指标
-| 指标 | 口径 | 目标 |
-| --- | --- | --- |
-| | | |
+## 6. User Stories & Acceptance Seeds
+| ID | User Story | Acceptance Seed | Priority | Source |
+|---|---|---|---|---|
+| | | | | |
 
-## 风险与开放问题
-| 风险 / 问题 | 影响 | 处理方式 |
-| --- | --- | --- |
-| | | |
+## 7. Product Flow
+- Normal path:
+- Exception path:
+- Manual fallback:
+- State changes:
 
-## Handoff To Requirements
-- 必须转成可测试需求的内容：
-- 可以延后的内容：
+## 8. Metrics & Evaluation
+- User value metric:
+- Business KPI:
+- Quality metric:
+- Operational metric:
+- Tracking / evidence:
+
+## 9. AI / Data / Compliance Snapshot
+- AI task:
+- AI evaluation:
+- Data source:
+- Refresh cadence:
+- Sensitive fields:
+- Permission / audit:
+- Cost / latency boundary:
+
+## 10. Risks, Assumptions & Dependencies
+| Item | Type | Impact | Owner | Handling |
+|---|---|---|---|---|
+| | | | | |
+
+## 11. Roadmap / Release Slicing
+- MVP:
+- v1.1:
+- Later:
+- Rollback / disable strategy:
+
+## 12. Open Questions & Decisions
+| Question | Impact | Owner | Needed by | Status |
+|---|---|---|---|---|
+| | | | | |
+
+## 13. Product Decision Gate
+| Check | Status | Evidence |
+|---|---|---|
+| MVP confirmed | pass / warn / fail | |
+| Target users clear | pass / warn / fail | |
+| Success metric exists | pass / warn / fail | |
+| Non-goals clear | pass / warn / fail | |
+| Handoff ready | pass / warn / fail | |
+
+## 14. Handoff To Requirements
+- Requirements seeds:
+- Recommended components flags:
+- Notes for ui_design:
+- Notes for technical_design:
+- Notes for data / security:
+- Blockers:

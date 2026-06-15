@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/huangrx6/SpecForge/core/skills/product/contracts/product-discovery.schema.json",
+  "title": "SpecForge Product Discovery Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["desired_outcome", "opportunities", "solution_candidates", "experiments", "handoff"],
+  "properties": {
+    "desired_outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["statement", "metric", "baseline", "target", "confidence"],
+      "properties": {
+        "statement": { "type": "string" },
+        "metric": { "type": "string" },
+        "baseline": { "type": "string" },
+        "target": { "type": "string" },
+        "confidence": { "type": "string", "enum": ["confirmed", "likely", "unclear"] }
+      }
+    },
+    "opportunities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "user_role", "pain_or_need", "evidence", "confidence"],
+        "properties": {
+          "id": { "type": "string" },
+          "user_role": { "type": "string" },
+          "pain_or_need": { "type": "string" },
+          "evidence": { "type": "string" },
+          "confidence": { "type": "string", "enum": ["confirmed", "likely", "unclear"] }
+        }
+      }
+    },
+    "solution_candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "opportunity_id", "solution", "value", "complexity", "risk", "recommendation"],
+        "properties": {
+          "id": { "type": "string" },
+          "opportunity_id": { "type": "string" },
+          "solution": { "type": "string" },
+          "value": { "type": "string" },
+          "complexity": { "type": "string" },
+          "risk": { "type": "string" },
+          "recommendation": { "type": "string", "enum": ["mvp-candidate", "test", "defer", "reject"] }
+        }
+      }
+    },
+    "experiments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["solution_id", "assumption", "method", "success_signal", "owner"],
+        "properties": {
+          "solution_id": { "type": "string" },
+          "assumption": { "type": "string" },
+          "method": { "type": "string" },
+          "success_signal": { "type": "string" },
+          "owner": { "type": "string" }
+        }
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["brainstorm", "prd", "research", "requirements"],
+      "properties": {
+        "brainstorm": { "type": "array", "items": { "type": "string" } },
+        "prd": { "type": "array", "items": { "type": "string" } },
+        "research": { "type": "array", "items": { "type": "string" } },
+        "requirements": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}
