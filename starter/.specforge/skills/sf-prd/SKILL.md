@@ -7,7 +7,7 @@ description: 生成或更新产品需求文档（PRD）；用于产品型 work i
 
 ## 运行目录
 
-执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
+执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，必须先定位宿主项目根：项目根是“包含 `.specforge/` 目录的业务项目目录”，不是 `.specforge/` 目录本身。若当前目录是 `.specforge/` 或其任意子目录，先 `cd ..` 回到宿主项目根；若当前目录是 `frontend/`、`backend/` 等子目录，也先向上回到包含 `.specforge/` 的项目根。禁止从 `.specforge/` 内执行 `node .specforge/core/scripts/...`，否则会形成 `.specforge/.specforge/...` 的错误路径。
 
 `sf-prd` 把 brief 的分析结论升级为可对齐产品、设计与工程的 PRD。它回答“为什么做、给谁做、第一版交付哪些价值、哪些先不做”，不替代 `sf-requirements`。requirements 才回答“系统必须表现出哪些可测试行为、边界和验收标准”。
 

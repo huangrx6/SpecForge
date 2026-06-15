@@ -7,7 +7,7 @@ description: 为存量项目或大型代码库建立 SpecForge 项目画像；�
 
 ## 运行目录
 
-执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行。不要在 `frontend/`、`backend/` 等子目录直接运行相对路径命令，除非该子目录就是独立仓库根。
+执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，必须先定位宿主项目根：项目根是“包含 `.specforge/` 目录的业务项目目录”，不是 `.specforge/` 目录本身。若当前目录是 `.specforge/` 或其任意子目录，先 `cd ..` 回到宿主项目根；若当前目录是 `frontend/`、`backend/` 等子目录，也先向上回到包含 `.specforge/` 的项目根，除非该子目录就是独立仓库根。禁止从 `.specforge/` 内执行 `node .specforge/core/scripts/...`，否则会形成 `.specforge/.specforge/...` 的错误路径。
 
 `sf-steering` 用来理解存量项目。它不写业务代码，也不创建普通需求产物；它先建立可复用的项目画像，并把稳定事实回写到 `.specforge/wiki/*.md`。后续 `sf-intake`、`sf-requirements`、`sf-tech-design`、`sf-implement` 才能基于这些事实做新需求、bugfix 或重构。
 

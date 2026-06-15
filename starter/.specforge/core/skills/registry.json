@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "SpecForge 托管的最小第三方 skill 快照。它们是参考能力，不是工作流阶段。",
+  "description": "SpecForge 托管的最小参考 skill 集合，包含本地维护 skill 和经过审查的第三方快照。它们是参考能力，不是工作流阶段。",
   "skills": [
     {
       "id": "create-prd",
@@ -332,6 +332,41 @@
         "替代 Pencil 正式原型",
         "替代前端技术设计或实现",
         "把所有 foundations/components/pages 文件一次性复制进 ui-design.md"
+      ]
+    },
+    {
+      "id": "brainstorm-search",
+      "category": "research",
+      "localPath": "research/brainstorm-search",
+      "name": "brainstorm-search",
+      "role": "brainstorm 阶段当前事实查证",
+      "trust": "SpecForge 本地维护，面向 brainstorm 取舍的来源索引和证据契约",
+      "risk": "低",
+      "source": {
+        "type": "local-authored",
+        "repo": "SpecForge",
+        "path": "core/skills/research/brainstorm-search/SKILL.md",
+        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/research/brainstorm-search",
+        "files": [
+          {
+            "path": "references/source-index.md"
+          },
+          {
+            "path": "references/evidence-contract.md"
+          }
+        ]
+      },
+      "trigger": "当 sf-brainstorm 中当前事实、版本、依赖、价格、竞品、AI provider、漏洞、法规或浏览器兼容性会影响范围、技术路线或成本取舍时使用。",
+      "normalizeTo": [
+        "00-intake/brainstorm.md#当前事实与研究证据",
+        "00-intake/brainstorm.md#问题地图",
+        "00-intake/brainstorm.md#方案选项"
+      ],
+      "doNotUseFor": [
+        "替代用户确认",
+        "替代 deep-research 的多来源综合",
+        "替代实际联网查证或项目实测",
+        "把社区观点写成当前事实"
       ]
     },
     {

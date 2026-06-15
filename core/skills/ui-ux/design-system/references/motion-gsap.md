@@ -7,7 +7,7 @@
 | Layer | Use for | Default token | Dependency |
 |---|---|---|---|
 | CSS transition | hover、focus、active、drawer、popover、toast、skeleton | `--duration-fast` 到 `--duration-moderate` | 无 |
-| Motion Vue / CSS animation | 组件进入退出、列表错峰、presence、轻量页面切换 | `--duration-base` 到 `--duration-slow` | technical design 确认 |
+| Motion Vue / Motion React / CSS animation | 组件进入退出、列表错峰、presence、轻量页面切换 | `--duration-base` 到 `--duration-slow` | technical design 确认 |
 | GSAP timeline | 多步骤流程、AI 工具调用、品牌页、大屏、复杂 timeline | 每步 220-260ms，整体 300-600ms | technical design 确认 |
 
 ## Use CSS transition
@@ -89,6 +89,17 @@ import { Motion } from "motion-v";
 import { Motion } from "motion-v";
 
 defineProps<{ index: number }>();
+
+function secondsFromToken(name: string, fallbackMs: number) {
+  if (typeof window === "undefined") return fallbackMs / 1000;
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  if (raw.endsWith("ms")) return Number.parseFloat(raw) / 1000;
+  if (raw.endsWith("s")) return Number.parseFloat(raw);
+  return fallbackMs / 1000;
+}
+
+const baseDuration = secondsFromToken("--duration-base", 180);
+const staggerOffset = Math.min(baseDuration * 0.2, 0.04);
 </script>
 
 <template>
@@ -97,8 +108,8 @@ defineProps<{ index: number }>();
     :initial="{ opacity: 0, y: 8 }"
     :animate="{ opacity: 1, y: 0 }"
     :transition="{
-      duration: 0.18,
-      delay: Math.min(index * 0.035, 0.18),
+      duration: baseDuration,
+      delay: Math.min(index * staggerOffset, baseDuration),
       ease: [0, 0, 0.2, 1],
     }"
   >
@@ -106,6 +117,88 @@ defineProps<{ index: number }>();
   </Motion>
 </template>
 ```
+
+`staggerOffset` 是列表错峰间隔，不是组件 duration token。它应从 `--duration-base` 派生，或在 Motion Contract 中显式说明为 stagger offset，避免实现阶段再造一套硬编码时长。
+
+### Layer 2: Motion React
+
+React 项目使用 Motion for React，默认从 `motion/react` 导入 `motion`。新增 Motion React 前必须在 technical design 写明依赖和边界。
+
+```tsx
+"use client";
+
+import { motion, useReducedMotion } from "motion/react";
+import type { ReactNode } from "react";
+
+function secondsFromToken(name: string, fallbackMs: number) {
+  if (typeof window === "undefined") return fallbackMs / 1000;
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  if (raw.endsWith("ms")) return Number.parseFloat(raw) / 1000;
+  if (raw.endsWith("s")) return Number.parseFloat(raw);
+  return fallbackMs / 1000;
+}
+
+export function MotionEnter({ children }: { children: ReactNode }) {
+  const reduce = useReducedMotion();
+  const duration = secondsFromToken("--duration-base", 180);
+
+  if (reduce) return <>{children}</>;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 4 }}
+      transition={{ duration, ease: [0.4, 0, 0.2, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+```
+
+```tsx
+"use client";
+
+import { motion, useReducedMotion } from "motion/react";
+import type { ReactNode } from "react";
+
+function secondsFromToken(name: string, fallbackMs: number) {
+  if (typeof window === "undefined") return fallbackMs / 1000;
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  if (raw.endsWith("ms")) return Number.parseFloat(raw) / 1000;
+  if (raw.endsWith("s")) return Number.parseFloat(raw);
+  return fallbackMs / 1000;
+}
+
+export function MotionListItem({
+  children,
+  index,
+}: {
+  children: ReactNode;
+  index: number;
+}) {
+  const reduce = useReducedMotion();
+  const duration = secondsFromToken("--duration-base", 180);
+  const staggerOffset = Math.min(duration * 0.2, 0.04);
+
+  return (
+    <motion.li
+      initial={reduce ? false : { opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: reduce ? 0 : duration,
+        delay: reduce ? 0 : Math.min(index * staggerOffset, duration),
+        ease: [0, 0, 0.2, 1],
+      }}
+    >
+      {children}
+    </motion.li>
+  );
+}
+```
+
+`staggerOffset` 同样是错峰间隔，不是独立 duration。React / Vue 示例都应优先读取 CSS token，无法读取时再回落到 design-system 默认值。
 
 ### Layer 3: GSAP Timeline
 

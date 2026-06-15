@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, isAbsolute, join } from "node:path";
 import { pathToFileURL } from "node:url";
 
 export const root = process.cwd();
@@ -57,6 +57,7 @@ export function workspacePath(relativePath) {
 }
 
 export function abs(relativePath) {
+  if (isAbsolute(relativePath)) return relativePath;
   return join(root, relativePath);
 }
 

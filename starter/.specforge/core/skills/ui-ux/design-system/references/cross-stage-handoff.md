@@ -45,6 +45,11 @@ Design Contract Summary:
 - shadcn-vue primitive layer:
 - Project wrapper layer:
 - Motion source:
+  - Layer 1 (CSS):
+  - Layer 2 (Motion Vue / CSS animation):
+  - Layer 3 (GSAP):
+  - Reduced motion:
+  - Handoff artifact:
 - Anti-slop rules:
 - Verification hooks:
 ```
@@ -56,7 +61,12 @@ Design Contract Summary:
 - Token delivery：CSS variables、Tailwind theme、组件局部变量还是现有项目 token。
 - Component source：现有组件、shadcn-vue primitive、自建 registry、项目 wrapper、domain component。
 - Registry boundary：是否需要 shadcn-vue custom registry；registry item 负责什么，项目代码负责什么。
-- Motion source：CSS transition、Motion Vue、Vue Bits、GSAP 或现有动画工具；是否新增依赖。
+- Motion source 必答五问：
+  - Layer 1 (CSS)：哪些组件使用 transition，使用哪些 duration / easing token。
+  - Layer 2 (Motion Vue / CSS animation)：哪些组件需要进入退出、presence、stagger 或轻量页面切换；是否新增依赖。
+  - Layer 3 (GSAP)：是否使用；只允许写具体场景，例如 AI 工具调用步骤推进、品牌页 timeline、大屏编排。
+  - Reduced motion：降级策略是 remove travel、keep opacity、skip all 还是 jump to final state。
+  - Handoff artifact：提供给 `sf-implement` 的 Motion Contract 表格位置。
 - State ownership：loading、empty、error、permission、stale、partial 状态由页面、wrapper、hook 还是后端状态负责。
 - Visual verification：哪些页面和状态必须截图，哪些可用 DOM / a11y / unit 验证。
 
@@ -76,7 +86,8 @@ Design Contract Summary:
 | Token adherence | CSS variables / Tailwind theme / computed styles |
 | Component adherence | wrapper props、slots、events、states 覆盖 |
 | State matrix | default、loading、empty、error、permission、success 截图或 DOM 证据 |
-| Motion boundary | reduced motion、duration、easing、no decorative noise |
+| Motion boundary | 每个动效有 duration token / easing token / reduced motion 覆盖 / 无 layout 属性动效 |
+| Motion intent | 每个动效能说明：反馈 / 空间关系 / 进度 / 品牌 signature |
 | Accessibility | keyboard path、focus、ARIA、contrast、touch target |
 | Anti-slop | nested cards、generic gradients、icon tiles、gray-on-color、text overflow |
 

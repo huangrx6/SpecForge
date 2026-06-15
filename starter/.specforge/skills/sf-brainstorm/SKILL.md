@@ -7,7 +7,7 @@ description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户�
 
 ## 运行目录
 
-执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
+执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，必须先定位宿主项目根：项目根是“包含 `.specforge/` 目录的业务项目目录”，不是 `.specforge/` 目录本身。若当前目录是 `.specforge/` 或其任意子目录，先 `cd ..` 回到宿主项目根；若当前目录是 `frontend/`、`backend/` 等子目录，也先向上回到包含 `.specforge/` 的项目根。禁止从 `.specforge/` 内执行 `node .specforge/core/scripts/...`，否则会形成 `.specforge/.specforge/...` 的错误路径。
 
 ## 运行模式检测
 
@@ -32,23 +32,25 @@ description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户�
 - `.specforge/core/standards/ai-toolkit.md`：人工确认点、输出预算、来源证据和轻量 / 标准分流。
 - 有 UI 方向时读取 `.specforge/core/standards/design.md`。
 - 有技术选型或依赖版本问题时读取 `.specforge/core/standards/engineering.md`。
-- `.specforge/core/skills/ORCHESTRATION.md`：第三方参考能力的总编排规则。
-- `references/external-skills.md`：本 skill 的第三方 skill 选择表、读取深度和归一化格式。
+- `.specforge/core/skills/ORCHESTRATION.md`：参考能力的总编排规则。
+- `references/external-skills.md`：本 skill 的参考 skill 选择表、读取深度和归一化格式。
+- `.specforge/core/skills/research/brainstorm-search/SKILL.md`：当前事实查证、来源选择、证据表和未查证项记录。
 
-## 第三方 Skill 联动
+## 参考 Skill 联动
 
-先读取 `.specforge/core/skills/ORCHESTRATION.md`。当本轮 brainstorm 需要第三方方法卡时，再读取本 skill 目录下的 `references/external-skills.md`，按其中的选择表决定使用哪个 skill、读到什么深度、归一化到哪里。
+先读取 `.specforge/core/skills/ORCHESTRATION.md`。当本轮 brainstorm 需要辅助方法卡或事实查证契约时，再读取本 skill 目录下的 `references/external-skills.md`，按其中的选择表决定使用哪个 skill、读到什么深度、归一化到哪里。
 
 常见参考包括：
 
 - `opportunity-solution-tree`：产品目标、用户机会、MVP、候选方向、实验和优先级取舍。
 - `design-system`：体验方向、美学方向、用户旅程、信息架构、交互、可访问性和后续 UI design 输入。
+- `brainstorm-search`：当前事实查证、来源优先级、证据表和未查证项。
 - `deep-research`：多来源研究、共识/争议和研究空白。
 - `user-stories`：用户故事、验收口径和边界条件。
 - `create-prd`：PRD handoff 检查、非目标和 release 分期覆盖。
 - `playwright-skill`：只在 brainstorm 需要提前识别验证风险时参考，正式执行仍交给后续阶段。
 
-第三方 skill 的输出必须先归一化为 `问题地图 / 方案对比 / 用户确认记录 / 后续阶段输入`。它不能替代事实查证，不能替代用户确认，也不能原样落入 `brainstorm.md`。
+参考 skill 的输出必须先归一化为 `问题地图 / 方案对比 / 用户确认记录 / 后续阶段输入`。它不能替代用户确认，也不能原样落入 `brainstorm.md`；事实类结论必须按 `brainstorm-search` 的证据契约记录来源。
 
 ## 何时使用
 
@@ -150,10 +152,11 @@ C) 不确定 → 先按 B 设计，留扩展点
    - `deep`：先做 Phase 1 发散，再做 Phase 2 聚焦。
    - 模式来源见 `sf-intake` 的“Brainstorm 分流规则”和 `core/artifacts/templates/brief.md#Brainstorm 决策`。
 3. 需要当前事实时先查证；技术类优先官方资料，并记录日期。
-4. 需要第三方方法卡时，按 `references/external-skills.md` 选择并读取最小必要内容；只把它转成候选、风险、问题地图或后续阶段输入，不把第三方输出直接当结论。
-5. 建立问题地图：`[已明确] / [必须确认] / [可安全默认]`。
-6. 按固定维度排序 `[必须确认]`：核心目标/范围 > 体验方向 > 数据与安全 > 集成与依赖 > 交付验收。
-7. 写明输出预算：小型取舍只保留 1 个问题和 2-3 个选项；复杂取舍才展开方案对比和研究证据。
+4. 需要外部事实、版本、依赖、价格、竞品、漏洞、法规或 AI provider 资料时，读取 `.specforge/core/skills/research/brainstorm-search/SKILL.md`，按其来源索引和证据契约查证，并在 `brainstorm.md#当前事实与研究证据` 记录搜索计划、URL、日期、结论和置信度。
+5. 需要参考 skill 时，按 `references/external-skills.md` 选择并读取最小必要内容；只把它转成候选、风险、问题地图或后续阶段输入，不把参考输出直接当结论。
+6. 建立问题地图：`[已明确] / [必须确认] / [可安全默认]`。
+7. 按固定维度排序 `[必须确认]`：核心目标/范围 > 体验方向 > 数据与安全 > 集成与依赖 > 交付验收。
+8. 写明输出预算：小型取舍只保留 1 个问题和 2-3 个选项；复杂取舍才展开方案对比和研究证据。
 
 ### B. 每轮对话循环
 

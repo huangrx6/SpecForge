@@ -47,7 +47,7 @@
 | Component strategy | |
 | shadcn-vue primitive layer | |
 | Project wrapper layer | |
-| Motion source | |
+| Motion source | Layer 1 (CSS): ; Layer 2 (Motion Vue / CSS animation): ; Layer 3 (GSAP): ; Reduced motion: ; Handoff artifact: |
 | Anti-slop rules | |
 | Verification hooks | |
 
@@ -82,9 +82,9 @@
 | | | | | | |
 
 ## 11. 组件契约
-| 组件 | shadcn-vue 映射 | 变体 | 状态 | 反模式 |
-| --- | --- | --- | --- | --- |
-| | | | | |
+| 组件 | shadcn-vue 映射 | 变体 | 状态 | Motion | 反模式 |
+| --- | --- | --- | --- | --- | --- |
+| | | | | | |
 
 ## 12. 视觉质量 Review
 - 对齐：

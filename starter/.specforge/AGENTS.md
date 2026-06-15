@@ -19,6 +19,7 @@
 ---
 
 ## 启动与加载顺序
+0. **定位项目根**：执行任何 `node .specforge/...` 命令前，必须先回到宿主项目根。项目根是“包含 `.specforge/` 目录的业务项目目录”，不是 `.specforge/` 目录本身；如果当前目录已经是 `.specforge/` 或其子目录，先回到上一级宿主项目根，禁止形成 `.specforge/.specforge/...` 路径。
 1. **读取状态**：读取 `.specforge/AGENTS.md`、`manifest.yaml`、`registry.yaml`。若有活跃工作项，则加载其 `work.yaml`。
 2. **就绪判定**：运行 `node .specforge/core/scripts/instructions.mjs` 获取当前 ready artifact 与推荐技能。
 3. **按需加载**：根据当前阶段，只加载对应所需的 `core/standards/` 规则与 wiki 事实。

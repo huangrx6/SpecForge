@@ -29,6 +29,11 @@ Design Contract Summary:
 - Navigation decision:
 - Scroll regions:
 - Motion source:
+  - Layer 1 (CSS):
+  - Layer 2 (Motion Vue / CSS animation):
+  - Layer 3 (GSAP):
+  - Reduced motion:
+  - Handoff artifact:
 - Verification hooks:
 
 Component contract:
@@ -94,6 +99,11 @@ Design Contract Summary:
 - shadcn-vue primitive layer:
 - Project wrapper layer:
 - Motion source:
+  - Layer 1 (CSS):
+  - Layer 2 (Motion Vue / CSS animation):
+  - Layer 3 (GSAP):
+  - Reduced motion:
+  - Handoff artifact:
 - Anti-slop rules:
 - Verification hooks:
 

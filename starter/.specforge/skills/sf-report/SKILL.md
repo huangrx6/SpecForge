@@ -7,7 +7,7 @@ description: 生成或刷新 SpecForge HTML 阅读报告；用于用户说“生
 
 ## 运行目录
 
-执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，先从当前目录向上找到包含 `.specforge/` 的项目根，并在该目录执行后续命令。不要在 `frontend/`、`backend/` 等子目录直接运行相对 `.specforge/...` 命令。
+执行任何 `node .specforge/...` 命令或读取 `.specforge/...` 文件前，必须先定位宿主项目根：项目根是“包含 `.specforge/` 目录的业务项目目录”，不是 `.specforge/` 目录本身。若当前目录是 `.specforge/` 或其任意子目录，先 `cd ..` 回到宿主项目根；若当前目录是 `frontend/`、`backend/` 等子目录，也先向上回到包含 `.specforge/` 的项目根。禁止从 `.specforge/` 内执行 `node .specforge/core/scripts/...`，否则会形成 `.specforge/.specforge/...` 的错误路径。
 
 `sf-report` 是面向非命令行用户的 HTML 阅读层入口。用户只需要自然语言说明想看什么；命令是 Agent 内部执行细节，不要求用户记忆。
 
@@ -59,7 +59,7 @@ node .specforge/core/scripts/instructions.mjs
 - 保持同一套 semantic token、状态颜色、卡片、表格、代码块和导航样式。
 - 密度默认 `comfortable`，表格和代码证据区接近 `compact`；不要把每个 section 都做成大留白宣传块。
 - 动效只用于导航、hover、状态反馈和轻微层级变化；遵守 `prefers-reduced-motion`，不要做大幅飞入、弹跳或旋转。
-- 报告首屏优先展示 Action Board、当前状态、下一步、质量和风险，不把长表堆到第一屏。
+- 报告首屏优先展示“行动面板”、当前状态、下一步、质量和风险，不把长表堆到第一屏。
 - 用户指定模块时，只返回同一报告的锚点，不另起一套样式。
 - 如果用户要求“好看一点 / 给领导看 / 给业务看”，仍先使用统一报告模板；不要在单次任务里随意换主题、字体或颜色。
 - Markdown artifact 是事实源，HTML 是阅读层；样式只服务于阅读和评审，不改变事实内容。
@@ -89,7 +89,7 @@ node .specforge/core/scripts/render-work-report.mjs --work-item <work-id>
 - 报告路径。
 - 如果用户指定模块，返回带锚点的路径，例如 `07-report/work-summary.html#artifact-requirements`。
 - 简短说明：Markdown artifact 仍是事实源，HTML 是阅读层。
-- 如果有 blocker / quality warning，提醒用户优先看 Action Board 和 Quality Suite。
+- 如果有 blocker / quality warning，提醒用户优先看“行动面板”和“质量套件”。
 
 ## 生成评审包
 
@@ -133,8 +133,8 @@ node .specforge/core/scripts/workflow-package.mjs
 | 当前焦点 | `#current-focus` |
 | 质量套件 | `#quality-suite` |
 | 工作流健康 | `#health` |
-| Traceability | `#traceability` |
-| Blockers / Warnings | `#warnings` |
+| 追踪关系 | `#traceability` |
+| 阻断项 / 质量提醒 | `#warnings` |
 | 决策点 | `#decision-checkpoints` |
 | 决策简报 | `#decision-brief` |
 

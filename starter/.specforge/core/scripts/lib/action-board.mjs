@@ -18,14 +18,14 @@ export function traceGapCount(traceability) {
 }
 
 export function traceabilityPolicyLine(policy) {
-  if (!policy) return "mode=advisory; enforced_gates=none";
-  return `mode=${policy.mode}; enforced_gates=${policy.enforced_gates?.length ? policy.enforced_gates.join(", ") : "none"}`;
+  if (!policy) return "模式=建议；强制门禁=无";
+  return `模式=${policy.mode}; 强制门禁=${policy.enforced_gates?.length ? policy.enforced_gates.join(", ") : "无"}`;
 }
 
 export function actionReason(diagnosis) {
   if (diagnosis.blockers?.[0]) return diagnosis.blockers[0].message;
   const decision = diagnosis.decision_checkpoints?.open?.[0];
-  if (decision) return `Resolve ${decision.marker} at ${decision.path}:${decision.line}`;
+  if (decision) return `处理 ${decision.marker}：${decision.path}:${decision.line}`;
   return diagnosis.route_reason;
 }
 
@@ -55,9 +55,9 @@ export function actionCommands(diagnosis) {
 
 export function readingOrder() {
   return [
-    "Resolve P0 / P1 blockers and the top open decision.",
-    "Read the current stage contract and ready artifact.",
-    "Check traceability before implementation or verification gates.",
-    "Use artifact excerpts only after the action summary is clear.",
+    "先处理 P0 / P1 阻断项和最靠前的人工决策点。",
+    "再阅读当前阶段契约和 ready artifact。",
+    "进入实现或验证门禁前，先检查需求、任务和验证之间的追踪关系。",
+    "行动摘要明确后，再查看下方 artifact 摘要片段。",
   ];
 }

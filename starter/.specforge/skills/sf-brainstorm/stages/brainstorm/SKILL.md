@@ -15,7 +15,8 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
 - 可选：`00-intake/prd.md`、`01-spec/requirements.md`、`01-spec/ui-design.md`、`01-spec/technical-design.md`。
 - 相关 `.specforge/wiki/` 长期事实。
 - 当前可靠外部资料；技术类优先官方文档，产品/竞品类记录来源和访问日期。
-- `.specforge/core/skills/ORCHESTRATION.md`（需要第三方参考时，用于选择 skill、读取 reference 和归一化输出）。
+- `.specforge/core/skills/ORCHESTRATION.md`（需要参考 skill 时，用于选择 skill、读取 reference 和归一化输出）。
+- `.specforge/core/skills/research/brainstorm-search/SKILL.md`（需要外部事实、版本、竞品、价格、漏洞、法规或 AI provider 资料时，用于搜索来源和证据记录）。
 
 ## 触发
 
@@ -29,13 +30,13 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
 - technical design 前缺少技术路线、版本、依赖、部署、成本、安全或长期维护取舍。
 - 任一 spec review 发现“方案还没被用户确认”。
 
-## 第三方 Skill 参考归一化
+## 参考 Skill 归一化
 
-需要第三方方法卡时，先读 `.specforge/core/skills/ORCHESTRATION.md`，再选择最相关的 skill 和最小必要 reference。
+需要参考 skill 时，先读 `.specforge/core/skills/ORCHESTRATION.md`，再选择最相关的 skill 和最小必要 reference。
 
-1. 第三方输出先提取为 `候选方案 / 风险提示 / 访谈镜头 / 研究问题 / 验收问题 / 后续阶段输入`。
+1. 参考输出先提取为 `候选方案 / 风险提示 / 访谈镜头 / 研究问题 / 验收问题 / 后续阶段输入`。
 2. 再并入问题地图：会改变方向的放入 `[必须确认]`；只影响后续细化的写入对应下游阶段输入。
-3. 不把第三方 persona、PRD、故事、审查清单、测试建议或技术推荐写成已确认，除非用户明确确认。
+3. 不把参考 skill 的 persona、PRD、故事、审查清单、测试建议或技术推荐写成已确认，除非用户明确确认。
 4. 用户确认后，立即写入对应确认状态或真实 confirmed marker。
 
 ## 过程
@@ -49,10 +50,16 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
 1. **框定问题和事实输入。**
    - 写清用户目标、目标用户、业务结果、约束和当前已知事实。
 2. **补足当前事实和外部参考。**
-   - 需要外部事实时先研究，不凭旧知识拍板。
-   - 技术事实优先官方资料；产品/竞品事实至少说明来源、日期和结论。
-   - 不需要外部研究时写明跳过理由。
-   - 需要第三方方法卡时，按 `core/skills/ORCHESTRATION.md` 选择并读取；输出必须按“第三方 Skill 参考归一化”处理。
+   - 需要外部事实时先读取 `.specforge/core/skills/research/brainstorm-search/SKILL.md`，再按其 `references/source-index.md` 和 `references/evidence-contract.md` 查证，不凭旧知识拍板。
+   - 以下情况必须调用 `brainstorm-search`，不允许跳过：
+     - 涉及具体版本号、依赖兼容性、API 限制：查官方文档 + GitHub releases / package changelog。
+     - 涉及新引入的库或工具：查 npmjs / GitHub Issues / releases / 已知 bug。
+     - 涉及 AI provider 能力边界、上下文长度、价格、限流或数据使用：查各厂商官方文档，带访问日期。
+     - 涉及竞品功能声明、定价或市场定位：查竞品官网、官方 changelog、官方 blog，不引用二手评测当事实。
+     - 涉及法规、合规、数据隐私、安全漏洞：查官方法规 / 标准 / NVD / Snyk / OWASP 等权威来源。
+   - 查证结果必须先记录搜索计划，再记录来源 URL、访问 / 发布日期、关键结论（1-2 句）、置信度（confirmed / likely / unclear）。
+   - 不需要外部研究时写明 `跳过理由：[具体原因]`，不允许只写“无需外部研究”。
+   - 需要参考 skill 时，按 `core/skills/ORCHESTRATION.md` 选择并读取；输出必须按“参考 Skill 归一化”处理。
 3. **建立问题地图。**
    - 建立问题地图：`[已明确]`、`[必须确认]`、`[可安全默认]`。
    - 若对某项是否“明显最优”存在任何不确定，强制划入 `[必须确认]`。
@@ -124,11 +131,14 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
 
 - 问题框架。
 - 当前事实和研究证据。
+  - 必须先写搜索计划表：`事实问题 | 来源类型 | 查询入口 | 足够性`。
+  - 必须使用表格：`问题 | 来源 | 日期 | 结论 | 置信度`。
+  - 未查证项必须列 checklist：`- [ ] 问题描述 → 待查来源`。
 - 问题地图：已明确 / 必须确认 / 可安全默认，且必须确认项带优先级。
 - 方案对比表。
 - 推荐方案和理由。
 - 用户确认记录。
-- 第三方 skill 使用记录：读取了什么、提取了什么、如何归一化。
+- 参考 Skill 使用记录：读取了什么、提取了什么、如何归一化。
 - 明确延后 / 不做。
 - 未决问题。
 - 下一步路由。
