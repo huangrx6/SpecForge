@@ -134,6 +134,7 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
 - 问题框架。
 - 当前事实和研究证据。
   - 必须先写搜索计划表：`事实问题 | 来源类型 | 查询入口 | 足够性`。
+  - 必须写本地事实输入：已读取哪些 artifact / manifest / lockfile / wiki，哪些仍是 `unknown`。
   - 必须使用表格：`问题 | 来源 | 日期 | 结论 | 置信度`。
   - 涉及依赖 / SDK / runtime / package manager 时，必须写版本依赖关系表：`依赖 / 技术 | 当前 / 候选版本 | 关系类型 | 约束来源 | 影响 | Handoff`。
   - 必须写覆盖度说明：已达到 quick / standard / dependency / high-stakes 哪个查证深度，缺口是什么。

@@ -34,6 +34,10 @@
 |---|---|---|---|
 | | | | |
 
+本地事实：
+- 已读取：
+- 缺失 / unknown：
+
 | 问题 | 来源 | 日期 | 结论 | 置信度 |
 |---|---|---|---|---|
 | | | | | confirmed / likely / unclear |
@@ -43,6 +47,8 @@
 | 依赖 / 技术 | 当前 / 候选版本 | 关系类型 | 约束来源 | 影响 | Handoff |
 |---|---|---|---|---|---|
 | | | direct / peer / runtime / lockfile / transitive / breaking / override | URL 或 manifest / lockfile 路径 | | tech-design lock version / needs user dependency decision / needs spike / no action |
+
+覆盖度：
 ```
 
 字段要求：
@@ -54,6 +60,16 @@
 | 日期 | 访问日期或来源发布日期；版本、价格、模型、竞品必须用访问日期 |
 | 结论 | 1-2 句，只写来源能支撑的事实 |
 | 置信度 | `confirmed` / `likely` / `unclear` |
+
+## Local Facts
+
+证据表前必须说明是否读取了本地事实。没有本地项目上下文时也必须显式写 `缺失 / unknown`，不能假设默认版本。
+
+```md
+本地事实：
+- 已读取：`package.json`、`pnpm-lock.yaml`、`.specforge/wiki/00-index.md`
+- 缺失 / unknown：部署 Node 版本未找到；需要 tech-design 从 CI / Dockerfile 确认
+```
 
 ## Version Relationship Map
 

@@ -349,6 +349,9 @@
         "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/research/brainstorm-search",
         "files": [
           {
+            "path": "references/research-playbook.md"
+          },
+          {
             "path": "references/source-index.md"
           },
           {

@@ -20,20 +20,23 @@ description: SpecForge brainstorm 阶段的当前事实查证 skill；用于在�
 ## 读取顺序
 
 1. 读取当前 `brainstorm.md`、`brief.md` 或用户原始问题，提取需要事实支撑的问题。
-2. 读取 `references/source-index.md`，按问题类型选择来源。
-3. 读取 `references/evidence-contract.md`，确定输出格式、置信度和未查证项写法。
-4. 涉及新增 / 替换依赖、SDK、插件、组件库、测试库、运行时或 package manager 时，读取 `references/dependency-version-map.md`，建立版本依赖关系和 tech-design handoff。
-5. 如果出现多来源争议、竞品/市场范围大、法规风险或 AI 能力边界是核心变量，再读取 `.specforge/core/skills/research/deep-research/SKILL.md` 组织综合分析。
+2. 读取 `references/research-playbook.md`，先确认本地事实、查询模式、时效规则、冲突处理和升级规则。
+3. 读取 `references/source-index.md`，按问题类型选择来源。
+4. 读取 `references/evidence-contract.md`，确定输出格式、置信度和未查证项写法。
+5. 涉及新增 / 替换依赖、SDK、插件、组件库、测试库、运行时或 package manager 时，读取 `references/dependency-version-map.md`，建立版本依赖关系和 tech-design handoff。
+6. 如果出现多来源争议、竞品/市场范围大、法规风险或 AI 能力边界是核心变量，再读取 `.specforge/core/skills/research/deep-research/SKILL.md` 组织综合分析。
 
 ## 搜索流程
 
 1. **拆问题**：把模糊问题拆成可查证事实，例如“这个库靠谱吗”拆成版本、维护、兼容、安全、社区反馈。
-2. **选来源**：优先官方文档、release notes、package metadata、GitHub issues、规范文档；社区内容只能补充观点。
-3. **查当前资料**：涉及版本、价格、模型能力、API 限制、漏洞、法规或竞品状态时必须联网查证，不能凭旧知识。
-4. **建版本关系**：新增 / 替换依赖时查 direct deps、peer deps、runtime / engine、lockfile、transitive deps、breaking changes 和 override / resolution 需求。
-5. **记录证据**：每条证据记录 URL、访问 / 发布日期、结论和置信度。
-6. **归一化**：把结论写成 `confirmed / likely / unclear`，并明确哪些问题仍需实测、用户提供账号或后续 research。
-7. **交回 brainstorm**：只把事实证据、风险、未查证项和 tech-design handoff 交给 `sf-brainstorm`；是否采用某方案仍由用户确认。
+2. **读本地事实**：先查已有 artifact、wiki、manifest、lockfile、runtime config 和已批准决策；缺失时写 `unknown`。
+3. **选来源**：优先官方文档、release notes、package metadata、GitHub issues、规范文档；社区内容只能补充观点。
+4. **查当前资料**：涉及版本、价格、模型能力、API 限制、漏洞、法规或竞品状态时必须联网查证，不能凭旧知识。
+5. **处理冲突和时效**：按 `research-playbook.md` 判断来源新旧、冲突、负证据和是否升级 `deep-research`。
+6. **建版本关系**：新增 / 替换依赖时查 direct deps、peer deps、runtime / engine、lockfile、transitive deps、breaking changes 和 override / resolution 需求。
+7. **记录证据**：每条证据记录 URL、访问 / 发布日期、结论和置信度。
+8. **归一化**：把结论写成 `confirmed / likely / unclear`，并明确哪些问题仍需实测、用户提供账号或后续 research。
+9. **交回 brainstorm**：只把事实证据、风险、未查证项和 tech-design handoff 交给 `sf-brainstorm`；是否采用某方案仍由用户确认。
 
 ## 查证深度
 
@@ -51,6 +54,7 @@ description: SpecForge brainstorm 阶段的当前事实查证 skill；用于在�
 | 内容 | 写入位置 |
 |---|---|
 | 搜索计划摘要 | `00-intake/brainstorm.md#当前事实与研究证据` |
+| 本地事实输入 | `00-intake/brainstorm.md#当前事实与研究证据`，写明读取到的 artifact / manifest / lockfile 或缺口 |
 | 当前事实与研究证据表 | `00-intake/brainstorm.md#当前事实与研究证据` |
 | 版本依赖关系表 | `00-intake/brainstorm.md#当前事实与研究证据`，仅在版本关系影响取舍时必填 |
 | 未查证项 checklist | `00-intake/brainstorm.md#当前事实与研究证据` |
@@ -69,6 +73,10 @@ description: SpecForge brainstorm 阶段的当前事实查证 skill；用于在�
 |---|---|---|---|
 | 依赖兼容性 | 官方 docs + release notes | docs URL / GitHub releases | 覆盖版本支持和 breaking changes |
 
+本地事实：
+- 已读取：
+- 缺失 / unknown：
+
 | 问题 | 来源 | 日期 | 结论 | 置信度 |
 |---|---|---|---|---|
 | 依赖兼容性 | 官方 docs / release notes URL | 访问或发布日期 | 1-2 句结论 | confirmed / likely / unclear |
@@ -78,6 +86,8 @@ description: SpecForge brainstorm 阶段的当前事实查证 skill；用于在�
 | 依赖 / 技术 | 当前 / 候选版本 | 关系类型 | 约束来源 | 影响 | Handoff |
 |---|---|---|---|---|---|
 | | | direct / peer / runtime / lockfile / transitive / breaking / override | URL 或 manifest / lockfile 路径 | | tech-design lock version / needs user dependency decision / needs spike / no action |
+
+覆盖度：
 
 未查证项：
 - [ ] 问题描述 → 待查来源 / 需要用户提供账号或上下文
