@@ -1,7 +1,8 @@
 import { exists, parseComponents, readText } from "./specforge.mjs";
 
-const evidenceLevels = new Set(["proven", "mocked", "manual-confirmed", "deferred", "missing"]);
-const riskLevels = new Set(["high", "medium", "low"]);
+const evidenceLevels = new Set(["claimed", "observed", "proven", "mocked", "manual-confirmed", "deferred", "missing"]);
+const riskLevels = new Set(["critical", "high", "medium", "low"]);
+const authStrategies = new Set(["none", "ui-login", "api-login", "storage-state", "manual"]);
 
 function splitRow(line) {
   const trimmed = line.trim();
@@ -85,6 +86,35 @@ function parseTestDesignArtifacts(content) {
   }));
 }
 
+function parseTestEngineeringArtifacts(content) {
+  return parseTableRows(content, /^##\s+1\.2\s+Test Engineering Artifacts/i, 4, /Artifact|Path|Purpose|Status/i).map((cells) => ({
+    artifact: cells[0],
+    path: cells[1],
+    purpose: cells[2],
+    status: cells[3],
+  }));
+}
+
+function parseAuthRuntime(content) {
+  return parseTableRows(content, /^##\s+3\.1\s+Auth And Runtime/i, 5, /Item|Strategy|Source|Sensitive/i).map((cells) => ({
+    item: cells[0],
+    strategy: cells[1],
+    source: cells[2],
+    sensitive_data_handling: cells[3],
+    cleanup: cells[4],
+  }));
+}
+
+function parseEvidenceManifest(content) {
+  return parseTableRows(content, /^##\s+3\.2\s+Evidence Manifest/i, 5, /Run ID|Command|Related/i).map((cells) => ({
+    run_id: cells[0],
+    command: cells[1],
+    related: cells[2],
+    evidence_path: cells[3],
+    strength: cells[4],
+  }));
+}
+
 function parseReportCaseIds(workItemBase) {
   const reportPath = `${workItemBase}/05-verification/report.md`;
   if (!exists(reportPath)) return new Set();
@@ -133,6 +163,18 @@ function browserFlowRequired(workItemBase) {
   return /页面|按钮|表单|上传|提交|审批|下载|权限|路由|错误提示|登录|点击|弹窗|抽屉|响应式|upload|submit|approve|download|permission|route|form|button|login|click|modal|drawer|responsive|error/i.test(content);
 }
 
+function runtimeCheckLikely(workItemBase) {
+  const content = [
+    readIfExists(`${workItemBase}/01-spec/requirements.md`),
+    readIfExists(`${workItemBase}/01-spec/gap-report.md`),
+    readIfExists(`${workItemBase}/01-spec/tasks.md`),
+    readIfExists(`${workItemBase}/01-spec/technical-design.md`),
+    readIfExists(`${workItemBase}/04-code-review/code-review-v1.md`),
+  ].join("\n");
+
+  return /启动|运行|健康检查|环境变量|配置|migration|migrate|docker|server|port|build|deploy|rollback|health check|env|startup|runtime/i.test(content);
+}
+
 function evidencePathCandidates(value) {
   return String(value ?? "")
     .split(/[,，\s]+/)
@@ -140,7 +182,7 @@ function evidencePathCandidates(value) {
     .filter((item) => /^(05-verification\/|evidence\/).+/.test(item));
 }
 
-function classifyIssues(workItemBase, testCases, playwrightCases, designArtifacts, reportCaseIds, reportPlaywrightIds) {
+function classifyIssues(workItemBase, testCases, playwrightCases, designArtifacts, engineeringArtifacts, authRuntimeRows, evidenceManifestRows, reportCaseIds, reportPlaywrightIds) {
   const issues = [];
 
   if (testCases.length === 0) {
@@ -156,6 +198,27 @@ function classifyIssues(workItemBase, testCases, playwrightCases, designArtifact
       severity: "FAIL",
       code: "browser-flow-without-playwright",
       message: "当前 work item 存在 UI / 浏览器流程信号，但 05-verification/test-cases.md 缺少 PW-* Playwright 用例。",
+    });
+  }
+
+  const engineeringPaths = new Set(engineeringArtifacts.map((artifact) => artifact.path).filter(Boolean));
+  const hasPlaywrightPlan = [...engineeringPaths].some((path) => /playwright-flows\.md$/.test(path));
+  const hasRuntimeRunbook = [...engineeringPaths].some((path) => /runtime-runbook\.md$/.test(path));
+  const hasAuthPlan = [...engineeringPaths].some((path) => /auth-plan\.md$/.test(path));
+
+  if (browserFlowRequired(workItemBase) && !hasPlaywrightPlan) {
+    issues.push({
+      severity: "WARN",
+      code: "missing-playwright-flow-plan",
+      message: "当前 work item 存在 UI / 浏览器流程信号，建议在 05-verification/test-engineering/playwright-flows.md 规划 PW flow、locator、assertion 和 evidence。",
+    });
+  }
+
+  if (runtimeCheckLikely(workItemBase) && !hasRuntimeRunbook) {
+    issues.push({
+      severity: "WARN",
+      code: "missing-runtime-runbook",
+      message: "当前 work item 存在启动 / 配置 / 运行信号，建议提供 05-verification/test-engineering/runtime-runbook.md。",
     });
   }
 
@@ -253,6 +316,75 @@ function classifyIssues(workItemBase, testCases, playwrightCases, designArtifact
         message: `${artifact.export_path} 不存在；请确认测试设计导出文件已归档。`,
       });
     }
+    if (/test-design\//.test(artifact.path) || /test-design\//.test(artifact.export_path)) {
+      issues.push({
+        severity: "WARN",
+        code: "deprecated-test-design-path",
+        message: "检测到旧 test-design 路径；新测试工程产物建议写入 05-verification/test-engineering/。",
+      });
+    }
+  }
+
+  for (const artifact of engineeringArtifacts) {
+    if (isChoiceOrPlaceholder(artifact.path) || isChoiceOrPlaceholder(artifact.status)) {
+      issues.push({
+        severity: "WARN",
+        code: "incomplete-test-engineering-artifact",
+        message: `${artifact.artifact || "test-engineering artifact"} 缺少真实 path 或 status。`,
+      });
+    }
+    if (artifact.path && !isChoiceOrPlaceholder(artifact.path) && !exists(`${workItemBase}/${artifact.path}`) && !/planned|N\/A/i.test(artifact.status)) {
+      issues.push({
+        severity: "WARN",
+        code: "missing-test-engineering-artifact",
+        message: `${artifact.path} 不存在；请确认 test-engineering 产物已归档，或将状态标为 planned / N/A。`,
+      });
+    }
+  }
+
+  const authRows = authRuntimeRows.filter((row) => /auth/i.test(row.item));
+  for (const auth of authRows) {
+    const strategy = String(auth.strategy ?? "").trim();
+    if (!authStrategies.has(strategy)) {
+      issues.push({
+        severity: "WARN",
+        code: "invalid-auth-strategy",
+        message: `Auth strategy 建议使用 none / ui-login / api-login / storage-state / manual，当前为：${strategy || "empty"}`,
+      });
+    }
+    if (strategy !== "none" && !hasAuthPlan) {
+      issues.push({
+        severity: "WARN",
+        code: "missing-auth-plan",
+        message: "存在登录策略但未登记 05-verification/test-engineering/auth-plan.md。",
+      });
+    }
+  }
+
+  for (const evidence of evidenceManifestRows) {
+    if (isChoiceOrPlaceholder(evidence.run_id) || isChoiceOrPlaceholder(evidence.command) || isChoiceOrPlaceholder(evidence.related)) {
+      issues.push({
+        severity: "WARN",
+        code: "incomplete-evidence-manifest",
+        message: `${evidence.run_id || "evidence row"} 缺少 run id、command 或 related TC/PW。`,
+      });
+    }
+    if (!evidenceLevels.has(String(evidence.strength).trim())) {
+      issues.push({
+        severity: "WARN",
+        code: "invalid-evidence-manifest-strength",
+        message: `${evidence.run_id || "evidence row"} 的 Strength 应为 claimed / observed / proven / mocked / manual-confirmed / deferred / missing。`,
+      });
+    }
+    for (const evidencePath of evidencePathCandidates(evidence.evidence_path)) {
+      if (!exists(`${workItemBase}/${evidencePath}`)) {
+        issues.push({
+          severity: "WARN",
+          code: "missing-evidence-manifest-path",
+          message: `${evidence.run_id || "evidence row"} 声明的证据路径不存在：${evidencePath}`,
+        });
+      }
+    }
   }
 
   return issues;
@@ -267,6 +399,9 @@ export function testCaseQualitySummary(workItemBase, testCasePath = "05-verifica
       test_cases: [],
       playwright_cases: [],
       test_design_artifacts: [],
+      test_engineering_artifacts: [],
+      auth_runtime: [],
+      evidence_manifest: [],
       issues: [
         {
           severity: "FAIL",
@@ -281,9 +416,22 @@ export function testCaseQualitySummary(workItemBase, testCasePath = "05-verifica
   const testCases = parseTestCases(content);
   const playwrightCases = parsePlaywrightCases(content);
   const designArtifacts = parseTestDesignArtifacts(content);
+  const engineeringArtifacts = parseTestEngineeringArtifacts(content);
+  const authRuntimeRows = parseAuthRuntime(content);
+  const evidenceManifestRows = parseEvidenceManifest(content);
   const reportCaseIds = parseReportCaseIds(workItemBase);
   const reportPlaywrightIds = parseReportPlaywrightIds(workItemBase);
-  const issues = classifyIssues(workItemBase, testCases, playwrightCases, designArtifacts, reportCaseIds, reportPlaywrightIds);
+  const issues = classifyIssues(
+    workItemBase,
+    testCases,
+    playwrightCases,
+    designArtifacts,
+    engineeringArtifacts,
+    authRuntimeRows,
+    evidenceManifestRows,
+    reportCaseIds,
+    reportPlaywrightIds,
+  );
 
   return {
     path: testCasePath,
@@ -291,10 +439,16 @@ export function testCaseQualitySummary(workItemBase, testCasePath = "05-verifica
     test_cases: testCases,
     playwright_cases: playwrightCases,
     test_design_artifacts: designArtifacts,
+    test_engineering_artifacts: engineeringArtifacts,
+    auth_runtime: authRuntimeRows,
+    evidence_manifest: evidenceManifestRows,
     summary: {
       test_cases: testCases.length,
       playwright_cases: playwrightCases.length,
       test_design_artifacts: designArtifacts.length,
+      test_engineering_artifacts: engineeringArtifacts.length,
+      auth_runtime_rows: authRuntimeRows.length,
+      evidence_manifest_rows: evidenceManifestRows.length,
       report_case_ids: reportCaseIds.size,
       report_playwright_ids: reportPlaywrightIds.size,
     },

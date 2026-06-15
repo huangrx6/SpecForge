@@ -13,11 +13,12 @@ description: 执行 SpecForge code_review gate；用于 implementation 完成后
 
 ## 必读
 
-- `references/review-gate-rubric.md`：diff 对账、spec compliance、外部 `code-reviewer` 使用、finding 分级和 gate 决策。
+- `.specforge/core/skills/quality/code-review/SKILL.md`：SpecForge 本地代码审查主能力包，定义 diff 对账、spec compliance、risk review、finding 分级和输出契约。
+- `references/review-gate-rubric.md`：阶段内 gate 执行补充，连接本地 `code-review` 能力包和外部 `code-reviewer` 参考。
 - `.specforge/skills/sf-code-review/stages/code-review/SKILL.md`：内部代码审查母本。
 - `.specforge/core/artifacts/templates/code-review.md`：写入骨架。
 - `.specforge/core/standards/workflow.md`、`.specforge/core/standards/engineering.md`、`.specforge/core/standards/ai-toolkit.md`。
-- `.specforge/core/skills/ORCHESTRATION.md`：外部 code review 参考边界。
+- `.specforge/core/skills/ORCHESTRATION.md`：本地 code review 主能力和外部 code review 参考边界。
 
 ## 启动扫描
 
@@ -82,13 +83,13 @@ node .specforge/core/scripts/create-artifact.mjs code_review
 4. 对照 `technical-design.md#7.1 Architecture Contract`、`#Implementation Handoff`、`#12. Operability & Maintenance`：真实 diff 是否落在架构边界内，是否按 change slices / sequence / do-not-touch 执行，是否保留 rollback seam、owner、extension point 和 revisit trigger。
 5. 若实现与 approved spec 不一致，优先记录 P0 / P1，不用代码风格建议冲淡主要风险。
 
-### D. 外部 `code-reviewer` 联动
+### D. 本地 `code-review` 主能力与外部参考
 
-`sf-code-review` 仍是唯一 code_review gate 入口。需要补充安全、性能、正确性、可维护性或测试覆盖检查维度时，按 `references/review-gate-rubric.md#外部 code-reviewer 联动` 读取本地 `.specforge/core/skills/quality/code-reviewer/SKILL.md`。
+`sf-code-review` 仍是唯一 code_review gate 入口。每次审查先读取 `.specforge/core/skills/quality/code-review/SKILL.md`；需要补充安全、性能、正确性、可维护性或测试覆盖检查维度时，再按 `.specforge/core/skills/quality/code-review/references/external-code-reviewer-normalization.md` 读取外部 `code-reviewer` 规则参考。
 
 - 不调用任何外部 code-reviewer agent，包括 `code-reviewer` 和 `superpowers:code-reviewer`。
+- 外部 `code-reviewer` 不是 gate 入口，不能直接批准 / 拒绝 gate。
 - 只能读取本地 `.specforge/core/skills/quality/code-reviewer/SKILL.md` 和相关 `rules/*.md`，由 `sf-code-review` 自己完成审查。
-- 先读 `code-reviewer/SKILL.md` 总览。
 - 只在对应风险存在时读取相关 `rules/*.md`：SQL 注入、XSS、N+1、错误处理、命名、类型标注。
 - 第三方输出只能转成 `04-code-review/code-review-v1.md` 中有文件、行号、影响和修复方向的 finding；不要复制外部模板标题。
 

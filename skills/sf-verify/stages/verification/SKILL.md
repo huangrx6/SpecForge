@@ -25,8 +25,8 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 - `.specforge/core/standards/ai-toolkit.md`
 - `.specforge/core/standards/design.md`（存在 UI 影响时）
 - `.specforge/core/standards/pc-ui-design-spec.md`（`ui-design.md` 声明采用 PC 端业务系统规范时）
-- `.specforge/core/skills/README.md`（存在测试设计、XMind、UI / 浏览器验证时）
-- `.specforge/core/skills/quality/test-design/SKILL.md`（需要系统化测试设计、XMind / 白板导出、TC / PW 矩阵或自动化分层时）
+- `.specforge/core/skills/README.md`（存在测试工程、XMind、UI / 浏览器验证时）
+- `.specforge/core/skills/quality/test-engineering/SKILL.md`（需要系统化测试用例、测试代码、XMind / 白板导出、TC / PW 矩阵、项目启动、登录态、Playwright flow 或证据归档时）
 
 ## 写入
 
@@ -40,10 +40,11 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 1. **确认前置 gate**
    - `code_review` 必须为 `APPROVED`。
    - 读取 code review 的 findings、residual risks 和 verification notes。
-2. **先做测试设计**
-   - 当需求、任务、UI 状态、技术风险或 review notes 较多时，先读取 `core/skills/quality/test-design/SKILL.md`。
-   - 产出 `05-verification/test-design/test-design-tree.md` 或 `.json`，再回填 TC / PW 到 `05-verification/test-cases.md`。
-   - XMind / 白板 / 表格只能作为测试设计草图；必须导出 Markdown / JSON 到 `05-verification/test-design/`，并把可执行用例回填到下方矩阵。
+2. **先做测试工程规划**
+   - 当需求、任务、UI 状态、技术风险或 review notes 较多时，先读取 `core/skills/quality/test-engineering/SKILL.md`。
+   - 产出 `05-verification/test-engineering/test-design-tree.md` 或 `.json`，再回填 TC / PW 到 `05-verification/test-cases.md`。
+   - 需要项目启动、登录态、测试数据、Playwright flow 或证据包时，先写 `runtime-runbook.md`、`auth-plan.md`、`playwright-flows.md` 和 `automation-plan.md`。
+   - XMind / 白板 / 表格只能作为测试设计草图；必须导出 Markdown / JSON 到 `05-verification/test-engineering/`，并把可执行用例回填到下方矩阵。
 3. **输出测试用例**
    - 在执行验证前写 `05-verification/test-cases.md`。
    - 用例必须从 requirements / gap_report / tasks / ui_design / technical_design / code review notes / 相关 wiki 的运行、风险和模块边界推导，不凭验证阶段临时想象。
@@ -107,7 +108,7 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 - technical_design 的 Architecture Contract、Implementation Handoff 或 Operability & Maintenance 中承诺的 rollout、rollback、观察点、owner、extension point、wiki target 或 revisit trigger 没有验证证据或可信跳过理由。
 - UI 关键路径只测 happy path。
 - 有浏览器流程但未先写 `05-verification/test-cases.md` 和 Playwright 用例、未执行自动化操作，或只用单元测试 / 手工点击替代。
-- 使用 XMind 但没有导出 Markdown / JSON，或导出内容未回填到 TC/PW 用例。
+- 使用 XMind 但没有导出 Markdown / JSON 到 `test-engineering/`，或导出内容未回填到 TC/PW 用例。
 - 涉及提交、审批、上传、下载、权限或错误提示，但没有 Playwright 覆盖成功和失败路径。
 - 浏览器验证证据没有写入 `05-verification/report.md` 或 `05-verification/evidence/`。
 - `ui-design.md` 声明采用 PC 端业务系统规范，但未验证核心 token、布局尺寸、表格 / 表单 / 弹窗 / 抽屉或响应式约束。
@@ -128,7 +129,8 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 ## 完成标准
 
 - verification report 足以支撑发布或关闭判断。
-- 使用 XMind / 白板 / 测试设计树时，`test-design/` 中存在 Markdown / JSON 导出，并已回填到 `test-cases.md#1.1 Test Design Artifacts`。
+- 使用 XMind / 白板 / 测试设计树时，`test-engineering/` 中存在 Markdown / JSON 导出，并已回填到 `test-cases.md#1.1 Test Design Artifacts`。
+- 需要启动、登录态或浏览器流程时，`test-engineering/` 中已有 runtime runbook、auth plan、Playwright flow 和 evidence plan。
 - `test-case-quality.mjs` 无 failure；warning 已进入 verification report 的风险、owner 和重新验证触发条件。
 - `APPROVED` 时 verification gate 状态与证据一致。
 - `REQUEST_CHANGES` / `REJECTED` 时 gate 状态已更新且 evidence 为 `null`。

@@ -652,16 +652,62 @@ function productSystemIssues() {
   return issues;
 }
 
-function testDesignIssues() {
+function codeReviewSkillIssues() {
   const required = [
-    "core/skills/quality/test-design/SKILL.md",
-    "core/skills/quality/test-design/references/test-design-tree.md",
-    "core/skills/quality/test-design/references/automation-matrix.md",
-    "core/skills/quality/test-design/references/xmind-export.md",
+    "core/skills/quality/code-review/SKILL.md",
+    "core/skills/quality/code-review/foundations/review-boundary.md",
+    "core/skills/quality/code-review/foundations/finding-severity.md",
+    "core/skills/quality/code-review/foundations/diff-triage.md",
+    "core/skills/quality/code-review/foundations/spec-compliance.md",
+    "core/skills/quality/code-review/references/output-contract.md",
+    "core/skills/quality/code-review/references/external-code-reviewer-normalization.md",
+    "core/skills/quality/code-review/contracts/code-review-finding.schema.json",
   ];
-  return required
+  const issues = required
     .filter((path) => !exists(path))
-    .map((path) => issue("FAIL", "missing-test-design-file", `${path} is required by the test-design contract.`, path));
+    .map((path) => issue("FAIL", "missing-code-review-file", `${path} is required by the code-review contract.`, path));
+
+  const skillPath = "core/skills/quality/code-review/SKILL.md";
+  if (exists(skillPath)) {
+    const body = read(skillPath);
+    for (const marker of ["SpecForge 自有 code review 主能力", "三向对账", "spec compliance review", "gate decision"]) {
+      if (!body.includes(marker)) issues.push(issue("FAIL", "code-review-marker-missing", `${skillPath} is missing ${marker}.`, skillPath));
+    }
+  }
+  return issues;
+}
+
+function testEngineeringIssues() {
+  const required = [
+    "core/skills/quality/test-engineering/SKILL.md",
+    "core/skills/quality/test-engineering/foundations/evidence-strength.md",
+    "core/skills/quality/test-engineering/foundations/test-data-auth.md",
+    "core/skills/quality/test-engineering/patterns/authenticated-browser-flow.md",
+    "core/skills/quality/test-engineering/patterns/runtime-smoke.md",
+    "core/skills/quality/test-engineering/patterns/unit-test-authoring.md",
+    "core/skills/quality/test-engineering/references/output-contract.md",
+    "core/skills/quality/test-engineering/references/playwright-execution-contract.md",
+    "core/skills/quality/test-engineering/contracts/test-case.schema.json",
+    "core/skills/quality/test-engineering/contracts/playwright-flow.schema.json",
+    "core/skills/quality/test-design/SKILL.md",
+  ];
+  const issues = required
+    .filter((path) => !exists(path))
+    .map((path) => issue("FAIL", "missing-test-engineering-file", `${path} is required by the test-engineering contract.`, path));
+
+  const aliasPath = "core/skills/quality/test-design/SKILL.md";
+  if (exists(aliasPath) && !read(aliasPath).includes("Deprecated: use `core/skills/quality/test-engineering/SKILL.md`")) {
+    issues.push(issue("FAIL", "test-design-alias-missing", `${aliasPath} must be a deprecated alias to test-engineering.`, aliasPath));
+  }
+
+  const skillPath = "core/skills/quality/test-engineering/SKILL.md";
+  if (exists(skillPath)) {
+    const body = read(skillPath);
+    for (const marker of ["测试工程主能力包", "auth strategy", "runtime runbook", "Playwright", "evidence"]) {
+      if (!body.includes(marker)) issues.push(issue("FAIL", "test-engineering-marker-missing", `${skillPath} is missing ${marker}.`, skillPath));
+    }
+  }
+  return issues;
 }
 
 function starterManifestIssues() {
@@ -1514,7 +1560,8 @@ const checks = [
   { id: "requirements-system-contract", issues: requirementsSystemIssues() },
   { id: "prd-system-contract", issues: prdSystemIssues() },
   { id: "product-system-contract", issues: productSystemIssues() },
-  { id: "test-design-contract", issues: testDesignIssues() },
+  { id: "code-review-skill-contract", issues: codeReviewSkillIssues() },
+  { id: "test-engineering-contract", issues: testEngineeringIssues() },
   { id: "starter-manifest", issues: starterManifestIssues() },
   { id: "script-modules", issues: scriptModuleIssues() },
   { id: "package-scripts", issues: packageScriptIssues() },

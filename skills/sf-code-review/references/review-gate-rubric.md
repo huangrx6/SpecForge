@@ -1,6 +1,10 @@
 # Code Review Gate Rubric
 
-本文件保存 code review 的 diff 对账、spec compliance、外部 `code-reviewer` 使用、finding 分级和 gate 决策。`SKILL.md` 只保留入口执行顺序和硬门禁。
+本文件保存 code review 的 diff 对账、spec compliance、本地 `quality/code-review` 主能力、外部 `code-reviewer` 参考、finding 分级和 gate 决策。`SKILL.md` 只保留入口执行顺序和硬门禁。
+
+## 主能力包
+
+每次 code_review gate 前先读取 `.specforge/core/skills/quality/code-review/SKILL.md`，再按风险读取其 foundations、checklists 和 references。外部 `code-reviewer` 只在主能力包判断需要补充规则时读取。
 
 ## Review 顺序
 
@@ -56,12 +60,14 @@
 
 ## 外部 code-reviewer 联动
 
-`code-reviewer` 是风险检查清单，不是 gate 入口。只有当 diff 或 spec 暗示对应风险时才读取。
+`code-reviewer` 是外部风险检查清单，不是 gate 入口。只有当 diff 或 spec 暗示对应风险时才读取。
 
 使用规则：
 
 - 不调用任何外部 code-reviewer agent，包括 `code-reviewer` 和 `superpowers:code-reviewer`。
 - `code-reviewer` 只表示本地 skill 目录和规则文件，不表示可调用 agent。
+- 不让 `code-reviewer` 直接批准 / 拒绝 gate。
+- 不读 requirements / technical design / tasks / implementation report 就不得引用外部规则下结论。
 - 只读取 `.specforge/core/skills/quality/code-reviewer/SKILL.md` 和下表相关 rule 文件。
 
 | 风险信号 | 读取 |

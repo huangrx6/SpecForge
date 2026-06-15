@@ -1,42 +1,54 @@
 # Code Review
 
-## 一页摘要
-| 项 | 内容 |
-| --- | --- |
-| Review 结论 | |
-| 阻断项 | |
-| 残余风险 | |
-| 下一步 | |
+## 1. Review Control
+- Workflow:
+- Ready artifact:
+- Reviewed commit / diff:
+- Input artifacts:
+- External rule references:
 
-## Findings
-| Severity | File / Line | Finding | Required Change |
+## 2. Evidence Matrix
+| Evidence | Status | Notes |
+| --- | --- | --- |
+| requirements / gap-report | found / missing / N/A | |
+| ui-design | found / missing / N/A | |
+| technical-design | found / missing / N/A | |
+| tasks | found / missing | |
+| implementation report | found / missing | |
+| changed-files | found / missing | |
+| git diff | collected / missing | |
+| tests / startup / screenshots | found / missing / deferred | |
+
+## 3. Diff Reconciliation
+| File | In changed-files | In git diff | Task / Spec source | Status |
+| --- | --- | --- | --- | --- |
+| | | | | |
+
+## 4. Spec Compliance
+| Source | Expected | Evidence | Result |
 | --- | --- | --- | --- |
 | | | | |
 
-## Diff 对账
-| 来源 | 结论 | 备注 |
+## 5. Risk Review
+| Domain | Result | Notes |
 | --- | --- | --- |
-| tasks.md | | |
-| implementation report | | |
-| changed-files.md | | |
-| git diff/status | | |
+| Security / permissions | pass / warn / fail | |
+| Data / migration | pass / warn / fail | |
+| API / external calls | pass / warn / fail | |
+| UI / state / a11y | pass / warn / fail | |
+| Config / env / dependency | pass / warn / fail | |
+| Tests / evidence | pass / warn / fail | |
 
-## 任务图对账
-| Task | Diff | Report | 结论 |
-| --- | --- | --- | --- |
-| | | | |
+## 6. Findings
+| Severity | Location | Problem | Impact | Required fix | Evidence needed |
+| --- | --- | --- | --- | --- | --- |
+| | | | | | |
 
-## 验证缺口
-| 缺口 | 风险 | 建议 |
-| --- | --- | --- |
-| | | |
+## 7. Residual Risks
+-
 
-## 验证提示
-- 必须补证：
-- 可以人工确认：
-- 发布前观察：
+## 8. Verification Notes
+-
 
-## Decision
-- Gate：
-- Evidence：
-- Re-review 条件：
+## 9. Decision
+APPROVED / REQUEST_CHANGES / REJECTED

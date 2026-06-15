@@ -1,4 +1,6 @@
-# XMind Export Rules
+# Legacy XMind Export Rules
+
+Deprecated compatibility note: new work should use `core/skills/quality/test-engineering/references/output-contract.md` and write artifacts under `05-verification/test-engineering/`. This file only preserves the old `test-design` wording for existing artifacts.
 
 XMind 可以帮助人快速审查测试空间，但不能成为唯一事实源。
 
@@ -6,14 +8,14 @@ XMind 可以帮助人快速审查测试空间，但不能成为唯一事实源�
 
 使用 XMind、白板或脑图时，必须导出至少一种：
 
-- `05-verification/test-design/test-design-tree.md`
-- `05-verification/test-design/test-design-tree.json`
+- `05-verification/test-engineering/test-design-tree.md`
+- `05-verification/test-engineering/test-design-tree.json`
 
 并在 `05-verification/test-cases.md#1.1 Test Design Artifacts` 登记：
 
 | Artifact | Format | Path | Derived Cases | Export Path | Status |
 |---|---|---|---|---|---|
-| 测试设计脑图 | xmind | 05-verification/test-design/test-design.xmind | TC-001, PW-001 | 05-verification/test-design/test-design-tree.md | exported |
+| 测试设计脑图 | xmind | 05-verification/test-engineering/test-design.xmind | TC-001, PW-001 | 05-verification/test-engineering/test-design-tree.md | exported |
 
 ## 节点命名
 

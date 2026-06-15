@@ -1,5 +1,7 @@
 # Test Design Tree
 
+Deprecated compatibility note: new work should read `core/skills/quality/test-engineering/SKILL.md` first. Keep this reference only for old `test-design` artifacts that need migration.
+
 测试设计树用于把规格、任务和风险转成可审查的测试空间。它可以派生为 XMind，但 Markdown / JSON 才是 SpecForge 事实源。
 
 ## 推荐结构

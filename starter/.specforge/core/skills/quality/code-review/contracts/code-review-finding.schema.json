@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/huangrx6/SpecForge/core/skills/quality/code-review/contracts/code-review-finding.schema.json",
+  "title": "SpecForge Code Review Finding",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["severity", "location", "source", "problem", "impact", "required_fix", "evidence_needed", "gate_effect"],
+  "properties": {
+    "severity": { "type": "string", "enum": ["P0", "P1", "P2", "P3"] },
+    "location": { "type": "string", "description": "file:line or artifact section" },
+    "source": { "type": "string", "enum": ["diff", "spec", "task", "implementation-report", "code-reviewer-rule"] },
+    "problem": { "type": "string" },
+    "impact": { "type": "string" },
+    "required_fix": { "type": "string" },
+    "evidence_needed": { "type": "string" },
+    "gate_effect": { "type": "string", "enum": ["reject", "request_changes", "residual_risk", "advisory"] }
+  }
+}

@@ -22,7 +22,7 @@
 | `requirements/` | 行为契约、确认边界、转译、用户故事、验收标准和可测试性 | `requirements`, `user-stories` |
 | `ui-ux/` | UX 研究、设计语言、Pencil 原型、设计转代码参考 | `design-system`, `pencil` |
 | `brainstorm/` | 问题重构、事实查证、发散、类比、场景模拟、批判、评估、输出和行动计划 | `problem-framing`, `research-source`, `divergent-thinking`, `analogy-thinking`, `scenario-simulation`, `critic-review`, `decision-matrix`, `output-shaping`, `execution-planning` |
-| `quality/` | Code review、测试设计与浏览器验证参考 | `code-reviewer`, `test-design`, `playwright-skill` |
+| `quality/` | Code review、测试工程与浏览器验证参考 | `code-review`, `test-engineering`, `code-reviewer`, `test-design`, `playwright-skill` |
 
 ## 保留 Skill
 
@@ -45,9 +45,11 @@
 | `decision-matrix` | `brainstorm/decision-matrix` | 按价值、成本、风险、落地性、可扩展性和置信度收敛排序 | `00-intake/brainstorm.md#方案评估矩阵` |
 | `output-shaping` | `brainstorm/output-shaping` | 选择想法池、方案矩阵、最小可行版本路线图、风险清单或行动表等输出形态 | `00-intake/brainstorm.md` |
 | `execution-planning` | `brainstorm/execution-planning` | 把推荐方向转成下一步行动、最小可行版本路线和下游交接 | `00-intake/brainstorm.md#下一步行动` |
-| `playwright-skill` | `quality/playwright-skill` | 浏览器 E2E、真实操作、截图和响应式验证 | `05-verification/test-cases.md`、`05-verification/report.md`、`05-verification/evidence/` |
-| `test-design` | `quality/test-design` | 测试设计树、XMind / 白板导出、TC / PW 用例矩阵和自动化分层策略 | `05-verification/test-design/`、`05-verification/test-cases.md`、`05-verification/report.md` |
-| `code-reviewer` | `quality/code-reviewer` | 安全、性能、正确性和可维护性的 code review 参考清单 | `04-code-review/code-review-v1.md`、`05-verification/report.md` |
+| `code-review` | `quality/code-review` | SpecForge 本地代码审查主能力包，负责 diff、spec、tasks、implementation report 和证据对账 | `04-code-review/code-review-v1.md` |
+| `test-engineering` | `quality/test-engineering` | 测试用例、测试代码、项目启动、Playwright 浏览器验证、登录态和证据归档能力包 | `05-verification/test-plan.md`、`05-verification/test-cases.md`、`05-verification/test-engineering/`、`05-verification/report.md`、`05-verification/evidence/` |
+| `playwright-skill` | `quality/playwright-skill` | 外部浏览器 E2E、真实操作、截图和响应式验证参考 | `05-verification/test-cases.md`、`05-verification/report.md`、`05-verification/evidence/` |
+| `test-design` | `quality/test-design` | Deprecated alias；旧测试设计入口，指向 `test-engineering` | `05-verification/test-engineering/`、`05-verification/test-cases.md` |
+| `code-reviewer` | `quality/code-reviewer` | 外部 code review 规则参考，不是 gate 入口 | `04-code-review/code-review-v1.md` |
 
 ## 触发纪律
 
@@ -60,8 +62,8 @@
 - Brainstorm 不只查资料：先用 `problem-framing` 重构问题，再按需要使用 `research-source`、`divergent-thinking`、`analogy-thinking`、`scenario-simulation`、`critic-review`、`decision-matrix`、`output-shaping` 和 `execution-planning`。
 - Brainstorm 包内子 skill 按 `skip` / `light` / `deep` / `research-heavy` profile 组成内部链路，不计入“最多 1 个外部辅助”的限制。
 - 当前事实、法规、价格、版本、竞品、AI provider 或新闻会影响 brainstorm 取舍时，先参考 `research-source` 建立证据表；需要长篇研究或实验时路由 `sf-discovery` research。
-- Code review 参考只补充检查维度，不替代 `sf-code-review` gate。
-- Verification 前如需系统化测试设计、XMind / 白板导出、TC / PW 矩阵或自动化分层，先参考 `test-design`，再用 `test-case-quality.mjs` 检查。
+- Code review gate 前先读 `code-review` 主能力包；`code-reviewer` 只补充检查维度，不替代 `sf-code-review` gate。
+- Verification 前如需测试用例、测试代码、项目启动、登录态、Playwright 流程或证据归档，先参考 `test-engineering`，再用 `test-case-quality.mjs` 检查。
 - Verification 有浏览器流程时必须有 Playwright 用例和真实自动化操作证据。
 - 参考 skill 输出只当作参考笔记，不替代用户确认、SpecForge 模板或 gate evidence。
 

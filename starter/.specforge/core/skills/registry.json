@@ -333,11 +333,57 @@
       ]
     },
     {
-      "id": "code-reviewer",
+      "id": "code-review",
       "category": "quality",
+      "localPath": "quality/code-review",
+      "name": "code-review",
+      "role": "SpecForge 本地代码审查主能力包",
+      "trust": "SpecForge 本地维护，面向 code_review gate 的 diff、spec、tasks、implementation report 和证据对账",
+      "risk": "低",
+      "source": {
+        "type": "local-authored",
+        "repo": "SpecForge",
+        "path": "core/skills/quality/code-review/SKILL.md",
+        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/quality/code-review",
+        "files": [
+          { "path": "foundations/review-boundary.md" },
+          { "path": "foundations/finding-severity.md" },
+          { "path": "foundations/diff-triage.md" },
+          { "path": "foundations/spec-compliance.md" },
+          { "path": "checklists/security-auth-data.md" },
+          { "path": "checklists/correctness-error-handling.md" },
+          { "path": "checklists/api-contract.md" },
+          { "path": "checklists/data-migration.md" },
+          { "path": "checklists/concurrency-idempotency.md" },
+          { "path": "checklists/ui-state-a11y.md" },
+          { "path": "checklists/dependency-env-config.md" },
+          { "path": "checklists/tests-evidence.md" },
+          { "path": "references/output-contract.md" },
+          { "path": "references/anti-patterns.md" },
+          { "path": "references/external-code-reviewer-normalization.md" },
+          { "path": "contracts/code-review-finding.schema.json" }
+        ]
+      },
+      "trigger": "sf-code-review 每次进行 code_review gate 前必读；用于判断真实 diff 是否符合 approved spec、tasks、implementation report、changed-files 和验证证据。",
+      "normalizeTo": [
+        "04-code-review/code-review-v1.md#Review Control",
+        "04-code-review/code-review-v1.md#Diff Reconciliation",
+        "04-code-review/code-review-v1.md#Spec Compliance",
+        "04-code-review/code-review-v1.md#Findings"
+      ],
+      "doNotUseFor": [
+        "替代 sf-code-review stage",
+        "在 review 阶段顺手改代码",
+        "不读真实 diff 就批准 gate",
+        "用个人风格偏好阻断"
+      ]
+    },
+    {
+      "id": "code-reviewer",
+      "category": "quality-reference",
       "localPath": "quality/code-reviewer",
       "name": "code-reviewer",
-      "role": "代码审查参考",
+      "role": "外部 code review 规则参考，不是 gate 入口",
       "trust": "高星社区来源，MIT 许可，已做静态审查",
       "risk": "中",
       "source": {
@@ -373,7 +419,7 @@
           }
         ]
       },
-      "trigger": "当 code_review 需要补充安全、性能、正确性、可维护性检查清单时参考，尤其适合 PR review、上线前风险扫查和高风险 diff 的二次审查。",
+      "trigger": "当本地 code-review 主能力包需要补充安全、性能、正确性、可维护性检查清单时参考；只用于高风险 diff 的规则补充。",
       "normalizeTo": [
         "04-code-review/code-review-v1.md#Findings",
         "04-code-review/code-review-v1.md#Risk Checks",
@@ -381,6 +427,9 @@
       ],
       "doNotUseFor": [
         "替代 SpecForge code_review gate",
+        "直接批准 / 拒绝 gate",
+        "不读 requirements / technical design / tasks / implementation report 就审查",
+        "只给泛泛建议，不绑定 diff 文件、行号、影响和修复证据",
         "在未阅读 diff 和需求证据时泛泛输出模板化建议",
         "把第三方示例代码原样当作项目修复方案",
         "替代安全专项审计"
@@ -881,12 +930,75 @@
       ]
     },
     {
-      "id": "test-design",
+      "id": "test-engineering",
       "category": "quality",
+      "localPath": "quality/test-engineering",
+      "name": "test-engineering",
+      "role": "测试用例、测试代码、项目启动、Playwright 浏览器验证和证据归档能力包",
+      "trust": "SpecForge 本地维护，面向 sf-verify 的测试工程、自动化执行和证据分级",
+      "risk": "低",
+      "source": {
+        "type": "local-authored",
+        "repo": "SpecForge",
+        "path": "core/skills/quality/test-engineering/SKILL.md",
+        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/quality/test-engineering",
+        "files": [
+          { "path": "foundations/test-boundary.md" },
+          { "path": "foundations/evidence-strength.md" },
+          { "path": "foundations/test-data-auth.md" },
+          { "path": "foundations/test-isolation.md" },
+          { "path": "foundations/flakiness-control.md" },
+          { "path": "transforms/spec-to-test-plan.md" },
+          { "path": "transforms/requirements-to-test-cases.md" },
+          { "path": "transforms/ui-design-to-playwright.md" },
+          { "path": "transforms/technical-design-to-runtime-checks.md" },
+          { "path": "transforms/code-review-to-regression-tests.md" },
+          { "path": "patterns/unit-test-authoring.md" },
+          { "path": "patterns/api-contract-test.md" },
+          { "path": "patterns/data-permission-test.md" },
+          { "path": "patterns/authenticated-browser-flow.md" },
+          { "path": "patterns/playwright-journey.md" },
+          { "path": "patterns/upload-download-flow.md" },
+          { "path": "patterns/dashboard-table-flow.md" },
+          { "path": "patterns/ai-agent-flow.md" },
+          { "path": "patterns/runtime-smoke.md" },
+          { "path": "references/output-contract.md" },
+          { "path": "references/playwright-execution-contract.md" },
+          { "path": "references/project-startup-contract.md" },
+          { "path": "references/locator-contract.md" },
+          { "path": "references/evidence-contract.md" },
+          { "path": "references/anti-patterns.md" },
+          { "path": "contracts/test-case.schema.json" },
+          { "path": "contracts/test-plan.schema.json" },
+          { "path": "contracts/playwright-flow.schema.json" },
+          { "path": "prompts/test-case-authoring.md" },
+          { "path": "prompts/unit-test-generation.md" },
+          { "path": "prompts/playwright-flow-generation.md" },
+          { "path": "prompts/failure-triage.md" }
+        ]
+      },
+      "trigger": "sf-verify 需要生成测试用例、自动化测试、启动项目、浏览器测试、登录态方案或验证证据时必读。",
+      "normalizeTo": [
+        "05-verification/test-plan.md",
+        "05-verification/test-cases.md",
+        "05-verification/test-engineering/",
+        "05-verification/report.md",
+        "05-verification/evidence/"
+      ],
+      "doNotUseFor": [
+        "替代 sf-verify gate",
+        "编造账号、密码、token 或登录态",
+        "把 mock 结果包装成真实端到端通过",
+        "保存 Cookie、token、localStorage 或 sessionStorage 到仓库"
+      ]
+    },
+    {
+      "id": "test-design",
+      "category": "quality-alias",
       "localPath": "quality/test-design",
       "name": "test-design",
-      "role": "测试设计树、XMind / 白板导出、TC / PW 用例矩阵和自动化分层策略",
-      "trust": "SpecForge 本地维护，结合测试设计、XMind 导出、Playwright 和 evidence grading 实践沉淀",
+      "role": "兼容旧文档的 test-engineering alias",
+      "trust": "SpecForge 本地维护，deprecated compatibility alias",
       "risk": "低",
       "source": {
         "type": "local-authored",
@@ -905,16 +1017,17 @@
           }
         ]
       },
-      "trigger": "当 verification 需要从 requirements、gap report、tasks、UI design、technical design 或 code review notes 生成测试设计树、XMind / 白板导出、TC / PW 矩阵、自动化用例和证据目标时参考。",
+      "trigger": "仅当旧 artifact 或旧文档仍引用 test-design 时使用；新流程必须改读 test-engineering。",
       "normalizeTo": [
-        "05-verification/test-design/test-design-tree.md",
-        "05-verification/test-design/test-design-tree.json",
+        "05-verification/test-engineering/test-design-tree.md",
+        "05-verification/test-engineering/test-design-tree.json",
         "05-verification/test-cases.md#1.1 Test Design Artifacts",
         "05-verification/test-cases.md#2. Test Case Matrix",
         "05-verification/test-cases.md#3. Playwright Cases",
         "05-verification/report.md#证据强度分级"
       ],
       "doNotUseFor": [
+        "新 verification 流程的主测试工程入口",
         "替代 sf-verify gate",
         "把 XMind、截图或白板当作唯一事实源",
         "用 happy path 替代权限、错误、边界和回归路径",

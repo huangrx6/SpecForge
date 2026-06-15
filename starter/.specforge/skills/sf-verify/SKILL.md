@@ -23,6 +23,7 @@ description: 执行 SpecForge verification 阶段；用于 code_review 已通过
 - `.specforge/core/standards/engineering.md`
 - 有 UI 影响时读取 `.specforge/core/standards/design.md`；若 `ui-design.md` 声明采用 PC 端业务系统规范，还要读取 `.specforge/core/standards/pc-ui-design-spec.md`。
 - 有浏览器流程时读取 `.specforge/core/standards/playwright.md` 和 `.specforge/core/skills/ORCHESTRATION.md`。
+- 需要生成测试用例、自动化测试、项目启动、登录态、Playwright flow 或证据包时读取 `.specforge/core/skills/quality/test-engineering/SKILL.md`。
 
 ## 启动扫描
 
@@ -50,7 +51,7 @@ node .specforge/core/scripts/create-artifact.mjs verification
 2. 用例来源必须来自 requirements / gap report / tasks / UI design / technical design / code review notes / 相关 wiki 的运行、风险和模块边界。
 3. 每个用例包含 ID、来源、前置条件、步骤、断言、证据类型、自动化方式和风险等级。
 4. 有浏览器 UI 时，必须包含 Playwright 用例；不能用“手工点过”替代。
-5. 如果使用 XMind / 白板 / 表格做测试设计，必须导出 Markdown / JSON 到 `05-verification/test-design/`，并把派生 TC/PW 用例回填到 `test-cases.md`。
+5. 如果使用 XMind / 白板 / 表格做测试设计，必须导出 Markdown / JSON 到 `05-verification/test-engineering/`，并把派生 TC/PW 用例回填到 `test-cases.md`。
 6. 写完用例后运行 `node .specforge/core/scripts/test-case-quality.mjs`；失败项必须先修正，warning 必须进入 report 的风险 / owner / 重新验证触发条件。
 
 ### B. 建覆盖矩阵
@@ -111,6 +112,7 @@ node .specforge/core/scripts/gate.mjs verification REJECTED
 ## 完成标准
 
 - `05-verification/test-cases.md` 先于验证执行存在并更新。
+- 复杂验证已先通过 `test-engineering` 生成或更新测试对象树、TC/PW、runtime runbook、auth plan 和 evidence plan。
 - `node .specforge/core/scripts/test-case-quality.mjs` 通过，或所有 warning 都在 report 中有 owner、影响和重新验证条件。
 - `05-verification/report.md` 能追溯 requirements / gap / tasks / code review notes 到证据。
 - 报告已区分证据强度，并明确哪些结论来自 local、mock、CI、真实环境或人工确认。

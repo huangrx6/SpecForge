@@ -23,9 +23,11 @@
 | `decision-matrix` | `brainstorm/decision-matrix` | Brainstorm | 用价值、成本、风险、落地性、可扩展性和置信度收敛排序 | `00-intake/brainstorm.md#方案评估矩阵` |
 | `output-shaping` | `brainstorm/output-shaping` | Brainstorm | 控制 brainstorm 输出形态，避免自由散文式结论 | `00-intake/brainstorm.md` |
 | `execution-planning` | `brainstorm/execution-planning` | Brainstorm | 把推荐方向转成下一步行动、handoff 和验证入口 | `00-intake/brainstorm.md#下一步行动` |
-| `test-design` | `quality/test-design` | Verification | 测试设计树、XMind / 白板导出、TC / PW 用例矩阵、自动化分层和证据目标 | `05-verification/test-design/`、`05-verification/test-cases.md`、`05-verification/report.md` |
-| `playwright-skill` | `quality/playwright-skill` | Verification | 浏览器 E2E、真实点击输入、角色流程、截图和响应式证据 | `05-verification/test-cases.md`、`05-verification/report.md`、`05-verification/evidence/` |
-| `code-reviewer` | `quality/code-reviewer` | Code Review | 安全、性能、正确性、可维护性和测试覆盖的补充检查清单 | `04-code-review/code-review-v1.md`、`05-verification/report.md` |
+| `code-review` | `quality/code-review` | Code Review | SpecForge 本地代码审查主能力包；diff、spec、tasks、implementation report、changed-files 和证据对账 | `04-code-review/code-review-v1.md` |
+| `test-engineering` | `quality/test-engineering` | Verification | 测试用例、测试代码、项目启动、登录态、Playwright 浏览器验证和证据归档 | `05-verification/test-plan.md`、`05-verification/test-cases.md`、`05-verification/test-engineering/`、`05-verification/report.md`、`05-verification/evidence/` |
+| `test-design` | `quality/test-design` | Verification | Deprecated alias；旧测试设计入口，指向 `test-engineering` | `05-verification/test-engineering/`、`05-verification/test-cases.md` |
+| `playwright-skill` | `quality/playwright-skill` | Verification | 外部浏览器 E2E、真实点击输入、角色流程、截图和响应式证据参考 | `05-verification/test-cases.md`、`05-verification/report.md`、`05-verification/evidence/` |
+| `code-reviewer` | `quality/code-reviewer` | Code Review | 外部 code review 规则参考；安全、性能、正确性、可维护性补充检查清单 | `04-code-review/code-review-v1.md` |
 
 ## 按需外部参考
 
@@ -118,15 +120,17 @@
 
 ### Code Review
 
-- `sf-code-review` 仍是唯一 code_review 阶段入口；`code-reviewer` 只作为补充检查清单。
+- `sf-code-review` 仍是唯一 code_review 阶段入口；每次 gate 前先读 `quality/code-review` 主能力包。
+- `code-reviewer` 只作为外部规则参考，不是 gate 入口，不得直接批准 / 拒绝 gate。
 - 不调用任何外部 code-reviewer agent，包括 `code-reviewer` 和 `superpowers:code-reviewer`；`code-reviewer` 只表示本地 skill 目录和规则文件。
 - 安全和数据风险先看，再看性能、正确性、可维护性和测试覆盖；finding 必须绑定文件、行号、影响和可执行修复建议。
 - 不把第三方示例代码当成项目代码直接套用；修复建议必须结合本仓库语言、框架和既有模式。
 
 ### Verification
 
-- 需要从 requirements / gap / tasks / UI / technical design / code review notes 系统生成测试空间、XMind / 白板导出、TC / PW 用例或自动化分层时，先参考 `test-design`。
-- `test-design` 输出必须归一化到 `05-verification/test-design/` 和 `05-verification/test-cases.md`；XMind / 白板只能作为草图，必须导出 Markdown / JSON 并回填 TC / PW。
+- 需要从 requirements / gap / tasks / UI / technical design / code review notes 系统生成测试用例、测试代码、项目启动、登录态、Playwright flow、TC / PW 用例或证据包时，先参考 `test-engineering`。
+- `test-engineering` 输出必须归一化到 `05-verification/test-engineering/`、`05-verification/test-cases.md`、`05-verification/report.md` 和 `05-verification/evidence/`；XMind / 白板只能作为草图，必须导出 Markdown / JSON 并回填 TC / PW。
+- `test-design` 仅为兼容 alias，新流程不要以它为主入口。
 - 测试设计完成后运行 `test-case-quality.mjs`；失败项先修正，warning 写入 verification report 的风险、owner 和重新验证触发条件。
 - 有浏览器页面、表单、上传、提交、审批、下载、权限、路由跳转或错误提示时，使用 `playwright-skill` 或等价 Playwright 脚本形成可重复证据。
 - 先写 `05-verification/test-cases.md`，再执行真实浏览器操作。

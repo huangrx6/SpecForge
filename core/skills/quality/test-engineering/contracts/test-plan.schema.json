@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/huangrx6/SpecForge/core/skills/quality/test-engineering/contracts/test-plan.schema.json",
+  "title": "SpecForge Test Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["source_artifacts", "test_profile", "automation_target", "risk_level", "auth_strategy", "test_cases"],
+  "properties": {
+    "source_artifacts": { "type": "array", "items": { "type": "string" } },
+    "test_profile": { "type": "string", "enum": ["compact", "standard", "full"] },
+    "automation_target": { "type": "string" },
+    "risk_level": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+    "auth_strategy": { "type": "string", "enum": ["none", "ui-login", "api-login", "storage-state", "manual"] },
+    "test_cases": { "type": "array", "items": { "$ref": "test-case.schema.json" } }
+  }
+}

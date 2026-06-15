@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/huangrx6/SpecForge/core/skills/quality/test-engineering/contracts/test-case.schema.json",
+  "title": "SpecForge Test Case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "title", "source", "risk", "layer", "preconditions", "test_data", "steps", "assertions", "automation", "evidence_required", "evidence_strength_target", "cleanup", "owner", "status"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^TC-[0-9]{3,}$" },
+    "title": { "type": "string" },
+    "source": { "type": "array", "items": { "type": "string" } },
+    "risk": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+    "layer": { "type": "string", "enum": ["unit", "integration", "contract", "e2e", "smoke", "manual"] },
+    "preconditions": { "type": "array", "items": { "type": "string" } },
+    "test_data": { "type": "array", "items": { "type": "string" } },
+    "steps": { "type": "array", "items": { "type": "string" } },
+    "assertions": { "type": "array", "items": { "type": "string" } },
+    "automation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "file", "command", "headed"],
+      "properties": {
+        "type": { "type": "string", "enum": ["unit", "api", "playwright", "command", "manual"] },
+        "file": { "type": "string" },
+        "command": { "type": "string" },
+        "headed": { "type": "boolean" }
+      }
+    },
+    "evidence_required": { "type": "array", "items": { "type": "string" } },
+    "evidence_strength_target": { "type": "string", "enum": ["claimed", "observed", "proven", "mocked", "manual-confirmed", "deferred", "missing"] },
+    "cleanup": { "type": "array", "items": { "type": "string" } },
+    "owner": { "type": "string" },
+    "status": { "type": "string", "enum": ["planned", "implemented", "executed", "passed", "failed", "deferred"] }
+  }
+}

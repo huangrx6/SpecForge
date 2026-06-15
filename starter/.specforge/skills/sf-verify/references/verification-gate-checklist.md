@@ -32,11 +32,12 @@
 
 不能先跑一堆命令，最后倒填用例。
 
-测试设计产物规则：
+测试工程产物规则：
 
 - XMind / 白板 / 表格只能作为测试设计草图，不能作为最终 gate 事实源。
-- 使用 XMind 时，必须导出 Markdown / JSON 到 `05-verification/test-design/`。
+- 使用 XMind 时，必须导出 Markdown / JSON 到 `05-verification/test-engineering/`。
 - 导出内容必须能追溯到 `TC-*` / `PW-*` 用例；不能只保留图片或二进制脑图。
+- 需要启动项目、登录态、测试数据或浏览器流程时，必须在 `05-verification/test-engineering/` 下写 runtime runbook、auth plan、automation plan 或 Playwright flow。
 - 写完用例后运行 `node .specforge/core/scripts/test-case-quality.mjs`，把 failure 先修掉，warning 写入 report 的风险、owner 和重新验证触发条件。
 
 ## 风险到证据
@@ -68,7 +69,7 @@
 
 项目没有 Playwright 配置时：
 
-1. 优先使用 `.specforge/core/skills/quality/playwright-skill` 或临时 Playwright 脚本。
+1. 优先使用 `.specforge/core/skills/quality/test-engineering` 规划 flow、auth、locator 和 evidence；执行层可使用 `.specforge/core/skills/quality/playwright-skill` 或临时 Playwright 脚本。
 2. 记录安装 / 执行命令和证据。
 3. 如果无法运行，写阻断原因、替代证据和 owner；高风险 UI 不得批准。
 
@@ -148,7 +149,8 @@ P0 / P1 风险、安全、权限、数据迁移、公共 API、生产发布风�
 
 - test cases 已写且与 report 对齐。
 - `test-case-quality.mjs` 无 failure；warning 有 owner、影响和重新验证触发条件。
-- XMind / 白板测试设计已导出为 Markdown / JSON，并回填 TC/PW 用例。
+- XMind / 白板测试设计已导出为 Markdown / JSON 到 `test-engineering/`，并回填 TC/PW 用例。
+- 复杂验证已生成 runtime runbook、auth plan、automation plan、Playwright flows 和 evidence manifest 计划。
 - 覆盖矩阵没有空白关键项。
 - code review residual risks 都有证据或 owner。
 - UI 浏览器流程有 Playwright 证据。

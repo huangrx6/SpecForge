@@ -1,5 +1,7 @@
 # Automation Matrix
 
+Deprecated compatibility note: new work should use `core/skills/quality/test-engineering/SKILL.md` plus the test-engineering patterns and output contract. This matrix remains as a legacy quick reference.
+
 测试设计完成后，用本矩阵选择最小充分的自动化层级。
 
 | 风险 / 对象 | 首选验证 | 补充验证 | 不足说明 |

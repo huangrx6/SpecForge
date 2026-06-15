@@ -159,12 +159,12 @@
         "artifact": "code_review",
         "path": "04-code-review/code-review-v1.md",
         "sections": [
-          "一页摘要",
-          "任务图对账",
-          "验证提示"
+          "Review Control",
+          "Diff Reconciliation",
+          "Verification Notes"
         ],
         "severity": "P2",
-        "message": "code review 缺少任务图对账或验证提示，verification 可能拿不到弱证据、deferred 项和外部补证提示。"
+        "message": "code review 缺少 review control、diff reconciliation 或 verification notes，verification 可能拿不到真实 diff 范围、弱证据、deferred 项和外部补证提示。"
       },
       {
         "artifact": "verification",
