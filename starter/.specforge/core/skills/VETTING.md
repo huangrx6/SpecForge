@@ -10,9 +10,16 @@
 | `user-stories` | `phuryn/pm-skills` | 0 | 可能带入 Sprint / backlog 表达 | 只保留 3C、INVEST 和验收标准方法 |
 | `opportunity-solution-tree` | `phuryn/pm-skills` | 5 | 可能把缺少证据的分数写成事实 | 只作为机会树、功能候选、实验和优先级方法，结论必须等用户确认 |
 | `design-system` | SpecForge local-authored | 56 | 可能把设计规则当成已确认 UI 方向 | 只作为设计语言、组件契约、动效、页面模式和去廉价感参考，必须归一化到 UI artifact 或组件契约 |
-| `brainstorm-search` | SpecForge local-authored | 4 | 可能把来源索引当成事实，或在无联网证据时补结论 | 只作为 brainstorm 当前事实查证流程、本地事实读取、来源选择、版本关系和证据表契约，事实必须来自实际 URL / 本地证据 |
+| `problem-framing` | SpecForge local-authored | 0 | 可能把 agent 对问题的重述当成用户原意 | 只作为问题重构和必须确认项发现，用户确认前不能写成 approved |
+| `research-source` | SpecForge local-authored | 4 | 可能把来源索引当成事实，或在无联网证据时补结论 | 只作为 brainstorm 当前事实查证流程、本地事实读取、来源选择、版本关系和证据表契约，事实必须来自实际 URL / 本地证据 |
+| `divergent-thinking` | SpecForge local-authored | 0 | 可能生成过多低质量方向或把点子当结论 | 只作为候选池，必须经过收敛、批判和用户确认 |
+| `analogy-thinking` | SpecForge local-authored | 0 | 可能迁移不适用的行业机制 | 只提取可迁移机制，并记录适配成本和风险 |
+| `scenario-simulation` | SpecForge local-authored | 0 | 可能把假设场景当真实用户证据 | 只作为方案压测，不替代用户研究或验收测试 |
+| `critic-review` | SpecForge local-authored | 0 | 可能过度否定或扩大风险 | 只暴露假设、反例、可删范围和验证点，由用户或下游阶段决策 |
+| `decision-matrix` | SpecForge local-authored | 0 | 可能把主观评分伪装成客观事实 | 分数必须附理由和置信度，不能替代用户取舍 |
+| `output-shaping` | SpecForge local-authored | 0 | 可能为了格式完整而填充无证据内容 | 只控制输出结构，缺失项必须写 unknown / pending |
+| `execution-planning` | SpecForge local-authored | 0 | 可能把行动计划误写成已批准任务 | 只作为 handoff 和下一步路由，不能替代 tasks 或 gate |
 | `test-design` | SpecForge local-authored | 3 | 可能把测试设计替代真实验证 | 只作为测试空间、TC / PW 矩阵和证据目标参考，必须落到 verification artifact 并执行验证 |
-| `deep-research` | `Shubhamsaboo/awesome-llm-apps` | 0 | 可能把旧资料当事实 | 只提供研究组织方法，事实另行核验 |
 | `code-reviewer` | `Shubhamsaboo/awesome-llm-apps` | 6 | 可能输出模板化 finding | 只作为风险检查清单 |
 | `pencil` | `chiroro-jr/skills` | 8 | 依赖 Pencil MCP，且 upstream 引用未托管的 `frontend-design` | 本地裁剪为读取已确认 UI 方向和 SpecForge 设计标准，只用于 Pencil 原型、截图证据和设计转代码参考 |
 | `playwright-skill` | `lackeyjb/playwright-skill` | 4 | 浏览器自动化可能接触敏感数据 | 只在受控测试环境做 E2E 证据 |

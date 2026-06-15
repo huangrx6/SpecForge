@@ -14,7 +14,7 @@ description: SpecForge 内部预研技能。执行架构论证、API可行性测
 - `.specforge/core/standards/product.md`
 - `.specforge/core/standards/engineering.md`
 - 与调研主题相关的官方文档、源码、release note 或项目内证据
-- `.specforge/core/skills/research/deep-research/SKILL.md`（需要多来源综合、引用、共识 / 争议或研究空白结构时）
+- `.specforge/core/skills/brainstorm/research-source/SKILL.md`（需要当前事实、版本、来源质量、冲突处理、证据覆盖度或依赖关系查证时）
 
 ## 写入
 
@@ -24,7 +24,7 @@ description: SpecForge 内部预研技能。执行架构论证、API可行性测
 
 1. 根据 brief，澄清本次预研的核心假说。
 2. 收集来源时优先使用官方文档、源码、标准或项目事实；记录版本、日期和权威度。
-3. 需要多来源综合时，参考 `deep-research` 的结构组织来源、关键发现、共识、争议和进一步研究空白；版本敏感事实仍必须实时核验。
+3. 需要外部事实或多来源综合时，参考 `research-source` 的本地事实、来源索引、证据契约、冲突处理和覆盖度要求组织来源、关键发现、争议和进一步研究空白；版本敏感事实必须实时核验。
 4. 进行极简 PoC 或可复现实验；无法实验时写明原因和替代证据。
 5. 提供多个技术或架构路径的横向对比，覆盖实施成本、迁移、运维和回滚。
 6. 评估 License / Security / Operations / Performance / Vendor Lock-in / Migration 风险。

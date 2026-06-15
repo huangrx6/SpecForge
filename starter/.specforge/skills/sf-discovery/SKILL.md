@@ -30,12 +30,12 @@ description: 对新请求执行深度探索、缺陷根因分析或预研；用�
 - `.specforge/core/standards/product.md`：分析深度、代码探索、外部研究、候选功能、用户选择和澄清。
 - `.specforge/core/skills/ORCHESTRATION.md`：第三方研究参考的选择、来源核验和归一化要求。
 
-## 第三方 Skill 联动
+## 参考 Skill 联动
 
-需要跨来源综合、引用编号、来源可信度标注、共识 / 争议拆解或研究空白整理时，按需读取 `.specforge/core/skills/research/deep-research/SKILL.md`。
+需要外部事实、版本、价格、法规、漏洞、竞品或 SDK / provider 资料时，按需读取 `.specforge/core/skills/brainstorm/research-source/SKILL.md`。
 
-- `deep-research` 只提供研究组织方法；当前事实、法规、版本、价格、新闻、漏洞和竞品状态必须另行查可靠来源。
-- 研究结论必须写入 `01-spec/research.md` 或 `00-intake/brief.md`，并保留来源、日期、可信度和未解决问题。
+- `research-source` 只提供本地事实读取、来源选择、证据契约、版本关系、冲突处理和覆盖度检查；复杂 PoC / 实验仍由 discovery research 执行。
+- 研究结论必须写入 `01-spec/research.md` 或 `00-intake/brief.md`，并保留来源、日期、置信度、覆盖度和未解决问题。
 
 ## 动作
 

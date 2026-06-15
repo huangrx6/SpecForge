@@ -1,6 +1,6 @@
-# Research Playbook
+# Research Protocol
 
-本文件定义 `brainstorm-search` 的实际查证动作：先看本地事实、再联网、再交叉验证、最后归一化到 brainstorm。它补足 `source-index.md` 的“去哪查”和 `evidence-contract.md` 的“怎么写”之间的执行空隙。
+本文件定义 `research-source` 的实际查证动作：先看本地事实、再联网、再交叉验证、最后归一化到 brainstorm。它补足 `source-index.md` 的“去哪查”和 `evidence-contract.md` 的“怎么写”之间的执行空隙。
 
 ## Local First
 
@@ -62,7 +62,7 @@
 1. 先按来源等级排序：官方当前文档 / registry / release notes > 官方 issue / maintainer comment > 标准或 advisory database > 高质量参考文章 > 社区讨论。
 2. 再按日期排序：同等级下优先当前资料，旧资料降级为背景。
 3. 如果仍冲突，写 `unclear`，列出冲突来源和需要谁确认。
-4. 如果冲突会改变 MVP、成本、安全或架构，必须在 `brainstorm.md#问题地图` 标记 `[必须确认]` 或升级 `deep-research`。
+4. 如果冲突会改变 MVP、成本、安全或架构，必须在 `brainstorm.md#问题地图` 标记 `[必须确认]` 或交给 `sf-discovery` research。
 
 ## Negative Evidence
 
@@ -83,7 +83,7 @@
 
 | 触发 | 动作 |
 |---|---|
-| 多个候选方案都依赖不确定事实 | 升级 `deep-research` 或回到用户确认 |
+| 多个候选方案都依赖不确定事实 | 交给 `sf-discovery` research 或回到用户确认 |
 | 当前资料互相冲突且影响方向 | 写 `unclear`，标记 `[必须确认]` |
 | 需要安装、运行、压测或登录后台 | 写未查证项，handoff 给 `sf-tech-design` / research spike |
 | 涉及法规、合规、安全或用户数据 | 使用 high-stakes evidence，不足则不得 confirmed |

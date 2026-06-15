@@ -16,7 +16,7 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
 - 相关 `.specforge/wiki/` 长期事实。
 - 当前可靠外部资料；技术类优先官方文档，产品/竞品类记录来源和访问日期。
 - `.specforge/core/skills/ORCHESTRATION.md`（需要参考 skill 时，用于选择 skill、读取 reference 和归一化输出）。
-- `.specforge/core/skills/research/brainstorm-search/SKILL.md`（需要外部事实、版本、竞品、价格、漏洞、法规或 AI provider 资料时，用于搜索来源和证据记录）。
+- `.specforge/core/skills/brainstorm/research-source/SKILL.md`（需要外部事实、版本、竞品、价格、漏洞、法规或 AI provider 资料时，用于搜索来源和证据记录）。
 
 ## 触发
 
@@ -48,17 +48,18 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
    - `deep` 时必须先做 Phase 1 发散，再做 Phase 2 聚焦。
    - 模式来源见 `sf-intake` 的“Brainstorm 分流规则”和 `core/artifacts/templates/brief.md#Brainstorm 决策`。
 1. **框定问题和事实输入。**
+   - 请求、目标用户、成功标准、约束或真实冲突不清楚时，先读取 `.specforge/core/skills/brainstorm/problem-framing/SKILL.md`。
    - 写清用户目标、目标用户、业务结果、约束和当前已知事实。
 2. **补足当前事实和外部参考。**
-   - 需要外部事实时先读取 `.specforge/core/skills/research/brainstorm-search/SKILL.md`，再按其 `references/source-index.md` 和 `references/evidence-contract.md` 查证，不凭旧知识拍板。
-   - 以下情况必须调用 `brainstorm-search`，不允许跳过：
+   - 需要外部事实时先读取 `.specforge/core/skills/brainstorm/research-source/SKILL.md`，再按其 `references/source-index.md` 和 `references/evidence-contract.md` 查证，不凭旧知识拍板。
+   - 以下情况必须调用 `research-source`，不允许跳过：
      - 涉及具体版本号、依赖兼容性、API 限制：查官方文档 + GitHub releases / package changelog。
      - 涉及新引入的库或工具：查 npmjs / GitHub Issues / releases / 已知 bug。
      - 涉及 AI provider 能力边界、上下文长度、价格、限流或数据使用：查各厂商官方文档，带访问日期。
      - 涉及竞品功能声明、定价或市场定位：查竞品官网、官方 changelog、官方 blog，不引用二手评测当事实。
      - 涉及法规、合规、数据隐私、安全漏洞：查官方法规 / 标准 / NVD / Snyk / OWASP 等权威来源。
    - 查证结果必须先记录搜索计划，再记录来源 URL、访问 / 发布日期、关键结论（1-2 句）、置信度（confirmed / likely / unclear）。
-   - 涉及新增 / 替换依赖、SDK、插件、组件库、测试库、运行时或 package manager 时，必须按 `brainstorm-search/references/dependency-version-map.md` 记录版本依赖关系：direct、peer、runtime、lockfile、transitive、breaking、override / resolution。
+   - 涉及新增 / 替换依赖、SDK、插件、组件库、测试库、运行时或 package manager 时，必须按 `research-source/references/dependency-version-map.md` 记录版本依赖关系：direct、peer、runtime、lockfile、transitive、breaking、override / resolution。
    - 版本依赖关系只作为 brainstorm 风险和 handoff；最终锁版本、依赖确认、兼容策略和验证方案交给 `sf-tech-design`。
    - 不需要外部研究时写明 `跳过理由：[具体原因]`，不允许只写“无需外部研究”。
    - 需要参考 skill 时，按 `core/skills/ORCHESTRATION.md` 选择并读取；输出必须按“参考 Skill 归一化”处理。
@@ -68,10 +69,14 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
    - 将所有 `[必须确认]` 按以下维度排序：核心目标/范围 > 体验方向 > 数据与安全 > 集成与依赖 > 交付验收。
 4. **Phase 1 发散。**
    - 仅 `deep` 必填；`light` 可写 N/A 和理由。
+   - 需要发散时读取 `.specforge/core/skills/brainstorm/divergent-thinking/SKILL.md`；候选方案同质化或需要差异化机制时，再读取 `.specforge/core/skills/brainstorm/analogy-thinking/SKILL.md`。
    - 从五个维度列出可能性，不先筛选：用户目标、解法可能性、技术路线、风险未知、不做什么。
    - 给用户看发散清单，询问是否有遗漏的重要方向。
    - 给用户前先自检：至少一个反直觉方案；考虑做更少或不做；技术路线至少两条；明确最大未知风险。
 5. **Phase 2 聚焦。**
+   - 给出方案前，读取 `.specforge/core/skills/brainstorm/scenario-simulation/SKILL.md`，用关键场景、失败路径和边界条件压测候选。
+   - 推荐方案前，读取 `.specforge/core/skills/brainstorm/critic-review/SKILL.md`，暴露最弱假设、反例、可删范围和验证点。
+   - 需要排序、推荐或用户授权默认时，读取 `.specforge/core/skills/brainstorm/decision-matrix/SKILL.md`，把取舍写成矩阵而不是散文判断。
    - 给出 2-3 个互斥方案或 MVP 组合。
    - 每个方案必须包含：用户价值、实现成本、主要风险、适用场景、放弃代价。
    - 方案之间必须真的不同，不能只是同一方案的措辞变化。
@@ -113,6 +118,8 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
    - Embedded 模式写入 `00-intake/brainstorm.md` 并同步 `00-intake/brief.md`。
    - Standalone / Lightweight 模式写入 `specforge-import-ready.md` 格式内容。
 8. **收敛落档。**
+   - 写入前读取 `.specforge/core/skills/brainstorm/output-shaping/SKILL.md`，选择适合本轮的输出形态。
+   - 需要进入 PRD / requirements / UI design / technical design / research / verification 时，读取 `.specforge/core/skills/brainstorm/execution-planning/SKILL.md`，写清 handoff、owner、输入产物和验证入口。
    - 写入 `00-intake/brainstorm.md`。
    - 更新 `00-intake/brief.md` 的澄清记录、功能候选池、用户选择、PRD 决策和下一步路由。
    - 如果来自 PRD / requirements / UI / tech design 的返工，标明 `Return to` 和需要修改的 artifact。
@@ -132,6 +139,7 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
 ## `brainstorm.md` 必含内容
 
 - 问题框架。
+- 问题重构：原始表述、重写后的问题、核心冲突、成功标准、必须确认项。
 - 当前事实和研究证据。
   - 必须先写搜索计划表：`事实问题 | 来源类型 | 查询入口 | 足够性`。
   - 必须写本地事实输入：已读取哪些 artifact / manifest / lockfile / wiki，哪些仍是 `unknown`。
@@ -140,12 +148,18 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
   - 必须写覆盖度说明：已达到 quick / standard / dependency / high-stakes 哪个查证深度，缺口是什么。
   - 未查证项必须列 checklist：`- [ ] 问题描述 → 待查来源`。
 - 问题地图：已明确 / 必须确认 / 可安全默认，且必须确认项带优先级。
+- 发散方向池：保守 / 标准 / 激进 / 实验 / 反直觉方向。
+- 类比迁移：类比来源、可迁移机制、调整方式和风险。
+- 场景模拟：关键场景、失败路径、边界条件和补救策略。
+- 批判质疑：最弱假设、反方问题、可删范围和验证点。
+- 方案评估矩阵：价值、成本、风险、落地性、可扩展性、置信度和推荐。
 - 方案对比表。
 - 推荐方案和理由。
 - 用户确认记录。
 - 参考 Skill 使用记录：读取了什么、提取了什么、如何归一化。
 - 明确延后 / 不做。
 - 未决问题。
+- 下一步行动：下游阶段、输入产物、owner、阻断条件和验证入口。
 - 下一步路由。
 
 ## 判定表

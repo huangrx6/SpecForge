@@ -1,12 +1,12 @@
 # Dependency Version Map
 
-本文件用于 `brainstorm-search` 中的版本依赖关系查证。它不替代 `sf-tech-design` 的最终版本锁定；它负责在 brainstorm 阶段发现会影响方案取舍的版本关系、兼容风险和后续 technical design 必须处理的证据。
+本文件用于 `research-source` 中的版本依赖关系查证。它不替代 `sf-tech-design` 的最终版本锁定；它负责在 brainstorm 阶段发现会影响方案取舍的版本关系、兼容风险和后续 technical design 必须处理的证据。
 
 ## 边界
 
 | 阶段 | 负责 | 不负责 |
 |---|---|---|
-| `brainstorm-search` | 发现版本关系风险：直接依赖、peer deps、runtime / engine、lockfile、transitive deps、breaking changes、override / resolution 需求 | 最终锁定版本、修改 lockfile、决定迁移方案 |
+| `research-source` | 发现版本关系风险：直接依赖、peer deps、runtime / engine、lockfile、transitive deps、breaking changes、override / resolution 需求 | 最终锁定版本、修改 lockfile、决定迁移方案 |
 | `sf-tech-design` | 基于证据锁定版本、确认新增依赖、写兼容策略、升级 / 回滚 / 验证方案 | 回头凭记忆补事实，或忽略 brainstorm 中的未查证项 |
 
 ## 必查关系

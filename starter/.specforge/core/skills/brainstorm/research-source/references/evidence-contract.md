@@ -1,6 +1,6 @@
 # Evidence Contract
 
-`brainstorm-search` 的输出必须短、可追溯、可被 `sf-brainstorm` 直接写入 `brainstorm.md`。
+`research-source` 的输出必须短、可追溯、可被 `sf-brainstorm` 直接写入 `brainstorm.md`。
 
 ## Search Plan
 

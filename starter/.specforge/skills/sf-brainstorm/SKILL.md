@@ -34,7 +34,7 @@ description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户�
 - 有技术选型或依赖版本问题时读取 `.specforge/core/standards/engineering.md`。
 - `.specforge/core/skills/ORCHESTRATION.md`：参考能力的总编排规则。
 - `references/external-skills.md`：本 skill 的参考 skill 选择表、读取深度和归一化格式。
-- `.specforge/core/skills/research/brainstorm-search/SKILL.md`：当前事实查证、来源选择、证据表和未查证项记录。
+- `.specforge/core/skills/brainstorm/research-source/SKILL.md`：当前事实查证、来源选择、证据表和未查证项记录。
 
 ## 参考 Skill 联动
 
@@ -42,15 +42,22 @@ description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户�
 
 常见参考包括：
 
+- `problem-framing`：问题重构、目标、受众、约束、假设和必须确认问题。
+- `divergent-thinking`：多角度发散候选方向，避免过早收敛。
+- `analogy-thinking`：从其他产品、行业或系统迁移可用机制。
+- `scenario-simulation`：把方案放进真实使用流程、失败路径和边界场景里压测。
+- `critic-review`：反方质疑、假设检查、过度设计压缩和风险暴露。
+- `decision-matrix`：按价值、成本、风险、落地性、可扩展性和置信度收敛排序。
+- `output-shaping`：控制 brainstorm 输出形态，避免自由散文式结论。
+- `execution-planning`：把推荐方向转成下一步行动、handoff 和验证入口。
 - `opportunity-solution-tree`：产品目标、用户机会、MVP、候选方向、实验和优先级取舍。
 - `design-system`：体验方向、美学方向、用户旅程、信息架构、交互、可访问性和后续 UI design 输入。
-- `brainstorm-search`：当前事实查证、来源优先级、证据表和未查证项。
-- `deep-research`：多来源研究、共识/争议和研究空白。
+- `research-source`：当前事实查证、来源优先级、证据表和未查证项。
 - `user-stories`：用户故事、验收口径和边界条件。
 - `create-prd`：PRD handoff 检查、非目标和 release 分期覆盖。
 - `playwright-skill`：只在 brainstorm 需要提前识别验证风险时参考，正式执行仍交给后续阶段。
 
-参考 skill 的输出必须先归一化为 `问题地图 / 方案对比 / 用户确认记录 / 后续阶段输入`。它不能替代用户确认，也不能原样落入 `brainstorm.md`；事实类结论必须按 `brainstorm-search` 的证据契约记录来源。
+参考 skill 的输出必须先归一化为 `问题地图 / 方案对比 / 用户确认记录 / 后续阶段输入`。它不能替代用户确认，也不能原样落入 `brainstorm.md`；事实类结论必须按 `research-source` 的证据契约记录来源。
 
 ## 何时使用
 
@@ -152,9 +159,9 @@ C) 不确定 → 先按 B 设计，留扩展点
    - `deep`：先做 Phase 1 发散，再做 Phase 2 聚焦。
    - 模式来源见 `sf-intake` 的“Brainstorm 分流规则”和 `core/artifacts/templates/brief.md#Brainstorm 决策`。
 3. 需要当前事实时先查证；技术类优先官方资料，并记录日期。
-4. 需要外部事实、版本、依赖、价格、竞品、漏洞、法规或 AI provider 资料时，读取 `.specforge/core/skills/research/brainstorm-search/SKILL.md`，按其来源索引和证据契约查证，并在 `brainstorm.md#当前事实与研究证据` 记录搜索计划、URL、日期、结论和置信度。
+4. 需要外部事实、版本、依赖、价格、竞品、漏洞、法规或 AI provider 资料时，读取 `.specforge/core/skills/brainstorm/research-source/SKILL.md`，按其来源索引和证据契约查证，并在 `brainstorm.md#当前事实与研究证据` 记录搜索计划、URL、日期、结论和置信度。
    - 新增 / 替换依赖、SDK、插件、组件库、测试库、运行时或 package manager 时，还要记录版本依赖关系表，作为后续 `sf-tech-design` 当前版本事实和依赖确认输入。
-5. 需要参考 skill 时，按 `references/external-skills.md` 选择并读取最小必要内容；只把它转成候选、风险、问题地图或后续阶段输入，不把参考输出直接当结论。
+5. 需要参考 skill 时，按 `references/external-skills.md` 选择并读取最小必要内容；Brainstorm 包内 skill 可以按问题重构、事实查证、发散、类比、场景、批判、矩阵、输出和行动计划串联使用。
 6. 建立问题地图：`[已明确] / [必须确认] / [可安全默认]`。
 7. 按固定维度排序 `[必须确认]`：核心目标/范围 > 体验方向 > 数据与安全 > 集成与依赖 > 交付验收。
 8. 写明输出预算：小型取舍只保留 1 个问题和 2-3 个选项；复杂取舍才展开方案对比和研究证据。

@@ -11,11 +11,18 @@
 | `user-stories` | `requirements/user-stories` | Requirements | 用户故事、3C、INVEST、验收标准和可测试性参考 | `01-spec/requirements.md` |
 | `pencil` | `ui-ux/pencil` | UI Design | Pencil `.pen` 原型读写、组件复用、tokens、截图导出、布局检查和设计转代码参考 | `01-spec/ui-design.md`、`01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/` |
 | `design-system` | `ui-ux/design-system` | Brainstorm / UI Design / Technical Design | 用户研究、信息架构、设计语言、foundations、组件规范、页面模式、shadcn-vue 映射、动效边界和去廉价感审查 | `00-intake/brainstorm.md`、`01-spec/ui-design.md`、Pencil 输入、前端组件契约 |
-| `brainstorm-search` | `research/brainstorm-search` | Brainstorm / Research | 当前事实查证、来源选择、证据表、置信度和未查证项 | `00-intake/brainstorm.md#当前事实与研究证据` |
+| `problem-framing` | `brainstorm/problem-framing` | Brainstorm | 把模糊请求重构为目标、受众、约束、假设和必须确认问题 | `00-intake/brainstorm.md#问题重构`、`#问题地图` |
+| `research-source` | `brainstorm/research-source` | Brainstorm / Research | 当前事实查证、来源选择、证据表、置信度和未查证项 | `00-intake/brainstorm.md#当前事实与研究证据` |
+| `divergent-thinking` | `brainstorm/divergent-thinking` | Brainstorm | 从多种视角发散候选方向，避免过早收敛 | `00-intake/brainstorm.md#发散方向池` |
+| `analogy-thinking` | `brainstorm/analogy-thinking` | Brainstorm | 从其他产品、行业或系统迁移机制，形成差异化选项 | `00-intake/brainstorm.md#类比迁移` |
+| `scenario-simulation` | `brainstorm/scenario-simulation` | Brainstorm | 用真实使用场景、失败路径和边界条件压测方案 | `00-intake/brainstorm.md#场景模拟` |
+| `critic-review` | `brainstorm/critic-review` | Brainstorm | 反方质疑、假设检查、过度设计压缩和风险暴露 | `00-intake/brainstorm.md#批判质疑` |
+| `decision-matrix` | `brainstorm/decision-matrix` | Brainstorm | 用价值、成本、风险、落地性、可扩展性和置信度收敛排序 | `00-intake/brainstorm.md#方案评估矩阵` |
+| `output-shaping` | `brainstorm/output-shaping` | Brainstorm | 控制 brainstorm 输出形态，避免自由散文式结论 | `00-intake/brainstorm.md` |
+| `execution-planning` | `brainstorm/execution-planning` | Brainstorm | 把推荐方向转成下一步行动、handoff 和验证入口 | `00-intake/brainstorm.md#下一步行动` |
 | `test-design` | `quality/test-design` | Verification | 测试设计树、XMind / 白板导出、TC / PW 用例矩阵、自动化分层和证据目标 | `05-verification/test-design/`、`05-verification/test-cases.md`、`05-verification/report.md` |
 | `playwright-skill` | `quality/playwright-skill` | Verification | 浏览器 E2E、真实点击输入、角色流程、截图和响应式证据 | `05-verification/test-cases.md`、`05-verification/report.md`、`05-verification/evidence/` |
 | `code-reviewer` | `quality/code-reviewer` | Code Review | 安全、性能、正确性、可维护性和测试覆盖的补充检查清单 | `04-code-review/code-review-v1.md`、`05-verification/report.md` |
-| `deep-research` | `research/deep-research` | Research / Discovery | 多来源研究综合、引用、可信度和共识/争议拆解参考 | `01-spec/research.md` |
 
 ## 按需外部参考
 
@@ -47,11 +54,22 @@
 
 ### Brainstorm
 
-- 按本节判断是否参考 `opportunity-solution-tree`、`design-system`、`brainstorm-search`、`deep-research`、`user-stories`、`create-prd` 或 `playwright-skill`。
+- Brainstorm 不是单纯事实查证；默认先用 `problem-framing` 明确问题，再按风险决定是否进入事实查证、发散、类比、模拟、批判、矩阵、输出和行动计划。
+- 标准联动顺序：
+  1. `problem-framing`：请求含糊、目标/范围/用户不清时必读。
+  2. `research-source`：当前事实、版本、价格、竞品、AI provider、法规、漏洞或依赖会影响取舍时必读。
+  3. `divergent-thinking`：需要 2 个以上候选方向或用户要求“帮我想想”时必读。
+  4. `analogy-thinking`：候选方案同质化、需要差异化机制或跨行业借鉴时读取。
+  5. `scenario-simulation`：方案会进入产品/流程/工程落地前，用场景、失败路径和边界条件压测。
+  6. `critic-review`：推荐方案出现前，检查假设、过度设计、反例和可删除范围。
+  7. `decision-matrix`：需要排序、推荐或用户授权默认时读取。
+  8. `output-shaping`：把输出固定为想法池、方案矩阵、MVP 路线图、风险清单或行动表。
+  9. `execution-planning`：收敛后写清下一步路由、handoff 和验证入口。
+- 按本节判断是否还需参考 `opportunity-solution-tree`、`design-system`、`user-stories`、`create-prd` 或 `playwright-skill`。
 - 先读目标 skill 的 `SKILL.md`；只有问题落到具体子领域时，才读 `references/` 或 `rules/` 下的相关文件。
 - `opportunity-solution-tree` 的 references 只在需要时读取：新产品点子、存量产品点子、需求 triage、功能优先级或优先级框架。
 - 参考 skill 输出必须先归一化成 SpecForge 问题地图、方案对比、用户确认记录或后续阶段输入；不得把外部模板原样写进 `brainstorm.md`。
-- 当前事实、版本、依赖、价格、竞品、AI provider、漏洞、法规或浏览器兼容性会影响取舍时，先参考 `brainstorm-search`，再把证据表写入 `brainstorm.md#当前事实与研究证据`。
+- 当前事实、版本、依赖、价格、竞品、AI provider、漏洞、法规或浏览器兼容性会影响取舍时，先参考 `research-source`，再把证据表写入 `brainstorm.md#当前事实与研究证据`。
 - 用户确认 UI / 视觉 / 体验方向、技术路线、依赖、工具链或验收口径后，必须写入对应 confirmed 状态；未确认时只能写 pending 和 `[NEEDS ... DECISION]`。
 
 ### Requirements
@@ -75,8 +93,8 @@
 
 ### Research / Discovery
 
-- 当 discovery 需要跨来源综合、引用编号、来源可信度、共识/争议和研究空白时，可参考 `deep-research`。
-- 涉及当前事实、法规、版本、价格、漏洞、新闻或竞品状态时，先用 `brainstorm-search` 或等价可靠来源实时核验；`deep-research` 只提供研究组织方法。
+- 涉及当前事实、法规、版本、价格、漏洞、新闻或竞品状态时，先用 `research-source` 或等价可靠来源实时核验。
+- `research-source` 负责来源选择、证据表、冲突记录和覆盖度说明；复杂 PoC、架构实验、性能验证或跨来源长篇研究升级到 `sf-discovery` 的 research artifact。
 - 研究结论必须写入 `01-spec/research.md`，并在 PRD、requirements 或 technical design 中只引用已归一化的结论。
 
 ### Code Review
