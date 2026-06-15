@@ -24,6 +24,14 @@
 | --- | --- | --- | --- | --- |
 | | | | | confirmed / likely / unclear |
 
+版本依赖关系：
+
+| 依赖 / 技术 | 当前 / 候选版本 | 关系类型 | 约束来源 | 影响 | Handoff |
+| --- | --- | --- | --- | --- | --- |
+| | | direct / peer / runtime / lockfile / transitive / breaking / override | | | tech-design lock version / needs user dependency decision / needs spike / no action |
+
+覆盖度：
+
 未查证项：
 - [ ] 问题描述 → 待查来源
 

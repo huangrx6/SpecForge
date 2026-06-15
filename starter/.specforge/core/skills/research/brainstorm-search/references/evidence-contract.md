@@ -37,6 +37,12 @@
 | 问题 | 来源 | 日期 | 结论 | 置信度 |
 |---|---|---|---|---|
 | | | | | confirmed / likely / unclear |
+
+版本依赖关系：
+
+| 依赖 / 技术 | 当前 / 候选版本 | 关系类型 | 约束来源 | 影响 | Handoff |
+|---|---|---|---|---|---|
+| | | direct / peer / runtime / lockfile / transitive / breaking / override | URL 或 manifest / lockfile 路径 | | tech-design lock version / needs user dependency decision / needs spike / no action |
 ```
 
 字段要求：
@@ -49,6 +55,27 @@
 | 结论 | 1-2 句，只写来源能支撑的事实 |
 | 置信度 | `confirmed` / `likely` / `unclear` |
 
+## Version Relationship Map
+
+涉及新增 / 替换依赖、SDK、插件、组件库、测试库、运行时、package manager 或 AI provider SDK 时，证据表后必须补版本依赖关系表。
+
+字段要求：
+
+| 字段 | 要求 |
+|---|---|
+| 依赖 / 技术 | 具体 package、SDK、runtime、framework 或 provider |
+| 当前 / 候选版本 | 当前项目版本、候选版本或 `unknown`；外部事实必须有来源 |
+| 关系类型 | `direct` / `peer` / `runtime` / `lockfile` / `transitive` / `breaking` / `override` |
+| 约束来源 | URL 或本地 manifest / lockfile 路径 |
+| 影响 | 对方案取舍、成本、兼容性、安全或验证的影响 |
+| Handoff | `tech-design lock version` / `needs user dependency decision` / `needs spike` / `no action` |
+
+跳过版本依赖关系表时，必须写一句跳过理由，例如：
+
+```md
+版本依赖关系：N/A。本轮只查竞品定价，不涉及新增依赖或运行时兼容性。
+```
+
 ## Confidence
 
 | 置信度 | 判定 |
@@ -56,6 +83,20 @@
 | `confirmed` | A 级来源直接支持结论，或两个以上可靠来源一致 |
 | `likely` | 来源可靠但间接；只有 B 级来源；或需要项目实测才能最终确认 |
 | `unclear` | 来源冲突、缺日期、官方未说明、需要登录/账号/实测或用户上下文 |
+
+## Coverage Check
+
+证据表后必须用一句话说明覆盖度，尤其是没有达到 `SKILL.md#查证深度` 中对应最小证据时。
+
+```md
+覆盖度：standard decision evidence 已满足（官方 docs + release notes）；dependency evidence 未满足，因为当前项目 lockfile 不可访问，已列入未查证项。
+```
+
+判定规则：
+
+- 达不到对应查证深度时，置信度不能写 `confirmed`。
+- 缺少当前项目 manifest / lockfile 时，不能断言版本兼容；只能写 `likely` 或 `unclear`。
+- 社区反馈只能补充用户痛点或风险线索，不能补足官方来源缺口。
 
 ## Open Checks
 
@@ -70,11 +111,12 @@
 - 官方文档没有说明，社区讨论互相矛盾。
 - 需要安装、运行或压测才能验证。
 - 事实会随时间变动，但当前无法联网或来源不可访问。
+- 当前项目 manifest / lockfile / runtime 版本不可访问，无法判断 peer deps、engine 或 transitive risk。
 
 ## Handoff Note
 
 如果某条证据会影响方案选择，必须在 `brainstorm.md#方案选项` 或 `#问题地图` 中引用它：
 
 ```md
-- [必须确认] 是否引入 X：当前证据显示 peer deps 与现有 Vue 版本可能冲突（见“当前事实与研究证据”第 2 行）。
+- [必须确认] 是否引入 X：当前证据显示 peer deps 与现有 Vue 版本可能冲突（见“当前事实与研究证据”第 2 行和“版本依赖关系”第 1 行），需要 tech-design 锁定版本并验证 build。
 ```

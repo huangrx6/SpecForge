@@ -10,7 +10,7 @@
 | `user-stories` | `phuryn/pm-skills` | 0 | 可能带入 Sprint / backlog 表达 | 只保留 3C、INVEST 和验收标准方法 |
 | `opportunity-solution-tree` | `phuryn/pm-skills` | 5 | 可能把缺少证据的分数写成事实 | 只作为机会树、功能候选、实验和优先级方法，结论必须等用户确认 |
 | `design-system` | SpecForge local-authored | 56 | 可能把设计规则当成已确认 UI 方向 | 只作为设计语言、组件契约、动效、页面模式和去廉价感参考，必须归一化到 UI artifact 或组件契约 |
-| `brainstorm-search` | SpecForge local-authored | 2 | 可能把来源索引当成事实，或在无联网证据时补结论 | 只作为 brainstorm 当前事实查证流程、来源选择和证据表契约，事实必须来自实际 URL / 本地证据 |
+| `brainstorm-search` | SpecForge local-authored | 3 | 可能把来源索引当成事实，或在无联网证据时补结论 | 只作为 brainstorm 当前事实查证流程、来源选择、版本关系和证据表契约，事实必须来自实际 URL / 本地证据 |
 | `test-design` | SpecForge local-authored | 3 | 可能把测试设计替代真实验证 | 只作为测试空间、TC / PW 矩阵和证据目标参考，必须落到 verification artifact 并执行验证 |
 | `deep-research` | `Shubhamsaboo/awesome-llm-apps` | 0 | 可能把旧资料当事实 | 只提供研究组织方法，事实另行核验 |
 | `code-reviewer` | `Shubhamsaboo/awesome-llm-apps` | 6 | 可能输出模板化 finding | 只作为风险检查清单 |

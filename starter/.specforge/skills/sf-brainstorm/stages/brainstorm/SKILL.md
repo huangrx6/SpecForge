@@ -58,6 +58,8 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
      - 涉及竞品功能声明、定价或市场定位：查竞品官网、官方 changelog、官方 blog，不引用二手评测当事实。
      - 涉及法规、合规、数据隐私、安全漏洞：查官方法规 / 标准 / NVD / Snyk / OWASP 等权威来源。
    - 查证结果必须先记录搜索计划，再记录来源 URL、访问 / 发布日期、关键结论（1-2 句）、置信度（confirmed / likely / unclear）。
+   - 涉及新增 / 替换依赖、SDK、插件、组件库、测试库、运行时或 package manager 时，必须按 `brainstorm-search/references/dependency-version-map.md` 记录版本依赖关系：direct、peer、runtime、lockfile、transitive、breaking、override / resolution。
+   - 版本依赖关系只作为 brainstorm 风险和 handoff；最终锁版本、依赖确认、兼容策略和验证方案交给 `sf-tech-design`。
    - 不需要外部研究时写明 `跳过理由：[具体原因]`，不允许只写“无需外部研究”。
    - 需要参考 skill 时，按 `core/skills/ORCHESTRATION.md` 选择并读取；输出必须按“参考 Skill 归一化”处理。
 3. **建立问题地图。**
@@ -133,6 +135,8 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
 - 当前事实和研究证据。
   - 必须先写搜索计划表：`事实问题 | 来源类型 | 查询入口 | 足够性`。
   - 必须使用表格：`问题 | 来源 | 日期 | 结论 | 置信度`。
+  - 涉及依赖 / SDK / runtime / package manager 时，必须写版本依赖关系表：`依赖 / 技术 | 当前 / 候选版本 | 关系类型 | 约束来源 | 影响 | Handoff`。
+  - 必须写覆盖度说明：已达到 quick / standard / dependency / high-stakes 哪个查证深度，缺口是什么。
   - 未查证项必须列 checklist：`- [ ] 问题描述 → 待查来源`。
 - 问题地图：已明确 / 必须确认 / 可安全默认，且必须确认项带优先级。
 - 方案对比表。

@@ -9,9 +9,24 @@
 | npm 包版本、下载量、维护状态 | npmjs.com、npmtrends.com、deps.dev | 看 weekly downloads 趋势、最后发版时间、版本分布、依赖图和 license / advisory 信号 |
 | GitHub 维护健康度 | github.com repo → Issues / Pulse / Releases、OpenSSF Scorecard | 看 open issues 趋势、最近 commit、release 节奏、PR 响应速度和供应链安全健康信号 |
 | 框架官方文档 | 各框架官网，例如 react.dev、vuejs.org、docs.astro.build | 必须读官网，不读 Medium 二手文章替代官网 |
-| 依赖兼容性 / peer deps | 包的 package.json、CHANGELOG.md、release notes | 版本锁定风险最常在 peer deps、breaking changes 和 migration guide |
+| 依赖兼容性 / peer deps | 包的 package.json、npm package metadata、CHANGELOG.md、release notes、deps.dev | 版本锁定风险最常在 peer deps、breaking changes、transitive deps 和 migration guide |
+| Runtime / engine 约束 | package.json `engines`、official runtime docs、CI matrix、release notes | 查 Node / Python / Go / Java / browser / OS / native binding 要求，判断部署或本地运行是否冲突 |
+| Lockfile / 实际安装树 | package-lock.json、pnpm-lock.yaml、yarn.lock、bun.lock、poetry.lock、uv.lock、go.sum、Cargo.lock | 有项目上下文时优先读 lockfile；manifest 只说明期望，lockfile 才说明实际安装树 |
+| Override / resolution 风险 | npm overrides、pnpm overrides、Yarn resolutions、package manager docs | 需要强制 transitive version 时只记录风险和 handoff，不在 brainstorm 阶段直接决策 |
 | 安全漏洞 | osv.dev、deps.dev、GitHub Security Advisories、nvd.nist.gov、snyk.io/vuln | 引入新依赖或升级关键包前查一遍；开源包优先看 OSV / deps.dev 的精确版本映射，再交叉检查 NVD / GitHub / Snyk |
 | 性能基准 | Web Almanac、web.dev、MDN、Chrome Developer Blog | 优先使用有数据、日期和测试条件的来源 |
+
+## Dependency / Package Manager 官方入口
+
+| 生态 | 优先来源 | 说明 |
+|---|---|---|
+| npm / Node | npm package.json docs、npm package-lock docs、SemVer spec、Node.js docs | 查 `dependencies`、`peerDependencies`、`engines`、`overrides`、lockfile 和 semver range |
+| pnpm | pnpm lockfile、peer dependencies、overrides / packageExtensions docs | pnpm 对 peer resolution 更严格，新增依赖时要查 peer conflict 和 workspace 影响 |
+| Yarn | Yarn manifest、resolutions、packageExtensions docs | 查 resolutions / packageExtensions 是否只是临时补丁 |
+| Python | PyPA dependency specifiers、PyPI project metadata、poetry / uv docs | 查 `requires-python`、extras、environment markers、lockfile 和 build backend |
+| Go | Go modules reference、go.mod / go.sum docs | 查 `require`、`replace`、module path、Go toolchain 版本 |
+| Rust | Cargo reference、Cargo.lock、features / MSRV 文档 | 查 feature flags、workspace deps、MSRV 和 transitive risk |
+| JVM | Maven / Gradle dependency management、BOM、plugin docs | 查 BOM、plugin version、Java target、effective dependency tree |
 
 ## 产品 / 竞品 / 市场
 
@@ -30,6 +45,17 @@
 | SDK / API 版本 | 官方 GitHub release notes、官方 SDK 文档 | 不信博客，不信旧示例；确认当前 SDK 版本和迁移说明 |
 | 限流 / 配额 | 官方 rate limits / usage limits / quotas 页面 | 影响成本模型、排队策略和降级方案时必须查证 |
 | 数据使用 / 隐私边界 | 官方 data usage、privacy、enterprise security 文档 | 涉及用户数据、企业合规或默认日志保留时必须查证 |
+
+## 最小来源组合
+
+| 场景 | 最小来源组合 | 不能缺的结论 |
+|---|---|---|
+| 新增 npm / JS 依赖 | npm package metadata + official docs / README + release notes / changelog + OSV / GitHub Advisories | 当前版本、peer / engine、维护状态、安全信号、breaking changes |
+| 新增 Python 依赖 | PyPI metadata + project docs + release notes + dependency specifiers / lockfile + OSV | Python 版本要求、extras / markers、维护状态、安全信号 |
+| 新增 AI provider / SDK | provider docs + pricing + rate limits / quotas + data usage / privacy + SDK releases | 模型能力、价格、限流、数据边界、SDK 版本 |
+| 竞品功能 / 定价取舍 | product docs / website + pricing page + official changelog / blog | 功能是否存在、价格 / 套餐、发布时间或当前状态 |
+| 安全 / 合规影响 | official standard / regulator source + OWASP / MDN / vendor security docs + advisory database | 适用范围、强制要求、项目影响、未查证项 |
+| 浏览器 / 可访问性 | MDN / caniuse + WAI-ARIA / WCAG + framework docs | 支持矩阵、fallback、交互 pattern |
 
 ## 工程规范 / 最佳实践
 

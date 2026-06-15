@@ -353,6 +353,9 @@
           },
           {
             "path": "references/evidence-contract.md"
+          },
+          {
+            "path": "references/dependency-version-map.md"
           }
         ]
       },

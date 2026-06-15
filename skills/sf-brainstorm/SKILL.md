@@ -153,6 +153,7 @@ C) 不确定 → 先按 B 设计，留扩展点
    - 模式来源见 `sf-intake` 的“Brainstorm 分流规则”和 `core/artifacts/templates/brief.md#Brainstorm 决策`。
 3. 需要当前事实时先查证；技术类优先官方资料，并记录日期。
 4. 需要外部事实、版本、依赖、价格、竞品、漏洞、法规或 AI provider 资料时，读取 `.specforge/core/skills/research/brainstorm-search/SKILL.md`，按其来源索引和证据契约查证，并在 `brainstorm.md#当前事实与研究证据` 记录搜索计划、URL、日期、结论和置信度。
+   - 新增 / 替换依赖、SDK、插件、组件库、测试库、运行时或 package manager 时，还要记录版本依赖关系表，作为后续 `sf-tech-design` 当前版本事实和依赖确认输入。
 5. 需要参考 skill 时，按 `references/external-skills.md` 选择并读取最小必要内容；只把它转成候选、风险、问题地图或后续阶段输入，不把参考输出直接当结论。
 6. 建立问题地图：`[已明确] / [必须确认] / [可安全默认]`。
 7. 按固定维度排序 `[必须确认]`：核心目标/范围 > 体验方向 > 数据与安全 > 集成与依赖 > 交付验收。
