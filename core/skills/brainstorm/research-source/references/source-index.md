@@ -4,47 +4,47 @@
 
 ## 技术选型 / 版本 / 兼容性
 
-| 问题类型 | 优先来源 | 说明 |
+| 问题类型 | 官方 / 权威入口 URL | 使用说明 |
 |---|---|---|
-| npm 包版本、下载量、维护状态 | npmjs.com、npmtrends.com、deps.dev | 看 weekly downloads 趋势、最后发版时间、版本分布、依赖图和 license / advisory 信号 |
-| GitHub 维护健康度 | github.com repo → Issues / Pulse / Releases、OpenSSF Scorecard | 看 open issues 趋势、最近 commit、release 节奏、PR 响应速度和供应链安全健康信号 |
-| 框架官方文档 | 各框架官网，例如 react.dev、vuejs.org、docs.astro.build | 必须读官网，不读 Medium 二手文章替代官网 |
-| 依赖兼容性 / peer deps | 包的 package.json、npm package metadata、CHANGELOG.md、release notes、deps.dev | 版本锁定风险最常在 peer deps、breaking changes、transitive deps 和 migration guide |
-| Runtime / engine 约束 | package.json `engines`、official runtime docs、CI matrix、release notes | 查 Node / Python / Go / Java / browser / OS / native binding 要求，判断部署或本地运行是否冲突 |
-| Lockfile / 实际安装树 | package-lock.json、pnpm-lock.yaml、yarn.lock、bun.lock、poetry.lock、uv.lock、go.sum、Cargo.lock | 有项目上下文时优先读 lockfile；manifest 只说明期望，lockfile 才说明实际安装树 |
-| Override / resolution 风险 | npm overrides、pnpm overrides、Yarn resolutions、package manager docs | 需要强制 transitive version 时只记录风险和交接，不在 brainstorm 阶段直接决策 |
-| 安全漏洞 | osv.dev、deps.dev、GitHub Security Advisories、nvd.nist.gov、snyk.io/vuln | 引入新依赖或升级关键包前查一遍；开源包优先看 OSV / deps.dev 的精确版本映射，再交叉检查 NVD / GitHub / Snyk |
-| 性能基准 | Web Almanac、web.dev、MDN、Chrome Developer Blog | 优先使用有数据、日期和测试条件的来源 |
+| npm 包版本、下载量、维护状态 | `https://www.npmjs.com/`、`https://npmtrends.com/`、`https://deps.dev/` | 看 weekly downloads 趋势、最后发版时间、版本分布、依赖图和 license / advisory 信号 |
+| GitHub 维护健康度 | `https://github.com/<owner>/<repo>/releases`、`https://github.com/<owner>/<repo>/issues`、`https://github.com/<owner>/<repo>/pulse`、`https://scorecard.dev/` | 看 open issues 趋势、最近 commit、release 节奏、PR 响应速度和供应链安全健康信号 |
+| 框架官方文档 | `https://react.dev/`、`https://vuejs.org/`、`https://docs.astro.build/`、`https://vite.dev/` | 必须读官网，不读 Medium 二手文章替代官网；框架事实以当前官方文档和 release notes 为准 |
+| 依赖兼容性 / peer deps | 包 registry 页面、repo `package.json`、`CHANGELOG.md`、`https://docs.npmjs.com/cli/v10/configuring-npm/package-json#peerdependencies`、`https://deps.dev/` | 版本锁定风险最常在 peer deps、breaking changes、transitive deps 和 migration guide |
+| Runtime / engine 约束 | `https://nodejs.org/docs/latest/api/packages.html`、生态 runtime docs、CI matrix、release notes | 查 Node / Python / Go / Java / browser / OS / native binding 要求，判断部署或本地运行是否冲突 |
+| Lockfile / 实际安装树 | 本地 `package-lock.json`、`pnpm-lock.yaml`、`yarn.lock`、`bun.lock`、`poetry.lock`、`uv.lock`、`go.sum`、`Cargo.lock` | 有项目上下文时优先读 lockfile；manifest 只说明期望，lockfile 才说明实际安装树 |
+| Override / resolution 风险 | `https://docs.npmjs.com/cli/v10/configuring-npm/package-json#overrides`、`https://pnpm.io/package_json#pnpmoverrides`、`https://yarnpkg.com/configuration/manifest#resolutions` | 需要强制 transitive version 时只记录风险和交接，不在 brainstorm 阶段直接决策 |
+| 安全漏洞 | `https://osv.dev/`、`https://deps.dev/`、`https://github.com/advisories`、`https://nvd.nist.gov/vuln`、`https://snyk.io/vuln` | 引入新依赖或升级关键包前查一遍；开源包优先看 OSV / deps.dev 的精确版本映射，再交叉检查 NVD / GitHub / Snyk |
+| 性能基准 | `https://almanac.httparchive.org/`、`https://web.dev/`、`https://developer.mozilla.org/`、`https://developer.chrome.com/blog` | 优先使用有数据、日期和测试条件的来源 |
 
 ## 依赖 / 包管理器官方入口
 
-| 生态 | 优先来源 | 说明 |
+| 生态 | 官方 / 权威入口 URL | 使用说明 |
 |---|---|---|
-| npm / Node | npm package.json docs、npm package-lock docs、SemVer spec、Node.js docs | 查 `dependencies`、`peerDependencies`、`engines`、`overrides`、lockfile 和 semver range |
-| pnpm | pnpm lockfile、peer dependencies、overrides / packageExtensions docs | pnpm 对 peer resolution 更严格，新增依赖时要查 peer conflict 和 workspace 影响 |
-| Yarn | Yarn manifest、resolutions、packageExtensions docs | 查 resolutions / packageExtensions 是否只是临时补丁 |
-| Python | PyPA dependency specifiers、PyPI project metadata、poetry / uv docs | 查 `requires-python`、extras、environment markers、lockfile 和 build backend |
-| Go | Go modules reference、go.mod / go.sum docs | 查 `require`、`replace`、module path、Go toolchain 版本 |
-| Rust | Cargo reference、Cargo.lock、features / MSRV 文档 | 查 feature flags、workspace deps、MSRV 和 transitive risk |
-| JVM | Maven / Gradle dependency management、BOM、plugin docs | 查 BOM、plugin version、Java target、effective dependency tree |
+| npm / Node | `https://docs.npmjs.com/cli/v10/configuring-npm/package-json`、`https://docs.npmjs.com/cli/v10/configuring-npm/package-lock-json`、`https://semver.org/`、`https://nodejs.org/docs/latest/api/` | 查 `dependencies`、`peerDependencies`、`engines`、`overrides`、lockfile 和 semver range |
+| pnpm | `https://pnpm.io/lockfile`、`https://pnpm.io/package_json`、`https://pnpm.io/settings#overrides` | pnpm 对 peer resolution 更严格，新增依赖时要查 peer conflict 和 workspace 影响 |
+| Yarn | `https://yarnpkg.com/configuration/manifest`、`https://yarnpkg.com/features/package-extensions` | 查 resolutions / packageExtensions 是否只是临时补丁 |
+| Python | `https://packaging.python.org/en/latest/specifications/dependency-specifiers/`、`https://pypi.org/`、`https://python-poetry.org/docs/`、`https://docs.astral.sh/uv/` | 查 `requires-python`、extras、environment markers、lockfile 和 build backend |
+| Go | `https://go.dev/ref/mod` | 查 `require`、`replace`、module path、Go toolchain 版本 |
+| Rust | `https://doc.rust-lang.org/cargo/reference/` | 查 feature flags、workspace deps、MSRV 和 transitive risk |
+| JVM | `https://maven.apache.org/guides/`、`https://docs.gradle.org/current/userguide/userguide.html` | 查 BOM、plugin version、Java target、effective dependency tree |
 
 ## 产品 / 竞品 / 市场
 
-| 问题类型 | 优先来源 | 说明 |
+| 问题类型 | 官方 / 权威入口 URL | 使用说明 |
 |---|---|---|
-| 竞品功能对比 | 产品官网、官方 changelog、官方 docs、官方 blog | 不用 G2 / Capterra 当事实来源；它们只能辅助理解用户感受 |
-| 定价模型 | 产品 Pricing 页面 | 价格随时变，必须记录访问日期；最好记录地区、币种和套餐名 |
-| 用户反馈 / 痛点 | Hacker News、Reddit、Product Hunt 评论、GitHub Discussions | 看情绪、场景和反复出现的问题，不把单条评论当结论 |
-| 行业报告 | State of JS / State of CSS、ThoughtWorks Tech Radar、Stack Overflow Developer Survey | 必须记录年份、样本量或报告范围 |
+| 竞品功能对比 | `https://<product-domain>/`、`https://<product-domain>/docs`、`https://<product-domain>/changelog`、官方 blog | 不用 G2 / Capterra 当事实来源；它们只能辅助理解用户感受 |
+| 定价模型 | `https://<product-domain>/pricing` 或产品官网 Pricing 页面 | 价格随时变，必须记录访问日期；最好记录地区、币种和套餐名 |
+| 用户反馈 / 痛点 | `https://news.ycombinator.com/`、`https://www.reddit.com/`、`https://www.producthunt.com/`、GitHub Discussions | 看情绪、场景和反复出现的问题，不把单条评论当结论 |
+| 行业报告 | `https://stateofjs.com/`、`https://stateofcss.com/`、`https://www.thoughtworks.com/radar`、`https://survey.stackoverflow.co/` | 必须记录年份、样本量或报告范围 |
 
 ## AI / LLM 能力边界
 
-| 问题类型 | 优先来源 | 说明 |
+| 问题类型 | 官方 / 权威入口 URL | 使用说明 |
 |---|---|---|
-| 模型能力、上下文长度、价格 | 各厂商官方文档，例如 platform.openai.com/docs、docs.anthropic.com、ai.google.dev/docs | 模型和价格变更频繁，必须带访问日期 |
-| SDK / API 版本 | 官方 GitHub release notes、官方 SDK 文档 | 不信博客，不信旧示例；确认当前 SDK 版本和迁移说明 |
-| 限流 / 配额 | 官方 rate limits / usage limits / quotas 页面 | 影响成本模型、排队策略和降级方案时必须查证 |
-| 数据使用 / 隐私边界 | 官方 data usage、privacy、enterprise security 文档 | 涉及用户数据、企业合规或默认日志保留时必须查证 |
+| 模型能力、上下文长度、价格 | `https://platform.openai.com/docs`、`https://openai.com/api/pricing/`、`https://docs.anthropic.com/`、`https://www.anthropic.com/pricing`、`https://ai.google.dev/`、`https://ai.google.dev/pricing` | 模型和价格变更频繁，必须带访问日期 |
+| SDK / API 版本 | provider 官方 SDK docs、官方 GitHub releases、provider migration guide，例如 `https://github.com/openai/openai-node/releases`、`https://github.com/anthropics/anthropic-sdk-typescript/releases` | 不信博客，不信旧示例；确认当前 SDK 版本和迁移说明 |
+| 限流 / 配额 | provider 官方 rate limits / usage limits / quotas 页面，例如 `https://platform.openai.com/docs/guides/rate-limits`、`https://docs.anthropic.com/`、`https://ai.google.dev/` | 影响成本模型、排队策略和降级方案时必须查证 |
+| 数据使用 / 隐私边界 | provider 官方 data usage、privacy、enterprise security 文档，例如 `https://openai.com/policies/`、`https://www.anthropic.com/legal/privacy`、`https://ai.google.dev/gemini-api/terms` | 涉及用户数据、企业合规或默认日志保留时必须查证 |
 
 ## 最小来源组合
 
@@ -59,18 +59,19 @@
 
 ## 工程规范 / 最佳实践
 
-| 问题类型 | 优先来源 | 说明 |
+| 问题类型 | 官方 / 权威入口 URL | 使用说明 |
 |---|---|---|
-| 浏览器兼容性 | caniuse.com、MDN Browser Compatibility table | 记录目标浏览器和不支持的 fallback |
-| Web 性能标准 | web.dev/articles、Chrome Developer Blog、Web Almanac | 优先引用有指标定义和日期的文章 |
-| 安全规范 | OWASP Top 10、OWASP Cheat Sheet Series、MDN Security | 用于威胁建模和安全约束，不替代项目安全评审 |
-| 可访问性 | WAI-ARIA Authoring Practices、WCAG 2.2、MDN Accessibility | 交互组件必须查 pattern 和键盘路径 |
+| 浏览器兼容性 | `https://caniuse.com/`、MDN Browser Compatibility tables，例如 `https://developer.mozilla.org/` | 记录目标浏览器和不支持的 fallback |
+| Web 标准 / API | `https://developer.mozilla.org/`、`https://www.w3.org/TR/`、`https://tc39.es/`、`https://html.spec.whatwg.org/` | 标准事实优先规范和 MDN；实现差异再查浏览器兼容 |
+| Web 性能标准 | `https://web.dev/articles`、`https://developer.chrome.com/blog`、`https://almanac.httparchive.org/` | 优先引用有指标定义和日期的文章 |
+| 安全规范 | `https://owasp.org/www-project-top-ten/`、`https://cheatsheetseries.owasp.org/`、`https://developer.mozilla.org/en-US/docs/Web/Security` | 用于威胁建模和安全约束，不替代项目安全评审 |
+| 可访问性 | `https://www.w3.org/WAI/WCAG22/quickref/`、`https://www.w3.org/WAI/ARIA/apg/`、`https://developer.mozilla.org/en-US/docs/Web/Accessibility` | 交互组件必须查 pattern 和键盘路径 |
 
 ## GitHub 内容
 
-| 问题类型 | 优先来源 | 说明 |
+| 问题类型 | 官方 / 权威入口 URL | 使用说明 |
 |---|---|---|
-| 方案成熟度 / 社区采用 | README、Releases、Insights / Pulse、star-history.com、OpenSSF Scorecard、deps.dev | star 不是质量保证；必须结合 release、issue 质量、依赖健康和安全维护信号 |
+| 方案成熟度 / 社区采用 | repo README、Releases、Insights / Pulse、`https://star-history.com/`、`https://scorecard.dev/`、`https://deps.dev/` | star 不是质量保证；必须结合 release、issue 质量、依赖健康和安全维护信号 |
 | Issue 讨论 / 已知 bug | GitHub Issues（label: bug / wontfix / regression）、Discussions | 记录 issue 链接、状态、最后更新时间 |
 | 实际用法 | README examples、官方示例仓库、examples 目录 | 只引用能跑通或官方维护的示例 |
 | 社区共识 | Discussions、RFC 文档、maintainer comments | 共识必须来自多条证据，不来自单条高赞评论 |

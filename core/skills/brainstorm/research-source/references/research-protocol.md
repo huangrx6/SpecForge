@@ -33,14 +33,17 @@
 
 ## 时效规则
 
-| 事实类型 | 时效规则 |
-|---|---|
-| 价格、模型、限流、配额、竞品套餐 | 必须用访问日期；超过 30 天的证据只能作为历史线索 |
-| SDK / API / package 版本 | 必须用访问日期或 release 日期；以 package registry / official release 为准 |
-| 安全漏洞 | 必须查当前 advisory database；旧博客不能证明当前安全状态 |
-| 法规 / 合规 | 必须记录法规版本、发布日期或官方页面访问日期 |
-| 浏览器兼容性 | 必须记录 MDN / caniuse 的当前状态或目标浏览器版本 |
-| 行业报告 | 必须记录报告年份、样本范围或调查时间 |
+| 事实类型 | 必填日期 | 过期边界 | 过期后处理 |
+|---|---|---:|---|
+| AI provider 价格、模型能力、上下文长度、限流、配额 | 访问日期 | 14 天 | 不能用于当前成本模型；必须重新查官方页面 |
+| 竞品 pricing、套餐、功能可用性 | 访问日期 | 30 天 | 降为历史线索；影响 MVP 范围时重新查官网 / changelog |
+| npm / SDK / API latest version | 访问日期或 registry / release 日期 | 30 天 | 只能写 `likely`；新增依赖或升级时重新查 registry + release notes |
+| peer deps、engine、breaking changes | release 日期 + 当前项目 manifest / lockfile 日期 | 90 天，或目标版本变化时立即过期 | 没有当前项目版本时不能写 `confirmed` |
+| 安全漏洞 / CVE / advisory | 访问日期 | 7 天 | 必须查当前 advisory database；旧博客不能证明当前安全状态 |
+| 浏览器兼容性 / Web API | 访问日期 + 目标浏览器版本 | 90 天 | 如果目标浏览器矩阵变化，必须重新查 MDN / caniuse |
+| Web 标准 / RFC / WAI / WCAG | 版本号、发布日期或访问日期 | 被新版本 / superseded notice 替代时过期 | 记录当前规范版本，不能用旧草案覆盖当前规范 |
+| 法规 / 合规 | 法规版本、发布日期或官方访问日期 | 有修订 / 生效日期变化时过期 | high-stakes evidence；不足时写 `unclear` |
+| 行业报告 / 调研 | 报告年份、样本范围或调查时间 | 新年度报告发布后旧报告只作历史趋势 | 不用旧报告证明当前采用率 |
 
 如果事实类型变化快，但只能找到旧资料，置信度最多为 `likely`；如果会影响成本、安全或架构，写 `unclear` 并升级后续 research / technical design。
 
@@ -61,8 +64,17 @@
 
 1. 先按来源等级排序：官方当前文档 / registry / release notes > 官方 issue / maintainer comment > 标准或 advisory database > 高质量参考文章 > 社区讨论。
 2. 再按日期排序：同等级下优先当前资料，旧资料降级为背景。
-3. 如果仍冲突，写 `unclear`，列出冲突来源和需要谁确认。
-4. 如果冲突会改变 MVP、成本、安全或架构，必须在 `brainstorm.md#问题地图` 标记 `[必须确认]` 或交给 `sf-discovery` research。
+3. A 级来源和 B 级来源冲突时，以 A 级当前来源为事实；B 级只记录为“参考观点 / 风险线索”，不能推翻 A 级来源。
+4. 两个 A 级来源冲突时，优先使用更接近事实主体的来源：provider / package / product 官方 > 标准 / registry / advisory > framework 集成文档；仍冲突则写 `unclear`。
+5. 官方 docs 和 registry / package metadata 冲突时，不直接拍板；补查 release notes、repo manifest、issue / maintainer comment，并记录冲突。
+6. 如果仍冲突，写 `unclear`，列出冲突来源和需要谁确认。
+7. 如果冲突会改变 MVP、成本、安全或架构，必须在 `brainstorm.md#问题地图` 标记 `[必须确认]` 或交给 `sf-discovery` research。
+
+冲突记录格式：
+
+```md
+冲突：官方 docs 写 X，registry metadata 写 Y。已查 release notes 仍未解释差异；结论为 unclear，需 tech-design spike 或 maintainer issue 确认。
+```
 
 ## 负证据
 
@@ -88,6 +100,11 @@
 | 需要安装、运行、压测或登录后台 | 写未查证项，交接给 `sf-tech-design` / research spike |
 | 涉及法规、合规、安全或用户数据 | 使用 high-stakes evidence，不足则不得 confirmed |
 | 用户要求“最新 / 当前推荐” | 必须联网查证，并记录访问日期 |
+| 技术选型有 2+ 个不明显最优的方案，且关键事实无法从 A 级来源确认 | 升级 `sf-discovery` research，补多来源对比或 PoC |
+| 新依赖的 peer / transitive / breaking 风险会影响工期、架构或回滚 | 升级 `sf-discovery` research 或 `sf-tech-design` spike |
+| AI provider 能力、价格、限流或数据边界是成本模型关键变量 | 升级 research-heavy；不足时不能进入 adopt |
+| 竞品事实推翻类比方向或 MVP 假设 | 回写 `analogy-thinking`，把对应类比标为 `needs revision` |
+| 来源需要账号、私有仓库、企业合同或地域价格才能确认 | 写 `unclear`，向用户要上下文或升级人工查证 |
 
 ## 输出自检
 

@@ -22,6 +22,7 @@ description: Brainstorm 包内的类比迁移 skill。用于直接发散变窄�
 4. 明确不能照搬的部分：品牌、视觉、专有流程、过重组织结构、合规假设。
 5. 把每个机制翻译成当前项目可用的候选方向。
 6. 标记需要事实查证的类比，不把未查证类比当事实证据。
+7. 如果 `research-source` 推翻类比的核心事实假设，把该方向标为 `needs revision`，退回发散池重新发散。
 
 ## 类比来源池
 
@@ -56,9 +57,9 @@ description: Brainstorm 包内的类比迁移 skill。用于直接发散变窄�
 ```md
 ## 类比迁移
 
-| 来源领域 / 产品 | 相似任务 | 可迁移机制 | 当前问题中的方案 | 不能照搬 | 风险 / 查证 |
-|---|---|---|---|---|---|
-| | | | | | |
+| 来源领域 / 产品 | 相似任务 | 可迁移机制 | 当前问题中的方案 | 不能照搬 | 状态 | 风险 / 查证 |
+|---|---|---|---|---|---|---|
+| | | | | | ready / needs research / needs revision | |
 ```
 
 ## 质量门槛
@@ -77,6 +78,7 @@ description: Brainstorm 包内的类比迁移 skill。用于直接发散变窄�
 | 表面模仿 | “像 Linear / Notion 一样高级” | 提取具体机制：命令、队列、审计、协作 |
 | 类比过远 | 机制和当前约束无关 | 写相似任务，不相似就删除 |
 | 未查证事实 | 声称某产品功能存在但没来源 | 标记 `needs research` |
+| 查证推翻类比 | research-source 证明核心事实假设不成立，但仍保留为可迁移机制 | 标记 `needs revision`，从可迁移机制中移除，退回 `divergent-thinking` 候选池 |
 | 忽略成本 | 类比来自大组织流程，当前项目承受不了 | 写适配方式和简化版 |
 
 ## 交接
@@ -84,6 +86,7 @@ description: Brainstorm 包内的类比迁移 skill。用于直接发散变窄�
 - 有价值的类比方向交给 `divergent-thinking` 或 `decision-matrix`。
 - 类比暴露出的风险交给 `critic-review`。
 - 类比需要真实产品事实时交给 `research-source`。
+- `research-source` 如果推翻某个类比的核心事实假设，该类比方向必须回写为 `needs revision`：不能进入“可迁移机制”或 `decision-matrix`；必须带着被推翻的事实和来源返回 `divergent-thinking`，重新生成替代候选。
 
 ## 自检清单
 
@@ -91,4 +94,5 @@ description: Brainstorm 包内的类比迁移 skill。用于直接发散变窄�
 - 是否提取了机制，而不是照搬外观和品牌感？
 - 是否明确不能照搬的部分？
 - 是否把需要事实查证的类比标为 `needs research`？
+- 是否把被查证推翻的类比标为 `needs revision` 并退回发散池？
 - 是否至少产生一个能进入方案对比的候选方向？

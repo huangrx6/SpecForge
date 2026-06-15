@@ -22,6 +22,16 @@
 | Breaking changes | 目标版本相对当前版本的 breaking changes、migration guide、deprecation | CHANGELOG、release notes、migration docs、GitHub Releases | 是否改变 implementation 成本或 MVP 范围 |
 | Override / resolution | 是否需要强制 transitive version、fork、backport 或单一版本 | npm overrides、pnpm overrides、Yarn resolutions、package manager docs | 只能作为风险 / 后续方案，不在 brainstorm 直接改 |
 
+## 查证路径
+
+| 风险类型 | 查证路径 | 必须记录 |
+|---|---|---|
+| Peer deps | 1. 读候选包 registry metadata；2. 读 repo `package.json` / manifest；3. 对照当前项目 host package 版本；4. 必要时查 package manager peer resolution 文档；5. 有条件时用 `npm view <pkg> peerDependencies` / `pnpm why` / install dry run 辅证 | host package 名称与当前版本、peer range、是否满足、冲突来源、需要 tech-design 锁定的版本 |
+| Transitive deps | 1. 读 lockfile 实际安装树；2. 用 package manager explain / why 定位引入路径；3. 查 deps.dev / OSV / GitHub Advisories；4. 查 patched version 或 override 说明；5. 记录是否需要替代包 / override / spike | transitive 包名、引入路径、affected range、当前实际版本、patched version、是否影响方案推荐 |
+| Breaking changes | 1. 确认当前版本与候选版本；2. 查 CHANGELOG / release notes / migration guide；3. 查 deprecation notes；4. 查 framework / plugin 集成文档；5. 判断是否改变 MVP、迁移成本或回滚策略 | 当前版本、目标版本、breaking 条目、迁移动作、影响范围、是否升级 research / tech-design |
+| Runtime / engine | 1. 查 package metadata `engines` / requires；2. 查项目 `.nvmrc` / Dockerfile / CI / deployment config；3. 查 native binding / OS 要求；4. 记录 deploy 环境 unknown 项 | runtime 当前版本、候选要求、部署冲突、需要用户或 tech-design 确认的环境 |
+| Override / resolution | 1. 查是否存在官方 patched version；2. 查 package manager overrides / resolutions 文档；3. 查 maintainer issue 是否建议 override；4. 记录回滚风险 | override 目标、为什么需要、是否临时、谁在 tech-design 验证 |
+
 ## 生态速查表
 
 | 生态 | Manifest | Lockfile | 常见版本关系 |
