@@ -8,15 +8,24 @@
 | 需要用户拍板 | |
 | Handoff | |
 
-## 问题地图
-- 用户要解决的真实问题：
-- 当前约束：
-- 最容易跑偏的点：
+## 执行配置
+| 项 | 内容 |
+| --- | --- |
+| Brainstorm mode | skip / light / deep |
+| Execution profile | skip / light / deep / research-heavy |
+| Package skills used | |
+| External references used | |
+| Sections marked N/A | |
 
 ## 问题重构
 | 原始表述 | 重构后的问题 | 核心冲突 | 成功标准 | 必须确认 |
 | --- | --- | --- | --- | --- |
 | | | | | |
+
+## 问题地图
+- 用户要解决的真实问题：
+- 当前约束：
+- 最容易跑偏的点：
 
 ## 当前事实与研究证据
 搜索计划：

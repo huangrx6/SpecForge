@@ -34,7 +34,7 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
 
 需要参考 skill 时，先读 `.specforge/core/skills/ORCHESTRATION.md`，再选择最相关的 skill 和最小必要 reference。
 
-1. 参考输出先提取为 `候选方案 / 风险提示 / 访谈镜头 / 研究问题 / 验收问题 / 后续阶段输入`。
+1. 参考输出先提取为 `问题重构 / 事实证据 / 发散方向 / 类比迁移 / 场景模拟 / 批判质疑 / 评估矩阵 / 候选方案 / 风险提示 / 验收问题 / 下一步行动 / 后续阶段输入`。
 2. 再并入问题地图：会改变方向的放入 `[必须确认]`；只影响后续细化的写入对应下游阶段输入。
 3. 不把参考 skill 的 persona、PRD、故事、审查清单、测试建议或技术推荐写成已确认，除非用户明确确认。
 4. 用户确认后，立即写入对应确认状态或真实 confirmed marker。
@@ -46,6 +46,8 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
    - `skip` 时不要强行 brainstorm，回到 brief 指定下一步。
    - `light` 时执行框定、候选和收敛，但不做五维全量发散。
    - `deep` 时必须先做 Phase 1 发散，再做 Phase 2 聚焦。
+   - 涉及事实争议、依赖版本、AI provider、价格、法规、安全或竞品取舍时，将执行 profile 记为 `research-heavy`，即使 brief 原始模式是 `light`。
+   - 在 `brainstorm.md#执行配置` 记录：`Brainstorm mode`、`Execution profile`、`Package skills used`、`External references used`、`Sections marked N/A`。
    - 模式来源见 `sf-intake` 的“Brainstorm 分流规则”和 `core/artifacts/templates/brief.md#Brainstorm 决策`。
 1. **框定问题和事实输入。**
    - 请求、目标用户、成功标准、约束或真实冲突不清楚时，先读取 `.specforge/core/skills/brainstorm/problem-framing/SKILL.md`。
@@ -62,7 +64,7 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
    - 涉及新增 / 替换依赖、SDK、插件、组件库、测试库、运行时或 package manager 时，必须按 `research-source/references/dependency-version-map.md` 记录版本依赖关系：direct、peer、runtime、lockfile、transitive、breaking、override / resolution。
    - 版本依赖关系只作为 brainstorm 风险和 handoff；最终锁版本、依赖确认、兼容策略和验证方案交给 `sf-tech-design`。
    - 不需要外部研究时写明 `跳过理由：[具体原因]`，不允许只写“无需外部研究”。
-   - 需要参考 skill 时，按 `core/skills/ORCHESTRATION.md` 选择并读取；输出必须按“参考 Skill 归一化”处理。
+   - 需要参考 skill 时，按 `.specforge/core/skills/ORCHESTRATION.md` 选择并读取；输出必须按“参考 Skill 归一化”处理。
 3. **建立问题地图。**
    - 建立问题地图：`[已明确]`、`[必须确认]`、`[可安全默认]`。
    - 若对某项是否“明显最优”存在任何不确定，强制划入 `[必须确认]`。
@@ -74,7 +76,8 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
    - 给用户看发散清单，询问是否有遗漏的重要方向。
    - 给用户前先自检：至少一个反直觉方案；考虑做更少或不做；技术路线至少两条；明确最大未知风险。
 5. **Phase 2 聚焦。**
-   - 给出方案前，读取 `.specforge/core/skills/brainstorm/scenario-simulation/SKILL.md`，用关键场景、失败路径和边界条件压测候选。
+   - `deep` profile 给出方案前，读取 `.specforge/core/skills/brainstorm/scenario-simulation/SKILL.md`，用关键场景、失败路径和边界条件压测候选。
+   - `light` / `research-heavy` profile 只有当场景、失败路径或边界条件会改变推荐时才读取 `scenario-simulation`；否则在 `执行配置` 标记 `场景模拟: N/A + 理由`。
    - 推荐方案前，读取 `.specforge/core/skills/brainstorm/critic-review/SKILL.md`，暴露最弱假设、反例、可删范围和验证点。
    - 需要排序、推荐或用户授权默认时，读取 `.specforge/core/skills/brainstorm/decision-matrix/SKILL.md`，把取舍写成矩阵而不是散文判断。
    - 给出 2-3 个互斥方案或 MVP 组合。
@@ -138,6 +141,7 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
 
 ## `brainstorm.md` 必含内容
 
+- 执行配置：Brainstorm mode、Execution profile、Package skills used、External references used、N/A section reason。
 - 问题框架。
 - 问题重构：原始表述、重写后的问题、核心冲突、成功标准、必须确认项。
 - 当前事实和研究证据。
@@ -161,6 +165,8 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
 - 未决问题。
 - 下一步行动：下游阶段、输入产物、owner、阻断条件和验证入口。
 - 下一步路由。
+
+`light` profile 可将 `类比迁移`、`场景模拟` 或其他未使用 section 写为 `N/A`，但必须说明理由。`deep` 和 `research-heavy` profile 不能省略会影响推荐可信度的 section；缺证据时写入未查证项，而不是删 section。
 
 ## 判定表
 

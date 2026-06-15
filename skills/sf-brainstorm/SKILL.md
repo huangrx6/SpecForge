@@ -157,11 +157,12 @@ C) 不确定 → 先按 B 设计，留扩展点
    - `skip`：无需用户参与式取舍，记录跳过理由并回到 brief 指定下一步。
    - `light`：直接框定问题、给 2-3 个候选并收敛，不做五维全量发散。
    - `deep`：先做 Phase 1 发散，再做 Phase 2 聚焦。
+   - `research-heavy`：当前事实、依赖版本、AI provider、价格、法规、安全或竞品证据会影响方向时使用；它可以由 `light` / `deep` 自动升级而来。
    - 模式来源见 `sf-intake` 的“Brainstorm 分流规则”和 `core/artifacts/templates/brief.md#Brainstorm 决策`。
 3. 需要当前事实时先查证；技术类优先官方资料，并记录日期。
 4. 需要外部事实、版本、依赖、价格、竞品、漏洞、法规或 AI provider 资料时，读取 `.specforge/core/skills/brainstorm/research-source/SKILL.md`，按其来源索引和证据契约查证，并在 `brainstorm.md#当前事实与研究证据` 记录搜索计划、URL、日期、结论和置信度。
    - 新增 / 替换依赖、SDK、插件、组件库、测试库、运行时或 package manager 时，还要记录版本依赖关系表，作为后续 `sf-tech-design` 当前版本事实和依赖确认输入。
-5. 需要参考 skill 时，按 `references/external-skills.md` 选择并读取最小必要内容；Brainstorm 包内 skill 可以按问题重构、事实查证、发散、类比、场景、批判、矩阵、输出和行动计划串联使用。
+5. 需要参考 skill 时，按 `references/external-skills.md` 选择并读取最小必要内容；Brainstorm 包内 skill 可以按问题重构、事实查证、发散、类比、场景、批判、矩阵、输出和行动计划串联使用，且不计入“最多 1 个外部辅助”的限制。
 6. 建立问题地图：`[已明确] / [必须确认] / [可安全默认]`。
 7. 按固定维度排序 `[必须确认]`：核心目标/范围 > 体验方向 > 数据与安全 > 集成与依赖 > 交付验收。
 8. 写明输出预算：小型取舍只保留 1 个问题和 2-3 个选项；复杂取舍才展开方案对比和研究证据。
@@ -182,7 +183,7 @@ C) 不确定 → 先按 B 设计，留扩展点
 
 ### C. 收敛时做一次
 
-1. 写入或更新 `00-intake/brainstorm.md`：问题地图、事实证据、方案对比、推荐项、用户确认、明确延后 / 不做、未决问题。
+1. 写入或更新 `00-intake/brainstorm.md`，至少覆盖 stage 母本的必含内容：执行配置、问题重构、问题地图、事实证据、发散方向池、类比迁移、场景模拟、批判质疑、方案评估矩阵、方案对比、推荐项、用户确认、参考 Skill 使用记录、明确延后 / 不做、未决问题、下一步行动和下一步路由。`light` profile 可将未使用 section 写为 `N/A + 理由`。
 2. 同步更新 `00-intake/brief.md`：澄清记录、功能候选池、用户选择、外部研究摘要、PRD 决策和 Brainstorm 决策。
 3. 只有用户已确认、授权默认或明确延后的选择才能写入已批准结论；Agent recommendation 必须单独保留。
 4. 确认没有 `[NEEDS ... DECISION]` 阻断项；如仍有阻断项，输出暂停原因而不是路由到下游。

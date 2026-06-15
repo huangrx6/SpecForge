@@ -55,6 +55,7 @@
 - UI 方向确认后，先用 `design-system` 收敛设计语言、token、组件契约和页面模式，再进入 Pencil 原型。
 - UX 参考只补充研究、流程和可访问性证据，不替代 Pencil 原型或 SpecForge UI artifact。
 - Brainstorm 不只查资料：先用 `problem-framing` 重构问题，再按需要使用 `research-source`、`divergent-thinking`、`analogy-thinking`、`scenario-simulation`、`critic-review`、`decision-matrix`、`output-shaping` 和 `execution-planning`。
+- Brainstorm 包内子 skill 按 `skip` / `light` / `deep` / `research-heavy` profile 组成内部链路，不计入“最多 1 个外部辅助”的限制。
 - 当前事实、法规、价格、版本、竞品、AI provider 或新闻会影响 brainstorm 取舍时，先参考 `research-source` 建立证据表；需要长篇研究或实验时路由 `sf-discovery` research。
 - Code review 参考只补充检查维度，不替代 `sf-code-review` gate。
 - Verification 前如需系统化测试设计、XMind / 白板导出、TC / PW 矩阵或自动化分层，先参考 `test-design`，再用 `test-case-quality.mjs` 检查。

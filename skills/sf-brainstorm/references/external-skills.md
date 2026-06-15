@@ -7,11 +7,20 @@
 1. 先读 `sf-brainstorm/SKILL.md` 和 `.specforge/skills/sf-brainstorm/stages/brainstorm/SKILL.md`，再决定是否读取参考 skill。
 2. Brainstorm 包内 skill 可以组成链路使用；跨到产品、设计、验证等外部参考时，默认最多再选择 1 个最相关的 skill。
 3. 先读目标 skill 的 `SKILL.md`；只有问题落到具体子领域时，才读 `references/` 或 `rules/` 下的相关文件。
-4. 参考 skill 输出先转成 `问题重构 / 事实证据 / 发散方向 / 方案对比 / 批判质疑 / 评估矩阵 / 用户确认记录 / 后续阶段输入`，不能原样复制模板标题或结论。
+4. 参考 skill 输出先转成 `问题重构 / 事实证据 / 发散方向 / 类比迁移 / 场景模拟 / 方案对比 / 批判质疑 / 评估矩阵 / 用户确认记录 / 下一步行动 / 后续阶段输入`，不能原样复制模板标题或结论。
 5. 涉及当前事实、版本、法规、价格、竞品、安全或漏洞时，必须另行查可靠来源；参考 skill 不提供事实背书，除非它明确要求实际联网查证并记录来源。
 6. 查证外部事实时优先读取 `.specforge/core/skills/brainstorm/research-source/SKILL.md`，把搜索计划、来源、日期、结论和置信度写入 `brainstorm.md#当前事实与研究证据`。
 
 ## Brainstorm 包内链路
+
+先根据当前任务选择执行 profile，再选择子 skill。profile 写入 `brainstorm.md#执行配置`。
+
+| Profile | 何时使用 | 必读子 skill | 可选子 skill | 输出约束 |
+|---|---|---|---|---|
+| `skip` | brief 已确认无需 brainstorm | 无 | 无 | 只写跳过理由和下一步路由 |
+| `light` | 低风险取舍、用户只需要快速比较 | `problem-framing`、`divergent-thinking`、`critic-review`、`decision-matrix`、`output-shaping` | `research-source`、`execution-planning` | 未使用 section 写 `N/A + 理由` |
+| `deep` | 方案空间不清、会影响产品/体验/技术方向 | `problem-framing`、`divergent-thinking`、`scenario-simulation`、`critic-review`、`decision-matrix`、`output-shaping`、`execution-planning` | `research-source`、`analogy-thinking` | 必须保留完整取舍链路 |
+| `research-heavy` | 当前事实、版本、价格、法规、安全、竞品或 AI provider 证据影响方向 | `problem-framing`、`research-source`、`critic-review`、`decision-matrix`、`execution-planning` | `divergent-thinking`、`scenario-simulation`、`analogy-thinking` | 必须记录覆盖度、未查证项和是否升级 `sf-discovery` research |
 
 | 触发问题 | 优先参考 | 按需读取的 reference | 提取为 | 归一化到 |
 |---|---|---|---|---|
