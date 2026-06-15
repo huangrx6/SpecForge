@@ -171,7 +171,7 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
 - 方案评估矩阵：价值、成本、风险、落地性、可扩展性、置信度和推荐。
 - 方案对比表。
 - 推荐方案和理由。
-- 用户确认记录。
+- 用户确认记录：必须区分 `user-confirmed`、`delegated-default`、`agent-recommendation`、`pending`，防止下游把 Agent recommendation 当成用户确认。
 - 参考 Skill 使用记录：读取了什么、提取了什么、如何归一化。
 - 明确延后 / 不做。
 - 未决问题。

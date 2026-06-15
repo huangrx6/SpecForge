@@ -95,9 +95,9 @@
 | | defer / out-of-scope / rejected | | |
 
 ## 用户确认记录
-| 问题 | 用户选择 | 对后续产物的影响 |
-| --- | --- | --- |
-| | | |
+| 问题 | 用户选择 / 授权 | 确认类型 | 对后续产物的影响 |
+| --- | --- | --- | --- |
+| | | user-confirmed / delegated-default / agent-recommendation / pending | |
 
 ## 参考 Skill 使用记录
 | Skill | 读取内容 | 提取结果 | 归一化到 | 不能替代的确认 |
