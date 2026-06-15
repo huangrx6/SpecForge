@@ -67,6 +67,23 @@ description: Brainstorm 包内的方案评估 skill。用于多个候选方向�
 | `defer` | 有价值但不是当前 MVP，适合后续版本 |
 | `reject` | 明显越界、成本过高、风险不可接受或不符合目标 |
 
+## Profile 用法
+
+| Profile | 评估方式 | 推荐策略 |
+|---|---|---|
+| `light` | 只评估 2-3 个候选，重点看价值、成本、风险 | 给一个推荐和一个备选 |
+| `deep` | 完整评估价值、成本、新颖度、风险、落地性、扩展性、置信度 | 给推荐、放弃代价和回退点 |
+| `research-heavy` | 重点看证据置信度和事实缺口 | `unclear` 不能 adopt，优先 test / research |
+
+## 平局处理
+
+| 情况 | 处理 |
+|---|---|
+| 两个方案价值接近 | 选成本更低、回退更容易的方案 |
+| 一个方案价值高但风险也高 | 推荐小实验或分阶段，不直接 adopt |
+| 一个方案证据不足 | 降低置信度，交给 `research-source` |
+| 用户偏好和矩阵冲突 | 标记用户偏好，说明风险，等待确认 |
+
 ## 质量门槛
 
 - 至少比较 2 个真实不同方案；只有 1 个方案时写明为什么没有可比项。
@@ -74,6 +91,7 @@ description: Brainstorm 包内的方案评估 skill。用于多个候选方向�
 - 用户确认和 agent recommendation 必须分开。
 - 置信度为 `unclear` 的方案不能直接 `adopt`，只能 `test` / `defer` / `research`。
 - 不用单一总分掩盖高风险项。
+- 推荐必须能被 `execution-planning` 转成下一步行动。
 
 ## 常见失败
 
@@ -89,3 +107,11 @@ description: Brainstorm 包内的方案评估 skill。用于多个候选方向�
 - 推荐进入 `execution-planning`。
 - 需要事实补强的项进入 `research-source`。
 - 需要用户拍板的项进入 Socratic 单问。
+
+## 自检清单
+
+- 候选是否在同一层级比较？
+- 是否写清不选其他方案的原因？
+- 是否把 `unclear` 证据降级处理？
+- 是否保留用户确认和 agent recommendation 的边界？
+- 是否给了下一步验证或回退点？

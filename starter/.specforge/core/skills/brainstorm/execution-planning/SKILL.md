@@ -67,6 +67,25 @@ description: Brainstorm 包内的行动规划 skill。用于方向已推荐或�
 | Agent 推荐 | `Agent recommendation`，不能写 approved |
 | 仍需确认 | `[NEEDS ... DECISION]`，只问一个问题 |
 
+## Profile 用法
+
+| Profile | 计划深度 | 输出重点 |
+|---|---|---|
+| `light` | 只写下一步行动和一个最高优先级确认问题 | 快速进入用户确认或 PRD |
+| `deep` | 写完整 MVP 路线、交接、验证和回退点 | 支撑多个下游阶段 |
+| `research-heavy` | 写补证路径、升级 research 条件、事实缺口 owner | 防止证据不足时进入实现 |
+
+## 路由判断
+
+| 条件 | 下一步 |
+|---|---|
+| 产品范围和用户价值仍需整理 | `sf-prd` |
+| 行为、边界、验收标准需要落地 | `sf-requirements` |
+| 页面、流程、状态、视觉方向需要设计 | `sf-ui-design` |
+| 技术栈、依赖、架构、集成、验证策略需要设计 | `sf-tech-design` |
+| 事实冲突、实验或 PoC 才能判断 | `sf-discovery` research |
+| 已有可验证实现，需要证明行为 | `sf-verify` |
+
 ## 质量门槛
 
 - 没有用户确认或授权默认时，不写实现计划。
@@ -74,6 +93,7 @@ description: Brainstorm 包内的行动规划 skill。用于方向已推荐或�
 - MVP 路线必须写“不做什么”。
 - 需要 research / spike / prototype 的风险不能被隐藏在 Later。
 - 下游交接要足以让对应 sf-* skill 继续，不需要重新猜。
+- 每个阻断条件都要有解除方式。
 
 ## 常见失败
 
@@ -89,3 +109,11 @@ description: Brainstorm 包内的行动规划 skill。用于方向已推荐或�
 - 用户尚未确认会改变范围、体验、架构、成本或安全的关键选择。
 - 未查证事实会改变推荐。
 - 下游阶段不明确，或当前输出不足以支撑任何下游。
+
+## 自检清单
+
+- 是否区分用户确认、授权默认和 agent recommendation？
+- 是否没有越权写 implementation tasks？
+- 是否每个行动都有 owner、输入、输出和进入条件？
+- 是否写了不做什么和回退点？
+- 是否把 research / spike 风险显式交接？
