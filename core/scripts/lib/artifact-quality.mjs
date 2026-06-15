@@ -142,11 +142,15 @@ function lintRequirements(content, outputPath) {
   const issues = [];
   addRequiredHeadingIssues(issues, content, outputPath, [
     "0.1 Spec Quality Gate",
+    "上游确认输入",
+    "Source -> Requirement 转译",
     "边界",
     "影响面确认",
     "功能需求",
     "行为覆盖矩阵",
     "验收标准",
+    "REQ / AC Trace",
+    "Downstream Handoff",
   ]);
 
   const openMarkers = unresolvedDecisionMarkers(content);
@@ -174,6 +178,26 @@ function lintRequirements(content, outputPath) {
       message: `${outputPath} 没有真实 AC-xxx 验收标准。`,
       fix: "为每个关键 REQ 写入 Given / When / Then 或等价验收方式。",
     });
+  }
+  const reqRowsMissingAc = realRowsWithId(content, "REQ").filter((line) => !/\bAC-\d+\b/.test(line));
+  if (reqRowsMissingAc.length > 0) {
+    issues.push({
+      severity: "WARN",
+      code: "requirements-req-missing-ac-link",
+      message: `${outputPath} 有 ${reqRowsMissingAc.length} 条 REQ 行未直接链接 AC-xxx。`,
+      fix: "在功能需求或 REQ / AC Trace 中为每条 REQ 挂接对应 AC，或写明 N/A 理由。",
+    });
+  }
+  if (hasHeading(content, "验收标准")) {
+    const acceptanceBody = getSectionBody(content, "验收标准") ?? "";
+    if (!/\|\s*ID\s*\|\s*Given\s*\|\s*When\s*\|\s*Then\s*\|\s*验证方式\s*\|/.test(acceptanceBody)) {
+      issues.push({
+        severity: "WARN",
+        code: "requirements-ac-not-gwt",
+        message: `${outputPath} 的验收标准表没有使用 Given / When / Then / 验证方式列。`,
+        fix: "优先使用 Given / When / Then / 验证方式，无法使用时在 Spec Quality Gate 写明原因。",
+      });
+    }
   }
   if (/has-untestable-items/i.test(content)) {
     issues.push({

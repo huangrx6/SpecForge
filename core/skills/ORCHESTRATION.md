@@ -8,7 +8,8 @@
 |---|---|---|---|---|
 | `opportunity-solution-tree` | `product/opportunity-solution-tree` | Brainstorm / PRD | 从机会和问题出发做候选方案、实验、需求 triage 和优先级取舍 | `00-intake/brainstorm.md`、`00-intake/brief.md`、`00-intake/prd.md` |
 | `create-prd` | `prd/create-prd` | PRD | 上下文充分时合成 PRD，整理背景、目标、用户、价值主张、范围、假设和 release | `00-intake/prd.md` |
-| `user-stories` | `requirements/user-stories` | Requirements | 用户故事、3C、INVEST、验收标准和可测试性参考 | `01-spec/requirements.md` |
+| `requirements` | `requirements` | Requirements | 行为契约、确认边界、来源转译、REQ / AC 追踪、NFR 和下游 handoff 主能力包 | `01-spec/requirements.md` |
+| `user-stories` | `requirements/user-stories` | Requirements | 用户故事、3C、INVEST、验收标准和可测试性补充参考 | `01-spec/requirements.md` |
 | `pencil` | `ui-ux/pencil` | UI Design | Pencil `.pen` 原型读写、组件复用、tokens、截图导出、布局检查和设计转代码参考 | `01-spec/ui-design.md`、`01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/` |
 | `design-system` | `ui-ux/design-system` | Brainstorm / UI Design / Technical Design | 用户研究、信息架构、设计语言、foundations、组件规范、页面模式、shadcn-vue 映射、动效边界和去廉价感审查 | `00-intake/brainstorm.md`、`01-spec/ui-design.md`、Pencil 输入、前端组件契约 |
 | `problem-framing` | `brainstorm/problem-framing` | Brainstorm | 把模糊请求重构为目标、受众、约束、假设和必须确认问题 | `00-intake/brainstorm.md#问题重构`、`#问题地图` |
@@ -83,8 +84,10 @@
 
 ### Requirements
 
-- 只有当用户故事、验收标准、边界条件或可测试性不足时，参考 `user-stories`。
-- 输出必须转成 SpecForge requirements 的编号需求、场景、Given/When/Then、NFR 和重新验证触发条件。
+- 每次 requirements 阶段先读取 `requirements` 主能力包，建立确认边界、Source -> Requirement 转译、REQ / AC trace 和下游 handoff。
+- 只有当用户故事、3C、INVEST、验收标准样例或可测试性补充不足时，再参考 `user-stories`。
+- 输出必须转成 SpecForge requirements 的编号需求、场景、Given/When/Then、NFR、重新验证触发条件和 Downstream Handoff。
+- `agent-recommendation`、未查证事实和未确认候选不能升级为用户确认的 `MUST` / `SHALL`。
 - 不保留 Sprint、Assignee、故事点、外部 backlog 路径或第三方模板路径。
 
 ### UI Design

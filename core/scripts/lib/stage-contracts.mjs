@@ -25,10 +25,10 @@ const contractByArtifact = {
   },
   requirements: {
     goal: "把目标和边界转成可测试、可追踪、无核心冲突的行为规格。",
-    read: ["brief", "PRD when present", "research / gap report", "wiki product rules"],
-    produce: ["01-spec/requirements.md", "REQ-* / AC-* / NFR-* IDs", "impact flags"],
+    read: ["brief", "PRD when present", "brainstorm confirmations", "research / gap report", "wiki product rules", "requirements capability package"],
+    produce: ["01-spec/requirements.md", "REQ-* / AC-* / NFR-* IDs", "source trace", "impact flags", "downstream handoff"],
     human_decisions: ["MVP", "acceptance meaning", "dependency / tooling decision signals", "conflicting requirements"],
-    must_prove: ["every MUST is testable", "non-goals are explicit", "impact flags match the request"],
+    must_prove: ["every MUST is confirmed and testable", "REQ / AC trace is complete", "non-goals are explicit", "impact flags match the request"],
     exit: "UI / technical design or tasks can start without inventing behavior.",
   },
   ui_design: {
@@ -128,7 +128,7 @@ const executionByArtifact = {
     ],
   },
   requirements: {
-    tools: ["sf-requirements", "decision-checkpoints.mjs", "decision-quality.mjs", "quality-suite.mjs", "wiki product rules"],
+    tools: ["sf-requirements", "requirements capability package", "decision-checkpoints.mjs", "decision-quality.mjs", "quality-suite.mjs", "wiki product rules"],
     commands: [
       "node .specforge/core/scripts/create-artifact.mjs requirements",
       "node .specforge/core/scripts/quality-suite.mjs",

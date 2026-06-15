@@ -1,14 +1,14 @@
 # Requirements Authoring Guide
 
-本文件保存 PRD 转译、第三方 skill 归一化、自适应需求访谈、写作细则和影响面 flags。`SKILL.md` 只保留入口执行顺序、门禁和产物边界。
+本文件保存 PRD 转译、第三方 skill 归一化、自适应需求访谈、写作细则和影响面 flags。需求语言、确认边界、可测试性、追踪和下游 handoff 的主规则在 `.specforge/core/skills/requirements/` 能力包中；本文件只补 sf-requirements 阶段内的执行细则。
 
 ## PRD / Requirements 边界
 
 | 维度 | sf-prd | sf-requirements |
 |---|---|---|
-| 目标 | 产品意图、用户价值、MVP 决策 | 可测试行为、边界、验收标准 |
-| 粒度 | 用户故事、候选功能、路线图、验收种子 | SHALL 需求、异常路径、边界值、NFR、验收矩阵 |
-| 决策 | 产品范围和优先级 | 行为契约和影响面 flags |
+| 目标 | 产品意图、用户价值、MVP 决策 | 可测试行为、确认边界、验收标准 |
+| 粒度 | 用户故事、候选功能、路线图、验收种子 | SHALL 需求、异常路径、边界值、NFR、REQ / AC trace |
+| 决策 | 产品范围和优先级 | 行为契约、影响面 flags 和下游 handoff |
 | 不做 | 技术设计和任务拆解 | 产品脑暴、UI / API / DB 方案 |
 
 如果 PRD 或 brainstorm 没有回答目标用户、MVP 边界或成功标准，先把问题写成 `[NEEDS CLARIFICATION]` 并路由到 `sf-brainstorm` 或 `sf-prd`，不要在 requirements 中补造产品决策。
@@ -17,21 +17,23 @@
 
 写 requirements 时必须显式完成一次 PRD 转译，不允许复制粘贴：
 
-1. 把每个已确认 MVP 能力映射到至少一个 `REQ-*`。
+1. 把每个已确认 MVP 能力映射到至少一个 `REQ-*`；未确认候选只进入 pending / deferred / recommendation。
 2. 把每个 PRD user story 改写为系统可观察行为：触发、条件、系统响应、用户可见结果。
 3. 把 PRD 的 `Acceptance Seed` 拆成最终 AC：正常路径、失败路径、空状态、边界值、权限差异和重新验证触发条件。
 4. 把 PRD 的产品指标转成验收线索或 NFR；无法验证的指标保留为产品指标，不伪装成工程 AC。
-5. 把 PRD 的 UI / 技术 notes 只转成影响面 flags 和后续设计触发，不在 requirements 中展开方案。
+5. 把 PRD 的 UI / 技术 notes 只转成影响面 flags、NFR 线索和后续设计触发，不在 requirements 中展开方案。
+6. 每次转译都记录 source item、确认类型、REQ / AC / NFR / Out of Scope / Pending 结果。
 
 requirements 不合格的信号：只剩用户故事、没有 SHALL 行为、没有失败/边界/权限、没有 AC，或者出现 API / DB / 文件路径实现方案。
 
 ## 第三方 Skill 归一化
 
-先读取 `.specforge/core/skills/ORCHESTRATION.md`、`README.md` 和 `registry.json`，只按需选择第三方 skill。第三方 skill 是参考输入，不是 SpecForge 产物格式。
+先读取 `.specforge/core/skills/ORCHESTRATION.md`、`README.md` 和 `registry.json`，主能力使用 `.specforge/core/skills/requirements/SKILL.md`；第三方 skill 只按需选择。第三方 skill 是参考输入，不是 SpecForge 产物格式。
 
 | Skill | 什么时候读 | 归一化到 |
 |---|---|---|
-| `user-stories` | 需要用户故事、3C、Given/When/Then、INVEST 检查或验收标准样例时 | `requirements.md#目标用户与场景`、`#功能需求`、`#验收标准` |
+| `requirements` | 每次 requirements 阶段必读 | `requirements.md#上游确认输入`、`#功能需求`、`#验收标准`、`#REQ / AC Trace`、`#Downstream Handoff` |
+| `user-stories` | 需要用户故事、3C、Given/When/Then、INVEST 检查或验收标准样例时 | `requirements.md#上游确认输入`、`#功能需求`、`#验收标准` |
 | `create-prd` | 只在 PRD handoff 不清晰时回看产品意图、目标、非目标和 release 分期 | 作为输入摘要，不直接写入 requirements |
 
 规则：
@@ -72,6 +74,7 @@ requirements 不合格的信号：只剩用户故事、没有 SHALL 行为、没
 - 如果需求会迫使技术设计选择包管理器、UI 组件库、样式方案、Python 依赖管理 / 虚拟环境、构建工具、测试 runner、任务运行器或 monorepo 工具，必须写 `[TOOLING DECISION REQUIRED]` 或 `[NEEDS TOOLING DECISION]`，并说明需要用户确认；不要在 requirements 中替用户选择 npm / pnpm / yarn、uv / Poetry / pip / Conda 等偏好。
 - 每条功能需求至少覆盖正常路径；有失败、空状态、边界值、权限差异时必须显式写出。
 - 每条 `MUST` 需求必须至少有一个 `AC-*`，并在 PRD / Brief 追溯表中标明来源。
+- 每条 `MUST` 需求必须来自 `user-confirmed` / `delegated-default` / 既有系统契约；Agent recommendation 不能升级为 MUST。
 - 将 PRD 用户故事转成需求时，保留“角色 / 目标 / 价值”作为来源说明，但需求正文使用系统行为语言。
 - 适合时使用 EARS：
   - `WHEN <event>, THE SYSTEM SHALL <response>.`

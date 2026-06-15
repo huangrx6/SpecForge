@@ -32,6 +32,111 @@
       ]
     },
     {
+      "id": "requirements",
+      "category": "requirements",
+      "localPath": "requirements",
+      "name": "requirements",
+      "role": "Requirements 行为契约、确认边界、来源转译、REQ / AC 追踪和下游 handoff 主能力包",
+      "trust": "SpecForge 本地维护，结合 ISO/IEC/IEEE 29148、RFC 2119、EARS、Gherkin 和 SpecForge 阶段链路沉淀",
+      "risk": "低",
+      "source": {
+        "type": "local-authored",
+        "repo": "SpecForge",
+        "path": "core/skills/requirements/SKILL.md",
+        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/requirements",
+        "files": [
+          {
+            "path": "foundations/confirmation-boundary.md"
+          },
+          {
+            "path": "foundations/nfr-taxonomy.md"
+          },
+          {
+            "path": "foundations/requirement-language.md"
+          },
+          {
+            "path": "foundations/testability.md"
+          },
+          {
+            "path": "foundations/traceability.md"
+          },
+          {
+            "path": "transforms/source-to-requirements.md"
+          },
+          {
+            "path": "transforms/prd-to-requirements.md"
+          },
+          {
+            "path": "transforms/brainstorm-to-requirements.md"
+          },
+          {
+            "path": "transforms/research-to-requirements.md"
+          },
+          {
+            "path": "transforms/gap-to-requirements.md"
+          },
+          {
+            "path": "patterns/role-permission.md"
+          },
+          {
+            "path": "patterns/workflow-state.md"
+          },
+          {
+            "path": "patterns/data-file.md"
+          },
+          {
+            "path": "patterns/ai-quality.md"
+          },
+          {
+            "path": "patterns/ui-impact.md"
+          },
+          {
+            "path": "patterns/integration-api.md"
+          },
+          {
+            "path": "patterns/ops-runtime.md"
+          },
+          {
+            "path": "references/output-contract.md"
+          },
+          {
+            "path": "references/cross-stage-handoff.md"
+          },
+          {
+            "path": "references/quality-rubric.md"
+          },
+          {
+            "path": "references/anti-patterns.md"
+          },
+          {
+            "path": "prompts/requirements-interview.md"
+          },
+          {
+            "path": "prompts/acceptance-criteria.md"
+          },
+          {
+            "path": "prompts/ambiguity-review.md"
+          }
+        ]
+      },
+      "trigger": "每次 sf-requirements 需要把 brief / PRD / brainstorm / research / gap report 转成可测试、可追踪、可交给 UI / technical design / tasking / verification 的行为规格时必读。",
+      "normalizeTo": [
+        "01-spec/requirements.md#上游确认输入",
+        "01-spec/requirements.md#Source -> Requirement 转译",
+        "01-spec/requirements.md#功能需求",
+        "01-spec/requirements.md#验收标准",
+        "01-spec/requirements.md#REQ / AC Trace",
+        "01-spec/requirements.md#Downstream Handoff"
+      ],
+      "doNotUseFor": [
+        "替代用户确认产品范围或验收口径",
+        "把 Agent recommendation 升级为 user-confirmed MUST",
+        "在 requirements 中提前写 UI / API / DB / 任务实现方案",
+        "跳过 PRD、research 或 gap report 的来源证据",
+        "替代 artifact-quality、spec_review 或 verification gate"
+      ]
+    },
+    {
       "id": "user-stories",
       "category": "requirements",
       "localPath": "requirements/user-stories",

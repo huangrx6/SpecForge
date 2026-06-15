@@ -19,7 +19,13 @@ description: 生成或更新 SpecForge work item 的 requirements；用于 activ
 
 ## 必读
 
-- `references/requirements-authoring-guide.md`：PRD 转译、第三方 skill、访谈镜头、写作细则和 flags 回写。
+- `.specforge/core/skills/requirements/SKILL.md`：requirements 行为契约能力包入口，定义确认边界、转译规则、可测试性、追踪和下游 handoff。
+- `.specforge/core/skills/requirements/references/output-contract.md`：输出 profile、必填 section 和 REQ / AC 表格契约。
+- `.specforge/core/skills/requirements/foundations/confirmation-boundary.md`：确认类型、MUST / SHALL 可写入边界和 pending 处理。
+- `.specforge/core/skills/requirements/foundations/requirement-language.md`：RFC 2119、EARS、禁止模糊词和实现词。
+- `.specforge/core/skills/requirements/foundations/testability.md`：可测试性、Given / When / Then 和验证方式要求。
+- `.specforge/core/skills/requirements/foundations/traceability.md`：Source -> REQ -> AC -> downstream 追踪规则。
+- `references/requirements-authoring-guide.md`：PRD 转译补充、第三方 skill 归一化、访谈镜头、写作细则和 flags 回写。
 - `.specforge/skills/sf-requirements/stages/requirements/SKILL.md`：内部需求质量标准、停止条件和完成标准。
 - `.specforge/core/standards/product.md`：PRD 输入、候选功能、用户故事、验收标准和可测试需求。
 - `.specforge/core/standards/workflow.md`：范围、非目标、写入边界和中文协作。
@@ -58,22 +64,25 @@ node .specforge/core/scripts/create-artifact.mjs requirements
 
 ### B. 转译为可测试行为
 
-1. 按 `references/requirements-authoring-guide.md#PRD 转译规则` 显式完成 PRD 转译。
-2. 从 brief 的 Wiki 上下文入口和相关 wiki 中提取既有产品规则、模块边界、API / 数据约束和已知风险，只转成需求约束或影响面，不展开全仓代码探索。
-3. 把 PRD / brief 中的用户故事、候选功能和验收种子转成 `REQ-*`、`AC-*`、NFR、非目标或待澄清项。
-4. 需求正文使用系统行为语言，不复制 PRD 原文，不写实现方案。
-5. 如需用户故事或验收样例，按 `references/requirements-authoring-guide.md#第三方 Skill 归一化` 读取 `user-stories`。
-6. 对中高复杂度需求执行一致性检查：用户目标、MVP、角色权限、数据口径、验收标准和非目标不得互相冲突；冲突必须回到用户确认。
+1. 先建立 `上游确认输入` 表：original request、brief、brainstorm、PRD、research、gap report、wiki 事实都必须标注确认类型。
+2. 只有 `user-confirmed` 和 `delegated-default` 可以转成 `MUST` / `SHALL` 行为需求；`agent-recommendation` 只能写成候选 / 建议，`pending` 必须留在未决问题。
+3. 按 `.specforge/core/skills/requirements/transforms/source-to-requirements.md` 和 `references/requirements-authoring-guide.md#PRD 转译规则` 显式完成来源转译。
+4. 从 brief 的 Wiki 上下文入口和相关 wiki 中提取既有产品规则、模块边界、API / 数据约束和已知风险，只转成需求约束或影响面，不展开全仓代码探索。
+5. 把 PRD / brief / brainstorm 中已确认的用户故事、候选功能和验收种子转成 `REQ-*`、`AC-*`、NFR、非目标、明确延后或待澄清项。
+6. 需求正文使用系统行为语言，不复制 PRD 原文，不写实现方案；优先使用 EARS 或 RFC 2119 层级表达。
+7. 如需用户故事或验收样例，按 `references/requirements-authoring-guide.md#第三方 Skill 归一化` 读取 `user-stories`，但它只补视角，不替代主 requirements 包。
+8. 对中高复杂度需求执行一致性检查：用户目标、MVP、角色权限、数据口径、验收标准和非目标不得互相冲突；冲突必须回到用户确认。
 
 ### C. 写 requirements
 
 1. 写入 `01-spec/requirements.md`。
-2. 每条 `MUST` 需求至少有一个 `AC-*`。
-3. 适用时覆盖正常路径、失败路径、空状态、边界值、权限差异和重新验证触发条件。
+2. 每条 `MUST` / `SHALL` 需求至少有一个 `AC-*`，并在 `REQ / AC Trace` 中连回来源。
+3. 适用时覆盖正常路径、失败路径、空状态、边界值、权限差异和重新验证触发条件；不适用时写 N/A 理由。
 4. 涉及依赖或工具链选择时，写 `[NEEDS DEPENDENCY DECISION]` / `[NEEDS TOOLING DECISION]`，不要替用户选择。
 5. 填写 `Spec Quality Gate`，说明输出预算、冲突扫描、可测试性扫描和下一阶段是否可直接开工。
 6. 标出非目标、依赖、风险、重新验证触发条件和已知歧义；无法确认的行为必须写 `[NEEDS CLARIFICATION]`，不得猜测或包装成已批准规格。
 7. **新增字段或数据变更时，必须枚举所有读取或展示该数据的页面**（不仅是新增/编辑表单，还包括列表页、详情页、只读视图、导出等），每个页面单独列为影响面，不得合并或遗漏。
+8. 写清 `Downstream Handoff`：哪些 REQ / AC 触发 UI design、technical design、tasking、verification，哪些未决项会阻断下游。
 
 ### D. 回写 flags 和路由
 
@@ -104,6 +113,8 @@ node .specforge/core/scripts/artifact-quality.mjs
 - `01-spec/requirements.md` 可以独立支撑后续影响面判断。
 - PRD 中每个已确认 MVP 能力都能追溯到 requirements 中的需求或非目标。
 - PRD 的每个验收种子都已转成最终 AC、NFR、非目标或待澄清项。
+- 所有 `MUST` / `SHALL` 都来自 `user-confirmed` / `delegated-default` / 既有系统契约，不把 Agent recommendation 写成用户确认。
+- `REQ-*`、`AC-*`、NFR 和下游 handoff 可以从来源追溯。
 - `Spec Quality Gate` 已证明需求可测试、无未处理冲突，且输出预算与 work item 规模匹配。
 - 每个 user-visible / operator-visible 行为都有验收标准。
 - 影响面 flags 已校准。

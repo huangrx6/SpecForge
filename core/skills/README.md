@@ -19,7 +19,7 @@
 |---|---|---|
 | `product/` | 产品发现、机会树、方案取舍 | `opportunity-solution-tree` |
 | `prd/` | PRD 合成与产品范围整理 | `create-prd` |
-| `requirements/` | 用户故事、验收标准和可测试性 | `user-stories` |
+| `requirements/` | 行为契约、确认边界、转译、用户故事、验收标准和可测试性 | `requirements`, `user-stories` |
 | `ui-ux/` | UX 研究、设计语言、Pencil 原型、设计转代码参考 | `design-system`, `pencil` |
 | `brainstorm/` | 问题重构、事实查证、发散、类比、场景模拟、批判、评估、输出和行动计划 | `problem-framing`, `research-source`, `divergent-thinking`, `analogy-thinking`, `scenario-simulation`, `critic-review`, `decision-matrix`, `output-shaping`, `execution-planning` |
 | `quality/` | Code review、测试设计与浏览器验证参考 | `code-reviewer`, `test-design`, `playwright-skill` |
@@ -30,7 +30,8 @@
 |---|---|---|
 | `opportunity-solution-tree` | `product/opportunity-solution-tree` | Intake / PRD 前的机会树、功能候选、假设、实验和优先级参考 | `00-intake/brainstorm.md`、`00-intake/brief.md`、`00-intake/prd.md` |
 | `create-prd` | `prd/create-prd` | 上下文充分时合成 PRD | `00-intake/prd.md` |
-| `user-stories` | `requirements/user-stories` | 用户故事、3C / INVEST 和验收标准参考 | `01-spec/requirements.md` |
+| `requirements` | `requirements` | Requirements 行为契约、确认边界、来源转译、REQ / AC 追踪、NFR 和下游 handoff 主能力包 | `01-spec/requirements.md` |
+| `user-stories` | `requirements/user-stories` | 用户故事、3C / INVEST 和验收标准补充参考 | `01-spec/requirements.md` |
 | `pencil` | `ui-ux/pencil` | Pencil MCP 原型读写、组件复用、tokens、布局检查、截图导出和设计转代码参考 | `01-spec/ui-design.md`、`.pen` 源文件、导出截图、前端实现备注 |
 | `design-system` | `ui-ux/design-system` | 用户研究、信息架构、设计语言、foundations、组件规范、页面模式、shadcn-vue 映射、动效边界和去廉价感审查 | `00-intake/brainstorm.md`、`01-spec/ui-design.md`、Pencil 输入、前端组件契约 |
 | `problem-framing` | `brainstorm/problem-framing` | 模糊请求的问题重构、目标澄清、约束和必须确认问题 | `00-intake/brainstorm.md#问题重构`、`#问题地图` |
@@ -50,7 +51,7 @@
 
 - 不在每个阶段默认加载参考 skill。
 - PRD 只在需要机会树 / 功能候选 / 合成时参考 `opportunity-solution-tree` / `create-prd`。
-- Requirements 只在故事、验收或边界不足时参考 `user-stories`。
+- Requirements 默认先读 `requirements` 主能力包；只有故事、验收或 INVEST 视角不足时再参考 `user-stories`。
 - UI 正式原型固定为 Pencil；其他工具只能作为用户显式提供的外部输入。
 - UI 方向确认后，先用 `design-system` 收敛设计语言、token、组件契约和页面模式，再进入 Pencil 原型。
 - UX 参考只补充研究、流程和可访问性证据，不替代 Pencil 原型或 SpecForge UI artifact。
