@@ -275,7 +275,7 @@
       "category": "ui-ux",
       "localPath": "ui-ux/design-system",
       "name": "design-system",
-      "role": "设计语言、组件规范、页面模式、shadcn-vue 映射和去廉价感审查",
+      "role": "设计模式路由、设计语言、机器可读契约、组件规范、页面模式、shadcn-vue 映射和视觉 QA 审查",
       "trust": "SpecForge 本地维护，结合 shadcn-vue、设计系统、可访问性和 Product UI 实践沉淀",
       "risk": "低",
       "source": {
@@ -284,6 +284,12 @@
         "path": "core/skills/ui-ux/design-system/SKILL.md",
         "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/ui-ux/design-system",
         "files": [
+          {
+            "path": "contracts/design-contract.schema.json"
+          },
+          {
+            "path": "contracts/component-contract.template.md"
+          },
           {
             "path": "foundations/README.md"
           },
@@ -405,6 +411,12 @@
             "path": "references/shadcn-vue.md"
           },
           {
+            "path": "references/design-mode-routing.md"
+          },
+          {
+            "path": "references/visual-qa-detectors.md"
+          },
+          {
             "path": "references/pc-business-system.md"
           },
           {
@@ -424,10 +436,12 @@
           }
         ]
       },
-      "trigger": "当 sf-ui-design 需要提炼设计语言、建立 token、选择组件模式、生成 shadcn-vue 组件契约、设计页面模式、引入动效边界或执行去廉价感审查时使用。",
+      "trigger": "当 sf-ui-design 需要判断 Product UI / Brand Surface / Hybrid 模式、提炼设计语言、建立 token、生成机器可读 Design Contract、选择组件模式、生成 shadcn-vue 组件契约、设计页面模式、引入动效边界或执行视觉 QA 审查时使用。",
       "normalizeTo": [
         "01-spec/ui-design.md#Visual Style Brief",
+        "01-spec/ui-design.md#Design Contract Summary",
         "01-spec/ui-design.md#管理端 / shadcn 组件封装契约",
+        "01-spec/design/components/<component-name>.contract.md",
         "01-spec/ui-design.md#Interaction State Matrix",
         "01-spec/ui-design.md#视觉质量 Review",
         "01-spec/ui-mockup.pen"
@@ -436,6 +450,7 @@
         "替代用户确认 UI 方向",
         "替代 Pencil 正式原型",
         "替代前端技术设计或实现",
+        "把 Brand Surface 审美直接套到 Product UI 控件",
         "把所有 foundations/components/pages 文件一次性复制进 ui-design.md"
       ]
     },

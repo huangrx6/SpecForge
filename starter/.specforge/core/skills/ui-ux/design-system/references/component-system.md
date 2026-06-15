@@ -13,6 +13,8 @@
 
 `sf-ui-design` 至少要输出 Project component；复杂页面输出 Pattern / Domain component。
 
+复杂、复用或跨页面组件必须独立落档到 `01-spec/design/components/<component-name>.contract.md`，模板见 `contracts/component-contract.template.md`。`ui-design.md` 只保留组件矩阵和链接，不要让实现阶段从散文里猜 props、events、slots 和状态责任。
+
 ## Contract fields
 
 - `purpose`：解决什么任务，不解决什么任务。
@@ -85,6 +87,25 @@ Motion:
 - `Pattern component` 负责页面级复用，例如 ImportWizard、EntityDetailDrawer、ErrorDiagnosisPanel。
 
 如果一个组件需要反复处理权限、加载、错误、空态、远程数据或审计日志，就必须提升为 project wrapper。
+
+## Component contract file
+
+保存路径：
+
+```text
+01-spec/design/components/<component-name>.contract.md
+```
+
+必须覆盖：
+
+- Identity：purpose / not for。
+- Anatomy：root、header、toolbar、content、footer、slots。
+- Variants：语义、业务、布局、设备变体。
+- States：loading、empty、filtered-empty、error、permission、stale 等。
+- Mapping：primitive、companions、project wrapper、pattern component。
+- Props / events / slots：实现阶段需要的稳定接口。
+- Motion：layer、token、reduced motion。
+- Verification：截图状态、DOM checks、a11y checks。
 
 ## shadcn-vue integration
 

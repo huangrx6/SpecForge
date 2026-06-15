@@ -33,7 +33,7 @@
 | `requirements` | `requirements` | Requirements 行为契约、确认边界、来源转译、REQ / AC 追踪、NFR 和下游 handoff 主能力包 | `01-spec/requirements.md` |
 | `user-stories` | `requirements/user-stories` | 用户故事、3C / INVEST 和验收标准补充参考 | `01-spec/requirements.md` |
 | `pencil` | `ui-ux/pencil` | Pencil MCP 原型读写、组件复用、tokens、布局检查、截图导出和设计转代码参考 | `01-spec/ui-design.md`、`.pen` 源文件、导出截图、前端实现备注 |
-| `design-system` | `ui-ux/design-system` | 用户研究、信息架构、设计语言、foundations、组件规范、页面模式、shadcn-vue 映射、动效边界和去廉价感审查 | `00-intake/brainstorm.md`、`01-spec/ui-design.md`、Pencil 输入、前端组件契约 |
+| `design-system` | `ui-ux/design-system` | 用户研究、信息架构、设计模式路由、设计语言、foundations、机器可读 Design Contract、组件规范、页面模式、shadcn-vue 映射、动效边界和视觉 QA 审查 | `00-intake/brainstorm.md`、`01-spec/ui-design.md`、`01-spec/design/components/*.contract.md`、Pencil 输入、前端组件契约 |
 | `problem-framing` | `brainstorm/problem-framing` | 模糊请求的问题重构、目标澄清、约束和必须确认问题 | `00-intake/brainstorm.md#问题重构`、`#问题地图` |
 | `research-source` | `brainstorm/research-source` | 当前事实查证、来源选择、证据表、版本依赖关系和未查证项 | `00-intake/brainstorm.md#当前事实与研究证据` |
 | `divergent-thinking` | `brainstorm/divergent-thinking` | 多角度发散候选方向，包含保守、标准、激进、实验和反直觉方案 | `00-intake/brainstorm.md#发散方向池` |
@@ -53,7 +53,7 @@
 - PRD 只在需要机会树 / 功能候选 / 合成时参考 `opportunity-solution-tree` / `create-prd`。
 - Requirements 默认先读 `requirements` 主能力包；只有故事、验收或 INVEST 视角不足时再参考 `user-stories`。
 - UI 正式原型固定为 Pencil；其他工具只能作为用户显式提供的外部输入。
-- UI 方向确认后，先用 `design-system` 收敛设计语言、token、组件契约和页面模式，再进入 Pencil 原型。
+- UI 方向确认后，先用 `design-system` 判断 Product UI / Brand Surface / Hybrid 模式，再收敛设计语言、token、组件契约、Design Contract JSON 和页面模式，再进入 Pencil 原型。
 - UX 参考只补充研究、流程和可访问性证据，不替代 Pencil 原型或 SpecForge UI artifact。
 - Brainstorm 不只查资料：先用 `problem-framing` 重构问题，再按需要使用 `research-source`、`divergent-thinking`、`analogy-thinking`、`scenario-simulation`、`critic-review`、`decision-matrix`、`output-shaping` 和 `execution-planning`。
 - Brainstorm 包内子 skill 按 `skip` / `light` / `deep` / `research-heavy` profile 组成内部链路，不计入“最多 1 个外部辅助”的限制。

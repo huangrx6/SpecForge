@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/huangrx6/SpecForge/core/skills/ui-ux/design-system/contracts/design-contract.schema.json",
+  "title": "SpecForge Design Contract Summary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "design_mode",
+    "aesthetic_direction",
+    "signature",
+    "token_source",
+    "component_strategy",
+    "shadcn_vue",
+    "motion",
+    "verification_hooks",
+    "anti_slop_rules"
+  ],
+  "properties": {
+    "design_mode": {
+      "type": "string",
+      "enum": ["Product UI", "Brand Surface", "Hybrid", "Avatar-IP / Empty State"]
+    },
+    "aesthetic_direction": {
+      "type": "string"
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "description"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["structural", "typographic", "material", "interaction", "motion"]
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "token_source": {
+      "type": "string",
+      "enum": ["existing", "new", "delta"]
+    },
+    "component_strategy": {
+      "type": "string",
+      "enum": ["primitive + wrapper", "project components", "registry"]
+    },
+    "shadcn_vue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primitive_layer", "project_wrapper_layer"],
+      "properties": {
+        "primitive_layer": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "project_wrapper_layer": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "motion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["layer_1_css", "layer_2_motion_vue", "layer_3_gsap", "reduced_motion"],
+      "properties": {
+        "layer_1_css": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "layer_2_motion_vue": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "layer_3_gsap": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "reduced_motion": {
+          "type": "string"
+        }
+      }
+    },
+    "verification_hooks": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "anti_slop_rules": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

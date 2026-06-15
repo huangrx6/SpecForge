@@ -20,38 +20,41 @@ description: SpecForge UI 设计规范 skill；用于提炼设计语言、建立
 
 ## 读取顺序
 
-1. 先读 `references/design-intelligence.md`，明确 subject、audience、single job、design mode 和一个可辩护的 signature。
-2. UX 证据、信息架构、交互恢复、微文案或可访问性不足时读 `references/ux-research-ia.md`。
-3. 再读 `foundations/README.md`，按需读 colors / typography / spacing / density / radius-shadow / motion / accessibility。
-4. 需要推荐风格方向时读 `references/aesthetic-directions.md` 和 `prompts/aesthetic-selection.md`，先推荐 3-5 个互斥美学风格（用户要求少量时 2-3 个），再把用户选择翻译成业务页面模式。
-5. Product UI / shadcn-vue 场景读 `references/shadcn-vue.md`、`references/tailwind-v4.md`、`components/README.md`、`references/component-system.md` 和相关 `components/*.md`。
-6. 页面设计读 `pages/*.md` 中最接近的模式；没有命中的页面先读 `pages/dashboard.md`、`pages/list-detail.md`、`pages/form-flow.md`。
-7. 需要从参考网站或截图提取风格时读 `references/design-md-extraction.md`，按 DESIGN.md 结构抽取 token、组件、布局和 do/don't。
-8. 需要生成或审查提示词时读 `prompts/ui-generation.md`、`prompts/design-language.md`、`prompts/sample-board.md`、`prompts/taste-critique.md`、`prompts/anti-cheapness-review.md`、`prompts/motion-design.md`。
-9. 需要给人看样例时读 `references/good-case.md`、`references/bad-case.md`、`references/sample-board-template.md`，形成“采用 / 不采用 / 原因 / 待确认”。
-10. 需要跨阶段交付、前端技术设计、实现或验证时读 `references/cross-stage-handoff.md`。
-11. 写入 `ui-design.md` 前读 `references/output-contract.md`，按 compact / standard / full 选择输出结构，并保留 Design Contract Summary。
-12. 需要复杂动效或编排时读 `references/motion-gsap.md`；Vue 项目可参考 Vue Bits / Motion Vue，但新增依赖必须在 technical design 中确认。
+1. 先读 `references/design-mode-routing.md`，判断 Product UI、Brand Surface、Hybrid 或 Avatar-IP / Empty State，并决定本轮输出深度和禁止项。
+2. 再读 `references/design-intelligence.md`，明确 subject、audience、single job、design mode 和一个可辩护的 signature。
+3. UX 证据、信息架构、交互恢复、微文案或可访问性不足时读 `references/ux-research-ia.md`。
+4. 再读 `foundations/README.md`，按需读 colors / typography / spacing / density / radius-shadow / motion / accessibility。
+5. 需要推荐风格方向时读 `references/aesthetic-directions.md` 和 `prompts/aesthetic-selection.md`，先推荐 3-5 个互斥美学风格（用户要求少量时 2-3 个），再把用户选择翻译成业务页面模式。
+6. Product UI / shadcn-vue 场景读 `references/shadcn-vue.md`、`references/tailwind-v4.md`、`components/README.md`、`references/component-system.md`、`contracts/component-contract.template.md` 和相关 `components/*.md`。
+7. 页面设计读 `pages/*.md` 中最接近的模式；没有命中的页面先读 `pages/dashboard.md`、`pages/list-detail.md`、`pages/form-flow.md`。
+8. 需要从参考网站或截图提取风格时读 `references/design-md-extraction.md`，按 DESIGN.md 结构抽取 token、组件、布局和 do/don't。
+9. 需要生成或审查提示词时读 `prompts/ui-generation.md`、`prompts/design-language.md`、`prompts/sample-board.md`、`prompts/taste-critique.md`、`prompts/anti-cheapness-review.md`、`prompts/motion-design.md`。
+10. 需要给人看样例时读 `references/good-case.md`、`references/bad-case.md`、`references/sample-board-template.md`，形成“采用 / 不采用 / 原因 / 待确认”。
+11. 做视觉质量审查时读 `references/visual-qa-detectors.md`，按 detector 输出 fail signal、severity 和 fix。
+12. 需要跨阶段交付、前端技术设计、实现或验证时读 `references/cross-stage-handoff.md` 和 `contracts/design-contract.schema.json`。
+13. 写入 `ui-design.md` 前读 `references/output-contract.md`，按 compact / standard / full 选择输出结构，并保留 Markdown Summary 和 machine-readable JSON block。
+14. 需要复杂动效或编排时读 `references/motion-gsap.md`；Vue 项目可参考 Vue Bits / Motion Vue，但新增依赖必须在 technical design 中确认。
 
 ## 工具链
 
 1. **Design intake**：提取宿主产品、目标用户、使用场景、实现栈、已有组件、约束和用户审美偏好。
 2. **Subject grounding**：用真实业务对象、行业材料、用户语言和场景物件推导视觉方向，不从通用 SaaS 模板开始。
 3. **UX grounding**：需要时用 `ux-research-ia.md` 补齐用户、任务、信息架构、交互恢复、微文案和可访问性底线；关键未知必须回到人工确认。
-4. **Design mode**：判断 Product UI、Brand Surface 或 Hybrid；后台工具默认 Product UI，除非用户明确要求表达型品牌页面。
+4. **Design mode routing**：用 `references/design-mode-routing.md` 判断 Product UI、Brand Surface、Hybrid 或 Avatar-IP / Empty State；后台工具默认 Product UI，除非用户明确要求表达型品牌页面且不破坏任务效率。
 5. **Reference extraction**：有参考网站/截图时，抽取 DESIGN.md 风格的 atmosphere、tokens、typography、components、layout、do/don't。
 6. **Aesthetic direction recommendation**：基于 `aesthetic-directions.md` 推荐 3-5 个互斥美学方向；方向必须是审美气质，例如极简主义、玩具感、水彩风、赛博朋克、森系，而不是 Operational Calm 这类业务模式。
 7. **Business translation**：用户选择美学后，再把它翻译成业务页面模式、组件气质、密度、状态、动效边界和 signature。
 7. **Self-critique pass**：先问“这个方案是不是任何同类产品都会长这样”，若是，必须替换 palette、type、layout 或 signature 中至少一项。
 8. **Human taste gate**：方向会影响视觉气质、信息架构或核心流程时，先让用户确认；低风险小改可写可逆默认。
 9. **Foundations pack**：把确认方向落成 semantic tokens、字体层级、空间密度、圆角阴影、动效、可访问性约束。
-10. **Component system**：按 `components/README.md` 和 `references/component-system.md` 定义 structure、variants、states、density、content、a11y、shadcn-vue primitive / companion / project wrapper。
-11. **Component contract**：优先映射到 shadcn-vue primitive，再定义项目级组件；写清 props、events、slots、density、文案规则、empty/error/loading/permission/partial/stale 等复杂状态。
+10. **Component system**：按 `components/README.md`、`references/component-system.md` 和 `contracts/component-contract.template.md` 定义 structure、variants、states、density、content、a11y、shadcn-vue primitive / companion / project wrapper。
+11. **Component contract files**：复杂或复用组件写入 `01-spec/design/components/<component-name>.contract.md`；优先映射到 shadcn-vue primitive，再定义项目级组件；写清 props、events、slots、density、文案规则、empty/error/loading/permission/partial/stale 等复杂状态。
 12. **Page patterns**：选择页面模式，明确导航、主任务、状态矩阵、响应式、微文案和不做项。
 13. **Sample board**：生成可给人看的样例板，包含 2-3 张关键页面或关键组件片段的描述、采用/不采用理由和修改建议。
-14. **Taste review**：检查模板感、廉价渐变、无意义卡片、单色堆叠、默认控件、文案空泛、动效噪音和不可落地样式。
-15. **Cross-stage handoff**：按 `references/cross-stage-handoff.md` 生成 Design Contract Summary，明确 token source、component strategy、shadcn-vue primitive / wrapper、motion source 和 verification hooks。
-16. **Handoff**：把设计语言、组件契约、页面模式和样例板归一化写入 `ui-design.md`，供 Pencil、technical design、tasking、implementation 和 verification 使用。
+14. **Visual QA detectors**：按 `references/visual-qa-detectors.md` 检查 generic SaaS shell、card soup、fake premium gradient、motion noise、state missing、primitive pile 等问题，并给出修正动作。
+15. **Taste review**：检查模板感、廉价渐变、无意义卡片、单色堆叠、默认控件、文案空泛、动效噪音和不可落地样式。
+16. **Cross-stage handoff**：按 `references/cross-stage-handoff.md` 和 `contracts/design-contract.schema.json` 生成 Design Contract Summary，明确 token source、component strategy、shadcn-vue primitive / wrapper、motion source 和 verification hooks。
+17. **Handoff**：把设计语言、组件契约、页面模式、JSON contract 和样例板归一化写入 `ui-design.md`，供 Pencil、technical design、tasking、implementation 和 verification 使用。
 
 ## 输出到 SpecForge
 
@@ -61,11 +64,12 @@ description: SpecForge UI 设计规范 skill；用于提炼设计语言、建立
 | 美学方向推荐、用户选择和不适用方向 | `01-spec/ui-design.md#Aesthetic Direction` |
 | 参考网站 / 截图提取的 DESIGN.md 规则 | `01-spec/ui-design.md#Design Reference Extraction` |
 | 组件契约、shadcn-vue primitive 映射 | `01-spec/ui-design.md#Admin Component Contract` |
+| 复杂 / 复用组件独立契约 | `01-spec/design/components/<component-name>.contract.md` |
 | 页面模式、关键状态、空错权加载 | `01-spec/ui-design.md#页面地图` 和 `#状态矩阵` |
 | 2-3 个方向样例、人工确认和放弃项 | `01-spec/ui-design.md#UI Direction Options` |
 | 去廉价感审查、修正动作 | `01-spec/ui-design.md#视觉质量 Review` |
 | Pencil 原型输入 | `01-spec/ui-mockup.pen` 和导出截图 |
-| Design Contract Summary、跨阶段 token / wrapper / motion / verification hooks | `01-spec/ui-design.md#Design Contract Summary`；后续由 `technical-design.md` 和 implementation 读取 |
+| Design Contract Summary、machine-readable JSON block、跨阶段 token / wrapper / motion / verification hooks | `01-spec/ui-design.md#Design Contract Summary`；后续由 `technical-design.md`、tasking、implementation 和 verification 读取 |
 
 输出规模按 `references/output-contract.md` 选择 compact / standard / full，避免又回到大而难读的文档。
 
@@ -74,6 +78,7 @@ description: SpecForge UI 设计规范 skill；用于提炼设计语言、建立
 - 先定义设计语言，再画页面；先定组件规则，再谈实现。
 - 每个 UI 方向必须有 subject、audience、single job 和 signature；没有 signature 的方向通常只是模板换皮。
 - Product UI 以清晰、密度、稳定和可重复使用为主，不做营销页式装饰。
+- 设计模式必须先路由：Product UI、Brand Surface、Hybrid、Avatar-IP / Empty State 不能混用质量标准。
 - Brand Surface 可以更有表达，但仍要有 token、网格、动效边界和内容策略。
 - shadcn-vue 是 primitive / registry / theme 基座，不等于完整设计系统；必须定义项目级组件 contract。
 - React Bits 类灵感在 Vue 项目中优先找 Vue Bits / Motion Vue / CSS transition 等对应实现；没有任务价值的动效不进入 Product UI。
@@ -91,6 +96,7 @@ description: SpecForge UI 设计规范 skill；用于提炼设计语言、建立
 - 颜色、字体、间距、圆角、阴影、动效和组件形态可复用。
 - 关键页面至少覆盖 default / loading / empty / error / permission / success 中适用状态。
 - 组件契约能指导 shadcn-vue 或项目组件封装。
-- Design Contract Summary 能指导 technical design 选择组件架构、registry、token delivery、motion dependency 和验证面。
+- Design Contract Summary 同时有人读 Markdown 和机器读 JSON，能指导 technical design 选择组件架构、registry、token delivery、motion dependency 和验证面。
+- 复杂 / 复用组件有独立 `01-spec/design/components/<component-name>.contract.md`，或写明 N/A 理由。
 - 有 sample board、人工确认状态、去廉价感 review 和至少一轮修正建议。
 - 生成的样例可以给人工确认，并能说明好在哪里、不好在哪里、为什么适合宿主项目。

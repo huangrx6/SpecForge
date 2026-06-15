@@ -23,6 +23,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - 现有页面、组件库、设计系统、Pencil 文件、截图、参考产品或用户提供的设计资料
 - 需要操作 Pencil 时读取 `core/skills/ui-ux/pencil/SKILL.md`
 - 需要设计语言、去廉价感、shadcn-vue 映射、页面模式、样例板、动效边界、UX 研究、IA、交互、微文案或可访问性检查时读取 `core/skills/ui-ux/design-system/SKILL.md`
+- 使用 design-system 时先读取 `core/skills/ui-ux/design-system/references/design-mode-routing.md`；交接后续阶段前输出 Design Contract Summary 的 Markdown 表和符合 `core/skills/ui-ux/design-system/contracts/design-contract.schema.json` 的 JSON block。
 - 做视觉质量审查时优先读取项目设计系统、已确认 UI 方向和 `core/skills/ui-ux/design-system/references/ux-research-ia.md`；不再内置 `web-design-guidelines`
 
 ## 写入
@@ -55,6 +56,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - **PC 业务系统模板**：若产品是后台 / 管理系统 / 数据表格系统，或用户明确给出 PC 端 UI 规范，读取 `pc-ui-design-spec.md`，在 Visual Style Brief 中写入设计系统来源和核心 token；后续 Pencil、HTML/CSS、前端实现都不得擅自改这些数值。
 - **shadcn 管理端模式**：若实现层采用 shadcn/ui，把 shadcn 视为 primitive / registry / theming 层；在 UI design 中定义 App Shell、Resource Page、Entity Table、Detail/Form、State Feedback 和 Ops Pattern 的封装契约。
 - **design-system 工具链**：若需要设计语言或组件规范，读取 `design-system`，把 design intelligence、美学方向推荐、DESIGN.md extraction、foundations、组件契约、页面模式、样例板、动效边界和去廉价感 review 归一化到 UI design。
+- **Design mode routing**：先判断 Product UI、Brand Surface、Hybrid 或 Avatar-IP / Empty State；后台、审批、数据表格和高频工作台默认 Product UI，不把品牌页视觉直接套到控件层。
 
 ### 2. 定义（Define）
 
@@ -79,6 +81,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - **建立 foundations pack**：把确认方向写成 semantic tokens、密度、排版、圆角阴影、图标、文案、动效和可访问性底线。
 - **建立 taste critique**：检查这个方向是否可以套到任意同类产品；如果可以，必须替换 signature、布局、排版或色彩策略中的至少一项。
 - **写组件封装契约**：管理端必须说明哪些页面级、资源级和状态级组件由项目封装；避免每个页面重复散落基础 `Button`、`Card`、`Table`。
+- **写组件契约文件**：复杂或复用组件必须写入 `01-spec/design/components/<component-name>.contract.md`，覆盖 anatomy、variants、states、mapping、props、events、slots、motion 和 verification。
 - 页面 × 状态矩阵：default、loading、empty、error、permission、disabled、success、boundary、responsive、a11y。
 - 明确不做项，防止实现阶段扩大 UI 范围。
 - **用户流程设计**：先绘制 happy path，再设计错误和边缘情况。最小化步骤，3 步以上流程提供进度指示器。
@@ -101,6 +104,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 
 - **执行视觉质量自检并修一轮**：必须基于截图检查信息层级、间距、对齐、密度、颜色、组件一致性、状态反馈、响应式和可访问性基础。
 - **执行去廉价感审查**：检查默认模板味、无意义卡片、廉价渐变、随机图标、一次性 token、动效噪音和无法映射到项目组件的问题。
+- **执行 visual QA detectors**：按 `design-system/references/visual-qa-detectors.md` 检查 Generic SaaS shell、Card soup、Fake premium gradient、Motion noise、State missing、Primitive pile 等 detector。
 - 发现问题先修 Pencil，再把 review 发现和修正结果写入 `ui-design.md`。
 - "实现时再优化 UI"不是通过条件。
 - **无障碍自查**：WCAG 2.1 AA 四原则逐项检查（感知性、可操作性、可理解性、健壮性），任何项不通过必须修正后才能交付。
@@ -111,6 +115,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - **写 UI 验证策略**：明确 Playwright 后续要覆盖的页面、操作、角色、状态、截图和失败路径。
 - **记录所有设计决策**：确认来源、选择、放弃项和影响，方便 reviewer 和实现者理解设计意图。
 - **交互状态文档化**：所有页面/组件的状态（default、hover、focus、active、disabled、error、loading、empty、success）必须有明确描述。
+- **机器可读交接**：`Design Contract Summary` 必须包含 JSON block，供 technical design、tasking、implementation 和 verification 读取。
 
 ## 停止条件
 
@@ -130,6 +135,8 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - `ui-design.md` 能让 reviewer 判断 UI 是否满足需求。
 - 有 UI 变更时，存在用户画像提取、Visual Style Brief、页面地图、信息架构、用户流程、微文案、状态矩阵、Pencil `.pen`、导出截图、无障碍自查和视觉质量修正记录。
 - 需要设计系统时，存在 design intelligence、aesthetic direction、foundations pack、sample board、人工确认状态、组件契约、页面模式、taste critique 和 motion boundary。
+- Design Contract Summary 同时包含 Markdown 表和 machine-readable JSON block。
+- 复杂 / 复用组件有独立 component contract 文件，或写明 N/A 理由。
 - Pencil `.pen` 保存后可重读，且 `ui-design.md#9. Pencil 原型证据` 记录保存状态、重读校验和截图证据。
 - 无 UI 影响时，N/A 理由和验证方式清楚。
 - 实现者能据此实现页面结构和交互状态。

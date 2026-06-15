@@ -51,6 +51,31 @@
 | Anti-slop rules | |
 | Verification hooks | |
 
+```json
+{
+  "design_mode": "Product UI",
+  "aesthetic_direction": "",
+  "signature": {
+    "type": "structural",
+    "description": ""
+  },
+  "token_source": "existing",
+  "component_strategy": "primitive + wrapper",
+  "shadcn_vue": {
+    "primitive_layer": [],
+    "project_wrapper_layer": []
+  },
+  "motion": {
+    "layer_1_css": [],
+    "layer_2_motion_vue": [],
+    "layer_3_gsap": [],
+    "reduced_motion": ""
+  },
+  "verification_hooks": [],
+  "anti_slop_rules": []
+}
+```
+
 ## 5. 信息架构
 | 区域 | 内容 | 优先级 | 备注 |
 | --- | --- | --- | --- |
@@ -82,9 +107,9 @@
 | | | | | | |
 
 ## 11. 组件契约
-| 组件 | shadcn-vue 映射 | 变体 | 状态 | Motion | 反模式 |
-| --- | --- | --- | --- | --- | --- |
-| | | | | | |
+| 组件 | Contract file | shadcn-vue 映射 | 变体 | 状态 | Motion | 反模式 |
+| --- | --- | --- | --- | --- | --- | --- |
+| | `01-spec/design/components/<component-name>.contract.md` | | | | | |
 
 ## 12. 视觉质量 Review
 - 对齐：
@@ -92,6 +117,15 @@
 - 对比：
 - 响应式：
 - 细节质感：
+
+## 13. Visual QA Detectors
+| Detector | Result | Evidence | Fix / Accepted reason |
+| --- | --- | --- | --- |
+| Generic SaaS shell | ok / issue | | |
+| Card soup | ok / issue | | |
+| Fake premium gradient | ok / issue | | |
+| Motion noise | ok / issue | | |
+| State missing | ok / issue | | |
 
 ## 15. UI 验证策略
 | 验证项 | 方法 | 证据 |

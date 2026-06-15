@@ -221,6 +221,8 @@ function standardsIndexIssues() {
 function designSystemIssues() {
   const required = [
     "core/skills/ui-ux/design-system/SKILL.md",
+    "core/skills/ui-ux/design-system/contracts/design-contract.schema.json",
+    "core/skills/ui-ux/design-system/contracts/component-contract.template.md",
     "core/skills/ui-ux/design-system/components/README.md",
     "core/skills/ui-ux/design-system/foundations/README.md",
     "core/skills/ui-ux/design-system/foundations/tokens.md",
@@ -261,6 +263,8 @@ function designSystemIssues() {
     "core/skills/ui-ux/design-system/prompts/visual-qa.md",
     "core/skills/ui-ux/design-system/references/good-case.md",
     "core/skills/ui-ux/design-system/references/bad-case.md",
+    "core/skills/ui-ux/design-system/references/design-mode-routing.md",
+    "core/skills/ui-ux/design-system/references/visual-qa-detectors.md",
     "core/skills/ui-ux/design-system/references/design-review-rubric.md",
     "core/skills/ui-ux/design-system/references/aesthetic-directions.md",
     "core/skills/ui-ux/design-system/references/component-system.md",

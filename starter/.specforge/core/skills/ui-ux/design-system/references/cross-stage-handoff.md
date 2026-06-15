@@ -33,7 +33,7 @@
 
 ## Design Contract Summary
 
-`ui-design.md` 应提供这段可被后续阶段直接复制引用的摘要：
+`ui-design.md` 应提供这段可被后续阶段直接复制引用的摘要。Markdown 给人读，JSON 给后续 agent 稳定解析；两者必须表达同一组事实。
 
 ```md
 Design Contract Summary:
@@ -54,12 +54,40 @@ Design Contract Summary:
 - Verification hooks:
 ```
 
+```json
+{
+  "design_mode": "Product UI",
+  "aesthetic_direction": "",
+  "signature": {
+    "type": "structural",
+    "description": ""
+  },
+  "token_source": "existing",
+  "component_strategy": "primitive + wrapper",
+  "shadcn_vue": {
+    "primitive_layer": [],
+    "project_wrapper_layer": []
+  },
+  "motion": {
+    "layer_1_css": [],
+    "layer_2_motion_vue": [],
+    "layer_3_gsap": [],
+    "reduced_motion": ""
+  },
+  "verification_hooks": [],
+  "anti_slop_rules": []
+}
+```
+
+JSON 字段必须符合 `contracts/design-contract.schema.json`。如果某字段不适用，填空数组或明确 N/A 文本，不要省略字段。
+
 ## Technical design additions
 
 前端相关 technical design 必须回答：
 
 - Token delivery：CSS variables、Tailwind theme、组件局部变量还是现有项目 token。
 - Component source：现有组件、shadcn-vue primitive、自建 registry、项目 wrapper、domain component。
+- Component contract files：读取 `01-spec/design/components/<component-name>.contract.md`，确认 primitive、companions、project wrapper、states、props、events、slots、motion 和 verification。
 - Registry boundary：是否需要 shadcn-vue custom registry；registry item 负责什么，项目代码负责什么。
 - Motion source 必答五问：
   - Layer 1 (CSS)：哪些组件使用 transition，使用哪些 duration / easing token。
@@ -85,6 +113,7 @@ Design Contract Summary:
 | --- | --- |
 | Token adherence | CSS variables / Tailwind theme / computed styles |
 | Component adherence | wrapper props、slots、events、states 覆盖 |
+| Component contract files | `01-spec/design/components/*.contract.md` 存在或 N/A 理由 |
 | State matrix | default、loading、empty、error、permission、success 截图或 DOM 证据 |
 | Motion boundary | 每个动效有 duration token / easing token / reduced motion 覆盖 / 无 layout 属性动效 |
 | Motion intent | 每个动效能说明：反馈 / 空间关系 / 进度 / 品牌 signature |

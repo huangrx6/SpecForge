@@ -33,15 +33,15 @@ const contractByArtifact = {
   },
   ui_design: {
     goal: "定义用户可见流程、状态、交互、视觉方向和原型证据。",
-    read: ["requirements", "design standards", "existing UI patterns", "Pencil / screenshot evidence when used"],
-    produce: ["01-spec/ui-design.md", "state matrix", "prototype or N/A evidence"],
+    read: ["requirements", "design standards", "design mode routing", "existing UI patterns", "Pencil / screenshot evidence when used"],
+    produce: ["01-spec/ui-design.md", "Design Contract JSON", "component contract files when needed", "state matrix", "prototype or N/A evidence"],
     human_decisions: ["visual direction", "critical flow", "prototype fidelity", "accessibility / responsive tradeoff"],
-    must_prove: ["empty / loading / error / permission / boundary states are covered", "UI direction is confirmed or N/A"],
+    must_prove: ["design mode matches the surface", "empty / loading / error / permission / boundary states are covered", "UI direction is confirmed or N/A", "handoff contract is machine-readable"],
     exit: "frontend implementation can proceed without re-deciding UX.",
   },
   technical_design: {
     goal: "给实现者最小充分的工程方案、影响面、契约、风险和验证策略。",
-    read: ["requirements", "ui design when applicable", "wiki architecture", "official docs for new technology"],
+    read: ["requirements", "ui design when applicable", "Design Contract JSON when UI applies", "component contract files", "wiki architecture", "official docs for new technology"],
     produce: ["01-spec/technical-design.md", "impact scan", "contracts", "ADR / N/A", "verification strategy"],
     human_decisions: ["new dependency", "tooling", "architecture choice", "core design review"],
     must_prove: ["no high-impact unknown remains", "new dependencies are confirmed", "contracts are testable"],
@@ -49,7 +49,7 @@ const contractByArtifact = {
   },
   tasks: {
     goal: "把 approved spec 拆成可执行、可并行、可验证、可回滚的任务图。",
-    read: ["requirements", "ui design", "technical design", "wiki context", "workflow schema"],
+    read: ["requirements", "ui design", "Design Contract JSON", "component contract files", "technical design", "wiki context", "workflow schema"],
     produce: ["01-spec/tasks.md", "source coverage matrix", "Txxx tasks", "verification tasks"],
     human_decisions: ["scope expansion", "parallel ownership", "defer / follow-up items"],
     must_prove: ["source items map to tasks", "each task has Trace / Files / Verification / Rollback / Risk", "testcase links are planned"],
@@ -65,7 +65,7 @@ const contractByArtifact = {
   },
   implementation: {
     goal: "按任务图实现，并记录真实 diff、任务对账、验证结果和偏离。",
-    read: ["approved tasks", "spec review evidence", "wiki entries", "current git status"],
+    read: ["approved tasks", "Design Contract JSON when UI applies", "component contract files", "spec review evidence", "wiki entries", "current git status"],
     produce: ["code changes", "03-implementation/plan.md", "03-implementation/report.md", "03-implementation/changed-files.md"],
     human_decisions: ["spec gap discovered", "scope expansion", "unavailable external verification"],
     must_prove: ["diff maps back to tasks", "tests or smoke checks ran where feasible", "unrelated user changes are preserved"],
@@ -81,7 +81,7 @@ const contractByArtifact = {
   },
   verification: {
     goal: "用证据证明行为、风险和回滚关切已经覆盖到匹配强度。",
-    read: ["test cases", "code review notes", "tasks", "CI / local / Playwright / logs"],
+    read: ["test cases", "Design Contract JSON when UI applies", "component contract files", "code review notes", "tasks", "CI / local / Playwright / logs"],
     produce: ["05-verification/test-cases.md", "05-verification/report.md", "05-verification/ci-result.md when applicable"],
     human_decisions: ["manual-confirmed evidence", "deferred external proof", "risk acceptance"],
     must_prove: ["evidence strength matches risk", "skips have owner and revalidation trigger", "missing evidence is not approved"],
@@ -137,7 +137,7 @@ const executionByArtifact = {
     ],
   },
   ui_design: {
-    tools: ["sf-ui-design", "Pencil", "design standards", "visual verification screenshots", "quality-suite.mjs"],
+    tools: ["sf-ui-design", "Pencil", "design-system routing", "Design Contract JSON", "design standards", "visual verification screenshots", "quality-suite.mjs"],
     commands: [
       "node .specforge/core/scripts/create-artifact.mjs ui_design",
       "node .specforge/core/scripts/quality-suite.mjs",

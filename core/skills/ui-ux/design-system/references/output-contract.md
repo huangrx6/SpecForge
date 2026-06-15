@@ -2,11 +2,16 @@
 
 `sf-ui-design` 调用 design-system 后，至少把以下内容归一化写入 `ui-design.md`。
 
+所有 profile 都必须同时输出两种 Design Contract：
+
+- Markdown 版 `Design Contract Summary`：给人类 reviewer 快速阅读。
+- `Design Contract JSON`：给 `sf-tech-design`、`sf-tasking`、`sf-implement` 和 `sf-verify` 稳定读取。字段必须符合 `contracts/design-contract.schema.json`。
+
 ## Compact
 
 用于小 UI 改动或局部组件：
 
-```md
+````md
 Design intelligence:
 - Subject:
 - Audience:
@@ -24,6 +29,7 @@ Foundations delta:
 - Motion:
 
 Design Contract Summary:
+- Design mode:
 - Token source:
 - Component strategy:
 - Navigation decision:
@@ -36,21 +42,48 @@ Design Contract Summary:
   - Handoff artifact:
 - Verification hooks:
 
+Design Contract JSON:
+```json
+{
+  "design_mode": "Product UI",
+  "aesthetic_direction": "",
+  "signature": {
+    "type": "structural",
+    "description": ""
+  },
+  "token_source": "existing",
+  "component_strategy": "primitive + wrapper",
+  "shadcn_vue": {
+    "primitive_layer": [],
+    "project_wrapper_layer": []
+  },
+  "motion": {
+    "layer_1_css": [],
+    "layer_2_motion_vue": [],
+    "layer_3_gsap": [],
+    "reduced_motion": ""
+  },
+  "verification_hooks": [],
+  "anti_slop_rules": []
+}
+```
+
 Component contract:
 - Component:
+- Contract file:
 - States:
 - shadcn-vue primitive:
 
 Taste review:
 - Verdict:
 - Change:
-```
+````
 
 ## Standard
 
 用于新页面、H5、后台资源页、AI 助手：
 
-```md
+````md
 Design intelligence:
 - Subject:
 - Audience:
@@ -107,8 +140,35 @@ Design Contract Summary:
 - Anti-slop rules:
 - Verification hooks:
 
+Design Contract JSON:
+```json
+{
+  "design_mode": "Product UI",
+  "aesthetic_direction": "",
+  "signature": {
+    "type": "structural",
+    "description": ""
+  },
+  "token_source": "existing",
+  "component_strategy": "primitive + wrapper",
+  "shadcn_vue": {
+    "primitive_layer": [],
+    "project_wrapper_layer": []
+  },
+  "motion": {
+    "layer_1_css": [],
+    "layer_2_motion_vue": [],
+    "layer_3_gsap": [],
+    "reduced_motion": ""
+  },
+  "verification_hooks": [],
+  "anti_slop_rules": []
+}
+```
+
 Component contract:
 - Project component:
+- Contract file:
 - Primitive:
 - Anatomy:
 - Variants:
@@ -131,7 +191,7 @@ Page pattern:
 Taste review:
 - Verdict:
 - Required fixes:
-```
+````
 
 ## Full
 
@@ -139,3 +199,4 @@ Taste review:
 
 - 在 Standard 之上补充 typography scale table、color role table、motion choreography、responsive artboards、Pencil sample board、visual QA evidence。
 - 如果后续进入 technical design / implementation，还要补充 registry boundary、component contract matrix、state ownership、token delivery 和 visual verification plan。
+- 复杂或复用组件必须输出 `01-spec/design/components/<component-name>.contract.md`，使用 `contracts/component-contract.template.md`。
