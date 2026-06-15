@@ -2,6 +2,14 @@
 
 动效分三层：CSS 状态反馈、组件级 transition、GSAP timeline。默认从轻到重选择。
 
+## Layer Decision
+
+| Layer | Use for | Default token | Dependency |
+|---|---|---|---|
+| CSS transition | hover、focus、active、drawer、popover、toast、skeleton | `--duration-fast` 到 `--duration-moderate` | 无 |
+| Motion Vue / CSS animation | 组件进入退出、列表错峰、presence、轻量页面切换 | `--duration-base` 到 `--duration-slow` | technical design 确认 |
+| GSAP timeline | 多步骤流程、AI 工具调用、品牌页、大屏、复杂 timeline | 每步 220-260ms，整体 300-600ms | technical design 确认 |
+
 ## Use CSS transition
 
 - hover、focus、active、disabled。
@@ -14,6 +22,137 @@
 - 大屏、直播间、品牌页中的数据或场景动效。
 - AI 工具调用、步骤推进、复杂状态切换需要连续反馈。
 - 需要统一控制 play / pause / reverse / timeScale。
+
+## Vue Implementation Snippets
+
+### Layer 1: CSS Transition
+
+用于 Button、MenuItem、Badge、Toast、Drawer 等高频 UI。只动 `opacity`、`transform`、颜色和边框，不动 layout 属性。
+
+```vue
+<template>
+  <button
+    class="transition-[opacity,transform,background-color,border-color]
+           duration-[var(--duration-fast)]
+           ease-[var(--ease-standard)]
+           hover:opacity-90
+           active:scale-[0.97]
+           disabled:pointer-events-none
+           disabled:opacity-50"
+    type="button"
+  >
+    保存变更
+  </button>
+</template>
+```
+
+```vue
+<template>
+  <Transition
+    enter-active-class="motion-panel"
+    enter-from-class="opacity-0 translate-y-1"
+    enter-to-class="opacity-100 translate-y-0"
+    leave-active-class="motion-panel"
+    leave-from-class="opacity-100 translate-y-0"
+    leave-to-class="opacity-0 translate-y-1"
+  >
+    <section v-if="open" class="rounded-lg border bg-background p-4">
+      <slot />
+    </section>
+  </Transition>
+</template>
+```
+
+### Layer 2: Motion Vue
+
+用于需要 presence、stagger、layout-aware transition 的组件。新增 Motion Vue 前必须在 technical design 写明依赖和边界。
+
+```vue
+<script setup lang="ts">
+import { Motion } from "motion-v";
+</script>
+
+<template>
+  <Motion
+    :initial="{ opacity: 0, y: 6 }"
+    :animate="{ opacity: 1, y: 0 }"
+    :exit="{ opacity: 0, y: 4 }"
+    :transition="{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }"
+  >
+    <slot />
+  </Motion>
+</template>
+```
+
+```vue
+<script setup lang="ts">
+import { Motion } from "motion-v";
+
+defineProps<{ index: number }>();
+</script>
+
+<template>
+  <Motion
+    as="li"
+    :initial="{ opacity: 0, y: 8 }"
+    :animate="{ opacity: 1, y: 0 }"
+    :transition="{
+      duration: 0.18,
+      delay: Math.min(index * 0.035, 0.18),
+      ease: [0, 0, 0.2, 1],
+    }"
+  >
+    <slot />
+  </Motion>
+</template>
+```
+
+### Layer 3: GSAP Timeline
+
+只用于多步骤 timeline、AI 工具调用、品牌型动效或大屏状态编排。普通表单、hover、drawer、toast 不使用 GSAP。
+
+```js
+import gsap from "gsap";
+
+// 只用于多步骤 timeline，非普通表单。
+const tl = gsap.timeline({
+  defaults: {
+    duration: 0.22,
+    ease: "power2.out",
+  },
+});
+
+tl.to(".step-1", { opacity: 1, x: 0 })
+  .to(".step-2", { opacity: 1, x: 0 }, "+=0.08")
+  .to(".step-3", { opacity: 1, x: 0 }, "+=0.08");
+```
+
+```js
+import gsap from "gsap";
+import { onBeforeUnmount, onMounted } from "vue";
+
+let ctx;
+
+onMounted(() => {
+  ctx = gsap.context(() => {
+    gsap.fromTo(
+      ".tool-step",
+      { opacity: 0, x: -8 },
+      {
+        opacity: 1,
+        x: 0,
+        duration: 0.22,
+        ease: "power2.out",
+        stagger: 0.08,
+      },
+    );
+  });
+});
+
+onBeforeUnmount(() => {
+  ctx?.revert();
+});
+```
 
 ## Rules
 
@@ -30,4 +169,15 @@ Motion layer: CSS transition
 GSAP: N/A
 Reduced motion: keep state changes, remove travel distance
 Reason: 高频后台表格，动效只需确认操作反馈。
+```
+
+## Motion Contract Example
+
+```md
+| 场景 | 实现层 | Token | Easing | 触发条件 | Reduced motion |
+|---|---|---|---|---|---|
+| Drawer 进入 | CSS transition | `--duration-moderate` | `--ease-decelerate` | `v-if` mounted | 保留 opacity，移除 translate |
+| Toast 进入 | Motion Vue | `--duration-base` | `--ease-decelerate` | mounted | 直接显示 |
+| 按钮 active | CSS transition | `--duration-instant` | `--ease-standard` | `:active` | 保留颜色变化，移除 scale |
+| 步骤推进 | GSAP timeline | 260ms per step | `power2.out` | `emit("next")` | 跳到最终状态 |
 ```

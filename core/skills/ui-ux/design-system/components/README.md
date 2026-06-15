@@ -10,6 +10,7 @@
 | States | default / hover / focus / active / selected / disabled / readonly / loading / empty / error / permission / success / stale / conflict |
 | Density | compact / default / comfortable / mobile / wide 的尺寸、间距、行高、触摸目标和响应式 |
 | shadcn-vue mapping | primitive、companion components、project wrappers、props、events、slots |
+| Motion | enter / exit、状态变化、实现层、duration / easing token、reduced motion |
 | Content | label、helper、placeholder、单位、错误、空态、按钮、tooltip、截断和敏感信息 |
 | Anti-patterns | 哪些做法会廉价、低效或不可维护 |
 
@@ -20,6 +21,7 @@
 - **Density**：必须给出 compact / default / mobile 的可实施规则；高频后台和 H5 不能共用同一套尺寸。
 - **Variants**：必须按语义和业务场景拆，不允许只列 primary / secondary 这种颜色变体。
 - **shadcn-vue mapping**：先列 primitive，再列 companion，再列项目封装；shadcn-vue 是 registry/primitive 层，不是最终业务组件。
+- **Motion**：必须说明 CSS transition、Motion Vue、CSS animation 或 GSAP 的选择；Feedback 族必填 enter / exit，Actions 族至少填 active，Data 族至少填 row hover 和 loading skeleton。
 - **Content**：文案必须是可执行、可恢复、可理解的业务语言；不要把 placeholder、toast、tooltip 当作万能补丁。
 - **Anti-patterns**：必须指出会导致廉价感、不可访问、不可维护或 AI 生成发散的做法。
 
@@ -62,6 +64,7 @@ Props:
 Events:
 Slots:
 A11y:
+Motion:
 Content rules:
 Anti-patterns:
 ```

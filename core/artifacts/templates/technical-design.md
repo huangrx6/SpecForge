@@ -98,7 +98,7 @@
 | Component source | | | |
 | Registry boundary | | | |
 | Project wrapper | | | |
-| Motion source | | | |
+| Motion source | Layer 1 (CSS): ; Layer 2 (Motion Vue / CSS animation): ; Layer 3 (GSAP): ; Reduced motion: ; Handoff artifact: | | |
 | State ownership | | | |
 | Visual verification | | | |
 

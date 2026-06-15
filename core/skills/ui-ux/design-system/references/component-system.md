@@ -22,6 +22,7 @@
 - `density`：compact、default、comfortable、mobile、wide 的高度、间距、行高、触摸目标和响应式规则。
 - `content`：标签、提示、错误、空态、单位、截断、敏感信息、按钮文案、tooltip 和 toast。
 - `a11y`：aria、键盘路径、focus、contrast、touch target。
+- `motion`：enter / exit 过渡策略、状态变化动效、实现层级（CSS / Motion Vue / GSAP）、duration / easing token、reduced motion 降级。
 - `implementation`：shadcn-vue primitive、companion components、project wrapper、props、events、slots、状态管理边界。
 - `quality`：反模式和视觉审查项。
 
@@ -35,6 +36,7 @@
 | Variant | 语义、业务、布局、设备四类变体分别是什么 | 把 variant 当颜色枚举 |
 | Mapping | shadcn-vue primitive、组合组件、项目 wrapper 的责任边界 | 页面直接拼 primitive |
 | Content | label、helper、error、empty、tooltip、toast 如何表达 | 文案全是“确定/提交/暂无数据” |
+| Motion | 状态变化用哪一层实现、token 是什么、reduced motion 如何降级 | 只写“有过渡动画”或完全跳过 |
 | Anti-pattern | 什么会廉价、误导、不可访问或不可维护 | 只写“注意美观” |
 
 ## Component families
@@ -47,6 +49,31 @@
 | Feedback | Toast, Dialog, Drawer, EmptyState, SkeletonProgress, StatusBadge | severity, recovery, persistence, focus management |
 | Data | Table, Chart, Card, FilterBar | sorting, filtering, units, empty/error, density |
 | Identity | Avatar, StatusBadge | fallback, stable color, role, accessibility |
+
+## Motion slot requirements
+
+每个组件族都必须写 motion slot。没有动效也要写 `motion: N/A` 和原因，避免实现阶段默认跳过。
+
+| Family | Required motion slot |
+|---|---|
+| Actions | Button 至少定义 active 态、loading spinner / text swap、disabled 变化；默认 CSS transition。 |
+| Inputs | focus、validation error、helper / error text 进入；默认 CSS transition，不用 GSAP。 |
+| Navigation | current item、tabs indicator、menu / command palette 进入退出；CSS transition 或 Motion Vue。 |
+| Feedback | Toast、Dialog、Drawer、EmptyState、SkeletonProgress 必须定义 enter / exit、focus handoff、reduced motion。 |
+| Data | Table 至少定义 row hover、selection、loading skeleton、empty/error 切换；复杂数据刷新禁止大幅位移。 |
+| Identity | Avatar / StatusBadge 定义状态颜色变化和 fallback 切换；默认 CSS transition。 |
+
+```md
+Motion:
+- Layer: CSS transition / Motion Vue / GSAP / N/A
+- Enter / exit:
+- State change:
+- Token:
+- Easing:
+- Trigger:
+- Reduced motion:
+- Do not animate:
+```
 
 ## Project wrapper rule
 
