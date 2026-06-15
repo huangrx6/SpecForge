@@ -12,7 +12,7 @@
       },
       "fail": {
         "given": ["direction is still ambiguous"],
-        "expect_signal": "NEEDS DECISION is present and downstream PRD / requirements does not proceed"
+        "expect_signal": "存在 NEEDS DECISION，且下游产品需求文档 / 需求规格不继续推进"
       }
     },
     {
@@ -84,12 +84,12 @@
       "stage": "requirements",
       "artifact_id": "requirements",
       "pass": {
-        "given": ["brief / PRD / research are sufficient"],
+        "given": ["简报 / 产品需求文档 / 研究已足够"],
         "expect": ["01-spec/requirements.md has REQ, AC, NFR, non-goals, and impact flags"],
         "assertions": ["every MUST is testable"]
       },
       "fail": {
-        "given": ["acceptance meaning or MVP scope is unresolved"],
+        "given": ["验收含义或最小可行版本范围尚未解决"],
         "expect_signal": "NEEDS DECISION remains and tasks do not proceed"
       }
     },

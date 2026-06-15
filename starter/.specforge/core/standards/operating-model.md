@@ -21,8 +21,8 @@
 |---|---|---|---|
 | Patch | 单字段、文案、小配置、小 bug | brief + tasks + verification 摘要 | 影响面扩大 |
 | Focused | 明确页面 / 接口 / 模块 | requirements + bounded design + tasks | 入口不清或跨模块风险 |
-| Standard | 常规 feature / issue | PRD 可选，完整 spec/design/tasks/gates | 关键取舍未确认 |
-| Deep | 大型存量项目、跨系统、架构变化 | steering + PRD + design + review + verification + wiki | 缺 provider、缺用户确认或风险不可证明 |
+| Standard | 常规 feature / issue | 产品需求文档可选，完整 spec/design/tasks/gates | 关键取舍未确认 |
+| Deep | 大型存量项目、跨系统、架构变化 | steering + 产品需求文档 + design + review + verification + wiki | 缺 provider、缺用户确认或风险不可证明 |
 
 默认不要选 Deep。只有影响面、风险或长期复用价值证明有必要，才扩大流程。
 

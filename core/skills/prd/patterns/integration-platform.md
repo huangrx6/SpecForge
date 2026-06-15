@@ -1,19 +1,19 @@
-# Integration / Platform PRD Pattern
+# 集成与平台产品需求文档模式
 
-适用外部 provider、Webhook、SDK、平台能力、开放 API、跨系统同步和集成配置。
+适用外部服务商、网络回调、软件开发包、平台能力、开放接口、跨系统同步和集成配置。
 
 ## 必须确认
 
 - 集成对象和业务价值。
 - 输入 / 输出业务语义。
-- provider 是否已确认。
+- 服务商是否已确认。
 - 失败、超时、限流、重复回调、人工恢复。
-- 权限、审计、成本和 SLA 影响。
+- 权限、审计、成本和服务等级影响。
 
-## PRD 输出重点
+## 产品需求文档输出重点
 
-- Problem / Outcome。
-- Candidate Feature Pool。
-- Risks / Dependencies。
-- Roadmap / Release Slicing。
-- Handoff To Requirements：集成边界、失败种子、decision markers。
+- 问题 / 目标结果。
+- 候选功能池。
+- 风险与依赖。
+- 路线图与版本切分。
+- 交接给需求阶段：集成边界、失败种子、决策标记。

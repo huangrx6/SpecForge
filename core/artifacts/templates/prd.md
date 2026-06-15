@@ -1,100 +1,100 @@
-# PRD: <name>
+# 产品需求文档：<名称>
 
-## 0. PRD Control
-- PRD Depth:
-- Source Work Item:
-- Decision Status:
-- Source Artifacts:
-- Assumptions:
-- External Skill Inputs:
-- Product Discovery Inputs:
+## 0. 产品需求文档控制
+- 输出深度：
+- 来源工作项：
+- 决策状态：
+- 来源产物：
+- 假设：
+- 外部参考输入：
+- 产品发现输入：
 
-## 1. Product Decision Summary
-- Problem:
-- Target Users:
-- MVP:
-- Non-goals:
-- Success Criteria:
-- Can enter requirements: yes / no
+## 1. 产品决策摘要
+- 问题：
+- 目标用户：
+- 最小可行版本：
+- 非目标：
+- 成功标准：
+- 是否可进入需求阶段：是 / 否
 
-## 2. Background & Outcome
-- Why now:
-- Current pain:
-- Desired outcome:
-- Business / user value:
-- Failure cost if not solved:
+## 2. 背景与目标结果
+- 为什么现在做：
+- 当前痛点：
+- 期望结果：
+- 业务价值 / 用户价值：
+- 不解决的代价：
 
-## 3. Users, Roles & Scenarios
-| Role | Department / Context | Goal | Pain | Scenario | Frequency / Device | Permission / Responsibility |
+## 3. 用户、角色与场景
+| 角色 | 部门 / 上下文 | 目标 | 痛点 | 场景 | 使用频率 / 设备 | 权限 / 责任 |
 |---|---|---|---|---|---|---|
 | | | | | | | |
 
-## 4. Candidate Feature Pool
-| Feature | User value | Complexity | Risk | Recommendation | Confirmation |
+## 4. 候选功能池
+| 功能 | 用户价值 | 复杂度 | 风险 | 建议 | 确认状态 |
 |---|---|---|---|---|---|
 | | | | | | |
 
-## 5. Scope & MVP Decision
-| Item | Phase | Decision | Rationale | Source |
+## 5. 范围与最小可行版本决策
+| 项 | 阶段 | 决策 | 理由 | 来源 |
 |---|---|---|---|---|
-| | MVP / optional / later / out-of-scope | user-confirmed / delegated-default / pending | | |
+| | 最小可行版本 / 可选增强 / 后续版本 / 不在范围内 | 用户已确认 / 授权默认 / 待确认 | | |
 
-## 6. User Stories & Acceptance Seeds
-| ID | User Story | Acceptance Seed | Priority | Source |
-|---|---|---|---|---|
-| | | | | |
-
-## 7. Product Flow
-- Normal path:
-- Exception path:
-- Manual fallback:
-- State changes:
-
-## 8. Metrics & Evaluation
-- User value metric:
-- Business KPI:
-- Quality metric:
-- Operational metric:
-- Tracking / evidence:
-
-## 9. AI / Data / Compliance Snapshot
-- AI task:
-- AI evaluation:
-- Data source:
-- Refresh cadence:
-- Sensitive fields:
-- Permission / audit:
-- Cost / latency boundary:
-
-## 10. Risks, Assumptions & Dependencies
-| Item | Type | Impact | Owner | Handling |
+## 6. 用户故事与验收种子
+| 编号 | 用户故事 | 验收种子 | 优先级 | 来源 |
 |---|---|---|---|---|
 | | | | | |
 
-## 11. Roadmap / Release Slicing
-- MVP:
-- v1.1:
-- Later:
-- Rollback / disable strategy:
+## 7. 产品流程
+- 正常路径：
+- 异常路径：
+- 人工兜底：
+- 状态变化：
 
-## 12. Open Questions & Decisions
-| Question | Impact | Owner | Needed by | Status |
+## 8. 指标与评估
+- 用户价值指标：
+- 业务指标：
+- 质量指标：
+- 运营指标：
+- 埋点 / 证据：
+
+## 9. AI、数据与合规快照
+- AI 任务：
+- AI 评估：
+- 数据来源：
+- 刷新频率：
+- 敏感字段：
+- 权限 / 审计：
+- 成本 / 延迟边界：
+
+## 10. 风险、假设与依赖
+| 项 | 类型 | 影响 | 负责人 | 处理方式 |
 |---|---|---|---|---|
 | | | | | |
 
-## 13. Product Decision Gate
-| Check | Status | Evidence |
+## 11. 路线图与版本切分
+- 最小可行版本：
+- 下一版本：
+- 后续版本：
+- 回退 / 禁用策略：
+
+## 12. 开放问题与决策
+| 问题 | 影响 | 负责人 | 需要时间 | 状态 |
+|---|---|---|---|---|
+| | | | | |
+
+## 13. 产品决策门禁
+| 检查项 | 状态 | 证据 |
 |---|---|---|
-| MVP confirmed | pass / warn / fail | |
-| Target users clear | pass / warn / fail | |
-| Success metric exists | pass / warn / fail | |
-| Non-goals clear | pass / warn / fail | |
-| Handoff ready | pass / warn / fail | |
+| 最小可行版本已确认 | 通过 / 警告 / 失败 | |
+| 目标用户清楚 | 通过 / 警告 / 失败 | |
+| 成功指标存在 | 通过 / 警告 / 失败 | |
+| 非目标清楚 | 通过 / 警告 / 失败 | |
+| 下游交接就绪 | 通过 / 警告 / 失败 | |
 
-## 14. Handoff To Requirements
-- Requirements seeds:
-- Recommended components flags:
-- Notes for ui_design:
-- Notes for technical_design:
-- Notes for data / security:
-- Blockers:
+## 14. 交接给需求阶段
+- 需求种子：
+- 建议组件标记：
+- 给界面设计阶段的备注：
+- 给技术设计阶段的备注：
+- 给数据 / 安全的备注：
+- 阻塞项：

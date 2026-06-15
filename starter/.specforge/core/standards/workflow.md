@@ -52,7 +52,7 @@ refactor:  intake -> technical_design -> tasks -> spec_review -> implementation 
 discovery: intake -> research -> wiki_sync -> closure
 ```
 
-Brainstorm 和 PRD 都是 graph 外的澄清产物：`intake -> sf-brainstorm -> sf-prd -> requirements`。Brainstorm 只在需要用户参与式取舍时出现；PRD 只在 brief 明确需要时出现。
+Brainstorm 和产品需求文档都是 graph 外的澄清产物：`intake -> sf-brainstorm -> sf-prd -> requirements`。Brainstorm 只在需要用户参与式取舍时出现；产品需求文档只在 brief 明确需要时出现。
 
 每个 workflow schema 除了定义 artifact DAG、apply 和 archive 条件，还必须定义适合该 workflow 的 `quality_policy.section_checks` 和 `traceability_policy`。`status` / `instructions` 读取质量策略输出非阻断质量提醒；`gate-preflight` 读取 traceability 策略决定追溯缺口是 advisory warning 还是严格 gate failure。这样可以避免 `lite`、`bugfix`、`discovery` 被套用同一套重型 feature 检查，也避免高风险 feature 缺少必要质量条。
 
@@ -63,8 +63,8 @@ Brainstorm 和 PRD 都是 graph 外的澄清产物：`intake -> sf-brainstorm ->
 | 阶段 / Artifact | 技能 | 写入证据/产物 | 退出门禁 / 约束 |
 |---|---|---|---|
 | intake / brief | `sf-intake` | `work.yaml`、`00-intake/original-request.md`、`00-intake/brief.md` | 问题类型已确认；需要取舍时路由到 brainstorm |
-| brainstorm | `sf-brainstorm` | `00-intake/brainstorm.md`、回写 `00-intake/brief.md` | 关键方向、MVP、体验或技术路线取舍已确认 |
-| prd | `sf-prd` | `00-intake/prd.md` | 产品澄清完毕，可进入 requirements |
+| brainstorm | `sf-brainstorm` | `00-intake/brainstorm.md`、回写 `00-intake/brief.md` | 关键方向、最小可行版本、体验或技术路线取舍已确认 |
+| prd | `sf-prd` | `00-intake/prd.md` | 产品澄清完毕，可进入需求阶段 |
 | research | `sf-discovery` | `01-spec/research.md` 或 `01-spec/gap-report.md` | 预研、Spike 或 Gap 分析完成 |
 | requirements | `sf-requirements` | `01-spec/requirements.md` | 行为、边界、验收标准清楚 |
 | ui_design | `sf-ui-design` | `01-spec/ui-design.md`、Pencil 原型及 PNG 截图 | Pencil 原型、状态矩阵通过自检 |
@@ -128,7 +128,7 @@ Verification 报告必须区分证据强度，避免把 mock、人工口头确�
 ### 轻量产物与可视化
 
 - 每个 artifact 顶部先写简短摘要、关键决策、风险和下一步；详细矩阵放后文。
-- `lite` workflow 默认不生成 PRD、UI design、technical design，除非用户要求或风险触发。
+- `lite` workflow 默认不生成产品需求文档、界面设计、技术设计，除非用户要求或风险触发。
 - 长文档必须减少模板化说明，保留能指导实现、验证或审查的字段。
 - Markdown 是唯一可版本管理事实源；HTML / 图表 / 看板可以作为阅读友好的派生产物。
 - HTML / 可视化报告适合复杂验证矩阵、状态流、跨系统链路和对非研发人员展示，但必须在 Markdown artifact 中登记路径和来源。

@@ -28,7 +28,7 @@
 | 需求特征 | 推荐 workflow / 模式 | 产物策略 | 人工确认策略 |
 |---|---|---|---|
 | 小改、单字段、单页面文案、明确 bug | `lite` / Quick Plan 风格 | brief + requirements + tasks；合并或省略低价值大表 | 只确认范围、风险和验证方式 |
-| 业务功能、AI 能力、跨前后端、外部集成 | `feature` / `standard` | PRD 可选；requirements、technical design、tasks 必须有追溯 | MVP、技术路线、依赖和验证口径必须确认 |
+| 业务功能、AI 能力、跨前后端、外部集成 | `feature` / `standard` | 产品需求文档可选；需求规格、技术设计、任务必须有追溯 | 最小可行版本、技术路线、依赖和验证口径必须确认 |
 | 架构、数据、安全、权限、迁移、生产风险 | `standard` / `refactor` / `discovery` | technical design、risk、rollback、verification 详写 | 风险接受、回滚和真实环境补证必须确认 |
 | 方向不清、依赖未知、外部资料不确定 | brainstorm / discovery | 先产出问题地图、研究证据、ADR 候选 | 每次只问一个会改变方向的问题 |
 
@@ -38,9 +38,9 @@
 
 | 阶段 | 必须产出 | 不应产出 | 完成前自检 |
 |---|---|---|---|
-| Intake | workflow、scope、components flags、AI 工具链计划、下一步路由 | 完整方案、代码实现 | 是否过度流程化；是否需要 brainstorm / PRD / research |
+| Intake | 工作流、范围、组件标记、AI 工具链计划、下一步路由 | 完整方案、代码实现 | 是否过度流程化；是否需要 brainstorm / 产品需求文档 / research |
 | Brainstorm | 问题地图、候选方案、用户确认、延后项 | 假确认、无差异选项 | 是否还有高影响 `[NEEDS ... DECISION]` |
-| PRD | 问题、目标用户、MVP、成功指标、验收种子 | 最终 REQ、接口、文件路径 | 是否足够进入 requirements；是否能一页看懂 |
+| 产品需求文档 | 问题、目标用户、最小可行版本、成功指标、验收种子 | 最终需求、接口、文件路径 | 是否足够进入需求规格；是否能一页看懂 |
 | Requirements | `REQ-*`、`AC-*`、NFR、非目标、行为覆盖 | 技术方案、任务拆解 | 每条 MUST 是否可测试；冲突是否已处理 |
 | UI Design | 页面、状态、角色、交互、原型证据 | 后端实现细节 | 状态矩阵是否覆盖空 / 错 / 权限 / 边界 |
 | Technical Design | 影响面、读取计划、选型、契约、风险、验证策略 | UI 视觉细节、无根据依赖 | 设计是否最小充分；新增依赖是否确认 |
@@ -60,8 +60,8 @@ Traceability 由 workflow schema 的 `traceability_policy` 控制：`off` 不提
 
 | 阶段 | 推荐工具 / 能力 | 主要用途 | 归一化产物 |
 |---|---|---|---|
-| Intake / 澄清 | `sf-intake`、`sf-brainstorm` | 判断需求类型、范围、风险、是否需要 PRD / UI / 技术设计 | `00-intake/brief.md`、`brainstorm.md` |
-| 产品与验收 | `sf-prd`、`sf-requirements` | 明确目标用户、MVP、验收标准、异常场景 | `prd.md`、`requirements.md` |
+| Intake / 澄清 | `sf-intake`、`sf-brainstorm` | 判断需求类型、范围、风险、是否需要产品需求文档 / 界面设计 / 技术设计 | `00-intake/brief.md`、`brainstorm.md` |
+| 产品与验收 | `sf-prd`、`sf-requirements` | 明确目标用户、最小可行版本、验收标准、异常场景 | `prd.md`、`requirements.md` |
 | UI / 交互 | `sf-ui-design`、`design-system`、Pencil | 设计语言、页面地图、状态矩阵、原型、截图证据 | `ui-design.md`、`.pen`、导出 PNG |
 | 技术方案 | `sf-tech-design`、官方文档检索 | 架构、API、数据、权限、安全、配置、验证策略 | `technical-design.md` |
 | 任务拆解 | `sf-tasking` | 把规格拆成可实现、可验证、可回滚任务 | `tasks.md` |
@@ -91,7 +91,7 @@ Traceability 由 workflow schema 的 `traceability_policy` 控制：`off` 不提
 
 | 场景 | AI 应提供的信息 | 可接受的人类决策 |
 |---|---|---|
-| MVP / 范围取舍不清 | 方案对比、推荐项、影响范围 | 选择方案、拆分、延后、授权默认 |
+| 最小可行版本 / 范围取舍不清 | 方案对比、推荐项、影响范围 | 选择方案、拆分、延后、授权默认 |
 | UI 方向或体验路径未定 | 页面地图、状态矩阵、关键交互差异 | 选定方向、要求原型、声明无 UI 影响 |
 | 新增依赖 / 技术路线 | 当前项目证据、备选方案、风险 | 采用、拒绝、沿用现有栈 |
 | 外部真实环境不可访问 | 本地和 mock 证据、未覆盖风险、补证方式 | 接受外部待补证、要求继续联调、降级上线 |
@@ -138,7 +138,7 @@ Traceability 由 workflow schema 的 `traceability_policy` 控制：`off` 不提
 
 | Work item 规模 | 对用户输出 | Artifact 内容 | 禁止事项 |
 |---|---|---|---|
-| 小型 | 5-10 行结论 + 风险 + 下一步 | 表格压缩，N/A 合并 | 为单字段小改生成长 PRD |
+| 小型 | 5-10 行结论 + 风险 + 下一步 | 表格压缩，N/A 合并 | 为单字段小改生成长产品需求文档 |
 | 中型 | 摘要 + 关键矩阵 + 明确确认点 | 保留需求、设计、任务追溯 | 大段背景重复 |
 | 大型 / 高风险 | 摘要 + 决策表 + 风险表 + 证据索引 | 完整矩阵、ADR、验证计划、回滚 | 隐藏跳过项或弱证据 |
 
@@ -162,7 +162,7 @@ Verification 报告必须区分证据强度：
 - 长表格只保留可执行字段；背景解释放到附录或 wiki。
 - 重复模板项可以写 N/A，但必须说明为什么 N/A。
 - 对用户输出时优先给“结论 + 风险 + 下一步”，完整表格留在 artifact。
-- `lite` workflow 不生成 PRD / UI / technical design，除非风险或用户要求触发。
+- `lite` 工作流不生成产品需求文档 / 界面设计 / 技术设计，除非风险或用户要求触发。
 
 ## HTML / 可视化产物
 

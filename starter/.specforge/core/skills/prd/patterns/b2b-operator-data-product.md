@@ -1,4 +1,4 @@
-# B2B Operator / Data Product PRD Pattern
+# B 端运营商与数据产品需求文档模式
 
 适用：
 
@@ -21,14 +21,14 @@
 - 导出、报表、订阅、告警。
 - 灰度、回滚和运维责任。
 
-## PRD 输出重点
+## 产品需求文档输出重点
 
-- Problem / Outcome。
-- Users / Departments。
-- Data & Compliance Snapshot。
-- Scope & MVP Decision。
-- Metrics / Evaluation。
-- Handoff To Requirements。
+- 问题 / 目标结果。
+- 用户 / 部门。
+- 数据与合规快照。
+- 范围与最小可行版本决策。
+- 指标与评估。
+- 交接给需求阶段。
 
 ## 常见风险
 

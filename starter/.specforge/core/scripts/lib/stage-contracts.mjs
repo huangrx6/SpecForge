@@ -3,7 +3,7 @@ const contractByArtifact = {
     goal: "把原始请求转成一个有边界、可路由、可继续的 work item。",
     read: ["original request", "existing wiki index", "similar archived work items when relevant"],
     produce: ["00-intake/original-request.md", "00-intake/brief.md", "workflow / components decision"],
-    human_decisions: ["workflow choice", "scope split", "PRD required", "high-impact unknowns"],
+    human_decisions: ["workflow choice", "scope split", "是否需要产品需求文档", "high-impact unknowns"],
     must_prove: ["the next route is clear", "scope and non-goals are explicit", "active work item is unique"],
     exit: "brief is readable in one page and downstream artifact can start without guessing the request.",
   },

@@ -3,7 +3,7 @@
   "id": "sf-requirements",
   "layer": "product-discovery",
   "primary_stage": "requirements",
-  "purpose": "Convert PRD, brief, and research into testable requirements.",
+  "purpose": "把产品需求文档、简报和研究结论转成可测试的需求规格。",
   "owns": {
     "stages": [
       {

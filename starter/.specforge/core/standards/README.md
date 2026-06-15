@@ -12,7 +12,7 @@
 | `evolution.md` | SpecForge 后续如何按 SDD / HITL / Agent eval 思路继续演进 | 维护者 / 框架改造 |
 | `stage-playbook.md` | 每一步怎么配合、工具如何组合、阅读层如何降噪 | 自动推进 / 接力 |
 | `ai-toolkit.md` | AI 工具链如何选择、人工确认和证据如何回流 | Agent / 人工审查 |
-| `product.md` | 产品、PRD、需求和验收如何表达 | PRD / requirements |
+| `product.md` | 产品、产品需求文档、需求和验收如何表达 | 产品需求文档 / 需求规格 |
 | `design.md` | UI 影响、设计方向、Pencil 原型和视觉质量如何确认 | UI design |
 | `engineering.md` | 技术设计、实现、审查和验证如何可靠交付 | tech design / implement |
 | `code-intelligence.md` | 存量项目如何做代码画像和 CodeGraph / provider 编排 | steering / onboarding |

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/huangrx6/SpecForge/core/skills/prd/contracts/prd-decision.schema.json",
-  "title": "SpecForge PRD Decision Contract",
+  "title": "SpecForge 产品需求文档决策契约",
   "type": "object",
   "additionalProperties": false,
   "required": [

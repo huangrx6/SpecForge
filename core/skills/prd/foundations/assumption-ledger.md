@@ -1,27 +1,27 @@
-# Assumption Ledger
+# 假设台账
 
-PRD 可以记录假设，但不能把假设伪装成已确认事实。所有假设都必须影响可见、owner 明确、触发复核。
+产品需求文档可以记录假设，但不能把假设伪装成已确认事实。所有假设都必须影响可见、负责人明确、触发复核条件清楚。
 
-## Assumption Types
+## 假设类型
 
-| 类型 | 含义 | PRD 处理 |
+| 类型 | 含义 | 产品需求文档处理 |
 |---|---|---|
-| `confirmed` | 用户、PRD 上游、research 或 wiki 已确认 | 可作为 MVP / metric / non-goal 依据 |
-| `delegated-default` | 用户授权 Agent 默认推进 | 可进入 PRD，但写 risk note 和 rollback point |
-| `likely` | 有弱证据或合理推断 | 只能写 assumption，不作为 approved MVP 唯一依据 |
-| `unclear` | 无足够证据 | 写 Open Question 或 research-needed |
+| `confirmed` | 用户、上游产品需求文档、预研或知识库已确认 | 可作为最小可行版本、指标和非目标依据 |
+| `delegated-default` | 用户授权智能体按默认建议推进 | 可进入产品需求文档，但要写风险备注和回退点 |
+| `likely` | 有弱证据或合理推断 | 只能写假设，不作为已批准最小可行版本的唯一依据 |
+| `unclear` | 无足够证据 | 写开放问题或标记为需要预研 |
 | `conflict` | 上游材料互相冲突 | 写 blocked-by-conflict |
 
-## Ledger Format
+## 台账格式
 
 ```md
-| Assumption / Fact | Type | Evidence | Impact | Owner | Revisit trigger |
+| 假设 / 事实 | 类型 | 证据 | 影响 | 负责人 | 复核触发条件 |
 |---|---|---|---|---|---|
 ```
 
-## Rules
+## 规则
 
 - 高影响假设不能隐藏在正文里。
-- 影响 MVP、数据权限、AI 质量、合规或成本的假设必须有 owner。
-- `unclear` 不能进入 `approved-for-requirements`，除非它不影响 MVP 和 handoff。
+- 影响最小可行版本、数据权限、AI 质量、合规或成本的假设必须有负责人。
+- `unclear` 不能进入 `approved-for-requirements`，除非它不影响最小可行版本和下游交接。
 - `delegated-default` 必须写明回退点。

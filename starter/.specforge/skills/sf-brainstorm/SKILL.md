@@ -1,6 +1,6 @@
 ---
 name: sf-brainstorm
-description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户参与式头脑风暴；用于进入 PRD、requirements 或 technical_design 前先形成可确认的候选方案、研究证据和决策记录。
+description: 对模糊产品想法、界面、AI、技术方向或范围取舍做用户参与式头脑风暴；用于进入产品需求文档、需求规格或技术设计前先形成可确认的候选方案、研究证据和决策记录。
 ---
 
 # sf-brainstorm
@@ -11,24 +11,24 @@ description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户�
 
 ## 运行模式检测
 
-1. 当前目录向上存在 `.specforge/` 且有 active work item：**Embedded 模式**，按 active work item 读取 brief / PRD / requirements 并写入 `00-intake/brainstorm.md`。
-2. 存在 `.specforge/` 但无 active work item：**Lightweight 模式**，只做本阶段对话式 brainstorm；需要落档时输出 `specforge-import-ready.md` 格式内容，或先路由 `sf-intake` 创建 work item。
-3. 不存在 `.specforge/`：**Standalone 模式**，不要运行 `.specforge/...` 命令；产出可后续导入的 `specforge-import-ready.md` 格式内容，必须保留用户确认、未决问题和推荐项边界。
+1. 当前目录向上存在 `.specforge/` 且有活跃工作项：**嵌入模式**，按活跃工作项读取简报、产品需求文档和需求规格，并写入 `00-intake/brainstorm.md`。
+2. 存在 `.specforge/` 但无活跃工作项：**轻量模式**，只做本阶段对话式头脑风暴；需要落档时输出 `specforge-import-ready.md` 格式内容，或先路由 `sf-intake` 创建工作项。
+3. 不存在 `.specforge/`：**独立模式**，不要运行 `.specforge/...` 命令；产出可后续导入的 `specforge-import-ready.md` 格式内容，必须保留用户确认、未决问题和推荐项边界。
 
-`sf-brainstorm` 是用户参与式发散和收敛阶段。它把模糊诉求、产品方向、体验方向、AI 能力边界或技术路线问题整理成可选择的方案，并明确哪些选择已被用户确认。它不替用户拍板，不写最终 requirements，不实现代码。
+`sf-brainstorm` 是用户参与式发散和收敛阶段。它把模糊诉求、产品方向、体验方向、AI 能力边界或技术路线问题整理成可选择的方案，并明确哪些选择已被用户确认。它不替用户拍板，不写最终需求规格，不实现代码。
 
 ## 启动
 
 1. 读取 `.specforge/AGENTS.md`。
 2. 读取 `.specforge/registry.yaml`，确认是否已有 active work item。
-3. 有 active work item 时，读取 `00-intake/original-request.md`、`00-intake/brief.md`、可选 `00-intake/prd.md` 和已有 `00-intake/brainstorm.md`。
-4. 无 active work item 时，只做对话式 brainstorm；若用户要落档，先路由到 `sf-intake` 创建 work item。
+3. 有活跃工作项时，读取 `00-intake/original-request.md`、`00-intake/brief.md`、可选 `00-intake/prd.md` 和已有 `00-intake/brainstorm.md`。
+4. 无活跃工作项时，只做对话式头脑风暴；若用户要落档，先路由到 `sf-intake` 创建工作项。
 5. 读取 `.specforge/skills/sf-brainstorm/stages/brainstorm/SKILL.md`。
 
 ## 关联标准
 
 - `.specforge/core/standards/workflow.md`：scope、artifact 边界和 gate 纪律。
-- `.specforge/core/standards/product.md`：候选池、MVP、PRD 和 requirements 边界。
+- `.specforge/core/standards/product.md`：候选池、最小可行版本、产品需求文档和需求阶段边界。
 - `.specforge/core/standards/ai-toolkit.md`：人工确认点、输出预算、来源证据和轻量 / 标准分流。
 - 有 UI 方向时读取 `.specforge/core/standards/design.md`。
 - 有技术选型或依赖版本问题时读取 `.specforge/core/standards/engineering.md`。
@@ -48,15 +48,15 @@ description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户�
 - `scenario-simulation`：把方案放进真实使用流程、失败路径和边界场景里压测。
 - `critic-review`：反方质疑、假设检查、过度设计压缩和风险暴露。
 - `decision-matrix`：按价值、成本、风险、落地性、可扩展性和置信度收敛排序。
-- `output-shaping`：控制 brainstorm 输出形态，避免自由散文式结论。
+- `output-shaping`：控制头脑风暴输出形态，避免自由散文式结论。
 - `execution-planning`：把推荐方向转成下一步行动、交接和验证入口。
-- `product`：产品目标、用户机会、MVP 推荐、候选方向、实验和优先级取舍。
+- `product`：产品目标、用户机会、最小可行版本推荐、候选方向、实验和优先级取舍。
 - `opportunity-solution-tree`：外部 OST 参考；只补机会树、实验和优先级视角。
 - `design-system`：体验方向、美学方向、用户旅程、信息架构、交互、可访问性和后续 UI design 输入。
 - `research-source`：当前事实查证、来源优先级、证据表和未查证项。
 - `user-stories`：用户故事、验收口径和边界条件。
-- `prd`：PRD 交接检查、非目标、Product Decision Gate 和 requirements handoff。
-- `create-prd`：外部 PRD 参考；只补 8 段式 PRD、非目标和 release 分期覆盖。
+- `prd`：产品需求文档交接检查、非目标、产品决策门禁和需求阶段交接。
+- `create-prd`：外部产品需求文档参考；只补 8 段式产品需求文档、非目标和版本分期覆盖。
 - `playwright-skill`：只在 brainstorm 需要提前识别验证风险时参考，正式执行仍交给后续阶段。
 
 参考 skill 的输出必须先归一化为 `问题地图 / 方案对比 / 用户确认记录 / 后续阶段输入`。它不能替代用户确认，也不能原样落入 `brainstorm.md`；事实类结论必须按 `research-source` 的证据契约记录来源。
@@ -65,7 +65,7 @@ description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户�
 
 - 用户说“先 brainstorm / 头脑风暴 / 我还没想清楚 / 你帮我想想”。
 - intake 发现产品、页面、全栈应用、AI 能力、多角色流程、审批、权限、数据生命周期等方向尚未确认。
-- PRD、requirements、UI design 或 technical_design 中出现会改变方向的 `[NEEDS ... DECISION]`。
+- 产品需求文档、需求规格、界面设计或技术设计中出现会改变方向的 `[NEEDS ... DECISION]`。
 - `instructions.mjs` 返回 `ui-direction-unconfirmed`，表示 UI / 视觉 / 体验方向还没有用户确认，必须先让用户取舍。
 - `instructions.mjs` 返回 `tech-direction-unconfirmed`，表示新项目 / 空仓库路径的技术栈、数据库、调度器、AI provider、部署或依赖方向还没有用户确认，必须先让用户取舍。
 - `instructions.mjs` 返回 `dependency-decision-unconfirmed`，表示本次可能新增 / 替换直接依赖、SDK、插件、组件库、ORM、驱动、测试库或外部 provider，但还没有用户确认。
@@ -76,10 +76,10 @@ description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户�
 
 | 阶段 | 负责 | 不负责 |
 |---|---|---|
-| `sf-intake` | 创建/选择 work item、分类 workflow、写 brief 初稿 | 深入展开方案 |
+| `sf-intake` | 创建或选择工作项、分类工作流、写简报初稿 | 深入展开方案 |
 | `sf-brainstorm` | 发散候选、查证当前事实、让用户做关键取舍 | 写最终规格或自动拍板 |
-| `sf-prd` | 把已确认产品方向整理成 PRD | 重新发散所有可能 |
-| `sf-requirements` | 把 PRD/brief 转成可测试行为和 AC | 做产品路线选择 |
+| `sf-prd` | 把已确认产品方向整理成产品需求文档 | 重新发散所有可能 |
+| `sf-requirements` | 把产品需求文档和简报转成可测试行为与验收标准 | 做产品路线选择 |
 | `sf-tech-design` | 把已确认技术方向细化为架构设计 | 在未确认情况下自动选型 |
 
 ## 铁律（不可越过）
@@ -107,7 +107,7 @@ description: 对模糊产品想法、UI/AI/技术方向或范围取舍做用户�
 
 **`[必须确认]` 问题优先级排序（从高到低依次问）：**
 
-1. **核心目标/范围**：这是为谁做的？解决什么核心问题？MVP 做什么，明确不做什么？
+1. **核心目标/范围**：这是为谁做的？解决什么核心问题？最小可行版本做什么，明确不做什么？
 2. **体验方向**（有 UI 时）：什么感觉？参考哪类产品？主要用户是什么角色？
 3. **数据与安全**：谁能看到数据？数据生命周期如何？有没有敏感数据或合规要求？
 4. **集成与依赖**：会依赖哪些外部系统或服务？现有系统有哪些约束？
@@ -137,7 +137,7 @@ C) 不确定 → 先按 B 设计，留扩展点
 
 **收敛信号（满足全部才能进入下一阶段）：**
 - ✅ 所有 `[必须确认]` 事项有用户答案或明确授权默认
-- ✅ MVP 范围已明确（做什么，不做什么）
+- ✅ 最小可行版本范围已明确（做什么，不做什么）
 - ✅ 高风险决策（数据安全、成本模型、不可逆架构选择）已有结论
 - ✅ 用户知道下一步是什么
 - ❌ 任何 `[NEEDS ... DECISION]` 标记存在 → 不得宣布收敛
@@ -154,17 +154,17 @@ C) 不确定 → 先按 B 设计，留扩展点
 
 ### A. 启动时做一次
 
-1. 读取 active work item 的 original request、brief、可选 PRD / requirements / UI / technical design 和已有 brainstorm。
+1. 读取活跃工作项的原始请求、简报、可选产品需求文档、需求规格、界面设计、技术设计和已有头脑风暴记录。
 2. 读取 `brief.md#Brainstorm 决策` 的模式，决定本轮深度：
    - `skip`：无需用户参与式取舍，记录跳过理由并回到 brief 指定下一步。
    - `light`：直接框定问题、给 2-3 个候选并收敛，不做五维全量发散。
    - `deep`：先做 Phase 1 发散，再做 Phase 2 聚焦。
-   - `research-heavy`：当前事实、依赖版本、AI provider、价格、法规、安全或竞品证据会影响方向时使用；它可以由 `light` / `deep` 自动升级而来。
+   - `research-heavy`：当前事实、依赖版本、AI 供应商、价格、法规、安全或竞品证据会影响方向时使用；它可以由 `light` / `deep` 自动升级而来。
    - 如果 `brief.md#Brainstorm 决策` 已写 `Execution profile`，优先沿用；为空时再由 `Brainstorm mode` 和事实风险推导并回写。
    - 模式来源见 `sf-intake` 的“Brainstorm 分流规则”和 `core/artifacts/templates/brief.md#Brainstorm 决策`。
 3. 需要当前事实时先查证；技术类优先官方资料，并记录日期。
 4. 需要外部事实、版本、依赖、价格、竞品、漏洞、法规或 AI provider 资料时，读取 `.specforge/core/skills/brainstorm/research-source/SKILL.md`，按其来源索引和证据契约查证，并在 `brainstorm.md#当前事实与研究证据` 记录搜索计划、URL、日期、结论和置信度。
-   - 新增 / 替换依赖、SDK、插件、组件库、测试库、运行时或 package manager 时，还要记录版本依赖关系表，作为后续 `sf-tech-design` 当前版本事实和依赖确认输入。
+   - 新增 / 替换依赖、SDK、插件、组件库、测试库、运行时或包管理器时，还要记录版本依赖关系表，作为后续 `sf-tech-design` 当前版本事实和依赖确认输入。
 5. 需要参考 skill 时，按 `references/external-skills.md` 选择并读取最小必要内容；Brainstorm 包内 skill 可以按问题重构、事实查证、发散、类比、场景、批判、矩阵、输出和行动计划串联使用，且不计入“最多 1 个外部辅助”的限制。
 6. 建立问题地图：`[已明确] / [必须确认] / [可安全默认]`。
 7. 按固定维度排序 `[必须确认]`：核心目标/范围 > 体验方向 > 数据与安全 > 集成与依赖 > 交付验收。
@@ -186,22 +186,22 @@ C) 不确定 → 先按 B 设计，留扩展点
 
 ### C. 收敛时做一次
 
-1. 写入或更新 `00-intake/brainstorm.md`，至少覆盖 stage 母本的必含内容：执行配置、问题重构、问题地图、事实证据、发散方向池、类比迁移、场景模拟、批判质疑、方案评估矩阵、方案对比、推荐项、用户确认、参考 Skill 使用记录、明确延后 / 不做、未决问题、下一步行动和下一步路由。`light` profile 可将未使用 section 写为 `N/A + 理由`。
+1. 写入或更新 `00-intake/brainstorm.md`，至少覆盖阶段母本的必含内容：执行配置、问题重构、问题地图、事实证据、发散方向池、类比迁移、场景模拟、批判质疑、方案评估矩阵、方案对比、推荐项、用户确认、参考 Skill 使用记录、明确延后 / 不做、未决问题、下一步行动和下一步路由。`light` profile 可将未使用小节写为 `N/A + 理由`。
 2. 同步更新 `00-intake/brief.md`：澄清记录、功能候选池、用户选择、外部研究摘要、PRD 决策和 Brainstorm 决策。
-3. 只有用户已确认、授权默认或明确延后的选择才能写入已批准结论；Agent recommendation 必须单独保留。
+3. 只有用户已确认、授权默认或明确延后的选择才能写入已批准结论；Agent 推荐必须单独保留。
 4. 确认没有 `[NEEDS ... DECISION]` 阻断项；如仍有阻断项，输出暂停原因而不是路由到下游。
 
 ## 判定表
 
 | 条件 | 状态 |
 |---|---|
-| 没有 active work item，且用户要求落档但尚未创建 work item | 停止：需先创建 work item |
-| 用户尚未确认 MVP、核心方案、关键技术路线或不能安全默认的边界 | 停止：继续 Socratic 单问 |
+| 没有活跃工作项，且用户要求落档但尚未创建工作项 | 停止：需先创建工作项 |
+| 用户尚未确认最小可行版本、核心方案、关键技术路线或不能安全默认的边界 | 停止：继续单问 |
 | 需要当前事实支撑的判断尚未完成研究 | 停止：先补事实来源 |
 | 方案之间成本、风险或用户价值差异未说明清楚 | 停止：补方案对比 |
 | 任何 `[NEEDS ... DECISION]` 仍存在 | 停止：不得宣布收敛 |
-| 用户确认的选择、授权默认、Agent recommendation 和未决问题已分清 | 完成条件之一 |
-| `brainstorm.md` 足以支撑 PRD、requirements、UI design 或 technical design 继续推进 | 完成条件之一 |
+| 用户确认的选择、授权默认、Agent 推荐和未决问题已分清 | 完成条件之一 |
+| `brainstorm.md` 足以支撑产品需求文档、需求规格、界面设计或技术设计继续推进 | 完成条件之一 |
 | `brief.md` 已同步，所有 `[NEEDS ... DECISION]` 已清除 | 完成 |
 
 ## 停止条件

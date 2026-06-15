@@ -1,4 +1,4 @@
-# Workflow / Approval PRD Pattern
+# 流程与审批产品需求文档模式
 
 适用：
 
@@ -21,11 +21,11 @@
 - 是否通知。
 - 是否审计。
 
-## PRD 输出重点
+## 产品需求文档输出重点
 
-- Users / Roles。
-- Product Flow。
-- Exception path。
-- Risk。
-- Acceptance Seeds。
-- Handoff To Requirements。
+- 用户 / 角色。
+- 产品流程。
+- 异常路径。
+- 风险。
+- 验收种子。
+- 交接给需求阶段。

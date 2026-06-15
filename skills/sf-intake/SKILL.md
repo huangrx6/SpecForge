@@ -1,6 +1,6 @@
 ---
 name: sf-intake
-description: 为新请求创建或整理 SpecForge work item；用于用户提出新需求、bug、issue、重构、预研、低风险小改或边界不清的工作，需要分类 workflow、决定是否需要 PRD、校准 components flags，并写出可支撑下一步的 brief 时。
+description: 为新请求创建或整理 SpecForge 工作项；用于用户提出新需求、bug、issue、重构、预研、低风险小改或边界不清的工作，需要分类工作流、决定是否需要产品需求文档、校准组件标记，并写出可支撑下一步的简报时。
 ---
 
 # sf-intake
@@ -15,16 +15,16 @@ description: 为新请求创建或整理 SpecForge work item；用于用户提�
 2. 存在 `.specforge/` 但无 active work item：**Lightweight 模式**，可以创建 work item；如果用户只想先整理想法，则输出 `specforge-import-ready.md` 格式内容。
 3. 不存在 `.specforge/`：**Standalone 模式**，不要运行 `.specforge/...` 命令；用对话完成 intake 分类和 brief 草稿，输出 `specforge-import-ready.md` 格式内容，后续可在初始化后导入。
 
-`sf-intake` 是分诊入口：判断 work item 类型、workflow、是否需要 PRD、是否需要 research、影响面 flags、是否需要拆分，并识别是否需要进入 `sf-brainstorm`。它负责 intake，不负责写完整 PRD、requirements、设计或实现代码。
+`sf-intake` 是分诊入口：判断工作项类型、工作流、是否需要产品需求文档、是否需要预研、影响面标记、是否需要拆分，并识别是否需要进入 `sf-brainstorm`。它负责分诊，不负责写完整产品需求文档、需求规格、设计或实现代码。
 
 ## 必读
 
-- `references/routing.md`：workflow 分类、brainstorm 分流、PRD 决策、follow-up 和 components flags。
+- `references/routing.md`：工作流分类、头脑风暴分流、产品需求文档决策、后续问题和组件标记。
 - `.specforge/skills/sf-discovery/stages/discovery/SKILL.md`：discovery / research 输入输出和停止条件。
 - `.specforge/skills/sf-brainstorm/stages/brainstorm/SKILL.md`：需要用户参与式取舍时的阶段说明。
-- `.specforge/core/standards/workflow.md`：上下文加载、workflow 分类、scope、命名和 gate 边界。
-- `.specforge/core/standards/product.md`：分析深度、PRD 决策、功能候选池、澄清和需求可测试性。
-- `.specforge/core/standards/ai-toolkit.md`：workflow 轻重分流、AI 工具链计划、人工确认和输出预算。
+- `.specforge/core/standards/workflow.md`：上下文加载、工作流分类、范围、命名和门禁边界。
+- `.specforge/core/standards/product.md`：分析深度、产品需求文档决策、功能候选池、澄清和需求可测试性。
+- `.specforge/core/standards/ai-toolkit.md`：工作流轻重分流、AI 工具链计划、人工确认和输出预算。
 
 ## 启动扫描
 
@@ -38,7 +38,7 @@ description: 为新请求创建或整理 SpecForge work item；用于用户提�
 
 ### A. 先分诊
 
-1. 按 `references/routing.md#分诊顺序` 判断 active work item、拆分、kind、workflow、存量项目前置、PRD、components flags 和下一步。
+1. 按 `references/routing.md#分诊顺序` 判断活跃工作项、拆分、类型、工作流、存量项目前置、产品需求文档、组件标记和下一步。
 2. 多个 active work item 时先让用户指定，不猜。
 3. 混合请求先拆分，不创建万能 work item。
 4. 已完成或 archive work item 的后续问题，按 follow-up 新建，并保留 parent/relation。
@@ -85,11 +85,11 @@ node .specforge/core/scripts/create-work.mjs --workflow issue --kind issue --par
 
 - 背景和目标。
 - AI 工具链计划：本 work item 每个阶段使用哪些 AI / 验证 / 可视化能力、产出什么证据、何处需要人工确认。
-- PRD 决策：是否需要 PRD、深度、原因和下一步。
+- 产品需求文档决策：是否需要产品需求文档、深度、原因和下一步。
 - Brainstorm 决策：`skip / light / deep`、原因和阻断项。
 - 分析深度、代码库探索、外部研究或跳过理由、澄清记录和分析综合。
 - Wiki 上下文入口：本次读取的 wiki 文件、入口路径、相关模块、上游 / 下游和需要补证的缺口。
-- 候选功能池、推荐 MVP、用户已确认选择和明确延后项。
+- 候选功能池、推荐最小可行版本、用户已确认选择和明确延后项。
 - 本次负责 / 不负责。
 - 影响面矩阵：UI、frontend、backend、API、data、AI、integration、security、delivery、tests。
 - 依赖、风险、澄清项。
@@ -106,10 +106,10 @@ node .specforge/core/scripts/create-work.mjs --workflow issue --kind issue --par
 |---|---|
 | 多个 active work item，且用户未指定 | 停止：先请用户指定 |
 | 需求边界不清，无法判断 workflow | 停止：提一个关键澄清问题 |
-| 产品 / 页面 / 全栈应用的 MVP 功能组合尚未确认，且无法安全默认 | 停止：需先完成方向取舍 |
+| 产品 / 页面 / 全栈应用的最小可行版本功能组合尚未确认，且无法安全默认 | 停止：需先完成方向取舍 |
 | 已有代码项目缺少 wiki 基线 | 停止：需先建立 wiki |
 | 需求触碰既有模块但 wiki 没有入口或明显过期 | 停止：路由 `sf-steering` 补齐项目画像 |
-| 产品型 work item 需要 PRD，但缺少核心产品决策 | 停止：需先澄清产品方向 |
+| 产品型工作项需要产品需求文档，但缺少核心产品决策 | 停止：需先澄清产品方向 |
 | `standard` / `deep` 缺少代码库探索证据或明确跳过原因 | 停止：补探索或写跳过理由 |
 | `deep` 缺少外部研究证据或明确跳过原因 | 停止：补研究或写跳过理由 |
 | 存在生产、安全、权限、数据迁移风险但没有足够上下文 | 停止：澄清或路由 discovery |
@@ -117,10 +117,10 @@ node .specforge/core/scripts/create-work.mjs --workflow issue --kind issue --par
 ## 完成标准
 
 - work item 已进入 `.specforge/work/active/`，或 Standalone / Lightweight 模式下输出了可导入内容。
-- brief 足以支撑 PRD 或 requirements。
+- 简报足以支撑产品需求文档或需求规格。
 - brief 已按规模选择输出预算，避免为低风险小改生成过重流程。
 - brief 的 AI 工具链计划只列实际会使用的工具，并且能追溯到 artifact、验证或 wiki。
-- PRD 决策清楚：需要就标记 `PRD required: yes`，不需要就写明跳过理由。
+- 产品需求文档决策清楚：需要就写“是否需要产品需求文档：是”，不需要就写明跳过理由。
 - Brainstorm 决策清楚：`skip / light / deep` 有理由。
 - `work.yaml` 的 `workflow` 和 `components` 已与 brief 影响面矩阵一致。
 - 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
@@ -128,6 +128,6 @@ node .specforge/core/scripts/create-work.mjs --workflow issue --kind issue --par
 ## 不做
 
 - 不直接实现。
-- 不写完整 PRD、requirements、UI design 或 technical design。
+- 不写完整产品需求文档、需求规格、界面设计或技术设计。
 - 不手工绕过 artifact graph；是否跳过 ui_design / technical_design 由 `components` 和 workflow schema 共同决定。
 - 不把 Agent 推荐方案写成用户已确认选择。

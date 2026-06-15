@@ -1,16 +1,16 @@
-# Product Discovery To PRD
+# 产品发现到产品需求文档
 
-| Product discovery 内容 | PRD 位置 |
+| 产品发现内容 | 产品需求文档位置 |
 |---|---|
-| Desired outcome | Product Decision Summary / Metrics |
-| Opportunity | Problem / Background / Candidate Feature Pool |
-| Solution candidate | Candidate Feature Pool |
-| MVP recommendation | Scope & MVP Decision, pending confirmation |
-| Experiment | Risks / Roadmap / Validation |
-| Evidence gap | Open Questions / research-needed |
+| 目标结果 | 产品决策摘要 / 指标 |
+| 机会 | 问题 / 背景 / 候选功能池 |
+| 方案候选 | 候选功能池 |
+| 最小可行版本建议 | 范围与最小可行版本决策，等待确认 |
+| 实验 | 风险 / 路线图 / 验证 |
+| 证据缺口 | 开放问题 / 需要研究 |
 
-## Rules
+## 规则
 
-- `mvp-recommended` 进入 PRD 时必须标为 candidate，除非用户确认或授权默认。
-- PRD 负责产品决策；Product discovery 只提供机会、候选、证据和推荐。
-- 没有 evidence 的 opportunity 只能写 likely / unclear。
+- `mvp-recommended` 进入产品需求文档时必须标为候选，除非用户确认或授权默认。
+- 产品需求文档负责产品决策；产品发现只提供机会、候选、证据和推荐。
+- 没有证据的机会只能写 likely / unclear。

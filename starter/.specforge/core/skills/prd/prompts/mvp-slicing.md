@@ -1,17 +1,17 @@
-# MVP Slicing Prompt
+# 最小可行版本切分提示
 
-把候选功能池裁剪成 MVP / optional / later / out-of-scope。
+把候选功能池裁剪成最小可行版本、可选增强、后续版本和不在范围内。
 
-## Table
+## 表格
 
 ```md
-| Feature | User value | Complexity | Risk | Slice | Rationale | Confirmation |
+| 功能 | 用户价值 | 复杂度 | 风险 | 切分 | 理由 | 确认状态 |
 |---|---|---|---|---|---|---|
 ```
 
-## Rules
+## 规则
 
-- MVP 只保留能证明核心 outcome 的最小能力。
-- 高价值高风险项优先拆小或放 experiment。
-- Agent recommendation 不能等于 user-confirmed。
-- 每个 later / out-of-scope 写后续触发条件。
+- 最小可行版本只保留能证明核心目标结果的最小能力。
+- 高价值高风险项优先拆小或放入实验。
+- 智能体建议不能等于用户已确认。
+- 每个后续版本 / 不在范围内项都要写后续触发条件。

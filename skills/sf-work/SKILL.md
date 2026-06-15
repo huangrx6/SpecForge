@@ -45,7 +45,7 @@ git status --short --untracked-files=all
 1. 判断当前 ready artifact。
 2. 先做推进安全检查：
    - gate 为 `REQUEST_CHANGES` / `REJECTED` 时，不继续下游，按 review / report 的 return path 回到修复技能。
-   - requirements 前仍有 PRD 产品决策阻断时，暂停到 `sf-prd`。
+   - 需求规格前仍有产品需求文档的产品决策阻断时，暂停到 `sf-prd`。
    - requirements / ui_design / technical_design 前仍有用户取舍阻断时，暂停到 `sf-brainstorm`。
    - technical_design 有关键 `unknown` 时，暂停到 `sf-tech-design`。
    - technical_design 的核心决策摘要未确认、授权默认或标记 N/A 时，暂停到 `sf-tech-design`。
@@ -56,7 +56,7 @@ git status --short --untracked-files=all
    - verification 的缺口属于真实环境、第三方系统或低风险残余时，先让 `sf-verify` 生成人工确认请求；用户确认后继续。
    - wiki_sync 会产生重复 current wiki 文件，或 release / rollback 未覆盖 verification 残余风险时，暂停到 `sf-wiki` / `sf-close`。
 3. 对 ready artifact 调用对应子技能：
-   - requirements：先检查 `00-intake/brief.md`、可选 `brainstorm.md` 和 PRD 决策；如果存在需要用户取舍的 `[NEEDS DECISION]`，先调用 `sf-brainstorm`；如果 `PRD required: yes` 或表格中 `PRD required | yes`，且 `00-intake/prd.md` 不存在、`Decision Status` 不是 `approved-for-requirements`，或仍有 `[NEEDS PRODUCT DECISION]`，先调用 `sf-prd`；否则调用 `sf-requirements`
+   - requirements：先检查 `00-intake/brief.md`、可选 `brainstorm.md` 和产品需求文档决策；如果存在需要用户取舍的 `[NEEDS DECISION]`，先调用 `sf-brainstorm`；如果 `brief.md#产品需求文档决策` 标记“是否需要产品需求文档：是”，且 `00-intake/prd.md` 不存在、决策状态不是 `approved-for-requirements`，或仍有 `[NEEDS PRODUCT DECISION]`，先调用 `sf-prd`；否则调用 `sf-requirements`
    - gap_report：`sf-discovery`
    - research：`sf-discovery`
    - ui_design：`sf-ui-design`
@@ -105,8 +105,8 @@ Gate artifact 允许自动生成草稿，但不允许“空模板批准”。批
 
 - 出现 `[NEEDS CLARIFICATION]`。
 - 当前 work item 是 `standard` / `feature` / `issue` 但 brief 缺少代码探索、外部研究 / 跳过理由、澄清记录或分析综合。
-- feature / standard 的 brief 标记需要 PRD，但 `00-intake/prd.md` 不存在、`Decision Status` 不是 `approved-for-requirements`，或仍有产品决策阻塞。
-- 产品、页面、全栈应用的功能候选池、MVP 组合、体验方向或关键技术路线尚未被用户确认。
+- feature / standard 的简报标记需要产品需求文档，但 `00-intake/prd.md` 不存在、决策状态不是 `approved-for-requirements`，或仍有产品决策阻塞。
+- 产品、页面、全栈应用的功能候选池、最小可行版本组合、体验方向或关键技术路线尚未被用户确认。
 - 有用户可见页面但缺少页面地图、线稿 / 原型、视觉风格确认或交互状态。
 - 技术栈、组件库、编辑器、数据层或测试方案没有 profile / 取舍理由。
 - technical design 初稿后的核心决策摘要没有用户确认、授权默认或明确 N/A。

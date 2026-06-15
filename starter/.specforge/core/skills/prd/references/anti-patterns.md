@@ -1,19 +1,19 @@
-# PRD Anti-patterns
+# 产品需求文档反模式
 
-| 反模式 | Fail signal | 为什么危险 | 修正 |
+| 反模式 | 失败信号 | 为什么危险 | 修正 |
 |---|---|---|---|
-| Generic PRD template dump | 套 Summary / Market / Release 但不接 SpecForge graph | 下游 requirements 不能用 | 改为 Product Decision Summary + Handoff |
-| Feature list as PRD | 只有功能清单 | 看不出为什么做和怎么取舍 | 补 Problem / Outcome / MVP rationale |
-| Recommendation as decision | Agent 推荐直接写 MVP | 跳过用户确认 | 改成 candidate 或 delegated-default |
-| Requirements leakage | 写 REQ / AC / API / DB | 阶段边界混乱 | 移到 requirements / tech-design |
-| No non-goals | 没有明确不做 | 实现阶段范围膨胀 | 写 Non-goals 和后续触发条件 |
-| Metric theater | 指标都是“提升体验” | 不可判断成功 | 写可观察业务 / 用户 / 质量指标 |
-| AI magic | 写“智能识别 / 自动生成” | 不可验收 | 写输入、输出、评估、人工兜底 |
-| B2B data blind spot | 不写数据来源、口径、权限 | 后续技术和验收会错 | 写 Data & Compliance Snapshot |
+| 通用模板倾倒 | 套摘要、市场、发布计划，但不接 SpecForge 产物图 | 下游需求阶段不能用 | 改为产品决策摘要 + 下游交接 |
+| 功能清单冒充产品需求文档 | 只有功能清单 | 看不出为什么做和怎么取舍 | 补问题、目标结果和最小可行版本理由 |
+| 建议冒充决策 | 智能体推荐直接写最小可行版本 | 跳过用户确认 | 改成候选、授权默认或待确认 |
+| 需求泄漏 | 写需求编号、验收编号、接口或数据库 | 阶段边界混乱 | 移到需求阶段或技术设计阶段 |
+| 缺少非目标 | 没有明确不做 | 实现阶段范围膨胀 | 写非目标和后续触发条件 |
+| 指标表演 | 指标都是“提升体验” | 不可判断成功 | 写可观察业务、用户或质量指标 |
+| AI 魔法 | 写“智能识别 / 自动生成” | 不可验收 | 写输入、输出、评估、人工兜底 |
+| B 端数据盲区 | 不写数据来源、口径、权限 | 后续技术和验收会错 | 写数据与合规快照 |
 
-## Fix Order
+## 修正顺序
 
-1. 先修 Decision Status 和 confirmation。
-2. 再修 Problem / User / MVP / Non-goals。
-3. 再修 Metrics / Risk / Handoff。
-4. 最后删除 PRD 中的 requirements / UI / technical design 泄漏。
+1. 先修决策状态和确认状态。
+2. 再修问题、用户、最小可行版本和非目标。
+3. 再修指标、风险和下游交接。
+4. 最后删除产品需求文档中的需求规格、界面设计和技术设计泄漏。

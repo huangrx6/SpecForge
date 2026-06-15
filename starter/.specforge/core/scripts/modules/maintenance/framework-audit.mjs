@@ -554,7 +554,7 @@ function prdSystemIssues() {
   const skillPath = "core/skills/prd/SKILL.md";
   if (exists(skillPath)) {
     const body = read(skillPath);
-    for (const marker of ["PRD 是产品决策文档", "PRD 不负责", "Product Decision Gate", "Handoff To Requirements"]) {
+    for (const marker of ["产品需求文档是产品决策文档", "产品需求文档不负责", "产品决策门禁", "交接给需求阶段"]) {
       if (!body.includes(marker)) {
         issues.push(issue("FAIL", "prd-skill-boundary-marker-missing", `${skillPath} is missing ${marker}.`, skillPath));
       }
@@ -564,7 +564,7 @@ function prdSystemIssues() {
   const outputPath = "core/skills/prd/references/output-contract.md";
   if (exists(outputPath)) {
     const body = read(outputPath);
-    for (const marker of ["prd-lite", "prd-standard", "prd-deep", "Product Decision Summary", "Scope & MVP Decision", "Product Decision Gate", "Handoff To Requirements"]) {
+    for (const marker of ["prd-lite", "prd-standard", "prd-deep", "产品决策摘要", "范围与最小可行版本决策", "产品决策门禁", "交接给需求阶段"]) {
       if (!body.includes(marker)) {
         issues.push(issue("FAIL", "prd-output-contract-marker-missing", `${outputPath} is missing ${marker}.`, outputPath));
       }
@@ -574,7 +574,7 @@ function prdSystemIssues() {
   const antiPath = "core/skills/prd/references/anti-patterns.md";
   if (exists(antiPath)) {
     const body = read(antiPath);
-    for (const marker of ["Recommendation as decision", "Requirements leakage", "Metric theater", "Fix Order"]) {
+    for (const marker of ["建议冒充决策", "需求泄漏", "指标表演", "修正顺序"]) {
       if (!body.includes(marker)) {
         issues.push(issue("FAIL", "prd-anti-pattern-marker-missing", `${antiPath} is missing ${marker}.`, antiPath));
       }

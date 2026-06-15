@@ -74,10 +74,10 @@ AI 工具技能：sf-router / sf-*  负责让 AI 工具知道怎么工作，可 
 | 用户要求“理解项目 / 扫描项目 / 项目画像 / 架构地图 / 存量项目基线” | `sf-steering` |
 | 提出新需求、新 issue、新 bug、重构想法，且没有 active work item | `sf-intake` |
 | 用户要求“brainstorm / 头脑风暴 / 先讨论方案 / 帮我想想”，或现有 spec 出现未确认的产品、UI、AI、技术路线取舍 | `sf-brainstorm` |
-| 用户要求 review / 检查任一已有 spec、需求、PRD、UI design、tech design 或 tasks | `sf-spec-review` 的 Artifact Review 模式 |
+| 用户要求 review / 检查任一已有 spec、需求、产品需求文档、界面设计、技术设计或任务 | `sf-spec-review` 的 Artifact Review 模式 |
 | 只有一个 active work item，用户只说“继续 / 下一步” | 运行 `instructions.mjs` 后按 ready artifact 路由 |
 | active work item 需要深度分析 / brief 不足以支撑 requirements | `sf-discovery` |
-| active work item 的 MVP、方案、UI 方向、AI 能力边界或技术路线尚未被用户确认 | `sf-brainstorm` |
+| active work item 的最小可行版本、方案、界面方向、AI 能力边界或技术路线尚未被用户确认 | `sf-brainstorm` |
 | active work item 下一步是 gap_report / research | `sf-discovery` |
 | active work item 是产品型，需要对齐产品目标和功能边界 | `sf-prd` |
 | active work item 下一步是 requirements | `sf-requirements` |
@@ -115,7 +115,7 @@ AI 工具技能：sf-router / sf-*  负责让 AI 工具知道怎么工作，可 
      - `verification=REQUEST_CHANGES/REJECTED`：优先路由到实现修复阶段；若只是缺证据且实现未变，路由到验证阶段重跑。
      - `wiki_sync=REQUEST_CHANGES/REJECTED`：路由到 wiki 同步阶段。
    - 如果 `brief.md`、`prd.md`、`requirements.md`、`ui-design.md` 或 `technical-design.md` 中存在 `[NEEDS DECISION]`、`[NEEDS PRODUCT DECISION]`、`[NEEDS UI DECISION]`、`[NEEDS TECH DECISION]` 且问题需要用户取舍，先路由到 `sf-brainstorm`，不要替用户拍板。
-   - 如果 ready artifact 是 `requirements`，但 `brief.md#PRD 决策` 标记 `PRD required: yes` 或表格中 `PRD required | yes`，且 `00-intake/prd.md` 不存在、`Decision Status` 不是 `approved-for-requirements`，或仍有 `[NEEDS PRODUCT DECISION]`，先路由到 `sf-prd`，不要直接进入 `sf-requirements`。
+   - 如果 ready artifact 是 `requirements`，但 `brief.md#产品需求文档决策` 标记“是否需要产品需求文档：是”，且 `00-intake/prd.md` 不存在、决策状态不是 `approved-for-requirements`，或仍有 `[NEEDS PRODUCT DECISION]`，先路由到 `sf-prd`，不要直接进入 `sf-requirements`。
    - 如果 `instructions.mjs` 返回 blocker `ui-direction-unconfirmed`，先路由到 `sf-brainstorm` 做 UI / 视觉 / 体验方向取舍；不要创建 `ui-design.md` 或 Pencil 原型。
    - 如果 `instructions.mjs` 返回 blocker `tech-direction-unconfirmed`，先路由到 `sf-brainstorm` 做技术栈 / 数据库 / 调度器 / AI provider / 部署 / 依赖方向取舍；不要创建 `technical-design.md`。
    - 如果 `instructions.mjs` 返回 blocker `dependency-decision-unconfirmed`，先路由到 `sf-brainstorm` 确认新增 / 替换依赖、SDK、插件、组件库、ORM、驱动、测试库或外部 provider；不要创建 `technical-design.md`。
@@ -153,7 +153,7 @@ Artifact Review 不更新 gate，也不要求 ready artifact 为 `spec_review`�
 ## 扫描时必须关联的标准
 
 - 状态判断：`.specforge/core/standards/workflow.md`
-- 产品 / PRD 分流：`.specforge/core/standards/product.md`
+- 产品 / 产品需求文档分流：`.specforge/core/standards/product.md`
 - UI 分流：`.specforge/core/standards/design.md`
 - 技术 / 实现 / 验证分流：`.specforge/core/standards/engineering.md`
 - Wiki / close 分流：`.specforge/core/standards/wiki.md`

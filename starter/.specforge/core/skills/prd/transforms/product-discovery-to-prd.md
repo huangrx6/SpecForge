@@ -1,25 +1,25 @@
-# Product Discovery To PRD
+# 产品发现转产品需求文档
 
-| Product discovery 内容 | PRD 位置 |
+| 产品发现内容 | 产品需求文档位置 |
 |---|---|
-| Desired outcome | Product Decision Summary / Metrics |
-| Opportunity | Problem / Background / Candidate Feature Pool |
-| Solution candidate | Candidate Feature Pool |
-| Experiment | Risks / Roadmap / Validation |
-| Prioritization score | Scope & MVP Decision rationale |
-| Open evidence gap | Open Questions / research-needed |
+| 期望结果 | 产品决策摘要 / 指标 |
+| 机会 | 问题 / 背景 / 候选功能池 |
+| 方案候选 | 候选功能池 |
+| 实验 | 风险 / 路线图 / 验证 |
+| 优先级评分 | 范围与最小可行版本决策理由 |
+| 证据缺口 | 开放问题 / 需要预研 |
 
-## Rules
+## 规则
 
-- Opportunity 不是功能，不能直接写成 MVP。
-- Solution candidate 不是已确认范围，必须经过用户确认或 delegated-default。
-- Experiment 不等于 release plan，只能作为 validation 或 research handoff。
-- 没有 evidence 的 opportunity 只能写 likely / assumption，不写 confirmed。
+- 机会不是功能，不能直接写成最小可行版本。
+- 方案候选不是已确认范围，必须经过用户确认或授权默认。
+- 实验不等于发布计划，只能作为验证或预研交接。
+- 没有证据的机会只能写“可能”或“假设”，不能写“已确认”。
 
-## Example
+## 示例
 
 ```md
-Opportunity: 客户经理无法快速判断哪些客户最需要优先跟进。
-Solution candidate: 到期提醒列表 + 优先级排序。
-PRD MVP decision: 到期提醒列表进入 MVP；自动排序作为 optional，因优先级口径未确认。
+机会：客户经理无法快速判断哪些客户最需要优先跟进。
+方案候选：到期提醒列表 + 优先级排序。
+产品需求文档最小可行版本决策：到期提醒列表进入最小可行版本；自动排序作为可选增强，原因是优先级口径未确认。
 ```

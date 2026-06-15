@@ -1,36 +1,36 @@
-# Brief To PRD
+# 简报转产品需求文档
 
-| brief.md 字段 | PRD 位置 | 处理 |
+| brief.md 字段 | 产品需求文档位置 | 处理 |
 |---|---|---|
-| 用户目标 | Product Decision Summary / Background | 转成 Problem 和 Desired outcome |
-| 推荐 workflow | PRD Control | 写 source workflow |
-| PRD 决策 | PRD Control | 决定是否需要 PRD 和深度 |
-| Brainstorm 决策 | Scope & MVP | 只采用 user-confirmed / delegated-default |
-| 范围 In Scope | Candidate Feature Pool / Scope | 转成候选功能或 MVP |
-| Out of Scope | Non-goals | 保留原因 |
-| 关键未知 | Open Questions | 高影响未知阻断 |
-| 影响面 flags | Handoff | 触发 ui / tech / data / security |
+| 用户目标 | 产品决策摘要 / 背景 | 转成问题和期望结果 |
+| 推荐流程 | 产品需求文档控制 | 写来源流程 |
+| 产品需求文档决策 | 产品需求文档控制 | 决定是否需要产品需求文档和输出深度 |
+| 头脑风暴决策 | 范围与最小可行版本 | 只采用用户已确认或授权默认的内容 |
+| 范围内 | 候选功能池 / 范围 | 转成候选功能或最小可行版本 |
+| 范围外 | 非目标 | 保留原因 |
+| 关键未知 | 开放问题 | 高影响未知阻断 |
+| 影响面标记 | 下游交接 | 触发界面、技术、数据或安全交接 |
 
-## Rules
+## 规则
 
-- brief 里没有确认的内容不能写成已批准 PRD。
-- Agent recommendation 只能进入候选，不进 MVP。
+- 简报里没有确认的内容不能写成已批准产品需求文档。
+- 智能体建议只能进入候选，不进最小可行版本。
 - 如果目标用户、核心问题、成功标准缺失，停止并提问。
-- 如果 brief 和 brainstorm 冲突，以用户确认记录为准；冲突写入 Open Questions。
+- 如果简报和头脑风暴冲突，以用户确认记录为准；冲突写入开放问题。
 
-## Example
+## 示例
 
-Bad:
+错误：
 
 ```md
-MVP：实现系统推荐的所有功能。
+最小可行版本：实现系统推荐的所有功能。
 ```
 
-Good:
+正确：
 
 ```md
-| Feature | User value | Complexity | Risk | Recommendation | Confirmation |
+| 功能 | 用户价值 | 复杂度 | 风险 | 建议 | 确认状态 |
 |---|---|---|---|---|---|
-| 到期提醒列表 | 降低漏跟进风险 | medium | 数据口径需确认 | MVP candidate | user-confirmed |
-| 短信提醒 | 提升触达率 | medium | 成本和合规未确认 | candidate | pending |
+| 到期提醒列表 | 降低漏跟进风险 | 中 | 数据口径需确认 | 最小可行版本候选 | 用户已确认 |
+| 短信提醒 | 提升触达率 | 中 | 成本和合规未确认 | 候选 | 待确认 |
 ```

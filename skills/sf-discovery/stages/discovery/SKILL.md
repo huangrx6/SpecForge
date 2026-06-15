@@ -1,11 +1,11 @@
 ---
 name: discovery
-description: SpecForge 内部 discovery / intake 路由技能。用于将原始请求判断为无需 spec、单 work item、多 work item、扩展已有 work item、是否需要 PRD、是否需要 research 或混合路线。
+description: SpecForge 内部 discovery / intake 路由技能。用于将原始请求判断为无需 spec、单工作项、多工作项、扩展已有工作项、是否需要产品需求文档、是否需要研究或混合路线。
 ---
 
 # Discovery Skill
 
-Discovery 是新工作的分诊和事实探索入口。它负责把原始诉求变成可推进的 work item：判断路线、识别缺口、做必要代码库 / 外部研究，并创建可恢复的 intake 证据。需要用户在多个产品、体验或技术方案中做取舍时，路由到 graph 外 `brainstorm` 阶段；Discovery 不直接写完整 PRD、requirements、设计或实现代码。
+Discovery 是新工作的分诊和事实探索入口。它负责把原始诉求变成可推进的工作项：判断路线、识别缺口、做必要代码库 / 外部研究，并创建可恢复的 intake 证据。需要用户在多个产品、体验或技术方案中做取舍时，路由到 graph 外 `brainstorm` 阶段；Discovery 不直接写完整产品需求文档、需求规格、设计或实现代码。
 
 ## 读取
 
@@ -24,12 +24,12 @@ Discovery 是新工作的分诊和事实探索入口。它负责把原始诉求�
 4. 按深度执行代码库探索；绿地项目也要记录“无既有实现”和项目规范。
 5. 判断风险等级：安全、数据迁移、生产发布、权限、外部依赖、跨模块契约。
 6. 需要新框架、第三方库、部署、安全或版本敏感事实时执行外部官方资料研究；不触发时写明跳过理由。
-7. 对产品、页面、全栈应用或复杂功能，如果需要用户确认 MVP / 核心方向 / 技术路线，暂停并向用户提问。
+7. 对产品、页面、全栈应用或复杂功能，如果需要用户确认最小可行版本 / 核心方向 / 技术路线，暂停并向用户提问。
 8. 需要新领域知识、竞品、政策、框架 / SDK / 版本事实、AI 能力边界、部署 / 安全事实时，必须查当前可靠来源；技术类优先官方文档，产品/竞品类记录来源日期和结论。若跳过外部研究，写明为什么对本次决策无影响。
-9. 对产品、页面、全栈应用或复杂功能，生成候选功能池，按 `MVP / 可选增强 / 后续版本` 分组，并给出推荐组合。
+9. 对产品、页面、全栈应用或复杂功能，生成候选功能池，按 `最小可行版本 / 可选增强 / 后续版本` 分组，并给出推荐组合。
 10. 先汇总“已明确 / 待确认 / 可能遗漏”，再向用户澄清关键问题并记录答案。
 11. 明确哪些选择已由用户确认，哪些只是 Agent 默认假设。
-12. 判断是否需要 PRD，并写入 `brief.md#PRD 决策`。PRD 是 graph 外产品澄清产物；需要时标记 `PRD required: yes`，不需要时写清跳过理由。
+12. 判断是否需要产品需求文档，并写入 `brief.md#产品需求文档决策`。产品需求文档是 graph 外产品澄清产物；需要时写“是否需要产品需求文档：是”，不需要时写清跳过理由。
 13. 选择 workflow：`lite`、`feature`、`standard`、`bugfix`、`issue`、`refactor` 或 `discovery`，并写出影响面矩阵。
 14. 根据影响面设置 `components` flags：`has_ui`、`has_api`、`has_db`、`has_domain`、`has_ai`、`has_nfr`、`has_security`、`has_integration`、`has_infra`、`has_background_job`、`needs_research`。纯预研使用 `discovery` workflow，不用在 feature / standard 内模拟 discovery 阶段。
 15. 没有 active work item 时，运行 `node .specforge/core/scripts/create-work.mjs --workflow <workflow> "工作项标题"`，已确定的影响面可用 `--has-ui false`、`--has-api true` 等参数写入。
@@ -52,21 +52,21 @@ Discovery 是新工作的分诊和事实探索入口。它负责把原始诉求�
 
 `feature` 是新增功能的首选 workflow；不要再把新增功能默认塞进 `standard`。`bugfix` 是已经确认的缺陷修复；`issue` 是尚未完全定性的异常、告警或问题排查，不要把它写成新增功能。`refactor` 不跳业务分析，它跳过的是终端用户需求规格；brief 仍必须说明重构动机、现状证据、风险和成功判据。`discovery` 不写实现任务；如果研究结果需要落地，应关闭 discovery work item 后新开 feature / standard / refactor / bugfix / issue work item。
 
-## PRD 决策
+## 产品需求文档决策
 
-需要 PRD：
+需要产品需求文档：
 
 - 产品型功能、后台工具、全栈应用、AI 功能、运营能力或多角色系统。
-- 用户目标宽泛，尚未确认目标用户、MVP、成功标准、功能候选或路线图。
+- 用户目标宽泛，尚未确认目标用户、最小可行版本、成功标准、功能候选或路线图。
 - 涉及审批、权限、AI 质量、数据生命周期、上线执行、人工复核或运营责任。
 
-跳过 PRD：
+跳过产品需求文档：
 
 - `bugfix`、`issue`、`refactor`、`discovery`。
 - `lite` 小改。
-- 已有等价 PRD / 业务规格，且 brief 已摘录产品边界。
+- 已有等价产品需求文档 / 业务规格，且 brief 已摘录产品边界。
 
-PRD 决策只写在 `brief.md`，不修改 artifact graph。需要 PRD 时，下一步由 `sf-router` 路由到 `sf-prd`；PRD 完成后再进入 `sf-requirements`。
+产品需求文档决策只写在 `brief.md`，不修改 artifact graph。需要产品需求文档时，下一步由 `sf-router` 路由到 `sf-prd`；产品需求文档完成后再进入 `sf-requirements`。
 
 ## 路由结果
 
@@ -82,11 +82,11 @@ PRD 决策只写在 `brief.md`，不修改 artifact graph。需要 PRD 时，下
 
 - 背景和目标。
 - 分析深度、代码库探索、外部研究或跳过理由、澄清记录和分析综合。
-- 候选功能池、推荐 MVP、用户已确认选择和明确延后项。
+- 候选功能池、推荐最小可行版本、用户已确认选择和明确延后项。
 - 本次负责和不负责。
 - 受影响区域。
 - 候选 workflow 和理由。
-- PRD required / skipped、PRD depth、跳过理由或阻塞问题。
+- 是否需要产品需求文档、产品需求文档深度、跳过理由或阻塞问题。
 - 影响面矩阵：UI、frontend、backend、API、data、AI、integration、security、delivery、tests。
 - `work.yaml` components flags 与影响面矩阵的一致性说明。
 - 风险、依赖和澄清项。
@@ -96,9 +96,9 @@ PRD 决策只写在 `brief.md`，不修改 artifact graph。需要 PRD 时，下
 
 - 多个 active work item，用户未指定目标。
 - 请求边界无法判断。
-- 产品 / 页面 / 全栈应用的 MVP 功能组合尚未被用户确认，且复杂度超过简单小改。
-- 需要 brainstorm 的需求尚未完成用户参与式取舍，却试图直接进入 PRD / requirements；此时返回 `sf-brainstorm`。
-- PRD 决策不清，导致后续无法判断应进 `sf-prd` 还是 `sf-requirements`。
+- 产品 / 页面 / 全栈应用的最小可行版本功能组合尚未被用户确认，且复杂度超过简单小改。
+- 需要 brainstorm 的需求尚未完成用户参与式取舍，却试图直接进入产品需求文档或需求规格；此时返回 `sf-brainstorm`。
+- 产品需求文档决策不清，导致后续无法判断应进 `sf-prd` 还是 `sf-requirements`。
 - `standard` / `deep` 缺少代码库探索证据或明确跳过原因。
 - `deep` 缺少外部研究证据或明确跳过原因。
 - 涉及生产、安全、权限或数据风险但缺少关键事实。
@@ -107,7 +107,7 @@ PRD 决策只写在 `brief.md`，不修改 artifact graph。需要 PRD 时，下
 ## 完成标准
 
 - work item 已创建或已有 work item 已被明确选中。
-- intake 产物足以支撑 PRD 或 requirements。
-- `brief.md` 已写清 PRD 决策和下一步路由。
+- intake 产物足以支撑产品需求文档或需求规格。
+- `brief.md` 已写清产品需求文档决策和下一步路由。
 - 所有歧义都用 `[NEEDS CLARIFICATION: question]` 标记。
 - research / 外部来源适用时，`source-quality.mjs` 无 `FAIL`，`WARN` 已处理或可追溯接受。

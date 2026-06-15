@@ -90,7 +90,7 @@ Wiki 不能只写一句概述。对于存量项目画像或重要 work item 回�
 以下情况必须触发 wiki sync：
 
 - 新增或改变长期 API、数据模型、权限模型、配置、部署、运行方式。
-- PRD / requirements 确认了可复用的产品规则。
+- 产品需求文档 / 需求规格确认了可复用的产品规则。
 - 技术设计产生长期架构决策或重要偏离。
 - bugfix 发现系统性根因、测试缺口或运维风险。
 - 用户明确要求“更新 wiki / 回写知识库”。
@@ -127,7 +127,7 @@ frontmatter 语义：
 
 | 来源变化 | 写入位置 | 不写入位置 |
 |---|---|---|
-| PRD / requirements 形成稳定业务规则 | `02-product-rules.md` | 不复制完整需求正文 |
+| 产品需求文档 / 需求规格形成稳定业务规则 | `02-product-rules.md` | 不复制完整需求正文 |
 | UI design 形成稳定设计系统或组件规则 | `design-system.md` | 不复制一次性线稿截图 |
 | technical design 形成长期架构 / API / 数据 / 运维事实 | `03-architecture.md`、`api-<domain>.md`、`04-data-model.md`、`05-operations.md` | 不复制临时实现计划 |
 | implementation 发现真实结构与设计不同 | 对应事实文件 + `06-decisions.md` | 不复制 commit diff |

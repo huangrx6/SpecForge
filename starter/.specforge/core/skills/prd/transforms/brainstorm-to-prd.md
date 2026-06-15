@@ -1,35 +1,35 @@
-# Brainstorm To PRD
+# 头脑风暴转产品需求文档
 
-| brainstorm 内容 | PRD 位置 |
+| 头脑风暴内容 | 产品需求文档位置 |
 |---|---|
-| 用户确认记录 | Scope & MVP Decision |
-| 明确延后 / 不做 | Non-goals / Roadmap |
-| 推荐方案 | Candidate Feature Pool，不能直接变 MVP |
-| 方案评估矩阵 | Scope rationale |
-| 当前事实与研究证据 | Background / Risk |
-| 下一步路由 | Handoff |
+| 用户确认记录 | 范围与最小可行版本决策 |
+| 明确延后 / 不做 | 非目标 / 路线图 |
+| 推荐方案 | 候选功能池，不能直接变最小可行版本 |
+| 方案评估矩阵 | 范围决策理由 |
+| 当前事实与研究证据 | 背景 / 风险 |
+| 下一步路由 | 下游交接 |
 
 ## 禁止
 
-- 不把 Agent recommendation 写成用户选择。
-- 不把 pending 问题包装成默认假设。
+- 不把智能体建议写成用户选择。
+- 不把待确认问题包装成默认假设。
 - 不复制完整 brainstorm 过程，只提取决策、依据和未决问题。
-- 不把方案评估矩阵里的 adopt 直接等于 user-confirmed。
+- 不把方案评估矩阵里的“采纳”直接等同于用户已确认。
 
-## Confirmation Mapping
+## 确认类型映射
 
-| Brainstorm confirmation type | PRD handling |
+| 头脑风暴确认类型 | 产品需求文档处理 |
 |---|---|
-| `user-confirmed` | 可进入 MVP / non-goal / success criteria |
-| `delegated-default` | 可进入 MVP，但写 risk note / rollback point |
-| `agent-recommendation` | 进入 candidate feature pool |
-| `pending` | 进入 Open Questions |
+| `user-confirmed` | 可进入最小可行版本、非目标或成功标准 |
+| `delegated-default` | 可进入最小可行版本，但写风险备注和回退点 |
+| `agent-recommendation` | 进入候选功能池 |
+| `pending` | 进入开放问题 |
 
-## Output Snippet
+## 输出片段
 
 ```md
-| Item | Phase | Decision | Rationale | Source |
+| 项 | 阶段 | 决策 | 理由 | 来源 |
 |---|---|---|---|---|
-| 到期提醒列表 | MVP | user-confirmed | 直接支撑客户经理提前跟进 | brainstorm.md#用户确认记录 |
-| 自动短信提醒 | later | pending | 成本、合规和发送频率未确认 | brainstorm.md#方案评估矩阵 |
+| 到期提醒列表 | 最小可行版本 | 用户已确认 | 直接支撑客户经理提前跟进 | brainstorm.md#用户确认记录 |
+| 自动短信提醒 | 后续版本 | 待确认 | 成本、合规和发送频率未确认 | brainstorm.md#方案评估矩阵 |
 ```

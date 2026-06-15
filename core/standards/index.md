@@ -18,7 +18,7 @@
 | `operating-model.md` | 框架级改动、自动推进策略、人工确认、证据强度、上下文预算、复盘沉淀 | SpecForge 如何作为可审计、可演进的 AI 研发工作流运行 |
 | `evolution.md` | 框架级改造、审计规则扩展、工具链演进、长期路线图复盘 | SpecForge 下一批该优化什么、为什么优化、落到哪里 |
 | `stage-playbook.md` | 自动推进、handoff、长流程复盘、用户问“每一步怎么配合” | 每一步用什么 AI / 脚本 / 人工确认 / 证据契约 |
-| `product.md` | PRD、requirements、research、功能澄清、验收标准 | 用户到底要什么，哪些能力进入 MVP，如何验收 |
+| `product.md` | 产品需求文档、需求规格、研究、功能澄清、验收标准 | 用户到底要什么，哪些能力进入最小可行版本，如何验收 |
 | `design.md` | UI / UX、页面、交互、视觉方向、原型证据 | 用户看见什么，怎么操作，状态是否完整；具体设计语言读 `core/skills/ui-ux/design-system` |
 | `pc-ui-design-spec.md` | PC 端业务系统、运营后台、管理控制台、数据表格工具，或用户明确提供该规范 | 具体颜色、字号、行高、间距、组件尺寸和 HTML/CSS token |
 | `engineering.md` | technical design、implementation、review、verification | 工程上怎么做才可靠、安全、可维护、可验证 |

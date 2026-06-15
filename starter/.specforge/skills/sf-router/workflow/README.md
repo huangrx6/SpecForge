@@ -43,7 +43,7 @@ description: <说明此技能做什么，以及什么时候使用>
 | `status/SKILL.md` | `sf-doctor`、`sf-work` |
 | `steering/SKILL.md` | `sf-steering`、`sf-onboard`、`sf-intake`、`sf-wiki`、`sf-close` |
 
-> `brainstorm` 是 graph 外阶段：它可以生成 `00-intake/brainstorm.md` 并回写 brief，但不强制每个 work item 都经过它。`sf-prd` 不对应固定的内部 stage 技能母本；它读取 brief / brainstorm 的已确认选择后生成 PRD。
+> `brainstorm` 是 graph 外阶段：它可以生成 `00-intake/brainstorm.md` 并回写 brief，但不强制每个 work item 都经过它。`sf-prd` 不对应固定的内部 stage 技能母本；它读取 brief / brainstorm 的已确认选择后生成产品需求文档。
 
 ## Artifact / Entry / Stage Alias
 

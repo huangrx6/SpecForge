@@ -7,8 +7,8 @@
       "category": "prd",
       "localPath": "prd",
       "name": "prd",
-      "role": "SpecForge PRD 产品决策主能力包",
-      "trust": "SpecForge 本地维护，连接 brief / brainstorm / product discovery / research 到 requirements",
+      "role": "SpecForge 产品需求文档决策主能力包",
+      "trust": "SpecForge 本地维护，连接简报、头脑风暴、产品发现和预研到需求阶段",
       "risk": "低",
       "source": {
         "type": "local-authored",
@@ -40,17 +40,17 @@
           { "path": "prompts/open-question-review.md" }
         ]
       },
-      "trigger": "sf-prd 每次写 00-intake/prd.md 时必读；用于形成 Product Decision Summary、Scope & MVP、Non-goals、Success Criteria、Risk 和 Handoff To Requirements。",
+      "trigger": "sf-prd 每次写 00-intake/prd.md 时必读；用于形成产品决策摘要、范围与最小可行版本、非目标、成功标准、风险和交接给需求阶段。",
       "normalizeTo": [
         "00-intake/prd.md",
-        "00-intake/prd.md#Product Decision Summary",
-        "00-intake/prd.md#Scope & MVP Decision",
-        "00-intake/prd.md#Handoff To Requirements"
+        "00-intake/prd.md#产品决策摘要",
+        "00-intake/prd.md#范围与最小可行版本决策",
+        "00-intake/prd.md#交接给需求阶段"
       ],
       "doNotUseFor": [
-        "替代 sf-requirements 的 REQ / AC / NFR",
-        "写 API / DB / UI / technical design",
-        "替用户批准 MVP",
+        "替代 sf-requirements 的需求 / 验收 / 非功能需求",
+        "写接口 / 数据库 / 界面 / 技术设计",
+        "替用户批准最小可行版本",
         "执行外部 create-prd 的文件保存动作"
       ]
     },
@@ -59,7 +59,7 @@
       "category": "prd",
       "localPath": "prd/create-prd",
       "name": "create-prd",
-      "role": "PRD 合成参考",
+      "role": "产品需求文档合成参考",
       "trust": "高星社区来源，MIT 许可，已做静态审查",
       "risk": "低",
       "source": {
@@ -69,20 +69,20 @@
         "url": "https://github.com/phuryn/pm-skills/tree/main/pm-execution/skills/create-prd",
         "rawUrl": "https://raw.githubusercontent.com/phuryn/pm-skills/main/pm-execution/skills/create-prd/SKILL.md"
       },
-      "trigger": "当 sf-prd 需要把已确认的问题、目标用户、价值主张、功能范围和发布计划整理成 PRD 时参考；重点借鉴 8 段式 PRD、目标和非目标、成功指标、假设和 release 分期。",
+      "trigger": "当 sf-prd 需要把已确认的问题、目标用户、价值主张、功能范围和发布计划整理成产品需求文档时参考；重点借鉴 8 段式产品需求文档、目标和非目标、成功指标、假设和版本分期。",
       "normalizeTo": [
-        "00-intake/prd.md#Executive Summary",
-        "00-intake/prd.md#Background & Product Goals",
-        "00-intake/prd.md#Scope & MVP Decision",
-        "00-intake/prd.md#Handoff To Requirements"
+        "00-intake/prd.md#产品决策摘要",
+        "00-intake/prd.md#背景与目标结果",
+        "00-intake/prd.md#范围与最小可行版本决策",
+        "00-intake/prd.md#交接给需求阶段"
       ],
       "doNotUseFor": [
         "替代 core/skills/prd/SKILL.md",
         "替代 sf-prd 模板",
-        "自动保存 PRD-[product-name].md 到任意路径",
-        "直接决定 MVP",
-        "直接进入 requirements",
-        "把 Technology 小节扩写成 technical design",
+        "自动保存外部产品需求文档文件到任意路径",
+        "直接决定最小可行版本",
+        "直接进入需求阶段",
+        "把技术小节扩写成技术设计",
         "跳过用户确认产品范围和非目标"
       ]
     },
@@ -91,7 +91,7 @@
       "category": "requirements",
       "localPath": "requirements",
       "name": "requirements",
-      "role": "Requirements 行为契约、确认边界、来源转译、REQ / AC 追踪和下游 handoff 主能力包",
+      "role": "需求规格行为契约、确认边界、来源转译、需求 / 验收标准追踪和下游交接主能力包",
       "trust": "SpecForge 本地维护，结合 ISO/IEC/IEEE 29148、RFC 2119、EARS、Gherkin 和 SpecForge 阶段链路沉淀",
       "risk": "低",
       "source": {
@@ -180,21 +180,21 @@
           }
         ]
       },
-      "trigger": "每次 sf-requirements 需要把 brief / PRD / brainstorm / research / gap report 转成可测试、可追踪、可交给 UI / technical design / tasking / verification 的行为规格时必读。",
+      "trigger": "每次 sf-requirements 需要把简报、产品需求文档、头脑风暴、研究或缺陷根因报告转成可测试、可追踪、可交给界面设计、技术设计、任务规划或验证阶段的行为规格时必读。",
       "normalizeTo": [
         "01-spec/requirements.md#上游确认输入",
-        "01-spec/requirements.md#Source -> Requirement 转译",
+        "01-spec/requirements.md#来源到需求转译",
         "01-spec/requirements.md#功能需求",
         "01-spec/requirements.md#验收标准",
-        "01-spec/requirements.md#REQ / AC Trace",
-        "01-spec/requirements.md#Downstream Handoff"
+        "01-spec/requirements.md#需求和验收标准追踪",
+        "01-spec/requirements.md#下游交接"
       ],
       "doNotUseFor": [
         "替代用户确认产品范围或验收口径",
-        "把 Agent recommendation 升级为 user-confirmed MUST",
-        "在 requirements 中提前写 UI / API / DB / 任务实现方案",
-        "跳过 PRD、research 或 gap report 的来源证据",
-        "替代 artifact-quality、spec_review 或 verification gate"
+        "把 Agent 推荐升级为用户确认的强制需求",
+        "在需求规格中提前写界面、接口、数据库或任务实现方案",
+        "跳过产品需求文档、研究或缺陷根因报告的来源证据",
+        "替代产物质量、规格审查或验证门禁"
       ]
     },
     {
@@ -202,7 +202,7 @@
       "category": "requirements",
       "localPath": "requirements/user-stories",
       "name": "user-stories",
-      "role": "Requirements 用户故事与验收标准参考",
+      "role": "需求规格用户故事与验收标准参考",
       "trust": "高星社区来源，MIT 许可，已做静态审查",
       "risk": "低",
       "source": {
@@ -231,8 +231,8 @@
       "category": "product",
       "localPath": "product",
       "name": "product",
-      "role": "SpecForge 产品发现、机会建模、功能取舍和 MVP 切分主能力包",
-      "trust": "SpecForge 本地维护，连接模糊请求、用户反馈、brainstorm 和 PRD",
+      "role": "SpecForge 产品发现、机会建模、功能取舍和最小可行版本切分主能力包",
+      "trust": "SpecForge 本地维护，连接模糊请求、用户反馈、头脑风暴和产品需求文档",
       "risk": "低",
       "source": {
         "type": "local-authored",
@@ -265,16 +265,16 @@
           { "path": "prompts/mvp-slicing.md" }
         ]
       },
-      "trigger": "sf-brainstorm 或 sf-prd 需要产品发现、机会建模、功能优先级或 MVP 切分时必读。",
+      "trigger": "sf-brainstorm 或 sf-prd 需要产品发现、机会建模、功能优先级或最小可行版本切分时必读。",
       "normalizeTo": [
         "00-intake/brainstorm.md",
         "00-intake/prd.md",
         "00-intake/brief.md"
       ],
       "doNotUseFor": [
-        "替代 PRD、requirements、UI design 或 technical design",
-        "替用户确认 MVP",
-        "伪造用户研究、baseline、RICE 或 Opportunity Score"
+        "替代产品需求文档、需求规格、界面设计或技术设计",
+        "替用户确认最小可行版本",
+        "伪造用户研究、基线、RICE 或机会评分"
       ]
     },
     {
@@ -314,21 +314,21 @@
           }
         ]
       },
-      "trigger": "当 sf-brainstorm 或 sf-prd 需要从“用户机会 / 问题”出发，而不是直接堆功能时参考；用于机会树、假设、实验、功能候选、需求 triage 和优先级取舍。",
+      "trigger": "当 sf-brainstorm 或 sf-prd 需要从“用户机会 / 问题”出发，而不是直接堆功能时参考；用于机会树、假设、实验、功能候选、需求分流和优先级取舍。",
       "normalizeTo": [
         "00-intake/brainstorm.md#问题地图",
         "00-intake/brainstorm.md#方案对比",
-        "00-intake/prd.md#Scope & MVP Decision",
-        "00-intake/brief.md#Feature Candidates"
+        "00-intake/prd.md#范围与最小可行版本决策",
+        "00-intake/brief.md#功能候选池"
       ],
       "doNotUseFor": [
         "替代 core/skills/product/SKILL.md",
-        "替代用户确认 MVP 或产品方向",
+        "替代用户确认最小可行版本或产品方向",
         "把客户提出的功能直接当解决方案",
-        "在没有研究证据时伪造 Opportunity Score",
-        "自动决定 MVP",
-        "把 Solution candidate 写成已确认需求",
-        "替代 PRD 或 requirements",
+        "在没有研究证据时伪造机会评分",
+        "自动决定最小可行版本",
+        "把方案候选写成已确认需求",
+        "替代产品需求文档或需求规格",
         "替代 sf-requirements 或技术设计"
       ]
     },
@@ -799,7 +799,7 @@
         "path": "core/skills/brainstorm/output-shaping/SKILL.md",
         "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/brainstorm/output-shaping"
       },
-      "trigger": "当 brainstorm 需要选择想法池、方向矩阵、方案对比、优先级排序、MVP 路线图、风险清单、行动计划或问题清单等输出格式时使用。",
+      "trigger": "当 brainstorm 需要选择想法池、方向矩阵、方案对比、优先级排序、最小可行版本路线图、风险清单、行动计划或问题清单等输出格式时使用。",
       "normalizeTo": [
         "00-intake/brainstorm.md"
       ],
@@ -815,7 +815,7 @@
       "localPath": "brainstorm/execution-planning",
       "name": "execution-planning",
       "role": "brainstorm 下一步行动与阶段路由",
-      "trust": "SpecForge 本地维护，面向推荐方向后的 MVP 路线和下游阶段 handoff",
+      "trust": "SpecForge 本地维护，面向推荐方向后的最小可行版本路线和下游阶段交接",
       "risk": "低",
       "source": {
         "type": "local-authored",
@@ -823,15 +823,15 @@
         "path": "core/skills/brainstorm/execution-planning/SKILL.md",
         "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/brainstorm/execution-planning"
       },
-      "trigger": "当 brainstorm 已有推荐或用户确认方向，需要转成下一步行动、MVP 路线图、验证问题和 PRD/requirements/UI/technical/discovery handoff 时使用。",
+      "trigger": "当 brainstorm 已有推荐或用户确认方向，需要转成下一步行动、最小可行版本路线图、验证问题和产品需求文档、需求规格、界面设计、技术设计或探索阶段交接时使用。",
       "normalizeTo": [
         "00-intake/brainstorm.md#下一步行动",
-        "00-intake/brief.md#Next Step"
+        "00-intake/brief.md#下一步"
       ],
       "doNotUseFor": [
         "替代 tasking",
         "在方向未确认时写实现任务",
-        "替代下游 PRD/requirements/design"
+        "替代下游产品需求文档、需求规格或设计阶段"
       ]
     },
     {

@@ -3,7 +3,7 @@
   "id": "sf-prd",
   "layer": "product-discovery",
   "primary_stage": "brainstorm",
-  "purpose": "Create or update the product requirements document.",
+  "purpose": "生成或更新产品需求文档。",
   "owns": {
     "stages": [],
     "workflow": []

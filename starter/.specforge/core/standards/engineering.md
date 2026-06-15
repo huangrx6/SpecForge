@@ -26,7 +26,7 @@
 - Agent 不得静默决定新技术栈。新项目、空仓库、技术栈缺失，或新增 / 替换框架、数据库、队列 / 调度、AI provider、运行时、部署方式、测试栈时，必须先给候选方案、推荐项和取舍，让用户确认。
 - Agent 不得静默引入新的直接依赖。新增 SDK、插件、组件库、ORM、数据库驱动、队列库、AI SDK、测试库、浏览器自动化库等直接依赖前，必须列出用途、替代方案、风险、许可证 / 安全影响和推荐理由，让用户确认。
 - Agent 不得静默决定工程工具链。包管理器（npm / pnpm / yarn / bun）、UI 组件库、样式方案、脚手架、Python 依赖管理和虚拟环境（uv / Poetry / pip / Conda）、构建工具、测试 runner、任务运行器、monorepo 工具都属于技术决策；新项目、技术栈缺失或本次变更会引入 / 替换这些工具时，必须让用户确认或记录沿用现有栈证据。
-- 以下情况可不重复询问，但必须写入确认来源：沿用已有 wiki / 代码技术栈；用户在 brief / PRD / requirements 已明确指定；用户明确授权“按推荐方案默认做”。
+- 以下情况可不重复询问，但必须写入确认来源：沿用已有 wiki / 代码技术栈；用户在 brief / 产品需求文档 / requirements 已明确指定；用户明确授权“按推荐方案默认做”。
 - 用户已确认的官方脚手架 / 框架组合，其自带依赖可按依赖组记录；脚手架之外额外新增的直接依赖仍需单独确认。
 - 未确认的关键技术选择写 `[NEEDS TECH DECISION]`；未确认的新增依赖写 `[NEEDS DEPENDENCY DECISION]`；未确认的工具链选择写 `[NEEDS TOOLING DECISION]`；三者都不能进入 tasking、implementation 或 spec_review approval。
 - 技术设计初稿完成后还必须展示核心决策摘要，让用户确认架构选择、新增 / 替换依赖、工具链选择、架构冲突 / 变更和最大风险。确认后写 `[TECH DESIGN REVIEW CONFIRMED]` 或 `Core Decision Review Status: confirmed`；用户授权默认写 `delegated_default`；无技术影响写 `not_required`。缺少该确认时不能进入 tasking、implementation 或 spec_review approval。

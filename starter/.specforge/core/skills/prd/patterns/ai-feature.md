@@ -1,11 +1,11 @@
-# AI Feature PRD Pattern
+# AI 功能产品需求文档模式
 
 适用：
 
 - LLM 问答。
 - 意图识别。
 - 分类 / 抽取 / 生成。
-- Agent 工具调用。
+- 智能体工具调用。
 - RAG / 知识库。
 - AI 自动化判断。
 
@@ -22,15 +22,15 @@
 - 是否需要日志、审计、可解释性。
 - 是否允许模型不确定 / 拒答。
 
-## PRD 输出重点
+## 产品需求文档输出重点
 
-- AI Task。
-- Evaluation Strategy。
-- Human Review / Override。
-- Safety / Privacy。
-- Cost / Latency Boundary。
-- Failure Modes。
-- Handoff To Requirements。
+- AI 任务。
+- 评估策略。
+- 人工复核 / 覆盖。
+- 安全 / 隐私。
+- 成本 / 延迟边界。
+- 失败模式。
+- 交接给需求阶段。
 
 ## AI 指标示例
 

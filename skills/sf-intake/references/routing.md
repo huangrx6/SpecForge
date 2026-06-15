@@ -1,6 +1,6 @@
 # sf-intake 路由与分诊参考
 
-本文件保存 `sf-intake` 的分类表、brainstorm 分流、PRD 决策和 follow-up 规则。`SKILL.md` 只保留执行顺序和门禁。
+本文件保存 `sf-intake` 的分类表、头脑风暴分流、产品需求文档决策和后续问题规则。`SKILL.md` 只保留执行顺序和门禁。
 
 ## 分诊顺序
 
@@ -15,7 +15,7 @@
    - 只有同一个交付目标下的前后端 / UI / 数据 / 测试，才保留在同一个 work item。
 3. **选择 work item kind 和 workflow。**
 4. **是否需要先做存量项目理解。**
-5. **决定是否需要 PRD。**
+5. **决定是否需要产品需求文档。**
 6. **校准 components flags。**
 7. **写 brief，并明确下一步路由。**
 
@@ -35,9 +35,9 @@
 
 | 类型 | 触发信号 | workflow | 下一步 |
 |---|---|---|---|
-| 新增用户能力 / 产品功能 | 新页面、新后台、新 AI 能力、多角色、审批、导入导出 | `feature` | PRD 判断后进入 requirements |
-| 通用标准变更 | 不属于 feature / bugfix / refactor / discovery，但风险需要完整规格 | `standard` | PRD 判断后进入 requirements |
-| 低风险小改 | 文案、配置、小样式、单点行为，范围清楚且无设计风险 | `lite` | requirements |
+| 新增用户能力 / 产品功能 | 新页面、新后台、新 AI 能力、多角色、审批、导入导出 | `feature` | 产品需求文档判断后进入需求规格 |
+| 通用标准变更 | 不属于 feature / bugfix / refactor / discovery，但风险需要完整规格 | `standard` | 产品需求文档判断后进入需求规格 |
+| 低风险小改 | 文案、配置、小样式、单点行为，范围清楚且无设计风险 | `lite` | 需求规格 |
 | 已确认缺陷 | 有复现、当前行为、期望行为，明确是 bug | `bugfix` | gap_report |
 | 未定性问题 | 告警、异常、现象排查，尚未确认代码缺陷 | `issue` | gap_report |
 | 行为不变重构 | 解耦、依赖升级、架构整理、性能重构，用户行为不变 | `refactor` | technical_design |
@@ -93,28 +93,28 @@ Brainstorm 深度必须写入 `brief.md#Brainstorm 决策`：
 node .specforge/core/scripts/create-work.mjs --workflow bugfix --kind bugfix --parent <previous-work-id> --relation follow_up "修复提交审批 400"
 ```
 
-## PRD 决策
+## 产品需求文档决策
 
-需要 PRD 的情况：
+需要产品需求文档的情况：
 
 - 产品型功能：新工具、新后台、全栈应用、AI 能力、运营平台、面向多角色的功能。
-- 用户只给了高层目标，尚未明确目标用户、MVP、成功标准、路线图或功能候选。
+- 用户只给了高层目标，尚未明确目标用户、最小可行版本、成功标准、路线图或功能候选。
 - 涉及 AI 质量、审批上线、权限、数据生命周期、任务调度、结果交付等产品决策。
-- 用户明确希望先设计产品方案或 PRD。
+- 用户明确希望先设计产品方案或产品需求文档。
 
-可以跳过 PRD 的情况：
+可以跳过产品需求文档的情况：
 
 - bugfix、issue、纯 refactor、纯 discovery。
 - lite 小改，目标和验收标准已经清楚。
-- 已有 PRD / 业务规格，且 brief 已把 MVP 和边界摘录清楚。
+- 已有产品需求文档 / 业务规格，且简报已把最小可行版本和边界摘录清楚。
 
-在 `brief.md#PRD 决策` 中写：
+在 `brief.md#产品需求文档决策` 中写：
 
-- `PRD required: yes / no`
-- `PRD depth: N/A / prd-lite / prd-standard / prd-deep`
-- `Reason`
-- `Blocking product decisions`
-- `Next route: sf-brainstorm / sf-prd / sf-requirements / sf-discovery / sf-tech-design`
+- 是否需要产品需求文档：是 / 否
+- 产品需求文档深度：不适用 / `prd-lite` / `prd-standard` / `prd-deep`
+- 原因
+- 阻断的产品决策
+- 下一步路由：`sf-brainstorm` / `sf-prd` / `sf-requirements` / `sf-discovery` / `sf-tech-design`
 
 ## Components flags
 

@@ -28,11 +28,11 @@
 
 | 阶段 | 目标 | AI / 脚本组合 | 人工确认点 | 输出契约 | 退出标准 |
 |---|---|---|---|---|---|
-| Intake | 判断 work item 类型、workflow、scope、components | `status.mjs`、`sf-intake`、必要时 `codebase-index.mjs` | workflow、拆分、PRD 是否需要、无法安全默认的 scope | `brief.md` 一页摘要、workflow 理由、AI 工具链计划 | active item 唯一，下一步 route 清楚 |
-| Brainstorm | 把模糊取舍收敛成一个可执行方向 | `sf-brainstorm`、外部 research / design skill 仅作输入 | MVP、UI 方向、技术路线、依赖、验收口径 | 问题地图、方案对比、用户确认记录 | 无关键 `[NEEDS ... DECISION]`，或明确暂停 |
-| PRD | 说明为什么做、给谁做、MVP 和成功指标 | `sf-prd`、产品资料、历史需求 | MVP、非目标、成功指标 | `prd.md`，可直接转译 requirements | `Decision Status: approved-for-requirements` |
+| Intake | 判断 work item 类型、workflow、scope、components | `status.mjs`、`sf-intake`、必要时 `codebase-index.mjs` | workflow、拆分、是否需要产品需求文档、无法安全默认的 scope | `brief.md` 一页摘要、workflow 理由、AI 工具链计划 | active item 唯一，下一步 route 清楚 |
+| Brainstorm | 把模糊取舍收敛成一个可执行方向 | `sf-brainstorm`、外部 research / design skill 仅作输入 | 最小可行版本、界面方向、技术路线、依赖、验收口径 | 问题地图、方案对比、用户确认记录 | 无关键 `[NEEDS ... DECISION]`，或明确暂停 |
+| 产品需求文档 | 说明为什么做、给谁做、最小可行版本和成功指标 | `sf-prd`、产品资料、历史需求 | 最小可行版本、非目标、成功指标 | `prd.md`，可直接转译需求规格 | `Decision Status: approved-for-requirements` |
 | Research / Gap | 证明事实、复现问题或形成 ADR 候选 | 官方资料、源码、日志、PoC、`sf-discovery` | 是否继续、拆分、放弃或降级 | `research.md` / `gap-report.md`，来源质量分级 | 结论、证据和后续 workflow 明确 |
-| Requirements | 转成可测试行为和边界 | `sf-requirements`、PRD / brief / research / wiki | 目标用户、验收、冲突需求 | `REQ-*`、`AC-*`、NFR、非目标、影响面 flags | 每条 MUST 可测试，无未决核心冲突 |
+| Requirements | 转成可测试行为和边界 | `sf-requirements`、产品需求文档 / brief / research / wiki | 目标用户、验收、冲突需求 | `REQ-*`、`AC-*`、NFR、非目标、影响面 flags | 每条 MUST 可测试，无未决核心冲突 |
 | UI Design | 明确页面、状态、交互、视觉和原型证据 | Pencil、`sf-ui-design`、设计标准 | 视觉方向、关键流程、原型交付方式 | 一页摘要、状态矩阵、Pencil 证据、验证策略 | UI 方向确认，空 / 错 / 权限 / 边界态覆盖 |
 | Technical Design | 给实现者最小充分工程设计 | `sf-tech-design`、profiles、官方文档、wiki | 新技术、依赖、工具链、核心决策 review | 一页摘要、影响面、ADR、契约、风险、验证策略 | 无关键 unknown，确认状态清楚 |
 | Tasks | 拆成可执行、可并行、可验证的任务图 | `sf-tasking`、artifact graph、wiki | 是否扩大 scope、是否拆 follow-up | 一页摘要、来源覆盖、任务波次、文件边界、验证任务 | 每个来源项有实现和验证承接 |
@@ -49,7 +49,7 @@
 |---|---|---|---|
 | Intake | 先跑 audit / status，再由 Agent 判断 workflow；需要用户时只问一个会改变路线的问题 | scope、workflow、components flags 必须可回溯到 brief | 5 行说明“做什么 / 不做什么 / 为什么走这个 workflow / 下一步” |
 | Brainstorm | 用候选方案表 + 风险表，不直接进入实现 | 每个方案必须有取舍和适用条件，不能只是同义改写 | 只保留 2-3 个可选方向和推荐理由 |
-| PRD | 用问题-用户-MVP-指标骨架，不写接口细节 | 成功指标和非目标必须可验证或可观察 | 一页摘要在前，路线图和背景放后 |
+| 产品需求文档 | 用问题-用户-最小可行版本-指标骨架，不写接口细节 | 成功指标和非目标必须可验证或可观察 | 一页摘要在前，路线图和背景放后 |
 | Requirements | 用 `REQ/AC/NFR` 和 Given / When / Then 风格描述行为 | MUST 必须可测试；冲突需求必须有 owner 或决策记录 | 每条需求只写行为和边界，不混入实现方案 |
 | UI Design | Pencil 做正式证据，截图 / 竞品 / HTML 只做输入参考 | 空、错、权限、加载、边界态必须有状态矩阵 | 页面地图和状态矩阵优先，视觉说明压缩到 token / component 级别 |
 | Technical Design | 用接口契约、数据契约、权限、安全、配置、迁移、回滚清单做设计 | 新依赖、新表、新权限、新外部调用必须有风险和验证方式 | 先给 ADR / 影响面 / 不做项，再展开细节 |
@@ -92,10 +92,10 @@ node .specforge/core/scripts/archive-work.mjs --dry-run
 
 | Workflow | 读者主要关心 | 保留内容 | 压缩内容 |
 |---|---|---|---|
-| `lite` | 改什么、影响什么、怎么验证 | brief、requirements、tasks、verification | PRD、UI / technical design 默认不生成 |
-| `bugfix` / `issue` | 复现、根因、修复、回归 | gap report、tasks、verification、rollback | 产品背景和完整 PRD |
+| `lite` | 改什么、影响什么、怎么验证 | brief、requirements、tasks、verification | 产品需求文档、UI / technical design 默认不生成 |
+| `bugfix` / `issue` | 复现、根因、修复、回归 | gap report、tasks、verification、rollback | 产品背景和完整产品需求文档 |
 | `feature` / `standard` | 行为、体验、技术、验证闭环 | requirements、适用 UI / technical design、tasks、review | 重复背景和泛化最佳实践 |
-| `refactor` | 行为不变、边界、回归 | technical design、tasks、spec review、verification | 业务 PRD 和无关 UI |
+| `refactor` | 行为不变、边界、回归 | technical design、tasks、spec review、verification | 业务产品需求文档和无关 UI |
 | `discovery` | 证据、结论、后续路线 | research、source quality、ADR、wiki | implementation / review / verification 链路 |
 
 ## 人工确认策略

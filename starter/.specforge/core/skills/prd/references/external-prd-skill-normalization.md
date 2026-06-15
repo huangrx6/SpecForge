@@ -1,29 +1,29 @@
-# External PRD Skill Normalization
+# 外部产品需求文档能力归一化
 
 外部 `create-prd` 只能作为结构和检查视角，不能替代 `core/skills/prd/SKILL.md`。
 
 ## 可以吸收
 
-- 背景、目标、用户、价值、假设和 release 分期的组织方式。
+- 背景、目标、用户、价值、假设和版本分期的组织方式。
 - 目标和非目标的表达。
-- 成功指标和 open questions 的提醒。
+- 成功指标和开放问题的提醒。
 
 ## 必须丢弃
 
 - 保存为 `PRD-[product-name].md` 的外部投递动作。
-- Technology / Technical Considerations 中的架构扩写。
-- 直接进入 requirements 的暗示。
-- 自动决定 MVP 的输出。
-- 与 SpecForge artifact graph 不匹配的章节。
+- 技术考虑中的架构扩写。
+- 直接进入需求阶段的暗示。
+- 自动决定最小可行版本的输出。
+- 与 SpecForge 产物图不匹配的章节。
 
-## Normalization
+## 归一化
 
-| 外部输出 | SpecForge PRD |
+| 外部输出 | SpecForge 产品需求文档 |
 |---|---|
-| Executive Summary | Product Decision Summary |
-| Goals / Non-goals | Scope & MVP Decision / Non-goals |
-| User Personas | Users, Roles & Scenarios |
-| Features | Candidate Feature Pool |
-| Release Plan | Roadmap / Release Slicing |
-| Technical Considerations | Notes for technical_design, only if product-relevant |
-| Open Questions | Open Questions & Decisions |
+| 执行摘要 | 产品决策摘要 |
+| 目标 / 非目标 | 范围与最小可行版本决策 / 非目标 |
+| 用户画像 | 用户、角色与场景 |
+| 功能 | 候选功能池 |
+| 发布计划 | 路线图与版本切分 |
+| 技术考虑 | 只在和产品相关时，写入给技术设计阶段的备注 |
+| 开放问题 | 开放问题与决策 |

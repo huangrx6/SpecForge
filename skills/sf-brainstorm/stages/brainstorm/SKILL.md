@@ -1,11 +1,11 @@
 ---
 name: brainstorm
-description: SpecForge 内部 brainstorm 阶段技能。用于在 intake、PRD、requirements、UI design 或 technical design 前后，对模糊方向做用户参与式发散、研究、取舍和确认。
+description: SpecForge 内部 brainstorm 阶段技能。用于在 intake、产品需求文档、需求规格、界面设计或技术设计前后，对模糊方向做用户参与式发散、研究、取舍和确认。
 ---
 
 # Brainstorm Skill
 
-Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、requirements、UI design 和 technical design，但不替代这些产物。它的核心职责是让 Agent 暂停单向推理，和用户一起把“可能性空间”变成“已确认选择 + 明确延后项 + 可安全默认”。
+Brainstorm 是 graph 外的协作收敛阶段。它服务于后续产品需求文档、需求规格、界面设计和技术设计，但不替代这些产物。它的核心职责是让 Agent 暂停单向推理，和用户一起把“可能性空间”变成“已确认选择 + 明确延后项 + 可安全默认”。
 
 ## 输入
 
@@ -21,7 +21,7 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
 ## 触发
 
 - 模糊产品想法、页面体验、AI 能力、运营后台、多角色流程、审批/权限/数据生命周期。
-- PRD 或 requirements 前缺少 MVP、用户角色、成功标准、非目标或功能候选池。
+- 产品需求文档或需求规格前缺少最小可行版本、用户角色、成功标准、非目标或功能候选池。
 - UI design 前缺少信息架构、关键任务、状态矩阵或交互风格方向。
 - `instructions.mjs` 给出 `ui-direction-unconfirmed` blocker。
 - `instructions.mjs` 给出 `tech-direction-unconfirmed` blocker。
@@ -36,7 +36,7 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
 
 1. 参考输出先提取为 `问题重构 / 事实证据 / 发散方向 / 类比迁移 / 场景模拟 / 批判质疑 / 评估矩阵 / 候选方案 / 风险提示 / 验收问题 / 下一步行动 / 后续阶段输入`。
 2. 再并入问题地图：会改变方向的放入 `[必须确认]`；只影响后续细化的写入对应下游阶段输入。
-3. 不把参考 skill 的 persona、PRD、故事、审查清单、测试建议或技术推荐写成已确认，除非用户明确确认。
+3. 不把参考 skill 的角色设定、产品需求文档、故事、审查清单、测试建议或技术推荐写成已确认，除非用户明确确认。
 4. 用户确认后，立即写入对应确认状态或真实 confirmed marker。
 
 ## 子 Skill 调用预算
@@ -92,7 +92,7 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
    - `light` / `research-heavy` profile 只有当场景、失败路径或边界条件会改变推荐时才读取 `scenario-simulation`；否则在 `执行配置` 标记 `场景模拟: N/A + 理由`。
    - 推荐方案前，读取 `.specforge/core/skills/brainstorm/critic-review/SKILL.md`，暴露最弱假设、反例、可删范围和验证点。
    - 需要排序、推荐或用户授权默认时，读取 `.specforge/core/skills/brainstorm/decision-matrix/SKILL.md`，把取舍写成矩阵而不是散文判断。
-   - 给出 2-3 个互斥方案或 MVP 组合。
+   - 给出 2-3 个互斥方案或最小可行版本组合。
    - 每个方案必须包含：用户价值、实现成本、主要风险、适用场景、放弃代价。
    - 方案之间必须真的不同，不能只是同一方案的措辞变化。
 6. **收敛取舍（Socratic 逐问协议）。**
@@ -100,7 +100,7 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
    **铁律：每次只问一个问题。用户回答之前不得提出下一个问题。**
 
    问题优先级（从高到低依次问）：
-   - P1 核心目标/范围：「这是为谁做的，解决什么核心问题？」「MVP 做什么，明确不做什么？」
+   - P1 核心目标/范围：「这是为谁做的，解决什么核心问题？」「最小可行版本做什么，明确不做什么？」
    - P2 体验方向（有 UI 时）：「什么感觉？参考哪类产品？主要用户是什么角色？」
    - P3 数据与安全：「谁能看到数据，数据生命周期如何？」「有没有敏感数据或合规要求？」
    - P4 集成与依赖：「会依赖哪些外部系统或服务？」「现有系统有哪些约束？」
@@ -113,7 +113,7 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
 
    **收敛信号（满足全部才能进入下一阶段）：**
    - ✅ 所有 `[必须确认]` 问题有明确回答或明确授权默认
-   - ✅ MVP 范围已明确
+   - ✅ 最小可行版本范围已明确
    - ✅ 影响架构/体验/成本的高影响未知已清零或明确延后
    - ✅ 用户知道下一步是什么
    - ❌ 任何「[NEEDS ... DECISION]」标记存在 → 不得宣布收敛
@@ -134,10 +134,10 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
    - Standalone / Lightweight 模式写入 `specforge-import-ready.md` 格式内容。
 8. **收敛落档。**
    - 写入前读取 `.specforge/core/skills/brainstorm/output-shaping/SKILL.md`，选择适合本轮的输出形态。
-   - 需要进入 PRD / requirements / UI design / technical design / research / verification 时，读取 `.specforge/core/skills/brainstorm/execution-planning/SKILL.md`，写清交接、owner、输入产物和验证入口。
+   - 需要进入产品需求文档、需求规格、界面设计、技术设计、研究或验证阶段时，读取 `.specforge/core/skills/brainstorm/execution-planning/SKILL.md`，写清交接、负责人、输入产物和验证入口。
    - 写入 `00-intake/brainstorm.md`。
-   - 更新 `00-intake/brief.md` 的澄清记录、功能候选池、用户选择、PRD 决策和下一步路由。
-   - 如果来自 PRD / requirements / UI / tech design 的返工，标明 `Return to` 和需要修改的 artifact。
+   - 更新 `00-intake/brief.md` 的澄清记录、功能候选池、用户选择、产品需求文档决策和下一步路由。
+   - 如果来自产品需求文档、需求规格、界面设计或技术设计的返工，标明 `Return to` 和需要修改的 artifact。
    - 如果用户确认的是 UI / 视觉 / 体验方向，写入 `UI Direction Status: confirmed` 或 `[UI DECISION CONFIRMED]`，否则后续 `ui_design` 会继续被阻断。
    - 如果用户确认的是技术栈 / 架构 / 数据库 / 调度器 / AI provider / 部署 / 依赖方向，写入 `Tech Direction Status: confirmed` 或 `[TECH DECISION CONFIRMED]`；用户授权默认写 `Tech Direction Status: delegated_default`，否则后续 `technical_design` 会继续被阻断。
    - 如果用户确认的是新增 / 替换依赖，写入 `Dependency Decision Status: confirmed` 或 `[DEPENDENCY DECISION CONFIRMED]`；用户授权默认写 `Dependency Decision Status: delegated_default`，否则后续 `technical_design` 会继续被阻断。
@@ -190,8 +190,8 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续 PRD、require
 | 后续阶段会误解“Agent 推荐”为“用户确认” | 停止 |
 | 任一 `[NEEDS ... DECISION]` 仍存在 | 停止 |
 | 用户确认的选择、授权默认、Agent recommendation 和未决问题被清楚区分 | 完成条件之一 |
-| `brainstorm.md` 足以支撑 PRD、requirements、UI design 或 technical design 继续推进 | 完成条件之一 |
-| `brief.md` 已同步，不存在和 brainstorm 相冲突的 PRD 决策或范围描述 | 完成 |
+| `brainstorm.md` 足以支撑产品需求文档、需求规格、界面设计或技术设计继续推进 | 完成条件之一 |
+| `brief.md` 已同步，不存在和 brainstorm 相冲突的产品需求文档决策或范围描述 | 完成 |
 
 ## 不做
 
