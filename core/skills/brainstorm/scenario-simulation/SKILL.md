@@ -1,36 +1,68 @@
 ---
 name: scenario-simulation
-description: Brainstorm package skill for testing ideas against realistic user, workflow, edge-case, adoption, operations, and failure scenarios. Use when brainstorm needs to know how candidate directions behave for different user intents, maturity levels, constraints, or usage contexts.
+description: Brainstorm 包内的场景模拟 skill。用于候选方向已经存在后，把方案放进真实用户输入、工作流、边界条件、失败路径、采用阻力、运营维护和下游交接场景中压测。
 ---
 
-# Scenario Simulation
+# 场景模拟
 
-Use this skill after candidate options exist. It turns abstract ideas into concrete “what happens when...” checks.
+本 skill 用来检验方案在真实场景里会怎样，而不是重复描述方案好处。它特别适合 `deep` profile；`light` 和 `research-heavy` 只有在场景会改变推荐时使用。
 
-## Scenario Types
+## 前置输入
 
-| Scenario | Question |
+- `发散方向池` 中进入收敛的候选方案。
+- `问题重构` 中的目标用户、约束、非目标和成功标准。
+- `当前事实与研究证据` 中的 confirmed / likely / unclear 事实。
+- 已知的 UI、技术、依赖、权限、安全或验收约束。
+
+## 场景类型
+
+| 场景 | 要回答的问题 |
 |---|---|
-| Fuzzy idea | User only has a vague goal. What does the system ask first? |
-| Existing solution optimization | User already has a solution. What should be preserved vs changed? |
-| Research-heavy decision | What facts are needed before a recommendation is safe? |
-| Creative exploration | How many options should be shown before evaluation? |
-| Execution handoff | What must be true before PRD / requirements / design / tech design starts? |
-| Failure / edge case | What happens if the assumption, dependency, or user behavior is wrong? |
+| 模糊输入 | 用户只有模糊目标时，系统先问什么？ |
+| 现有方案优化 | 什么必须保留？什么可以大胆改？ |
+| 重复使用 | 高频用户第 20 次使用时是否仍高效？ |
+| 新手进入 | 没有背景的新用户能不能理解下一步？ |
+| 失败路径 | 假设、依赖、数据或用户行为错误时会怎样？ |
+| 权限 / 安全 | 谁能看到、修改、导出、审批或回滚？ |
+| 运营维护 | 后续谁维护？哪里会变贵？ |
+| 下游交接 | 进入 PRD / requirements / UI / tech design 前必须满足什么？ |
 
-## Output
+## 执行步骤
+
+1. 为每个候选方向选 2-4 个关键场景；`deep` profile 至少包含一个失败场景。
+2. 写清场景里的用户状态、触发输入、系统响应和下一步。
+3. 标出风险：理解失败、流程中断、权限漏洞、成本膨胀、依赖不稳、验证困难。
+4. 判断风险是否改变推荐。如果会改变，把它写回 `问题地图` 或 `批判质疑`。
+5. 对需要事实的风险，交给 `research-source`；对需要实验的风险，交给 `sf-discovery` research。
+
+## 输出格式
 
 ```md
 ## 场景模拟
 
-| 场景 | 用户输入 / 状态 | 方案表现 | 风险 | 需要调整 |
-|---|---|---|---|---|
-| | | | | |
+| 方案 | 场景 | 用户输入 / 状态 | 系统表现 | 风险 | 需要调整 | 影响推荐 |
+|---|---|---|---|---|---|---|
+| | | | | | | yes / no |
 ```
 
-## Rules
+## 质量门槛
 
-- Simulate behavior, not just benefits.
-- Include at least one failure scenario for deep brainstorm.
-- If a scenario reveals a missing decision, add it to `问题地图`.
-- If a scenario reveals missing facts, hand it to `research-source`.
+- 不只写理想路径，必须包含失败或边界路径。
+- 场景要具体到用户动作和系统响应。
+- 如果模拟暴露新的高影响决策，必须加入 `[必须确认]`。
+- 如果场景不影响推荐，允许写 `N/A + 理由`，不要为了填表编故事。
+
+## 常见失败
+
+| 失败 | 表现 | 修正 |
+|---|---|---|
+| 只写收益 | “用户体验更好” | 写具体输入、响应和风险 |
+| 场景太泛 | “用户使用系统” | 写用户状态、触发点、下一步 |
+| 忽略失败 | 只模拟成功路径 | 增加依赖失败、权限错误、误操作 |
+| 不回写结论 | 发现风险但不影响矩阵 | 写入 `批判质疑` 或 `问题地图` |
+
+## 交接
+
+- 把改变推荐的风险交给 `critic-review`。
+- 把仍可行但需要排序的方案交给 `decision-matrix`。
+- 把验证路径交给 `execution-planning` 或后续 verification。

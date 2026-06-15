@@ -1,42 +1,68 @@
 ---
 name: analogy-thinking
-description: Brainstorm package skill for importing ideas from other products, industries, workflows, technical systems, games, editorial formats, operational tools, or service patterns. Use when direct brainstorming feels narrow or the user asks for a more advanced, differentiated, or less obvious direction.
+description: Brainstorm 包内的类比迁移 skill。用于直接发散变窄、方案同质化、用户要求更高级或差异化方向时，从其他产品、行业、工作流、技术系统、内容形态或运营机制中提取可迁移机制。
 ---
 
-# Analogy Thinking
+# 类比迁移
 
-Use this skill to widen the search space without copying surface style. It translates patterns from other domains into usable options.
+本 skill 用于借鉴机制，而不是照搬表面。它回答：别的领域如何解决相似问题？哪些机制可以迁移？哪些东西绝对不能复制？
 
-## Process
+## 使用时机
 
-1. Identify the core job-to-be-done.
-2. Pick 3-5 analogy domains with similar jobs, constraints, or emotions.
-3. Extract the transferable mechanism, not the surface artifact.
-4. Translate each mechanism into a candidate direction.
-5. Mark what would be inappropriate to copy.
+- `divergent-thinking` 生成的方向太常规。
+- 用户要求“更高级”“大胆一点”“不要模板化”。
+- 需要设计 agent skill、产品流程、工具体验、工作台、审核机制或长期演进机制。
+- 当前问题有抽象任务，例如信任、审计、快速重复工作、引导创建、持续进展、探索筛选。
 
-## Analogy Matrix
+## 执行步骤
+
+1. 写出当前问题的核心 job-to-be-done。
+2. 选择 3-5 个类比领域，优先选“任务相似”而不是“外观相似”的对象。
+3. 提取可迁移机制：流程、反馈、约束、节奏、权限、组合方式、审计方式。
+4. 明确不能照搬的部分：品牌、视觉、专有流程、过重组织结构、合规假设。
+5. 把每个机制翻译成当前项目可用的候选方向。
+6. 标记需要事实查证的类比，不把未查证类比当事实证据。
+
+## 类比来源池
+
+| 目标 | 可参考领域 | 可迁移机制 |
+|---|---|---|
+| 信任 / 可审计 | 银行后台、合规审查、病历、法律 redline | 证据链、版本差异、审批记录、责任边界 |
+| 快速重复工作 | IDE、表格、CRM 队列、命令面板 | 快捷操作、批量处理、局部预览、可撤销 |
+| 引导创建 | 报税、设计工具、配置向导、 onboarding | 分步收集、即时校验、缺口提示、保存草稿 |
+| 长期进展 | 学习路径、健身计划、事故响应、项目看板 | 阶段目标、反馈回路、里程碑、复盘 |
+| 探索筛选 | 市场地图、素材板、搜索 facets、策略游戏科技树 | 多维筛选、组合探索、局部展开、路径比较 |
+| 质量审查 | Code review、医学二诊、风控模型、出版编辑 | 反方检查、证据等级、阻断项、建议级别 |
+
+## 输出格式
 
 ```md
 ## 类比迁移
 
-| 来源领域 / 产品 | 可迁移机制 | 为什么相关 | 可转成的方案 | 不能照搬 |
-|---|---|---|---|---|
-| | | | | |
+| 来源领域 / 产品 | 相似任务 | 可迁移机制 | 当前问题中的方案 | 不能照搬 | 风险 / 查证 |
+|---|---|---|---|---|---|
+| | | | | | |
 ```
 
-## Useful Domains
+## 质量门槛
 
-| Need | Analogy sources |
-|---|---|
-| Trust / auditability | Banking, compliance review, medical records, legal redline |
-| Fast repeated work | IDEs, spreadsheets, CRM queues, command palettes |
-| Guided creation | Onboarding flows, design tools, tax filing, wizard forms |
-| Progress over time | Fitness apps, learning paths, incident response, project boards |
-| Exploration | Market maps, moodboards, game tech trees, search facets |
+- 至少给出 3 个不同来源领域；`light` profile 可以只保留 1-2 个最有价值类比。
+- 必须写“不能照搬”，防止类比失控。
+- 类比要迁移机制，不迁移品牌、审美或专有细节。
+- 类比如果涉及竞品事实，必须交给 `research-source` 查证。
+- 每个类比都要能落回当前问题的候选方向。
 
-## Guardrails
+## 常见失败
 
-- Do not cite an analogy as evidence unless it was fact-checked.
-- Do not copy brand, visual identity, or proprietary workflows.
-- Keep the mechanism and discard irrelevant aesthetics.
+| 失败 | 表现 | 修正 |
+|---|---|---|
+| 表面模仿 | “像 Linear / Notion 一样高级” | 提取具体机制：命令、队列、审计、协作 |
+| 类比过远 | 机制和当前约束无关 | 写相似任务，不相似就删除 |
+| 未查证事实 | 声称某产品功能存在但没来源 | 标记 `needs research` |
+| 忽略成本 | 类比来自大组织流程，当前项目承受不了 | 写适配方式和简化版 |
+
+## 交接
+
+- 有价值的类比方向交给 `divergent-thinking` 或 `decision-matrix`。
+- 类比暴露出的风险交给 `critic-review`。
+- 类比需要真实产品事实时交给 `research-source`。

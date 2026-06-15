@@ -1,43 +1,91 @@
 ---
 name: output-shaping
-description: Brainstorm package skill for choosing the right output format for a brainstorm result. Use when the result should be an idea pool, direction matrix, option comparison, priority list, MVP roadmap, risk list, action plan, question list, or compact user-facing prompt instead of freeform paragraphs.
+description: Brainstorm 包内的输出塑形 skill。用于根据 skip、light、deep、research-heavy profile 选择稳定输出结构，生成想法池、方向矩阵、方案对比、MVP 路线图、风险清单、行动表或紧凑用户提问，而不是自由散文。
 ---
 
-# Output Shaping
+# 输出塑形
 
-Use this skill whenever brainstorm output needs a stable shape. It selects the artifact structure that best matches the user's current decision.
+本 skill 负责让 brainstorm 结果可读、可交接、可验证。它不新增结论，只决定应该用什么结构承载现有结论和缺口。
 
-## Format Selector
+## 前置输入
 
-| Need | Output format |
+- `Execution profile`：skip / light / deep / research-heavy。
+- 已完成的包内 skill 输出：问题重构、事实证据、发散、类比、场景、批判、矩阵、行动计划。
+- 用户当前需要：探索、比较、拍板、查证、进入下游阶段或只回答一个问题。
+
+## 执行步骤
+
+1. 先确认 `Execution profile`，不要把 light 输出扩成 deep 模板。
+2. 判断用户当前需要：探索、比较、拍板、查证、交接或继续单问。
+3. 选择最小可用结构；能用一页摘要解决时，不强行填完整报告。
+4. 对未使用但模板中存在的 section 写 `N/A + 理由`。
+5. 检查事实、假设、agent recommendation、用户确认是否分开。
+6. 如果要进入下游阶段，补齐下一步行动和交接表。
+
+## 输出选择器
+
+| 需求 | 输出结构 |
 |---|---|
-| Explore possibilities | 想法池 / 发散方向池 |
-| Compare choices | 方案对比表 / 方案评估矩阵 |
-| Decide what to do first | 优先级排序 / MVP 路线图 |
-| Clarify uncertainty | 问题清单 / 未查证项 |
-| Prepare next workflow | 下一步行动 / handoff table |
-| Communicate briefly | 一页摘要 |
-| Challenge assumptions | 批判质疑表 / 风险清单 |
+| 探索可能性 | 想法池 / 发散方向池 |
+| 比较选择 | 方案对比表 / 方案评估矩阵 |
+| 决定先做什么 | 优先级排序 / MVP 路线图 |
+| 澄清不确定 | 问题清单 / 未查证项 |
+| 准备下游 workflow | 下一步行动 / 交接表 |
+| 用户只需要快速判断 | 一页摘要 + 一个问题 |
+| 挑战方案 | 批判质疑表 / 风险清单 |
 
-## Default Brainstorm Output
+## Profile 输出要求
+
+| Profile | 必填输出 | 可 N/A |
+|---|---|---|
+| `skip` | 执行配置、跳过理由、下一步路由 | 其他 section |
+| `light` | 一页摘要、执行配置、问题重构、发散方向池、批判质疑、方案评估矩阵、推荐方案、需要用户确认的问题 | 类比迁移、场景模拟、版本依赖关系 |
+| `deep` | 完整模板，包含类比/场景/批判/矩阵/下一步行动 | 只有确实不适用的技术或 UI 确认项 |
+| `research-heavy` | 执行配置、问题重构、事实证据、覆盖度、未查证项、批判质疑、评估矩阵、是否升级 research | 与事实无关的发散 section 可 N/A |
+
+## 默认输出骨架
 
 ```md
 1. 执行配置
-2. 问题重构
-3. 当前事实与研究证据
-4. 发散方向池
-5. 类比迁移 / 场景模拟（按 profile 可 N/A）
-6. 方案组合 / 方案对比
-7. 批判质疑
-8. 方案评估矩阵
-9. 推荐方案
-10. 下一步行动
-11. 需要用户确认的问题
+2. 一页摘要
+3. 问题重构
+4. 当前事实与研究证据
+5. 发散方向池
+6. 类比迁移 / 场景模拟（按 profile 可 N/A）
+7. 方案组合 / 方案对比
+8. 批判质疑
+9. 方案评估矩阵
+10. 推荐方案
+11. 用户确认记录
+12. 下一步行动
+13. 需要用户确认的问题
 ```
 
-## Rules
+## N/A 写法
 
-- Do not output every section when the brainstorm is light; choose the smallest useful format.
-- Do not bury a required user decision in prose.
-- Keep agent recommendation, user confirmation, facts, and assumptions visually separate.
-- If the output will feed another SpecForge stage, include the handoff table.
+```md
+## 场景模拟
+N/A。当前为 light profile，候选方案只影响文档结构，不涉及真实用户流程或失败路径；已在批判质疑中覆盖范围风险。
+```
+
+## 质量门槛
+
+- 不为完整而填空；缺失就写 `N/A + 理由` 或 `unknown`。
+- 用户确认、agent recommendation、事实证据、假设必须分开。
+- 每个表格都要能服务下一步；没有用途的表格删除或 N/A。
+- 进入下游阶段时必须有交接：输入、输出、owner、阻断条件。
+- 用户只需要继续对话时，最后只问一个最高优先级问题。
+
+## 常见失败
+
+| 失败 | 表现 | 修正 |
+|---|---|---|
+| 自由散文 | 很多段落但没有决策结构 | 改为摘要 + 表格 + 下一步 |
+| 过度模板化 | light profile 填满所有 section | N/A 不适用 section |
+| 混淆状态 | 推荐、事实、用户确认混在一起 | 拆成对应 section |
+| 没有交接 | 下游不知道拿什么继续 | 补下一步行动表 |
+
+## 交接
+
+- 输出给 `sf-brainstorm` 写入 `00-intake/brainstorm.md`。
+- 如果下一步是 PRD、requirements、UI、tech design 或 research，确保 `execution-planning` 已写交接。

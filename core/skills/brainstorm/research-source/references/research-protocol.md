@@ -1,8 +1,8 @@
-# Research Protocol
+# 查证协议
 
 本文件定义 `research-source` 的实际查证动作：先看本地事实、再联网、再交叉验证、最后归一化到 brainstorm。它补足 `source-index.md` 的“去哪查”和 `evidence-contract.md` 的“怎么写”之间的执行空隙。
 
-## Local First
+## 本地事实优先
 
 联网前先确认是否已有本地事实。已有本地事实不是最终事实，但能缩小搜索范围，避免查错生态或版本。
 
@@ -16,7 +16,7 @@
 
 如果本地事实缺失，不能假设默认版本；写 `unknown`，并在未查证项中说明缺哪个文件或上下文。
 
-## Query Patterns
+## 查询模式
 
 按问题类型组合查询，不用泛泛的“搜索 X”。
 
@@ -31,7 +31,7 @@
 | 浏览器兼容 | `<api> MDN compatibility`、`<feature> caniuse` |
 | 可访问性 pattern | `<component> WAI ARIA authoring practices`、`<component> keyboard interaction` |
 
-## Freshness Rules
+## 时效规则
 
 | 事实类型 | 时效规则 |
 |---|---|
@@ -44,7 +44,7 @@
 
 如果事实类型变化快，但只能找到旧资料，置信度最多为 `likely`；如果会影响成本、安全或架构，写 `unclear` 并升级后续 research / technical design。
 
-## Triangulation
+## 交叉验证
 
 | 场景 | 需要交叉验证 |
 |---|---|
@@ -55,7 +55,7 @@
 | 安全漏洞命中 transitive dependency | 查 advisory affected range、lockfile 实际版本、patched version |
 | AI provider 能力 / 价格影响成本模型 | 同时查模型文档、pricing、rate limits、data usage |
 
-## Conflict Handling
+## 冲突处理
 
 来源冲突时不要平均处理，也不要选择更符合推荐方案的来源。
 
@@ -64,7 +64,7 @@
 3. 如果仍冲突，写 `unclear`，列出冲突来源和需要谁确认。
 4. 如果冲突会改变 MVP、成本、安全或架构，必须在 `brainstorm.md#问题地图` 标记 `[必须确认]` 或交给 `sf-discovery` research。
 
-## Negative Evidence
+## 负证据
 
 找不到资料也是证据，但必须说清楚搜索范围。
 
@@ -79,17 +79,17 @@
 - `官方文档未说明...`
 - `需要项目实测 / 账号 / lockfile 才能确认...`
 
-## Escalation Rules
+## 升级规则
 
 | 触发 | 动作 |
 |---|---|
 | 多个候选方案都依赖不确定事实 | 交给 `sf-discovery` research 或回到用户确认 |
 | 当前资料互相冲突且影响方向 | 写 `unclear`，标记 `[必须确认]` |
-| 需要安装、运行、压测或登录后台 | 写未查证项，handoff 给 `sf-tech-design` / research spike |
+| 需要安装、运行、压测或登录后台 | 写未查证项，交接给 `sf-tech-design` / research spike |
 | 涉及法规、合规、安全或用户数据 | 使用 high-stakes evidence，不足则不得 confirmed |
 | 用户要求“最新 / 当前推荐” | 必须联网查证，并记录访问日期 |
 
-## Output Self-Check
+## 输出自检
 
 交回 `sf-brainstorm` 前逐项检查：
 

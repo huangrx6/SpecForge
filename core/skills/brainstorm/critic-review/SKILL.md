@@ -1,37 +1,81 @@
 ---
 name: critic-review
-description: Brainstorm package skill for challenging generated ideas before selection. Use when brainstorm has candidate directions and needs assumptions, failure modes, over-design risk, simpler alternatives, maintenance cost, security/privacy risk, or user-value doubts reviewed.
+description: Brainstorm 包内的反方审查 skill。用于候选方向生成后、推荐方案之前，检查用户价值、隐藏假设、失败模式、过度设计、简单替代、维护成本、安全隐私风险、事实缺口和范围越界。
 ---
 
-# Critic Review
+# 批判质疑
 
-Use this skill after options exist and before ranking. Its job is to prevent attractive but weak ideas from becoming the default.
+本 skill 用来保护 brainstorm 不被“看起来很聪明”的方案带偏。它不是为了否定创意，而是把脆弱点暴露出来，让 `decision-matrix` 的推荐更可信。
 
-## Challenge Questions
+## 前置输入
 
-| Area | Questions |
+- `发散方向池` 中准备进入收敛的方向。
+- `类比迁移` 和 `场景模拟` 中暴露出的风险。
+- `当前事实与研究证据` 中的 `likely` / `unclear` 项。
+- 用户已经确认的目标、非目标、依赖、技术方向或体验方向。
+
+## 审查步骤
+
+1. 对每个候选方案写一句“它为什么可能失败”。
+2. 找出最弱假设：用户真的需要吗？依赖真的可用吗？成本真的可控吗？
+3. 找更小版本：能否删掉 30-50% 范围仍保留主要价值？
+4. 检查安全、隐私、权限、数据生命周期和日志暴露。
+5. 检查维护成本：后续谁维护？哪些配置、版本、流程会变成负担？
+6. 检查范围越界：是否偷写了 requirements、technical design 或 implementation 任务。
+7. 对每个问题给处理建议：保留、简化、拆分、拒绝、查证、交给后续阶段。
+
+## 审查问题表
+
+| 维度 | 要问的问题 |
 |---|---|
-| User value | Does the user really need this? What pain remains unsolved? |
-| Assumptions | Which hidden assumptions must be true? How can they fail? |
-| Simplicity | Is there a smaller version that captures most value? |
-| Maintenance | Who owns this later? What grows expensive over time? |
-| Security / privacy | Does it expand access, data retention, or attack surface? |
-| Feasibility | Which dependency, integration, or runtime fact is still unproven? |
-| Scope | Does this smuggle in requirements, design, or implementation prematurely? |
+| 用户价值 | 这个方案解决的是核心痛点，还是边缘便利？不用它会怎样？ |
+| 假设 | 哪些条件必须为真？如果不成立，方案是否崩掉？ |
+| 简化 | 有没有更小版本能获得 80% 价值？ |
+| 维护 | 未来谁维护？哪些依赖、配置、文档、流程会持续消耗？ |
+| 安全 / 隐私 | 是否扩大数据访问、保留、导出、日志或审批面？ |
+| 可行性 | 是否依赖未查证版本、API、竞品事实或用户上下文？ |
+| 范围 | 是否把下游规格、设计或实现提前写死？ |
+| 回退 | 方案失败时能否回滚、降级或保留旧路径？ |
 
-## Output
+## 输出格式
 
 ```md
 ## 批判质疑
 
-| 方案 | 可能不成立的点 | 更简单替代 | 需要验证 | 处理建议 |
-|---|---|---|---|---|
-| | | | | keep / simplify / split / reject / research |
+| 方案 | 可能不成立的点 | 最弱假设 | 更简单替代 | 需要验证 | 处理建议 |
+|---|---|---|---|---|---|
+| | | | | | keep / simplify / split / reject / research |
 ```
 
-## Rules
+## 处理建议含义
 
-- Critique the idea, not the user preference.
-- Do not reject a direction only because it is unfamiliar.
-- If a flaw is fixable by simplifying, mark `simplify`, not `reject`.
-- If the flaw depends on missing facts, hand it to `research-source`.
+| 建议 | 含义 |
+|---|---|
+| `keep` | 风险可接受，保留进入矩阵 |
+| `simplify` | 方向有价值，但需要缩小范围 |
+| `split` | 方案混合了多个目标，需要拆分 |
+| `reject` | 风险或成本明显超过价值 |
+| `research` | 关键事实缺失，交给 `research-source` 或 `sf-discovery` research |
+
+## 质量门槛
+
+- 每个候选方案至少有 1 个反方问题。
+- 至少提出 1 个更简单替代，除非用户明确要求全量方案。
+- 不能因为方案陌生就拒绝；必须指出具体风险。
+- 不能因为用户喜欢就跳过风险；用户偏好和方案可行性分开记录。
+- 发现事实缺口时标记 `research`，不要主观猜测。
+
+## 常见失败
+
+| 失败 | 表现 | 修正 |
+|---|---|---|
+| 泛泛风险 | “可能复杂” | 写复杂在哪里、谁承担、如何验证 |
+| 只批不改 | 找到问题但不给替代 | 给 simplify / split 方案 |
+| 过度保守 | 所有创新都 reject | 区分陌生和不可行 |
+| 越权批准 | 把 agent 推荐写成用户确认 | 写 recommendation，不写 approved |
+
+## 交接
+
+- `keep` / `simplify` / `split` 的方案进入 `decision-matrix`。
+- `research` 项进入 `research-source` 或 `sf-discovery`。
+- `reject` 项保留放弃原因，防止后续反复提出。

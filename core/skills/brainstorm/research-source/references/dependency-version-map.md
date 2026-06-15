@@ -1,4 +1,4 @@
-# Dependency Version Map
+# 依赖版本关系图
 
 本文件用于 `research-source` 中的版本依赖关系查证。它不替代 `sf-tech-design` 的最终版本锁定；它负责在 brainstorm 阶段发现会影响方案取舍的版本关系、兼容风险和后续 technical design 必须处理的证据。
 
@@ -22,7 +22,7 @@
 | Breaking changes | 目标版本相对当前版本的 breaking changes、migration guide、deprecation | CHANGELOG、release notes、migration docs、GitHub Releases | 是否改变 implementation 成本或 MVP 范围 |
 | Override / resolution | 是否需要强制 transitive version、fork、backport 或单一版本 | npm overrides、pnpm overrides、Yarn resolutions、package manager docs | 只能作为风险 / 后续方案，不在 brainstorm 直接改 |
 
-## Ecosystem Quick Map
+## 生态速查表
 
 | 生态 | Manifest | Lockfile | 常见版本关系 |
 |---|---|---|---|
@@ -38,7 +38,7 @@
 ```md
 版本依赖关系：
 
-| 依赖 / 技术 | 当前 / 候选版本 | 关系类型 | 约束来源 | 影响 | Handoff |
+| 依赖 / 技术 | 当前 / 候选版本 | 关系类型 | 约束来源 | 影响 | 交接 |
 |---|---|---|---|---|---|
 | motion-v | latest / target | peer/runtime/release | npm + package.json + docs | 需要确认 Vue 版本和 bundler 兼容性 | tech-design 锁定版本并验证 build |
 ```
@@ -52,7 +52,7 @@
 | 关系类型 | `direct` / `peer` / `runtime` / `lockfile` / `transitive` / `breaking` / `override` |
 | 约束来源 | URL 或本地 manifest / lockfile 路径 |
 | 影响 | 对方案取舍、成本、兼容性、安全或验证的影响 |
-| Handoff | `tech-design lock version` / `needs user dependency decision` / `needs spike` / `no action` |
+| 交接 | `tech-design lock version` / `needs user dependency decision` / `needs spike` / `no action` |
 
 ## 判定规则
 

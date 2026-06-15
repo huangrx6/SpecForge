@@ -1,9 +1,9 @@
 ---
 name: research-source
-description: Brainstorm package source-checking skill for current facts, versions, dependency relationships, competitor/pricing facts, AI provider limits, security/advisory checks, and evidence handoff. Use when brainstorm needs reliable sources before framing options or comparing directions.
+description: Brainstorm 包内的事实查证 skill。用于当前事实、版本、依赖关系、竞品/定价、AI provider 限制、安全漏洞、法规合规、浏览器兼容性或证据交接会影响 brainstorm 方向、范围、成本、技术路线或推荐置信度时。
 ---
 
-# Research Source
+# 事实查证
 
 本 skill 负责把 `sf-brainstorm` 中的“需要查外部事实”变成可执行搜索流程。它不是 deep research，也不替用户做方案选择；它只回答：查什么、去哪里查、证据够不够、哪些仍不确定。
 
@@ -23,7 +23,7 @@ description: Brainstorm package source-checking skill for current facts, version
 2. 读取 `references/research-protocol.md`，先确认本地事实、查询模式、时效规则、冲突处理和升级规则。
 3. 读取 `references/source-index.md`，按问题类型选择来源。
 4. 读取 `references/evidence-contract.md`，确定输出格式、置信度和未查证项写法。
-5. 涉及新增 / 替换依赖、SDK、插件、组件库、测试库、运行时或 package manager 时，读取 `references/dependency-version-map.md`，建立版本依赖关系和 tech-design handoff。
+5. 涉及新增 / 替换依赖、SDK、插件、组件库、测试库、运行时或 package manager 时，读取 `references/dependency-version-map.md`，建立版本依赖关系和 tech-design 交接。
 6. 如果出现多来源争议、竞品/市场范围大、法规风险或 AI 能力边界是核心变量，把缺口写入 `brainstorm.md#问题地图` 并交给 `sf-discovery` 的 research artifact，不在 brainstorm 内伪装成已解决。
 
 ## 搜索流程
@@ -36,7 +36,7 @@ description: Brainstorm package source-checking skill for current facts, version
 6. **建版本关系**：新增 / 替换依赖时查 direct deps、peer deps、runtime / engine、lockfile、transitive deps、breaking changes 和 override / resolution 需求。
 7. **记录证据**：每条证据记录 URL、访问 / 发布日期、结论和置信度。
 8. **归一化**：把结论写成 `confirmed / likely / unclear`，并明确哪些问题仍需实测、用户提供账号或后续 research。
-9. **交回 brainstorm**：只把事实证据、风险、未查证项和 tech-design handoff 交给 `sf-brainstorm`；是否采用某方案仍由用户确认。
+9. **交回 brainstorm**：只把事实证据、风险、未查证项和 tech-design 交接交给 `sf-brainstorm`；是否采用某方案仍由用户确认。
 
 ## 查证深度
 
@@ -83,7 +83,7 @@ description: Brainstorm package source-checking skill for current facts, version
 
 版本依赖关系：
 
-| 依赖 / 技术 | 当前 / 候选版本 | 关系类型 | 约束来源 | 影响 | Handoff |
+| 依赖 / 技术 | 当前 / 候选版本 | 关系类型 | 约束来源 | 影响 | 交接 |
 |---|---|---|---|---|---|
 | | | direct / peer / runtime / lockfile / transitive / breaking / override | URL 或 manifest / lockfile 路径 | | tech-design lock version / needs user dependency decision / needs spike / no action |
 
@@ -110,7 +110,7 @@ description: Brainstorm package source-checking skill for current facts, version
 
 | 能力 | 使用时机 | 产出 |
 |---|---|---|
-| `research-source` | 版本关系会影响是否采用某方案、是否需要用户确认依赖、是否需要 spike | 版本依赖关系表、风险、未查证项、handoff |
+| `research-source` | 版本关系会影响是否采用某方案、是否需要用户确认依赖、是否需要 spike | 版本依赖关系表、风险、未查证项、交接 |
 | `sf-tech-design` | 用户已确认技术 / 依赖方向后，需要可实现的工程方案 | 最终版本锁定、依赖确认记录、兼容策略、验证和回滚方案 |
 
 ## 禁止
@@ -120,3 +120,11 @@ description: Brainstorm package source-checking skill for current facts, version
 - 不把社区评论当官方声明；只能作为用户痛点或争议线索。
 - 不因为找不到资料就补一个“看起来合理”的结论；写 `unclear`。
 - 不替代用户确认，也不把 agent recommendation 写成 approved。
+
+## 质量门槛
+
+- 每个外部事实必须有 URL 或明确写 `unknown / inaccessible`。
+- 日期必须是访问日期或来源发布日期；价格、版本、模型能力和竞品状态优先写访问日期。
+- 证据结论必须短，只写来源能支撑的事实。
+- 版本依赖影响方案取舍时，必须补版本依赖关系表。
+- 证据不足时降低置信度或升级 `sf-discovery` research，不用推测补齐。

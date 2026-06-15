@@ -6,7 +6,7 @@
 | 主题 | |
 | 当前最优方向 | |
 | 需要用户拍板 | |
-| Handoff | |
+| 交接 | |
 
 ## 执行配置
 | 项 | 内容 |
@@ -44,7 +44,7 @@
 
 版本依赖关系：
 
-| 依赖 / 技术 | 当前 / 候选版本 | 关系类型 | 约束来源 | 影响 | Handoff |
+| 依赖 / 技术 | 当前 / 候选版本 | 关系类型 | 约束来源 | 影响 | 交接 |
 | --- | --- | --- | --- | --- | --- |
 | | | direct / peer / runtime / lockfile / transitive / breaking / override | | | tech-design lock version / needs user dependency decision / needs spike / no action |
 

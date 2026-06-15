@@ -1,51 +1,91 @@
 ---
 name: decision-matrix
-description: Brainstorm package skill for scoring and selecting among brainstorm options. Use when there are multiple directions and the agent must compare value, cost, novelty, risk, feasibility, extensibility, confidence, and next-step fit without pretending recommendations are user approval.
+description: Brainstorm 包内的方案评估 skill。用于多个候选方向需要按价值、成本、新颖度、风险、落地性、可扩展性、证据置信度和下一步适配度排序，并形成 agent recommendation 但不替代用户确认。
 ---
 
-# Decision Matrix
+# 方案评估矩阵
 
-Use this skill after divergent options and critic review. It turns ideas into a transparent recommendation.
+本 skill 把候选方案从“想法列表”变成透明取舍。它可以给推荐，但不能把推荐写成用户已批准。
 
-## Default Criteria
+## 前置输入
 
-Score 1-5. Higher is better except cost and risk, which should be inverted in the total.
+- `发散方向池` 中进入收敛的候选。
+- `批判质疑` 的处理建议。
+- `场景模拟` 中影响推荐的风险。
+- `当前事实与研究证据` 的置信度。
+- 用户已确认的目标、非目标、依赖、体验方向和验收标准。
 
-| Criterion | Meaning |
+## 执行步骤
+
+1. 确认候选方案互斥或至少有明确差异；不互斥时先合并或拆分。
+2. 为每个方案填写价值、成本、风险、落地性、可扩展性和置信度。
+3. 成本和风险用“低分更好”会混乱，统一写成文字等级或显式说明评分方向。
+4. 不隐藏取舍：即使有总推荐，也要写“不选其他方案的原因”。
+5. 缺少证据时降低置信度，不直接判失败。
+6. 如果两项接近，推荐小实验、分阶段或用户单问，而不是强行拍板。
+
+## 默认评估维度
+
+| 维度 | 评分提示 |
 |---|---|
-| Value | How much it solves the real problem |
-| Cost | Implementation and coordination effort |
-| Novelty | Differentiation or new insight |
-| Risk | Security, complexity, product, or adoption risk |
-| Feasibility | Can it be done soon with available context |
-| Extensibility | Can it evolve without rework |
-| Confidence | Strength of evidence and assumptions |
+| 用户价值 | 对真实问题的解决力度，而不是功能数量 |
+| 实现成本 | 工程、设计、沟通、迁移、维护成本 |
+| 新颖度 | 是否带来差异化或新洞察 |
+| 风险 | 安全、隐私、复杂度、采纳、合规、依赖风险 |
+| 落地性 | 当前上下文和周期内是否能推进 |
+| 可扩展性 | 后续是否能演进，不制造大返工 |
+| 证据置信度 | confirmed / likely / unclear |
+| 下一步适配度 | 是否适合进入 PRD、requirements、UI、tech design 或 research |
 
-## Output
+## 输出格式
 
 ```md
 ## 方案评估矩阵
 
-| 方案 | 价值 | 成本 | 新颖度 | 风险 | 落地性 | 可扩展性 | 置信度 | 推荐 |
-|---|---:|---:|---:|---:|---:|---:|---:|---|
-| | | | | | | | | adopt / test / defer / reject |
+| 方案 | 用户价值 | 实现成本 | 新颖度 | 风险 | 落地性 | 可扩展性 | 置信度 | 推荐 |
+|---|---:|---:|---:|---:|---:|---:|---|---|
+| | 1-5 | 1-5 | 1-5 | 1-5 | 1-5 | 1-5 | confirmed / likely / unclear | adopt / test / defer / reject |
 ```
-
-## Recommendation
 
 ```md
 ## 推荐方案
 
-- 推荐：
+- Agent recommendation：
 - 为什么现在选它：
 - 不选其他方案的原因：
 - 需要用户确认：
 - 下一步验证：
+- 回退点：
 ```
 
-## Rules
+## 推荐标签
 
-- Do not hide tradeoffs behind a single total score.
-- Mark missing evidence as lower confidence, not as failure.
-- User confirmation is separate from agent recommendation.
-- If two options are close, recommend a small experiment or split path.
+| 标签 | 使用条件 |
+|---|---|
+| `adopt` | 价值高、风险可控、证据足以进入下游阶段 |
+| `test` | 方向可能好，但需要 spike、原型、用户确认或事实补证 |
+| `defer` | 有价值但不是当前 MVP，适合后续版本 |
+| `reject` | 明显越界、成本过高、风险不可接受或不符合目标 |
+
+## 质量门槛
+
+- 至少比较 2 个真实不同方案；只有 1 个方案时写明为什么没有可比项。
+- 推荐必须附带放弃代价。
+- 用户确认和 agent recommendation 必须分开。
+- 置信度为 `unclear` 的方案不能直接 `adopt`，只能 `test` / `defer` / `research`。
+- 不用单一总分掩盖高风险项。
+
+## 常见失败
+
+| 失败 | 表现 | 修正 |
+|---|---|---|
+| 分数伪客观 | 只给总分不解释 | 每个关键差异写一句理由 |
+| 忽略证据 | `unclear` 仍推荐 adopt | 降为 test 或 research |
+| 方案不可比 | 一个是产品方向，一个是实现细节 | 先统一比较层级 |
+| 推荐变批准 | “已选 A” | 改成 “Agent recommendation: A，需用户确认” |
+
+## 交接
+
+- 推荐进入 `execution-planning`。
+- 需要事实补强的项进入 `research-source`。
+- 需要用户拍板的项进入 Socratic 单问。

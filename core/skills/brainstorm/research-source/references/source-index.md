@@ -1,4 +1,4 @@
-# Source Index
+# 来源索引
 
 本文件按问题类型列出 `research-source` 的首选来源。执行时必须访问当前来源并记录日期；本文件只定义“去哪查”，不提供事实结论。
 
@@ -12,11 +12,11 @@
 | 依赖兼容性 / peer deps | 包的 package.json、npm package metadata、CHANGELOG.md、release notes、deps.dev | 版本锁定风险最常在 peer deps、breaking changes、transitive deps 和 migration guide |
 | Runtime / engine 约束 | package.json `engines`、official runtime docs、CI matrix、release notes | 查 Node / Python / Go / Java / browser / OS / native binding 要求，判断部署或本地运行是否冲突 |
 | Lockfile / 实际安装树 | package-lock.json、pnpm-lock.yaml、yarn.lock、bun.lock、poetry.lock、uv.lock、go.sum、Cargo.lock | 有项目上下文时优先读 lockfile；manifest 只说明期望，lockfile 才说明实际安装树 |
-| Override / resolution 风险 | npm overrides、pnpm overrides、Yarn resolutions、package manager docs | 需要强制 transitive version 时只记录风险和 handoff，不在 brainstorm 阶段直接决策 |
+| Override / resolution 风险 | npm overrides、pnpm overrides、Yarn resolutions、package manager docs | 需要强制 transitive version 时只记录风险和交接，不在 brainstorm 阶段直接决策 |
 | 安全漏洞 | osv.dev、deps.dev、GitHub Security Advisories、nvd.nist.gov、snyk.io/vuln | 引入新依赖或升级关键包前查一遍；开源包优先看 OSV / deps.dev 的精确版本映射，再交叉检查 NVD / GitHub / Snyk |
 | 性能基准 | Web Almanac、web.dev、MDN、Chrome Developer Blog | 优先使用有数据、日期和测试条件的来源 |
 
-## Dependency / Package Manager 官方入口
+## 依赖 / 包管理器官方入口
 
 | 生态 | 优先来源 | 说明 |
 |---|---|---|

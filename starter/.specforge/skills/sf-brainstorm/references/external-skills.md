@@ -31,7 +31,7 @@
 | 方案需要放进真实使用流程、失败路径或边界场景里检验 | `scenario-simulation` | `SKILL.md` | 关键场景、用户动作、系统响应、失败点、补救策略 | `brainstorm.md#场景模拟` |
 | 推荐前需要反驳自己、压缩范围或暴露假设 | `critic-review` | `SKILL.md` | 反方问题、最弱假设、删减项、风险和验证点 | `brainstorm.md#批判质疑` |
 | 需要排序、推荐、授权默认或向用户解释取舍 | `decision-matrix` | `SKILL.md` | 评估维度、评分、推荐、放弃代价、置信度 | `brainstorm.md#方案评估矩阵`、`#推荐方案` |
-| 输出容易变成自由散文，需要固定成可交接格式 | `output-shaping` | `SKILL.md` | 输出类型、最小必填 section、读者、handoff 边界 | `brainstorm.md` |
+| 输出容易变成自由散文，需要固定成可交接格式 | `output-shaping` | `SKILL.md` | 输出类型、最小必填 section、读者、交接边界 | `brainstorm.md` |
 | 方向已收敛，需要转给 PRD / requirements / UI / tech / research / verification | `execution-planning` | `SKILL.md` | 下一步路由、行动项、owner、输入产物、验证入口 | `brainstorm.md#下一步行动`、`#下一步路由` |
 
 ## 外部参考
@@ -43,7 +43,7 @@
 | 官网、landing、portfolio、品牌页或 redesign 的视觉方向容易模板化 | `design-taste-frontend` | `SKILL.md`；只在需要时读取其 references | Brand Surface 的视觉气质、版式候选、动效边界、反模板化风险 | `brainstorm.md#UI / 体验方向确认`、后续 `ui-design.md#Visual Style Brief` |
 | 管理端采用 shadcn/ui，但需要判断组件封装、registry 候选或避免基础组件拼装 | shadcn 官方 skill / shadcn registry reference | 官方 shadcn skill、`npx shadcn@latest docs/search/view` 输出；按需参考 `shadcn-component-discovery` / `shadcn-component-review` | primitive 选择、registry 候选、Admin Component Contract、组件审查点 | `brainstorm.md#技术路线确认`、`#UI / 体验方向确认`、后续 `ui-design.md` 和 `technical_design.md` 输入 |
 | 用户故事、验收口径、边界条件会影响方案取舍 | `user-stories` | `SKILL.md` | 用户故事候选、验收问题、边界/异常问题 | `brainstorm.md#问题地图`、后续 `requirements.md` 输入 |
-| PRD 信息已经足够，需要判断是否进入 PRD 合成 | `create-prd` | `SKILL.md` | PRD handoff 检查、非目标、目标用户、价值主张、release 分期覆盖缺口 | `prd.md` 输入，不直接写 brainstorm 结论 |
+| PRD 信息已经足够，需要判断是否进入 PRD 合成 | `create-prd` | `SKILL.md` | PRD 交接检查、非目标、目标用户、价值主张、release 分期覆盖缺口 | `prd.md` 输入，不直接写 brainstorm 结论 |
 | 验证路径、浏览器流程、角色操作是否可证明 | `playwright-skill` | `SKILL.md`；需要脚本细节时读 `API_REFERENCE.md` | E2E 验证问题、用户路径、证据要求 | 后续 `test-cases.md` / `verification-report.md` 输入 |
 
 ## 升级 sf-discovery research 的具体条件
