@@ -1,52 +1,47 @@
 # SpecForge Design Contract Handoff
 
-Pencil 原型只能消费已确认的 SpecForge 设计契约，不能自己重新决定审美、布局模式或动效层级。
+Pencil 只消费已确认的 SpecForge UI 设计结果，不在画布阶段重新做设计决策。
 
-## 输入检查
+## 输入
 
-开始 Pencil 前必须确认：
-
-| 输入 | 必须存在 | 缺失时 |
+| 输入 | 用途 | 缺失时 |
 | --- | --- | --- |
-| Design Contract JSON | `design_mode`、`color_system`、`foundation_system`、`motion` | 回到 `sf-ui-design` |
-| Composition Recipe | Typography、Spacing、Radius / Shadow、Motion、Signature | 回到 design-system 补齐 |
-| Product UI Layout Audit | Product UI 时必填 | 不能生成工作台 / Dashboard |
-| Component Contract | 复杂或复用组件必填 | 不能直接拼 primitive |
-| Visual QA Detectors | high severity issue 有结果 | 不能交付截图 |
+| `01-spec/ui-design.md#Design Contract Summary` | 获取 design mode、token 来源、组件策略、motion 边界和 verification hooks | 回到 `sf-ui-design` |
+| Design Contract JSON | 机器读取变量、组件、布局和 QA 约束 | 记录 blocked |
+| Component Contract | 判断是否创建 reusable component / ref / slot | 不直接拼 primitive |
+| Visual QA / Product UI Layout Audit | 作为截图和 layout snapshot 的验收依据 | 不在 Pencil 内补写规则 |
+| 用户确认 / 授权默认 | 判断能否执行原型 | pending 时停止 |
 
-## Handoff Matrix
+## Pencil 转译动作
 
-| Design Contract 字段 | Pencil 动作 | 验证 |
+| Contract 内容 | Pencil 动作 | 证据 |
 | --- | --- | --- |
-| `design_mode` | 决定 artboard 类型和密度 | 截图符合模式 |
-| `color_system` | 写入 color variables | 无散落 hex |
-| `foundation_system.typography` | 写入字体、字号、行高、数字变量 | 标题 / 正文 / 数字层级一致 |
-| `foundation_system.spacing` | 写入 page padding、gap、control height、row height | 布局遵循密度 |
-| `foundation_system.radius_shadow` | 写入 radius、border、shadow variables | 材质层级一致 |
-| `foundation_system.motion` | 标注 motion token 和原型说明 | 不把动效硬编码进实现 |
-| `layout` | 生成导航、滚动区、primary work surface | 首屏有主任务 |
-| `product_ui_quality` | 工作台 / Dashboard 专项 QA | 无空壳后台 |
-| `anti_slop_rules` | 转成截图审查项 | high issue 已处理 |
+| `scan_manifest` | 记录本次读了哪些 UI artifact | Handoff 表 |
+| `color_system` / `foundation_system` | 同步为 Pencil variables | `get_variables` / `set_variables` 结果 |
+| `component_strategy` / component contracts | 查找 reusable components，必要时创建 component / ref / slot | `batch_get` 结果 |
+| `layout` / page map | 创建或更新目标 artboard / frame | `batch_design` 操作摘要 |
+| `visual_qa` / verification hooks | 转成截图、layout snapshot 和导出检查 | `get_screenshot`、`snapshot_layout` |
 
-## Pencil Handoff Output
+## 输出格式
 
 ```md
 Pencil Handoff:
 | 项 | 结果 | 证据 |
 | --- | --- | --- |
-| Contract source | 01-spec/ui-design.md#Design Contract Summary | |
-| Token sync | complete / partial / blocked | |
+| Contract source | | |
+| Target .pen | | |
+| Variables sync | complete / partial / blocked | |
 | Component reuse | reused / created / N/A | |
-| Product UI layout | pass / issue / N/A | |
-| Screenshot export | path | |
-| Layout check | pass / issue | |
+| Screenshot export | path / blocked | |
+| Layout snapshot | pass / issue / blocked | |
 | Persistence check | pass / blocked | |
+| Remaining risk | | |
 ```
 
-## Stop Conditions
+## 停止条件
 
 - Design Contract JSON 不可解析。
-- `foundation_system` 缺失。
-- `design_mode` 是 Product UI，但没有 Product UI Layout Audit。
-- Pencil variables 只能覆盖颜色，无法覆盖字体 / 空间 / 圆角 / 阴影 / 动效，且没有补救计划。
-- `.pen` 保存后重读为空。
+- 用户确认状态是 `pending`。
+- 目标 `.pen` 无法打开或保存。
+- Design Contract 要求的关键组件 / 状态 / 页面不存在，且没有授权创建。
+- Pencil 执行会改变已确认的设计方向，而不是落地它。

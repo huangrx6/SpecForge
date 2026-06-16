@@ -24,11 +24,11 @@
 | Stage | design-system role | Must produce / consume | Stop condition |
 | --- | --- | --- | --- |
 | `sf-brainstorm` | 给 2-3 个互斥审美方向、体验取舍和样例板 | Aesthetic options、sample board、人工确认点 | 用户未确认会影响气质或 IA 的方向 |
-| `sf-ui-design` | 把选择的方向落成可审查的设计语言 | Design Contract Summary、Foundations Pack、Component Contract、Page Patterns、Motion Boundary | 没有 signature、token、组件状态或 visual QA |
-| `sf-tech-design` | 把设计语言转成工程架构 | Component Architecture、shadcn-vue registry / local wrapper、token delivery、motion dependency、test surface | UI 有影响但未决定组件库、wrapper、token 或动效实现 |
-| `sf-tasking` | 把 design contract 拆成任务边界 | Token task、wrapper task、page task、state / a11y task、visual verification task | 任务只写页面文件，不覆盖组件契约和状态验证 |
-| `sf-implement` | 按 contract 实现，不重新设计 | Read order、semantic tokens、project wrappers、motion adapter、state matrix evidence | 硬编码 token、直接拼 primitive、重新选择视觉风格 |
-| `sf-verify` | 检查设计实现一致性 | Screenshot / DOM / a11y / responsive / motion evidence | 只验证接口或构建，不验证 UI 状态和视觉回归 |
+| `sf-ui-design` | 把选择的方向落成可审查的设计语言 | Design Contract Summary、Reference Selection、Reference Scan Manifest、Extracted Reference Patterns、Foundations Pack、Component Contract、Page Patterns、Motion Boundary | 没有 signature、token、组件状态、reference boundary 或 visual QA |
+| `sf-tech-design` | 把设计语言和参考来源转成工程架构 | 消费 `reference_selection`，判断哪些来源只是 inspiration，哪些可以转成 component wrapper / registry / implementation reference；产出 Component Architecture、shadcn-vue registry / local wrapper、token delivery、motion dependency、test surface | UI 有影响但未决定组件库、wrapper、token、动效实现或 reference reuse boundary |
+| `sf-tasking` | 把 design contract 和外部参考转译拆成任务边界 | Token task、wrapper task、page task、state task、a11y task、visual verification task；外部参考只能拆成 wrapper / page / state / visual verification task | 任务写成“照某模板实现”，或只写页面文件，不覆盖组件契约和状态验证 |
+| `sf-implement` | 按 contract 实现，不重新设计、不复制外部来源 | Read order、semantic tokens、project wrappers、motion adapter、state matrix evidence；禁止直接复制未知 license、付费模板或 React shadcn 代码到 Vue | 硬编码 token、直接拼 primitive、重新选择视觉风格、复制外部代码 / 资产 |
+| `sf-verify` | 检查设计实现一致性和 reference boundary | Screenshot / DOM / a11y / responsive / motion evidence；检查 reuse boundary、state matrix、visual QA、token adherence 和是否违反 forbidden | 只验证接口或构建，不验证 UI 状态、视觉回归或 reference forbidden |
 | `sf-wiki` | 沉淀长期可复用规则 | `.specforge/wiki/design-system.md` 或 N/A reason | 稳定 token / component 只留在单个 work item |
 
 ## Design Contract Summary
@@ -37,7 +37,15 @@
 
 ```md
 Design Contract Summary:
+- Reference selection:
+  - UI type:
+  - Selected needs:
+  - Source routing:
+  - Reuse boundary:
+  - Offline behavior:
+  - Human confirmation:
 - Scan manifest:
+  - Profile:
   - Scanned files:
   - Selected data:
   - Skipped with reason:
@@ -85,8 +93,39 @@ Design Contract Summary:
 
 ```json
 {
+  "reference_selection": {
+    "ui_type": ["dashboard", "admin", "data-table"],
+    "stack": ["vue", "shadcn-vue", "tailwind"],
+    "selected_needs": ["page-structure", "block-composition", "domestic-ui-case"],
+    "borrow_strength": "moderate",
+    "admin_modules": ["app-shell", "dashboard", "data-table"],
+    "visual_direction": ["domestic-internet-product", "clean-professional"],
+    "source_routing": [
+      {
+        "selected_need": "page-structure",
+        "source_pool": ["shadcn-vue", "vue-vben-admin", "soybean-admin"],
+        "use_for": ["app shell anatomy", "dashboard layout", "state coverage"],
+        "reuse_mode": "page-pattern-only",
+        "required_extraction": ["layout anatomy", "component composition", "state coverage"],
+        "avoid": ["template source copy", "theme clone", "unknown license assets"],
+        "offline_fallback": "Use local page patterns, component-system and visual-qa-detectors"
+      }
+    ],
+    "reuse_boundary": [
+      "Extract layout anatomy, component anatomy and state coverage only",
+      "Translate React shadcn resources into shadcn-vue component contract / project wrapper before implementation",
+      "Do not copy code, screenshots, paid template assets, illustrations or brand copy"
+    ],
+    "offline_behavior": "If sources are offline, use data/reference-source-catalog.csv and local design-system references; record fallback in Reference Scan Manifest",
+    "human_confirmation": {
+      "status": "defaulted",
+      "reason": "User requested external references; Product UI uses moderate borrow strength as reversible default"
+    },
+    "forbidden": ["Do not copy React code into Vue", "Do not apply Awwwards motion to Product UI tables"]
+  },
   "scan_manifest": {
-    "workflow": ["mode", "source", "font", "color", "composition", "advanced_interaction", "component", "qa", "calibration", "output"],
+    "profile": "product-page",
+    "workflow": ["mode", "reference", "source", "font", "color", "composition", "advanced_interaction", "component", "qa", "calibration", "output"],
     "scanned_files": [
       {
         "path": "references/design-system-orchestration.md",
@@ -123,10 +162,81 @@ Design Contract Summary:
       "motion_recipe_id": "",
       "advanced_interaction_recipe_id": "none-product-ui"
     },
+    "selection_rationale": {
+      "palette": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      },
+      "font_source": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely",
+        "license": ""
+      },
+      "font_pairing": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      },
+      "type_scale": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      },
+      "spacing_density": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      },
+      "radius_shadow": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      },
+      "motion": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      },
+      "advanced_interaction": {
+        "id": "none-product-ui",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      }
+    },
     "skipped_with_reason": []
   },
   "design_mode": "Product UI",
   "aesthetic_direction": "",
+  "human_confirmation": {
+    "required": true,
+    "reason": "Aesthetic direction changes information architecture or first viewport task hierarchy",
+    "options_presented": [
+      "minimal editorial",
+      "dense command center",
+      "warm operational"
+    ],
+    "selected": "dense command center",
+    "status": "confirmed",
+    "default_reversibility": "Safe to change palette and spacing without schema, permission or data migration"
+  },
   "signature": {
     "type": "structural",
     "description": ""
@@ -209,6 +319,28 @@ Design Contract Summary:
     }
   },
   "token_source": "existing",
+  "token_delivery_hint": {
+    "css_variables": [
+      "--sf-bg",
+      "--sf-surface",
+      "--sf-text",
+      "--sf-primary",
+      "--sf-radius-card",
+      "--sf-motion-fast"
+    ],
+    "tailwind_mapping": {
+      "colors.background": "var(--sf-bg)",
+      "colors.primary": "var(--sf-primary)",
+      "borderRadius.card": "var(--sf-radius-card)"
+    },
+    "pencil_variables": [
+      "color.background",
+      "color.surface",
+      "type.body",
+      "space.3"
+    ],
+    "notes": "Implementation hint only; final token delivery is decided by sf-tech-design."
+  },
   "component_strategy": "primitive + wrapper",
   "shadcn_vue": {
     "primitive_layer": [],
@@ -236,6 +368,21 @@ Design Contract Summary:
     "layer_3_gsap": [],
     "reduced_motion": ""
   },
+  "visual_qa": [
+    {
+      "detector": "Empty dashboard skeleton",
+      "result": "ok",
+      "severity": "high",
+      "evidence": {
+        "artifact": "01-spec/ui-mockup-export/dashboard.png",
+        "viewport": "1440x900",
+        "region": "first viewport"
+      },
+      "fix": "N/A - primary work surface is present",
+      "status": "not-applicable",
+      "owner": "sf-ui-design"
+    }
+  ],
   "visual_calibration": {
     "feedback_source": "",
     "diagnosis": [],
@@ -249,6 +396,12 @@ Design Contract Summary:
 ```
 
 JSON 字段必须符合 `contracts/design-contract.schema.json`。如果某字段不适用，填空数组或明确 N/A 文本，不要省略字段。
+`human_confirmation.status` 只有用户明确选择时才能写 `confirmed`；低风险可逆默认写 `defaulted`，需要确认但未确认写 `pending`，不能把 Agent 推荐写成 confirmed。
+`scan_manifest.selected_data` 只记录 id；`scan_manifest.selection_rationale` 必须解释为什么选、拒绝了什么、替换风险和置信度，且每个 rationale id 必须与 selected_data 对齐。
+`reference_selection` 记录用户选择题、来源路由、复用边界、离线行为和禁止项；扫描记录写入 Reference Scan Manifest。它不是 design mode，也不能把网站名当风格名。
+`token_delivery_hint` 只是 design-system 给 `sf-tech-design` 的实现映射提示，不是最终工程决策；technical design 必须确认实际 CSS variables、Tailwind theme 和 Pencil variables 落点。
+`visual_qa` 是 sf-verify 的机器可读 gate 来源；high severity issue 只能是 `fixed` 或 `accepted`，不能以 `pending` / `blocked` 进入 verify。
+`motion.layer_3_gsap` 不使用时写空数组；一旦使用，数组项必须包含 `effect`、`fallback` 和 `verification`。
 
 `design_mode` 只能是 `Product UI`、`Brand Surface`、`Hybrid`、`Avatar-IP` 或 `Empty State`。不要写 `Avatar-IP / Empty State`；两者同时适用时，用 `scope: "both"` 表达组合。
 
@@ -257,6 +410,11 @@ JSON 字段必须符合 `contracts/design-contract.schema.json`。如果某字�
 前端相关 technical design 必须回答：
 
 - Token delivery：CSS variables、Tailwind theme、组件局部变量还是现有项目 token。
+- Reference source decision：哪些来源用于 component contract，哪些用于 page pattern，哪些只用于 visual inspiration / UX method。
+- Reference selection：本次参考需求、来源路由、抽取 pattern、复用边界、禁止复制项、离线 fallback；React shadcn 来源如何转成 shadcn-vue contract / project wrapper。
+- Vue translation：React shadcn block 如何转成 shadcn-vue primitive、project wrapper、props、events、slots、state owner。
+- License / reuse boundary：未知 license、付费资源、商业素材、截图、图片、文案必须禁止复制。
+- Offline fallback：外部来源不可访问时，是否使用本地 source catalog。
 - Color system：palette_id、aesthetic_direction、semantic token mapping、usage rules、contrast / dark mode flags、source_url 和 license_note。
 - Foundation system：typography scale、spacing density、radius / shadow recipe、motion recipe 和 GSAP signature；这些必须映射到 CSS variables / Tailwind theme / Pencil variables。
 - Visual calibration：如果存在用户反馈、截图诊断或 palette delta，implement 必须以校准后的 token / surface / motion 为准；不能回退到初版 palette 或默认 cyber / AI neon。
@@ -280,6 +438,11 @@ JSON 字段必须符合 `contracts/design-contract.schema.json`。如果某字�
 - 页面不能直接堆 primitive；有权限、加载、错误、空态、远程数据、审计或批量操作时必须使用 project wrapper。
 - 动效只能服务状态、焦点、空间关系或品牌 signature；Product UI 禁止无任务价值的背景特效。
 - Vue Bits / Motion / GSAP 都是 optional implementation source；新增依赖必须在 technical design 中确认。
+- 不要把外部模板当实现规格；只按 Design Contract 和 component contract 实现。
+- 不允许直接复制未知 license、付费模板或 React shadcn 代码到 Vue。
+- React-only shadcn 资源必须通过 Vue translation contract。
+- Inspiration gallery 不进入代码实现。
+- 国内设计案例只影响 visual completion、information density、UX / IA，不复制资产。
 - 若实现与 Pencil 截图或 design contract 冲突，停止并回到 `sf-ui-design` 或 `sf-tech-design`，不要在代码里临场改风格。
 
 ## Verification checklist
@@ -292,6 +455,14 @@ JSON 字段必须符合 `contracts/design-contract.schema.json`。如果某字�
 | Component contract files | `01-spec/design/components/*.contract.md` 存在或 N/A 理由 |
 | State matrix | default、loading、empty、error、permission、success 截图或 DOM 证据 |
 | Product UI layout | primary work surface、KPI actionability、content budget、right rail purpose、rejected filler |
+| Reference selection | 外部参考被使用时存在 Reference Selection |
+| Source routing | source routing 与 selected needs 一致 |
+| Reference boundary | 外部来源只抽 pattern / anatomy / source basis；无代码、图片、截图、文案、付费模板复制 |
+| Reuse boundary | reuse boundary 未被违反 |
+| Shadcn adaptation | React shadcn 来源已转 shadcn-vue primitive / project wrapper / page pattern |
+| React-to-Vue translation | React-to-Vue translation contract 存在 |
+| License safety | 无复制付费 / 未知 license 资产 |
+| Product UI motion safety | Product UI 未被 Brand Surface motion 污染 |
 | Motion boundary | 每个动效有 duration token / easing token / reduced motion 覆盖 / 无 layout 属性动效 |
 | Motion intent | 每个动效能说明：反馈 / 空间关系 / 进度 / 品牌 signature |
 | Accessibility | keyboard path、focus、ARIA、contrast、touch target |

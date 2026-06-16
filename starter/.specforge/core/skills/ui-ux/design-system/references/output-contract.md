@@ -9,6 +9,16 @@
 
 `design_mode` 只允许写 `Product UI`、`Brand Surface`、`Hybrid`、`Avatar-IP`、`Empty State`。不要写组合值；头像/IP 与空态同时适用时，在 JSON 中增加 `scope: "both"`。
 
+如果用户有外部参考诉求，或 Agent 主动使用外部设计来源，必须额外输出 `Reference Selection`、`Reference Source Routing`、`Reference Scan Manifest`、`Reuse Boundary`、`Extracted Reference Patterns` 和 `Design Contract JSON.reference_selection`。外部来源只提供 pattern、anatomy、state coverage、visual completion、motion boundary、UX / IA 方法、source basis 和 anti-reference，不提供可复制资产。
+
+Reference 输出规则：
+
+- 如果用户未提供外部参考，写 `Reference Selection: N/A`。
+- 如果用户提供了外部参考，或说“多看一些好网站 / 模板 / 案例”，必须输出 `Reference Selection`。
+- 外部来源不可访问时，不允许省略，必须写入 `Reference Scan Manifest` 的 fallback。
+- React shadcn 来源必须写明是否需要 Vue translation。
+- 国内设计社区来源必须写明具体参考类型：作品 / 文章 / 素材 / 设计团队 / 课程 / 行业案例 / UI 页面；不能写“站酷气质”。
+
 ## Compact
 
 用于小 UI 改动或局部组件：
@@ -30,7 +40,33 @@ Foundations delta:
 - Density:
 - Motion:
 
+Reference Selection:
+- UI type:
+- Stack:
+- Selected needs:
+- Borrow strength:
+- Admin modules:
+- Visual direction:
+- Source routing:
+- Reuse boundary:
+- Offline behavior:
+- Human confirmation:
+
+Reference Scan Manifest:
+| Source | Type | Access | Used for | Status | Fallback / reason |
+|---|---|---|---|---|---|
+| | | online / offline / catalog | | scanned / fallback / skipped | |
+
+Extracted Reference Patterns:
+| Source | Pattern | Adopt | Adapt | Avoid |
+|---|---|---|---|---|
+| | | | | |
+
 Design Scan Manifest:
+| 项 | 内容 |
+| --- | --- |
+| Profile | local-component / product-page / brand-surface / visual-calibration / full-system |
+
 | 文件 | 用途 | 状态 | 结论 / 跳过理由 |
 | --- | --- | --- | --- |
 | references/design-system-orchestration.md | 设计流程编排 | scanned | |
@@ -71,8 +107,25 @@ Design Contract Summary:
 Design Contract JSON:
 ```json
 {
+  "reference_selection": {
+    "ui_type": [],
+    "stack": [],
+    "selected_needs": [],
+    "borrow_strength": "moderate",
+    "admin_modules": [],
+    "visual_direction": [],
+    "source_routing": [],
+    "reuse_boundary": [],
+    "offline_behavior": "",
+    "human_confirmation": {
+      "status": "defaulted",
+      "reason": ""
+    },
+    "forbidden": []
+  },
   "scan_manifest": {
-    "workflow": ["mode", "source", "font", "color", "composition", "advanced_interaction", "component", "qa", "calibration", "output"],
+    "profile": "product-page",
+    "workflow": ["reference", "mode", "source", "font", "color", "composition", "advanced_interaction", "component", "qa", "calibration", "output"],
     "scanned_files": [
       {
         "path": "references/design-system-orchestration.md",
@@ -109,10 +162,81 @@ Design Contract JSON:
       "motion_recipe_id": "",
       "advanced_interaction_recipe_id": "none-product-ui"
     },
+    "selection_rationale": {
+      "palette": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      },
+      "font_source": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely",
+        "license": ""
+      },
+      "font_pairing": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      },
+      "type_scale": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      },
+      "spacing_density": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      },
+      "radius_shadow": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      },
+      "motion": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      },
+      "advanced_interaction": {
+        "id": "none-product-ui",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      }
+    },
     "skipped_with_reason": []
   },
   "design_mode": "Product UI",
   "aesthetic_direction": "",
+  "human_confirmation": {
+    "required": true,
+    "reason": "Aesthetic direction changes information architecture or first viewport task hierarchy",
+    "options_presented": [
+      "minimal editorial",
+      "dense command center",
+      "warm operational"
+    ],
+    "selected": "dense command center",
+    "status": "confirmed",
+    "default_reversibility": "Safe to change palette and spacing without schema, permission or data migration"
+  },
   "signature": {
     "type": "structural",
     "description": ""
@@ -195,6 +319,28 @@ Design Contract JSON:
     }
   },
   "token_source": "existing",
+  "token_delivery_hint": {
+    "css_variables": [
+      "--sf-bg",
+      "--sf-surface",
+      "--sf-text",
+      "--sf-primary",
+      "--sf-radius-card",
+      "--sf-motion-fast"
+    ],
+    "tailwind_mapping": {
+      "colors.background": "var(--sf-bg)",
+      "colors.primary": "var(--sf-primary)",
+      "borderRadius.card": "var(--sf-radius-card)"
+    },
+    "pencil_variables": [
+      "color.background",
+      "color.surface",
+      "type.body",
+      "space.3"
+    ],
+    "notes": "Implementation hint only; final token delivery is decided by sf-tech-design."
+  },
   "component_strategy": "primitive + wrapper",
   "shadcn_vue": {
     "primitive_layer": [],
@@ -206,6 +352,10 @@ Design Contract JSON:
     "primary_work_surface": "",
     "scroll_regions": [],
     "responsive_strategy": ""
+  },
+  "state_matrix": {
+    "required_states": [],
+    "owner": ""
   },
   "product_ui_quality": {
     "primary_user": "",
@@ -222,6 +372,21 @@ Design Contract JSON:
     "layer_3_gsap": [],
     "reduced_motion": ""
   },
+  "visual_qa": [
+    {
+      "detector": "Empty dashboard skeleton",
+      "result": "ok",
+      "severity": "high",
+      "evidence": {
+        "artifact": "01-spec/ui-mockup-export/dashboard.png",
+        "viewport": "1440x900",
+        "region": "first viewport"
+      },
+      "fix": "N/A - primary work surface is present",
+      "status": "not-applicable",
+      "owner": "sf-ui-design"
+    }
+  ],
   "visual_calibration": {
     "feedback_source": "",
     "diagnosis": [],
@@ -233,6 +398,8 @@ Design Contract JSON:
   "anti_slop_rules": []
 }
 ```
+
+`motion.layer_3_gsap` 不使用时写空数组；一旦使用，数组项必须写成 `{ "effect": "", "fallback": "", "verification": "" }`，说明 GSAP 效果、降级策略和验证方式。
 
 Component contract:
 - Component:
@@ -276,11 +443,37 @@ UI Direction Options:
 - Recommended:
 - Human confirmation:
 
-Design Reference Extraction:
-- Source:
-- Adopt:
-- Adapt:
-- Avoid:
+Reference Selection:
+- UI type:
+- Stack:
+- Selected needs:
+- Borrow strength:
+- Admin modules:
+- Visual direction:
+- Source routing:
+- Reuse boundary:
+- Offline behavior:
+- Human confirmation:
+
+Reference Source Routing:
+| 选择需求 | 路由来源 | 为什么 | 抽取内容 | 不使用内容 | 置信度 |
+| --- | --- | --- | --- | --- | --- |
+| | | | | | |
+
+Reference Scan Manifest:
+| Source | Type | Access | Used for | Status | Fallback / reason |
+|---|---|---|---|---|---|
+| | | online / offline / catalog | | scanned / fallback / skipped | |
+
+Reuse Boundary:
+| 可借鉴 | 必须转换 | 禁止复制 |
+| --- | --- | --- |
+| layout anatomy, state coverage | React shadcn -> shadcn-vue contract | code, images, screenshots, paid template assets |
+
+Extracted Reference Patterns:
+| Source | Pattern | Adopt | Adapt | Avoid |
+|---|---|---|---|---|
+| | | | | |
 
 Foundations pack:
 - Color system:
@@ -333,6 +526,12 @@ Palette Delta (when calibrated):
 | | | | |
 
 Design Contract Summary:
+- Reference selection:
+  - UI type:
+  - Selected needs:
+  - Borrow strength:
+  - Routed sources:
+  - Reuse boundary:
 - Design mode:
 - Aesthetic direction:
 - Signature:
@@ -377,8 +576,25 @@ Design Contract Summary:
 Design Contract JSON:
 ```json
 {
+  "reference_selection": {
+    "ui_type": [],
+    "stack": [],
+    "selected_needs": [],
+    "borrow_strength": "moderate",
+    "admin_modules": [],
+    "visual_direction": [],
+    "source_routing": [],
+    "reuse_boundary": [],
+    "offline_behavior": "",
+    "human_confirmation": {
+      "status": "defaulted",
+      "reason": ""
+    },
+    "forbidden": []
+  },
   "scan_manifest": {
-    "workflow": ["mode", "source", "font", "color", "composition", "advanced_interaction", "component", "qa", "calibration", "output"],
+    "profile": "product-page",
+    "workflow": ["reference", "mode", "source", "font", "color", "composition", "advanced_interaction", "component", "qa", "calibration", "output"],
     "scanned_files": [
       {
         "path": "references/design-system-orchestration.md",
@@ -415,10 +631,81 @@ Design Contract JSON:
       "motion_recipe_id": "",
       "advanced_interaction_recipe_id": "none-product-ui"
     },
+    "selection_rationale": {
+      "palette": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      },
+      "font_source": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely",
+        "license": ""
+      },
+      "font_pairing": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      },
+      "type_scale": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      },
+      "spacing_density": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      },
+      "radius_shadow": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      },
+      "motion": {
+        "id": "",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      },
+      "advanced_interaction": {
+        "id": "none-product-ui",
+        "why": "",
+        "rejected": [""],
+        "risk": "",
+        "confidence": "likely"
+      }
+    },
     "skipped_with_reason": []
   },
   "design_mode": "Product UI",
   "aesthetic_direction": "",
+  "human_confirmation": {
+    "required": true,
+    "reason": "Aesthetic direction changes information architecture or first viewport task hierarchy",
+    "options_presented": [
+      "minimal editorial",
+      "dense command center",
+      "warm operational"
+    ],
+    "selected": "dense command center",
+    "status": "confirmed",
+    "default_reversibility": "Safe to change palette and spacing without schema, permission or data migration"
+  },
   "signature": {
     "type": "structural",
     "description": ""
@@ -501,6 +788,28 @@ Design Contract JSON:
     }
   },
   "token_source": "existing",
+  "token_delivery_hint": {
+    "css_variables": [
+      "--sf-bg",
+      "--sf-surface",
+      "--sf-text",
+      "--sf-primary",
+      "--sf-radius-card",
+      "--sf-motion-fast"
+    ],
+    "tailwind_mapping": {
+      "colors.background": "var(--sf-bg)",
+      "colors.primary": "var(--sf-primary)",
+      "borderRadius.card": "var(--sf-radius-card)"
+    },
+    "pencil_variables": [
+      "color.background",
+      "color.surface",
+      "type.body",
+      "space.3"
+    ],
+    "notes": "Implementation hint only; final token delivery is decided by sf-tech-design."
+  },
   "component_strategy": "primitive + wrapper",
   "shadcn_vue": {
     "primitive_layer": [],
@@ -532,6 +841,21 @@ Design Contract JSON:
     "layer_3_gsap": [],
     "reduced_motion": ""
   },
+  "visual_qa": [
+    {
+      "detector": "Empty dashboard skeleton",
+      "result": "ok",
+      "severity": "high",
+      "evidence": {
+        "artifact": "01-spec/ui-mockup-export/dashboard.png",
+        "viewport": "1440x900",
+        "region": "first viewport"
+      },
+      "fix": "N/A - primary work surface is present",
+      "status": "not-applicable",
+      "owner": "sf-ui-design"
+    }
+  ],
   "visual_calibration": {
     "feedback_source": "",
     "diagnosis": [
@@ -551,6 +875,8 @@ Design Contract JSON:
   "anti_slop_rules": []
 }
 ```
+
+`motion.layer_3_gsap` 不使用时写空数组；一旦使用，数组项必须写成 `{ "effect": "", "fallback": "", "verification": "" }`，说明 GSAP 效果、降级策略和验证方式。
 
 Component contract:
 - Project component:
@@ -593,3 +919,27 @@ Taste review:
 - 在 Standard 之上补充 typography scale table、color role table、motion choreography、responsive artboards、Pencil sample board、visual QA evidence。
 - 如果后续进入 technical design / implementation，还要补充 registry boundary、component contract matrix、state ownership、token delivery 和 visual verification plan。
 - 复杂或复用组件必须输出 `01-spec/design/components/<component-name>.contract.md`，使用 `contracts/component-contract.template.md`。
+
+````md
+Reference Selection:
+- UI type:
+- Stack:
+- Selected needs:
+- Borrow strength:
+- Admin modules:
+- Visual direction:
+- Source routing:
+- Reuse boundary:
+- Offline behavior:
+- Human confirmation:
+
+Reference Scan Manifest:
+| Source | Type | Access | Used for | Status | Fallback / reason |
+|---|---|---|---|---|---|
+| | | online / offline / catalog | | scanned / fallback / skipped | |
+
+Extracted Reference Patterns:
+| Source | Pattern | Adopt | Adapt | Avoid |
+|---|---|---|---|---|
+| | | | | |
+````

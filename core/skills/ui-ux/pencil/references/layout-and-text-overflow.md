@@ -1,148 +1,48 @@
-# Layout and Text Overflow
+# Layout And Text Overflow
 
-## Why This Matters
+本文件只定义 Pencil 画布层面的布局检查和修复动作，不定义 spacing scale、断点体系或 Product UI 页面规则。
 
-Text and content overflowing outside its parent container or the artboard is one of the most common and visible design defects. It produces:
+## 构建原则
 
-- Unreadable, clipped text
-- Broken layouts on mobile screens
-- Code that requires manual overflow fixes
-- An unprofessional, broken appearance
+- 优先用 `.pen` 的 layout 属性组织节点：`layout: "vertical"` / `layout: "horizontal"`。
+- 对需要自适应的子节点使用 `width: "fill_container"`、`height: "fill_container"` 或 `fit_content`。
+- 文本节点必须有明确宽度或位于可约束容器内。
+- 长文案、中文标题、按钮文字、表格字段必须用截图验证是否截断。
+- 不确定布局是否安全时，先小范围 section 构建，再截图和 snapshot。
 
-This is especially critical for mobile designs where the artboard is typically only 375-393px wide.
+## 检查工具
 
-## Prevention Strategy
-
-### For Text Elements
-
-1. **Always set text width to fill its container**:
-   ```javascript
-   text=I(container, { type: "text", content: "Long text...", width: "fill_container" })
-   ```
-
-2. **Use appropriate text properties**:
-   - Set `maxLines` for text that should truncate (e.g., card titles, list items)
-   - Long paragraphs should wrap naturally within their container
-   - Headings that are too long should either wrap or be truncated with ellipsis
-
-3. **Never use fixed pixel widths wider than the parent** on text elements
-
-### For Container Frames
-
-1. **Use auto-layout** (`layout: "vertical"` or `layout: "horizontal"`) on parent frames so children flow naturally
-
-2. **Constrain children to parent width**:
-   ```javascript
-   child=I(parent, { type: "frame", width: "fill_container", layout: "vertical" })
-   ```
-
-3. **Set padding on parent frames** to prevent content from touching edges:
-   ```javascript
-   U("parentId", { padding: 16 })
-   // or per-side: paddingLeft, paddingRight, paddingTop, paddingBottom
-   ```
-
-4. **Use `gap` for spacing between children** instead of margin hacks:
-   ```javascript
-   U("parentId", { layout: "vertical", gap: 12 })
-   ```
-
-### For Mobile Screens (375-393px)
-
-Mobile layouts are the most prone to overflow. Extra care required:
-
-1. **Screen frame**: Set to exactly the target width (e.g., 375px)
-2. **All direct children**: Use `width: "fill_container"` with horizontal padding (16-20px)
-3. **Text**: Always `width: "fill_container"`, never a fixed width wider than ~335px (375 - 2*20 padding)
-4. **Images**: Constrain to container width or use `width: "fill_container"`
-5. **Horizontal scroll areas**: Only use intentionally (e.g., carousels), never by accident
-
-### For Nested Components
-
-When inserting a `ref` component instance:
-
-1. Set the instance width to `"fill_container"` if it should fill its parent:
-   ```javascript
-   card=I(container, { type: "ref", ref: "CardComponent", width: "fill_container" })
-   ```
-
-2. Verify the component's internal layout handles different widths correctly
-
-## Detection: Post-Build Verification
-
-After inserting content, always check for overflow:
-
-```
-pencil_snapshot_layout({
-  filePath: "path/to/file.pen",
-  parentId: "screenId",
-  maxDepth: 3,
-  problemsOnly: true
-})
+```md
+snapshot_layout:
+- parentId: target section / artboard
+- maxDepth: 3-5
+- problemsOnly: true
 ```
 
-This returns only nodes with layout problems:
-- **Clipped elements**: Children extending beyond parent bounds
-- **Overlapping elements**: Siblings overlapping unintentionally
-- **Overflow**: Content wider or taller than its container
+关注：
 
-### Interpreting Results
+- clipped text
+- sibling overlap
+- children outside parent bounds
+- unintended empty frame
+- content wider than artboard
+- fixed-size node breaking parent layout
 
-If `problemsOnly` returns results, fix each issue:
+## 修复动作
 
-| Problem | Likely Fix |
-|---------|-----------|
-| Text clipped horizontally | Set text `width: "fill_container"` or reduce font size |
-| Text clipped vertically | Increase parent height, use auto-height, or set `maxLines` |
-| Child wider than parent | Set child `width: "fill_container"` instead of fixed width |
-| Children overlapping | Add `layout: "vertical"` or `layout: "horizontal"` to parent |
-| Content outside artboard | Reduce widths/padding, check all descendants fit within screen width |
+| 问题 | Pencil 修复 |
+| --- | --- |
+| 文本超出容器 | 设置 text width、max lines、换行或扩大容器 |
+| 子节点越界 | 改为 fill / fit sizing，或调整父节点 layout |
+| 节点重叠 | 修正 layout direction、gap、position 或移入正确父级 |
+| 画板空白异常 | 检查节点是否在可视范围外或父级尺寸为 0 |
+| 组件实例内部破版 | 用 descendants 调整 slot / text；必要时回到 component contract |
 
-## Fix Patterns
+## 输出
 
-### Fix: Text Overflowing Parent
-
-```javascript
-// Before: fixed width wider than parent
-U("textNodeId", { width: "fill_container" })
+```md
+Pencil Layout Check:
+| Target | Tool | Result | Fix |
+| --- | --- | --- | --- |
+| | snapshot_layout / get_screenshot | pass / issue / blocked | |
 ```
-
-### Fix: Children Overflowing Frame
-
-```javascript
-// Add auto-layout so children stack instead of overlapping
-U("parentFrameId", { layout: "vertical", gap: 8 })
-// Make children fill parent width
-U("child1Id", { width: "fill_container" })
-U("child2Id", { width: "fill_container" })
-```
-
-### Fix: Content Touching Screen Edges
-
-```javascript
-// Add horizontal padding to the screen's content container
-U("contentContainerId", { paddingLeft: 16, paddingRight: 16 })
-```
-
-### Fix: Long Title Truncation
-
-```javascript
-// Truncate to single line with ellipsis
-U("titleTextId", { maxLines: 1, width: "fill_container" })
-```
-
-## Checklist
-
-After every section of a design:
-
-- [ ] Have I called `pencil_snapshot_layout` with `problemsOnly: true`?
-- [ ] Are all text elements using `width: "fill_container"` inside auto-layout parents?
-- [ ] Do mobile screens have appropriate padding (16-20px)?
-- [ ] Are long titles/descriptions set with `maxLines` for truncation?
-- [ ] Do all child frames use `width: "fill_container"` (not fixed widths wider than parent)?
-- [ ] Have I verified the full screen with `pencil_get_screenshot`?
-
-## See Also
-
-- [visual-verification.md](visual-verification.md) — Screenshot verification workflow to catch visual overflow
-- [responsive-breakpoints.md](responsive-breakpoints.md) — Mobile-specific layout constraints and patterns

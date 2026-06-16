@@ -1,143 +1,40 @@
 # Visual Verification
 
-## Why This Matters
+Pencil 验证必须基于渲染截图和布局快照。节点树成功不等于画面成功。
 
-Layout and spacing issues are invisible in the node tree. The only way to catch them is to look at the rendered output. Common issues that only screenshots reveal:
+## 验证流程
 
-- Misaligned elements that seem correct in the tree
-- Spacing that is technically valid but visually unbalanced
-- Text that renders differently than expected (wrong font size, weight, color contrast)
-- Colors that look wrong together despite individual correctness
-- Missing content or empty areas
-- Broken component instances
+1. 用 `get_screenshot` 截取目标 artboard 或 section。
+2. 用 `snapshot_layout` 检查 computed bounds 和 layout problem。
+3. 对照 Design Contract / Visual QA 的检查项判断是否需要修正。
+4. 用 `batch_design` 修复。
+5. 重新截图和 snapshot。
+6. 保存并重读 `.pen`。
 
-## Verification Workflow
+## 截图时机
 
-### Section-by-Section Verification
+| 时机 | 截图对象 |
+| --- | --- |
+| 完成一个 section | section root |
+| 批量变量更新后 | 至少一个代表性 artboard |
+| 修改组件实例后 | 组件实例或使用它的区域 |
+| 交付前 | 每个目标 artboard |
+| 变体比较 | 相关变体并排或逐个截图 |
 
-Do NOT build an entire screen and then verify at the end. Verify after each logical section:
+## 记录格式
 
-```
-Build header    -> Screenshot header    -> Fix issues
-Build hero      -> Screenshot hero      -> Fix issues
-Build features  -> Screenshot features  -> Fix issues
-Build footer    -> Screenshot footer    -> Fix issues
-Final           -> Screenshot full page -> Final review
-```
-
-### Step 1: Take a Screenshot
-
-After completing a section:
-
-```
-pencil_get_screenshot({
-  filePath: "path/to/file.pen",
-  nodeId: "sectionNodeId"
-})
+```md
+Pencil Visual Evidence:
+| Target | Screenshot | Layout snapshot | Result | Notes |
+| --- | --- | --- | --- | --- |
+| | | pass / issue / blocked | pass / issue / blocked | |
 ```
 
-For the full screen at the end:
+## 不通过信号
 
-```
-pencil_get_screenshot({
-  filePath: "path/to/file.pen",
-  nodeId: "screenNodeId"
-})
-```
-
-### Step 2: Analyze the Screenshot
-
-Look for these specific issues:
-
-**Alignment**
-- Are elements properly centered or left/right aligned?
-- Do columns have equal widths?
-- Are grid items consistently spaced?
-
-**Spacing**
-- Is there adequate padding inside containers?
-- Are gaps between elements consistent?
-- Does the spacing follow an 8px grid or the design system's spacing scale?
-
-**Typography**
-- Is text readable (sufficient size and contrast)?
-- Are headings visually distinct from body text?
-- Is any text cut off, overlapping, or overflowing?
-
-**Color and Contrast**
-- Do colors match the design system variables?
-- Is there sufficient contrast for readability?
-- Does the color scheme feel cohesive?
-
-**Completeness**
-- Are all expected elements present?
-- Are icons/images placed correctly?
-- Are there any empty or broken areas?
-
-### Step 3: Check Layout Problems
-
-In parallel with the screenshot, run layout checks:
-
-```
-pencil_snapshot_layout({
-  filePath: "path/to/file.pen",
-  parentId: "sectionNodeId",
-  maxDepth: 3,
-  problemsOnly: true
-})
-```
-
-This catches programmatic issues the screenshot might not make obvious:
-- Clipped elements (content extends beyond parent bounds)
-- Overlapping siblings
-- Elements positioned outside their parent
-
-### Step 4: Fix and Re-verify
-
-If issues are found:
-
-1. Fix each issue using `pencil_batch_design` with `U()` operations
-2. Take a new screenshot to confirm the fix
-3. Run `pencil_snapshot_layout` again to confirm no new issues
-
-## When to Take Screenshots
-
-| Moment | What to Screenshot |
-|--------|--------------------|
-| After building a section | The section's root frame |
-| After fixing an issue | The affected area |
-| When design is complete | The full screen/artboard |
-| After modifying an existing design | The changed section |
-| After bulk property updates | At least one affected area |
-| When comparing variants | Both variants side by side |
-
-## Full-Screen Final Review Checklist
-
-When taking the final full-screen screenshot:
-
-- [ ] Does the overall visual hierarchy make sense?
-- [ ] Are sections clearly separated?
-- [ ] Is the spacing consistent from top to bottom?
-- [ ] Does it look professional and polished?
-- [ ] On mobile: does everything fit within the 375px frame?
-- [ ] Are there any empty gaps or broken areas?
-- [ ] Does the color scheme work as a whole?
-- [ ] Is there adequate white space?
-
-## Common Issues Found Only Through Screenshots
-
-| Issue | Symptom in Screenshot |
-|-------|----------------------|
-| Wrong font weight | Text looks too thin or too bold compared to surroundings |
-| Inconsistent padding | Some cards have more internal space than others |
-| Color too similar to background | Element is hard to see or "disappears" |
-| Alignment drift | Elements seem slightly off from each other |
-| Missing gap | Two sections run directly into each other |
-| Broken auto-layout | Children stack in unexpected direction |
-| Icon too small/large | Icon is disproportionate to adjacent text |
-| Image aspect ratio wrong | Image appears stretched or squished |
-
-## See Also
-
-- [layout-and-text-overflow.md](layout-and-text-overflow.md) — Fix patterns for common overflow issues
-- [asset-reuse.md](asset-reuse.md) — Verify copied assets look correct after placement
+- 截图为空白或不是目标画板。
+- 文本明显截断、重叠、越界。
+- 组件实例丢失内容或 slot 未替换。
+- 图片 / logo 丢失或被拉伸。
+- `snapshot_layout` 报告未处理问题。
+- 截图无法证明本轮修改确实发生。

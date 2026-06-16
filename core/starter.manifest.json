@@ -279,6 +279,10 @@
       "to": "core/scripts/validate-external-skills.mjs"
     },
     {
+      "from": "scripts/validate-design-system-registry.mjs",
+      "to": "core/scripts/validate-design-system-registry.mjs"
+    },
+    {
       "from": "scripts/validate-skills.mjs",
       "to": "core/scripts/validate-skills.mjs"
     },

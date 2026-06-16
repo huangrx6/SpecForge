@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/huangrx6/SpecForge/core/skills/ui-ux/design-system/contracts/selected-data.schema.json",
+  "title": "SpecForge Design Selected Data",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["selected_data", "selection_rationale"],
+  "$defs": {
+    "selectionRationaleItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "why", "rejected", "risk", "confidence"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "why": { "type": "string", "minLength": 1 },
+        "rejected": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "risk": { "type": "string", "minLength": 1 },
+        "confidence": {
+          "type": "string",
+          "enum": ["confirmed", "likely", "unclear"]
+        },
+        "license": { "type": "string" }
+      }
+    }
+  },
+  "properties": {
+    "selected_data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "palette_id",
+        "font_source_id",
+        "font_pairing_id",
+        "type_scale_id",
+        "spacing_density_id",
+        "radius_shadow_recipe_id",
+        "motion_recipe_id",
+        "advanced_interaction_recipe_id"
+      ],
+      "properties": {
+        "palette_id": { "type": "string" },
+        "font_source_id": { "type": "string" },
+        "font_pairing_id": { "type": "string" },
+        "type_scale_id": { "type": "string" },
+        "spacing_density_id": { "type": "string" },
+        "radius_shadow_recipe_id": { "type": "string" },
+        "motion_recipe_id": { "type": "string" },
+        "advanced_interaction_recipe_id": { "type": "string" }
+      }
+    },
+    "selection_rationale": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "palette",
+        "font_source",
+        "font_pairing",
+        "type_scale",
+        "spacing_density",
+        "radius_shadow",
+        "motion",
+        "advanced_interaction"
+      ],
+      "properties": {
+        "palette": { "$ref": "#/$defs/selectionRationaleItem" },
+        "font_source": { "$ref": "#/$defs/selectionRationaleItem" },
+        "font_pairing": { "$ref": "#/$defs/selectionRationaleItem" },
+        "type_scale": { "$ref": "#/$defs/selectionRationaleItem" },
+        "spacing_density": { "$ref": "#/$defs/selectionRationaleItem" },
+        "radius_shadow": { "$ref": "#/$defs/selectionRationaleItem" },
+        "motion": { "$ref": "#/$defs/selectionRationaleItem" },
+        "advanced_interaction": { "$ref": "#/$defs/selectionRationaleItem" }
+      }
+    }
+  }
+}

@@ -216,6 +216,7 @@ const sourceRequiredPaths = [
   "core/scripts/sync-starter.mjs",
   "core/scripts/update-skills.mjs",
   "core/scripts/validate-external-skills.mjs",
+  "core/scripts/validate-design-system-registry.mjs",
   "core/scripts/validate-skills.mjs",
   "core/scripts/validate-structure.mjs",
   "core/scripts/lib/artifact-quality.mjs",
@@ -311,6 +312,7 @@ const sourceRequiredPaths = [
   "starter/.specforge/core/scripts/create-work.mjs",
   "starter/.specforge/core/scripts/framework-audit.mjs",
   "starter/.specforge/core/scripts/validate-external-skills.mjs",
+  "starter/.specforge/core/scripts/validate-design-system-registry.mjs",
   "starter/.specforge/core/skills/ORCHESTRATION.md",
   "cli/specforge.mjs",
 ];
@@ -480,6 +482,7 @@ const projectRequiredPaths = [
   ".specforge/core/scripts/workflow-package.mjs",
   ".specforge/core/scripts/update-skills.mjs",
   ".specforge/core/scripts/validate-external-skills.mjs",
+  ".specforge/core/scripts/validate-design-system-registry.mjs",
   ".specforge/core/scripts/validate-structure.mjs",
   ".specforge/core/skills/README.md",
   ".specforge/core/skills/ORCHESTRATION.md",

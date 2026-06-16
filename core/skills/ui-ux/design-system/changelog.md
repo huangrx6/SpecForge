@@ -1,5 +1,61 @@
 # Changelog
 
+## 0.11.12
+
+- 新增 Design Reference Picker 机制：用户只选择 UI 类型、参考目标、借鉴强度、后台模块和视觉方向，Agent 负责路由到 shadcn 生态、国内案例、Awwwards / Motion / GSAP、企业设计系统和 Vue admin 模板。
+- 新增 `references/reference-picker.md`、`references/reference-source-routing.md`、`references/reference-extraction-protocol.md`、`data/reference-source-catalog.csv` 和 `contracts/reference-selection.schema.json`，明确来源池不是风格名，外部来源只能抽 pattern / anatomy / state coverage / motion boundary / UX IA / source basis。
+- 新增 `prompts/reference-picker.md`、`prompts/source-routing.md`、`prompts/reference-extraction.md`、`prompts/shadcn-resource-audit.md`、`prompts/domestic-design-case-extraction.md`，让 shadcn 生态、国内设计案例和高级动效来源有独立抽取流程。
+- Design Contract JSON 新增必填 `reference_selection`；`output-contract.md`、`cross-stage-handoff.md` 和 `design-system-orchestration.md` 同步增加 Reference Selection、Source Routing、Scan Manifest、Reuse Boundary、Extracted Patterns 和禁止复制边界。
+
+## 0.11.11
+
+- `SKILL.md` 瘦身为统一入口，只保留调用条件、read profile 选择、输出契约、阻断条件和完成标准，不再承载完整读取链路。
+- 新增 `references/read-profiles.md` 作为 skill 内部子入口，按 `local-component`、`product-page`、`brand-surface`、`visual-calibration`、`full-system` 裁剪最短必读路径。
+- 新增 `contracts/selected-data.schema.json` 和 `contracts/visual-qa.schema.json`，把 selected data / rationale 与 Visual QA 作为可独立复用的子契约，同时继续汇入统一 Design Contract。
+- `validate-design-system-registry` 与 `framework-audit` 将 read profile 和两个子 schema 纳入关键文件检查，避免新增内部入口后机器清单漏读。
+
+## 0.11.10
+
+- Design Contract JSON 新增必填 `human_confirmation`，区分审美方向的用户确认、低风险可逆默认和未决状态。
+- `artifact-quality` 增加 human confirmation 校验：需要人工确认的方向不能写 `defaulted`，`pending` 会阻断，`confirmed` 不能来自 Agent recommendation。
+- `SKILL.md`、`output-contract.md` 和 `cross-stage-handoff.md` 同步说明 `confirmed` / `defaulted` / `pending` 的边界，避免后续阶段误把 Agent 推荐当成用户确认。
+
+## 0.11.9
+
+- Design Contract JSON 新增必填 `token_delivery_hint`，记录 CSS variables、Tailwind theme mapping、Pencil variables 和 notes，帮助 `sf-tech-design` 更快落地 token delivery。
+- `token_delivery_hint` 明确只是实现提示，不替代 `sf-tech-design` 的最终工程决策；`artifact-quality` 会检查 notes 是否表达 hint / technical-design 边界。
+- `output-contract.md`、`cross-stage-handoff.md` 和 `SKILL.md` 同步补充 token delivery hint 示例和交接说明。
+
+## 0.11.8
+
+- Design Contract JSON 新增必填 `visual_qa`，把 Visual QA detector 的 result、severity、evidence、fix、status 和 owner 写成机器可读 gate 数据。
+- `artifact-quality` 增加 Visual QA JSON 校验，high severity issue 只有 `fixed` 或 `accepted` 才能通过，`pending` / `blocked` 会阻断后续验证。
+- `visual-qa-detectors.md`、`output-contract.md`、`cross-stage-handoff.md` 和 `SKILL.md` 同步改为 Markdown 表 + JSON contract 双输出，避免 `sf-verify` 重新解析自然语言。
+
+## 0.11.7
+
+- `scan_manifest` 新增必填 `selection_rationale`，在保留 `selected_data` 机器 id 的同时，强制记录每个 palette、字体、type scale、spacing、radius / shadow、motion 和 advanced interaction 的选择理由、拒绝项、风险和置信度。
+- `artifact-quality` 增加 selection rationale 校验，要求 rationale id 与 `selected_data` 对齐，并拦截空理由、空风险、空拒绝项和非法 confidence。
+- `output-contract.md`、`cross-stage-handoff.md` 和 `design-system-orchestration.md` 同步补充 rationale 示例，避免后续阶段只知道“选了什么”，不知道“为什么不能换”。
+
+## 0.11.6
+
+- `contracts/design-contract.schema.json` 新增按 `design_mode` 条件化的 `allOf` 规则：Product UI / Hybrid 必须包含 `layout`、`state_matrix`、`product_ui_quality`，Brand Surface 必须包含 layout 和 reduced motion，Avatar-IP / Empty State 必须声明 scope 且不能新建全局 token。
+- `motion.layer_3_gsap` 升级为对象数组；一旦使用 GSAP，必须记录 `effect`、`fallback` 和 `verification`，避免高级动效没有降级和验证。
+- `artifact-quality` 同步增加 Design Contract 条件检查，拦截 Product UI / Hybrid 缺真实工作表面、主要用户 / 对象 / 任务、验证 hook、反模板规则，以及 Brand Surface / GSAP 缺降级验证。
+
+## 0.11.5
+
+- `core/skills/registry.json` 的 `design-system.source.files` 扩展为完整支持文件清单，覆盖 references、data、contracts、foundations、components、pages 和 prompts 下的 107 个文件。
+- 新增 `validate-design-system-registry.mjs`，校验 design-system 的 `SKILL.md` / orchestration 引用、关键文件、完整支持文件、registry 和 starter 镜像是否一致。
+- `validate-external-skills` 与默认 `npm run validate` 接入 design-system registry 校验，避免新增 Composition Recipe、字体来源、高级交互或视觉校准文件后机器入口继续停留在旧清单。
+
+## 0.11.4
+
+- 将 `SKILL.md` 从全量 19 步读取顺序改为 profile-driven read path，新增 `local-component`、`product-page`、`brand-surface`、`visual-calibration` 和 `full-system` 五类入口。
+- `references/design-system-orchestration.md` 升级为强制 profile routing，避免小组件、后台页面和截图校准任务默认读取完整设计系统。
+- Design Contract JSON 的 `scan_manifest` 新增必填 `profile` 字段，`output-contract.md` 和 `cross-stage-handoff.md` 同步记录 profile，方便后续阶段按任务规模消费设计约束。
+
 ## 0.11.3
 
 - 新增 `references/visual-calibration.md`，把实现、截图或用户反馈中的“不好看 / AI 味 / 模板感 / 不像目标行业 / GSAP 或 Three.js 不明显”转成可执行的诊断表、影响层、palette delta 和修正状态。

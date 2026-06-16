@@ -1,126 +1,50 @@
-# Design System Components
+# Pencil Components
 
-## Why This Matters
+本文件只处理 Pencil 的组件复用机制。组件应该长什么样、有哪些状态、如何映射前端组件，由 design-system 和 component contract 决定。
 
-Pencil design files often contain a design system with reusable components (buttons, cards, inputs, navbars, etc.) marked with `reusable: true`. These are equivalent to Figma components or React components. When you recreate a component from scratch instead of reusing the existing one:
+## 官方机制
 
-- The design becomes inconsistent (slightly different padding, colors, fonts)
-- Changes to the design system don't propagate to your new element
-- Code generation produces duplicated, non-DRY component code
-- The design file grows with redundant elements
+- `reusable: true`：把节点标记为可复用组件。
+- `type: "ref"`：创建组件实例。
+- `ref`：指向组件 id。
+- `descendants`：覆盖实例内部指定子节点。
+- `slot`：声明组件内部可替换的容器区域。
 
-## Step-by-Step: Discovering and Using Components
+## 发现组件
 
-### Step 1: List All Reusable Components
+开始修改前先读取现有组件：
 
-Always do this at the start of any design task:
-
-```
-pencil_batch_get({
-  filePath: "path/to/file.pen",
-  patterns: [{ reusable: true }],
-  readDepth: 2,
-  searchDepth: 3
-})
+```md
+batch_get:
+- patterns: [{ reusable: true }]
+- readDepth: 2-4
+- searchDepth: 根据画布结构选择
 ```
 
-This returns all components with their children (depth 2), searched up to 3 levels deep. You'll see components like:
+同时按名称检索常见组件：Button、Input、Table、Card、Dialog、Drawer、Sidebar、Navbar、Toolbar、Badge、Avatar、Chart、Empty、Toast。
 
-```json
-{
-  "id": "btn-primary",
-  "name": "Button",
-  "type": "frame",
-  "reusable": true,
-  "children": [
-    { "id": "btn-label", "type": "text", "content": "Button" }
-  ]
-}
+## 使用组件
+
+| 场景 | Pencil 动作 |
+| --- | --- |
+| 已有组件可用 | 用 `batch_design` 插入 `{ "type": "ref", "ref": "<component-id>" }` |
+| 只改文案 / 图标 / 状态 | 用 descendants 或子路径覆盖内部节点 |
+| 组件有内容槽 | 使用 slot / descendants 替换 slot 内容 |
+| 没有可复用组件 | 按 component contract 创建新节点，并设置 `reusable: true` |
+| 组件结构不满足需求 | 记录 blocked 或请求 design-system / component contract 更新 |
+
+## 复用记录
+
+```md
+Pencil Component Reuse:
+| 需求 | 组件 / ref | 操作 | 状态 | 证据 |
+| --- | --- | --- | --- | --- |
+| | | reused / created / blocked / N/A | | |
 ```
 
-### Step 2: Identify the Right Component
+## 禁止
 
-Look for components that match your need:
-- **Name matching**: "Button", "Card", "Input", "NavBar", "Avatar", etc.
-- **Structure matching**: If you need a card with image + title + description, look for a component with that structure
-- **Variant matching**: Some design systems have multiple variants (e.g., "Button Primary", "Button Secondary")
-
-### Step 3: Insert as a Ref Instance
-
-Use the component's ID as the `ref` value:
-
-```javascript
-// Insert a button instance
-btn=I("parentFrameId", { type: "ref", ref: "btn-primary", width: "fill_container" })
-```
-
-This creates a connected instance. Edits to the main component will propagate to this instance.
-
-### Step 4: Customize the Instance
-
-Override specific properties on the instance's descendants:
-
-```javascript
-// Change the button label text
-U(btn+"/btn-label", { content: "Submit" })
-```
-
-For deeper customization, use the Update operation on nested paths:
-
-```javascript
-// Update nested content: instanceId/descendantId
-U(btn+"/icon-container/icon", { content: "arrow_forward" })
-```
-
-### Step 5: Replace Slots
-
-If a component has placeholder/slot areas, use Replace to swap content:
-
-```javascript
-// Replace a slot inside the component instance
-newContent=R(btn+"/content-slot", { type: "text", content: "Custom Content" })
-```
-
-## When to Create a New Component
-
-Only create a new component from scratch when:
-
-1. **No similar component exists** in the design system after checking `reusable: true`
-2. **The existing component is fundamentally different** (not just a color or text change)
-3. **You're building a new design system** from an empty file
-
-When creating a new component, consider making it reusable for future use by setting `reusable: true`.
-
-## Design System Discovery Checklist
-
-Before designing any element, answer these questions:
-
-- [ ] Have I called `pencil_batch_get` with `{ reusable: true }` to list components?
-- [ ] Have I checked if a matching component exists for: buttons, inputs, cards, navbars, headers, footers, modals, badges, avatars, tables?
-- [ ] Am I inserting components as `ref` instances (not recreating the structure)?
-- [ ] Am I customizing instances via `U()` on descendant paths (not replacing the whole thing)?
-
-## Common Design System Components to Look For
-
-| Need | Search for names containing |
-|------|----------------------------|
-| Button | button, btn, cta |
-| Text input | input, field, text-field |
-| Card | card, tile, panel |
-| Navigation | nav, navbar, sidebar, menu |
-| Header | header, topbar, appbar |
-| Footer | footer, bottom-bar |
-| Modal/Dialog | modal, dialog, sheet |
-| Badge/Tag | badge, tag, chip, label |
-| Avatar | avatar, profile-pic |
-| Table row | row, table-row, list-item |
-| Icon | icon, symbol |
-| Checkbox/Radio | checkbox, radio, toggle, switch |
-| Select/Dropdown | select, dropdown, picker |
-| Tab | tab, tab-bar, segment |
-
-## See Also
-
-- [variables-and-tokens.md](variables-and-tokens.md) — Use variables when styling component instances
-- [design-to-code-workflow.md](design-to-code-workflow.md) — Map reusable components to shadcn/ui
-- [tailwind-shadcn-mapping.md](tailwind-shadcn-mapping.md) — Pencil component -> shadcn/ui component table
+- 在 `.pen` 内重新定义组件 anatomy、variants、states。
+- 已有 reusable component 时重新画一个外观相似的节点。
+- 直接把 React / Vue / shadcn 组件 API 写进 Pencil reference。
+- 用截图相似度替代 component contract。

@@ -225,6 +225,9 @@ function designSystemIssues() {
     "core/skills/ui-ux/design-system/contracts/design-contract.schema.json",
     "core/skills/ui-ux/design-system/contracts/color-palette.schema.json",
     "core/skills/ui-ux/design-system/contracts/component-contract.template.md",
+    "core/skills/ui-ux/design-system/contracts/reference-selection.schema.json",
+    "core/skills/ui-ux/design-system/contracts/selected-data.schema.json",
+    "core/skills/ui-ux/design-system/contracts/visual-qa.schema.json",
     "core/skills/ui-ux/design-system/data/aesthetic-palettes.csv",
     "core/skills/ui-ux/design-system/data/ui-color-scales.csv",
     "core/skills/ui-ux/design-system/data/aesthetic-palette-candidates.csv",
@@ -235,6 +238,7 @@ function designSystemIssues() {
     "core/skills/ui-ux/design-system/data/radius-shadow-recipes.csv",
     "core/skills/ui-ux/design-system/data/motion-recipes.csv",
     "core/skills/ui-ux/design-system/data/advanced-interaction-recipes.csv",
+    "core/skills/ui-ux/design-system/data/reference-source-catalog.csv",
     "core/skills/ui-ux/design-system/components/README.md",
     "core/skills/ui-ux/design-system/foundations/README.md",
     "core/skills/ui-ux/design-system/foundations/tokens.md",
@@ -273,6 +277,11 @@ function designSystemIssues() {
     "core/skills/ui-ux/design-system/prompts/anti-cheapness-review.md",
     "core/skills/ui-ux/design-system/prompts/taste-critique.md",
     "core/skills/ui-ux/design-system/prompts/visual-qa.md",
+    "core/skills/ui-ux/design-system/prompts/reference-picker.md",
+    "core/skills/ui-ux/design-system/prompts/source-routing.md",
+    "core/skills/ui-ux/design-system/prompts/reference-extraction.md",
+    "core/skills/ui-ux/design-system/prompts/shadcn-resource-audit.md",
+    "core/skills/ui-ux/design-system/prompts/domestic-design-case-extraction.md",
     "core/skills/ui-ux/design-system/references/good-case.md",
     "core/skills/ui-ux/design-system/references/bad-case.md",
     "core/skills/ui-ux/design-system/references/design-mode-routing.md",
@@ -294,6 +303,10 @@ function designSystemIssues() {
     "core/skills/ui-ux/design-system/references/taste-review.md",
     "core/skills/ui-ux/design-system/references/layout-archetypes.md",
     "core/skills/ui-ux/design-system/references/product-ui-layout-quality.md",
+    "core/skills/ui-ux/design-system/references/read-profiles.md",
+    "core/skills/ui-ux/design-system/references/reference-picker.md",
+    "core/skills/ui-ux/design-system/references/reference-source-routing.md",
+    "core/skills/ui-ux/design-system/references/reference-extraction-protocol.md",
     "core/skills/ui-ux/design-system/references/output-contract.md",
     "core/skills/ui-ux/design-system/references/cross-stage-handoff.md",
     "core/skills/ui-ux/design-system/references/shadcn-vue.md",
@@ -309,7 +322,7 @@ function designSystemIssues() {
   const schemaPath = "core/skills/ui-ux/design-system/contracts/design-contract.schema.json";
   if (exists(schemaPath)) {
     const schema = read(schemaPath);
-    for (const marker of ['"Product UI"', '"Brand Surface"', '"Hybrid"', '"Avatar-IP"', '"Empty State"', '"scan_manifest"', '"selected_data"', '"font_source_id"', '"font_pairing_id"', '"advanced_interaction_recipe_id"', '"contrast_checks"', '"scope"', '"foundation_system"', '"source_basis"', '"typography"', '"spacing"', '"radius_shadow"', '"layout"', '"product_ui_quality"']) {
+    for (const marker of ['"Product UI"', '"Brand Surface"', '"Hybrid"', '"Avatar-IP"', '"Empty State"', '"allOf"', '"if"', '"then"', '"const"', '"reference_selection"', '"ui_type"', '"selected_needs"', '"borrow_strength"', '"source_routing"', '"reuse_boundary"', '"offline_behavior"', '"forbidden"', '"scan_manifest"', '"profile"', '"selected_data"', '"selection_rationale"', '"human_confirmation"', '"options_presented"', '"default_reversibility"', '"font_source_id"', '"font_pairing_id"', '"advanced_interaction_recipe_id"', '"contrast_checks"', '"scope"', '"foundation_system"', '"source_basis"', '"typography"', '"spacing"', '"radius_shadow"', '"token_delivery_hint"', '"css_variables"', '"tailwind_mapping"', '"pencil_variables"', '"layout"', '"state_matrix"', '"primary_work_surface"', '"product_ui_quality"', '"visual_qa"', '"detector"', '"severity"', '"evidence"', '"owner"', '"layer_3_gsap"', '"fallback"', '"verification"']) {
       if (!schema.includes(marker)) {
         issues.push(issue("FAIL", "design-contract-schema-marker-missing", `${schemaPath} must include ${marker}.`, schemaPath));
       }
@@ -343,7 +356,7 @@ function designSystemIssues() {
   const artifactQualityPath = "core/scripts/lib/artifact-quality.mjs";
   if (exists(artifactQualityPath)) {
     const body = read(artifactQualityPath);
-    for (const marker of ["lintUiDesign", "design-contract-json-missing", "design-contract-unknown-palette", "design-contract-scan-manifest-missing", "design-contract-foundation-system-missing", "ui-design-high-visual-qa-unresolved"]) {
+    for (const marker of ["lintUiDesign", "design-contract-json-missing", "design-contract-unknown-palette", "design-contract-scan-manifest-missing", "design-contract-human-confirmation-missing", "design-contract-human-confirmation-defaulted-required", "design-contract-foundation-system-missing", "design-contract-token-delivery-hint-missing", "design-contract-token-delivery-css-vars-empty", "design-contract-selection-rationale-missing", "design-contract-selection-rationale-id-mismatch", "design-contract-visual-qa-missing", "design-contract-high-visual-qa-pending", "design-contract-mode-required-field-missing", "design-contract-gsap-entry-field-missing", "ui-design-high-visual-qa-unresolved"]) {
       if (!body.includes(marker)) {
         issues.push(issue("FAIL", "ui-design-artifact-quality-marker-missing", `${artifactQualityPath} must check ${marker}.`, artifactQualityPath));
       }
@@ -916,6 +929,7 @@ function scriptModuleIssues() {
       "validate-structure.mjs",
       "validate-skills.mjs",
       "validate-external-skills.mjs",
+      "validate-design-system-registry.mjs",
     ],
     archive: ["archive-work.mjs"],
   };

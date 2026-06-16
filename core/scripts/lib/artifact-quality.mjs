@@ -8,6 +8,21 @@ const taskFieldPattern = /^\s*_(Trace|Files|Verification|Rollback|Risk|Impact|Bo
 const designModeValues = new Set(["Product UI", "Brand Surface", "Hybrid", "Avatar-IP", "Empty State"]);
 const designScopeValues = new Set(["avatar", "empty_state", "both"]);
 const contrastStatusValues = new Set(["pass", "fail", "not-checked"]);
+const selectionConfidenceValues = new Set(["confirmed", "likely", "unclear"]);
+const visualQaResultValues = new Set(["ok", "issue", "not-applicable"]);
+const visualQaSeverityValues = new Set(["low", "medium", "high"]);
+const visualQaStatusValues = new Set(["fixed", "accepted", "pending", "blocked", "not-applicable"]);
+const humanConfirmationStatusValues = new Set(["confirmed", "defaulted", "pending"]);
+const selectionRationaleMap = [
+  ["palette_id", "palette"],
+  ["font_source_id", "font_source"],
+  ["font_pairing_id", "font_pairing"],
+  ["type_scale_id", "type_scale"],
+  ["spacing_density_id", "spacing_density"],
+  ["radius_shadow_recipe_id", "radius_shadow"],
+  ["motion_recipe_id", "motion"],
+  ["advanced_interaction_recipe_id", "advanced_interaction"],
+];
 const highSeverityVisualDetectors = new Set([
   "Generic SaaS shell",
   "Color-only design",
@@ -17,8 +32,12 @@ const highSeverityVisualDetectors = new Set([
   "Todo list without workflow",
   "Card soup",
   "Fake premium gradient",
+  "Default AI neon",
   "Motion noise",
   "State missing",
+  "Primitive pile",
+  "Token drift",
+  "Text overflow",
   "Low contrast subtlety",
 ]);
 
@@ -537,6 +556,134 @@ function lintVisualQaDetectors(issues, content, outputPath) {
   }
 }
 
+function lintVisualQaContract(issues, visualQa, outputPath) {
+  if (!Array.isArray(visualQa) || visualQa.length === 0) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-visual-qa-missing",
+      message: `${outputPath} 缺少 Design Contract JSON.visual_qa 或数组为空。`,
+      fix: "按 visual-qa-detectors.md 把 detector 扫描结果写入 visual_qa，至少包含 detector、result、severity、evidence、fix、status 和 owner。",
+    });
+    return;
+  }
+
+  for (const [index, entry] of visualQa.entries()) {
+    if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-visual-qa-entry-invalid",
+        message: `${outputPath} 的 visual_qa[${index}] 不是对象。`,
+        fix: "每条 visual_qa 必须写成 { detector, result, severity, evidence, fix, status, owner }。",
+      });
+      continue;
+    }
+
+    addMissingFields(
+      issues,
+      entry,
+      ["detector", "result", "severity", "evidence", "fix", "status", "owner"],
+      outputPath,
+      `visual_qa[${index}]`,
+      "design-contract-visual-qa-field-missing",
+    );
+
+    const detector = String(entry.detector ?? "").trim();
+    const result = String(entry.result ?? "").trim();
+    const severity = String(entry.severity ?? "").trim();
+    const status = String(entry.status ?? "").trim();
+
+    if (!isMeaningfulCell(detector)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-visual-qa-detector-missing",
+        message: `${outputPath} 的 visual_qa[${index}].detector 缺失或仍像占位。`,
+        fix: "detector 使用 visual-qa-detectors.md 中的稳定名称，方便 sf-verify 自动 gate。",
+      });
+    }
+    if (!visualQaResultValues.has(result)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-visual-qa-result-invalid",
+        message: `${outputPath} 的 visual_qa[${index}].result 非法：${result || "missing"}。`,
+        fix: "result 只能写 ok / issue / not-applicable。",
+      });
+    }
+    if (!visualQaSeverityValues.has(severity)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-visual-qa-severity-invalid",
+        message: `${outputPath} 的 visual_qa[${index}].severity 非法：${severity || "missing"}。`,
+        fix: "severity 只能写 low / medium / high。",
+      });
+    }
+    if (!visualQaStatusValues.has(status)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-visual-qa-status-invalid",
+        message: `${outputPath} 的 visual_qa[${index}].status 非法：${status || "missing"}。`,
+        fix: "status 只能写 fixed / accepted / pending / blocked / not-applicable。",
+      });
+    }
+
+    if (highSeverityVisualDetectors.has(detector) && severity !== "high") {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-visual-qa-severity-downgraded",
+        message: `${outputPath} 的 high severity detector 被降级：${detector} -> ${severity || "missing"}。`,
+        fix: "visual-qa-detectors.md 中定义为 high 的 detector 不能在 JSON 中降级。",
+      });
+    }
+
+    const evidence = entry.evidence;
+    if (!evidence || typeof evidence !== "object" || Array.isArray(evidence)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-visual-qa-evidence-missing",
+        message: `${outputPath} 的 visual_qa[${index}].evidence 缺失。`,
+        fix: "补齐 evidence.artifact、evidence.viewport 和 evidence.region，让 sf-verify 能定位截图或页面区域。",
+      });
+    } else {
+      for (const field of ["artifact", "viewport", "region"]) {
+        if (!isMeaningfulCell(String(evidence[field] ?? ""))) {
+          issues.push({
+            severity: "FAIL",
+            code: "design-contract-visual-qa-evidence-field-missing",
+            message: `${outputPath} 的 visual_qa[${index}].evidence.${field} 缺失或仍像占位。`,
+            fix: "写入截图 / 原型 / 页面 artifact、viewport 和具体区域；无法截图时写文本 artifact 与 region。",
+          });
+        }
+      }
+    }
+
+    if (result === "issue" && !isMeaningfulCell(String(entry.fix ?? ""))) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-visual-qa-fix-missing",
+        message: `${outputPath} 的 visual_qa[${index}] 标记为 issue，但 fix 为空。`,
+        fix: "为 issue 写明修复动作或 accepted reason；不要只记录问题。",
+      });
+    }
+
+    if (result === "issue" && severity === "high" && !["fixed", "accepted"].includes(status)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-high-visual-qa-pending",
+        message: `${outputPath} 仍有 high severity visual QA 未修复或未接受：${detector} (${status || "missing"})。`,
+        fix: "修复 high severity issue，或写明确 accepted reason 并把 status 改为 accepted；pending / blocked 不能进入 verify。",
+      });
+    }
+
+    if (!isMeaningfulCell(String(entry.owner ?? ""))) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-visual-qa-owner-missing",
+        message: `${outputPath} 的 visual_qa[${index}].owner 缺失或仍像占位。`,
+        fix: "owner 写 sf-ui-design、sf-implement、用户确认人或具体阶段，便于后续追责。",
+      });
+    }
+  }
+}
+
 function lintDesignScanManifest(issues, scanManifest, outputPath) {
   if (!scanManifest || typeof scanManifest !== "object") {
     issues.push({
@@ -548,7 +695,7 @@ function lintDesignScanManifest(issues, scanManifest, outputPath) {
     return;
   }
 
-  addMissingFields(issues, scanManifest, ["workflow", "scanned_files", "selected_data", "skipped_with_reason"], outputPath, "scan_manifest");
+  addMissingFields(issues, scanManifest, ["profile", "workflow", "scanned_files", "selected_data", "selection_rationale", "skipped_with_reason"], outputPath, "scan_manifest");
   if (!Array.isArray(scanManifest.workflow) || scanManifest.workflow.length === 0) {
     issues.push({
       severity: "FAIL",
@@ -625,6 +772,98 @@ function lintDesignScanManifest(issues, scanManifest, outputPath) {
       });
     }
   }
+
+  lintSelectionRationale(issues, selected, scanManifest.selection_rationale, outputPath);
+}
+
+function lintSelectionRationale(issues, selected, rationale, outputPath) {
+  if (!rationale || typeof rationale !== "object") {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-selection-rationale-missing",
+      message: `${outputPath} 缺少 scan_manifest.selection_rationale。`,
+      fix: "为 palette、font、type scale、spacing、radius/shadow、motion 和 advanced interaction 补齐选择理由、拒绝项、风险和置信度。",
+    });
+    return;
+  }
+
+  addMissingFields(
+    issues,
+    rationale,
+    selectionRationaleMap.map(([, key]) => key),
+    outputPath,
+    "scan_manifest.selection_rationale",
+    "design-contract-selection-rationale-field-missing",
+  );
+
+  for (const [selectedField, rationaleKey] of selectionRationaleMap) {
+    const entry = rationale?.[rationaleKey];
+    if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-selection-rationale-entry-invalid",
+        message: `${outputPath} 的 scan_manifest.selection_rationale.${rationaleKey} 不是对象。`,
+        fix: "每个 selection rationale 必须写成 { id, why, rejected, risk, confidence, license? }。",
+      });
+      continue;
+    }
+
+    addMissingFields(
+      issues,
+      entry,
+      ["id", "why", "rejected", "risk", "confidence"],
+      outputPath,
+      `scan_manifest.selection_rationale.${rationaleKey}`,
+      "design-contract-selection-rationale-field-missing",
+    );
+
+    const selectedId = String(selected?.[selectedField] ?? "").trim();
+    const rationaleId = String(entry.id ?? "").trim();
+    if (!isMeaningfulCell(rationaleId)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-selection-rationale-id-missing",
+        message: `${outputPath} 的 selection_rationale.${rationaleKey}.id 缺失或仍像占位。`,
+        fix: `让 selection_rationale.${rationaleKey}.id 与 selected_data.${selectedField} 保持一致。`,
+      });
+    } else if (isMeaningfulCell(selectedId) && !/^N\/A$/i.test(selectedId) && rationaleId !== selectedId) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-selection-rationale-id-mismatch",
+        message: `${outputPath} 的 selected_data.${selectedField}=${selectedId}，但 selection_rationale.${rationaleKey}.id=${rationaleId}。`,
+        fix: "selected_data 负责机器读取，selection_rationale 负责解释；两边 id 必须一致，避免后续阶段不知道真正选了什么。",
+      });
+    }
+
+    for (const field of ["why", "risk"]) {
+      if (!isMeaningfulCell(String(entry[field] ?? ""))) {
+        issues.push({
+          severity: "FAIL",
+          code: "design-contract-selection-rationale-text-missing",
+          message: `${outputPath} 的 selection_rationale.${rationaleKey}.${field} 缺失或仍像占位。`,
+          fix: "写清选择原因和替换风险；后续 tech-design / implement 需要知道为什么不能随便换。",
+        });
+      }
+    }
+
+    if (!Array.isArray(entry.rejected) || entry.rejected.length === 0 || entry.rejected.some((item) => !isMeaningfulCell(String(item ?? "")))) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-selection-rationale-rejected-missing",
+        message: `${outputPath} 的 selection_rationale.${rationaleKey}.rejected 缺少明确拒绝项。`,
+        fix: "至少记录一个被拒绝的备选 id / 方向 / 组合；没有真实备选时写明 none-with-reason。",
+      });
+    }
+
+    if (!selectionConfidenceValues.has(String(entry.confidence ?? ""))) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-selection-rationale-confidence-invalid",
+        message: `${outputPath} 的 selection_rationale.${rationaleKey}.confidence 非法：${entry.confidence ?? "missing"}。`,
+        fix: "confidence 只能写 confirmed / likely / unclear。",
+      });
+    }
+  }
 }
 
 function lintFoundationSystem(issues, foundation, outputPath) {
@@ -663,6 +902,361 @@ function lintFoundationSystem(issues, foundation, outputPath) {
   }
 }
 
+function lintTokenDeliveryHint(issues, hint, outputPath) {
+  if (!hint || typeof hint !== "object" || Array.isArray(hint)) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-token-delivery-hint-missing",
+      message: `${outputPath} 缺少 token_delivery_hint。`,
+      fix: "补齐 CSS variables、Tailwind mapping、Pencil variables 和 notes；该字段是 implementation hint，不替代 sf-tech-design 的最终工程决策。",
+    });
+    return;
+  }
+
+  addMissingFields(
+    issues,
+    hint,
+    ["css_variables", "tailwind_mapping", "pencil_variables", "notes"],
+    outputPath,
+    "token_delivery_hint",
+    "design-contract-token-delivery-hint-field-missing",
+  );
+
+  if (!Array.isArray(hint.css_variables) || hint.css_variables.length === 0) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-token-delivery-css-vars-empty",
+      message: `${outputPath} 的 token_delivery_hint.css_variables 为空。`,
+      fix: "至少写入背景、surface、text、primary、radius、motion 等 CSS variable hint。",
+    });
+  } else {
+    for (const [index, variable] of hint.css_variables.entries()) {
+      const value = String(variable ?? "").trim();
+      if (!/^--[A-Za-z0-9_-]+$/.test(value)) {
+        issues.push({
+          severity: "FAIL",
+          code: "design-contract-token-delivery-css-var-invalid",
+          message: `${outputPath} 的 token_delivery_hint.css_variables[${index}] 不是合法 CSS variable：${value || "missing"}。`,
+          fix: "CSS variable hint 必须形如 --sf-bg、--sf-primary、--sf-radius-card。",
+        });
+      }
+    }
+  }
+
+  const mapping = hint.tailwind_mapping;
+  if (!mapping || typeof mapping !== "object" || Array.isArray(mapping) || Object.keys(mapping).length === 0) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-token-delivery-tailwind-empty",
+      message: `${outputPath} 的 token_delivery_hint.tailwind_mapping 为空。`,
+      fix: "至少写入 colors.background、colors.primary、borderRadius.card 等 Tailwind theme hint。",
+    });
+  } else {
+    for (const [key, value] of Object.entries(mapping)) {
+      if (!isMeaningfulCell(String(key)) || !isMeaningfulCell(String(value ?? ""))) {
+        issues.push({
+          severity: "FAIL",
+          code: "design-contract-token-delivery-tailwind-invalid",
+          message: `${outputPath} 的 token_delivery_hint.tailwind_mapping 存在空 key 或 value。`,
+          fix: "Tailwind mapping 用 theme path -> var(--token) 的形式，例如 colors.background: var(--sf-bg)。",
+        });
+      }
+      if (!/^var\(--[A-Za-z0-9_-]+\)$/.test(String(value ?? "").trim())) {
+        issues.push({
+          severity: "WARN",
+          code: "design-contract-token-delivery-tailwind-not-var",
+          message: `${outputPath} 的 token_delivery_hint.tailwind_mapping.${key} 不是 var(--token) 形式。`,
+          fix: "优先映射到 CSS variables，最终 Tailwind theme 由 sf-tech-design 决定。",
+        });
+      }
+    }
+  }
+
+  if (!Array.isArray(hint.pencil_variables) || hint.pencil_variables.length === 0 || hint.pencil_variables.some((item) => !isMeaningfulCell(String(item ?? "")))) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-token-delivery-pencil-empty",
+      message: `${outputPath} 的 token_delivery_hint.pencil_variables 为空或含占位值。`,
+      fix: "至少写入 color.background、color.surface、type.body、space.3 等 Pencil variable hint。",
+    });
+  }
+
+  const notes = String(hint.notes ?? "");
+  if (!isMeaningfulCell(notes)) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-token-delivery-notes-missing",
+      message: `${outputPath} 的 token_delivery_hint.notes 缺失或仍像占位。`,
+      fix: "写清这是 hint，不是最终工程决策；最终 CSS / Tailwind / Pencil 落地由 sf-tech-design 确认。",
+    });
+  } else if (!/\bhint\b|提示|tech-design|技术设计|最终/i.test(notes)) {
+    issues.push({
+      severity: "WARN",
+      code: "design-contract-token-delivery-notes-not-hint",
+      message: `${outputPath} 的 token_delivery_hint.notes 没有说明该字段只是实现提示。`,
+      fix: "补一句：这是 design-system 输出的 hint，最终 token delivery 由 sf-tech-design 决定。",
+    });
+  }
+}
+
+function lintHumanConfirmation(issues, confirmation, outputPath) {
+  if (!confirmation || typeof confirmation !== "object" || Array.isArray(confirmation)) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-human-confirmation-missing",
+      message: `${outputPath} 缺少 human_confirmation。`,
+      fix: "补齐 required、reason、options_presented、selected、status 和 default_reversibility，明确是用户确认、低风险默认还是未决。",
+    });
+    return;
+  }
+
+  addMissingFields(
+    issues,
+    confirmation,
+    ["required", "reason", "options_presented", "selected", "status", "default_reversibility"],
+    outputPath,
+    "human_confirmation",
+    "design-contract-human-confirmation-field-missing",
+  );
+
+  const required = confirmation.required;
+  const status = String(confirmation.status ?? "").trim();
+  const options = Array.isArray(confirmation.options_presented) ? confirmation.options_presented.map((item) => String(item ?? "").trim()).filter(Boolean) : [];
+  const selected = String(confirmation.selected ?? "").trim();
+
+  if (typeof required !== "boolean") {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-human-confirmation-required-invalid",
+      message: `${outputPath} 的 human_confirmation.required 不是 boolean。`,
+      fix: "required 用 true / false：影响审美方向、IA 或首屏层级时为 true；低风险可逆小改为 false。",
+    });
+  }
+
+  if (!humanConfirmationStatusValues.has(status)) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-human-confirmation-status-invalid",
+      message: `${outputPath} 的 human_confirmation.status 非法：${status || "missing"}。`,
+      fix: "status 只能写 confirmed / defaulted / pending。",
+    });
+  }
+
+  for (const field of ["reason", "selected"]) {
+    if (!isMeaningfulCell(String(confirmation[field] ?? ""))) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-human-confirmation-text-missing",
+        message: `${outputPath} 的 human_confirmation.${field} 缺失或仍像占位。`,
+        fix: "写明为什么需要确认 / 默认，以及用户选择或低风险默认项；不要把 Agent 推荐当成用户确认。",
+      });
+    }
+  }
+
+  if (!Array.isArray(confirmation.options_presented) || options.length === 0 || options.some((item) => !isMeaningfulCell(item))) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-human-confirmation-options-missing",
+      message: `${outputPath} 的 human_confirmation.options_presented 缺少明确选项。`,
+      fix: "写入呈现给用户的互斥方向，低风险默认也要写默认项，例如 current-system-default。",
+    });
+  }
+
+  if (required === true) {
+    if (options.length < 2) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-human-confirmation-options-too-few",
+        message: `${outputPath} 标记 required: true，但没有给用户至少 2 个方向选项。`,
+        fix: "影响审美方向、IA 或首屏任务层级时，必须给 2-3 个互斥选项，或把 status 标为 pending。",
+      });
+    }
+    if (status === "defaulted") {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-human-confirmation-defaulted-required",
+        message: `${outputPath} 的 human_confirmation.required 为 true，但 status 写成 defaulted。`,
+        fix: "需要人工确认的方向不能被 Agent 默认；改为 confirmed（有用户证据）或 pending。",
+      });
+    }
+    if (status === "pending") {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-human-confirmation-pending",
+        message: `${outputPath} 的 human_confirmation 仍是 pending。`,
+        fix: "方向会影响审美、IA 或首屏层级时，pending 不能进入 tech-design / implement；先回到用户确认。",
+      });
+    }
+  }
+
+  if (required === false && status === "defaulted" && !isMeaningfulCell(String(confirmation.default_reversibility ?? ""))) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-human-confirmation-default-reversibility-missing",
+      message: `${outputPath} 的低风险默认缺少 default_reversibility。`,
+      fix: "说明为什么这个默认可逆，例如只影响 palette / spacing / copy，不涉及 schema、IA、权限或数据迁移。",
+    });
+  }
+
+  if (status === "confirmed") {
+    if (/agent\s*(recommendation|recommended)|ai\s*推荐|agent\s*建议|系统推荐|建议方向/i.test(selected)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-human-confirmation-agent-recommendation-as-confirmed",
+        message: `${outputPath} 把 Agent 推荐写成了 confirmed：${selected}。`,
+        fix: "只有用户明确选择才能写 confirmed；Agent 推荐应写 defaulted（低风险可逆）或 pending（需要用户确认）。",
+      });
+    }
+    if (options.length > 0 && !options.includes(selected)) {
+      issues.push({
+        severity: "WARN",
+        code: "design-contract-human-confirmation-selected-not-in-options",
+        message: `${outputPath} 的 selected 不在 options_presented 中：${selected}。`,
+        fix: "确认用户选择是否来自已展示选项；如用户自由选择了新方向，把它补入 options_presented。",
+      });
+    }
+  }
+}
+
+function addMeaningfulFieldIssue(issues, value, outputPath, owner, fix) {
+  if (isMeaningfulCell(String(value ?? ""))) return;
+  issues.push({
+    severity: "FAIL",
+    code: "design-contract-mode-field-empty",
+    message: `${outputPath} 的 ${owner} 缺失或仍像占位。`,
+    fix,
+  });
+}
+
+function addNonEmptyArrayIssue(issues, value, outputPath, owner, fix) {
+  if (Array.isArray(value) && value.length > 0) return;
+  issues.push({
+    severity: "FAIL",
+    code: "design-contract-mode-array-empty",
+    message: `${outputPath} 的 ${owner} 为空。`,
+    fix,
+  });
+}
+
+function lintGsapMotionEntries(issues, motion, outputPath) {
+  const entries = motion?.layer_3_gsap;
+  if (!Array.isArray(entries) || entries.length === 0) return;
+
+  for (const [index, entry] of entries.entries()) {
+    if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-gsap-entry-invalid",
+        message: `${outputPath} 的 motion.layer_3_gsap[${index}] 不是带 effect / fallback / verification 的对象。`,
+        fix: "GSAP 一旦使用，就必须写成对象：{ effect, fallback, verification }，不要只写字符串。",
+      });
+      continue;
+    }
+    for (const field of ["effect", "fallback", "verification"]) {
+      if (!isMeaningfulCell(String(entry[field] ?? ""))) {
+        issues.push({
+          severity: "FAIL",
+          code: "design-contract-gsap-entry-field-missing",
+          message: `${outputPath} 的 motion.layer_3_gsap[${index}].${field} 缺失或仍像占位。`,
+          fix: "补齐 GSAP 效果说明、reduced motion / 静态降级，以及截图、像素、动画状态或交互验证方式。",
+        });
+      }
+    }
+  }
+}
+
+function lintDesignModeConditionalContract(issues, contract, outputPath) {
+  const mode = contract?.design_mode;
+  lintGsapMotionEntries(issues, contract?.motion, outputPath);
+
+  if (mode === "Product UI" || mode === "Hybrid") {
+    addMissingFields(issues, contract, ["layout", "state_matrix", "product_ui_quality"], outputPath, `${mode} conditional contract`, "design-contract-mode-required-field-missing");
+    addMeaningfulFieldIssue(
+      issues,
+      contract.layout?.primary_work_surface,
+      outputPath,
+      "layout.primary_work_surface",
+      "Product UI / Hybrid 必须写真实工作表面，例如 table、workflow board、timeline、split panel 或业务对象列表；不能只写 dashboard shell。",
+    );
+    addNonEmptyArrayIssue(
+      issues,
+      contract.state_matrix?.required_states,
+      outputPath,
+      "state_matrix.required_states",
+      "写入 default / loading / empty / error / permission / success 中适用状态，避免只交付默认态。",
+    );
+    for (const field of ["primary_user", "primary_object", "primary_job"]) {
+      addMeaningfulFieldIssue(
+        issues,
+        contract.product_ui_quality?.[field],
+        outputPath,
+        `product_ui_quality.${field}`,
+        "Product UI / Hybrid 必须绑定主要使用者、主要业务对象和主要任务，避免 KPI wallpaper 和空壳工作台。",
+      );
+    }
+    addNonEmptyArrayIssue(
+      issues,
+      contract.verification_hooks,
+      outputPath,
+      "verification_hooks",
+      "写入至少一个截图、DOM、a11y、responsive、motion 或状态验证 hook。",
+    );
+    addNonEmptyArrayIssue(
+      issues,
+      contract.anti_slop_rules,
+      outputPath,
+      "anti_slop_rules",
+      "写入至少一个反模板 / 反廉价感规则，让后续 review 有可执行检查点。",
+    );
+  }
+
+  if (mode === "Brand Surface") {
+    addMissingFields(issues, contract, ["layout", "motion"], outputPath, "Brand Surface conditional contract", "design-contract-mode-required-field-missing");
+    const signatureType = String(contract.signature?.type ?? "");
+    if (!["typographic", "material", "motion"].includes(signatureType)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-brand-signature-invalid",
+        message: `${outputPath} 的 Brand Surface signature.type 不能是 ${signatureType || "missing"}。`,
+        fix: "Brand Surface 的 signature.type 使用 typographic / material / motion 之一；不要只写 structural 这类后台布局签名。",
+      });
+    }
+    addMeaningfulFieldIssue(
+      issues,
+      contract.motion?.reduced_motion,
+      outputPath,
+      "motion.reduced_motion",
+      "Brand Surface 可以更强表达，但必须写 reduced motion 降级策略。",
+    );
+  }
+
+  if (mode === "Avatar-IP" || mode === "Empty State") {
+    if (!designScopeValues.has(contract.scope)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-avatar-empty-scope-missing",
+        message: `${outputPath} 的 ${mode} 缺少合法 scope。`,
+        fix: "Avatar-IP / Empty State 必须写 scope: avatar / empty_state / both；不要把组合值写进 design_mode。",
+      });
+    }
+    if (contract.token_source === "new") {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-local-token-pollution",
+        message: `${outputPath} 的 ${mode} 使用 token_source: new，可能污染全局 token。`,
+        fix: "头像、IP 或空态默认使用 existing / delta；只记录局部 token delta，不新建全局设计系统。",
+      });
+    }
+    addNonEmptyArrayIssue(
+      issues,
+      contract.anti_slop_rules,
+      outputPath,
+      "anti_slop_rules",
+      "写入局部插画 / 空态 / IP 不污染主系统 token 的限制。",
+    );
+  }
+}
+
 function lintUiDesign(content, outputPath) {
   const issues = [];
   addRequiredHeadingIssues(issues, content, outputPath, ["Design Contract Summary"]);
@@ -691,18 +1285,22 @@ function lintUiDesign(content, outputPath) {
     "scan_manifest",
     "design_mode",
     "aesthetic_direction",
+    "human_confirmation",
     "signature",
     "color_system",
     "foundation_system",
     "token_source",
+    "token_delivery_hint",
     "component_strategy",
     "shadcn_vue",
     "motion",
+    "visual_qa",
     "verification_hooks",
     "anti_slop_rules",
   ], outputPath, "Design Contract JSON");
 
   lintDesignScanManifest(issues, contract.scan_manifest, outputPath);
+  lintHumanConfirmation(issues, contract.human_confirmation, outputPath);
 
   if (!designModeValues.has(contract.design_mode)) {
     issues.push({
@@ -772,6 +1370,9 @@ function lintUiDesign(content, outputPath) {
   }
   lintContrastChecks(issues, color?.accessibility, outputPath);
   lintFoundationSystem(issues, contract.foundation_system, outputPath);
+  lintTokenDeliveryHint(issues, contract.token_delivery_hint, outputPath);
+  lintVisualQaContract(issues, contract.visual_qa, outputPath);
+  lintDesignModeConditionalContract(issues, contract, outputPath);
   lintVisualQaDetectors(issues, content, outputPath);
   return issues;
 }

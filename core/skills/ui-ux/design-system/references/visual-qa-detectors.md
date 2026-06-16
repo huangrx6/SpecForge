@@ -1,6 +1,6 @@
 # Visual QA Detectors
 
-本文件把“不要廉价感 / 不要模板感”变成可执行检测器。发现 fail signal 时，不只写审美评价，必须写修正动作并更新 Design Contract Summary 的 `anti_slop_rules`。
+本文件把“不要廉价感 / 不要模板感”变成可执行检测器。发现 fail signal 时，不只写审美评价，必须写修正动作，并同步更新 Design Contract Summary 的 `visual_qa` 和 `anti_slop_rules`。
 
 ## Detectors
 
@@ -31,9 +31,9 @@
 1. 先按 `references/design-mode-routing.md` 确认当前 design mode。
 2. Product UI / 后台 / 管理端 / 工作台 / Dashboard 必须先按 `references/product-ui-layout-quality.md` 完成 Product UI Layout Audit；颜色合格不能抵消结构失败。
 3. 针对截图、Pencil、样例板或 UI 描述逐项扫描 detector。
-4. 每个 high severity fail 必须修正，或在 `视觉质量 Review` 写 owner、影响和接受理由。
+4. 每个 high severity fail 必须修正，或在 `visual_qa` 写 owner、影响和接受理由，并把 status 标为 `fixed` 或 `accepted`。
 5. 修正动作必须落到 token、layout、component contract、state matrix、motion 或 copy 之一。
-6. `sf-verify` 可用 detector 名称作为 visual verification hook。
+6. `sf-verify` 读取 Design Contract JSON 的 `visual_qa`，不再重新解析自然语言表格；Markdown 表只是 reviewer 视图。
 
 ## Output Format
 
@@ -49,3 +49,39 @@ Visual QA Detectors:
 | Default AI neon | ok / issue | | |
 | State missing | ok / issue | | |
 ```
+
+Design Contract JSON 必须同步输出机器可读 `visual_qa`：
+
+```json
+{
+  "visual_qa": [
+    {
+      "detector": "Empty dashboard skeleton",
+      "result": "issue",
+      "severity": "high",
+      "evidence": {
+        "artifact": "01-spec/ui-mockup-export/dashboard.png",
+        "viewport": "1440x900",
+        "region": "first viewport"
+      },
+      "fix": "Replace KPI wallpaper with Review Desk queue and SLA rail",
+      "status": "fixed",
+      "owner": "sf-ui-design"
+    }
+  ]
+}
+```
+
+字段规则：
+
+| 字段 | 要求 |
+| --- | --- |
+| `detector` | 使用本文件中的稳定 detector 名称 |
+| `result` | `ok` / `issue` / `not-applicable` |
+| `severity` | `low` / `medium` / `high`；本文件 high detector 不允许降级 |
+| `evidence` | 必填 `artifact`、`viewport`、`region`，让验证阶段能定位截图或页面区域 |
+| `fix` | `issue` 必填修正动作或接受理由 |
+| `status` | `fixed` / `accepted` / `pending` / `blocked` / `not-applicable` |
+| `owner` | 负责阶段或角色，例如 `sf-ui-design`、`sf-implement` |
+
+阻断规则：`severity: "high"` 且 `result: "issue"` 时，`status` 只能是 `fixed` 或 `accepted`；`pending` / `blocked` 不允许进入 `sf-verify`。

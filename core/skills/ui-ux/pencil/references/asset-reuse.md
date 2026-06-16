@@ -1,131 +1,42 @@
-# Asset Reuse
+# Pencil Asset Reuse
 
-## Why This Matters
+本文件处理 `.pen` 内已有资产的查找、复制和证据记录。品牌、版权、外部素材使用边界来自 design-system 和相关 spec；Pencil 只负责不重复生成、不丢失资产和不破坏一致性。
 
-AI image generation is non-deterministic. Every time you generate a logo, it will look different. If a project already has a logo on one screen, generating a new one for another screen creates visual inconsistency - the app appears to have two different brands.
+## 先查再用
 
-The same applies to:
-- Product images used across multiple screens
-- Illustrations or decorative graphics
-- Brand elements (logos, wordmarks, icons)
-- Profile photos or avatars used in different contexts
+需要 logo、品牌图形、图标、产品图、头像或插画时，先用 `batch_get` 检索：
 
-## Step-by-Step: Finding and Reusing Assets
-
-### Step 1: Search for Existing Assets
-
-Before generating any image, search the document for existing ones:
-
-```
-pencil_batch_get({
-  filePath: "path/to/file.pen",
-  patterns: [{ name: "logo" }],
-  searchDepth: 5
-})
+```md
+batch_get:
+- patterns:
+  - { name: "logo|brand|wordmark" }
+  - { name: "image|hero|illustration|avatar|icon" }
+  - { reusable: true }
+- readDepth: 2-4
 ```
 
-Search with multiple name patterns to cast a wide net:
+## 使用决策
 
-```
-pencil_batch_get({
-  filePath: "path/to/file.pen",
-  patterns: [
-    { name: "logo" },
-    { name: "brand" },
-    { name: "icon" },
-    { name: "image" }
-  ],
-  searchDepth: 5
-})
-```
+| 情况 | 动作 |
+| --- | --- |
+| 已有 logo / 品牌资产 | 复制节点或复用包含该资产的 component / ref |
+| 已有图标组件 | 使用 `ref` 或 icon node，不重新生成 |
+| 已有图片用于同一对象 | 复制或引用同一资产 |
+| 没有资产但 spec 要求 | 记录需要用户提供或授权生成 |
+| 外部来源 license 不明 | 只记录 pattern，不复制资产 |
 
-You can also search by node type for frames that might contain image fills:
+## 资产证据
 
-```
-pencil_batch_get({
-  filePath: "path/to/file.pen",
-  patterns: [{ type: "frame", name: "logo|brand|hero" }],
-  searchDepth: 5
-})
+```md
+Pencil Asset Reuse:
+| 资产 | 来源节点 / 文件 | 操作 | 状态 | 说明 |
+| --- | --- | --- | --- | --- |
+| | | reused / copied / generated-with-approval / blocked | | |
 ```
 
-### Step 2: Copy the Existing Asset
+## 禁止
 
-When you find an existing logo or image asset, copy it:
-
-```javascript
-// Copy the logo from another artboard into the current screen
-logoCopy=C("existingLogoNodeId", "targetParentId", { width: 120, height: 40 })
-```
-
-The Copy operation (`C()`) creates a duplicate of the node, preserving its image fill, styling, and structure.
-
-For reusable components that contain logos (e.g., a header component with a built-in logo), insert the component as a ref:
-
-```javascript
-// Insert the entire header component which already contains the logo
-header=I("screenId", { type: "ref", ref: "HeaderComponent", width: "fill_container" })
-```
-
-### Step 3: Adjust Size and Position
-
-After copying, you may need to resize:
-
-```javascript
-U("copiedLogoId", { width: 100, height: 32 })
-```
-
-Or adjust position within the new context.
-
-## When to Generate New Images
-
-Only use the `G()` (Generate) operation when:
-
-1. **No similar asset exists** anywhere in the document
-2. **The image is genuinely unique** to this screen (e.g., a specific hero photo, a unique illustration)
-3. **You're building the first screen** and no assets exist yet
-
-```javascript
-// Only when no existing asset matches
-heroImg=I("heroSection", { type: "frame", name: "Hero Image", width: "fill_container", height: 400 })
-G(heroImg, "stock", "modern office workspace")
-```
-
-## Logo-Specific Rules
-
-Logos have the strictest reuse requirements:
-
-1. **ALWAYS search first** - A logo should exist if any other screen in the document has been designed
-2. **ALWAYS copy** - Never generate a new logo if one exists. Generated logos will never match.
-3. **Keep proportions** - When resizing a copied logo, maintain aspect ratio
-4. **Check both artboards and components** - The logo might be inside a reusable header/navbar component
-
-## Decision Tree
-
-```
-Need an image/logo?
-├── Is it a logo or brand element?
-│   ├── Does one exist elsewhere in the doc? -> COPY IT
-│   └── First screen, nothing exists? -> Generate or ask user for asset
-├── Is it a product photo / hero image?
-│   ├── Same image used on another screen? -> COPY IT
-│   └── Unique to this screen? -> Generate with G() or use stock
-└── Is it an icon?
-    ├── Exists in design system components? -> Use the component ref
-    └── New icon needed? -> Use icon_font type or generate
-```
-
-## Checklist
-
-Before generating any image:
-
-- [ ] Have I searched for existing logos/images with `pencil_batch_get`?
-- [ ] Have I searched using name patterns like `logo`, `brand`, `image`, `hero`?
-- [ ] Have I checked if a reusable component (navbar, header) already contains the logo?
-- [ ] Am I copying existing assets instead of regenerating them?
-- [ ] For logos specifically: am I absolutely sure no logo exists in the document?
-
-## See Also
-
-- [design-system-components.md](design-system-components.md) — Check reusable components that may contain logos/icons
-- [visual-verification.md](visual-verification.md) — Verify copied assets look correct after placement
+- 已有 logo 时重新生成一个类似 logo。
+- 复制外部截图、插画、商业素材或付费模板资产。
+- 把来源不明图片直接写入 `.pen`。
+- 不记录资产来源就导出截图。

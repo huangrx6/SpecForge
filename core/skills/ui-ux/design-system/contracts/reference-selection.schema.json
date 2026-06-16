@@ -1,0 +1,209 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/huangrx6/SpecForge/core/skills/ui-ux/design-system/contracts/reference-selection.schema.json",
+  "title": "SpecForge Design Reference Selection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ui_type",
+    "stack",
+    "selected_needs",
+    "borrow_strength",
+    "source_routing",
+    "reuse_boundary",
+    "offline_behavior",
+    "human_confirmation",
+    "forbidden"
+  ],
+  "properties": {
+    "ui_type": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "admin",
+          "data-table",
+          "dashboard",
+          "settings",
+          "auth",
+          "onboarding",
+          "ai-assistant",
+          "brand-surface",
+          "mobile-h5",
+          "empty-state"
+        ]
+      }
+    },
+    "stack": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "vue",
+          "shadcn-vue",
+          "react",
+          "shadcn-ui",
+          "tailwind",
+          "element-plus",
+          "existing-component-library",
+          "unknown"
+        ]
+      }
+    },
+    "selected_needs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "component-wrapper",
+          "page-structure",
+          "block-composition",
+          "visual-completion",
+          "motion",
+          "domestic-ui-case",
+          "industry-case",
+          "ux-ia",
+          "state-system"
+        ]
+      }
+    },
+    "borrow_strength": {
+      "type": "string",
+      "enum": [
+        "conservative",
+        "moderate",
+        "strong",
+        "review-only"
+      ]
+    },
+    "admin_modules": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "app-shell",
+          "dashboard",
+          "data-table",
+          "chart-metrics",
+          "form-flow",
+          "user-permission",
+          "settings",
+          "auth",
+          "feedback-overlays",
+          "state-system"
+        ]
+      }
+    },
+    "visual_direction": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "clean-professional",
+          "high-density-efficient",
+          "light-brand",
+          "tech-without-ai-neon",
+          "domestic-internet-product",
+          "portfolio-level-polish",
+          "warm-friendly",
+          "dark-professional"
+        ]
+      }
+    },
+    "source_routing": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "selected_need",
+          "source_pool",
+          "use_for",
+          "reuse_mode",
+          "required_extraction",
+          "avoid"
+        ],
+        "properties": {
+          "selected_need": {
+            "type": "string"
+          },
+          "source_pool": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "use_for": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reuse_mode": {
+            "type": "string",
+            "enum": [
+              "component-contract-only",
+              "pattern-only",
+              "page-pattern-only",
+              "inspiration-only",
+              "method-only",
+              "implementation-reference",
+              "translate-to-vue-contract"
+            ]
+          },
+          "required_extraction": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "avoid": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "offline_fallback": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "reuse_boundary": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "offline_behavior": {
+      "type": "string"
+    },
+    "human_confirmation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "reason"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "confirmed",
+            "defaulted",
+            "pending"
+          ]
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "forbidden": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
