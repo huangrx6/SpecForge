@@ -16,28 +16,72 @@
         "path": "core/skills/prd/SKILL.md",
         "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/prd",
         "files": [
-          { "path": "foundations/product-decision-boundary.md" },
-          { "path": "foundations/prd-language.md" },
-          { "path": "foundations/assumption-ledger.md" },
-          { "path": "foundations/decision-status.md" },
-          { "path": "transforms/brief-to-prd.md" },
-          { "path": "transforms/brainstorm-to-prd.md" },
-          { "path": "transforms/research-to-prd.md" },
-          { "path": "transforms/product-discovery-to-prd.md" },
-          { "path": "patterns/b2b-operator-data-product.md" },
-          { "path": "patterns/ai-feature.md" },
-          { "path": "patterns/workflow-approval.md" },
-          { "path": "patterns/dashboard-report.md" },
-          { "path": "patterns/internal-tool.md" },
-          { "path": "patterns/integration-platform.md" },
-          { "path": "references/output-contract.md" },
-          { "path": "references/quality-rubric.md" },
-          { "path": "references/anti-patterns.md" },
-          { "path": "references/external-prd-skill-normalization.md" },
-          { "path": "contracts/prd-decision.schema.json" },
-          { "path": "prompts/product-interview.md" },
-          { "path": "prompts/mvp-slicing.md" },
-          { "path": "prompts/open-question-review.md" }
+          {
+            "path": "foundations/product-decision-boundary.md"
+          },
+          {
+            "path": "foundations/prd-language.md"
+          },
+          {
+            "path": "foundations/assumption-ledger.md"
+          },
+          {
+            "path": "foundations/decision-status.md"
+          },
+          {
+            "path": "transforms/brief-to-prd.md"
+          },
+          {
+            "path": "transforms/brainstorm-to-prd.md"
+          },
+          {
+            "path": "transforms/research-to-prd.md"
+          },
+          {
+            "path": "transforms/product-discovery-to-prd.md"
+          },
+          {
+            "path": "patterns/b2b-operator-data-product.md"
+          },
+          {
+            "path": "patterns/ai-feature.md"
+          },
+          {
+            "path": "patterns/workflow-approval.md"
+          },
+          {
+            "path": "patterns/dashboard-report.md"
+          },
+          {
+            "path": "patterns/internal-tool.md"
+          },
+          {
+            "path": "patterns/integration-platform.md"
+          },
+          {
+            "path": "references/output-contract.md"
+          },
+          {
+            "path": "references/quality-rubric.md"
+          },
+          {
+            "path": "references/anti-patterns.md"
+          },
+          {
+            "path": "references/external-prd-skill-normalization.md"
+          },
+          {
+            "path": "contracts/prd-decision.schema.json"
+          },
+          {
+            "path": "prompts/product-interview.md"
+          },
+          {
+            "path": "prompts/mvp-slicing.md"
+          },
+          {
+            "path": "prompts/open-question-review.md"
+          }
         ]
       },
       "trigger": "sf-prd 每次写 00-intake/prd.md 时必读；用于形成产品决策摘要、范围与最小可行版本、非目标、成功标准、风险和交接给需求阶段。",
@@ -248,29 +292,75 @@
         "path": "core/skills/product/SKILL.md",
         "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/product",
         "files": [
-          { "path": "foundations/product-discovery-boundary.md" },
-          { "path": "foundations/opportunity-language.md" },
-          { "path": "foundations/outcome-metric.md" },
-          { "path": "foundations/evidence-levels.md" },
-          { "path": "transforms/request-to-opportunity-map.md" },
-          { "path": "transforms/feedback-to-feature-pool.md" },
-          { "path": "transforms/brainstorm-to-product-discovery.md" },
-          { "path": "transforms/product-discovery-to-prd.md" },
-          { "path": "patterns/b2b-operator-data-product.md" },
-          { "path": "patterns/ai-agent-product.md" },
-          { "path": "patterns/dashboard-analytics.md" },
-          { "path": "patterns/workflow-ops.md" },
-          { "path": "patterns/internal-platform.md" },
-          { "path": "references/output-contract.md" },
-          { "path": "references/prioritization-methods.md" },
-          { "path": "references/experiment-design.md" },
-          { "path": "references/quality-rubric.md" },
-          { "path": "references/anti-patterns.md" },
-          { "path": "references/external-ost-normalization.md" },
-          { "path": "contracts/product-discovery.schema.json" },
-          { "path": "prompts/opportunity-interview.md" },
-          { "path": "prompts/feature-triage.md" },
-          { "path": "prompts/mvp-slicing.md" }
+          {
+            "path": "foundations/product-discovery-boundary.md"
+          },
+          {
+            "path": "foundations/opportunity-language.md"
+          },
+          {
+            "path": "foundations/outcome-metric.md"
+          },
+          {
+            "path": "foundations/evidence-levels.md"
+          },
+          {
+            "path": "transforms/request-to-opportunity-map.md"
+          },
+          {
+            "path": "transforms/feedback-to-feature-pool.md"
+          },
+          {
+            "path": "transforms/brainstorm-to-product-discovery.md"
+          },
+          {
+            "path": "transforms/product-discovery-to-prd.md"
+          },
+          {
+            "path": "patterns/b2b-operator-data-product.md"
+          },
+          {
+            "path": "patterns/ai-agent-product.md"
+          },
+          {
+            "path": "patterns/dashboard-analytics.md"
+          },
+          {
+            "path": "patterns/workflow-ops.md"
+          },
+          {
+            "path": "patterns/internal-platform.md"
+          },
+          {
+            "path": "references/output-contract.md"
+          },
+          {
+            "path": "references/prioritization-methods.md"
+          },
+          {
+            "path": "references/experiment-design.md"
+          },
+          {
+            "path": "references/quality-rubric.md"
+          },
+          {
+            "path": "references/anti-patterns.md"
+          },
+          {
+            "path": "references/external-ost-normalization.md"
+          },
+          {
+            "path": "contracts/product-discovery.schema.json"
+          },
+          {
+            "path": "prompts/opportunity-interview.md"
+          },
+          {
+            "path": "prompts/feature-triage.md"
+          },
+          {
+            "path": "prompts/mvp-slicing.md"
+          }
         ]
       },
       "trigger": "sf-brainstorm 或 sf-prd 需要产品发现、机会建模、功能优先级或最小可行版本切分时必读。",
@@ -345,8 +435,8 @@
       "category": "quality",
       "localPath": "quality/code-review",
       "name": "code-review",
-      "role": "SpecForge 本地代码审查主能力包",
-      "trust": "SpecForge 本地维护，面向 code_review gate 的 diff、spec、tasks、implementation report 和证据对账",
+      "role": "SpecForge 本地代码审查能力包：对照 approved spec、tasks、implementation report、changed files、真实 diff 和验证证据，审查实现是否满足规格、工程规则、安全边界和 gate 条件。",
+      "trust": "SpecForge 本地维护",
       "risk": "低",
       "source": {
         "type": "local-authored",
@@ -354,93 +444,63 @@
         "path": "core/skills/quality/code-review/SKILL.md",
         "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/quality/code-review",
         "files": [
-          { "path": "foundations/review-boundary.md" },
-          { "path": "foundations/finding-severity.md" },
-          { "path": "foundations/diff-triage.md" },
-          { "path": "foundations/spec-compliance.md" },
-          { "path": "checklists/security-auth-data.md" },
-          { "path": "checklists/correctness-error-handling.md" },
-          { "path": "checklists/api-contract.md" },
-          { "path": "checklists/data-migration.md" },
-          { "path": "checklists/concurrency-idempotency.md" },
-          { "path": "checklists/ui-state-a11y.md" },
-          { "path": "checklists/dependency-env-config.md" },
-          { "path": "checklists/tests-evidence.md" },
-          { "path": "references/output-contract.md" },
-          { "path": "references/anti-patterns.md" },
-          { "path": "references/external-code-reviewer-normalization.md" },
-          { "path": "contracts/code-review-finding.schema.json" }
-        ]
-      },
-      "trigger": "sf-code-review 每次进行 code_review gate 前必读；用于判断真实 diff 是否符合 approved spec、tasks、implementation report、changed-files 和验证证据。",
-      "normalizeTo": [
-        "04-code-review/code-review-v1.md#Review Control",
-        "04-code-review/code-review-v1.md#Diff Reconciliation",
-        "04-code-review/code-review-v1.md#Spec Compliance",
-        "04-code-review/code-review-v1.md#Findings"
-      ],
-      "doNotUseFor": [
-        "替代 sf-code-review stage",
-        "在 review 阶段顺手改代码",
-        "不读真实 diff 就批准 gate",
-        "用个人风格偏好阻断"
-      ]
-    },
-    {
-      "id": "code-reviewer",
-      "category": "quality-reference",
-      "localPath": "quality/code-reviewer",
-      "name": "code-reviewer",
-      "role": "外部 code review 规则参考，不是 gate 入口",
-      "trust": "高星社区来源，MIT 许可，已做静态审查",
-      "risk": "中",
-      "source": {
-        "type": "github-raw",
-        "repo": "Shubhamsaboo/awesome-llm-apps",
-        "path": "awesome_agent_skills/code-reviewer/SKILL.md",
-        "url": "https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/awesome_agent_skills/code-reviewer",
-        "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/SKILL.md",
-        "files": [
           {
-            "path": "rules/correctness-error-handling.md",
-            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/rules/correctness-error-handling.md"
+            "path": "foundations/review-boundary.md"
           },
           {
-            "path": "rules/maintainability-naming.md",
-            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/rules/maintainability-naming.md"
+            "path": "foundations/finding-severity.md"
           },
           {
-            "path": "rules/maintainability-type-hints.md",
-            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/rules/maintainability-type-hints.md"
+            "path": "foundations/diff-triage.md"
           },
           {
-            "path": "rules/performance-n-plus-one.md",
-            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/rules/performance-n-plus-one.md"
+            "path": "foundations/spec-compliance.md"
           },
           {
-            "path": "rules/security-sql-injection.md",
-            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/rules/security-sql-injection.md"
+            "path": "checklists/security-auth-data.md"
           },
           {
-            "path": "rules/security-xss-prevention.md",
-            "rawUrl": "https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/awesome_agent_skills/code-reviewer/rules/security-xss-prevention.md"
+            "path": "checklists/correctness-error-handling.md"
+          },
+          {
+            "path": "checklists/api-contract.md"
+          },
+          {
+            "path": "checklists/data-migration.md"
+          },
+          {
+            "path": "checklists/concurrency-idempotency.md"
+          },
+          {
+            "path": "checklists/ui-state-a11y.md"
+          },
+          {
+            "path": "checklists/dependency-env-config.md"
+          },
+          {
+            "path": "checklists/tests-evidence.md"
+          },
+          {
+            "path": "references/output-contract.md"
+          },
+          {
+            "path": "references/anti-patterns.md"
+          },
+          {
+            "path": "contracts/code-review-finding.schema.json"
           }
         ]
       },
-      "trigger": "当本地 code-review 主能力包需要补充安全、性能、正确性、可维护性检查清单时参考；只用于高风险 diff 的规则补充。",
+      "trigger": "sf-code-review 执行 code_review gate 前必读；用于 diff 对账、spec compliance、架构边界、安全/权限/数据/配置/依赖/测试证据审查。",
       "normalizeTo": [
-        "04-code-review/code-review-v1.md#Findings",
-        "04-code-review/code-review-v1.md#Risk Checks",
-        "05-verification/report.md#Regression Coverage"
+        "04-code-review/code-review-v1.md"
       ],
       "doNotUseFor": [
-        "替代 SpecForge code_review gate",
-        "直接批准 / 拒绝 gate",
-        "不读 requirements / technical design / tasks / implementation report 就审查",
-        "只给泛泛建议，不绑定 diff 文件、行号、影响和修复证据",
-        "在未阅读 diff 和需求证据时泛泛输出模板化建议",
-        "把第三方示例代码原样当作项目修复方案",
-        "替代安全专项审计"
+        "替代用户确认规格",
+        "在 review 阶段直接修改代码",
+        "绕过 requirements / technical-design / tasks / implementation report",
+        "只基于个人风格偏好阻断 gate",
+        "不绑定文件、行号、影响和修复证据的泛泛建议"
       ]
     },
     {
@@ -951,38 +1011,102 @@
         "path": "core/skills/quality/test-engineering/SKILL.md",
         "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/quality/test-engineering",
         "files": [
-          { "path": "foundations/test-boundary.md" },
-          { "path": "foundations/evidence-strength.md" },
-          { "path": "foundations/test-data-auth.md" },
-          { "path": "foundations/test-isolation.md" },
-          { "path": "foundations/flakiness-control.md" },
-          { "path": "transforms/spec-to-test-plan.md" },
-          { "path": "transforms/requirements-to-test-cases.md" },
-          { "path": "transforms/ui-design-to-playwright.md" },
-          { "path": "transforms/technical-design-to-runtime-checks.md" },
-          { "path": "transforms/code-review-to-regression-tests.md" },
-          { "path": "patterns/unit-test-authoring.md" },
-          { "path": "patterns/api-contract-test.md" },
-          { "path": "patterns/data-permission-test.md" },
-          { "path": "patterns/authenticated-browser-flow.md" },
-          { "path": "patterns/playwright-journey.md" },
-          { "path": "patterns/upload-download-flow.md" },
-          { "path": "patterns/dashboard-table-flow.md" },
-          { "path": "patterns/ai-agent-flow.md" },
-          { "path": "patterns/runtime-smoke.md" },
-          { "path": "references/output-contract.md" },
-          { "path": "references/playwright-execution-contract.md" },
-          { "path": "references/project-startup-contract.md" },
-          { "path": "references/locator-contract.md" },
-          { "path": "references/evidence-contract.md" },
-          { "path": "references/anti-patterns.md" },
-          { "path": "contracts/test-case.schema.json" },
-          { "path": "contracts/test-plan.schema.json" },
-          { "path": "contracts/playwright-flow.schema.json" },
-          { "path": "prompts/test-case-authoring.md" },
-          { "path": "prompts/unit-test-generation.md" },
-          { "path": "prompts/playwright-flow-generation.md" },
-          { "path": "prompts/failure-triage.md" }
+          {
+            "path": "foundations/test-boundary.md"
+          },
+          {
+            "path": "foundations/evidence-strength.md"
+          },
+          {
+            "path": "foundations/test-data-auth.md"
+          },
+          {
+            "path": "foundations/test-isolation.md"
+          },
+          {
+            "path": "foundations/flakiness-control.md"
+          },
+          {
+            "path": "transforms/spec-to-test-plan.md"
+          },
+          {
+            "path": "transforms/requirements-to-test-cases.md"
+          },
+          {
+            "path": "transforms/ui-design-to-playwright.md"
+          },
+          {
+            "path": "transforms/technical-design-to-runtime-checks.md"
+          },
+          {
+            "path": "transforms/code-review-to-regression-tests.md"
+          },
+          {
+            "path": "patterns/unit-test-authoring.md"
+          },
+          {
+            "path": "patterns/api-contract-test.md"
+          },
+          {
+            "path": "patterns/data-permission-test.md"
+          },
+          {
+            "path": "patterns/authenticated-browser-flow.md"
+          },
+          {
+            "path": "patterns/playwright-journey.md"
+          },
+          {
+            "path": "patterns/upload-download-flow.md"
+          },
+          {
+            "path": "patterns/dashboard-table-flow.md"
+          },
+          {
+            "path": "patterns/ai-agent-flow.md"
+          },
+          {
+            "path": "patterns/runtime-smoke.md"
+          },
+          {
+            "path": "references/output-contract.md"
+          },
+          {
+            "path": "references/playwright-execution-contract.md"
+          },
+          {
+            "path": "references/project-startup-contract.md"
+          },
+          {
+            "path": "references/locator-contract.md"
+          },
+          {
+            "path": "references/evidence-contract.md"
+          },
+          {
+            "path": "references/anti-patterns.md"
+          },
+          {
+            "path": "contracts/test-case.schema.json"
+          },
+          {
+            "path": "contracts/test-plan.schema.json"
+          },
+          {
+            "path": "contracts/playwright-flow.schema.json"
+          },
+          {
+            "path": "prompts/test-case-authoring.md"
+          },
+          {
+            "path": "prompts/unit-test-generation.md"
+          },
+          {
+            "path": "prompts/playwright-flow-generation.md"
+          },
+          {
+            "path": "prompts/failure-triage.md"
+          }
         ]
       },
       "trigger": "sf-verify 需要生成测试用例、自动化测试、启动项目、浏览器测试、登录态方案或验证证据时必读。",

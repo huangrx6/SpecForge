@@ -746,7 +746,6 @@ function codeReviewSkillIssues() {
     "core/skills/quality/code-review/foundations/diff-triage.md",
     "core/skills/quality/code-review/foundations/spec-compliance.md",
     "core/skills/quality/code-review/references/output-contract.md",
-    "core/skills/quality/code-review/references/external-code-reviewer-normalization.md",
     "core/skills/quality/code-review/contracts/code-review-finding.schema.json",
   ];
   const issues = required
@@ -758,6 +757,24 @@ function codeReviewSkillIssues() {
     const body = read(skillPath);
     for (const marker of ["SpecForge 自有 code review 主能力", "三向对账", "spec compliance review", "gate decision"]) {
       if (!body.includes(marker)) issues.push(issue("FAIL", "code-review-marker-missing", `${skillPath} is missing ${marker}.`, skillPath));
+    }
+    const removedReviewSkill = `code-${"reviewer"}`;
+    if (body.includes(`quality/${removedReviewSkill}`) || body.includes(`external-${removedReviewSkill}-normalization`)) {
+      issues.push(issue("FAIL", "code-review-external-reference-present", `${skillPath} must not reference removed external review skill.`, skillPath));
+    }
+  }
+
+  const removedReviewSkill = `code-${"reviewer"}`;
+  if (exists(`core/skills/quality/${removedReviewSkill}`)) {
+    issues.push(issue("FAIL", "external-review-directory-present", `core/skills/quality/${removedReviewSkill} must not be vendored.`, `core/skills/quality/${removedReviewSkill}`));
+  }
+  if (exists(`core/skills/quality/code-review/references/external-${removedReviewSkill}-normalization.md`)) {
+    issues.push(issue("FAIL", "external-review-normalization-present", "external review normalization reference must be removed.", `core/skills/quality/code-review/references/external-${removedReviewSkill}-normalization.md`));
+  }
+  if (exists("core/skills/registry.json")) {
+    const registry = read("core/skills/registry.json");
+    if (registry.includes(`"id": "${removedReviewSkill}"`) || registry.includes("Shubhamsaboo/awesome-llm-apps")) {
+      issues.push(issue("FAIL", "external-review-registry-present", "registry must not include removed external review skill.", "core/skills/registry.json"));
     }
   }
   return issues;

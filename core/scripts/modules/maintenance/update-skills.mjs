@@ -57,16 +57,6 @@ function normalize(content) {
 }
 
 function adaptSnapshotContent(skill, content) {
-  if (skill.id === "code-reviewer") {
-    return content.replace(
-      /1\. \*\*Review \[AGENTS\.md\]\(AGENTS\.md\)\*\* for a complete compilation of all rules with examples/,
-      "1. **Start from this file** to decide whether the review needs security, performance, correctness, or maintainability depth",
-    ).replace(
-      "2. **Reference specific rules** from `rules/` directory for deep dives",
-      "2. **Reference only the specific rules** from `rules/` that match the current risk",
-    );
-  }
-
   if (skill.id === "pencil") {
     return content
       .replace(

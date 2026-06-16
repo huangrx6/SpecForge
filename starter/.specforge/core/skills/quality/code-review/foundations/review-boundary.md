@@ -15,7 +15,7 @@ Code review 是 gate 审查，不是实现阶段的延伸。审查员只判断�
 - 不因个人代码风格偏好阻断。
 - 不要求超出 approved spec 的新功能。
 - 不把 verification 阶段才应执行的真实环境验证提前包装为已通过。
-- 不把外部 code-reviewer 的模板结论当 gate decision。
+- 不把外部 review 模板、第三方 agent 或泛泛建议当 gate decision。
 
 ## 退回规则
 

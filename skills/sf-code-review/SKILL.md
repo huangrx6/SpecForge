@@ -14,7 +14,7 @@ description: 执行 SpecForge code_review gate；用于 implementation 完成后
 ## 必读
 
 - `.specforge/core/skills/quality/code-review/SKILL.md`：SpecForge 本地代码审查主能力包，定义 diff 对账、spec compliance、risk review、finding 分级和输出契约。
-- `references/review-gate-rubric.md`：阶段内 gate 执行补充，连接本地 `code-review` 能力包和外部 `code-reviewer` 参考。
+- `references/review-gate-rubric.md`：阶段内 gate 执行补充，连接本地 `code-review` 能力包、risk checklist 和 gate 决策。
 - `.specforge/skills/sf-code-review/stages/code-review/SKILL.md`：内部代码审查母本。
 - `.specforge/core/artifacts/templates/code-review.md`：写入骨架。
 - `.specforge/core/standards/workflow.md`、`.specforge/core/standards/engineering.md`、`.specforge/core/standards/ai-toolkit.md`。
@@ -83,15 +83,14 @@ node .specforge/core/scripts/create-artifact.mjs code_review
 4. 对照 `technical-design.md#7.1 Architecture Contract`、`#Implementation Handoff`、`#12. Operability & Maintenance`：真实 diff 是否落在架构边界内，是否按 change slices / sequence / do-not-touch 执行，是否保留 rollback seam、owner、extension point 和 revisit trigger。
 5. 若实现与 approved spec 不一致，优先记录 P0 / P1，不用代码风格建议冲淡主要风险。
 
-### D. 本地 `code-review` 主能力与外部参考
+### D. 本地 `code-review` 主能力
 
-`sf-code-review` 仍是唯一 code_review gate 入口。每次审查先读取 `.specforge/core/skills/quality/code-review/SKILL.md`；需要补充安全、性能、正确性、可维护性或测试覆盖检查维度时，再按 `.specforge/core/skills/quality/code-review/references/external-code-reviewer-normalization.md` 读取外部 `code-reviewer` 规则参考。
+`sf-code-review` 仍是唯一 code_review gate 入口。每次审查先读取 `.specforge/core/skills/quality/code-review/SKILL.md`；需要补充安全、性能、正确性、可维护性或测试覆盖检查维度时，只读取本地 `quality/code-review/checklists/*.md`。
 
-- 不调用任何外部 code-reviewer agent，包括 `code-reviewer` 和 `superpowers:code-reviewer`。
-- 外部 `code-reviewer` 不是 gate 入口，不能直接批准 / 拒绝 gate。
-- 只能读取本地 `.specforge/core/skills/quality/code-reviewer/SKILL.md` 和相关 `rules/*.md`，由 `sf-code-review` 自己完成审查。
-- 只在对应风险存在时读取相关 `rules/*.md`：SQL 注入、XSS、N+1、错误处理、命名、类型标注。
-- 第三方输出只能转成 `04-code-review/code-review-v1.md` 中有文件、行号、影响和修复方向的 finding；不要复制外部模板标题。
+- 不调用任何外部 review agent。
+- 不读取已删除的外部代码审查 skill 目录；仓库不再托管该能力。
+- finding 必须来自真实 diff、approved spec、tasks、implementation report、验证证据或本地 checklist。
+- 不复制第三方模板标题，不用泛泛建议替代文件 / 行号 / 影响 / 修复方向。
 
 ### E. Code Quality / Risk Review
 
@@ -158,4 +157,4 @@ node .specforge/core/scripts/gate.mjs code_review REJECTED
 - 不用“看起来没问题”批准 gate。
 - 不在 review 阶段顺手修实现。
 - 不因为个人风格偏好阻断，除非违反 approved spec、项目规则或工程风险底线。
-- 不让外部 `code-reviewer` 替代 SpecForge 的 diff、tasks、implementation report 和 gate 对账。
+- 不让外部 review agent 替代 SpecForge 的 diff、tasks、implementation report 和 gate 对账。

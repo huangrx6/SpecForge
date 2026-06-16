@@ -21,7 +21,7 @@ description: SpecForge 本地代码审查主能力包。用于 sf-code-review �
 
 - 不基于个人风格阻断。
 - 不在 review 阶段顺手改代码。
-- 不让外部 `code-reviewer` 替代 SpecForge gate。
+- 不引入外部 reviewer 或第三方 review 模板替代 SpecForge gate。
 - 不在没有真实 diff 和证据的情况下批准。
 
 ## 读取顺序
@@ -34,7 +34,7 @@ description: SpecForge 本地代码审查主能力包。用于 sf-code-review �
 6. `git status --short --untracked-files=all`、`git diff --name-only`、`git diff --stat` 和关键文件 diff
 7. 测试输出、启动输出、截图、trace、日志、CI 链接
 8. `.specforge/wiki/` 中的长期模块边界
-9. 必要时读取外部 `quality/code-reviewer` 规则参考
+9. 必要时按本能力包内置 checklist 深入安全、性能、正确性、可维护性、测试证据等风险。
 
 ## 参考文件路由
 
@@ -51,7 +51,6 @@ description: SpecForge 本地代码审查主能力包。用于 sf-code-review �
 | 测试和证据完整性 | `checklists/tests-evidence.md` |
 | 输出结构 | `references/output-contract.md` |
 | 常见失败 | `references/anti-patterns.md` |
-| 外部 code-reviewer 如何归一化 | `references/external-code-reviewer-normalization.md` |
 
 ## 核心流程
 

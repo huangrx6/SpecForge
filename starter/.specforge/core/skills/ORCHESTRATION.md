@@ -27,7 +27,6 @@
 | `test-engineering` | `quality/test-engineering` | Verification | 测试用例、测试代码、项目启动、登录态、Playwright 浏览器验证和证据归档 | `05-verification/test-plan.md`、`05-verification/test-cases.md`、`05-verification/test-engineering/`、`05-verification/report.md`、`05-verification/evidence/` |
 | `test-design` | `quality/test-design` | Verification | Deprecated alias；旧测试设计入口，指向 `test-engineering` | `05-verification/test-engineering/`、`05-verification/test-cases.md` |
 | `playwright-skill` | `quality/playwright-skill` | Verification | 外部浏览器 E2E、真实点击输入、角色流程、截图和响应式证据参考 | `05-verification/test-cases.md`、`05-verification/report.md`、`05-verification/evidence/` |
-| `code-reviewer` | `quality/code-reviewer` | Code Review | 外部 code review 规则参考；安全、性能、正确性、可维护性补充检查清单 | `04-code-review/code-review-v1.md` |
 
 ## 按需外部参考
 
@@ -121,8 +120,7 @@
 ### Code Review
 
 - `sf-code-review` 仍是唯一 code_review 阶段入口；每次 gate 前先读 `quality/code-review` 主能力包。
-- `code-reviewer` 只作为外部规则参考，不是 gate 入口，不得直接批准 / 拒绝 gate。
-- 不调用任何外部 code-reviewer agent，包括 `code-reviewer` 和 `superpowers:code-reviewer`；`code-reviewer` 只表示本地 skill 目录和规则文件。
+- 不调用任何外部 review agent；仓库不再托管外部代码审查 skill。
 - 安全和数据风险先看，再看性能、正确性、可维护性和测试覆盖；finding 必须绑定文件、行号、影响和可执行修复建议。
 - 不把第三方示例代码当成项目代码直接套用；修复建议必须结合本仓库语言、框架和既有模式。
 

@@ -8,7 +8,7 @@
   "properties": {
     "severity": { "type": "string", "enum": ["P0", "P1", "P2", "P3"] },
     "location": { "type": "string", "description": "file:line or artifact section" },
-    "source": { "type": "string", "enum": ["diff", "spec", "task", "implementation-report", "code-reviewer-rule"] },
+    "source": { "type": "string", "enum": ["diff", "spec", "task", "implementation-report", "local-checklist"] },
     "problem": { "type": "string" },
     "impact": { "type": "string" },
     "required_fix": { "type": "string" },

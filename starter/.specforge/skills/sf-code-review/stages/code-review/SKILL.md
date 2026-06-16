@@ -25,8 +25,7 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/ai-toolkit.md`
 - `.specforge/core/skills/quality/code-review/SKILL.md`
-- `.specforge/core/skills/ORCHESTRATION.md`（需要外部 code review 参考时）
-- `.specforge/core/skills/quality/code-reviewer/SKILL.md`（需要安全、性能、正确性、可维护性补充检查清单时）
+- `.specforge/core/skills/ORCHESTRATION.md`
 
 ## 写入
 
@@ -58,9 +57,9 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
    - 若实现与 approved spec 不一致，优先记录 P0 / P1，不继续用代码质量建议掩盖规格偏离。
 6. **再做 Code Quality / Risk Review**
    - 只在 spec compliance 没有阻断偏离后，继续审查工程质量、安全、可维护性和测试证据。
-   - 先按 `.specforge/core/skills/quality/code-review/SKILL.md` 的 risk checklist 和 output contract 组织审查。
-   - 需要补充检查视角时，按 `.specforge/core/skills/quality/code-review/references/external-code-reviewer-normalization.md` 读取本地 `code-reviewer` skill，只加载相关 rule 文件，并把结论归一为本审查的 finding。不得调用任何外部 code-reviewer agent，包括 `code-reviewer` 和 `superpowers:code-reviewer`。
-   - `code-reviewer` 是风险清单，不是 gate 入口；不得复制其模板标题或用泛泛建议替代文件 / 行号 / 影响 / 修复方向。
+   - 按 `.specforge/core/skills/quality/code-review/SKILL.md` 的 risk checklist 和 output contract 组织审查。
+   - 需要补充检查视角时，只读取 `.specforge/core/skills/quality/code-review/checklists/*.md` 中与真实 diff 风险相关的文件。
+   - 不调用、不读取、不恢复任何外部 review agent 或已删除的外部代码审查 skill 目录；finding 必须绑定文件 / 行号 / 影响 / 修复方向。
 7. **对照 technical-design 影响面**
    - `yes` 影响面必须有对应代码 / 配置 / 文档变更和验证证据；若实现阶段决定不做，必须在 implementation report 中写明偏离、风险和退回路径。
    - `no` 影响面不得出现未经批准的真实 diff；例如 technical design 判定无数据影响，却新增 migration、schema、ORM model 或持久化字段。

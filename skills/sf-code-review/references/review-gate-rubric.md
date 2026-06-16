@@ -1,10 +1,10 @@
 # Code Review Gate Rubric
 
-本文件保存 code review 的 diff 对账、spec compliance、本地 `quality/code-review` 主能力、外部 `code-reviewer` 参考、finding 分级和 gate 决策。`SKILL.md` 只保留入口执行顺序和硬门禁。
+本文件保存 code review 的 diff 对账、spec compliance、本地 `quality/code-review` 主能力、finding 分级和 gate 决策。`SKILL.md` 只保留入口执行顺序和硬门禁。
 
 ## 主能力包
 
-每次 code_review gate 前先读取 `.specforge/core/skills/quality/code-review/SKILL.md`，再按风险读取其 foundations、checklists 和 references。外部 `code-reviewer` 只在主能力包判断需要补充规则时读取。
+每次 code_review gate 前先读取 `.specforge/core/skills/quality/code-review/SKILL.md`，再按风险读取其 foundations、checklists 和 references。不要读取或恢复外部代码审查 skill。
 
 ## Review 顺序
 
@@ -57,35 +57,6 @@
 - Implementation Handoff 是否被实现报告和 diff 承接：change slices、sequence、files/modules、test seams、rollout、rollback seam、do-not-touch 和 open assumptions。
 - Operability & Maintenance 是否被保留：日志 / 指标 / trace、health check、owner、extension point、deprecation path、wiki target、technical debt 和 revisit trigger。
 - 实现是否新增依赖、环境变量、迁移、外部调用或权限路径，而 spec 没批准。
-
-## 外部 code-reviewer 联动
-
-`code-reviewer` 是外部风险检查清单，不是 gate 入口。只有当 diff 或 spec 暗示对应风险时才读取。
-
-使用规则：
-
-- 不调用任何外部 code-reviewer agent，包括 `code-reviewer` 和 `superpowers:code-reviewer`。
-- `code-reviewer` 只表示本地 skill 目录和规则文件，不表示可调用 agent。
-- 不让 `code-reviewer` 直接批准 / 拒绝 gate。
-- 不读 requirements / technical design / tasks / implementation report 就不得引用外部规则下结论。
-- 只读取 `.specforge/core/skills/quality/code-reviewer/SKILL.md` 和下表相关 rule 文件。
-
-| 风险信号 | 读取 |
-|---|---|
-| SQL、ORM raw query、拼接查询、筛选参数、搜索接口 | `.specforge/core/skills/quality/code-reviewer/rules/security-sql-injection.md` |
-| HTML 注入、markdown 渲染、富文本、用户输入展示、dangerouslySetInnerHTML | `.specforge/core/skills/quality/code-reviewer/rules/security-xss-prevention.md` |
-| 新增列表页、批量查询、循环内访问 DB / API、GraphQL resolver | `.specforge/core/skills/quality/code-reviewer/rules/performance-n-plus-one.md` |
-| try/catch、错误响应、重试、后台任务、外部服务调用 | `.specforge/core/skills/quality/code-reviewer/rules/correctness-error-handling.md` |
-| 变量 / 函数命名导致审查理解困难 | `.specforge/core/skills/quality/code-reviewer/rules/maintainability-naming.md` |
-| Python / TS 类型边界模糊，公共函数或 DTO 缺类型 | `.specforge/core/skills/quality/code-reviewer/rules/maintainability-type-hints.md` |
-
-融合规则：
-
-- 第三方规则只能变成本次 review 的具体 finding。
-- Finding 必须绑定文件和行号；无法定位行时，绑定 diff 文件和 artifact 章节。
-- 不复制第三方 “Critical Issues / High Priority” 模板标题。
-- 不因为命名或类型偏好阻断，除非影响正确性、安全、维护风险或项目规则。
-- 如果外部 rule 和 approved spec 冲突，以 approved spec 和项目工程标准为准；必要时退回 spec。
 
 ## Risk Review 清单
 

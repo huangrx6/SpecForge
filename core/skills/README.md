@@ -22,7 +22,7 @@
 | `requirements/` | 行为契约、确认边界、转译、用户故事、验收标准和可测试性 | `requirements`, `user-stories` |
 | `ui-ux/` | UX 研究、设计语言、Pencil 原型、设计转代码参考 | `design-system`, `pencil` |
 | `brainstorm/` | 问题重构、事实查证、发散、类比、场景模拟、批判、评估、输出和行动计划 | `problem-framing`, `research-source`, `divergent-thinking`, `analogy-thinking`, `scenario-simulation`, `critic-review`, `decision-matrix`, `output-shaping`, `execution-planning` |
-| `quality/` | Code review、测试工程与浏览器验证参考 | `code-review`, `test-engineering`, `code-reviewer`, `test-design`, `playwright-skill` |
+| `quality/` | Code review、测试工程与浏览器验证参考 | `code-review`, `test-engineering`, `test-design`, `playwright-skill` |
 
 ## 保留 Skill
 
@@ -49,7 +49,6 @@
 | `test-engineering` | `quality/test-engineering` | 测试用例、测试代码、项目启动、Playwright 浏览器验证、登录态和证据归档能力包 | `05-verification/test-plan.md`、`05-verification/test-cases.md`、`05-verification/test-engineering/`、`05-verification/report.md`、`05-verification/evidence/` |
 | `playwright-skill` | `quality/playwright-skill` | 外部浏览器 E2E、真实操作、截图和响应式验证参考 | `05-verification/test-cases.md`、`05-verification/report.md`、`05-verification/evidence/` |
 | `test-design` | `quality/test-design` | Deprecated alias；旧测试设计入口，指向 `test-engineering` | `05-verification/test-engineering/`、`05-verification/test-cases.md` |
-| `code-reviewer` | `quality/code-reviewer` | 外部 code review 规则参考，不是 gate 入口 | `04-code-review/code-review-v1.md` |
 
 ## 触发纪律
 
@@ -62,7 +61,7 @@
 - Brainstorm 不只查资料：先用 `problem-framing` 重构问题，再按需要使用 `research-source`、`divergent-thinking`、`analogy-thinking`、`scenario-simulation`、`critic-review`、`decision-matrix`、`output-shaping` 和 `execution-planning`。
 - Brainstorm 包内子 skill 按 `skip` / `light` / `deep` / `research-heavy` profile 组成内部链路，不计入“最多 1 个外部辅助”的限制。
 - 当前事实、法规、价格、版本、竞品、AI provider 或新闻会影响 brainstorm 取舍时，先参考 `research-source` 建立证据表；需要长篇研究或实验时路由 `sf-discovery` research。
-- Code review gate 前先读 `code-review` 主能力包；`code-reviewer` 只补充检查维度，不替代 `sf-code-review` gate。
+- Code review gate 前只读 `code-review` 主能力包；不再托管或读取外部 review skill。
 - Verification 前如需测试用例、测试代码、项目启动、登录态、Playwright 流程或证据归档，先参考 `test-engineering`，再用 `test-case-quality.mjs` 检查。
 - Verification 有浏览器流程时必须有 Playwright 用例和真实自动化操作证据。
 - 参考 skill 输出只当作参考笔记，不替代用户确认、SpecForge 模板或 gate evidence。
