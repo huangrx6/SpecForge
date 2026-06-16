@@ -2,6 +2,8 @@
 
 动效分三层：CSS 状态反馈、组件级 transition、GSAP timeline。默认从轻到重选择。
 
+复杂动效先读 `references/advanced-interaction-source-index.md` 和 `data/advanced-interaction-recipes.csv`。本文件负责实现层代码片段；高级交互是否应该使用、对应 recipe_id、fallback、reduced motion 和验证方式必须先在 Advanced Interaction Contract 中确定。
+
 ## Layer Decision
 
 | Layer | Use for | Default token | Dependency |
@@ -9,6 +11,7 @@
 | CSS transition | hover、focus、active、drawer、popover、toast、skeleton | `--duration-fast` 到 `--duration-moderate` | 无 |
 | Motion Vue / Motion React / CSS animation | 组件进入退出、列表错峰、presence、轻量页面切换 | `--duration-base` 到 `--duration-slow` | technical design 确认 |
 | GSAP timeline | 多步骤流程、AI 工具调用、品牌页、大屏、复杂 timeline | 每步 220-260ms，整体 300-600ms | technical design 确认 |
+| Three.js / R3F / TresJS | 3D 产品、空间数据、品牌 shader signature | 不属于普通 motion token | technical design 确认 |
 
 ## Use CSS transition
 
@@ -22,6 +25,20 @@
 - 大屏、直播间、品牌页中的数据或场景动效。
 - AI 工具调用、步骤推进、复杂状态切换需要连续反馈。
 - 需要统一控制 play / pause / reverse / timeScale。
+
+## Advanced GSAP Patterns
+
+GSAP 高级效果必须来自 `foundation_system.motion.gsap_signature`，不能在实现阶段临时决定。
+
+| Pattern | 适用 | 结构 | 禁止 |
+|---|---|---|---|
+| Tool-call timeline | AI 工具调用、agent 步骤、诊断链路 | 输入确认 -> 工具启动 -> 中间状态 -> 结果落位 -> 可恢复动作 | 抽象光效盖过真实状态 |
+| Progress choreography | 导入、导出、审批推进、批处理 | 当前步骤、阻塞原因、重试、完成确认 | 用无限 loading 代替真实进度 |
+| Data reveal | 大屏、趋势、指标解释 | 数字更新、图表 reveal、异常高亮、责任入口 | 所有数字同时翻滚 |
+| Brand signature | 官网、活动页、作品集 | 只选一个 hero / section signature moment | 每个 section 都复杂动效 |
+| Spatial transition | Split inspector、drawer、详情切换 | 旧上下文收束，新上下文进入 | 动画宽高或 grid layout |
+
+Product UI 中使用 GSAP 前必须写明：为什么 CSS transition / Motion Vue / Motion React 不够、timeline 中每一步的状态含义、reduced motion 如何跳到最终状态。
 
 ## Vue Implementation Snippets
 

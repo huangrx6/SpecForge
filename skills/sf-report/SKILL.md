@@ -122,7 +122,7 @@ node .specforge/core/scripts/workflow-package.mjs
 | Implementation | `#artifact-implementation` |
 | Code Review | `#artifact-code_review` |
 | Verification | `#artifact-verification` |
-| Wiki Sync | `#artifact-wiki_sync` |
+| Wiki 同步 | `#artifact-wiki_sync` |
 | Closure | `#artifact-closure` |
 
 常用报告区域锚点：

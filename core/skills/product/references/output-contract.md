@@ -80,6 +80,62 @@ Product discovery 输出不是 PRD，也不是 requirements。它只形成机会
 - Evidence coverage:
 - Can enter PRD: yes / no
 
+## 0.1 Product Discovery JSON（产品发现 JSON）
+
+必须同时输出机器可读 JSON，给 `sf-prd` 稳定读取。JSON 必须符合 `core/skills/product/contracts/product-discovery.schema.json`。
+
+`solution_candidates[].confirmation_status=mvp-recommended` 只是 Agent 推荐；进入 PRD 的 MVP 前必须改成 `user-confirmed-mvp` 或 `delegated-default`。否则只能进入 PRD 的候选功能池或开放问题。
+
+```json
+{
+  "desired_outcome": {
+    "statement": "",
+    "metric": "",
+    "baseline": "unknown",
+    "baseline_status": "unknown",
+    "target": "",
+    "target_status": "directional",
+    "confidence": "unclear"
+  },
+  "opportunities": [
+    {
+      "id": "OPP-001",
+      "user_role": "",
+      "pain_or_need": "",
+      "evidence": [
+        {
+          "source": "",
+          "source_type": "assumption",
+          "date": "",
+          "finding": "",
+          "confidence": "unclear"
+        }
+      ],
+      "confidence": "unclear"
+    }
+  ],
+  "solution_candidates": [
+    {
+      "id": "SOL-001",
+      "opportunity_id": "OPP-001",
+      "solution": "",
+      "value": "",
+      "complexity": "",
+      "risk": "",
+      "recommendation": "mvp-candidate",
+      "confirmation_status": "mvp-recommended"
+    }
+  ],
+  "experiments": [],
+  "handoff": {
+    "brainstorm": [],
+    "prd": [],
+    "research": [],
+    "requirements": []
+  }
+}
+```
+
 ## 1. Desired Outcome
 - Outcome:
 - Target user / buyer:
@@ -105,7 +161,7 @@ Product discovery 输出不是 PRD，也不是 requirements。它只形成机会
 ## 5. MVP Recommendation
 | Item | Recommendation | Confirmation status | Why | Abandonment cost |
 |---|---|---|---|---|
-| | mvp-recommended / optional / later / out-of-scope | user-confirmed / delegated-default / pending | | |
+| | mvp-recommended / optional / later / out-of-scope | mvp-recommended / user-confirmed-mvp / delegated-default / pending / needs-research / experiment-needed | | |
 
 ## 6. Experiment / Validation Plan
 | Solution | Assumption | Risk type | Experiment | Success signal | Cost | Time |
@@ -131,7 +187,8 @@ Product discovery 输出不是 PRD，也不是 requirements。它只形成机会
 
 ## Guardrails
 
-- `MVP Recommendation` is not user approval unless confirmation status is `user-confirmed`.
+- `MVP Recommendation` is not user approval unless confirmation status is `user-confirmed-mvp` or `delegated-default`.
+- `mvp-recommended` cannot enter PRD MVP directly; it must be written as candidate scope, open question, or experiment / research handoff.
 - Do not invent reach, RICE, opportunity score, baseline, target, user count, market size, price, or adoption data.
 - High-risk AI / data / compliance items must have an experiment or research handoff.
 - Solution candidates cannot be copied into PRD as confirmed scope without decision status.

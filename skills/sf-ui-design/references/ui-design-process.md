@@ -34,8 +34,8 @@ UI design 不是一上来画图。先判断哪些问题会改变页面结构、�
 
 | 参考输入 | 什么时候用 | 归一化到 |
 |---|---|---|
-| `design-system` | 用户画像、信息架构、交互流程、微文案、可访问性、视觉层级、设计语言、美学方向推荐、DESIGN.md extraction、foundations、组件契约、页面模式、shadcn-vue 映射、动效边界或去廉价感审查 | UX rationale、IA、流程风险、a11y 约束、Design intelligence、Aesthetic Direction、Visual Style Brief、token、Admin Component Contract、Pencil variables、实现约束、视觉 review |
-| `pencil` | 需要创建、更新、读取、截图或检查 `.pen` | Pencil 原型证据、截图、保存后重读校验 |
+| `design-system` | 用户画像、信息架构、交互流程、微文案、可访问性、视觉层级、设计语言、美学方向推荐、DESIGN.md extraction、Composition Recipe、foundations、组件契约、页面模式、shadcn-vue 映射、动效 / GSAP 边界或去廉价感审查 | UX rationale、IA、流程风险、a11y 约束、Design intelligence、Aesthetic Direction、Visual Style Brief、foundation_system、Admin Component Contract、Pencil variables、实现约束、视觉 review |
+| `pencil` | 需要创建、更新、读取、截图或检查 `.pen` | Pencil 原型证据、Design Contract token sync、截图、保存后重读校验 |
 | `design-taste-frontend` | landing、portfolio、品牌页、redesign 或公开展示页需要更强视觉判断 | Brand Surface 的气质、版式、动效边界、反模板化检查 |
 | `design-mode-routing.md` | 产品同时可能是后台、官网、展示页或混合场景，需要先判断设计方向 | Design Mode、读取顺序、风格和组件边界 |
 | shadcn 官方 skill / shadcn registry reference | 管理端实现层采用 shadcn/ui，或需要查组件、registry、theme、update 规则 | `admin-product-ui-contracts.md` 中的 primitive 选择、registry 候选、组件审查点、实现约束 |
@@ -67,11 +67,12 @@ UI design 不是一上来画图。先判断哪些问题会改变页面结构、�
 4. 有参考网站 / 截图 / 品牌材料时，读取 `references/design-md-extraction.md` 和 `prompts/design-md-extraction.md`。
 5. 读取 `references/aesthetic-directions.md` 和 `prompts/aesthetic-selection.md`，形成 3-5 个可确认方向。
 6. 用户选择方向后，按场景读取 foundations：后台优先 density、spacing、typography、colors；H5 补 responsive、content；品牌或大屏补 motion、data visualization。
-7. 读取 `components/README.md`、`references/component-system.md`、相关 components、pages 和 `references/layout-archetypes.md`，形成项目级组件契约和页面模式。
-8. 使用 `prompts/sample-board.md` 输出选择后的样例板和组件约束。
-9. 使用 `prompts/taste-critique.md` 做反模板审查；需要修正时先修方向再进 Pencil。
-10. 用户确认后进入 Pencil；没有确认且风险高时停止。
-11. Pencil 截图后使用 `prompts/visual-qa.md` 和 `references/design-review-rubric.md` 进行审查并修一轮。
+7. 读取 `references/design-composition.md` 和 foundation 数据表，输出 Composition Recipe 和 `foundation_system`；颜色、字体、空间、圆角阴影、动效必须一起形成配方。
+8. 读取 `components/README.md`、`references/component-system.md`、相关 components、pages 和 `references/layout-archetypes.md`，形成项目级组件契约和页面模式。
+9. 使用 `prompts/sample-board.md` 输出选择后的样例板和组件约束。
+10. 使用 `prompts/taste-critique.md` 做反模板审查；需要修正时先修方向再进 Pencil。
+11. 用户确认后进入 Pencil；没有确认且风险高时停止。
+12. Pencil 截图后使用 `prompts/visual-qa.md`、`references/design-review-rubric.md` 和 `core/skills/ui-ux/pencil/references/pencil-quality-gate.md` 进行审查并修一轮。
 
 ## Pencil 保存与重读门禁
 
@@ -100,6 +101,7 @@ Pencil 原型不是“调用过工具”就算完成，必须确认目标 `.pen`
 
 - 空 `.pen` / 空画布最多读取一次，确认空后立即创建第一屏。
 - 创建前读取 `pencil_get_variables` 和可复用组件；已有组件或变量时优先复用。
+- 创建前必须把 Design Contract JSON 的 `color_system` 和 `foundation_system` 同步为 Pencil variables；只同步颜色不算完成。
 - 分 section 创建和验证，避免整屏生成后才发现溢出。
 - 每个关键页面至少覆盖 default、loading、empty、error、permission / disabled、success、responsive、a11y 中适用状态。
 - 导出截图放入 `01-spec/ui-mockup-export/`，截图文件名应能看出页面和状态。

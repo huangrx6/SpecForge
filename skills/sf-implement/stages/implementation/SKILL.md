@@ -28,6 +28,7 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/ai-toolkit.md`
 - `.specforge/core/skills/README.md`（存在浏览器实现或验证辅助时）
+- `.specforge/core/skills/code-intelligence/SKILL.md`（tasks / technical design 包含 Graph Facts、关键符号、调用关系或受影响测试时）
 
 ## 写入
 
@@ -63,6 +64,7 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
    - 如 tasks 包含 `任务图与执行策略`，必须按其中依赖、可并行边界、主要写入边界和交接证据执行。
    - 需要调整任务依赖、并行边界或主要写入文件时，停止并退回 `sf-tasking`。
    - 从 `technical-design.md#0. 影响面与读取计划`、`#7.1 Architecture Contract`、`#Implementation Handoff`、`#12. Operability & Maintenance` 以及相关 wiki 提取 `yes` / `no` / `unknown`、入口路径、关键符号 / 路由、上游 / 下游、测试位置、运行命令、change slices、files/modules、test seams、rollout、rollback、owner 和 revisit trigger，形成实现影响面对账计划。
+   - 若 plan 依赖 `GF-*`、Graph Facts、关键符号或受影响测试，先运行 `node .specforge/core/scripts/graph-freshness.mjs --json`；fresh / ready 时按图事实定位，stale / unavailable 时只作为低置信线索并回到 wiki / tasks / technical design 的明确边界。
    - 只沿上述 bounded context 读取代码；不得为了“保险”重新全量扫描仓库。
    - 如果任务边界不足以指导写入，停止回到 `sf-tasking` 或 `sf-spec-review`。
    - 如果 `technical-design.md` 仍有 `[NEEDS TECH DECISION]` 或 `[NEEDS DEPENDENCY DECISION]`，停止回到 `sf-tech-design` 确认技术选型或新增依赖。
@@ -84,6 +86,7 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
    - `[NEEDS TECH DECISION]` / `[NEEDS DEPENDENCY DECISION]`：不得以实现代替用户确认。
    - `Implementation Handoff`：必须承接 change slices、files/modules、sequence、test seams、rollout、rollback seam、do-not-touch 和 open assumptions。
    - `Operability & Maintenance`：必须承接 owner、extension point、deprecation path、wiki target、technical debt 和 revisit trigger。
+   - 已确认的 Graph Facts 只能用于定位和影响面对账；若实现发现图事实与真实代码冲突，必须在 report 中记录冲突并退回 code-intelligence / steering 补证，不能静默覆盖。
 6. **按任务逐项实现，保持小步可审查**
    - 优先从 W0 的契约、脚手架、失败优先验证开始。
    - 行为变更默认采用失败优先验证：先新增或定位一个能失败的单元 / 集成 / 契约 / Playwright 用例，再写生产代码使其通过。确实无法先写失败用例时，必须在 report 中说明原因和替代证据。
@@ -96,6 +99,7 @@ description: SpecForge 内部实现技能。用于 spec_review 已批准后，�
    - `03-implementation/report.md` 必须记录 technical_design 影响面实现对账：`yes` 的落地与验证、`no` 的未越界确认、`unknown` 的退回处理。
    - `03-implementation/changed-files.md` 记录每个真实变更文件、任务、批准边界来源、风险和验证。
    - 收尾时用 `git status --short --untracked-files=all`、`git diff --name-only`、`git diff --stat` 反查，发现未登记变更、未追踪文件或登记但无 diff 的项必须补齐或说明。
+   - 若本次改变了已登记的关键符号、API、数据写入路径或测试边界，记录 post-change graph freshness、touched symbols、affected area 和后续 wiki refresh target。
 8. **执行启动验证清单**
    - 每个实现阶段结束后，必须执行适用的安装、构建、typecheck、lint、测试、dev server / service 启动、迁移、配置、健康检查或 smoke test。
    - 不能运行时写明环境缺口、风险、替代验证和 owner。

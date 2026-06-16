@@ -17,7 +17,7 @@ description: SpecForge 内部需求技能。用于为 work item 生成清晰、�
 - `.specforge/core/skills/requirements/SKILL.md`
 - `.specforge/core/skills/requirements/references/output-contract.md`
 - `.specforge/core/skills/requirements/foundations/behavior-contract.md`
-- `.specforge/core/skills/requirements/foundations/confirmation-boundary.md`、`requirement-language.md`、`testability.md`、`traceability.md`（兼容入口；继续读 `behavior-contract.md`）
+- `.specforge/core/skills/requirements/foundations/nfr-taxonomy.md`（存在 NFR、性能、安全、可靠性、可用性、AI 质量或运行约束时）
 - `.specforge/core/skills/requirements/transforms/source-to-requirements.md`
 - `.specforge/core/skills/requirements/references/cross-stage-handoff.md`
 - `.specforge/core/standards/product.md`

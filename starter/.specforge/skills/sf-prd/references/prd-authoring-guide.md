@@ -152,6 +152,10 @@
 - 外部参考输入：
 - 产品发现输入：
 
+## 0.1 PRD Decision JSON
+
+必须输出符合 `.specforge/core/skills/prd/contracts/prd-decision.schema.json` 的 JSON。顶层 `decision_status` 只允许表达文档是否可进入需求阶段；`delegated-default` 只能写在具体 MVP 项、假设项或范围项的 `confirmation_type` 中。
+
 ## 1. 产品决策摘要
 - 问题：
 - 目标用户：

@@ -25,6 +25,7 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/ai-toolkit.md`
 - `.specforge/core/skills/quality/code-review/SKILL.md`
+- `.specforge/core/skills/code-intelligence/SKILL.md`（diff 涉及存量模块、API、数据、权限、任务或跨模块风险时）
 - `.specforge/core/skills/ORCHESTRATION.md`
 
 ## 写入
@@ -40,6 +41,7 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
 2. **收集真实 diff**
    - 读取 `git status --short --untracked-files=all`、`git diff --name-only`、`git diff --stat` 和关键文件 diff。
    - 对比 `03-implementation/changed-files.md`，发现未登记变更或登记但无 diff 的项。
+   - 中高风险 diff 运行 `node .specforge/core/scripts/graph-impact.mjs --from-git --json`；provider 不 ready 时接受低置信 fallback，但必须写明边界。
 3. **建立任务覆盖矩阵**
    - 每个 `tasks.md` 任务检查状态、相关文件、实现证据和验证证据。
    - 每个完成任务的 `_Impact:_` 必须与真实 diff 和 implementation report 的 technical_design 影响面对账一致。
@@ -48,6 +50,7 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
 4. **三向对账**
    - 每个真实 diff 文件必须能追溯到 approved spec、`tasks.md` 的 `_Boundary:_` 或 implementation report 中的批准偏离说明。
    - 存量模块的真实 diff 必须仍落在 wiki / technical design 指定的入口、模块和上下游边界内；缺边界时记录 finding，不为审查临时全仓扫描补齐。
+   - graph impact 暴露的 affected tests、上游 / 下游、API / data / job / auth 风险必须进入 review findings 或 verification notes。
    - 每个完成任务必须能追溯到至少一个真实变更或可信 N/A，以及至少一个验证证据或可信 deferred 理由。
    - `changed-files.md`、implementation report、真实 git diff 三者不一致时，先记 finding，不允许靠口头解释通过。
 5. **先做 Spec Compliance Review**

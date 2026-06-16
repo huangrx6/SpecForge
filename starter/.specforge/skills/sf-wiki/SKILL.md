@@ -45,7 +45,19 @@ node .specforge/core/scripts/create-artifact.mjs wiki_sync
 node .specforge/core/scripts/sync-wiki.mjs
 ```
 
-4. 若当前没有 active work item，但用户明确要求更新 wiki，可进入 Lightweight wiki 更新；必须写清来源证据，不能凭口头印象改当前事实。
+4. 在写 `06-close/wiki-sync.md` 或判断 N/A 前，必须先生成机器计划：
+
+```bash
+node .specforge/core/scripts/wiki-update-plan.mjs --json
+```
+
+若输出 `can_write_na=false`，不得写 `N/A - 无长期事实`；必须更新 `required_targets` 或写明阻断缺口。若 wiki 仍处于 `missing` / `bootstrap` 且当前 work item verification 已批准，先运行：
+
+```bash
+node .specforge/core/scripts/wiki-hydrate.mjs --mode close --write
+```
+
+5. 若当前没有 active work item，但用户明确要求更新 wiki，可进入 Lightweight wiki 更新；必须写清来源证据，不能凭口头印象改当前事实。
 
 ## 执行序列
 
@@ -60,6 +72,7 @@ node .specforge/core/scripts/sync-wiki.mjs
 - `01-spec/ui-design.md`（存在时）
 - `01-spec/technical-design.md`（存在时）
 - `00-steering/codebase-intelligence.md`（存在时）
+- `node .specforge/core/scripts/wiki-refresh-plan.mjs --from-diff --json`（implementation / verification 后判断长期 Wiki 目标）
 - `02-spec-review/spec-review-v1.md`（存在时）
 - `03-implementation/report.md`
 - `04-code-review/code-review-v1.md`
@@ -68,12 +81,19 @@ node .specforge/core/scripts/sync-wiki.mjs
 
 ### B. 判断是否回写
 
-1. 提取候选长期事实。
-2. 按 `references/wiki-sync-rules.md#回写矩阵` 判断目标文件。
-3. 按 `ai-toolkit.md#持续演进` 判断是否至少有一个可复用事实；确实没有时写 `N/A - 无长期事实` 和理由。
-4. 只影响一次性实现、临时日志、测试输出、截图或局部无复用备注时，在 `06-close/wiki-sync.md` 写 N/A 理由，不更新 wiki。
-5. 改变长期产品、架构、接口、数据、运行、设计系统、术语、风险时，必须更新对应 wiki 文件。
-6. 若 `technical-design.md#7.1 Architecture Contract`、`#Implementation Handoff` 或 `#12. Operability & Maintenance` 声明了 owner、extension point、deprecation path、wiki target、technical debt 或 revisit trigger，必须按其 wiki target 回写或在 `wiki-sync.md` 写明可信 N/A。
+1. 运行 `wiki-update-plan.mjs --json`，把 `wiki_state`、`long_term_fact_candidates`、`required_targets`、`can_write_na` 和 `blocking_gaps` 写入 `06-close/wiki-sync.md#0` 到 `#2`。
+2. 提取候选长期事实。
+3. 按 `references/wiki-sync-rules.md#回写矩阵` 判断目标文件，并与 `required_targets` 对账。
+4. 按 `ai-toolkit.md#持续演进` 判断是否至少有一个可复用事实；只有 `can_write_na=true` 且候选事实都已说明不复用时，才允许写 `N/A - 无长期事实`。
+5. 只影响一次性实现、临时日志、测试输出、截图或局部无复用备注时，在 `06-close/wiki-sync.md` 写 N/A 理由，不更新 wiki。
+6. 改变长期产品、架构、接口、数据、运行、设计系统、术语、风险时，必须更新对应 wiki 文件。
+   - 接口总览优先写 `external-interfaces.md`；接口域详情按需写 `api-<domain>.md`，第三方系统详情按需写 `integration-<system>.md`。
+   - 配置 / 环境变量 / secret / feature flag 写 `config-env.md`。
+   - 认证 / 授权 / 权限 / 敏感数据边界写 `security-auth.md`。
+   - 后台任务 / 队列 / 事件 / 定时任务写 `jobs-events.md`。
+   - SQL / DDL / dump 文件默认不是当前事实。只有被 migration/runtime/CI/tests 引用或用户确认时，才能写进“当前数据权威”或“当前实体 / 表”；否则写入 `04-data-model.md#历史--未受信-sql-产物` 或 `08-risks.md`。
+7. 若 `wiki-refresh-plan.mjs --from-diff --json` 返回 `wiki_update_needed=true`，必须把 targets 写入 `wiki-sync.md#2-必须更新的-wiki-目标`，更新对应 Wiki 或写阻断原因。
+8. 若 `technical-design.md#7.1 Architecture Contract`、`#Implementation Handoff` 或 `#12. Operability & Maintenance` 声明了 owner、extension point、deprecation path、wiki target、technical debt 或 revisit trigger，必须按其 wiki target 回写或在 `wiki-sync.md` 写明可信 N/A。
 
 ### C. 更新 wiki
 
@@ -84,6 +104,13 @@ node .specforge/core/scripts/sync-wiki.mjs
 5. 对缺失事实执行一次补证：用 `rg` / provider / 关键配置读取查找路由、模型、migration、服务入口、脚本和测试。仍无法确认的，写 `未确认` 并同步到 `08-risks.md`。
 6. 更新 `.specforge/wiki/00-index.md` 的摘要、当前文件索引和最后同步时间。
 7. 在 `06-close/wiki-sync.md` 记录更新文件、写入事实、来源证据、不更新原因、未确认缺口和下游重新验证要求。
+8. 更新后运行严格质量检查：
+
+```bash
+node .specforge/core/scripts/wiki-quality.mjs --mode close
+```
+
+`FAIL` 必须修复；`WARN` 必须在 `wiki-sync.md#8-质量检查结果` 记录接受理由或后续补证路径。
 
 ### D. 更新 gate
 
@@ -105,6 +132,8 @@ node .specforge/core/scripts/gate.mjs wiki_sync REQUEST_CHANGES
 |---|---|
 | verification 未批准，且处于 close 前 wiki_sync | 停止，回 `sf-verify` |
 | 只是一次性过程记录、日志、截图、临时调试 | 不更新 wiki，写 N/A 理由 |
+| `wiki-update-plan` 输出 `can_write_na=false` | 必须更新 required targets 或阻断，不得 N/A |
+| 已验证 work item 后 wiki 仍为 bootstrap | 先 `wiki-hydrate --mode close --write`，再人工补证 |
 | 长期产品 / 架构 / API / 数据 / 运行 / 设计系统 / 风险变化 | 更新对应 wiki |
 | technical design 声明 wiki target、owner、extension point、deprecation path、technical debt 或 revisit trigger | 更新对应 wiki / `08-risks.md` / `06-decisions.md` |
 | artifact 与现有 wiki 冲突且无法判断最新事实 | `REQUEST_CHANGES` |
@@ -119,6 +148,7 @@ node .specforge/core/scripts/gate.mjs wiki_sync REQUEST_CHANGES
 - wiki 只包含当前事实；旧事实被更新，必要背景进入 `06-decisions.md`。
 - 架构 / API / 数据 / 运维文件满足最低完整度；不足项已明确标注 `未确认`，并在 `08-risks.md` 或 `06-close/wiki-sync.md` 记录补证路径。
 - 架构 / 模块 / API / 数据 / 运维文件包含后续任务可用的入口路径、关键符号 / 路由、上游下游、测试位置、运行命令或推荐检索词。
+- `wiki-update-plan` 的 `required_targets` 已更新或有阻断说明，且 `wiki-quality.mjs --mode close` 无 `FAIL`。
 - wiki_sync gate 状态与 evidence 一致。
 - 完成后运行 `node .specforge/core/scripts/instructions.mjs`，将输出展示给用户，让用户知道当前 workflow 的下一步是什么。
 

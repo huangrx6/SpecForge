@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/huangrx6/SpecForge/core/skills/product/contracts/product-discovery.schema.json",
-  "title": "SpecForge Product Discovery Contract",
+  "title": "SpecForge 产品发现契约",
   "type": "object",
   "additionalProperties": false,
   "required": ["desired_outcome", "opportunities", "solution_candidates", "experiments", "handoff"],
@@ -9,13 +9,24 @@
     "desired_outcome": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["statement", "metric", "baseline", "target", "confidence"],
+      "required": ["statement", "metric", "baseline", "baseline_status", "target", "target_status", "confidence"],
       "properties": {
         "statement": { "type": "string" },
         "metric": { "type": "string" },
         "baseline": { "type": "string" },
+        "baseline_status": {
+          "type": "string",
+          "enum": ["known", "unknown", "not-required"]
+        },
         "target": { "type": "string" },
-        "confidence": { "type": "string", "enum": ["confirmed", "likely", "unclear"] }
+        "target_status": {
+          "type": "string",
+          "enum": ["confirmed", "directional", "unknown"]
+        },
+        "confidence": {
+          "type": "string",
+          "enum": ["confirmed", "likely", "unclear"]
+        }
       }
     },
     "opportunities": {
@@ -28,8 +39,14 @@
           "id": { "type": "string" },
           "user_role": { "type": "string" },
           "pain_or_need": { "type": "string" },
-          "evidence": { "type": "string" },
-          "confidence": { "type": "string", "enum": ["confirmed", "likely", "unclear"] }
+          "evidence": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/evidence_item" }
+          },
+          "confidence": {
+            "type": "string",
+            "enum": ["confirmed", "likely", "unclear"]
+          }
         }
       }
     },
@@ -38,7 +55,7 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "opportunity_id", "solution", "value", "complexity", "risk", "recommendation"],
+        "required": ["id", "opportunity_id", "solution", "value", "complexity", "risk", "recommendation", "confirmation_status"],
         "properties": {
           "id": { "type": "string" },
           "opportunity_id": { "type": "string" },
@@ -46,7 +63,14 @@
           "value": { "type": "string" },
           "complexity": { "type": "string" },
           "risk": { "type": "string" },
-          "recommendation": { "type": "string", "enum": ["mvp-candidate", "test", "defer", "reject"] }
+          "recommendation": {
+            "type": "string",
+            "enum": ["mvp-candidate", "test", "defer", "reject"]
+          },
+          "confirmation_status": {
+            "type": "string",
+            "enum": ["mvp-recommended", "user-confirmed-mvp", "delegated-default", "pending", "needs-research", "experiment-needed"]
+          }
         }
       }
     },
@@ -74,6 +98,26 @@
         "prd": { "type": "array", "items": { "type": "string" } },
         "research": { "type": "array", "items": { "type": "string" } },
         "requirements": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "$defs": {
+    "evidence_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "source_type", "date", "finding", "confidence"],
+      "properties": {
+        "source": { "type": "string" },
+        "source_type": {
+          "type": "string",
+          "enum": ["user-confirmation", "interview", "analytics", "research", "wiki", "assumption"]
+        },
+        "date": { "type": "string" },
+        "finding": { "type": "string" },
+        "confidence": {
+          "type": "string",
+          "enum": ["confirmed", "likely", "unclear"]
+        }
       }
     }
   }

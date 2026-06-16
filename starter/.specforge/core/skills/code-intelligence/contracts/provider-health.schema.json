@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SpecForge Provider Health",
+  "type": "object",
+  "required": ["provider", "installed", "mcp_configured", "initialized", "ready", "sync_status", "checked_at"],
+  "properties": {
+    "provider": { "type": "string" },
+    "installed": { "type": "boolean" },
+    "mcp_configured": { "type": ["boolean", "null"] },
+    "initialized": { "type": ["boolean", "null"] },
+    "ready": { "type": "boolean" },
+    "status": { "type": "string" },
+    "index_status": { "type": "string" },
+    "sync_status": { "type": "string" },
+    "pending_files": { "type": "array", "items": { "type": "string" } },
+    "warnings": { "type": "array", "items": { "type": "string" } },
+    "checked_at": { "type": "string" }
+  },
+  "additionalProperties": true
+}
+

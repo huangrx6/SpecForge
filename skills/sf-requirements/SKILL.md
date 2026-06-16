@@ -22,12 +22,13 @@ description: 生成或更新 SpecForge 工作项的需求规格；用于活跃�
 - `.specforge/core/skills/requirements/SKILL.md`：requirements 行为契约能力包入口，定义确认边界、转译规则、可测试性、追踪和下游 handoff。
 - `.specforge/core/skills/requirements/references/output-contract.md`：输出 profile、必填 section 和 REQ / AC 表格契约。
 - `.specforge/core/skills/requirements/foundations/behavior-contract.md`：确认边界、需求语言、可测试性、Given / When / Then、Source -> REQ -> AC -> downstream 追踪规则。
-- `.specforge/core/skills/requirements/foundations/confirmation-boundary.md`、`requirement-language.md`、`testability.md`、`traceability.md`：兼容入口；读到它们时继续读 `behavior-contract.md`。
+- `.specforge/core/skills/requirements/foundations/nfr-taxonomy.md`：NFR 类型、验证口径和不可验证目标降级规则。
 - `references/requirements-authoring-guide.md`：产品需求文档转译补充、第三方 skill 归一化、访谈镜头、写作细则和影响面标记回写。
 - `.specforge/skills/sf-requirements/stages/requirements/SKILL.md`：内部需求质量标准、停止条件和完成标准。
 - `.specforge/core/standards/product.md`：产品需求文档输入、候选功能、用户故事、验收标准和可测试需求。
 - `.specforge/core/standards/workflow.md`：范围、非目标、写入边界和中文协作。
 - `.specforge/core/standards/ai-toolkit.md`：spec source-of-truth、输出预算、阶段质量条和人工确认点。
+- `.specforge/core/skills/code-intelligence/SKILL.md`：只在需要验证现有行为、权限边界、数据来源、运行事实或 Wiki 契约可信度时读取；CodeGraph 结果不能直接生成 MUST / SHALL。
 - `.specforge/core/skills/ORCHESTRATION.md`、`README.md`、`registry.json`：第三方 requirements skill 的选择、边界和来源风险。
 
 ## 启动扫描
@@ -66,11 +67,12 @@ node .specforge/core/scripts/create-artifact.mjs requirements
 2. 只有 `user-confirmed` 和 `delegated-default` 可以转成 `MUST` / `SHALL` 行为需求；`agent-recommendation` 只能写成候选 / 建议，`pending` 必须留在未决问题。
 3. 按 `.specforge/core/skills/requirements/transforms/source-to-requirements.md` 的前后对照样例和 `references/requirements-authoring-guide.md#产品需求文档转译规则` 显式完成来源转译。
 4. 从 brief 的 Wiki 上下文入口和相关 wiki 中提取既有产品规则、模块边界、API / 数据约束和已知风险，只转成需求约束或影响面，不展开全仓代码探索。
-5. 把产品需求文档 / 简报 / 头脑风暴中已确认的用户故事、候选功能和验收种子转成 `REQ-*`、`AC-*`、NFR、非目标、明确延后或待澄清项。
-6. 需求正文使用系统行为语言，不复制产品需求文档原文，不写实现方案；优先使用 EARS 或 RFC 2119 层级表达。
-7. 如需用户故事或验收样例，按 `references/requirements-authoring-guide.md#第三方 Skill 归一化` 读取 `user-stories`，但它只补视角，不替代主 requirements 包。
-8. 按需求风险读取 1-3 个 pattern 文件：角色 / 权限、状态流转、数据文件、AI 质量、UI 影响、集成 API、运行时约束；每个命中的 pattern 至少补一个常见漏项检查。
-9. 对中高复杂度需求执行一致性检查：用户目标、最小可行版本、角色权限、数据口径、验收标准和非目标不得互相冲突；冲突必须回到用户确认。
+5. 如果需要验证现有行为或边界，按 code-intelligence 的 Wiki-first 规则做局部补证；结果只能写成 existing behavior / current fact / pending evidence，不能直接升级为用户确认需求。
+6. 把产品需求文档 / 简报 / 头脑风暴中已确认的用户故事、候选功能和验收种子转成 `REQ-*`、`AC-*`、NFR、非目标、明确延后或待澄清项。
+7. 需求正文使用系统行为语言，不复制产品需求文档原文，不写实现方案；优先使用 EARS 或 RFC 2119 层级表达。
+8. 如需用户故事或验收样例，按 `references/requirements-authoring-guide.md#第三方 Skill 归一化` 读取 `user-stories`，但它只补视角，不替代主 requirements 包。
+9. 按需求风险读取 1-3 个 pattern 文件：角色 / 权限、状态流转、数据文件、AI 质量、UI 影响、集成 API、运行时约束；每个命中的 pattern 至少补一个常见漏项检查。
+10. 对中高复杂度需求执行一致性检查：用户目标、最小可行版本、角色权限、数据口径、验收标准和非目标不得互相冲突；冲突必须回到用户确认。
 
 ### C. 写 requirements
 

@@ -9,6 +9,69 @@
 - 外部参考输入：
 - 产品发现输入：
 
+## 0.1 PRD Decision JSON
+
+```json
+{
+  "prd_depth": "prd-standard",
+  "decision_status": "draft",
+  "source_artifacts": [],
+  "problem": "",
+  "target_users": [],
+  "mvp": [
+    {
+      "item": "",
+      "source": "",
+      "confirmation_type": "pending",
+      "rationale": "",
+      "risk": "",
+      "handoff": []
+    }
+  ],
+  "non_goals": [
+    {
+      "item": "",
+      "reason": "",
+      "trigger_for_future": "",
+      "source": ""
+    }
+  ],
+  "success_criteria": [
+    {
+      "metric": "",
+      "target": "",
+      "baseline": "unknown",
+      "evidence": "",
+      "confidence": "unclear"
+    }
+  ],
+  "assumptions": [
+    {
+      "assumption": "",
+      "source": "",
+      "confirmation_type": "pending",
+      "risk": "",
+      "validation": ""
+    }
+  ],
+  "open_questions": [],
+  "requirements_seeds": [
+    {
+      "seed": "",
+      "source": "",
+      "target_section": "pending",
+      "notes": ""
+    }
+  ],
+  "handoff": {
+    "ui_design": [],
+    "technical_design": [],
+    "data_security": [],
+    "verification": []
+  }
+}
+```
+
 ## 1. 产品决策摘要
 - 问题：
 - 目标用户：

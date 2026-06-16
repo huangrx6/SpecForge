@@ -13,7 +13,8 @@
 | `requirements` | `requirements` | Requirements | 行为契约、确认边界、来源转译、REQ / AC 追踪、NFR 和下游 handoff 主能力包 | `01-spec/requirements.md` |
 | `user-stories` | `requirements/user-stories` | Requirements | 用户故事、3C、INVEST、验收标准和可测试性补充参考 | `01-spec/requirements.md` |
 | `pencil` | `ui-ux/pencil` | UI Design | Pencil `.pen` 原型读写、组件复用、tokens、截图导出、布局检查和设计转代码参考 | `01-spec/ui-design.md`、`01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/` |
-| `design-system` | `ui-ux/design-system` | Brainstorm / UI Design / Technical Design | 用户研究、信息架构、设计模式路由、设计语言、专业色阶、foundations、机器可读 Design Contract、组件规范、页面模式、shadcn-vue 映射、动效边界和视觉 QA 审查 | `00-intake/brainstorm.md`、`01-spec/ui-design.md`、`01-spec/design/components/*.contract.md`、Pencil 输入、前端组件契约 |
+| `design-system` | `ui-ux/design-system` | Brainstorm / UI Design / Technical Design | 用户研究、信息架构、设计模式路由、设计语言、Composition Recipe、专业色阶、foundation_system、机器可读 Design Contract、组件规范、页面模式、shadcn-vue 映射、动效 / GSAP 边界和视觉 QA 审查 | `00-intake/brainstorm.md`、`01-spec/ui-design.md`、`01-spec/design/components/*.contract.md`、Pencil 输入、前端组件契约 |
+| `pencil` | `ui-ux/pencil` | UI Design / Implementation | 本地 Pencil 原型落地，把已确认 Design Contract JSON、foundation_system 和组件契约同步到 `.pen` variables、组件复用、截图和布局证据 | `01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/`、`01-spec/ui-design.md#Wireframe / Prototype Evidence` |
 | `problem-framing` | `brainstorm/problem-framing` | Brainstorm | 把模糊请求重构为目标、受众、约束、假设和必须确认问题 | `00-intake/brainstorm.md#问题重构`、`#问题地图` |
 | `research-source` | `brainstorm/research-source` | Brainstorm / Research | 当前事实查证、来源选择、证据表、置信度和未查证项 | `00-intake/brainstorm.md#当前事实与研究证据` |
 | `divergent-thinking` | `brainstorm/divergent-thinking` | Brainstorm | 从多种视角发散候选方向，避免过早收敛 | `00-intake/brainstorm.md#发散方向池` |
@@ -23,9 +24,9 @@
 | `decision-matrix` | `brainstorm/decision-matrix` | Brainstorm | 用价值、成本、风险、落地性、可扩展性和置信度收敛排序 | `00-intake/brainstorm.md#方案评估矩阵` |
 | `output-shaping` | `brainstorm/output-shaping` | Brainstorm | 控制 brainstorm 输出形态，避免自由散文式结论 | `00-intake/brainstorm.md` |
 | `execution-planning` | `brainstorm/execution-planning` | Brainstorm | 把推荐方向转成下一步行动、handoff 和验证入口 | `00-intake/brainstorm.md#下一步行动` |
+| `code-intelligence` | `code-intelligence` | 全阶段 | Wiki-first 代码智能主能力包；封装 CodeGraph、MCP / SCIP provider、Repomix、bootstrap map、`rg`、freshness、impact、affected tests 和 graph facts 归一化 | `00-intake/brief.md`、`01-spec/requirements.md`、`01-spec/technical-design.md`、`01-spec/tasks.md`、`03-implementation/report.md`、`04-code-review/code-review-v1.md`、`05-verification/report.md`、`.specforge/wiki/*.md` |
 | `code-review` | `quality/code-review` | Code Review | SpecForge 本地代码审查主能力包；diff、spec、tasks、implementation report、changed-files 和证据对账 | `04-code-review/code-review-v1.md` |
 | `test-engineering` | `quality/test-engineering` | Verification | 测试用例、测试代码、项目启动、登录态、Playwright 浏览器验证和证据归档 | `05-verification/test-plan.md`、`05-verification/test-cases.md`、`05-verification/test-engineering/`、`05-verification/report.md`、`05-verification/evidence/` |
-| `test-design` | `quality/test-design` | Verification | Deprecated alias；旧测试设计入口，指向 `test-engineering` | `05-verification/test-engineering/`、`05-verification/test-cases.md` |
 | `playwright-skill` | `quality/playwright-skill` | Verification | 外部浏览器 E2E、真实点击输入、角色流程、截图和响应式证据参考 | `05-verification/test-cases.md`、`05-verification/report.md`、`05-verification/evidence/` |
 
 ## 按需外部参考
@@ -98,7 +99,7 @@
 ### UI Design
 
 - 正式原型固定使用 `pencil`。
-- 需要提炼设计语言、palette 色阶、token、组件契约、页面模式、shadcn-vue 映射、动效边界或视觉 QA 审查时，先参考 `design-system`，再把结果转成 `ui-design.md`、Design Contract JSON、组件契约文件和 Pencil 输入。
+- 需要提炼设计语言、palette 色阶、foundation_system、组件契约、页面模式、shadcn-vue 映射、动效 / GSAP 边界或视觉 QA 审查时，先参考 `design-system`，再把结果转成 `ui-design.md`、Design Contract JSON、组件契约文件和本地 `pencil` 输入。
 - 读取 `pencil` 时，先确认 UI 方向已由用户确认；如果 upstream 提到 `frontend-design`，按 SpecForge 的 `design.md`、`sf-ui-design` 和已确认 UI 方向处理。
 - 方向已确认后，需要细化 persona-lite、用户旅程、信息架构、微文案、可访问性或视觉层级时，读取 `design-system/references/ux-research-ia.md`；需要把视觉语言落成 foundations / components / pages 时继续使用 `design-system` 的 aesthetic、foundations、components 和 pages 规则。输出必须归一为 `00-intake/brainstorm.md`、`01-spec/research.md` 或 `01-spec/ui-design.md`。
 - design-system 必须先判断 Product UI / Brand Surface / Hybrid / Avatar-IP 模式；后台、审批、数据表格和高频工作台默认 Product UI，不把品牌页视觉直接套到控件层。
@@ -117,6 +118,15 @@
 - `research-source` 负责来源选择、证据表、冲突记录和覆盖度说明；复杂 PoC、架构实验、性能验证或跨来源长篇研究升级到 `sf-discovery` 的 research artifact。
 - 研究结论必须写入 `01-spec/research.md`，并在产品需求文档、需求规格或技术设计中只引用已归一化的结论。
 
+### Code Intelligence
+
+- `code-intelligence` 是跨阶段能力包，不属于 `sf-steering` 独占。
+- 任何阶段需要定位现有模块、符号、调用链、影响面、受影响测试、provider freshness 或 Wiki 回写候选时，先读 `code-intelligence/SKILL.md`。
+- 默认顺序是 Wiki first：先从 `.specforge/wiki/00-index.md` 和相关知识项建立 bounded context，再用 CodeGraph / MCP / SCIP / Repomix / `rg` 验证局部事实。
+- CodeGraph CLI installed 不等于 Agent 可用；使用前必须区分 installed、mcp-configured、initialized、ready 和 sync-required。
+- Provider 输出必须先归一为 `graph_facts[]`；不能把 graph result 直接写成 requirements、technical design 或 Wiki 当前事实。
+- `sf-tech-design`、`sf-code-review`、`sf-verify` 是最常使用 impact / affected tests 的阶段；`sf-wiki` / `sf-close` 只回写已验证的长期事实。
+
 ### Code Review
 
 - `sf-code-review` 仍是唯一 code_review 阶段入口；每次 gate 前先读 `quality/code-review` 主能力包。
@@ -128,7 +138,6 @@
 
 - 需要从 requirements / gap / tasks / UI / technical design / code review notes 系统生成测试用例、测试代码、项目启动、登录态、Playwright flow、TC / PW 用例或证据包时，先参考 `test-engineering`。
 - `test-engineering` 输出必须归一化到 `05-verification/test-engineering/`、`05-verification/test-cases.md`、`05-verification/report.md` 和 `05-verification/evidence/`；XMind / 白板只能作为草图，必须导出 Markdown / JSON 并回填 TC / PW。
-- `test-design` 仅为兼容 alias，新流程不要以它为主入口。
 - 测试设计完成后运行 `test-case-quality.mjs`；失败项先修正，warning 写入 verification report 的风险、owner 和重新验证触发条件。
 - 有浏览器页面、表单、上传、提交、审批、下载、权限、路由跳转或错误提示时，使用 `playwright-skill` 或等价 Playwright 脚本形成可重复证据。
 - 先写 `05-verification/test-cases.md`，再执行真实浏览器操作。

@@ -26,6 +26,7 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 - `.specforge/core/standards/design.md`（存在 UI 影响时）
 - `.specforge/core/standards/pc-ui-design-spec.md`（`ui-design.md` 声明采用 PC 端业务系统规范时）
 - `.specforge/core/skills/README.md`（存在测试工程、XMind、UI / 浏览器验证时）
+- `.specforge/core/skills/code-intelligence/SKILL.md`（code review 或 changed files 提供 affected tests / graph impact 时）
 - `.specforge/core/skills/quality/test-engineering/SKILL.md`（需要系统化测试用例、测试代码、XMind / 白板导出、TC / PW 矩阵、项目启动、登录态、Playwright flow 或证据归档时）
 
 ## 写入
@@ -40,6 +41,7 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
 1. **确认前置 gate**
    - `code_review` 必须为 `APPROVED`。
    - 读取 code review 的 findings、residual risks 和 verification notes。
+   - 如 code review 没有 affected tests，但 diff 涉及存量模块、API、数据、权限、任务或跨模块风险，运行 `node .specforge/core/scripts/graph-impact.mjs --from-git --json`。
 2. **先做测试工程规划**
    - 当需求、任务、UI 状态、技术风险或 review notes 较多时，先读取 `core/skills/quality/test-engineering/SKILL.md`。
    - 产出 `05-verification/test-engineering/test-design-tree.md` 或 `.json`，再回填 TC / PW 到 `05-verification/test-cases.md`。
@@ -56,6 +58,7 @@ description: SpecForge 内部验证技能。用于证明 work item 可工作，�
    - code review 中 Technical Design 影响面实现审查的 `yes`、Architecture Contract、Implementation Handoff、Operability & Maintenance、residual risk 和 verification notes 必须映射到验证证据或可信跳过理由。
 5. **按风险选择验证层级**
    - 单元、集成、契约、E2E、UI 手工、静态检查、构建、启动、配置、迁移、回滚、可观测性。
+   - affected tests 必须优先进入执行清单；无法运行时写清替代证据、owner 和重新验证触发条件。
    - 安全、权限、数据、迁移、外部契约、后台任务、发布配置、可观测性、回滚、owner/revisit trigger 和可靠性属于强证据区域，不能只用“人工看过”批准。
 6. **UI 变更验证**
    - 构建页面 × 操作 × 角色 × 状态矩阵。

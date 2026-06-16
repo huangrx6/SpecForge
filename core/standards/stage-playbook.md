@@ -40,7 +40,7 @@
 | Implementation | 按任务图实现和快速验证 | Codex / Trae / SOLO、测试命令、`git diff` | 发现规格缺口、越界、无法验证 | code、changed-files、implementation report | diff、tasks、report、验证结果一致 |
 | Code Review | 找缺陷、偏离、安全和缺测 | `sf-code-review`、真实 diff、测试证据 | 是否修复、是否退回 spec、是否接受低风险残余 | findings、任务图对账、验证提示 | 无阻断缺陷，gate evidence 完整 |
 | Verification | 用证据证明风险已覆盖 | `sf-verify`、CI、Playwright、logs、mock / real env | 外部补证、跳过项、风险接受 | test-cases、report、证据强度、manual-confirmed 记录 | 证据强度覆盖风险强度，gate 可解释 |
-| Wiki Sync | 把长期事实回写知识库 | `sf-wiki`、wiki index、source artifacts | 哪些事实长期有效，哪些 N/A | wiki files、wiki-sync evidence | current wiki 唯一，不重复、不塞临时噪音 |
+| Wiki 同步 | 把长期事实回写知识库 | `sf-wiki`、wiki index、source artifacts | 哪些事实长期有效，哪些 N/A | wiki files、wiki-sync evidence | current wiki 唯一，不重复、不塞临时噪音 |
 | Close | 发布、回滚、报告和归档 | `sf-close`、doctor、report renderer、archive dry-run | 发布判断、回滚、外部观察 | release、rollback、HTML report、archive | doctor 通过，残余风险有 owner 和触发条件 |
 
 ## 每阶段雕琢准则
@@ -58,7 +58,7 @@
 | Implementation | Codex / Trae 负责执行，SpecForge 负责边界和证据 | 发现越界必须回写 tasks / spec，不能静默扩大 scope | implementation report 只写变更、验证、偏离和后续 |
 | Code Review | 用真实 diff、测试证据和任务对账 | 安全、权限、数据、回归缺口优先于风格建议 | 先 findings，后总结；每条 finding 有文件、影响、验证建议 |
 | Verification | 按风险选择 proven / mocked / manual-confirmed / deferred 证据 | `missing` 不能批准 gate；弱证据必须写边界和补证触发条件 | 把证据索引和结论放前，长日志放 evidence 目录 |
-| Wiki Sync | 只沉淀未来会复用的事实 | 临时过程、一次性日志、重复内容不得写入 wiki | 每条知识有来源 artifact、适用范围和过期条件 |
+| Wiki 同步 | 只沉淀未来会复用的事实 | 临时过程、一次性日志、重复内容不得写入 wiki | 每条知识有来源 artifact、适用范围和过期条件 |
 | Close | 用 package / handoff / doctor / archive dry-run 收束 | release、rollback、残余风险、owner 缺一不可 | 先 Action Summary，再给归档路径和验证摘要 |
 
 ## 命令入口

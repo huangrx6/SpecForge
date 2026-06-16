@@ -23,6 +23,7 @@ description: 完成 SpecForge 关闭阶段；用于当前 workflow 已到 wiki_s
 - `.specforge/core/standards/wiki.md`
 - `.specforge/core/standards/engineering.md`
 - `.specforge/core/standards/ai-toolkit.md`
+- `.specforge/core/skills/code-intelligence/SKILL.md`（wiki sync / close 需要按 diff 判断 Wiki 刷新目标时）
 
 ## 启动扫描
 
@@ -40,7 +41,7 @@ node .specforge/core/scripts/instructions.mjs
 | `closure` | 写 release / rollback，doctor，archive dry-run，archive |
 | 其他 | 停止，按 `instructions.mjs` 路由到对应阶段 |
 
-## Wiki Sync
+## Wiki 同步
 
 1. 生成 artifact：
 
@@ -49,7 +50,8 @@ node .specforge/core/scripts/create-artifact.mjs wiki_sync
 ```
 
 2. 读取 implementation、code review、verification、requirements / gap report、ui design、technical design。
-3. 判断是否影响长期知识：
+3. 先运行 `node .specforge/core/scripts/wiki-update-plan.mjs --json` 和 `node .specforge/core/scripts/wiki-refresh-plan.mjs --from-diff --json`；若 `can_write_na=false`，或 diff 刷新计划存在 required target，不得在 `wiki-sync.md` 写 N/A，必须更新 required targets 或记录阻断。
+4. 判断是否影响长期知识：
    - 产品规则、用户流程、术语。
    - UI 设计系统、PC 端规范、页面规则。
    - 架构、模块边界、API、事件、SDK。
@@ -57,8 +59,8 @@ node .specforge/core/scripts/create-artifact.mjs wiki_sync
    - 运行、发布、回滚、可观测性。
    - technical design 的 rollout、rollback seam、owner、extension point、deprecation path、wiki target、technical debt、revisit trigger。
    - 决策、风险、技术债。
-4. 更新 `.specforge/wiki/` 中当前知识文件，或在 `06-close/wiki-sync.md` 写明不更新理由。
-5. 批准 gate：
+5. 更新 `.specforge/wiki/` 中当前知识文件，或在 `06-close/wiki-sync.md` 写明不更新理由。
+6. 运行 `node .specforge/core/scripts/wiki-quality.mjs --mode close`；无 `FAIL` 后批准 gate：
 
 ```bash
 node .specforge/core/scripts/gate.mjs wiki_sync APPROVED --evidence 06-close/wiki-sync.md
@@ -94,6 +96,9 @@ node .specforge/core/scripts/create-artifact.mjs closure
 
 ```bash
 node .specforge/core/scripts/doctor.mjs
+node .specforge/core/scripts/wiki-update-plan.mjs --json
+node .specforge/core/scripts/wiki-refresh-plan.mjs --from-diff --json
+node .specforge/core/scripts/wiki-quality.mjs --mode close
 node .specforge/core/scripts/archive-work.mjs --dry-run
 ```
 
@@ -115,6 +120,9 @@ node .specforge/core/scripts/archive-work.mjs
 |---|---|
 | verification gate 未批准 | 停止，回 `sf-verify` |
 | wiki_sync gate 未批准且 ready 已到 closure | 停止，先做 wiki sync |
+| `wiki-update-plan` 输出 `can_write_na=false` 但 wiki-sync 写 N/A | 停止，补 wiki |
+| `wiki-refresh-plan` 有 required target 但 wiki-sync 写 N/A | 停止，补 wiki 或记录阻断 |
+| `wiki-quality.mjs --mode close` 有 `FAIL` | 停止，修复 wiki |
 | release / rollback 缺少 verification 残余风险或观察点对账 | 停止，补齐 |
 | rollback 无触发条件或不可回滚未写补偿 | 停止，补齐 |
 | doctor 或 archive dry-run 失败 | 停止，按错误处理 |
@@ -123,6 +131,7 @@ node .specforge/core/scripts/archive-work.mjs
 ## 完成标准
 
 - `06-close/wiki-sync.md` 存在，wiki_sync gate 为 `APPROVED`。
+- `wiki-update-plan`、`wiki-refresh-plan` 与 wiki-sync 结论一致，`wiki-quality.mjs --mode close` 无 `FAIL`。
 - `06-close/release.md`、`06-close/rollback.md` 已填写，不是空模板。
 - verification 残余风险、release 观察点、rollback 触发条件互相对齐。
 - 外部待补证、manual-confirmed、deferred 项已进入 release 观察点或 follow-up。

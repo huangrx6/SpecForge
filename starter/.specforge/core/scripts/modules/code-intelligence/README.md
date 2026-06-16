@@ -1,8 +1,8 @@
-# Code Intelligence Module
+# 代码智能脚本模块
 
-职责：存量项目画像、provider 检测、CodeGraph health、Repomix 编排计划、bootstrap map 和 provider graph facts 归一化。
+职责：存量项目画像、provider 检测、CodeGraph health / freshness、Repomix 编排计划、bootstrap map、diff 影响面、Wiki 刷新计划和 provider graph facts 归一化。
 
-稳定入口：`codebase-map.mjs`、`codebase-index.mjs`。
+稳定入口：`codebase-map.mjs`、`codebase-index.mjs`、`graph-freshness.mjs`、`graph-impact.mjs`、`wiki-refresh-plan.mjs`。
 
 内部模块：`provider-facts.mjs` 负责把 CodeGraph / MCP / SCIP 查询结果归一为 `graph_facts[]`。
 

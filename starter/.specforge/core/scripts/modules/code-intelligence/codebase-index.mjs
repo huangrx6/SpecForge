@@ -591,6 +591,37 @@ function firstItems(items = [], limit = 12) {
   return items.slice(0, limit);
 }
 
+function dataCandidateGroups(raw) {
+  const empty = {
+    active_models: [],
+    repositories: [],
+    migration_artifacts: [],
+    schema_authorities: [],
+    seed_or_init: [],
+    legacy_sql_candidates: [],
+    untrusted_sql: [],
+    data_candidates: [],
+  };
+  if (Array.isArray(raw)) return { ...empty, data_candidates: firstItems(raw, 20) };
+  if (!raw || typeof raw !== "object") return empty;
+  return Object.fromEntries(
+    Object.entries(empty).map(([key]) => [key, firstItems(Array.isArray(raw[key]) ? raw[key] : [], 20)]),
+  );
+}
+
+function flattenDataCandidates(groups) {
+  return [
+    ...groups.schema_authorities,
+    ...groups.active_models,
+    ...groups.repositories,
+    ...groups.migration_artifacts,
+    ...groups.seed_or_init,
+    ...groups.data_candidates,
+    ...groups.legacy_sql_candidates,
+    ...groups.untrusted_sql,
+  ].filter((item, index, list) => list.indexOf(item) === index);
+}
+
 function normalizedContext(bootstrap, selected, status, graphFacts = []) {
   const modules = firstItems(bootstrap.source_roots ?? [], 12).map((item) => ({
     path: item.name,
@@ -599,8 +630,9 @@ function normalizedContext(bootstrap, selected, status, graphFacts = []) {
     source_count: item.source_count ?? item.count,
     file_count: item.file_count ?? item.count,
   }));
+  const dataGroups = dataCandidateGroups(bootstrap.candidates?.data);
 
-  return {
+  const context = {
     scale: bootstrap.scale,
     has_codebase: bootstrap.has_codebase,
     provider_status: status,
@@ -609,7 +641,8 @@ function normalizedContext(bootstrap, selected, status, graphFacts = []) {
     modules,
     entries: firstItems(bootstrap.candidates?.entries ?? [], 20),
     api_candidates: firstItems(bootstrap.candidates?.api ?? [], 20),
-    data_candidates: firstItems(bootstrap.candidates?.data ?? [], 20),
+    data_candidates: firstItems(flattenDataCandidates(dataGroups), 40),
+    data_candidate_groups: dataGroups,
     test_candidates: firstItems(bootstrap.candidates?.tests ?? [], 20),
     operations_candidates: firstItems(bootstrap.candidates?.operations ?? [], 20),
     graph_facts: firstItems(graphFacts, 50),
@@ -630,6 +663,8 @@ function normalizedContext(bootstrap, selected, status, graphFacts = []) {
           ? ["requested graph provider is installed but not ready; initialize or sync it before relying on graph facts"]
         : [],
   };
+  context.wiki_seed = wikiSeed(bootstrap, context, status);
+  return context;
 }
 
 function itemPath(item) {
@@ -646,6 +681,71 @@ function languageNames(languages) {
   }
   if (typeof languages === "object") return Object.keys(languages);
   return [];
+}
+
+function stableWikiSlug(value) {
+  return String(value ?? "unknown")
+    .replace(/[\\/]+/g, "-")
+    .replace(/[^A-Za-z0-9_-]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 64) || "unknown";
+}
+
+function wikiSeed(bootstrap, context, status) {
+  const moduleCandidates = context.modules.slice(0, 8).map((item) => ({
+    path: `.specforge/wiki/module-${stableWikiSlug(item.path)}.md`,
+    source: item.path,
+    reason: "Source root candidate with enough source files to become a reusable module entry.",
+  }));
+  const apiCandidates = context.api_candidates.slice(0, 6).map((item) => ({
+    path: `.specforge/wiki/api-${stableWikiSlug(itemPath(item))}.md`,
+    source: itemPath(item),
+    reason: "API / route candidate found by bootstrap map.",
+  }));
+
+  return {
+    project_overview: {
+      target: ".specforge/wiki/01-project-overview.md",
+      scale: bootstrap.scale,
+      has_codebase: bootstrap.has_codebase,
+      languages: languageNames(bootstrap.languages),
+      source_roots: context.modules.map((item) => item.path),
+    },
+    architecture: {
+      target: ".specforge/wiki/03-architecture.md",
+      modules: context.modules,
+      entries: context.entries,
+      api_candidates: context.api_candidates,
+      graph_facts: context.graph_facts.filter((fact) => fact.used_for_wiki),
+    },
+    data_model: {
+      target: ".specforge/wiki/04-data-model.md",
+      candidates: context.data_candidates,
+      groups: context.data_candidate_groups,
+    },
+    operations: {
+      target: ".specforge/wiki/05-operations.md",
+      candidates: context.operations_candidates,
+      test_candidates: context.test_candidates,
+    },
+    suggested_files: [
+      ".specforge/wiki/01-project-overview.md",
+      ".specforge/wiki/03-architecture.md",
+      context.api_candidates.length ? ".specforge/wiki/external-interfaces.md" : null,
+      context.data_candidates.length ? ".specforge/wiki/04-data-model.md" : null,
+      ".specforge/wiki/05-operations.md",
+      ".specforge/wiki/08-risks.md",
+      ...moduleCandidates.map((item) => item.path),
+      ...apiCandidates.map((item) => item.path),
+    ].filter(Boolean),
+    module_candidates: moduleCandidates,
+    api_candidates: apiCandidates,
+    risks:
+      status === "blocked_large_without_provider"
+        ? ["Large codebase needs graph/MCP/SCIP provider or user-specified module boundary before wiki facts are complete."]
+        : [],
+  };
 }
 
 function payloadSummary(payload) {
@@ -676,9 +776,11 @@ function payloadSummary(payload) {
     entries: payload.normalized_context.entries.map(itemPath),
     api_candidates: payload.normalized_context.api_candidates.map(itemPath),
     data_candidates: payload.normalized_context.data_candidates.map(itemPath),
+    data_candidate_groups: payload.normalized_context.data_candidate_groups,
     test_candidates: payload.normalized_context.test_candidates.map(itemPath),
     operations_candidates: payload.normalized_context.operations_candidates.map(itemPath),
     graph_fact_summary: payload.normalized_context.graph_fact_summary,
+    wiki_seed_targets: payload.normalized_context.wiki_seed.suggested_files,
   };
 }
 
@@ -855,7 +957,7 @@ ${markdownList(normalized.api_candidates, (item) => `\`${item}\``)}
 
 ### 数据候选
 
-${markdownList(normalized.data_candidates, (item) => `\`${item}\``)}
+${Object.entries(normalized.data_candidate_groups ?? {}).map(([group, items]) => `#### ${group}\n\n${markdownList(items, (item) => `\`${item}\``)}`).join("\n\n")}
 
 ### 测试候选
 
@@ -869,15 +971,15 @@ ${markdownList(normalized.operations_candidates, (item) => `\`${item}\``)}
 
 | 项 | 值 |
 |---|---|
-| Imported facts | ${normalized.graph_fact_summary.count} |
-| With source paths | ${normalized.graph_fact_summary.with_source_paths} |
-| Wiki candidates | ${normalized.graph_fact_summary.wiki_candidates} |
-| By type | \`${JSON.stringify(normalized.graph_fact_summary.by_type)}\` |
-| By confidence | \`${JSON.stringify(normalized.graph_fact_summary.by_confidence)}\` |
+| 导入事实数 | ${normalized.graph_fact_summary.count} |
+| 带来源路径 | ${normalized.graph_fact_summary.with_source_paths} |
+| Wiki 候选 | ${normalized.graph_fact_summary.wiki_candidates} |
+| 按类型 | \`${JSON.stringify(normalized.graph_fact_summary.by_type)}\` |
+| 按置信度 | \`${JSON.stringify(normalized.graph_fact_summary.by_confidence)}\` |
 
-| ID | Type | Subject | Relation | Object | Provider | Confidence | Source paths | Used for wiki |
+| ID | 类型 | 主体 | 关系 | 客体 | Provider | 置信度 | 来源路径 | 用于 Wiki |
 |---|---|---|---|---|---|---|---|---|
-${normalized.graph_facts.length === 0 ? "| N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A |" : normalized.graph_facts.map((fact) => `| ${fact.id} | ${fact.type} | ${fact.subject || "N/A"} | ${fact.relation || "N/A"} | ${fact.object || "N/A"} | ${fact.provider} | ${fact.confidence} | ${fact.source_paths.map((item) => `\`${item}\``).join("<br>") || "N/A"} | ${fact.used_for_wiki ? "yes" : "no"} |`).join("\n")}
+${normalized.graph_facts.length === 0 ? "| N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A |" : normalized.graph_facts.map((fact) => `| ${fact.id} | ${fact.type} | ${fact.subject || "N/A"} | ${fact.relation || "N/A"} | ${fact.object || "N/A"} | ${fact.provider} | ${fact.confidence} | ${fact.source_paths.map((item) => `\`${item}\``).join("<br>") || "N/A"} | ${fact.used_for_wiki ? "是" : "否"} |`).join("\n")}
 
 ## 6. Wiki 回写计划
 
@@ -904,6 +1006,7 @@ ${JSON.stringify(
     selected_provider: payload.selected_provider,
     provider_health: payload.selected_provider.health,
     normalized_context: payload.normalized_context,
+    wiki_seed: payload.wiki_seed,
     graph_facts: payload.graph_facts,
     provider_execution: payload.provider_execution,
   },
@@ -1013,6 +1116,7 @@ try {
   const warnings = scanModeDecision.selected
     ? [...selection.warnings, ...scanModeDecision.warnings, ...providerHealthWarnings(providerList)]
     : [...scanModeDecision.warnings, ...providerHealthWarnings(providerList)];
+  const normalized = normalizedContext(bootstrap, selection.selected, selection.status, graphFacts);
   const payload = {
     kind: "specforge_codebase_intelligence",
     version: 1,
@@ -1032,7 +1136,8 @@ try {
     next_actions: nextActions(selection.status, bootstrap.scale, selection.selected, scanModeDecision, dependency),
     warnings,
     graph_facts: graphFacts,
-    normalized_context: normalizedContext(bootstrap, selection.selected, selection.status, graphFacts),
+    normalized_context: normalized,
+    wiki_seed: normalized.wiki_seed,
     provider_plan: plan,
     provider_execution: execution,
     bootstrap,

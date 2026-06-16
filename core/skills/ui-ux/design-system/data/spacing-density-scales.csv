@@ -1,0 +1,12 @@
+density_id,display_name,design_mode,best_for,page_padding,section_gap,panel_padding,card_gap,toolbar_height,control_height,table_row_height,sidebar_width,content_max_width,avoid
+compact,紧凑 Product UI,Product UI,后台/审批/表格密集页,24,16,16,12,44,32,40,240,none,避免大卡片和 32px+ 区块间距
+comfortable,标准 Product UI,Product UI,工作台/普通 SaaS,32,24,20,16,52,36,44,260,1440,避免首屏空白超过 40%
+analytical,数据分析密度,Product UI,数据看板/运营分析,28,20,18,16,48,34,42,240,1600,避免指标卡过大且无 drilldown
+editorial,品牌叙事密度,Brand Surface,官网/活动页/作品集,48,56,32,24,auto,44,none,none,1180,避免把 editorial 留白带到后台工作区
+hybrid,混合入口密度,Hybrid,AI 助手/客户门户/低频入口,32,32,24,20,52,38,44,260,1280,展示区和工作区必须分别定义密度
+productive-2x,生产力紧凑密度,Product UI,政企后台/审批台/权限审计,24,16,16,12,48,32,40,240,none,借鉴 Carbon 2/4/8 scale：避免大留白和卡片汤
+commerce-admin,商家运营密度,Product UI,订单/库存/客服/营销配置,24,20,16,12,48,32,40,240,1440,借鉴 Polaris semantic space：入口和列表按任务分组而不是平均卡片
+collaboration-workflow,协作流程密度,Product UI,项目/知识库/看板/文档协作,32,24,16,12,48,34,44,260,1440,借鉴 Atlassian：同组靠近跨任务区拉开
+fluent-ramp,Fluent 企业密度,Product UI,桌面工具/企业控制台/设置中心,32,24,20,16,52,36,44,260,1440,借鉴 Fluent 4px ramp：响应式和触控场景可放大控件
+material-adaptive,Material 自适应密度,Hybrid,跨端产品/移动优先/轻工作台,32,24,20,16,56,40,48,280,1280,借鉴 Material adaptive layout：不要把移动舒适间距照搬到桌面高密区域
+brand-narrative,品牌叙事密度,Brand Surface,官网/活动页/作品集,56,64,32,24,auto,44,none,none,1200,借鉴 Apple/Material 可读性：首屏叙事但必须露出下一段

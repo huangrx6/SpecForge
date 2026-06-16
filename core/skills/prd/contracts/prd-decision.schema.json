@@ -25,17 +25,41 @@
     },
     "decision_status": {
       "type": "string",
-      "enum": ["draft", "needs-decision", "research-needed", "delegated-default", "approved-for-requirements", "blocked-by-conflict"]
+      "enum": ["draft", "needs-decision", "research-needed", "approved-for-requirements", "blocked-by-conflict"]
     },
-    "source_artifacts": { "type": "array", "items": { "type": "string" } },
+    "source_artifacts": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
     "problem": { "type": "string" },
-    "target_users": { "type": "array", "items": { "type": "string" } },
-    "mvp": { "type": "array", "items": { "type": "string" } },
-    "non_goals": { "type": "array", "items": { "type": "string" } },
-    "success_criteria": { "type": "array", "items": { "type": "string" } },
-    "assumptions": { "type": "array", "items": { "type": "string" } },
-    "open_questions": { "type": "array", "items": { "type": "string" } },
-    "requirements_seeds": { "type": "array", "items": { "type": "string" } },
+    "target_users": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "mvp": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/mvp_item" }
+    },
+    "non_goals": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/non_goal" }
+    },
+    "success_criteria": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/success_criterion" }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/assumption" }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/open_question" }
+    },
+    "requirements_seeds": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/requirements_seed" }
+    },
     "handoff": {
       "type": "object",
       "additionalProperties": false,
@@ -45,6 +69,93 @@
         "technical_design": { "type": "array", "items": { "type": "string" } },
         "data_security": { "type": "array", "items": { "type": "string" } },
         "verification": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "$defs": {
+    "confirmation_type": {
+      "type": "string",
+      "enum": ["user-confirmed", "delegated-default", "agent-recommendation", "pending"]
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["confirmed", "likely", "unclear"]
+    },
+    "mvp_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["item", "source", "confirmation_type", "rationale", "risk", "handoff"],
+      "properties": {
+        "item": { "type": "string" },
+        "source": { "type": "string" },
+        "confirmation_type": { "$ref": "#/$defs/confirmation_type" },
+        "rationale": { "type": "string" },
+        "risk": { "type": "string" },
+        "handoff": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "non_goal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["item", "reason", "trigger_for_future", "source"],
+      "properties": {
+        "item": { "type": "string" },
+        "reason": { "type": "string" },
+        "trigger_for_future": { "type": "string" },
+        "source": { "type": "string" }
+      }
+    },
+    "success_criterion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metric", "target", "baseline", "evidence", "confidence"],
+      "properties": {
+        "metric": { "type": "string" },
+        "target": { "type": "string" },
+        "baseline": { "type": "string" },
+        "evidence": { "type": "string" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      }
+    },
+    "assumption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assumption", "source", "confirmation_type", "risk", "validation"],
+      "properties": {
+        "assumption": { "type": "string" },
+        "source": { "type": "string" },
+        "confirmation_type": { "$ref": "#/$defs/confirmation_type" },
+        "risk": { "type": "string" },
+        "validation": { "type": "string" }
+      }
+    },
+    "open_question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["question", "impact", "owner", "needed_by", "status"],
+      "properties": {
+        "question": { "type": "string" },
+        "impact": { "type": "string" },
+        "owner": { "type": "string" },
+        "needed_by": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "answered", "deferred", "blocked"]
+        }
+      }
+    },
+    "requirements_seed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["seed", "source", "target_section", "notes"],
+      "properties": {
+        "seed": { "type": "string" },
+        "source": { "type": "string" },
+        "target_section": {
+          "type": "string",
+          "enum": ["functional", "nfr", "constraint", "pending"]
+        },
+        "notes": { "type": "string" }
       }
     }
   }

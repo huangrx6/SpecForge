@@ -21,6 +21,7 @@ description: 根据已批准的 SpecForge tasks 执行实现；用于 implementa
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/engineering.md`
 - `.specforge/core/standards/ai-toolkit.md`
+- `.specforge/core/skills/code-intelligence/SKILL.md`：任务边界涉及现有模块、符号定位、调用链或修改后 freshness 检查时读取。
 - 需要实现 UI 时读取 `.specforge/core/standards/design.md`、`.specforge/core/skills/ui-ux/design-system/references/cross-stage-handoff.md` 和 `ui-design.md#Design Contract Summary`；若 `ui-design.md` 声明采用 PC 端业务系统规范，还要读取 `.specforge/core/standards/pc-ui-design-spec.md`。
 - UI 实现涉及 shadcn-vue、project wrapper、token、动效或组件状态时，按需读取 `.specforge/core/skills/ui-ux/design-system/references/component-system.md`、`references/shadcn-vue.md`、`foundations/tokens.md`、`foundations/motion.md` 和相关 `components/*.md`。
 
@@ -40,7 +41,8 @@ node .specforge/core/scripts/create-artifact.mjs implementation
 ```
 
 4. 读取 `work.yaml`、`01-spec/tasks.md`、适用的 `requirements.md` / `gap-report.md` / `ui-design.md` / `technical-design.md`、`02-spec-review/spec-review-v1.md`、`.specforge/wiki/00-index.md` 和任务 / 技术设计引用的相关 wiki。
-5. 运行：
+5. 如 tasks / technical design 引用了 `graph_facts[]`、affected modules 或关键 symbol，先运行 `node .specforge/core/scripts/graph-freshness.mjs --json`；provider pending / stale 时直接读取当前文件，不只信图谱。
+6. 运行：
 
 ```bash
 git status --short --untracked-files=all
@@ -56,7 +58,7 @@ git status --short --untracked-files=all
    - 如果 tasks 已填写 `任务图与执行策略`，以其中依赖、并行边界和禁止同时修改文件为准。
    - 若实际执行需要改变依赖或并行边界，停止并回到 `sf-tasking` 更新任务图。
 2. 从 `technical-design.md#0. 影响面与读取计划`、`#7.1 Architecture Contract`、`#Implementation Handoff`、`#12. Operability & Maintenance` 和相关 wiki 建立上下文边界：入口路径、关键符号 / 路由、上游 / 下游、测试位置、运行命令、change slices、files/modules、test seams、rollout、rollback、owner 和 revisit trigger。
-3. 实现前只沿上述边界读取代码；不得为了“保险”重新全量扫描仓库。
+3. 需要定位具体 symbol 时，按 `.specforge/core/skills/code-intelligence/references/stage-integration.md#sf-implement` 使用 CodeGraph / provider；实现前只沿上述边界读取代码，不得为了“保险”重新全量扫描仓库。
 4. 若任务边界、验证方式、回滚信息不足以指导实现，停止并退回 `sf-tasking` 或 `sf-spec-review`。
 5. 若存在 `[NEEDS TECH DECISION]`、`[NEEDS DEPENDENCY DECISION]`、关键 `unknown`，停止并退回 `sf-tech-design` 或 `sf-spec-review`。
 6. 写 `03-implementation/plan.md`。
@@ -82,7 +84,8 @@ git status --short --untracked-files=all
 
 1. 更新 `03-implementation/report.md`：task 状态、实现策略、验证、偏离、风险、code review 提示。
 2. 更新 `03-implementation/changed-files.md`：每个真实变更文件、task、批准边界、风险和验证方式。
-3. 收尾时运行：
+3. 修改后如使用过 graph provider，运行 `node .specforge/core/scripts/graph-freshness.mjs --json`，在 report 写明 graph freshness、touched symbols 和 affected area；pending / stale 文件必须直接读取当前文件。
+4. 收尾时运行：
 
 ```bash
 git status --short --untracked-files=all

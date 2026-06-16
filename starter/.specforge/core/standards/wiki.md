@@ -29,6 +29,10 @@ Wiki 也是后续任务的默认入口。日常需求、bugfix、issue、refacto
 | `06-decisions.md` | 长期架构 / 产品 / 技术决策 |
 | `07-glossary.md` | 术语、缩写、领域语言 |
 | `08-risks.md` | 已知风险、技术债、后续事项 |
+| `external-interfaces.md` | 对外接口总览：HTTP API、Webhook、GraphQL/RPC/gRPC、CLI、SDK、文件导入导出、第三方调用、事件消息、公开前端入口 |
+| `config-env.md` | 配置源、环境变量、secret、feature flag、运行时配置风险 |
+| `security-auth.md` | 认证、授权、角色权限、敏感数据边界、安全风险 |
+| `jobs-events.md` | 后台任务、队列、事件、定时任务、重试、DLQ、消息契约 |
 
 ## 最低完整度
 
@@ -45,7 +49,11 @@ Wiki 不能只写一句概述。对于存量项目画像或重要 work item 回�
 | `05-operations.md` | 环境变量、启动命令、构建、测试、数据库初始化、后台任务、部署、回滚、日志 / 监控、常见故障、验证入口 |
 | `06-decisions.md` | 决策、状态、背景、选项、取舍、影响范围、回滚 / 复核条件、证据 |
 | `07-glossary.md` | 术语、定义、代码中的命名、业务含义、容易混淆点、来源 |
-| `08-risks.md` | 风险、影响、证据、当前缓解、owner、下一步、阻断状态 |
+| `08-risks.md` | 风险、影响、证据、当前缓解、负责人、下一步、阻断状态 |
+| `external-interfaces.md` | 接口范围、入站 API、出站集成、文件导入导出、事件消息、未确认接口缺口、证据和置信度 |
+| `config-env.md` | 运行时配置来源、环境变量、功能开关、secret 边界、配置风险和证据 |
+| `security-auth.md` | 认证、授权、敏感数据边界、权限失败行为、安全风险和证据 |
+| `jobs-events.md` | 后台任务、事件 / 队列 / 消息契约、定时调度、重试 / 死信队列、测试和证据 |
 
 最低完整度不是要求编造信息。恰恰相反：如果架构、API、数据模型不完整，必须显式写出“缺什么、为什么缺、从哪里补”，而不是用笼统描述掩盖。
 
@@ -57,6 +65,31 @@ Wiki 不能只写一句概述。对于存量项目画像或重要 work item 回�
 - 运维事实至少引用 package script、Docker、CI、部署配置、env 示例、README 或脚本中的一种证据。
 - 如果某类证据不存在，写 `未发现`，并说明扫描范围。
 - 代码导航事实必须能帮助后续任务减少读取范围：路径、符号、命令、测试或检索词至少写一种，不能只写“参考源码”。
+
+## 证据可信度规则
+
+Wiki 写当前事实，不写“仓库里曾经存在过什么”。数据、接口、架构事实按以下证据等级处理：
+
+| 等级 | 证据 | 能否写为当前事实 |
+|---|---|---|
+| A | 当前运行入口、路由、controller、service、repository、ORM model、migration config、tests、CI | 可以 |
+| B | 当前技术设计、实现报告、验证报告、代码审查证据 | 已验证时可以 |
+| C | README、文档、注释、历史 SQL、旧 DDL、未引用脚本 | 不可以，除非有 A/B 级证据交叉确认 |
+| D | 目录名、文件名、Agent 推测、未验证图谱结果 | 不可以 |
+
+SQL / DDL / dump 文件默认不是当前事实。只有满足以下任一条件，才能作为当前数据证据：
+
+- 被当前 migration 工具引用。
+- 被 package script / Makefile / Docker init / CI 引用。
+- 被代码读取或执行。
+- 被测试 fixture 使用。
+- 被用户确认仍是当前 schema 来源。
+
+否则只能写入：
+
+- `04-data-model.md#历史--未受信-sql-产物`
+- `08-risks.md`
+- 未确认缺口
 
 ## Wiki-first 上下文策略
 
@@ -83,6 +116,7 @@ Wiki 不能只写一句概述。对于存量项目画像或重要 work item 回�
 |---|---|
 | `module-<name>.md` | 单个模块的职责、依赖、内部接口、运行注意事项足够稳定，需要独立维护 |
 | `api-<domain>.md` | 某个接口域包含多条 API / 事件 / Webhook / SDK 契约，需要集中汇总 |
+| `integration-<system>.md` | 某个第三方系统或外部服务有稳定 client、auth、retry、failure behavior 和测试证据 |
 | `design-system.md` | 项目形成稳定 UI 组件、token、视觉风格、Figma MCP / Pencil MCP / DESIGN.md 规则 |
 
 ## 何时回写
@@ -101,6 +135,25 @@ Wiki 不能只写一句概述。对于存量项目画像或重要 work item 回�
 - 临时调试日志。
 - 未批准的方案草稿。
 - 不会再次复用的实现备注。
+
+## 机器门禁
+
+Wiki sync 不能只靠人工判断。写 `06-close/wiki-sync.md` 前必须运行：
+
+```bash
+node .specforge/core/scripts/wiki-update-plan.mjs --json
+```
+
+`can_write_na=false` 时不得批准 “无长期事实” 的 N/A。必须更新 `required_targets`，或把 `blocking_gaps` 写成阻断项并让 `wiki_sync` gate 进入 `REQUEST_CHANGES`。
+
+存量项目 steering 或 close 阶段必须使用严格质量模式：
+
+```bash
+node .specforge/core/scripts/wiki-quality.mjs --mode steering
+node .specforge/core/scripts/wiki-quality.mjs --mode close
+```
+
+`bootstrap` 模式只允许新建空骨架；`steering` / `close` 模式会把核心文件 placeholder、缺少导航证据、`used_for_wiki=true` 的 graph facts 未回写等问题视为 `FAIL`。
 
 ## 写法
 
@@ -129,7 +182,8 @@ frontmatter 语义：
 |---|---|---|
 | 产品需求文档 / 需求规格形成稳定业务规则 | `02-product-rules.md` | 不复制完整需求正文 |
 | UI design 形成稳定设计系统或组件规则 | `design-system.md` | 不复制一次性线稿截图 |
-| technical design 形成长期架构 / API / 数据 / 运维事实 | `03-architecture.md`、`api-<domain>.md`、`04-data-model.md`、`05-operations.md` | 不复制临时实现计划 |
+| technical design 形成长期架构 / API / 数据 / 运维事实 | `03-architecture.md`、`external-interfaces.md`、`api-<domain>.md`、`04-data-model.md`、`05-operations.md` | 不复制临时实现计划 |
+| technical design 形成配置、权限、安全或后台任务事实 | `config-env.md`、`security-auth.md`、`jobs-events.md` | 不把 secret 值写入 wiki |
 | implementation 发现真实结构与设计不同 | 对应事实文件 + `06-decisions.md` | 不复制 commit diff |
 | `graph_facts[].used_for_wiki=true` | 对应架构 / 模块 / API / 数据 / 运维 / 风险文件，保留 `GF-*` id 和来源摘要 | 不复制 provider 原始报告或未确认关系 |
 | verification 暴露系统性风险或测试缺口 | `08-risks.md`、`05-operations.md` | 不复制完整测试日志 |

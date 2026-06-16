@@ -25,6 +25,12 @@
    - Why it might fail:
    - Visual language:
    - Foundations:
+   - Composition Recipe:
+     - Typography:
+     - Spacing:
+     - Radius / shadow:
+     - Motion:
+     - Signature carrier:
    - Business translation pattern:
    - Component impact:
    - Page pattern impact:
@@ -33,13 +39,13 @@
 2. Recommended direction
 3. Rejected directions and why
 4. Optional mix: 如果需要混合风格，说明主审美和辅助审美的边界
-5. After user selects: write constraints for foundations/components/pages/prompts/Pencil
+5. 用户选择后：写入 `Composition Recipe`、`foundation_system`、components、pages、prompts 和 Pencil handoff 约束
 
 要求：
 - 方向必须互斥。
 - 每个方向必须是审美风格，不是业务模式。
 - 每个方向都要能映射到组件契约，但不能把组件语言当成审美本身。
-- 不使用“现代、简洁、高级”作为唯一解释；必须落到色彩、字体、形状、材质、插画、动效和反模式。
+- 不使用“现代、简洁、高级”作为唯一解释；必须落到色彩、字体、字号、行高、间距、圆角、阴影、材质、插画、动效和反模式。
 - 如果是严肃后台，也可以推荐克制美学，如“极简主义 / 日式留白 / 极简科技风”，再翻译成高密业务 UI。
 - 推荐方向要覆盖不同气质，不要只在同一类里换名字；例如不要同时给“极简主义、现代高级感、日式留白”作为全部选项。
 ```

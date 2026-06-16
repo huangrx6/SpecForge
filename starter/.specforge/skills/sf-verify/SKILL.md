@@ -21,6 +21,7 @@ description: 执行 SpecForge verification 阶段；用于 code_review 已通过
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/ai-toolkit.md`
 - `.specforge/core/standards/engineering.md`
+- `.specforge/core/skills/code-intelligence/SKILL.md`：code review 或 changed files 提供 affected tests / graph impact 时读取，用于选择验证范围。
 - 有 UI 影响时读取 `.specforge/core/standards/design.md`；若 `ui-design.md` 声明采用 PC 端业务系统规范，还要读取 `.specforge/core/standards/pc-ui-design-spec.md`。
 - 有浏览器流程时读取 `.specforge/core/standards/playwright.md` 和 `.specforge/core/skills/ORCHESTRATION.md`。
 - 需要生成测试用例、自动化测试、项目启动、登录态、Playwright flow 或证据包时读取 `.specforge/core/skills/quality/test-engineering/SKILL.md`。
@@ -42,6 +43,7 @@ node .specforge/core/scripts/create-artifact.mjs verification
 ```
 
 4. 读取 `03-implementation/report.md`、`03-implementation/changed-files.md`、`04-code-review/code-review-v1.md`、适用 spec、`.specforge/wiki/00-index.md`、本次引用的运行 / API / 模块 / 风险 wiki 和已记录测试 / 截图 / 日志 / CI。
+5. 如 code review 未提供 affected tests，但 diff 涉及存量模块、API、数据、权限、任务或跨模块风险，运行 `node .specforge/core/scripts/graph-impact.mjs --from-git --json`，用结果选择回归测试范围。
 
 ## 执行序列
 
@@ -67,7 +69,8 @@ node .specforge/core/scripts/create-artifact.mjs verification
 ### C. 执行验证
 
 1. 按风险选择单元、集成、契约、E2E、UI、静态检查、构建、启动、迁移、回滚、可观测性验证。
-2. 记录实际命令、目录、时间、结果和输出摘要。
+2. 如果存在 affected tests，优先运行；无法运行时必须写 owner、影响和重新验证触发条件。
+3. 记录实际命令、目录、时间、结果和输出摘要。
 3. UI / 浏览器流程必须真实执行点击、输入、上传、提交、审批、下载、权限切换或错误触发中的适用部分。
 4. PC 端业务系统规范被采用时，额外验证 token、布局尺寸、表格、表单、弹窗 / 抽屉、响应式和图标规则是否符合 `pc-ui-design-spec.md`。
 5. 手工验证只用于无法自动化或一次性环境，必须写步骤、环境、结果和证据。

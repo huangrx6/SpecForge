@@ -25,7 +25,7 @@ description: SpecForge requirements 混合型能力包。用于把已确认的�
 4. 需要验收标准时读 `prompts/acceptance-criteria.md`，把验收种子转成 Given / When / Then / verification method。
 5. 需要按场景补覆盖时，按触发读取 `patterns/*.md`；优先读取与需求风险匹配的 1-3 个 pattern，不要全量加载。
 6. 写入前读 `references/cross-stage-handoff.md`，建立 Source -> REQ -> AC -> downstream trace。
-7. 旧文件 `foundations/confirmation-boundary.md`、`foundations/requirement-language.md`、`foundations/testability.md`、`foundations/traceability.md` 仅作为兼容入口；读到它们时继续读 `behavior-contract.md`。
+7. NFR 边界不清时读 `foundations/nfr-taxonomy.md`，避免把产品指标、技术方案或不可验证目标写成 NFR。
 8. 写完后读 `references/quality-rubric.md` 和 `references/anti-patterns.md`，做需求质量审查。
 
 ## 能力地图

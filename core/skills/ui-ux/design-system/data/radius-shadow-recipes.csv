@@ -1,0 +1,11 @@
+recipe_id,display_name,design_mode,best_for,control_radius,panel_radius,overlay_radius,surface_border,card_shadow,overlay_shadow,material_note,avoid
+product-border-first,边框优先 Product UI,Product UI,后台/管理端/审批台,6,8,10,1px solid var(--color-border),none,"0 16px 40px rgba(15, 23, 42, 0.14)",用背景层级和边框表达结构,避免每张卡都有投影
+product-soft-ops,轻柔运营台,Product UI,工作台/客服/运营,8,10,12,1px solid var(--color-border),"0 1px 2px rgba(15, 23, 42, 0.04)","0 18px 48px rgba(15, 23, 42, 0.16)",只给关键面板轻阴影,避免玩具化大圆角
+brand-material,品牌材质表面,Brand Surface,品牌页/活动页,10,16,18,"1px solid color-mix(in oklab, var(--color-border), transparent 20%)","0 18px 60px rgba(15, 23, 42, 0.12)","0 24px 80px rgba(15, 23, 42, 0.18)",材质必须服务主体对象,避免玻璃拟态全站铺开
+data-flat,数据工具扁平层级,Product UI,AI/数据/开发者工具,4,6,8,1px solid var(--color-border),none,"0 12px 32px rgba(2, 6, 23, 0.16)",高密信息优先边框分割,避免厚重投影降低扫描效率
+toy-local,局部玩具质感,Avatar-IP,头像/IP/空态局部,12,16,20,1px solid var(--color-border),"0 8px 24px rgba(15, 23, 42, 0.08)","0 20px 60px rgba(15, 23, 42, 0.16)",只影响 IP 和空态,避免扩散到主系统控件
+material-tonal-surface,Material tonal surface,Hybrid,跨端产品/轻工作台/状态面板,4,12,16,1px solid color-mix(in oklab var(--color-border) transparent 15%),none,"0 18px 42px rgba(15, 23, 42, 0.16)",借鉴 Material elevation：用 tonal surface 表达层级,避免把 elevation 当普通卡片阴影
+fluent-layered,Fluent layered surface,Product UI,桌面工具/企业控制台/设置中心,4,8,12,1px solid var(--color-border),"0 1px 2px rgba(15, 23, 42, 0.05)","0 16px 40px rgba(15, 23, 42, 0.18)",借鉴 Fluent layered surface：浮层和普通面板层级清楚,避免顶层页面靠大阴影制造层级
+commerce-admin-layered,商家后台层级,Product UI,订单/库存/客服/商家运营,6,8,12,1px solid var(--color-border),none,"0 18px 44px rgba(15, 23, 42, 0.15)",入口区少阴影列表区重扫描,避免 pastel icon card soup
+collaboration-surface,协作表面,Product UI,项目/知识库/看板/文档协作,4,6,8,1px solid var(--color-border),none,"0 12px 32px rgba(15, 23, 42, 0.14)",hover/selection 用 surface 与 border 表示,避免每个 block 都像独立卡片
+brand-signature-material,品牌 signature 材质,Brand Surface,官网/活动页/品牌叙事,12,18,24,1px solid color-mix(in oklab var(--color-border) transparent 35%),"0 24px 70px rgba(15, 23, 42, 0.14)","0 32px 100px rgba(15, 23, 42, 0.22)",只允许一个主体材质成为记忆点,避免全站玻璃拟态和强投影

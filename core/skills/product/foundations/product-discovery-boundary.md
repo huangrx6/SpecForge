@@ -27,6 +27,8 @@
 | `solution-candidate` | 候选解决方案 | candidate only |
 | `mvp-recommended` | Agent 推荐的 MVP | needs user confirmation |
 | `user-confirmed-mvp` | 用户确认 MVP | yes |
+| `delegated-default` | 用户授权按默认推荐推进 | yes, with risk note |
+| `pending` | 尚未确认 | candidate only |
 | `needs-research` | 需要补研究 | no |
 | `experiment-needed` | 需要实验验证 | maybe, as risk |
 

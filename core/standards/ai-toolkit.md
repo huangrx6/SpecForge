@@ -70,7 +70,7 @@ Traceability 由 workflow schema 的 `traceability_policy` 控制：`off` 不提
 | 浏览器验证 | Playwright | 点击、输入、提交、路由、响应式和失败提示验证 | `test-cases.md`、`verification report`、截图 / trace |
 | 审查 | `sf-spec-review`、`sf-code-review` | 聚焦越界、缺陷、安全、测试缺口和规格偏离 | review evidence |
 | 验收 | `sf-verify` | 归集本地、mock、CI、真实环境和人工确认结果 | `verification report` |
-| 知识沉淀 | `sf-wiki`、`sf-close`、Wiki Sync | 长期事实、接口契约、配置、风险、回滚沉淀 | `.specforge/wiki/*.md`、release / rollback |
+| 知识沉淀 | `sf-wiki`、`sf-close`、Wiki 同步 | 长期事实、接口契约、配置、风险、回滚沉淀 | `.specforge/wiki/*.md`、release / rollback |
 
 ## 推荐 AI 工具集
 

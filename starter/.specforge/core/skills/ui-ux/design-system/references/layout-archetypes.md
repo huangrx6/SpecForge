@@ -11,6 +11,20 @@
 | Split Inspector | 列表 + 详情、消息 + 上下文 | 左侧扫描，右侧决策；移动端变 drawer |
 | Workflow Timeline | 诊断、审批、导入、排障 | 步骤、当前状态、失败恢复清楚 |
 | Ops Dashboard | 监控、指标、告警 | 摘要、趋势、异常、责任入口 |
+| Review Desk | 审批、审核、风控、工单处理 | 状态 tabs、待处理队列、SLA、详情 drawer 和批量动作 |
+| Resource Operations | 用户、订单、资源、合同管理 | 工具栏、主表格、右侧 inspector、列设置和批量处理 |
+
+## Product UI selection rules
+
+| 输入信号 | 首选 archetype | 不要选 |
+|---|---|---|
+| 工作台 / 控制台 / 后台首页，且用户需要处理对象 | Review Desk / Resource Operations / Ops Dashboard | Generic SaaS shell |
+| 页面核心是用户、订单、合同、资源等对象管理 | Resource Operations / Split Inspector | KPI-only Dashboard |
+| 页面核心是审批、审核、工单、告警处理 | Review Desk / Workflow Timeline | Quick action grid |
+| 页面核心是监控和异常响应 | Ops Dashboard | 静态指标墙 |
+| 页面核心是 AI / 运维命令 | Command Surface | 表单卡片堆叠 |
+
+Product UI 第一屏必须有 `primary work surface`：queue、table、inspector、timeline、command surface 或 anomaly board。KPI、快捷入口和欢迎语都不是 primary work surface。
 
 ## Brand Surface
 
@@ -34,3 +48,5 @@
 - 先画装饰背景，再往上放内容。
 - 移动端只是桌面缩小版。
 - 表格页硬做 bento，导致扫描效率下降。
+- 工作台首屏只有 KPI strip、大空白卡片和快捷入口。
+- 右侧栏用通用 icon grid 填充，而不是承载 SLA、最近活动、上下文操作或异常解释。

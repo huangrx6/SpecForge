@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SpecForge Code Impact Report",
+  "type": "object",
+  "required": ["changed_files", "affected_modules", "affected_symbols", "affected_tests", "confidence", "checked_at"],
+  "properties": {
+    "changed_files": { "type": "array", "items": { "type": "string" } },
+    "affected_modules": { "type": "array", "items": { "type": "string" } },
+    "affected_symbols": { "type": "array", "items": { "type": "string" } },
+    "affected_tests": { "type": "array", "items": { "type": "string" } },
+    "graph_facts": { "type": "array", "items": { "$ref": "graph-fact.schema.json" } },
+    "fallback_used": { "type": "boolean" },
+    "confidence": { "type": "string", "enum": ["high", "medium", "low", "unknown"] },
+    "provider": { "type": "string" },
+    "checked_at": { "type": "string" },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}
+

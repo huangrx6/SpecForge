@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Huang RX6 的 Web3 个人官网，使用 Three.js 与 GSAP 构建沉浸式协议场。" />
+    <title>Huang RX6 | Web3 Systems</title>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="scene-canvas" aria-hidden="true"></canvas>
+      <div class="grain" aria-hidden="true"></div>
+
+      <a class="skip-link" href="#main">跳到主要内容</a>
+
+      <header class="site-header">
+        <a class="brand-lockup" href="#top" aria-label="Huang RX6 home">
+          <span class="sigil">HX</span>
+          <span>
+            <strong>Huang RX6</strong>
+            <small>protocol interface architect</small>
+          </span>
+        </a>
+        <nav aria-label="主导航">
+          <a href="#thesis">Thesis</a>
+          <a href="#systems">Systems</a>
+          <a href="#stack">Stack</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </header>
+
+      <main id="main">
+        <section class="hero scene-panel" id="top" data-scene="0">
+          <div class="hero-copy">
+            <p class="eyebrow">web3 / autonomous agents / protocol-grade ux</p>
+            <h1>
+              Huang RX6
+              <span>builds living protocol surfaces.</span>
+            </h1>
+            <p class="hero-text">
+              我把链上数据、智能代理、钱包权限和复杂协议，设计成可理解、可执行、可验证的产品体验。
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="#systems">进入协议场</a>
+              <a class="button secondary" href="#contact">交换信号</a>
+            </div>
+          </div>
+          <div class="hero-readout" aria-label="实时协议读数">
+            <span>identity.graph</span>
+            <b data-count="18420096">18,420,096</b>
+            <em>nodes online</em>
+          </div>
+        </section>
+
+        <section class="scroll-hint" aria-label="下一屏提示">
+          <span></span>
+          <p>Scroll to rotate the protocol field</p>
+        </section>
+
+        <section class="section scene-panel" id="thesis" data-scene="1">
+          <div class="section-copy reveal">
+            <p class="eyebrow">01 / thesis</p>
+            <h2>钱包不是入口，意图才是入口。</h2>
+            <p>
+              Web3 产品真正难的不是把交易发出去，而是让用户知道系统正在做什么、为什么需要签名、风险在哪里、失败后如何恢复。
+            </p>
+          </div>
+          <div class="signal-rail reveal">
+            <span>intent routing</span>
+            <span>risk surface</span>
+            <span>proof trail</span>
+            <span>reversible action</span>
+          </div>
+        </section>
+
+        <section class="section systems scene-panel" id="systems" data-scene="2">
+          <div class="section-copy reveal">
+            <p class="eyebrow">02 / selected systems</p>
+            <h2>不是作品卡片，是协议能力。</h2>
+          </div>
+          <div class="system-grid">
+            <article class="system-card reveal">
+              <span>0x01</span>
+              <h3>Agent wallet console</h3>
+              <p>把权限、签名、工具调用和资产变更放进同一个可审查执行面。</p>
+            </article>
+            <article class="system-card reveal">
+              <span>0x02</span>
+              <h3>On-chain intelligence graph</h3>
+              <p>将地址、合约、交易和风险路径组织成可探索的关系图。</p>
+            </article>
+            <article class="system-card reveal">
+              <span>0x03</span>
+              <h3>Protocol launch surface</h3>
+              <p>用数据、叙事和早期入口，让一个协议从概念进入真实使用。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section stack scene-panel" id="stack" data-scene="3">
+          <div class="section-copy reveal">
+            <p class="eyebrow">03 / operating stack</p>
+            <h2>一套给协议、代理和高级前端共用的系统语言。</h2>
+          </div>
+          <div class="stack-orbit reveal" aria-label="能力栈">
+            <span>Solidity</span>
+            <span>Indexers</span>
+            <span>AA Wallets</span>
+            <span>Agents</span>
+            <span>Three.js</span>
+            <span>GSAP</span>
+            <span>Design Systems</span>
+            <span>Verification</span>
+          </div>
+        </section>
+
+        <section class="section contact scene-panel" id="contact" data-scene="4">
+          <div class="contact-copy reveal">
+            <p class="eyebrow">04 / open channel</p>
+            <h2>如果你在做协议、AI agent 或下一代链上产品，我们可以交换信号。</h2>
+            <div class="contact-links">
+              <a href="mailto:hello@example.com">hello@example.com</a>
+              <a href="#">github.com/huangrx6</a>
+              <a href="#">x.com/huangrx6</a>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

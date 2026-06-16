@@ -5,10 +5,12 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
+    "scan_manifest",
     "design_mode",
     "aesthetic_direction",
     "signature",
     "color_system",
+    "foundation_system",
     "token_source",
     "component_strategy",
     "shadcn_vue",
@@ -17,6 +19,87 @@
     "anti_slop_rules"
   ],
   "properties": {
+    "scan_manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workflow", "scanned_files", "selected_data", "skipped_with_reason"],
+      "properties": {
+        "workflow": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "mode",
+              "intelligence",
+              "source",
+              "font",
+              "color",
+              "composition",
+              "advanced_interaction",
+              "component",
+              "qa",
+              "calibration",
+              "output"
+            ]
+          }
+        },
+        "scanned_files": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "purpose", "status", "finding"],
+            "properties": {
+              "path": { "type": "string" },
+              "purpose": { "type": "string" },
+              "status": {
+                "type": "string",
+                "enum": ["scanned", "skipped", "blocked"]
+              },
+              "finding": { "type": "string" }
+            }
+          }
+        },
+        "selected_data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "palette_id",
+            "font_source_id",
+            "font_pairing_id",
+            "type_scale_id",
+            "spacing_density_id",
+            "radius_shadow_recipe_id",
+            "motion_recipe_id",
+            "advanced_interaction_recipe_id"
+          ],
+          "properties": {
+            "palette_id": { "type": "string" },
+            "font_source_id": { "type": "string" },
+            "font_pairing_id": { "type": "string" },
+            "type_scale_id": { "type": "string" },
+            "spacing_density_id": { "type": "string" },
+            "radius_shadow_recipe_id": { "type": "string" },
+            "motion_recipe_id": { "type": "string" },
+            "advanced_interaction_recipe_id": { "type": "string" }
+          }
+        },
+        "skipped_with_reason": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "reason"],
+            "properties": {
+              "path": { "type": "string" },
+              "reason": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
     "design_mode": {
       "type": "string",
       "enum": ["Product UI", "Brand Surface", "Hybrid", "Avatar-IP", "Empty State"]
@@ -149,6 +232,102 @@
         "license_note": { "type": "string" }
       }
     },
+    "foundation_system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_basis", "typography", "spacing", "radius_shadow", "motion"],
+      "properties": {
+        "source_basis": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source", "adopt", "adapt", "avoid"],
+            "properties": {
+              "source": { "type": "string" },
+              "adopt": { "type": "string" },
+              "adapt": { "type": "string" },
+              "avoid": { "type": "string" }
+            }
+          }
+        },
+        "typography": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["font_family", "scale", "line_height", "numeric", "usage_rules"],
+          "properties": {
+            "font_family": { "type": "string" },
+            "scale": { "type": "string" },
+            "line_height": { "type": "string" },
+            "numeric": { "type": "string" },
+            "usage_rules": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "spacing": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["density", "grid", "page_padding", "section_gap", "component_gap", "usage_rules"],
+          "properties": {
+            "density": {
+              "type": "string",
+              "enum": [
+                "compact",
+                "comfortable",
+                "analytical",
+                "editorial",
+                "hybrid",
+                "productive-2x",
+                "commerce-admin",
+                "collaboration-workflow",
+                "fluent-ramp",
+                "material-adaptive",
+                "brand-narrative"
+              ]
+            },
+            "grid": { "type": "string" },
+            "page_padding": { "type": "string" },
+            "section_gap": { "type": "string" },
+            "component_gap": { "type": "string" },
+            "usage_rules": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "radius_shadow": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["radius_scale", "surface_treatment", "overlay_shadow", "usage_rules"],
+          "properties": {
+            "radius_scale": { "type": "string" },
+            "surface_treatment": { "type": "string" },
+            "overlay_shadow": { "type": "string" },
+            "usage_rules": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "motion": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["motion_personality", "css_tokens", "gsap_signature", "reduced_motion"],
+          "properties": {
+            "motion_personality": { "type": "string" },
+            "css_tokens": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "gsap_signature": { "type": "string" },
+            "reduced_motion": { "type": "string" }
+          }
+        }
+      }
+    },
     "component_strategy": {
       "type": "string",
       "enum": ["primitive + wrapper", "project components", "registry"]
@@ -188,6 +367,131 @@
         "reduced_motion": {
           "type": "string"
         }
+      }
+    },
+    "layout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "navigation_decision",
+        "layout_archetype",
+        "primary_work_surface",
+        "scroll_regions",
+        "responsive_strategy"
+      ],
+      "properties": {
+        "navigation_decision": { "type": "string" },
+        "layout_archetype": { "type": "string" },
+        "primary_work_surface": { "type": "string" },
+        "scroll_regions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "responsive_strategy": { "type": "string" }
+      }
+    },
+    "state_matrix": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_states", "owner"],
+      "properties": {
+        "required_states": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "owner": { "type": "string" }
+      }
+    },
+    "product_ui_quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary_user",
+        "primary_object",
+        "primary_job",
+        "kpi_actionability",
+        "content_budget",
+        "right_rail_purpose",
+        "rejected_filler"
+      ],
+      "properties": {
+        "primary_user": { "type": "string" },
+        "primary_object": { "type": "string" },
+        "primary_job": { "type": "string" },
+        "kpi_actionability": {
+          "type": "string",
+          "enum": ["pass", "issue", "not-applicable"]
+        },
+        "content_budget": {
+          "type": "string",
+          "enum": ["pass", "issue", "not-applicable"]
+        },
+        "right_rail_purpose": { "type": "string" },
+        "rejected_filler": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "visual_calibration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["feedback_source", "diagnosis", "palette_delta", "anti_reference", "next_review"],
+      "properties": {
+        "feedback_source": { "type": "string" },
+        "diagnosis": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["issue", "evidence", "affected_layers", "fix", "status"],
+            "properties": {
+              "issue": { "type": "string" },
+              "evidence": { "type": "string" },
+              "affected_layers": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "color",
+                    "typography",
+                    "spacing",
+                    "surface",
+                    "layout",
+                    "motion",
+                    "advanced_interaction",
+                    "content",
+                    "signature"
+                  ]
+                }
+              },
+              "fix": { "type": "string" },
+              "status": {
+                "type": "string",
+                "enum": ["pending", "fixed", "accepted", "blocked"]
+              }
+            }
+          }
+        },
+        "palette_delta": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["field", "from", "to", "reason"],
+            "properties": {
+              "field": { "type": "string" },
+              "from": { "type": "string" },
+              "to": { "type": "string" },
+              "reason": { "type": "string" }
+            }
+          }
+        },
+        "anti_reference": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "next_review": { "type": "string" }
       }
     },
     "verification_hooks": {

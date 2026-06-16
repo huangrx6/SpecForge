@@ -26,6 +26,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 - `.specforge/core/standards/pc-ui-design-spec.md`（`ui-design.md` 声明采用 PC 端业务系统规范时）
 - `.specforge/core/standards/engineering.md`
 - `.specforge/core/profiles/README.md`（存在技术选型时）
+- `.specforge/core/skills/code-intelligence/SKILL.md`（technical design、review 或上游证据包含 Graph Facts / affected tests / 代码影响面时）
 
 ## 写入
 
@@ -48,6 +49,7 @@ description: SpecForge 内部任务规划技能。用于 requirements、gap_repo
 1. **建立来源审计矩阵**：列出所有来源需求、决策、风险和验收标准，确认每项至少有实现任务和验证任务。来源必须包含适用的 `GOAL / PRD / REQ / UI / TECH / RESEARCH / CONTEXT`，不能只写“见上游文档”。
 2. **建立技术影响面任务覆盖**：读取 `technical-design.md#0. 影响面与读取计划` 及其 wiki 入口，把每个 `yes` 影响面映射到实现任务和验证任务；`no` 写 N/A 理由；关键 `unknown` 退回澄清。
    - 若存在 `technical-design.md#7.1 Architecture Contract`、`#Implementation Handoff` 或 `#12. Operability & Maintenance`，任务必须承接其中的 change slices、files/modules、test seams、rollout、rollback、owner、extension point、wiki target 和 revisit trigger。
+   - 若上游包含 `GF-*`、`Graph Facts`、affected modules 或 affected tests，任务的 `_Impact:_` 必须追踪对应事实或模块，`_Verification:_` 必须优先承接受影响测试；低置信图事实只能写成验证线索，不能写成已确认范围。
 3. **先列失败优先 / 契约任务**：API、schema、类型、配置、迁移、权限、提示词、评估集、feature flag、环境变量。行为变更优先设计能先失败的测试或检查。
 4. **再列基础任务**：新项目脚手架、开发服务器冒烟、目录结构、共享客户端、测试基线。
 5. **再列实现任务**：按模块、层次、用户路径或状态机拆分。每个任务应小到一次实现和一次 review 可以聚焦完成。

@@ -6,7 +6,7 @@
 
 | 输入信号 | Design mode | 输出深度 | 必读文件 | 禁止 |
 | --- | --- | --- | --- | --- |
-| 后台 / 管理端 / 审批 / 配置台 / 数据表格 / 高频工作台 / 运营工具 | Product UI | standard | `references/component-system.md` + relevant `pages/*.md` + `references/output-contract.md` | 不做营销页装饰；不用大面积玻璃拟态、夸张渐变、漂浮 hero 或装饰性动效替代任务效率 |
+| 后台 / 管理端 / 审批 / 配置台 / 数据表格 / 高频工作台 / 运营工具 | Product UI | standard | `references/product-ui-layout-quality.md` + `references/layout-archetypes.md` + `references/component-system.md` + relevant `pages/*.md` + `references/output-contract.md` | 不做营销页装饰；不用大面积玻璃拟态、夸张渐变、漂浮 hero、KPI 空壳或装饰性动效替代任务效率 |
 | 官网 / 品牌页 / 活动页 / 作品集 / landing / 公开展示页 | Brand Surface | full | `references/aesthetic-directions.md` + `references/sample-board-template.md` + `foundations/motion.md` + `references/output-contract.md` | 不把品牌视觉直接带到后台控件；不牺牲内容可读性和可访问性 |
 | AI 助手 / 工作台首页 / 客户门户 / 低频入口 / 产品内欢迎页 | Hybrid | standard / full | `references/design-intelligence.md` + `references/aesthetic-directions.md` + `references/component-system.md` + `references/output-contract.md` | 不让装饰抢主任务；展示面和工作面必须分层 |
 | 头像 / IP / 品牌吉祥物 / 角色化反馈 | Avatar-IP | compact | `references/aesthetic-directions.md` + `references/sample-board-template.md` + relevant component docs | 不影响主系统 token；不把角色风格扩散成全局控件风格 |
@@ -25,7 +25,7 @@
 
 | Design mode | 必须输出 | 典型 signature |
 | --- | --- | --- |
-| Product UI | 页面密度、组件 wrapper、状态矩阵、表格 / 表单 / 导航约束、visual QA detector 结果 | structural / typographic / interaction |
+| Product UI | Product UI Layout Audit、页面密度、组件 wrapper、状态矩阵、表格 / 表单 / 导航约束、visual QA detector 结果 | structural / typographic / interaction |
 | Brand Surface | 首屏叙事、视觉资产、排版气质、媒体策略、品牌动效边界、可访问性底线 | typographic / material / motion |
 | Hybrid | 展示面与工作面边界、共享 token、隔离 token、入口转场、任务不被装饰打断的证据 | structural / interaction |
 | Avatar-IP | 使用范围、IP 资产边界、角色化反馈边界、回到主任务的操作 | material / typographic |
@@ -44,6 +44,7 @@
 ## Stop Signals
 
 - Product UI 输出里出现大面积玻璃拟态、品牌 hero、装饰插画主导首屏，但没有任务效率理由。
+- Product UI / 工作台输出里只有 KPI 卡、空白卡片和快捷入口，没有主要业务对象、主队列或可行动工作表面。
 - Brand Surface 输出里只有后台表格、筛选栏和灰白卡片，无法表达品牌或对象。
 - Hybrid 输出没有拆分展示面和工作面，导致同一套组件同时承担营销和高频操作。
 - `Design Contract Summary` 没有 `design_mode` 或 `design_mode` 与输入信号冲突。

@@ -3,6 +3,12 @@ import { wikiQualitySummary } from "../../lib/wiki-quality.mjs";
 const args = process.argv.slice(2);
 const json = args.includes("--json");
 
+function option(name, fallback) {
+  const index = args.indexOf(name);
+  const value = args[index + 1];
+  return index === -1 || !value || value.startsWith("--") ? fallback : value;
+}
+
 function bullet(items, emptyText, renderItem) {
   if (!items || items.length === 0) return `- ${emptyText}`;
   return items.map((item) => `- ${renderItem(item)}`).join("\n");
@@ -14,6 +20,7 @@ function markdown(quality) {
 ## Summary
 
 - Wiki root: ${quality.wiki_root}
+- Mode: ${quality.summary.mode}
 - Files: ${quality.summary.total_files}
 - Current files: ${quality.summary.current_files}
 - Failures: ${quality.summary.fail}
@@ -34,7 +41,10 @@ ${quality.entries.map((entry) => `| ${entry.file} | ${entry.kind || "-"} | ${ent
 }
 
 try {
-  const quality = wikiQualitySummary();
+  const quality = wikiQualitySummary({
+    mode: option("--mode", "bootstrap"),
+    workItem: option("--work-item", undefined),
+  });
   if (json) {
     console.log(JSON.stringify({ wiki_quality: quality }, null, 2));
   } else {

@@ -10,6 +10,8 @@
 是否允许 GSAP：
 是否需要 reduced motion：
 已有 motion token：
+已选 motion recipe：
+Composition Recipe：
 组件族：
 
 输出：
@@ -19,7 +21,17 @@
 - 空间关系：
 - 进度：
 - 品牌 signature：
+- GSAP signature：
 - 不做的动效：
+
+## Motion Recipe
+
+- motion_id:
+- 为什么适合当前 design mode:
+- CSS transition 负责:
+- Motion Vue / React 负责:
+- GSAP 只负责:
+- 为什么不扩大使用:
 
 ## Motion Contract
 
@@ -67,6 +79,7 @@
 - CSS transition:
 - Motion Vue / CSS animation:
 - GSAP:
+- GSAP 使用条件是否满足至少 2 项:
 - 新增依赖：
 
 ## Verification Hooks

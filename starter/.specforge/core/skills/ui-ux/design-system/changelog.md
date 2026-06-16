@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.11.3
+
+- 新增 `references/visual-calibration.md`，把实现、截图或用户反馈中的“不好看 / AI 味 / 模板感 / 不像目标行业 / GSAP 或 Three.js 不明显”转成可执行的诊断表、影响层、palette delta 和修正状态。
+- `data/aesthetic-palettes.csv` 新增 `obsidian-phosphor`，作为 Web3 个人官网、协议品牌和开发者作品集的非默认青紫霓虹候选。
+- `references/color-system.md`、`references/visual-qa-detectors.md`、`pages/brand-surface.md` 和 `references/design-composition.md` 增加 Brand Surface de-template 规则，拦截 cyan + violet + rose + glow + glass 的通用 AI / cyber 模板。
+- Design Contract JSON 新增可选 `visual_calibration`，`references/output-contract.md` 增加 Visual Calibration 与 Palette Delta 输出区块。
+
+## 0.11.2
+
+- 新增 `references/design-system-orchestration.md`，将 design mode、来源扫描、字体、色彩、Composition Recipe、高级交互、组件、视觉 QA 和输出契约串成强制 Design Scan Manifest。
+- 新增 `references/font-source-index.md` 和 `data/font-pairing-recipes.csv`，内置中国用户可稳定使用的系统字体栈，并记录阿里巴巴普惠体、HarmonyOS Sans、MiSans、OPPO Sans、思源字体、站酷字体、优设标题黑等官方来源和许可边界。
+- 新增 `references/advanced-interaction-source-index.md` 和 `data/advanced-interaction-recipes.csv`，将 GSAP、ScrollTrigger、Flip、matchMedia、Three.js、React Three Fiber、Drei、TresJS 转成可选择的高级交互配方、fallback、reduced motion 和验证要求。
+- Design Contract JSON 新增必填 `scan_manifest`，要求记录 scanned files、selected data、skipped reasons，并由 artifact-quality 与 framework audit 校验。
+
+## 0.11.1
+
+- 新增 `references/composition-source-index.md`，把 Material、IBM Carbon、Shopify Polaris、Atlassian、Fluent、Apple HIG 和 GSAP 的字体、空间、层级、动效原则转译为 SpecForge Composition Recipe 来源索引。
+- 扩展 `references/design-composition.md`，新增来源驱动原则、配方族、字体组合、空间节奏、圆角阴影、动效 / GSAP signature 和 Composition Source Notes 输出要求。
+- 扩展 `data/type-scales.csv`、`data/spacing-density-scales.csv`、`data/radius-shadow-recipes.csv`、`data/motion-recipes.csv`，补充 enterprise、commerce、collaboration、material、fluent、brand、AI 等可选配方。
+- Design Contract JSON 的 `foundation_system` 新增必填 `source_basis`，要求记录采用来源、本地化改造和禁止复制项，并由 artifact-quality 与 framework audit 校验。
+
+## 0.11.0
+
+- 新增 `references/design-composition.md`，把字体、空间、圆角阴影、动效、GSAP signature 和业务 signature 合成 Composition Recipe，避免只约束颜色。
+- 新增 `data/type-scales.csv`、`data/spacing-density-scales.csv`、`data/radius-shadow-recipes.csv`、`data/motion-recipes.csv`，让 Agent 有可选的字体、空间、材质和动效配方。
+- Design Contract JSON 新增必填 `foundation_system`，覆盖 typography、spacing、radius_shadow 和 motion，并由 artifact-quality 校验。
+- Visual QA 新增 `Color-only design`，拦截“颜色正确但排版、空间、材质和动效不成系统”的设计。
+- 本地化 `core/skills/ui-ux/pencil`，Pencil 只消费已确认 Design Contract，不再作为外部通用设计 skill 主导审美。
+
 ## 0.10.0
 
 - 将 `data/aesthetic-palettes.csv` 调整为 Agent 查询友好的 semantic token 结构，新增 background、surface、text、primary、secondary、accent、status、chart、source_url 和 license_note 等字段，同时保留色阶线索。

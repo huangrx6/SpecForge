@@ -22,7 +22,6 @@
 | `execution-planning` | SpecForge local-authored | 0 | 可能把行动计划误写成已批准任务 | 只作为 handoff 和下一步路由，不能替代 tasks 或 gate |
 | `code-review` | SpecForge local-authored | 16 | 可能被误用为直接改代码或绕过 `sf-code-review` | 只作为本地 code review 主能力包，产出必须落到 `04-code-review/code-review-v1.md` 并由 `sf-code-review` 更新 gate |
 | `test-engineering` | SpecForge local-authored | 32 | 可能把测试计划替代真实验证，或错误处理登录态 / 证据 | 只作为测试工程能力包，必须把 TC / PW / runtime / auth / evidence 落到 verification artifact 并由 `sf-verify` 执行 gate |
-| `test-design` | SpecForge local-authored | 3 | 旧入口可能继续被当成主能力 | Deprecated alias，只指向 `test-engineering`，新流程不再作为主入口 |
 | `pencil` | `chiroro-jr/skills` | 8 | 依赖 Pencil MCP，且 upstream 引用未托管的 `frontend-design` | 本地裁剪为读取已确认 UI 方向和 SpecForge 设计标准，只用于 Pencil 原型、截图证据和设计转代码参考 |
 | `playwright-skill` | `lackeyjb/playwright-skill` | 4 | 浏览器自动化可能接触敏感数据 | 只在受控测试环境做 E2E 证据 |
 
@@ -67,3 +66,4 @@ node core/scripts/sync-starter.mjs --check
 |---|---|---|
 | `ux-designer` | `Shubhamsaboo/awesome-llm-apps` | 已吸收为 `design-system/references/ux-research-ia.md`，不再托管独立第三方 skill，避免泛 UX 教程和 SpecForge UI 流程并行。 |
 | 旧外部代码审查 skill | `Shubhamsaboo/awesome-llm-apps` | 已删除；本地 `quality/code-review` 已吸收必要 code review 检查维度，避免外部 reviewer 与 SpecForge gate 并行。 |
+| `test-design` | SpecForge local-authored | 已吸收进 `quality/test-engineering/references/output-contract.md`，包括测试设计树、自动化矩阵和 XMind / 白板导出规则；不再保留 deprecated alias 目录。 |

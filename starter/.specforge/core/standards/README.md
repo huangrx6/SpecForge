@@ -15,7 +15,7 @@
 | `product.md` | 产品、产品需求文档、需求和验收如何表达 | 产品需求文档 / 需求规格 |
 | `design.md` | UI 影响、设计方向、Pencil 原型和视觉质量如何确认 | UI design |
 | `engineering.md` | 技术设计、实现、审查和验证如何可靠交付 | tech design / implement |
-| `code-intelligence.md` | 存量项目如何做代码画像和 CodeGraph / provider 编排 | steering / onboarding |
+| `code-intelligence.md` | 跨阶段如何使用代码智能、CodeGraph / provider、影响面和 graph facts | intake / steering / tech design / review / verify / wiki |
 | `playwright.md` | 浏览器验证如何形成可重复证据 | verification |
 | `wiki.md` | 长期知识如何沉淀和去重 | wiki sync / close |
 | `pc-ui-design-spec.md` | PC 业务系统的具体 UI token 和组件约束 | Product UI |
@@ -26,7 +26,7 @@
 - UI 总原则写在 `design.md`；具体设计语言和组件细则交给 `core/skills/ui-ux/design-system`。
 - 技术选型标准写在 `engineering.md`；可选技术组合写在 `profiles/`。
 - 测试证据原则写在 `engineering.md` / `playwright.md`；具体测试用例模板写在 `artifacts/templates/test-cases.md`。
-- 代码画像原则写在 `code-intelligence.md`；具体扫描命令由 `scripts/codebase-index.mjs` 输出。
+- 代码智能原则写在 `code-intelligence.md`；具体跨阶段执行规则读 `core/skills/code-intelligence/`，扫描和影响面命令由 `scripts/codebase-index.mjs`、`graph-freshness.mjs`、`graph-impact.mjs`、`wiki-refresh-plan.mjs` 输出。
 - 框架后续演进写在 `evolution.md`；阶段打法和日常命令不要把演进路线复制一遍。
 
 ## 写作规范

@@ -18,6 +18,7 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
 - `.specforge/core/standards/engineering.md`
 - `.specforge/core/standards/ai-toolkit.md`
 - `.specforge/core/profiles/README.md`
+- `.specforge/core/skills/code-intelligence/SKILL.md`（存量项目且需要验证既有代码边界 / 调用关系 / 受影响测试时）
 - `.specforge/skills/sf-tech-design/references/architecture-contract.md`
 - 按影响面读取内部设计子模块；不要默认全量读取：
   - 前端工程、路由、组件、状态、API client 或构建：`.specforge/skills/sf-tech-design/stages/technical-design/frontend-design.md`
@@ -40,6 +41,7 @@ description: SpecForge 内部技术设计技能。用于根据 requirements 和�
    - 低风险未知可以写入 assumptions，但必须说明后续验证点。
 3. 生成读取计划：先列本次实际读取的 wiki 入口、代码入口、上游 / 下游和缺口，再列实际读取的子模块、profiles 和官方基准入口。
    - 存量项目只沿 wiki 指向的模块、API、数据、测试和运行链路读取代码。
+   - 若 wiki 入口不足但本次需要确认既有符号、调用关系、API handler、数据写入路径或受影响测试，先运行 `node .specforge/core/scripts/graph-freshness.mjs --json`；只有 fresh / ready 的图事实才能写入 `Graph Facts` 或 Architecture Contract，stale / unavailable 只能作为低置信线索并要求 steering / code-intelligence 补证。
    - wiki 缺入口、过期或与代码冲突时，停止并路由 `sf-steering`，不要在本阶段临时全量探索。
 4. 无技术影响时，写 N/A 结论：例如纯文案、纯 UI 视觉调整、无工程改动的配置说明，并说明验证方式。
 5. 建立需求追踪表，确保关键需求能落到技术方案或明确不适用。

@@ -25,6 +25,7 @@ description: 生成或更新 SpecForge work item 的 tasks；用于 requirements
 - `.specforge/core/standards/workflow.md`
 - `.specforge/core/standards/product.md`
 - `.specforge/core/standards/ai-toolkit.md`
+- `.specforge/core/skills/code-intelligence/SKILL.md`：technical design 或 code review 已提供 `graph_facts[]`、affected modules 或 affected tests 时读取，用于任务边界、依赖和验证任务拆分。
 - UI 适用时读取 `.specforge/core/standards/design.md`；若 `ui-design.md` 声明采用 PC 端业务系统规范，还要读取 `.specforge/core/standards/pc-ui-design-spec.md`。
 - technical design 适用时读取 `.specforge/core/standards/engineering.md` 和 `.specforge/core/profiles/README.md`。
 
@@ -65,7 +66,8 @@ node .specforge/core/scripts/create-artifact.mjs tasks
 1. 列出所有来源需求、决策、风险和验收标准。
 2. 每个来源项至少映射到一个实现任务和一个验证任务；N/A 必须写理由。
 3. 读取 `technical-design.md#0. 影响面与读取计划` 和其中的 wiki 入口；每个 `yes` 影响面必须有实现任务和验证任务，`no` 写 N/A，关键 `unknown` 退回澄清。
-4. UI 适用时把页面、组件、状态矩阵、Pencil 证据和视觉验证转成任务。
+4. 如果 technical design 提供 `graph_facts[]`、affected modules 或 affected tests，把对应 `GF-*` 写入任务 `_Impact:_` / `_Verification:_`，高风险调用链拆成独立任务。
+5. UI 适用时把页面、组件、状态矩阵、Pencil 证据和视觉验证转成任务。
 5. PC 端业务系统规范适用时，把 token、布局尺寸、表格 / 表单 / 弹窗 / 抽屉、响应式验证转成任务。
 6. 存量模块任务的 `_Files:_` / `_Boundary:_` 应优先来自 wiki 和 technical design 的入口路径；如果只能写成“待查全仓”，退回 `sf-tech-design` 或 `sf-steering`。
 7. 按 `ai-toolkit.md` 的阶段质量条检查：任务必须能让 implementation、code_review 和 verification 共用，不得只是执行愿望清单。

@@ -25,6 +25,7 @@ description: 生成或更新 SpecForge work item 的 technical_design；用于 r
 - `.specforge/core/artifacts/templates/technical-design.md`：写入骨架。
 - `.specforge/core/standards/product.md`、`.specforge/core/standards/workflow.md`、`.specforge/core/standards/engineering.md`。
 - `.specforge/core/standards/ai-toolkit.md`：阶段质量条、输出预算、依赖确认、source-of-truth 和证据分级。
+- `.specforge/core/skills/code-intelligence/SKILL.md`：当技术设计需要现有模块入口、调用链、影响面、受影响测试、provider freshness 或 `graph_facts[]` 时读取；优先用 Wiki bounded context，再局部查询 provider。
 - `.specforge/core/profiles/README.md`：技术选型维度、数据库选择矩阵和 profile selection 写法。
 - 前端 / UI 会影响组件架构、token、组件库、registry、动效依赖或可视验证时，读取 `.specforge/core/skills/ui-ux/design-system/SKILL.md` 和 `.specforge/core/skills/ui-ux/design-system/references/cross-stage-handoff.md`；再按需读 `references/shadcn-vue.md`、`references/component-system.md`、`references/ui-toolchain.md`、`foundations/tokens.md`、`foundations/motion.md`。
 
@@ -52,8 +53,9 @@ node .specforge/core/scripts/create-artifact.mjs technical_design
 
 1. 按 `references/technical-decision-guide.md#影响面扫描` 标记 frontend、backend、domain、API、data、auth/security、config/delivery、jobs、observability、reliability。
 2. 从 wiki 建立本次的读取计划：关联知识项、代码入口、上游 / 下游、测试位置、运行命令和需要补证的缺口。
-3. 把每个影响面写成 `yes / no / unknown`；会改变架构、数据、安全、成本或上线风险的 `unknown` 必须暂停澄清。
-4. 只读取本次需要的内部子模块和 profile，不默认全量读取：
+3. 需要分析调用链、影响半径或受影响测试时，运行 `node .specforge/core/scripts/graph-freshness.mjs --json`；ready 后按 `.specforge/core/skills/code-intelligence/references/stage-integration.md#sf-tech-design` 查询并归一 `graph_facts[]`。
+4. 把每个影响面写成 `yes / no / unknown`；会改变架构、数据、安全、成本或上线风险的 `unknown` 必须暂停澄清。
+5. 只读取本次需要的内部子模块和 profile，不默认全量读取：
    - frontend：`.specforge/skills/sf-tech-design/stages/technical-design/frontend-design.md`
    - backend：`.specforge/skills/sf-tech-design/stages/technical-design/backend-design.md`
    - domain：`.specforge/skills/sf-tech-design/stages/technical-design/domain-design.md`

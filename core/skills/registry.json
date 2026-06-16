@@ -148,27 +148,7 @@
             "path": "foundations/behavior-contract.md"
           },
           {
-            "path": "foundations/confirmation-boundary.md",
-            "deprecated": true,
-            "redirectTo": "foundations/behavior-contract.md#1-confirmation-boundary"
-          },
-          {
             "path": "foundations/nfr-taxonomy.md"
-          },
-          {
-            "path": "foundations/requirement-language.md",
-            "deprecated": true,
-            "redirectTo": "foundations/behavior-contract.md#2-requirement-language"
-          },
-          {
-            "path": "foundations/testability.md",
-            "deprecated": true,
-            "redirectTo": "foundations/behavior-contract.md#3-testability"
-          },
-          {
-            "path": "foundations/traceability.md",
-            "deprecated": true,
-            "redirectTo": "foundations/behavior-contract.md#4-traceability"
           },
           {
             "path": "transforms/source-to-requirements.md"
@@ -431,6 +411,97 @@
       ]
     },
     {
+      "id": "code-intelligence",
+      "category": "code-intelligence",
+      "localPath": "code-intelligence",
+      "name": "code-intelligence",
+      "role": "SpecForge 跨阶段代码智能能力包：用 Wiki-first、CodeGraph、MCP / SCIP provider、Repomix、bootstrap map 和 rg 定位现有系统范围、调用链、影响面、受影响测试、图谱事实和 Wiki 回写候选。",
+      "trust": "SpecForge 本地维护，结合 CodeGraph 官方文档、Wiki-first 上下文策略和 graph_facts 归一化契约沉淀",
+      "risk": "低",
+      "source": {
+        "type": "local-authored",
+        "repo": "SpecForge",
+        "path": "core/skills/code-intelligence/SKILL.md",
+        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/code-intelligence",
+        "files": [
+          {
+            "path": "foundations/provider-lifecycle.md"
+          },
+          {
+            "path": "foundations/freshness-policy.md"
+          },
+          {
+            "path": "foundations/graph-facts-contract.md"
+          },
+          {
+            "path": "foundations/wiki-first-context.md"
+          },
+          {
+            "path": "references/codegraph-usage.md"
+          },
+          {
+            "path": "references/provider-selection.md"
+          },
+          {
+            "path": "references/affected-tests.md"
+          },
+          {
+            "path": "references/stage-integration.md"
+          },
+          {
+            "path": "references/anti-patterns.md"
+          },
+          {
+            "path": "transforms/codegraph-to-graph-facts.md"
+          },
+          {
+            "path": "transforms/diff-to-impact.md"
+          },
+          {
+            "path": "transforms/graph-facts-to-wiki.md"
+          },
+          {
+            "path": "transforms/graph-facts-to-technical-design.md"
+          },
+          {
+            "path": "contracts/graph-fact.schema.json"
+          },
+          {
+            "path": "contracts/provider-health.schema.json"
+          },
+          {
+            "path": "contracts/impact-report.schema.json"
+          },
+          {
+            "path": "prompts/graph-query-plan.md"
+          },
+          {
+            "path": "prompts/impact-analysis.md"
+          }
+        ]
+      },
+      "trigger": "任何阶段需要现有代码范围、模块入口、符号关系、调用链、影响面、受影响测试、provider freshness、graph_facts 归一化或 Wiki 回写候选时使用；尤其是 sf-steering、sf-tech-design、sf-code-review、sf-verify 和 sf-wiki / sf-close。",
+      "normalizeTo": [
+        "00-intake/brief.md#现有系统上下文",
+        "01-spec/requirements.md#上游确认输入",
+        "01-spec/technical-design.md#影响面与读取计划",
+        "01-spec/technical-design.md#Architecture Contract",
+        "01-spec/tasks.md#任务图",
+        "03-implementation/report.md",
+        "04-code-review/code-review-v1.md",
+        "05-verification/report.md",
+        ".specforge/wiki/*.md"
+      ],
+      "doNotUseFor": [
+        "替代 sf-steering 的项目画像和 Wiki 回写职责",
+        "替代用户确认需求、技术方向或依赖选择",
+        "把 provider 原始输出直接粘贴进 Wiki、requirements 或 technical design",
+        "在 provider 未 ready / pending sync / stale 时写当前事实",
+        "把没有 source_paths 的 graph result 写成 high confidence",
+        "让普通阶段临时全仓扫描"
+      ]
+    },
+    {
       "id": "code-review",
       "category": "quality",
       "localPath": "quality/code-review",
@@ -508,7 +579,7 @@
       "category": "ui-ux",
       "localPath": "ui-ux/design-system",
       "name": "design-system",
-      "role": "设计模式路由、设计语言、机器可读契约、组件规范、页面模式、shadcn-vue 映射和视觉 QA 审查",
+      "role": "设计模式路由、设计组合配方、设计语言、机器可读契约、组件规范、页面模式、shadcn-vue 映射、Pencil 交接和视觉 QA 审查",
       "trust": "SpecForge 本地维护，结合 shadcn-vue、设计系统、可访问性和 Product UI 实践沉淀",
       "risk": "低",
       "source": {
@@ -537,6 +608,24 @@
           },
           {
             "path": "data/chart-palettes.csv"
+          },
+          {
+            "path": "data/font-pairing-recipes.csv"
+          },
+          {
+            "path": "data/type-scales.csv"
+          },
+          {
+            "path": "data/spacing-density-scales.csv"
+          },
+          {
+            "path": "data/radius-shadow-recipes.csv"
+          },
+          {
+            "path": "data/motion-recipes.csv"
+          },
+          {
+            "path": "data/advanced-interaction-recipes.csv"
           },
           {
             "path": "foundations/README.md"
@@ -659,7 +748,22 @@
             "path": "references/shadcn-vue.md"
           },
           {
+            "path": "references/design-system-orchestration.md"
+          },
+          {
             "path": "references/design-mode-routing.md"
+          },
+          {
+            "path": "references/composition-source-index.md"
+          },
+          {
+            "path": "references/font-source-index.md"
+          },
+          {
+            "path": "references/design-composition.md"
+          },
+          {
+            "path": "references/advanced-interaction-source-index.md"
           },
           {
             "path": "references/color-system.md"
@@ -672,6 +776,9 @@
           },
           {
             "path": "references/visual-qa-detectors.md"
+          },
+          {
+            "path": "references/product-ui-layout-quality.md"
           },
           {
             "path": "references/pc-business-system.md"
@@ -693,7 +800,7 @@
           }
         ]
       },
-      "trigger": "当 sf-ui-design 需要判断 Product UI / Brand Surface / Hybrid 模式、提炼设计语言、建立专业色阶和 token、生成机器可读 Design Contract、选择组件模式、生成 shadcn-vue 组件契约、设计页面模式、引入动效边界或执行视觉 QA 审查时使用。",
+      "trigger": "当 sf-ui-design 需要判断 Product UI / Brand Surface / Hybrid 模式、提炼设计语言、建立专业色阶和 foundation_system、生成机器可读 Design Contract、选择组件模式、生成 shadcn-vue 组件契约、设计页面模式、定义 Pencil 原型交接、引入动效 / GSAP 边界或执行视觉 QA 审查时使用。",
       "normalizeTo": [
         "01-spec/ui-design.md#Visual Style Brief",
         "01-spec/ui-design.md#Design Contract Summary",
@@ -1125,97 +1232,52 @@
       ]
     },
     {
-      "id": "test-design",
-      "category": "quality-alias",
-      "localPath": "quality/test-design",
-      "name": "test-design",
-      "role": "兼容旧文档的 test-engineering alias",
-      "trust": "SpecForge 本地维护，deprecated compatibility alias",
+      "id": "pencil",
+      "category": "ui-ux",
+      "localPath": "ui-ux/pencil",
+      "name": "pencil",
+      "role": "SpecForge 本地 Pencil 原型能力：把已确认 Design Contract JSON、Composition Recipe、组件契约和视觉 QA 规则稳定落到 .pen 原型、变量、组件复用和截图证据。",
+      "trust": "SpecForge 本地维护，外部 Pencil MCP 仅作为画布工具能力",
       "risk": "低",
       "source": {
         "type": "local-authored",
         "repo": "SpecForge",
-        "path": "core/skills/quality/test-design/SKILL.md",
-        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/quality/test-design",
+        "path": "core/skills/ui-ux/pencil/SKILL.md",
+        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/ui-ux/pencil",
         "files": [
           {
-            "path": "references/test-design-tree.md"
+            "path": "references/specforge-design-contract-handoff.md"
           },
           {
-            "path": "references/automation-matrix.md"
+            "path": "references/pencil-token-system.md"
           },
           {
-            "path": "references/xmind-export.md"
+            "path": "references/pencil-quality-gate.md"
+          },
+          {
+            "path": "references/design-to-code-workflow.md"
+          },
+          {
+            "path": "references/tailwind-shadcn-mapping.md"
+          },
+          {
+            "path": "references/responsive-breakpoints.md"
+          },
+          {
+            "path": "references/asset-reuse.md"
+          },
+          {
+            "path": "references/design-system-components.md"
+          },
+          {
+            "path": "references/layout-and-text-overflow.md"
+          },
+          {
+            "path": "references/visual-verification.md"
           }
         ]
       },
-      "trigger": "仅当旧 artifact 或旧文档仍引用 test-design 时使用；新流程必须改读 test-engineering。",
-      "normalizeTo": [
-        "05-verification/test-engineering/test-design-tree.md",
-        "05-verification/test-engineering/test-design-tree.json",
-        "05-verification/test-cases.md#1.1 Test Design Artifacts",
-        "05-verification/test-cases.md#2. Test Case Matrix",
-        "05-verification/test-cases.md#3. Playwright Cases",
-        "05-verification/report.md#证据强度分级"
-      ],
-      "doNotUseFor": [
-        "新 verification 流程的主测试工程入口",
-        "替代 sf-verify gate",
-        "把 XMind、截图或白板当作唯一事实源",
-        "用 happy path 替代权限、错误、边界和回归路径",
-        "生成未追溯到来源的测试用例"
-      ]
-    },
-    {
-      "id": "pencil",
-      "category": "ui-ux",
-      "localPath": "ui-ux/pencil",
-      "name": "pencil-design",
-      "role": "Pencil 设计与设计转代码参考",
-      "trust": "社区来源，已做静态审查，按 SpecForge 本地规则裁剪 frontend-design 依赖",
-      "risk": "中",
-      "source": {
-        "type": "github-raw",
-        "repo": "chiroro-jr/skills",
-        "path": "pencil-design/SKILL.md",
-        "url": "https://github.com/chiroro-jr/skills/tree/main/pencil-design",
-        "rawUrl": "https://raw.githubusercontent.com/chiroro-jr/skills/main/pencil-design/SKILL.md",
-        "files": [
-          {
-            "path": "references/asset-reuse.md",
-            "rawUrl": "https://raw.githubusercontent.com/chiroro-jr/skills/main/pencil-design/references/asset-reuse.md"
-          },
-          {
-            "path": "references/design-system-components.md",
-            "rawUrl": "https://raw.githubusercontent.com/chiroro-jr/skills/main/pencil-design/references/design-system-components.md"
-          },
-          {
-            "path": "references/design-to-code-workflow.md",
-            "rawUrl": "https://raw.githubusercontent.com/chiroro-jr/skills/main/pencil-design/references/design-to-code-workflow.md"
-          },
-          {
-            "path": "references/layout-and-text-overflow.md",
-            "rawUrl": "https://raw.githubusercontent.com/chiroro-jr/skills/main/pencil-design/references/layout-and-text-overflow.md"
-          },
-          {
-            "path": "references/responsive-breakpoints.md",
-            "rawUrl": "https://raw.githubusercontent.com/chiroro-jr/skills/main/pencil-design/references/responsive-breakpoints.md"
-          },
-          {
-            "path": "references/tailwind-shadcn-mapping.md",
-            "rawUrl": "https://raw.githubusercontent.com/chiroro-jr/skills/main/pencil-design/references/tailwind-shadcn-mapping.md"
-          },
-          {
-            "path": "references/variables-and-tokens.md",
-            "rawUrl": "https://raw.githubusercontent.com/chiroro-jr/skills/main/pencil-design/references/variables-and-tokens.md"
-          },
-          {
-            "path": "references/visual-verification.md",
-            "rawUrl": "https://raw.githubusercontent.com/chiroro-jr/skills/main/pencil-design/references/visual-verification.md"
-          }
-        ]
-      },
-      "trigger": "当 ui_design 已选择 Pencil，或需要通过 Pencil MCP 读取 / 修改 .pen 原型、复用组件、使用 design tokens、生成截图、检查布局溢出，或从 Pencil 设计生成前端代码时使用。",
+      "trigger": "当 ui_design 已选择 Pencil，或需要把 Design Contract JSON / foundation_system / Product UI Layout Audit 转成 .pen 原型、Pencil variables、可复用组件、截图证据、布局检查或从 Pencil 生成前端代码时使用。",
       "normalizeTo": [
         "01-spec/ui-design.md#UI Artifact Decision",
         "01-spec/ui-design.md#Wireframe / Prototype Evidence",
@@ -1224,11 +1286,11 @@
         "02-implementation/implementation-plan.md#Frontend Notes"
       ],
       "doNotUseFor": [
-        "替代视觉风格确认",
-        "替代用户确认",
-        "用普通文件读取方式解析 .pen 加密内容",
-        "在未读取已确认 UI 方向时直接设计",
-        "不截图、不检查 overflow 就通过 spec_review"
+        "替代用户确认 UI 方向",
+        "替代 design-system 做审美和设计模式决策",
+        "绕过 Design Contract JSON 直接画通用模板",
+        "只同步颜色而忽略字体、间距、圆角、阴影和动效",
+        "不截图、不布局检查或不保存重读就交付 .pen"
       ]
     }
   ]

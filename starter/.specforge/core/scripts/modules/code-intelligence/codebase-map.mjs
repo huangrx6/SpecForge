@@ -201,6 +201,58 @@ function candidate(files, predicate) {
     .map((file) => file.path);
 }
 
+function classifyDataCandidate(file) {
+  const p = file.path.toLowerCase();
+  const n = file.name.toLowerCase();
+  const sqlLike = n.endsWith(".sql") || /(ddl|dbml|schema\.prisma)/i.test(n);
+  const dataPath = /(^|\/)(migrations?|models?|entities|entity|repositories|repository|schema|schemas|prisma|sequelize|typeorm|db|database)(\/|$)/i.test(p);
+
+  if (sqlLike && (/(^|\/)(old|legacy|archive|backup|bak|deprecated|history)(\/|$)/i.test(p) || /(dump|backup|old|legacy|archive|bak|deprecated|history)/i.test(n))) {
+    return "legacy_sql_candidates";
+  }
+  if (/(^|\/)(migrations?|flyway|liquibase|alembic|prisma\/migrations|typeorm)(\/|$)/i.test(p)) {
+    return "migration_artifacts";
+  }
+  if (/(schema\.prisma|dbml|schema\.sql)$/i.test(n)) {
+    return "schema_authorities";
+  }
+  if (/(^|\/)(models?|entities|entity)(\/|$)/i.test(p)) {
+    return "active_models";
+  }
+  if (/(^|\/)(repositories|repository|dao|mapper)(\/|$)/i.test(p)) {
+    return "repositories";
+  }
+  if (/(^|\/)(seeds?|fixtures?|initdb)(\/|$)|init\.sql/i.test(p) && (dataPath || sqlLike)) {
+    return "seed_or_init";
+  }
+  if (n.endsWith(".sql")) {
+    return "untrusted_sql";
+  }
+  if (dataPath) {
+    return "data_candidates";
+  }
+  return null;
+}
+
+function classifiedDataCandidates(files) {
+  const groups = {
+    active_models: [],
+    repositories: [],
+    migration_artifacts: [],
+    schema_authorities: [],
+    seed_or_init: [],
+    legacy_sql_candidates: [],
+    untrusted_sql: [],
+    data_candidates: [],
+  };
+  for (const file of files.sort((a, b) => a.path.localeCompare(b.path))) {
+    const group = classifyDataCandidate(file);
+    if (!group) continue;
+    if (groups[group].length < maxCandidates) groups[group].push(file.path);
+  }
+  return groups;
+}
+
 function parsePackageJson(path) {
   try {
     const json = JSON.parse(readFileSync(join(root, path), "utf8"));
@@ -251,13 +303,7 @@ const apiCandidates = candidate(
     file.source &&
     /(^|\/)(api|apis|routes|router|routers|controllers|controller|handlers|handler|endpoints|views)(\/|$)/i.test(file.path),
 );
-const dataCandidates = candidate(
-  state.files,
-  (file) =>
-    /(^|\/)(migrations?|models?|entities|entity|repositories|repository|schema|schemas|prisma|sequelize|typeorm|db|database)(\/|$)/i.test(
-      file.path,
-    ) || ["schema.prisma", "dbml", "ddl.sql"].some((name) => file.name.toLowerCase().endsWith(name)),
-);
+const dataCandidates = classifiedDataCandidates(state.files);
 const testCandidates = candidate(
   state.files,
   (file) => /(^|\/)(__tests__|tests?|specs?|e2e|integration)(\/|$)/i.test(file.path) || /\.(test|spec)\.[cm]?[jt]sx?$/i.test(file.name),
@@ -335,6 +381,18 @@ function printList(title, items, render = (item) => `- ${item}`) {
   for (const item of items) console.log(render(item));
 }
 
+function printDataCandidates(groups) {
+  console.log("Data candidates:");
+  for (const [group, items] of Object.entries(groups)) {
+    console.log(`- ${group}:`);
+    if (!items.length) {
+      console.log("  - none");
+      continue;
+    }
+    for (const item of items) console.log(`  - ${item}`);
+  }
+}
+
 if (asJson) {
   console.log(JSON.stringify(result, null, 2));
 } else {
@@ -357,7 +415,7 @@ if (asJson) {
   console.log("");
   printList("API candidates:", result.candidates.api);
   console.log("");
-  printList("Data candidates:", result.candidates.data);
+  printDataCandidates(result.candidates.data);
   console.log("");
   printList("Test candidates:", result.candidates.tests);
   console.log("");

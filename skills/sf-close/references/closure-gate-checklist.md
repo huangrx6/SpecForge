@@ -13,7 +13,7 @@
 | 出问题怎么退？ | `06-close/rollback.md` |
 | work item 是否可以归档？ | doctor + archive dry-run + archive |
 
-## Wiki Sync 判断
+## Wiki 同步判断
 
 需要回写 wiki 的典型变化：
 

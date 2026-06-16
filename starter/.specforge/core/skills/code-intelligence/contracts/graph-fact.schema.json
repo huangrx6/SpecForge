@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SpecForge Graph Fact",
+  "type": "object",
+  "required": ["id", "type", "subject", "relation", "object", "source_paths", "provider", "query", "confidence", "indexed_at", "freshness"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^GF-[0-9A-Za-z_-]+$" },
+    "type": {
+      "type": "string",
+      "enum": ["module", "entry", "symbol", "call", "dependency", "api", "data", "test", "operation", "risk"]
+    },
+    "subject": { "type": "string" },
+    "relation": { "type": "string" },
+    "object": { "type": "string" },
+    "source_paths": { "type": "array", "items": { "type": "string" } },
+    "provider": {
+      "type": "string",
+      "enum": ["codegraph", "codebase-memory-mcp", "codegraphcontext", "repomix", "bootstrap-map", "rg", "manual"]
+    },
+    "query": { "type": "string" },
+    "confidence": { "type": "string", "enum": ["high", "medium", "low", "unknown"] },
+    "indexed_at": { "type": "string" },
+    "freshness": { "type": "string", "enum": ["ready", "pending-sync", "manual-verified", "stale", "unknown"] },
+    "used_for": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["wiki", "requirements", "technical-design", "tasking", "code-review", "verification"]
+      }
+    },
+    "used_for_wiki": { "type": "boolean" },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": false
+}
+

@@ -2,6 +2,8 @@
 
 动效 foundation 必须能被实现阶段直接复制为 token。原则只说明边界，token 才能让 `sf-implement` 避免硬编码 duration、easing 和一次性 Tailwind arbitrary value。
 
+先从 `data/motion-recipes.csv` 选择 `motion_id`。动效要和 design mode、页面任务、字体空间密度一起决定，不允许在实现阶段临时补“好看点的动画”。
+
 ## 动效目的
 
 | 类型 | 目的 | 建议 |
@@ -97,9 +99,35 @@
 - GSAP 适合品牌页、复杂时间轴、数字翻牌、场景化动效；不适合普通表单每个控件都动画化。
 - 尊重 `prefers-reduced-motion`。
 
+## Motion Recipe 映射
+
+| 场景 | 推荐 motion_id | GSAP 边界 |
+|---|---|---|
+| 后台 / 表格 / 表单 | `product-crisp` | N/A |
+| 导入 / 审批 / 工单 / 诊断 | `ops-progress` | 多步骤进度、阻塞恢复、执行日志 |
+| AI 工具调用 / agent 工作流 | `ai-command-flow` | tool-call timeline、trace reveal、streaming status |
+| 品牌页 / 活动页 | `brand-signature` | hero timeline、scroll scene、number morph |
+| 大屏 / 直播间 / 监控墙 | `data-live` | number roll、chart reveal、alert timeline |
+
+## GSAP 高级效果边界
+
+GSAP 不是“高级感开关”。只有满足以下至少 2 项才允许使用：
+
+- 多个元素需要严格时间轴和相对偏移。
+- 状态有可解释的过程，例如 AI 调用、导入、诊断、审批推进。
+- 动效是品牌 signature 的唯一主角。
+- 需要 play / pause / reverse / timeScale 统一控制。
+- 需要和数据状态、滚动场景或实时事件绑定。
+
+禁止把 GSAP 用于普通 hover、button press、toast、drawer、form field、table row hover。
+
 ## 禁止
 
 - 首屏所有元素同时飞入。
 - hover 动效改变布局尺寸。
 - 加载动画替代真实进度或错误反馈。
 - 后台工具中使用夸张弹跳、旋转和大幅位移。
+
+## 输出
+
+记录 `motion_id`、motion personality、CSS token、Motion Vue / React 边界、GSAP signature、reduced motion，并写入 `Design Contract JSON.foundation_system.motion` 和 `motion`。

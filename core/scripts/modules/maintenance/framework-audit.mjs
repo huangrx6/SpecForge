@@ -229,6 +229,12 @@ function designSystemIssues() {
     "core/skills/ui-ux/design-system/data/ui-color-scales.csv",
     "core/skills/ui-ux/design-system/data/aesthetic-palette-candidates.csv",
     "core/skills/ui-ux/design-system/data/chart-palettes.csv",
+    "core/skills/ui-ux/design-system/data/font-pairing-recipes.csv",
+    "core/skills/ui-ux/design-system/data/type-scales.csv",
+    "core/skills/ui-ux/design-system/data/spacing-density-scales.csv",
+    "core/skills/ui-ux/design-system/data/radius-shadow-recipes.csv",
+    "core/skills/ui-ux/design-system/data/motion-recipes.csv",
+    "core/skills/ui-ux/design-system/data/advanced-interaction-recipes.csv",
     "core/skills/ui-ux/design-system/components/README.md",
     "core/skills/ui-ux/design-system/foundations/README.md",
     "core/skills/ui-ux/design-system/foundations/tokens.md",
@@ -278,10 +284,16 @@ function designSystemIssues() {
     "core/skills/ui-ux/design-system/references/aesthetic-directions.md",
     "core/skills/ui-ux/design-system/references/component-system.md",
     "core/skills/ui-ux/design-system/references/design-intelligence.md",
+    "core/skills/ui-ux/design-system/references/design-system-orchestration.md",
+    "core/skills/ui-ux/design-system/references/composition-source-index.md",
+    "core/skills/ui-ux/design-system/references/font-source-index.md",
+    "core/skills/ui-ux/design-system/references/design-composition.md",
+    "core/skills/ui-ux/design-system/references/advanced-interaction-source-index.md",
     "core/skills/ui-ux/design-system/references/ux-research-ia.md",
     "core/skills/ui-ux/design-system/references/design-md-extraction.md",
     "core/skills/ui-ux/design-system/references/taste-review.md",
     "core/skills/ui-ux/design-system/references/layout-archetypes.md",
+    "core/skills/ui-ux/design-system/references/product-ui-layout-quality.md",
     "core/skills/ui-ux/design-system/references/output-contract.md",
     "core/skills/ui-ux/design-system/references/cross-stage-handoff.md",
     "core/skills/ui-ux/design-system/references/shadcn-vue.md",
@@ -297,7 +309,7 @@ function designSystemIssues() {
   const schemaPath = "core/skills/ui-ux/design-system/contracts/design-contract.schema.json";
   if (exists(schemaPath)) {
     const schema = read(schemaPath);
-    for (const marker of ['"Product UI"', '"Brand Surface"', '"Hybrid"', '"Avatar-IP"', '"Empty State"', '"contrast_checks"', '"scope"']) {
+    for (const marker of ['"Product UI"', '"Brand Surface"', '"Hybrid"', '"Avatar-IP"', '"Empty State"', '"scan_manifest"', '"selected_data"', '"font_source_id"', '"font_pairing_id"', '"advanced_interaction_recipe_id"', '"contrast_checks"', '"scope"', '"foundation_system"', '"source_basis"', '"typography"', '"spacing"', '"radius_shadow"', '"layout"', '"product_ui_quality"']) {
       if (!schema.includes(marker)) {
         issues.push(issue("FAIL", "design-contract-schema-marker-missing", `${schemaPath} must include ${marker}.`, schemaPath));
       }
@@ -331,13 +343,52 @@ function designSystemIssues() {
   const artifactQualityPath = "core/scripts/lib/artifact-quality.mjs";
   if (exists(artifactQualityPath)) {
     const body = read(artifactQualityPath);
-    for (const marker of ["lintUiDesign", "design-contract-json-missing", "design-contract-unknown-palette", "ui-design-high-visual-qa-unresolved"]) {
+    for (const marker of ["lintUiDesign", "design-contract-json-missing", "design-contract-unknown-palette", "design-contract-scan-manifest-missing", "design-contract-foundation-system-missing", "ui-design-high-visual-qa-unresolved"]) {
       if (!body.includes(marker)) {
         issues.push(issue("FAIL", "ui-design-artifact-quality-marker-missing", `${artifactQualityPath} must check ${marker}.`, artifactQualityPath));
       }
     }
   }
 
+  return issues;
+}
+
+function pencilSystemIssues() {
+  const issues = [];
+  const required = [
+    "core/skills/ui-ux/pencil/SKILL.md",
+    "core/skills/ui-ux/pencil/references/specforge-design-contract-handoff.md",
+    "core/skills/ui-ux/pencil/references/pencil-token-system.md",
+    "core/skills/ui-ux/pencil/references/pencil-quality-gate.md",
+  ];
+  issues.push(...required
+    .filter((path) => !exists(path))
+    .map((path) => issue("FAIL", "missing-pencil-skill-file", `${path} is required by the local Pencil skill contract.`, path)));
+
+  const registry = safeJson("core/skills/registry.json", { skills: [] });
+  const pencil = registry.skills?.find((entry) => entry.id === "pencil");
+  if (!pencil) {
+    issues.push(issue("FAIL", "pencil-registry-missing", "core/skills/registry.json must register the local pencil skill.", "core/skills/registry.json"));
+    return issues;
+  }
+  if (pencil.source?.type !== "local-authored") {
+    issues.push(issue("FAIL", "pencil-registry-not-local", "pencil must be a SpecForge local-authored skill, not github-raw.", "core/skills/registry.json"));
+  }
+  if (pencil.source?.path !== "core/skills/ui-ux/pencil/SKILL.md") {
+    issues.push(issue("FAIL", "pencil-registry-path-invalid", "pencil source.path must point to core/skills/ui-ux/pencil/SKILL.md.", "core/skills/registry.json"));
+  }
+  const files = new Set((pencil.source?.files ?? []).map((entry) => entry.path));
+  for (const support of ["references/specforge-design-contract-handoff.md", "references/pencil-token-system.md", "references/pencil-quality-gate.md"]) {
+    if (!files.has(support)) {
+      issues.push(issue("FAIL", "pencil-support-file-not-registered", `pencil registry source.files must include ${support}.`, "core/skills/registry.json"));
+    }
+  }
+  const body = exists("core/skills/ui-ux/pencil/SKILL.md") ? read("core/skills/ui-ux/pencil/SKILL.md") : "";
+  for (const marker of ["Design Contract JSON", "foundation_system", "Pencil variables", "Product UI Layout Audit", "不负责重新决定审美"]) {
+    if (!body.includes(marker)) {
+      issues.push(issue("FAIL", "pencil-skill-marker-missing", `Pencil skill must include marker: ${marker}.`, "core/skills/ui-ux/pencil/SKILL.md"));
+    }
+  }
   return issues;
 }
 
@@ -523,16 +574,14 @@ function requirementsSystemIssues() {
     }
   }
 
-  for (const [path, target] of [
-    ["core/skills/requirements/foundations/confirmation-boundary.md", "behavior-contract.md#1-confirmation-boundary"],
-    ["core/skills/requirements/foundations/requirement-language.md", "behavior-contract.md#2-requirement-language"],
-    ["core/skills/requirements/foundations/testability.md", "behavior-contract.md#3-testability"],
-    ["core/skills/requirements/foundations/traceability.md", "behavior-contract.md#4-traceability"],
+  for (const removed of [
+    "core/skills/requirements/foundations/confirmation-boundary.md",
+    "core/skills/requirements/foundations/requirement-language.md",
+    "core/skills/requirements/foundations/testability.md",
+    "core/skills/requirements/foundations/traceability.md",
   ]) {
-    if (!exists(path)) continue;
-    const body = read(path);
-    if (!body.includes("Deprecated compatibility entry") || !body.includes(target)) {
-      issues.push(issue("FAIL", "requirements-legacy-foundation-not-redirect", `${path} must be a deprecated redirect to ${target}.`, path));
+    if (exists(removed)) {
+      issues.push(issue("FAIL", "requirements-merged-foundation-present", `${removed} has been merged into behavior-contract.md and must be removed.`, removed));
     }
   }
 
@@ -549,15 +598,14 @@ function requirementsSystemIssues() {
   const registryPath = "core/skills/registry.json";
   if (exists(registryPath)) {
     const registry = read(registryPath);
-    for (const marker of [
-      '"path": "foundations/confirmation-boundary.md",\n            "deprecated": true',
-      '"path": "foundations/requirement-language.md",\n            "deprecated": true',
-      '"path": "foundations/testability.md",\n            "deprecated": true',
-      '"path": "foundations/traceability.md",\n            "deprecated": true',
-      '"redirectTo": "foundations/behavior-contract.md#1-confirmation-boundary"',
-    ]) {
+    for (const marker of ['"path": "foundations/behavior-contract.md"', '"path": "foundations/nfr-taxonomy.md"']) {
       if (!registry.includes(marker)) {
-        issues.push(issue("FAIL", "requirements-registry-legacy-foundation-not-deprecated", `${registryPath} must mark legacy requirements foundation files as deprecated redirects.`, registryPath));
+        issues.push(issue("FAIL", "requirements-registry-core-foundation-missing", `${registryPath} must include ${marker}.`, registryPath));
+      }
+    }
+    for (const removed of ["confirmation-boundary.md", "requirement-language.md", "testability.md", "traceability.md"]) {
+      if (registry.includes(removed)) {
+        issues.push(issue("FAIL", "requirements-registry-removed-foundation-present", `${registryPath} must not reference removed foundation file ${removed}.`, registryPath));
       }
     }
   }
@@ -792,16 +840,10 @@ function testEngineeringIssues() {
     "core/skills/quality/test-engineering/references/playwright-execution-contract.md",
     "core/skills/quality/test-engineering/contracts/test-case.schema.json",
     "core/skills/quality/test-engineering/contracts/playwright-flow.schema.json",
-    "core/skills/quality/test-design/SKILL.md",
   ];
   const issues = required
     .filter((path) => !exists(path))
     .map((path) => issue("FAIL", "missing-test-engineering-file", `${path} is required by the test-engineering contract.`, path));
-
-  const aliasPath = "core/skills/quality/test-design/SKILL.md";
-  if (exists(aliasPath) && !read(aliasPath).includes("Deprecated: use `core/skills/quality/test-engineering/SKILL.md`")) {
-    issues.push(issue("FAIL", "test-design-alias-missing", `${aliasPath} must be a deprecated alias to test-engineering.`, aliasPath));
-  }
 
   const skillPath = "core/skills/quality/test-engineering/SKILL.md";
   if (exists(skillPath)) {
@@ -809,6 +851,18 @@ function testEngineeringIssues() {
     for (const marker of ["测试工程主能力包", "auth strategy", "runtime runbook", "Playwright", "evidence"]) {
       if (!body.includes(marker)) issues.push(issue("FAIL", "test-engineering-marker-missing", `${skillPath} is missing ${marker}.`, skillPath));
     }
+  }
+  const outputPath = "core/skills/quality/test-engineering/references/output-contract.md";
+  if (exists(outputPath)) {
+    const body = read(outputPath);
+    for (const marker of ["Test Design Tree Rules", "Automation Matrix", "XMind / 白板导出规则"]) {
+      if (!body.includes(marker)) {
+        issues.push(issue("FAIL", "test-engineering-absorbed-test-design-marker-missing", `${outputPath} is missing ${marker}.`, outputPath));
+      }
+    }
+  }
+  if (exists("core/skills/quality/test-design")) {
+    issues.push(issue("FAIL", "test-design-directory-present", "Deprecated quality/test-design directory must be removed; use quality/test-engineering.", "core/skills/quality/test-design"));
   }
   return issues;
 }
@@ -851,7 +905,8 @@ function scriptModuleIssues() {
     ],
     gates: ["gate.mjs"],
     reporting: ["render-work-report.mjs", "workflow-package.mjs", "handoff-summary.mjs", "traceability-summary.mjs"],
-    "code-intelligence": ["codebase-map.mjs", "codebase-index.mjs"],
+    "code-intelligence": ["codebase-map.mjs", "codebase-index.mjs", "graph-freshness.mjs", "graph-impact.mjs", "wiki-refresh-plan.mjs"],
+    wiki: ["wiki-update-plan.mjs", "wiki-hydrate.mjs"],
     maintenance: [
       "doctor.mjs",
       "self-test.mjs",
@@ -876,6 +931,7 @@ function scriptModuleIssues() {
     "core/scripts/modules/gates/README.md",
     "core/scripts/modules/reporting/README.md",
     "core/scripts/modules/code-intelligence/README.md",
+    "core/scripts/modules/wiki/README.md",
     "core/scripts/modules/maintenance/README.md",
     "core/scripts/modules/archive/README.md",
   ];
@@ -1657,6 +1713,7 @@ const checks = [
   { id: "profile-catalog", issues: profileCatalogIssues() },
   { id: "standards-index", issues: standardsIndexIssues() },
   { id: "design-system-contract", issues: designSystemIssues() },
+  { id: "pencil-system-contract", issues: pencilSystemIssues() },
   { id: "design-system-aesthetic-contract", issues: designSystemAestheticIssues() },
   { id: "design-system-palette-contract", issues: designSystemPaletteIssues() },
   { id: "design-system-component-depth", issues: designSystemComponentDepthIssues() },

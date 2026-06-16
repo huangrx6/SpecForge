@@ -22,6 +22,18 @@
 5. 选定 palette 后写入 Design Contract JSON 的 `color_system`。
 6. 如果 palette 来自 Happy Hues / Color Hunt / Coolors 这类灵感来源，只能写 `source_type: inspiration`；进入实现前必须由 Agent 重新映射成 semantic tokens 并做 contrast check。
 7. `color_system.accessibility.contrast_checks` 必须记录实际检查结果；`requires_contrast_check: true` 不能替代 ratio / status。
+8. Brand Surface / Hybrid 选择科技、Web3、AI、赛博朋克、数据感方向时，必须额外执行 de-template check：如果 palette 落入 “cyan + violet + rose + glow + glass” 的通用组合，不能直接进入实现；要换 palette 或输出 custom palette delta。
+
+## De-template Palette Check
+
+| 信号 | 风险 | 修正 |
+| --- | --- | --- |
+| `primary` 是青色、`secondary` 是紫色、`accent` 是玫红，且页面使用强 glow | 常见 AI / cyber landing 模板 | 换非默认高识别 palette，例如 obsidian-phosphor、black-white-cool、luxury 的深色改造，或生成 custom delta |
+| 主按钮使用多色科技渐变 | 廉价“高级感” | 改成单色主行动、材质边框或 subtle light treatment |
+| 所有强调都靠高饱和色 | 视觉疲劳且缺少品牌判断 | 降低 chroma，保留一个 signal color，其余用中性色和材质表达 |
+| Web3 / 协议 / 开发者品牌只用了抽象霓虹 | 行业物件缺失 | 引入终端、协议图、网格、链路、密钥、硬件信号或数据拓扑的结构 signature |
+
+custom palette delta 必须写入 `visual_calibration.palette_delta`，并说明从哪个默认组合偏移，不能只写“换成更高级”。
 
 ## Palette Field Mapping
 
@@ -75,6 +87,7 @@
 ## Forbidden Combinations
 
 - 不允许 “紫蓝渐变 + 玻璃 + 大圆角 + 阴影” 成为默认组合。
+- 不允许 Web3 / AI / 科技品牌页默认使用 “青紫玫红霓虹 + 抽象光效 + 渐变按钮”。
 - 不允许高密后台使用 5 个以上高饱和色。
 - 不允许文本使用 muted 色放在彩色背景上。
 - 不允许状态色和品牌色混用，例如 danger 被拿来做装饰。

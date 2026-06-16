@@ -15,6 +15,7 @@ import {
 } from "../../lib/specforge.mjs";
 import { artifactQualitySummary } from "../../lib/artifact-quality.mjs";
 import { wikiQualitySummary } from "../../lib/wiki-quality.mjs";
+import { wikiUpdatePlan } from "../../lib/wiki-plan.mjs";
 
 function writeFixture(path, content) {
   mkdirSync(join(path, ".."), { recursive: true });
@@ -164,6 +165,209 @@ function testWikiQualityGraphFactReferences() {
   } finally {
     rmSync(base, { recursive: true, force: true });
   }
+}
+
+function testWikiQualityStrictModesBlockBootstrap() {
+  const base = mkdtempSync("tmp-specforge-wiki-strict-");
+  try {
+    const wikiRoot = `${base}/wiki`;
+    mkdirSync(wikiRoot, { recursive: true });
+    writeFixture(
+      `${wikiRoot}/00-index.md`,
+      "---\ntitle: Index\nkind: index\nowner: test\nlast_updated: YYYY-MM-DD\nsource_work: bootstrap\nstatus: current\n---\n\n# Index\n\n暂无。\n",
+    );
+    writeFixture(
+      `${wikiRoot}/01-project-overview.md`,
+      "---\ntitle: Project\nkind: project\nowner: test\nlast_updated: YYYY-MM-DD\nsource_work: bootstrap\nstatus: current\n---\n\n# Project\n\n暂无。\n\n未确认。\n\n待补充。\n",
+    );
+    writeFixture(
+      `${wikiRoot}/03-architecture.md`,
+      "---\ntitle: Architecture\nkind: architecture\nowner: test\nlast_updated: YYYY-MM-DD\nsource_work: bootstrap\nstatus: current\n---\n\n# Architecture\n\n暂无。\n\n未确认。\n\n待补充。\n",
+    );
+
+    const bootstrap = wikiQualitySummary({ wikiRoot, mode: "bootstrap" });
+    assert.equal(bootstrap.issues.some((issue) => issue.code === "placeholder-heavy" && issue.severity === "FAIL"), false);
+
+    const steering = wikiQualitySummary({ wikiRoot, mode: "steering" });
+    assert.ok(steering.issues.some((issue) => issue.code === "placeholder-heavy" && issue.severity === "FAIL"));
+    assert.ok(steering.issues.some((issue) => issue.code === "index-summary-placeholder"));
+  } finally {
+    rmSync(base, { recursive: true, force: true });
+  }
+}
+
+function testWikiUpdatePlanBlocksNaForVerifiedWork() {
+  const base = mkdtempSync("tmp-specforge-wiki-plan-");
+  try {
+    const work = `${base}/work/active/20260616-feat-001-wiki`;
+    const wikiRoot = `${base}/wiki`;
+    mkdirSync(wikiRoot, { recursive: true });
+    writeFixture(
+      `${work}/work.yaml`,
+      "id: 20260616-feat-001-wiki\nupdated_at: 2026-06-16\ngates:\n  verification:\n    status: APPROVED\n    evidence: 05-verification/report.md\n",
+    );
+    writeFixture(
+      `${work}/01-spec/requirements.md`,
+      "# Requirements\n\nREQ-001 MUST: WHEN user opens dashboard, THE SYSTEM SHALL show account status.\n",
+    );
+    writeFixture(
+      `${work}/01-spec/technical-design.md`,
+      "# Technical Design\n\n## 7.1 Architecture Contract\nBoundary: dashboard service and API route.\n",
+    );
+    writeFixture(
+      `${work}/03-implementation/changed-files.md`,
+      "# Changed Files\n\n- `src/dashboard/service.ts`\n- `src/api/dashboard/route.ts`\n",
+    );
+    writeFixture(`${work}/05-verification/report.md`, "# Verification\n\nAPPROVED\n");
+    writeFixture(`${wikiRoot}/00-index.md`, "# Index\n\n暂无。\n");
+    writeFixture(`${wikiRoot}/01-project-overview.md`, "# Project\n\n暂无。\n");
+    writeFixture(`${wikiRoot}/03-architecture.md`, "# Architecture\n\n暂无。\n");
+
+    const plan = wikiUpdatePlan({ workItemBase: work, workItem: "20260616-feat-001-wiki", wikiRoot });
+    assert.equal(plan.can_write_na, false);
+    assert.ok(plan.required_targets.some((target) => target.file === "03-architecture.md"));
+    assert.ok(plan.required_targets.some((target) => target.file === "05-operations.md"));
+    assert.ok(plan.blocking_gaps.length > 0);
+  } finally {
+    rmSync(base, { recursive: true, force: true });
+  }
+}
+
+function testCodebaseMapClassifiesDataCandidates() {
+  const base = mkdtempSync("tmp-specforge-data-map-");
+  try {
+    writeFixture(`${base}/src/models/user.ts`, "export interface User { id: string }\n");
+    writeFixture(`${base}/src/repositories/user-repository.ts`, "export const repo = {};\n");
+    writeFixture(`${base}/prisma/schema.prisma`, "model User { id String @id }\n");
+    writeFixture(`${base}/prisma/migrations/001_init/migration.sql`, "create table users(id text);\n");
+    writeFixture(`${base}/db/legacy/old.sql`, "create table old_users(id text);\n");
+    writeFixture(`${base}/database/backup_2019.sql`, "create table backup_users(id text);\n");
+
+    const result = spawnSync(process.execPath, [`${layout.tools}/codebase-map.mjs`, "--json"], {
+      cwd: root,
+      encoding: "utf8",
+      timeout: 10000,
+      maxBuffer: 4 * 1024 * 1024,
+    });
+    assert.equal(result.status, 0, `codebase-map failed\n${result.stderr}`);
+    const payload = JSON.parse(result.stdout);
+    const groups = payload.candidates.data;
+    assert.ok(groups.active_models.some((path) => path.endsWith("src/models/user.ts")));
+    assert.ok(groups.repositories.some((path) => path.endsWith("src/repositories/user-repository.ts")));
+    assert.ok(groups.schema_authorities.some((path) => path.endsWith("prisma/schema.prisma")));
+    assert.ok(groups.migration_artifacts.some((path) => path.endsWith("prisma/migrations/001_init/migration.sql")));
+    assert.ok(groups.legacy_sql_candidates.some((path) => path.endsWith("db/legacy/old.sql")));
+    assert.ok(groups.legacy_sql_candidates.some((path) => path.endsWith("database/backup_2019.sql")));
+  } finally {
+    rmSync(base, { recursive: true, force: true });
+  }
+}
+
+function testWikiQualityBlocksUntrustedSqlInCurrentEntities() {
+  const base = mkdtempSync("tmp-specforge-wiki-sql-");
+  try {
+    const wikiRoot = `${base}/wiki`;
+    const reportPath = `${base}/codebase-intelligence.md`;
+    mkdirSync(wikiRoot, { recursive: true });
+    writeFixture(
+      `${wikiRoot}/00-index.md`,
+      "---\ntitle: 索引\nkind: index\nowner: test\nlast_updated: 2026-06-16\nsource_work: test\nstatus: current\n---\n\n# 索引\n\n- [数据模型](04-data-model.md)\n",
+    );
+    writeFixture(
+      `${wikiRoot}/04-data-model.md`,
+      "---\ntitle: 数据模型\nkind: data\nowner: test\nlast_updated: 2026-06-16\nsource_work: test\nstatus: current\n---\n\n# 数据模型\n\n## 1. 当前数据权威\n\n| 权威来源 | 路径 / 工具 | 角色 | 证据 | 置信度 |\n|---|---|---|---|---|\n| ORM | `src/models/user.ts` | 当前 schema 来源 | code | 已确认 |\n\n## 3. 当前实体 / 表\n\n| 实体 / 表 | 用途 | 关键字段 | 状态字段 | 读取路径 | 写入路径 | 测试 | 证据 | 置信度 |\n|---|---|---|---|---|---|---|---|---|\n| old_users | legacy table | id | none | `db/legacy/old.sql` | `db/legacy/old.sql` | none | legacy SQL | 可能 |\n\n## 6. 历史 / 未受信 SQL 产物\n\n| 文件 | 不作为当前事实的原因 | 已扫描证据 | 下一步验证 |\n|---|---|---|---|\n| `db/legacy/old.sql` | 未被引用 | 已扫描 | 询问 owner |\n",
+    );
+    writeFixture(
+      reportPath,
+      `# Codebase Intelligence\n\n## 9. 原始 JSON 摘要\n\n\`\`\`json\n${JSON.stringify({
+        normalized_context: {
+          data_candidate_groups: {
+            active_models: ["src/models/user.ts"],
+            legacy_sql_candidates: ["db/legacy/old.sql"],
+            untrusted_sql: [],
+          },
+        },
+      })}\n\`\`\`\n`,
+    );
+
+    const quality = wikiQualitySummary({ wikiRoot, graphFactReports: [reportPath], mode: "steering" });
+    assert.ok(quality.issues.some((issue) => issue.code === "untrusted-sql-in-current-entities"));
+  } finally {
+    rmSync(base, { recursive: true, force: true });
+  }
+}
+
+function testWikiHydrateCliSmoke() {
+  const result = spawnSync(process.execPath, [`${layout.tools}/wiki-hydrate.mjs`, "--mode", "close", "--json"], {
+    cwd: root,
+    encoding: "utf8",
+    timeout: 10000,
+    maxBuffer: 2 * 1024 * 1024,
+  });
+  assert.equal(
+    result.status,
+    0,
+    `wiki-hydrate smoke failed\nSTDOUT:\n${result.stdout ?? ""}\nSTDERR:\n${result.stderr ?? ""}`,
+  );
+  const payload = JSON.parse(result.stdout);
+  assert.equal(payload.wiki_hydrate.mode, "close");
+  assert.equal(Array.isArray(payload.wiki_hydrate.writes), true);
+}
+
+function testCodeIntelligenceCliSmoke() {
+  const freshness = spawnSync(process.execPath, [`${layout.tools}/graph-freshness.mjs`, "--json"], {
+    cwd: root,
+    encoding: "utf8",
+    timeout: 10000,
+    maxBuffer: 2 * 1024 * 1024,
+  });
+  assert.equal(
+    freshness.status,
+    0,
+    `graph-freshness smoke failed\nSTDOUT:\n${freshness.stdout ?? ""}\nSTDERR:\n${freshness.stderr ?? ""}`,
+  );
+  const freshnessPayload = JSON.parse(freshness.stdout);
+  assert.equal(freshnessPayload.graph_freshness.provider, "codegraph");
+  assert.equal(typeof freshnessPayload.graph_freshness.ready, "boolean");
+
+  const impact = spawnSync(
+    process.execPath,
+    [`${layout.tools}/graph-impact.mjs`, "--changed-files", "src/api/auth.ts,src/auth/session.ts", "--json"],
+    {
+      cwd: root,
+      encoding: "utf8",
+      timeout: 10000,
+      maxBuffer: 2 * 1024 * 1024,
+    },
+  );
+  assert.equal(
+    impact.status,
+    0,
+    `graph-impact smoke failed\nSTDOUT:\n${impact.stdout ?? ""}\nSTDERR:\n${impact.stderr ?? ""}`,
+  );
+  const impactPayload = JSON.parse(impact.stdout);
+  assert.deepEqual(impactPayload.graph_impact.changed_files, ["src/api/auth.ts", "src/auth/session.ts"]);
+  assert.equal(Array.isArray(impactPayload.graph_impact.affected_tests), true);
+
+  const wikiPlan = spawnSync(
+    process.execPath,
+    [`${layout.tools}/wiki-refresh-plan.mjs`, "--changed-files", "src/api/auth.ts,prisma/schema.prisma", "--json"],
+    {
+      cwd: root,
+      encoding: "utf8",
+      timeout: 10000,
+      maxBuffer: 2 * 1024 * 1024,
+    },
+  );
+  assert.equal(
+    wikiPlan.status,
+    0,
+    `wiki-refresh-plan smoke failed\nSTDOUT:\n${wikiPlan.stdout ?? ""}\nSTDERR:\n${wikiPlan.stderr ?? ""}`,
+  );
+  const wikiPayload = JSON.parse(wikiPlan.stdout);
+  const targets = wikiPayload.wiki_refresh_plan.targets.map((target) => target.file);
+  assert.ok(targets.includes("external-interfaces.md"));
+  assert.ok(targets.includes("04-data-model.md"));
 }
 
 function testStageEvalFixturesCoverStages() {
@@ -377,6 +581,51 @@ function testUiDesignContractQuality() {
     assert.ok(failing.issues.some((issue) => issue.code === "ui-design-high-visual-qa-unresolved"));
 
     const contract = {
+      scan_manifest: {
+        workflow: ["mode", "source", "font", "color", "composition", "advanced_interaction", "component", "qa", "output"],
+        scanned_files: [
+          {
+            path: "references/design-system-orchestration.md",
+            purpose: "设计流程编排",
+            status: "scanned",
+            finding: "使用完整 Design Scan Manifest",
+          },
+          {
+            path: "references/design-mode-routing.md",
+            purpose: "模式路由",
+            status: "scanned",
+            finding: "Product UI",
+          },
+          {
+            path: "references/font-source-index.md",
+            purpose: "字体来源",
+            status: "scanned",
+            finding: "system-cn-ui",
+          },
+          {
+            path: "references/design-composition.md",
+            purpose: "组合配方",
+            status: "scanned",
+            finding: "product-compact + compact + product-border-first",
+          },
+        ],
+        selected_data: {
+          palette_id: "minimal-tech",
+          font_source_id: "system-cn-ui",
+          font_pairing_id: "system-productive-cn",
+          type_scale_id: "product-compact",
+          spacing_density_id: "compact",
+          radius_shadow_recipe_id: "product-border-first",
+          motion_recipe_id: "product-crisp",
+          advanced_interaction_recipe_id: "none-product-ui",
+        },
+        skipped_with_reason: [
+          {
+            path: "references/advanced-interaction-source-index.md",
+            reason: "Product UI 高频后台不使用 GSAP / Three.js signature",
+          },
+        ],
+      },
       design_mode: "Product UI",
       aesthetic_direction: "极简科技风",
       signature: {
@@ -427,6 +676,49 @@ function testUiDesignContractQuality() {
         source: "Tailwind Colors",
         source_url: "https://tailwindcss.com/docs/customizing-colors",
         license_note: "curated token mapping; verify source license before redistribution",
+      },
+      foundation_system: {
+        source_basis: [
+          {
+            source: "Carbon productive type",
+            adopt: "Product UI 紧凑层级",
+            adapt: "映射到本地 system font 和中文行高",
+            avoid: "复制 Carbon 视觉身份",
+          },
+          {
+            source: "Fluent spacing / proximity",
+            adopt: "用空间表达同组和层级",
+            adapt: "映射到 4px / 8px grid",
+            avoid: "所有 gap 一样",
+          },
+        ],
+        typography: {
+          font_family: "system-ui, PingFang SC, Microsoft YaHei, sans-serif",
+          scale: "product-compact",
+          line_height: "14px body / 22px line-height; table cells 13px / 20px",
+          numeric: "tabular numbers for metrics and amounts",
+          usage_rules: ["页面标题克制", "muted 文案不承载关键事实"],
+        },
+        spacing: {
+          density: "compact",
+          grid: "4px / 8px",
+          page_padding: "24px",
+          section_gap: "16px",
+          component_gap: "12px",
+          usage_rules: ["首屏必须有 primary work surface", "表格行高 40px"],
+        },
+        radius_shadow: {
+          radius_scale: "control 6px / panel 8px / overlay 10px",
+          surface_treatment: "border-first neutral surfaces",
+          overlay_shadow: "0 16px 40px rgba(15, 23, 42, 0.14)",
+          usage_rules: ["页面卡片不使用重阴影", "浮层阴影统一"],
+        },
+        motion: {
+          motion_personality: "product-crisp",
+          css_tokens: ["--duration-fast", "--duration-base", "--duration-moderate", "--ease-standard"],
+          gsap_signature: "N/A for high-frequency table workflow",
+          reduced_motion: "keep state changes, remove travel",
+        },
       },
       token_source: "existing",
       component_strategy: "primitive + wrapper",
@@ -482,6 +774,12 @@ testRegistryKeepsOtherActiveEntries();
 testArchiveAppend();
 testQualityPolicyValidation();
 testWikiQualityGraphFactReferences();
+testWikiQualityStrictModesBlockBootstrap();
+testWikiUpdatePlanBlocksNaForVerifiedWork();
+testCodebaseMapClassifiesDataCandidates();
+testWikiQualityBlocksUntrustedSqlInCurrentEntities();
+testWikiHydrateCliSmoke();
+testCodeIntelligenceCliSmoke();
 testStageEvalFixturesCoverStages();
 testStageScoreRubricCoversStages();
 testPromptSkillDriftRules();

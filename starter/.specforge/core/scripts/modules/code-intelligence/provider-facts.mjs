@@ -12,6 +12,7 @@ export const graphFactTypes = new Set([
 ]);
 
 export const confidenceLevels = new Set(["high", "medium", "low", "unknown"]);
+export const freshnessLevels = new Set(["ready", "pending-sync", "manual-verified", "stale", "unknown"]);
 
 function asArray(value) {
   if (!value) return [];
@@ -25,6 +26,11 @@ function normalizeString(value, fallback = "") {
 function normalizeConfidence(value) {
   const normalized = normalizeString(value || "unknown").toLowerCase();
   return confidenceLevels.has(normalized) ? normalized : "unknown";
+}
+
+function normalizeFreshness(value) {
+  const normalized = normalizeString(value || "unknown").toLowerCase();
+  return freshnessLevels.has(normalized) ? normalized : "unknown";
 }
 
 function normalizeType(value) {
@@ -49,6 +55,8 @@ export function normalizeProviderFacts(input, defaults = {}) {
       query: normalizeString(fact.query ?? fact.query_id ?? fact.command, defaults.query ?? "manual-import"),
       confidence: normalizeConfidence(fact.confidence),
       indexed_at: normalizeString(fact.indexed_at ?? fact.indexedAt, defaults.indexed_at ?? new Date().toISOString()),
+      freshness: normalizeFreshness(fact.freshness ?? defaults.freshness),
+      used_for: asArray(fact.used_for ?? fact.usedFor ?? defaults.used_for).map((item) => normalizeString(item)).filter(Boolean),
       used_for_wiki: Boolean(fact.used_for_wiki ?? fact.usedForWiki ?? false),
       notes: normalizeString(fact.notes ?? fact.summary),
     };
@@ -68,5 +76,6 @@ export function graphFactSummary(facts = []) {
     by_confidence: byConfidence,
     wiki_candidates: facts.filter((fact) => fact.used_for_wiki).length,
     with_source_paths: facts.filter((fact) => fact.source_paths.length > 0).length,
+    fresh: facts.filter((fact) => fact.freshness === "ready" || fact.freshness === "manual-verified").length,
   };
 }

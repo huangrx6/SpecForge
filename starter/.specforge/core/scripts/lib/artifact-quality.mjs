@@ -10,6 +10,11 @@ const designScopeValues = new Set(["avatar", "empty_state", "both"]);
 const contrastStatusValues = new Set(["pass", "fail", "not-checked"]);
 const highSeverityVisualDetectors = new Set([
   "Generic SaaS shell",
+  "Color-only design",
+  "Empty dashboard skeleton",
+  "KPI wallpaper",
+  "Blank framed content",
+  "Todo list without workflow",
   "Card soup",
   "Fake premium gradient",
   "Motion noise",
@@ -424,6 +429,13 @@ function paletteIds() {
   return new Set(lines.slice(1).map((line) => line.split(",")[0]?.trim()).filter(Boolean));
 }
 
+function designDataIds(fileName) {
+  const path = `${layout.runtime}/skills/ui-ux/design-system/data/${fileName}`;
+  if (!exists(path)) return new Set();
+  const lines = readText(path).split(/\r?\n/).filter((line) => line.trim());
+  return new Set(lines.slice(1).map((line) => line.split(",")[0]?.trim()).filter(Boolean));
+}
+
 function addMissingFields(issues, object, fields, outputPath, owner, code = "design-contract-field-missing") {
   const missing = fields.filter((field) => !Object.prototype.hasOwnProperty.call(object ?? {}, field));
   if (missing.length > 0) {
@@ -525,6 +537,132 @@ function lintVisualQaDetectors(issues, content, outputPath) {
   }
 }
 
+function lintDesignScanManifest(issues, scanManifest, outputPath) {
+  if (!scanManifest || typeof scanManifest !== "object") {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-scan-manifest-missing",
+      message: `${outputPath} 缺少 scan_manifest。`,
+      fix: "按 design-system-orchestration.md 输出扫描过的文件、选择的数据 id 和跳过理由。",
+    });
+    return;
+  }
+
+  addMissingFields(issues, scanManifest, ["workflow", "scanned_files", "selected_data", "skipped_with_reason"], outputPath, "scan_manifest");
+  if (!Array.isArray(scanManifest.workflow) || scanManifest.workflow.length === 0) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-scan-workflow-empty",
+      message: `${outputPath} 的 scan_manifest.workflow 为空。`,
+      fix: "记录 mode / source / font / color / composition / advanced_interaction / component / qa 等扫描步骤。",
+    });
+  }
+  if (!Array.isArray(scanManifest.scanned_files) || scanManifest.scanned_files.length === 0) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-scanned-files-empty",
+      message: `${outputPath} 的 scan_manifest.scanned_files 为空。`,
+      fix: "记录至少 design-system-orchestration、design-mode-routing、font-source-index 和 design-composition 的扫描结果。",
+    });
+  }
+
+  const scannedPaths = new Set((scanManifest.scanned_files ?? []).map((entry) => entry?.path).filter(Boolean));
+  for (const requiredPath of [
+    "references/design-system-orchestration.md",
+    "references/design-mode-routing.md",
+    "references/font-source-index.md",
+    "references/design-composition.md",
+  ]) {
+    if (!scannedPaths.has(requiredPath)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-required-scan-missing",
+        message: `${outputPath} 的 scan_manifest.scanned_files 缺少 ${requiredPath}。`,
+        fix: "按 orchestration 链路记录该文件的用途、状态和结论；不适用也要写 skipped 与理由。",
+      });
+    }
+  }
+
+  const selected = scanManifest.selected_data;
+  addMissingFields(issues, selected, [
+    "palette_id",
+    "font_source_id",
+    "font_pairing_id",
+    "type_scale_id",
+    "spacing_density_id",
+    "radius_shadow_recipe_id",
+    "motion_recipe_id",
+    "advanced_interaction_recipe_id",
+  ], outputPath, "scan_manifest.selected_data");
+
+  const idSources = [
+    ["font_pairing_id", "font-pairing-recipes.csv"],
+    ["type_scale_id", "type-scales.csv"],
+    ["spacing_density_id", "spacing-density-scales.csv"],
+    ["radius_shadow_recipe_id", "radius-shadow-recipes.csv"],
+    ["motion_recipe_id", "motion-recipes.csv"],
+    ["advanced_interaction_recipe_id", "advanced-interaction-recipes.csv"],
+  ];
+  for (const [field, fileName] of idSources) {
+    const value = String(selected?.[field] ?? "").trim();
+    if (!isMeaningfulCell(value)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-selected-data-missing",
+        message: `${outputPath} 的 scan_manifest.selected_data.${field} 缺失或仍像占位。`,
+        fix: `从 data/${fileName} 选择一个 id；不使用高级交互时写 none-product-ui 或明确 N/A recipe。`,
+      });
+      continue;
+    }
+    if (/^N\/A$/i.test(value)) continue;
+    const ids = designDataIds(fileName);
+    if (ids.size > 0 && !ids.has(value)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-selected-data-unknown",
+        message: `${outputPath} 的 ${field} 不存在于 ${fileName}：${value}。`,
+        fix: `改用 data/${fileName} 中存在的 id，或先把新 recipe 记录进数据表。`,
+      });
+    }
+  }
+}
+
+function lintFoundationSystem(issues, foundation, outputPath) {
+  if (!foundation || typeof foundation !== "object") {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-foundation-system-missing",
+      message: `${outputPath} 缺少 foundation_system。`,
+      fix: "补齐 typography、spacing、radius_shadow 和 motion；这些字段必须来自 design-composition 与 foundation 数据表。",
+    });
+    return;
+  }
+
+  addMissingFields(issues, foundation, ["source_basis", "typography", "spacing", "radius_shadow", "motion"], outputPath, "foundation_system");
+  addMissingFields(issues, foundation.typography, ["font_family", "scale", "line_height", "numeric", "usage_rules"], outputPath, "foundation_system.typography");
+  addMissingFields(issues, foundation.spacing, ["density", "grid", "page_padding", "section_gap", "component_gap", "usage_rules"], outputPath, "foundation_system.spacing");
+  addMissingFields(issues, foundation.radius_shadow, ["radius_scale", "surface_treatment", "overlay_shadow", "usage_rules"], outputPath, "foundation_system.radius_shadow");
+  addMissingFields(issues, foundation.motion, ["motion_personality", "css_tokens", "gsap_signature", "reduced_motion"], outputPath, "foundation_system.motion");
+
+  const requiredArrays = [
+    ["foundation_system.source_basis", foundation.source_basis],
+    ["foundation_system.typography.usage_rules", foundation.typography?.usage_rules],
+    ["foundation_system.spacing.usage_rules", foundation.spacing?.usage_rules],
+    ["foundation_system.radius_shadow.usage_rules", foundation.radius_shadow?.usage_rules],
+    ["foundation_system.motion.css_tokens", foundation.motion?.css_tokens],
+  ];
+  for (const [owner, value] of requiredArrays) {
+    if (!Array.isArray(value) || value.length === 0) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-foundation-array-empty",
+        message: `${outputPath} 的 ${owner} 为空。`,
+        fix: "写入至少一条可执行规则或 token；不要只写字段名。",
+      });
+    }
+  }
+}
+
 function lintUiDesign(content, outputPath) {
   const issues = [];
   addRequiredHeadingIssues(issues, content, outputPath, ["Design Contract Summary"]);
@@ -550,10 +688,12 @@ function lintUiDesign(content, outputPath) {
   }
 
   addMissingFields(issues, contract, [
+    "scan_manifest",
     "design_mode",
     "aesthetic_direction",
     "signature",
     "color_system",
+    "foundation_system",
     "token_source",
     "component_strategy",
     "shadcn_vue",
@@ -561,6 +701,8 @@ function lintUiDesign(content, outputPath) {
     "verification_hooks",
     "anti_slop_rules",
   ], outputPath, "Design Contract JSON");
+
+  lintDesignScanManifest(issues, contract.scan_manifest, outputPath);
 
   if (!designModeValues.has(contract.design_mode)) {
     issues.push({
@@ -629,6 +771,7 @@ function lintUiDesign(content, outputPath) {
     });
   }
   lintContrastChecks(issues, color?.accessibility, outputPath);
+  lintFoundationSystem(issues, contract.foundation_system, outputPath);
   lintVisualQaDetectors(issues, content, outputPath);
   return issues;
 }

@@ -2,6 +2,8 @@
 
 本标准回答：存量项目、大型代码库和老系统接入时，AI 应如何建立可靠项目画像。
 
+具体 Agent 执行规则、CodeGraph lifecycle、freshness、affected tests、stage integration 和 `graph_facts[]` 转换模板，统一由 `.specforge/core/skills/code-intelligence/SKILL.md` 及其 references / transforms 维护。本标准只保留跨阶段原则和禁止项。
+
 ## 核心定位
 
 日常 work item 不应把代码智能当作第一入口。已有 `.specforge/wiki/` 时，先用 wiki 定位业务域、模块、API、数据和运行入口，再用代码智能或 `rg` 验证局部事实。
@@ -39,6 +41,14 @@ SpecForge 的统一入口是：
 node .specforge/core/scripts/codebase-index.mjs --json
 ```
 
+日常阶段还可以按需使用：
+
+```bash
+node .specforge/core/scripts/graph-freshness.mjs --json
+node .specforge/core/scripts/graph-impact.mjs --from-git --json
+node .specforge/core/scripts/wiki-refresh-plan.mjs --from-diff --json
+```
+
 该脚本负责检测本机 provider、运行 bootstrap map，并输出 normalized decision payload。正式 steering 时同时生成中间证据报告：
 
 ```bash
@@ -65,6 +75,8 @@ CodeGraph / MCP / SCIP 查询结果必须先归一成 `graph_facts[]`，再进�
       "query": "codegraph_trace orders.submit payment.authorize",
       "confidence": "high",
       "indexed_at": "2026-06-13T10:00:00.000Z",
+      "freshness": "ready",
+      "used_for": ["wiki", "technical-design"],
       "used_for_wiki": true
     }
   ]
@@ -82,6 +94,7 @@ node .specforge/core/scripts/codebase-index.mjs --provider codegraph --provider-
 - `type` 使用 `module / entry / symbol / call / dependency / api / data / test / operation / risk`。
 - `source_paths` 必须指向当前仓库路径；没有路径的事实只能作为低置信度候选。
 - `confidence=high` 需要 ready provider、明确 query 和 source path。
+- `freshness` 使用 `ready / pending-sync / manual-verified / stale / unknown`；pending 或 stale 结果不得写成当前事实。
 - `used_for_wiki=true` 的事实必须能写入唯一 current wiki 文件，且保留 `GF-*` fact id、provider、query 或 source path；`wiki-quality.mjs` 会提示候选事实未被 wiki 引用。
 - Graph facts 只能表达关系和证据，不直接替代人工总结、requirements 或 technical design。
 
@@ -103,11 +116,13 @@ node .specforge/core/scripts/codebase-index.mjs --provider repomix --module src/
 
 ### CodeGraph
 
-[CodeGraph](https://github.com/colbymchenry/codegraph) 是推荐的一等 graph provider：本地 SQLite 代码知识图谱，支持 Codex MCP、Claude Code、Cursor 等 agent，能通过 `codegraph_context`、`codegraph_trace`、`codegraph_impact`、`codegraph_explore`、`codegraph_status` 等工具查询符号关系、调用链、影响面和相关源码。
+[CodeGraph](https://github.com/colbymchenry/codegraph) 是推荐的一等 graph provider：本地 SQLite 代码知识图谱，支持 MCP 接入 Codex、Claude Code、Cursor 等 agent，能通过 MCP / CLI 查询符号关系、调用链、影响面和相关源码。官方文档说明它用 tree-sitter 解析代码，将 symbols、edges、files 写入本地 SQLite，并通过 MCP、CLI 和 TypeScript library 暴露查询能力；安装 CLI 后仍需要 `codegraph install` 接入 Agent，项目根需要 `codegraph init` 或 `codegraph init -i` 初始化 `.codegraph/`。
 
 SpecForge 中的使用规则：
 
 - `codebase-index.mjs` 必须区分 `installed` 和 `ready`：检测到 `codegraph` CLI 只能说明已安装，只有 `health.ready=true`、`initialized=true` 且 `sync_status=clean` 时，才能把它当作 graph provider 证据源。
+- `installed` 不等于 `mcp-configured`；`codegraph install` 才是接入 Agent MCP 的步骤。
+- CodeGraph MCP server 运行时优先依赖 watcher 自动同步；只有 watcher 不可用、CI / 脚本 pre-flight、`CODEGRAPH_NO_DAEMON=1`、branch switch 后立即查询等场景才手动 `codegraph sync`。
 - 项目未安装、未初始化或索引不同步时，必须展示两种方式：A. 用户自己安装 / 初始化 / 同步；B. Agent 辅助安装 / 初始化 / 同步。用户选择自己处理时，只给命令并等待用户完成；用户确认 Agent 辅助后，再按当前 OS 执行安装、`codegraph init -i`、`codegraph sync` 和 `codegraph status`。
 - macOS / Linux 使用 `curl -fsSL https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh | sh`；Windows 使用 `irm https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.ps1 | iex`；若用户不想执行远程脚本，可改用 `npx @colbymchenry/codegraph`。
 - steering 时先用 `codebase-index.mjs --json` 或 `codegraph_status` 检查索引健康；若 `provider_health` 不是 `ready`，暂停深度图谱分析，先初始化或同步。

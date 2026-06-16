@@ -29,12 +29,13 @@
 | 玩具感 | `toy`, `bubble` |
 | 水彩风 | `watercolor` |
 | 森系 | `forest` |
-| 赛博朋克 | `cyberpunk` |
-| 极简科技风 | `minimal-tech`, `ai-data` |
+| 赛博朋克 | `cyberpunk`；若用于 Web3 / 协议 / 开发者个人品牌，优先比较 `obsidian-phosphor`，避免默认青紫霓虹 |
+| 极简科技风 | `minimal-tech`, `ai-data`, `obsidian-phosphor` |
 | 玻璃拟态 | `glass` |
 | 轻奢风 | `luxury` |
 | 复古海报风 | `poster-retro` |
 | 酷感黑白 | `black-white-cool` |
+| Web3 协议感 | `obsidian-phosphor`, `black-white-cool`, `cyberpunk` |
 | 政企可信风 | `enterprise-trust`, `minimal` |
 | 金融专业风 | `finance-pro`, `minimal` |
 | 医疗健康风 | `medical-clean`, `minimal-tech` |

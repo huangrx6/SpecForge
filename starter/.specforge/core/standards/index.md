@@ -23,7 +23,7 @@
 | `pc-ui-design-spec.md` | PC 端业务系统、运营后台、管理控制台、数据表格工具，或用户明确提供该规范 | 具体颜色、字号、行高、间距、组件尺寸和 HTML/CSS token |
 | `engineering.md` | technical design、implementation、review、verification | 工程上怎么做才可靠、安全、可维护、可验证 |
 | `ai-toolkit.md` | intake、自动推进、人工确认、verification、wiki sync、AI 工具链沉淀 | 不同阶段用什么 AI 工具，证据强度如何分级，什么时候需要人工确认 |
-| `code-intelligence.md` | 存量项目、老项目、大型代码库理解、项目画像 | 该用哪个 provider，什么时候暂停，如何把代码事实归一到 wiki |
+| `code-intelligence.md` | 存量项目、老项目、大型代码库、既有代码影响面、受影响测试、Wiki 回写候选 | 该用哪个 provider，什么时候暂停，如何把代码事实归一到 artifact / wiki |
 | `playwright.md` | verification、UI 自动化、浏览器流程、截图 / trace / console / network 证据 | 浏览器证据如何真实执行、脱敏归档和可复现 |
 | `wiki.md` | wiki sync、close、长期知识回写 | 哪些事实要沉淀，写到哪，何时更新 |
 
@@ -35,6 +35,7 @@
 | prd | `product.md`、`workflow.md`、`operating-model.md`、`stage-playbook.md`、`ai-toolkit.md` |
 | research / gap_report | `product.md`、`engineering.md`、`workflow.md`、`stage-playbook.md` |
 | steering / 存量项目画像 | `code-intelligence.md`、`wiki.md`、`workflow.md`、`operating-model.md` |
+| existing-code impact / review / verify | `code-intelligence.md`、`engineering.md`、`workflow.md`、`stage-playbook.md` |
 | requirements | `product.md`、`workflow.md`、`stage-playbook.md`、`ai-toolkit.md` |
 | ui_design | `design.md`、`product.md`、`workflow.md`、`stage-playbook.md`、`ai-toolkit.md`、`core/skills/ui-ux/design-system`；PC 业务系统场景加读 `pc-ui-design-spec.md` |
 | technical_design | `engineering.md`、`workflow.md`、`stage-playbook.md`、`ai-toolkit.md` |

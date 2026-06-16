@@ -22,9 +22,10 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - `.specforge/core/standards/ai-toolkit.md`
 - 现有页面、组件库、设计系统、Pencil 文件、截图、参考产品或用户提供的设计资料
 - 需要操作 Pencil 时读取 `core/skills/ui-ux/pencil/SKILL.md`
-- 需要设计语言、去廉价感、shadcn-vue 映射、页面模式、样例板、动效边界、UX 研究、IA、交互、微文案或可访问性检查时读取 `core/skills/ui-ux/design-system/SKILL.md`
+- 需要设计语言、Composition Recipe、去廉价感、shadcn-vue 映射、页面模式、样例板、动效 / GSAP 边界、UX 研究、IA、交互、微文案或可访问性检查时读取 `core/skills/ui-ux/design-system/SKILL.md`
 - 使用 design-system 时先读取 `core/skills/ui-ux/design-system/references/design-mode-routing.md`；交接后续阶段前输出 Design Contract Summary 的 Markdown 表和符合 `core/skills/ui-ux/design-system/contracts/design-contract.schema.json` 的 JSON block。
 - 配色必须读取 `core/skills/ui-ux/design-system/references/color-system.md`、`references/palette-source-index.md`、`references/palette-usage-rules.md`、`data/aesthetic-palettes.csv`、`data/ui-color-scales.csv` 和 `data/chart-palettes.csv`，并把 palette_id、semantic tokens、usage rules、accessibility、source_url、license_note、contrast checks 和 avoid rules 写入 Design Contract JSON。
+- 字体、字号、间距、圆角、阴影、动效和 GSAP signature 必须读取 `core/skills/ui-ux/design-system/references/design-composition.md` 和 foundation 数据表，并写入 Design Contract JSON 的 `foundation_system`。
 - 做视觉质量审查时优先读取项目设计系统、已确认 UI 方向和 `core/skills/ui-ux/design-system/references/ux-research-ia.md`；不再内置 `web-design-guidelines`
 
 ## 写入
@@ -56,9 +57,10 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - **竞品与参考分析**：若有现有设计系统、品牌手册、页面、Pencil、Figma、截图或参考产品，提取可执行规则：布局、导航、密度、色彩、字体、表格、表单、反馈、空态和错误态。不要只贴链接；每个参考都要写"采用什么、不采用什么、如何落地"。
 - **PC 业务系统模板**：若产品是后台 / 管理系统 / 数据表格系统，或用户明确给出 PC 端 UI 规范，读取 `pc-ui-design-spec.md`，在 Visual Style Brief 中写入设计系统来源和核心 token；后续 Pencil、HTML/CSS、前端实现都不得擅自改这些数值。
 - **shadcn 管理端模式**：若实现层采用 shadcn/ui，把 shadcn 视为 primitive / registry / theming 层；在 UI design 中定义 App Shell、Resource Page、Entity Table、Detail/Form、State Feedback 和 Ops Pattern 的封装契约。
-- **design-system 工具链**：若需要设计语言或组件规范，读取 `design-system`，把 design intelligence、美学方向推荐、DESIGN.md extraction、foundations、组件契约、页面模式、样例板、动效边界和去廉价感 review 归一化到 UI design。
+- **design-system 工具链**：若需要设计语言或组件规范，读取 `design-system`，把 design intelligence、美学方向推荐、DESIGN.md extraction、Composition Recipe、foundations、组件契约、页面模式、样例板、动效 / GSAP 边界和去廉价感 review 归一化到 UI design。
 - **Design mode routing**：先判断 Product UI、Brand Surface、Hybrid、Avatar-IP 或 Empty State；后台、审批、数据表格和高频工作台默认 Product UI，不把品牌页视觉直接套到控件层。头像/IP 与空态同时适用时用 `scope: "both"`，不要把组合值写入 `design_mode`。
 - **Color system**：从 palette library 选完整色阶，按 Product UI / Brand Surface / Hybrid 的比例纪律映射 semantic tokens；不能只输出 background / surface / text / primary / accent 单点色。
+- **Foundation system**：从 type scale、spacing density、radius / shadow recipe、motion recipe 中选择一套组合配方；不能只有颜色，没有字体、空间、圆角阴影和动效。
 
 ### 2. 定义（Define）
 
@@ -80,7 +82,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 
 - **建立体验规格**：页面地图、入口出口、角色流程、主路径、异常路径。
 - **选择输出预算**：按 work item 风险写 compact / standard / full；不要为了小改生成难以审阅的完整设计报告。
-- **建立 foundations pack**：把确认方向写成 semantic tokens、密度、排版、圆角阴影、图标、文案、动效和可访问性底线。
+- **建立 Composition Recipe 和 foundations pack**：把确认方向写成 semantic tokens、typography scale、spacing density、radius / shadow recipe、motion recipe、GSAP signature、图标、文案、动效和可访问性底线。
 - **建立 taste critique**：检查这个方向是否可以套到任意同类产品；如果可以，必须替换 signature、布局、排版或色彩策略中的至少一项。
 - **写组件封装契约**：管理端必须说明哪些页面级、资源级和状态级组件由项目封装；避免每个页面重复散落基础 `Button`、`Card`、`Table`。
 - **写组件契约文件**：复杂或复用组件必须写入 `01-spec/design/components/<component-name>.contract.md`，覆盖 anatomy、variants、states、mapping、props、events、slots、motion 和 verification。
@@ -92,8 +94,9 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 
 ### 4. 原型（Prototype）
 
-- **创建或更新 Pencil 原型**：读取 `core/skills/ui-ux/pencil/SKILL.md`。
+- **创建或更新 Pencil 原型**：读取 `core/skills/ui-ux/pencil/SKILL.md`；Pencil 只消费已确认 Design Contract，不重新决定审美。
 - 输出 `01-spec/ui-mockup.pen`。
+- Pencil 前必须同步 `color_system` 和 `foundation_system` 到 Pencil variables；如果只能同步颜色，记录阻断或补救计划。
 - 空 `.pen` / 空画布最多读取一次。确认为空后必须立即创建第一屏，不能陷入空读循环。
 - 每次完成 `pencil_batch_design` 后，必须确认目标 `.pen` 已保存 / 持久化；如果 Pencil MCP 没有单独 `save` 工具，则仍必须立刻重新打开或重读 `01-spec/ui-mockup.pen`。
 - 保存后重读校验必须确认至少存在一个 screen / frame / artboard 或第一屏节点，且不是空画布；校验通过后才能导出截图。
@@ -106,7 +109,8 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 
 - **执行视觉质量自检并修一轮**：必须基于截图检查信息层级、间距、对齐、密度、颜色、组件一致性、状态反馈、响应式和可访问性基础。
 - **执行去廉价感审查**：检查默认模板味、无意义卡片、廉价渐变、随机图标、一次性 token、动效噪音和无法映射到项目组件的问题。
-- **执行 visual QA detectors**：按 `design-system/references/visual-qa-detectors.md` 检查 Generic SaaS shell、Card soup、Fake premium gradient、Motion noise、State missing、Primitive pile 等 detector。
+- **执行 visual QA detectors**：按 `design-system/references/visual-qa-detectors.md` 检查 Generic SaaS shell、Empty dashboard skeleton、KPI wallpaper、Blank framed content、Card soup、Fake premium gradient、Motion noise、State missing、Primitive pile 等 detector。
+- **执行 Pencil quality gate**：按 `core/skills/ui-ux/pencil/references/pencil-quality-gate.md` 检查 token sync、组件复用、截图、布局、Product UI layout 和 Design Contract adherence。
 - 发现问题先修 Pencil，再把 review 发现和修正结果写入 `ui-design.md`。
 - "实现时再优化 UI"不是通过条件。
 - **无障碍自查**：WCAG 2.1 AA 四原则逐项检查（感知性、可操作性、可理解性、健壮性），任何项不通过必须修正后才能交付。
@@ -119,6 +123,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - **交互状态文档化**：所有页面/组件的状态（default、hover、focus、active、disabled、error、loading、empty、success）必须有明确描述。
 - **机器可读交接**：`Design Contract Summary` 必须包含 JSON block，供 technical design、tasking、implementation 和 verification 读取。
 - **色彩交接**：JSON block 必须包含 `color_system`，供后续阶段校验 token、对比度、dark mode 和禁止组合。
+- **Foundation 交接**：JSON block 必须包含 `foundation_system`，供后续阶段校验字体、字号、行高、间距、圆角、阴影、motion token 和 GSAP 边界。
 
 ## 停止条件
 
@@ -127,6 +132,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - 有 UI 变更但没有 Pencil `.pen`、导出截图或明确 Pencil 阻断原因。
 - Pencil `.pen` 未保存、保存后无法重读、重读后仍为空画布，或截图不是来自保存后的目标文件。
 - Pencil 原型只是默认控件堆叠，没有参考设计语言、状态矩阵或视觉质量自检。
+- Pencil 原型只同步颜色，没有同步字体、字号、间距、圆角、阴影和动效变量。
 - 原型默认采用 sidebar / topbar 但没有导航候选、推荐理由、用户确认或滚动区域说明。
 - 桌面主导航跟随主内容滚动，且没有明确业务理由、替代方案和用户确认。
 - 原型与 requirements 的角色、流程、审批、权限或异常态不一致。
@@ -140,6 +146,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - 需要设计系统时，存在 design intelligence、aesthetic direction、foundations pack、sample board、人工确认状态、组件契约、页面模式、taste critique 和 motion boundary。
 - Design Contract Summary 同时包含 Markdown 表和 machine-readable JSON block。
 - Design Contract JSON 包含 `color_system`，且 palette 不只是单点 hex。
+- Design Contract JSON 包含 `foundation_system`，且 typography / spacing / radius_shadow / motion 都可映射到实现和 Pencil variables。
 - 复杂 / 复用组件有独立 component contract 文件，或写明 N/A 理由。
 - Pencil `.pen` 保存后可重读，且 `ui-design.md#9. Pencil 原型证据` 记录保存状态、重读校验和截图证据。
 - 无 UI 影响时，N/A 理由和验证方式清楚。

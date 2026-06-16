@@ -14,6 +14,7 @@ description: 执行 SpecForge code_review gate；用于 implementation 完成后
 ## 必读
 
 - `.specforge/core/skills/quality/code-review/SKILL.md`：SpecForge 本地代码审查主能力包，定义 diff 对账、spec compliance、risk review、finding 分级和输出契约。
+- `.specforge/core/skills/code-intelligence/SKILL.md`：真实 diff 需要影响面、受影响测试、调用链或 provider freshness 分析时读取。
 - `references/review-gate-rubric.md`：阶段内 gate 执行补充，连接本地 `code-review` 能力包、risk checklist 和 gate 决策。
 - `.specforge/skills/sf-code-review/stages/code-review/SKILL.md`：内部代码审查母本。
 - `.specforge/core/artifacts/templates/code-review.md`：写入骨架。
@@ -56,6 +57,7 @@ node .specforge/core/scripts/create-artifact.mjs code_review
 - 当前 `git status --short --untracked-files=all`
 - `git diff --name-only`
 - `git diff --stat`
+- `node .specforge/core/scripts/graph-impact.mjs --from-git --json`（当 diff 涉及存量模块、API、数据、权限、任务或跨模块风险时）
 - 关键文件 diff、测试输出、启动验证、迁移、回滚或人工验证证据
 
 ## 执行序列
@@ -73,7 +75,8 @@ node .specforge/core/scripts/create-artifact.mjs code_review
 3. 若 `tasks.md` 包含任务图，检查真实执行顺序、并行边界、主要写入边界和 diff 是否一致。
 4. 每个真实 diff 文件必须能追溯到 approved spec、task `_Boundary:_` 或 implementation report 中的批准偏离说明。
 5. 对存量模块，检查真实 diff 是否仍落在 wiki / technical design 指定的入口、模块和上下游边界内；不为 review 临时全仓扫描来补齐边界。
-6. `changed-files.md`、implementation report、真实 git diff 三者不一致时，先记 finding，不靠口头解释通过。
+6. 对中高风险 diff 运行 graph impact；如果 affected tests 未运行或 graph impact 超出 tasks / technical design 边界，记录 finding 或 verification note。
+7. `changed-files.md`、implementation report、真实 git diff 三者不一致时，先记 finding，不靠口头解释通过。
 
 ### C. Spec Compliance 先行
 

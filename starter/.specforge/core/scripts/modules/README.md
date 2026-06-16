@@ -9,7 +9,8 @@
 | quality | `quality/` | `quality-suite.mjs`, `artifact-quality.mjs`, `decision-brief.mjs`, `decision-checkpoints.mjs`, `decision-quality.mjs`, `source-quality.mjs`, `implementation-quality.mjs`, `test-case-quality.mjs`, `evidence-summary.mjs`, `wiki-quality.mjs`, `closure-quality.mjs`, `gate-preflight.mjs` |
 | gates | `gates/` | `gate.mjs` |
 | reporting | `reporting/` | `render-work-report.mjs`, `workflow-package.mjs`, `handoff-summary.mjs`, `traceability-summary.mjs` |
-| code-intelligence | `code-intelligence/` | `codebase-map.mjs`, `codebase-index.mjs` |
+| code-intelligence | `code-intelligence/` | `codebase-map.mjs`, `codebase-index.mjs`, `graph-freshness.mjs`, `graph-impact.mjs`, `wiki-refresh-plan.mjs` |
+| wiki | `wiki/` | `wiki-update-plan.mjs`, `wiki-hydrate.mjs` |
 | maintenance | `maintenance/` | `doctor.mjs`, `self-test.mjs`, `framework-audit.mjs`, `sync-starter.mjs`, `update-skills.mjs`, `validate-structure.mjs`, `validate-skills.mjs`, `validate-external-skills.mjs` |
 | archive | `archive/` | `archive-work.mjs` |
 

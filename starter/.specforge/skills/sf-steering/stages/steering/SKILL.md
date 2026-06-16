@@ -11,7 +11,7 @@ Steering 产出的 wiki 必须能作为后续任务入口：不仅写结论，�
 
 ## 核心原则
 
-本阶段必须读取 `.specforge/core/standards/code-intelligence.md` 和 `.specforge/core/standards/wiki.md`。
+本阶段必须读取 `.specforge/core/standards/code-intelligence.md`、`.specforge/core/standards/wiki.md` 和 `.specforge/core/skills/code-intelligence/SKILL.md`。
 
 1. **先选扫描模式，再选 provider**：先运行 `codebase-index.mjs` 判断规模并展示扫描模式，让用户选择后再判断是否需要 provider。
 2. **分层理解，不读全仓**：大型项目不能把所有文件塞进上下文；只读取当前层级和目标模块需要的文件。
@@ -24,7 +24,8 @@ Steering 产出的 wiki 必须能作为后续任务入口：不仅写结论，�
 ```bash
 node .specforge/core/scripts/codebase-index.mjs --json
 node .specforge/core/scripts/codebase-index.mjs --write-report
-node .specforge/core/scripts/wiki-quality.mjs
+node .specforge/core/scripts/wiki-hydrate.mjs --from .specforge/work/active/<work-item>/00-steering/codebase-intelligence.md --mode steering --write
+node .specforge/core/scripts/wiki-quality.mjs --mode steering
 ```
 
 维护 SpecForge 源码仓库时使用：
@@ -32,9 +33,13 @@ node .specforge/core/scripts/wiki-quality.mjs
 ```bash
 node core/scripts/codebase-index.mjs --json
 node core/scripts/codebase-index.mjs --write-report --report /tmp/specforge-codebase-intelligence.md
+node core/scripts/wiki-hydrate.mjs --from /tmp/specforge-codebase-intelligence.md --mode steering --write
+node core/scripts/wiki-quality.mjs --mode steering
 ```
 
-`codebase-index.mjs` 会先输出 `scan_modes`，再检测 code intelligence provider，并在内部运行 `codebase-map.mjs` 生成 bootstrap map，输出 `normalized_context`、provider plan 和可审查 Markdown report。`codebase-map.mjs` 是 fallback scanner，只提供候选，不直接等于结论。重要结论必须继续读取文件、查询 provider 或由用户确认。
+`codebase-index.mjs` 会先输出 `scan_modes`，再检测 code intelligence provider，并在内部运行 `codebase-map.mjs` 生成 bootstrap map，输出 `normalized_context`、`wiki_seed`、provider plan 和可审查 Markdown report。`codebase-map.mjs` 是 fallback scanner，只提供候选，不直接等于结论。重要结论必须继续读取文件、查询 provider 或由用户确认。
+
+CodeGraph lifecycle、freshness、MCP / CLI 使用、affected tests 和 `graph_facts[]` 归一化细节由 `.specforge/core/skills/code-intelligence/` 维护；steering 只调用它，不在阶段技能中重复维护全部 provider 规则。
 
 ## 规模判断
 
@@ -104,6 +109,14 @@ node .specforge/core/scripts/codebase-index.mjs --json --scan-mode <mode>
 
 Provider 输出只能作为证据来源，必须归一成 wiki 当前事实。
 
+如选择 CodeGraph 或其他 graph provider，先运行：
+
+```bash
+node .specforge/core/scripts/graph-freshness.mjs --json
+```
+
+只有 freshness ready 或已人工读取当前文件验证后，才能把 graph facts 作为高置信证据。
+
 ### 1.6 中间证据报告
 
 `codebase-index.mjs --write-report` 默认写入：
@@ -139,7 +152,12 @@ Provider 输出只能作为证据来源，必须归一成 wiki 当前事实。
 
 ### 4. Wiki 基线层
 
-先读取 `codebase-intelligence.md` 中间证据，再把稳定事实写入 `.specforge/wiki/`：
+先读取 `codebase-intelligence.md` 中间证据，再运行 `wiki-hydrate` 把 `wiki_seed`、`bootstrap_candidates`、`graph_facts` 和人工确认事实写入 `.specforge/wiki/`：
+
+```bash
+node .specforge/core/scripts/wiki-hydrate.mjs --from <codebase-intelligence.md> --mode steering --write
+node .specforge/core/scripts/wiki-quality.mjs --mode steering
+```
 
 | 文件 | 内容 |
 |---|---|
@@ -147,7 +165,11 @@ Provider 输出只能作为证据来源，必须归一成 wiki 当前事实。
 | `03-architecture.md` | 架构形态、模块/服务划分、入口、依赖、关键链路、追踪路径 |
 | `module-<name>.md` | 模块职责、入口文件、上下游、测试、推荐检索词和风险 |
 | `api-<domain>.md` | API 域、路由、鉴权、请求响应、错误约定、实现路径和调用方 |
-| `04-data-model.md` | 数据库、核心表/模型、迁移、索引、生命周期、读写入口 |
+| `external-interfaces.md` | 对外接口总览：API、Webhook、CLI、SDK、文件导入导出、第三方调用、事件消息 |
+| `config-env.md` | 配置源、环境变量、secret、feature flag 和配置风险 |
+| `security-auth.md` | 认证、授权、权限和敏感数据边界 |
+| `jobs-events.md` | 后台任务、队列、事件、定时任务、retry / DLQ |
+| `04-data-model.md` | 当前数据权威、当前实体 / 表、迁移初始化、历史 / 未受信 SQL、数据生命周期 |
 | `05-operations.md` | 本地启动、构建、测试、部署、CI、环境变量、验证入口 |
 | `06-decisions.md` | 已确认的长期决策 |
 | `07-glossary.md` | 领域术语、缩写、系统内命名 |
@@ -156,7 +178,7 @@ Provider 输出只能作为证据来源，必须归一成 wiki 当前事实。
 
 Wiki 中每一项保持单文件、当前态。不要创建 `architecture-v2.md`、`module-x-20260518.md` 这类过程文件。
 
-写入或刷新 wiki 后运行 `node .specforge/core/scripts/wiki-quality.mjs`。`FAIL` 必须修复；`WARN` 必须补齐当前事实、source work、owner、更新时间，或在 `08-risks.md` 记录缺口、影响和下一步证据来源。
+写入或刷新 wiki 后运行 `node .specforge/core/scripts/wiki-quality.mjs --mode steering`。`FAIL` 必须修复；`WARN` 必须补齐当前事实、source work、owner、更新时间，或在 `08-risks.md` 记录缺口、影响和下一步证据来源。
 
 ### 4.5 Wiki 完整度补扫
 
@@ -202,7 +224,8 @@ Wiki 中每一项保持单文件、当前态。不要创建 `architecture-v2.md`
 - 代码库规模和技术栈判断清楚。
 - 至少更新 `01-project-overview.md` 和 `03-architecture.md`。
 - 对大型项目，至少建立目标模块的 `module-<name>.md`。
-- `03-architecture.md`、`04-data-model.md`、`05-operations.md` 和必要的 `api-<domain>.md` 达到最低完整度；不足项进入 `08-risks.md`。
+- `03-architecture.md`、`04-data-model.md`、`05-operations.md`、`external-interfaces.md` 和必要的 `api-<domain>.md` 达到最低完整度；不足项进入 `08-risks.md`。
+- `wiki-hydrate --mode steering --write` 已执行，`wiki_seed` 中的候选已回写或记录缺口。
 - 后续 work item 能引用 wiki 中的模块、API、数据和运行事实。
 - 未确认内容没有混进 wiki 当前事实。
-- `wiki-quality.mjs` 无 `FAIL`；`WARN` 已修复或在 `08-risks.md` 中可追溯接受。
+- `wiki-quality.mjs --mode steering` 无 `FAIL`；`WARN` 已修复或在 `08-risks.md` 中可追溯接受。

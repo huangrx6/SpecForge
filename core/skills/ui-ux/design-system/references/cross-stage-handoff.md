@@ -37,12 +37,30 @@
 
 ```md
 Design Contract Summary:
+- Scan manifest:
+  - Scanned files:
+  - Selected data:
+  - Skipped with reason:
 - Design mode:
 - Aesthetic direction:
 - Signature:
 - Color system:
+- Foundation system:
+  - Source basis:
+  - Typography:
+  - Spacing:
+  - Radius / shadow:
+  - Motion recipe:
 - Token source:
 - Component strategy:
+- Product UI layout audit:
+  - Primary user / object / job:
+  - Layout archetype:
+  - Primary work surface:
+  - KPI actionability:
+  - Content budget:
+  - Right rail purpose:
+  - Rejected filler:
 - shadcn-vue primitive layer:
 - Project wrapper layer:
 - Motion source:
@@ -51,12 +69,62 @@ Design Contract Summary:
   - Layer 3 (GSAP):
   - Reduced motion:
   - Handoff artifact:
+- Advanced interaction:
+  - Recipe:
+  - Dependency decision:
+  - Fallback:
+  - Verification:
+- Visual calibration:
+  - Feedback source:
+  - Palette delta:
+  - Anti-reference:
+  - Next review:
 - Anti-slop rules:
 - Verification hooks:
 ```
 
 ```json
 {
+  "scan_manifest": {
+    "workflow": ["mode", "source", "font", "color", "composition", "advanced_interaction", "component", "qa", "calibration", "output"],
+    "scanned_files": [
+      {
+        "path": "references/design-system-orchestration.md",
+        "purpose": "设计流程编排",
+        "status": "scanned",
+        "finding": ""
+      },
+      {
+        "path": "references/design-mode-routing.md",
+        "purpose": "模式路由",
+        "status": "scanned",
+        "finding": ""
+      },
+      {
+        "path": "references/font-source-index.md",
+        "purpose": "字体来源",
+        "status": "scanned",
+        "finding": ""
+      },
+      {
+        "path": "references/design-composition.md",
+        "purpose": "组合配方",
+        "status": "scanned",
+        "finding": ""
+      }
+    ],
+    "selected_data": {
+      "palette_id": "",
+      "font_source_id": "",
+      "font_pairing_id": "",
+      "type_scale_id": "",
+      "spacing_density_id": "",
+      "radius_shadow_recipe_id": "",
+      "motion_recipe_id": "",
+      "advanced_interaction_recipe_id": "none-product-ui"
+    },
+    "skipped_with_reason": []
+  },
   "design_mode": "Product UI",
   "aesthetic_direction": "",
   "signature": {
@@ -103,17 +171,77 @@ Design Contract Summary:
     "source_url": "",
     "license_note": ""
   },
+  "foundation_system": {
+    "source_basis": [
+      {
+        "source": "",
+        "adopt": "",
+        "adapt": "",
+        "avoid": ""
+      }
+    ],
+    "typography": {
+      "font_family": "",
+      "scale": "",
+      "line_height": "",
+      "numeric": "",
+      "usage_rules": []
+    },
+    "spacing": {
+      "density": "compact",
+      "grid": "4px / 8px",
+      "page_padding": "",
+      "section_gap": "",
+      "component_gap": "",
+      "usage_rules": []
+    },
+    "radius_shadow": {
+      "radius_scale": "",
+      "surface_treatment": "",
+      "overlay_shadow": "",
+      "usage_rules": []
+    },
+    "motion": {
+      "motion_personality": "",
+      "css_tokens": [],
+      "gsap_signature": "",
+      "reduced_motion": ""
+    }
+  },
   "token_source": "existing",
   "component_strategy": "primitive + wrapper",
   "shadcn_vue": {
     "primitive_layer": [],
     "project_wrapper_layer": []
   },
+  "layout": {
+    "navigation_decision": "",
+    "layout_archetype": "",
+    "primary_work_surface": "",
+    "scroll_regions": [],
+    "responsive_strategy": ""
+  },
+  "product_ui_quality": {
+    "primary_user": "",
+    "primary_object": "",
+    "primary_job": "",
+    "kpi_actionability": "pass",
+    "content_budget": "pass",
+    "right_rail_purpose": "",
+    "rejected_filler": []
+  },
   "motion": {
     "layer_1_css": [],
     "layer_2_motion_vue": [],
     "layer_3_gsap": [],
     "reduced_motion": ""
+  },
+  "visual_calibration": {
+    "feedback_source": "",
+    "diagnosis": [],
+    "palette_delta": [],
+    "anti_reference": [],
+    "next_review": ""
   },
   "verification_hooks": [],
   "anti_slop_rules": []
@@ -130,6 +258,9 @@ JSON 字段必须符合 `contracts/design-contract.schema.json`。如果某字�
 
 - Token delivery：CSS variables、Tailwind theme、组件局部变量还是现有项目 token。
 - Color system：palette_id、aesthetic_direction、semantic token mapping、usage rules、contrast / dark mode flags、source_url 和 license_note。
+- Foundation system：typography scale、spacing density、radius / shadow recipe、motion recipe 和 GSAP signature；这些必须映射到 CSS variables / Tailwind theme / Pencil variables。
+- Visual calibration：如果存在用户反馈、截图诊断或 palette delta，implement 必须以校准后的 token / surface / motion 为准；不能回退到初版 palette 或默认 cyber / AI neon。
+- Product UI layout：主要使用者、业务对象、主要任务、layout archetype、primary work surface、KPI 可行动性、首屏空白预算和右侧栏职责。
 - Component source：现有组件、shadcn-vue primitive、自建 registry、项目 wrapper、domain component。
 - Component contract files：读取 `01-spec/design/components/<component-name>.contract.md`，确认 primitive、companions、project wrapper、states、props、events、slots、motion 和 verification。
 - Registry boundary：是否需要 shadcn-vue custom registry；registry item 负责什么，项目代码负责什么。
@@ -156,9 +287,11 @@ JSON 字段必须符合 `contracts/design-contract.schema.json`。如果某字�
 | Check | Evidence |
 | --- | --- |
 | Token adherence | CSS variables / Tailwind theme / computed styles |
+| Foundation adherence | 字号、行高、间距、圆角、阴影、motion token 与 `foundation_system` 一致 |
 | Component adherence | wrapper props、slots、events、states 覆盖 |
 | Component contract files | `01-spec/design/components/*.contract.md` 存在或 N/A 理由 |
 | State matrix | default、loading、empty、error、permission、success 截图或 DOM 证据 |
+| Product UI layout | primary work surface、KPI actionability、content budget、right rail purpose、rejected filler |
 | Motion boundary | 每个动效有 duration token / easing token / reduced motion 覆盖 / 无 layout 属性动效 |
 | Motion intent | 每个动效能说明：反馈 / 空间关系 / 进度 / 品牌 signature |
 | Accessibility | keyboard path、focus、ARIA、contrast、touch target |

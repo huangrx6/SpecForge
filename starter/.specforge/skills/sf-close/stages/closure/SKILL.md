@@ -11,6 +11,8 @@ description: SpecForge 内部关闭技能。用于 wiki_sync 已批准后，写 
 
 - `verification` gate 为 `APPROVED`。
 - `wiki_sync` gate 为 `APPROVED`，且 evidence 指向 `06-close/wiki-sync.md`。
+- `node .specforge/core/scripts/wiki-update-plan.mjs --json` 已执行；若 `can_write_na=false`，`06-close/wiki-sync.md` 必须列出更新文件或阻断原因。
+- `node .specforge/core/scripts/wiki-quality.mjs --mode close` 无 `FAIL`。
 - `node .specforge/core/scripts/instructions.mjs` 显示 ready artifact 为 `closure`。
 
 ## 读取
@@ -26,6 +28,7 @@ description: SpecForge 内部关闭技能。用于 wiki_sync 已批准后，写 
 - `.specforge/core/standards/wiki.md`
 - `.specforge/core/standards/engineering.md`
 - `.specforge/core/standards/ai-toolkit.md`
+- `.specforge/core/skills/code-intelligence/SKILL.md`（归档前需要根据 diff / impact 确认 Wiki 是否还有长期事实未同步时）
 
 ## 写入
 
@@ -59,6 +62,9 @@ description: SpecForge 内部关闭技能。用于 wiki_sync 已批准后，写 
 4. **归档前检查**
 
    ```bash
+   node .specforge/core/scripts/wiki-refresh-plan.mjs --from-diff --json
+   node .specforge/core/scripts/wiki-update-plan.mjs --json
+   node .specforge/core/scripts/wiki-quality.mjs --mode close
    node .specforge/core/scripts/doctor.mjs
    node .specforge/core/scripts/archive-work.mjs --dry-run
    ```
@@ -82,6 +88,8 @@ description: SpecForge 内部关闭技能。用于 wiki_sync 已批准后，写 
 - `verification` 或 `wiki_sync` 未批准。
 - release / rollback 缺少关键事实。
 - verification 残余风险没有进入 release 观察点或 rollback 触发条件。
+- `wiki-update-plan` 发现 required targets 但 `wiki-sync.md` 写成 N/A。
+- `wiki-quality.mjs --mode close` 仍有 `FAIL`。
 - doctor 或 archive dry-run 失败。
 - hook 阻断关闭。
 
@@ -89,6 +97,7 @@ description: SpecForge 内部关闭技能。用于 wiki_sync 已批准后，写 
 
 - `release.md`、`rollback.md` 已填写，不是空模板。
 - release、rollback、wiki-sync 和 verification 证据互相一致。
+- wiki-sync 与 `wiki-update-plan` 一致，且 `wiki-quality.mjs --mode close` 无 `FAIL`。
 - release 观察点、rollback 触发条件和 verification 残余风险已对齐。
 - 归档前 doctor 和 archive dry-run 通过。
 - archive 成功，work item 从 active 移到 archive。

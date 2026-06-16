@@ -58,6 +58,73 @@
 - 外部参考输入：
 - 产品发现输入：
 
+## 0.1 PRD Decision JSON
+
+必须同时输出机器可读 JSON，给 `sf-requirements`、`sf-router` 和质量检查读取。JSON 必须符合 `core/skills/prd/contracts/prd-decision.schema.json`。
+
+`decision_status` 只表达整个产品需求文档是否可进入需求阶段；`delegated-default` 只能作为某个最小可行版本项、假设项或范围项的 `confirmation_type`，不能作为顶层 `decision_status`。
+
+```json
+{
+  "prd_depth": "prd-standard",
+  "decision_status": "approved-for-requirements",
+  "source_artifacts": [],
+  "problem": "",
+  "target_users": [],
+  "mvp": [
+    {
+      "item": "",
+      "source": "",
+      "confirmation_type": "user-confirmed",
+      "rationale": "",
+      "risk": "",
+      "handoff": []
+    }
+  ],
+  "non_goals": [
+    {
+      "item": "",
+      "reason": "",
+      "trigger_for_future": "",
+      "source": ""
+    }
+  ],
+  "success_criteria": [
+    {
+      "metric": "",
+      "target": "",
+      "baseline": "unknown",
+      "evidence": "",
+      "confidence": "unclear"
+    }
+  ],
+  "assumptions": [
+    {
+      "assumption": "",
+      "source": "",
+      "confirmation_type": "pending",
+      "risk": "",
+      "validation": ""
+    }
+  ],
+  "open_questions": [],
+  "requirements_seeds": [
+    {
+      "seed": "",
+      "source": "",
+      "target_section": "functional",
+      "notes": ""
+    }
+  ],
+  "handoff": {
+    "ui_design": [],
+    "technical_design": [],
+    "data_security": [],
+    "verification": []
+  }
+}
+```
+
 ## 1. 产品决策摘要
 - 问题：
 - 目标用户：
