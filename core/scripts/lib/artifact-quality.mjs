@@ -803,6 +803,15 @@ function lintReferenceSelectionContract(issues, contract, outputPath) {
     );
   }
 
+  if (hasReferenceSelection && !hasReferenceWorkflow) {
+    issues.push({
+      severity: "WARN",
+      code: "design-contract-reference-selection-without-workflow",
+      message: `${outputPath} 包含 reference_selection，但 scan_manifest.workflow 没有 reference。`,
+      fix: "如果使用了外部参考，把 reference 加入 scan_manifest.workflow；如果没有外部参考，则删除 reference_selection 并写 skipped_with_reason。",
+    });
+  }
+
   if (hasReferenceWorkflow && !hasReferenceSelection) {
     issues.push({
       severity: "FAIL",
