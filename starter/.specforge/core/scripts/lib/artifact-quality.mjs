@@ -13,6 +13,13 @@ const visualQaResultValues = new Set(["ok", "issue", "not-applicable"]);
 const visualQaSeverityValues = new Set(["low", "medium", "high"]);
 const visualQaStatusValues = new Set(["fixed", "accepted", "pending", "blocked", "not-applicable"]);
 const humanConfirmationStatusValues = new Set(["confirmed", "defaulted", "pending"]);
+const referenceUiTypeValues = new Set(["admin", "data-table", "dashboard", "settings", "auth", "onboarding", "ai-assistant", "brand-surface", "mobile-h5", "empty-state"]);
+const referenceStackValues = new Set(["vue", "shadcn-vue", "react", "shadcn-ui", "tailwind", "element-plus", "existing-component-library", "unknown"]);
+const referenceNeedValues = new Set(["component-wrapper", "page-structure", "block-composition", "visual-completion", "motion", "domestic-ui-case", "industry-case", "ux-ia", "state-system"]);
+const referenceBorrowStrengthValues = new Set(["conservative", "moderate", "strong", "review-only"]);
+const referenceAdminModuleValues = new Set(["app-shell", "dashboard", "data-table", "chart-metrics", "form-flow", "user-permission", "settings", "auth", "feedback-overlays", "state-system"]);
+const referenceVisualDirectionValues = new Set(["clean-professional", "high-density-efficient", "light-brand", "tech-without-ai-neon", "domestic-internet-product", "portfolio-level-polish", "warm-friendly", "dark-professional"]);
+const referenceReuseModeValues = new Set(["component-contract-only", "pattern-only", "page-pattern-only", "inspiration-only", "method-only", "implementation-reference", "translate-to-vue-contract"]);
 const selectionRationaleMap = [
   ["palette_id", "palette"],
   ["font_source_id", "font_source"],
@@ -467,6 +474,41 @@ function addMissingFields(issues, object, fields, outputPath, owner, code = "des
   }
 }
 
+function addEnumValueIssue(issues, value, allowedValues, outputPath, owner, fix) {
+  const text = String(value ?? "").trim();
+  if (allowedValues.has(text)) return;
+  issues.push({
+    severity: "FAIL",
+    code: "design-contract-reference-selection-enum-invalid",
+    message: `${outputPath} 的 ${owner} 非法：${text || "missing"}。`,
+    fix,
+  });
+}
+
+function addEnumArrayIssues(issues, value, allowedValues, outputPath, owner, fix) {
+  if (!Array.isArray(value)) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-reference-selection-array-invalid",
+      message: `${outputPath} 的 ${owner} 必须是数组。`,
+      fix,
+    });
+    return;
+  }
+
+  for (const [index, item] of value.entries()) {
+    const text = String(item ?? "").trim();
+    if (!allowedValues.has(text)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-reference-selection-enum-invalid",
+        message: `${outputPath} 的 ${owner}[${index}] 非法：${text || "missing"}。`,
+        fix,
+      });
+    }
+  }
+}
+
 function lintContrastChecks(issues, accessibility, outputPath) {
   if (!accessibility || typeof accessibility !== "object") {
     issues.push({
@@ -801,6 +843,68 @@ function lintReferenceSelectionContract(issues, contract, outputPath) {
       "reference_selection",
       "design-contract-reference-selection-field-missing",
     );
+
+    addEnumArrayIssues(issues, referenceSelection.ui_type, referenceUiTypeValues, outputPath, "reference_selection.ui_type", "ui_type 必须使用 reference-selection.schema.json 中的稳定枚举。");
+    addEnumArrayIssues(issues, referenceSelection.stack, referenceStackValues, outputPath, "reference_selection.stack", "stack 必须使用 reference-selection.schema.json 中的稳定枚举。");
+    addEnumArrayIssues(issues, referenceSelection.selected_needs, referenceNeedValues, outputPath, "reference_selection.selected_needs", "selected_needs 必须使用 reference-selection.schema.json 中的稳定枚举。");
+    addEnumValueIssue(issues, referenceSelection.borrow_strength, referenceBorrowStrengthValues, outputPath, "reference_selection.borrow_strength", "borrow_strength 只能写 conservative / moderate / strong / review-only。");
+    if (Object.prototype.hasOwnProperty.call(referenceSelection, "admin_modules")) {
+      addEnumArrayIssues(issues, referenceSelection.admin_modules, referenceAdminModuleValues, outputPath, "reference_selection.admin_modules", "admin_modules 必须使用 reference-selection.schema.json 中的稳定枚举。");
+    }
+    if (Object.prototype.hasOwnProperty.call(referenceSelection, "visual_direction")) {
+      addEnumArrayIssues(issues, referenceSelection.visual_direction, referenceVisualDirectionValues, outputPath, "reference_selection.visual_direction", "visual_direction 必须使用 reference-selection.schema.json 中的稳定枚举。");
+    }
+
+    if (!Array.isArray(referenceSelection.source_routing)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-reference-selection-array-invalid",
+        message: `${outputPath} 的 reference_selection.source_routing 必须是数组。`,
+        fix: "source_routing 按 reference-selection.schema.json 写成数组；无外部来源时省略 reference_selection。",
+      });
+    } else {
+      for (const [index, route] of referenceSelection.source_routing.entries()) {
+        if (!route || typeof route !== "object" || Array.isArray(route)) {
+          issues.push({
+            severity: "FAIL",
+            code: "design-contract-reference-source-routing-entry-invalid",
+            message: `${outputPath} 的 reference_selection.source_routing[${index}] 不是对象。`,
+            fix: "每条 source_routing 必须写成 { selected_need, source_pool, use_for, reuse_mode, required_extraction, avoid, offline_fallback? }。",
+          });
+          continue;
+        }
+
+        addMissingFields(
+          issues,
+          route,
+          ["selected_need", "source_pool", "use_for", "reuse_mode", "required_extraction", "avoid"],
+          outputPath,
+          `reference_selection.source_routing[${index}]`,
+          "design-contract-reference-source-routing-field-missing",
+        );
+        addEnumValueIssue(issues, route.reuse_mode, referenceReuseModeValues, outputPath, `reference_selection.source_routing[${index}].reuse_mode`, "reuse_mode 必须使用 reference-selection.schema.json 中的稳定枚举。");
+      }
+    }
+
+    const confirmation = referenceSelection.human_confirmation;
+    if (!confirmation || typeof confirmation !== "object" || Array.isArray(confirmation)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-reference-confirmation-invalid",
+        message: `${outputPath} 的 reference_selection.human_confirmation 不是对象。`,
+        fix: "human_confirmation 必须写成 { status, reason }，明确 confirmed / defaulted / pending。",
+      });
+    } else {
+      addMissingFields(
+        issues,
+        confirmation,
+        ["status", "reason"],
+        outputPath,
+        "reference_selection.human_confirmation",
+        "design-contract-reference-confirmation-field-missing",
+      );
+      addEnumValueIssue(issues, confirmation.status, humanConfirmationStatusValues, outputPath, "reference_selection.human_confirmation.status", "status 只能写 confirmed / defaulted / pending。");
+    }
   }
 
   if (hasReferenceSelection && !hasReferenceWorkflow) {
