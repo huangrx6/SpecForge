@@ -356,7 +356,7 @@ function designSystemIssues() {
   const artifactQualityPath = "core/scripts/lib/artifact-quality.mjs";
   if (exists(artifactQualityPath)) {
     const body = read(artifactQualityPath);
-    for (const marker of ["lintUiDesign", "design-contract-json-missing", "design-contract-unknown-palette", "design-contract-scan-manifest-missing", "design-contract-human-confirmation-missing", "design-contract-human-confirmation-defaulted-required", "design-contract-foundation-system-missing", "design-contract-token-delivery-hint-missing", "design-contract-token-delivery-css-vars-empty", "design-contract-selection-rationale-missing", "design-contract-selection-rationale-id-mismatch", "design-contract-visual-qa-missing", "design-contract-high-visual-qa-pending", "design-contract-mode-required-field-missing", "design-contract-gsap-entry-field-missing", "ui-design-high-visual-qa-unresolved"]) {
+    for (const marker of ["lintUiDesign", "design-contract-json-missing", "design-contract-unknown-palette", "design-contract-scan-manifest-missing", "design-contract-reference-selection-invalid", "design-contract-reference-workflow-missing-selection", "design-contract-reference-selection-skip-reason-missing", "design-contract-human-confirmation-missing", "design-contract-human-confirmation-defaulted-required", "design-contract-foundation-system-missing", "design-contract-token-delivery-hint-missing", "design-contract-token-delivery-css-vars-empty", "design-contract-selection-rationale-missing", "design-contract-selection-rationale-id-mismatch", "design-contract-visual-qa-missing", "design-contract-high-visual-qa-pending", "design-contract-mode-required-field-missing", "design-contract-gsap-entry-field-missing", "ui-design-high-visual-qa-unresolved"]) {
       if (!body.includes(marker)) {
         issues.push(issue("FAIL", "ui-design-artifact-quality-marker-missing", `${artifactQualityPath} must check ${marker}.`, artifactQualityPath));
       }
@@ -397,7 +397,14 @@ function pencilSystemIssues() {
     }
   }
   const body = exists("core/skills/ui-ux/pencil/SKILL.md") ? read("core/skills/ui-ux/pencil/SKILL.md") : "";
-  for (const marker of ["Design Contract JSON", "foundation_system", "Pencil variables", "Product UI Layout Audit", "不负责重新决定审美"]) {
+  for (const marker of [
+    "Design Contract JSON",
+    "Pencil variables",
+    "Pencil 只处理文件",
+    "不负责审美",
+    "Tailwind/shadcn",
+    "Product UI 设计规则",
+  ]) {
     if (!body.includes(marker)) {
       issues.push(issue("FAIL", "pencil-skill-marker-missing", `Pencil skill must include marker: ${marker}.`, "core/skills/ui-ux/pencil/SKILL.md"));
     }

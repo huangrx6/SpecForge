@@ -776,6 +776,58 @@ function lintDesignScanManifest(issues, scanManifest, outputPath) {
   lintSelectionRationale(issues, selected, scanManifest.selection_rationale, outputPath);
 }
 
+function lintReferenceSelectionContract(issues, contract, outputPath) {
+  const hasReferenceWorkflow = Array.isArray(contract.scan_manifest?.workflow)
+    && contract.scan_manifest.workflow.includes("reference");
+  const hasReferenceSelection = Object.prototype.hasOwnProperty.call(contract, "reference_selection");
+
+  if (hasReferenceSelection) {
+    const referenceSelection = contract.reference_selection;
+    if (!referenceSelection || typeof referenceSelection !== "object" || Array.isArray(referenceSelection)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-reference-selection-invalid",
+        message: `${outputPath} 的 reference_selection 必须是 object，不能是 N/A、null、空字符串或数组。`,
+        fix: "无外部参考时省略 reference_selection；有外部参考时按 reference-selection.schema.json 补齐 object。",
+      });
+      return;
+    }
+
+    addMissingFields(
+      issues,
+      referenceSelection,
+      ["ui_type", "stack", "selected_needs", "borrow_strength", "source_routing", "reuse_boundary", "offline_behavior", "human_confirmation", "forbidden"],
+      outputPath,
+      "reference_selection",
+      "design-contract-reference-selection-field-missing",
+    );
+  }
+
+  if (hasReferenceWorkflow && !hasReferenceSelection) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-reference-workflow-missing-selection",
+      message: `${outputPath} 的 scan_manifest.workflow 包含 reference，但缺少 reference_selection。`,
+      fix: "有外部参考流程时必须写 object 形式的 reference_selection；否则从 workflow 移除 reference，并写 skipped_with_reason。",
+    });
+  }
+
+  if (!hasReferenceWorkflow && !hasReferenceSelection) {
+    const skipped = contract.scan_manifest?.skipped_with_reason;
+    const text = Array.isArray(skipped)
+      ? skipped.map((entry) => (typeof entry === "string" ? entry : JSON.stringify(entry))).join(" ")
+      : String(skipped ?? "");
+    if (!/reference_selection|external reference|外部参考|no external reference requested/i.test(text)) {
+      issues.push({
+        severity: "WARN",
+        code: "design-contract-reference-selection-skip-reason-missing",
+        message: `${outputPath} 没有 reference_selection，但 skipped_with_reason 未记录无外部参考理由。`,
+        fix: "在 scan_manifest.skipped_with_reason 写入 reference_selection: no external reference requested。",
+      });
+    }
+  }
+}
+
 function lintSelectionRationale(issues, selected, rationale, outputPath) {
   if (!rationale || typeof rationale !== "object") {
     issues.push({
@@ -1300,6 +1352,7 @@ function lintUiDesign(content, outputPath) {
   ], outputPath, "Design Contract JSON");
 
   lintDesignScanManifest(issues, contract.scan_manifest, outputPath);
+  lintReferenceSelectionContract(issues, contract, outputPath);
   lintHumanConfirmation(issues, contract.human_confirmation, outputPath);
 
   if (!designModeValues.has(contract.design_mode)) {
