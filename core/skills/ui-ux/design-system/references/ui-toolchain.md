@@ -5,7 +5,7 @@
 ## Chain
 
 1. `sf-brainstorm`：模糊视觉方向、目标用户和体验取舍。
-2. `sf-ui-design`：正式生成 UI design artifact 和 Pencil 原型证据。
+2. `sf-ui-design`：正式生成 UI design artifact 和 Pencil handoff evidence。
 3. `design-system`：提供 Design Mode、Composition Recipe、color_system、foundation_system、组件契约、页面模式、样例板和视觉审查。
 4. `pencil`：消费已确认 Design Contract，创建正式 `.pen` 原型、variables、组件复用证据和截图。
 5. `sf-tech-design`：把 Design Contract Summary 转成 token delivery、组件架构、shadcn-vue registry / wrapper、motion dependency、GSAP 边界和验证面。
@@ -18,8 +18,8 @@
 - Design direction gate：方向影响气质或信息架构时确认。
 - Sample board gate：给用户看 2-3 个样例，确认采用/不采用。
 - Engineering handoff gate：UI 会影响前端架构、组件库、registry、动效依赖或 token delivery 时，technical design 必须确认。
-- Prototype gate：Pencil 截图 review 后至少修一轮。
-- Foundation gate：Design Contract JSON 必须包含 `color_system` 和 `foundation_system`，Pencil 必须证明两者都已同步。
+- Prototype gate：Pencil handoff screenshot review 后至少修一轮。
+- Foundation gate：Design Contract JSON 必须包含 `color_system` 和 `foundation_system`，`pencil` skill 必须证明两者都已同步。
 
 ## Anti-slop guardrails
 

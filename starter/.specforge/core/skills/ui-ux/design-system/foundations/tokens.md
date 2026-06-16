@@ -16,6 +16,6 @@ Tokens 是设计语言和实现之间的桥。不要直接把视觉值散落在�
 - shadcn-vue theme 只作为 primitive 主题，项目仍需要语义 token。
 - 禁止大量 arbitrary value 直接写在业务页面中。
 
-## Pencil
+## Pencil Variable Hints
 
-Pencil variables 应和实现 token 对齐：颜色、字号、间距、圆角、阴影都要有对应关系。
+design-system 只输出 Pencil variable hints，让 `pencil` skill 知道哪些 token group 需要同步。实际 `get_variables`、`set_variables`、节点绑定、截图和保存验证由 `core/skills/ui-ux/pencil` 执行。

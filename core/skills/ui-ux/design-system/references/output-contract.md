@@ -13,8 +13,9 @@
 
 Reference 输出规则：
 
-- 如果用户未提供外部参考，写 `Reference Selection: N/A`。
-- 如果用户提供了外部参考，或说“多看一些好网站 / 模板 / 案例”，必须输出 `Reference Selection`。
+- 如果用户未提供外部参考，Markdown 写 `Reference Selection: N/A`；Design Contract JSON 不写 `reference_selection`，并在 `scan_manifest.skipped_with_reason` 记录 `reference_selection: no external reference requested`。
+- 如果用户提供了外部参考，或说“多看一些好网站 / 模板 / 案例”，必须输出 `Reference Selection`，且 Design Contract JSON 必须包含 object 形式的 `reference_selection`。
+- 不允许在 Design Contract JSON 中写 `"reference_selection": "N/A"`、`null`、空字符串或空数组；`reference_selection` 一旦出现就必须符合 `contracts/reference-selection.schema.json`。
 - 外部来源不可访问时，不允许省略，必须写入 `Reference Scan Manifest` 的 fallback。
 - React shadcn 来源必须写明是否需要 Vue translation。
 - 国内设计社区来源必须写明具体参考类型：作品 / 文章 / 素材 / 设计团队 / 课程 / 行业案例 / UI 页面；不能写“站酷气质”。
@@ -40,7 +41,7 @@ Foundations delta:
 - Density:
 - Motion:
 
-Reference Selection:
+Reference Selection (external reference only; otherwise `N/A`):
 - UI type:
 - Stack:
 - Selected needs:
@@ -61,6 +62,15 @@ Extracted Reference Patterns:
 | Source | Pattern | Adopt | Adapt | Avoid |
 |---|---|---|---|---|
 | | | | | |
+
+Pencil Handoff Requirements (only when `.pen` / prototype evidence is requested):
+- Target file: `01-spec/ui-mockup.pen`
+- Target artboards:
+  - name / route / viewport / state / primary work surface:
+- Required token groups: color / typography / spacing / radius_shadow / motion
+- Component contracts:
+- Asset reuse requirements:
+- Evidence required: variables synced / reusable components checked / screenshot exported / layout snapshot clean / persistence checked
 
 Design Scan Manifest:
 | 项 | 内容 |
@@ -105,6 +115,8 @@ Design Contract Summary:
 - Verification hooks:
 
 Design Contract JSON:
+The JSON example below assumes external references were used. If there is no external reference request, omit `reference_selection`, remove `reference` from `scan_manifest.workflow`, and record the skipped reason in `scan_manifest.skipped_with_reason`.
+
 ```json
 {
   "reference_selection": {
@@ -443,7 +455,7 @@ UI Direction Options:
 - Recommended:
 - Human confirmation:
 
-Reference Selection:
+Reference Selection (external reference only; otherwise `N/A`):
 - UI type:
 - Stack:
 - Selected needs:
@@ -474,6 +486,15 @@ Extracted Reference Patterns:
 | Source | Pattern | Adopt | Adapt | Avoid |
 |---|---|---|---|---|
 | | | | | |
+
+Pencil Handoff Requirements (only when `.pen` / prototype evidence is requested):
+- Target file: `01-spec/ui-mockup.pen`
+- Target artboards:
+  - name / route / viewport / state / primary work surface:
+- Required token groups: color / typography / spacing / radius_shadow / motion
+- Component contracts:
+- Asset reuse requirements:
+- Evidence required: variables synced / reusable components checked / screenshot exported / layout snapshot clean / persistence checked
 
 Foundations pack:
 - Color system:
@@ -526,7 +547,7 @@ Palette Delta (when calibrated):
 | | | | |
 
 Design Contract Summary:
-- Reference selection:
+- Reference selection (external reference only; otherwise N/A):
   - UI type:
   - Selected needs:
   - Borrow strength:
@@ -574,6 +595,8 @@ Design Contract Summary:
 - Verification hooks:
 
 Design Contract JSON:
+The JSON example below assumes external references were used. If there is no external reference request, omit `reference_selection`, remove `reference` from `scan_manifest.workflow`, and record the skipped reason in `scan_manifest.skipped_with_reason`.
+
 ```json
 {
   "reference_selection": {
@@ -916,12 +939,12 @@ Taste review:
 
 用于品牌页、大屏、复杂多角色系统：
 
-- 在 Standard 之上补充 typography scale table、color role table、motion choreography、responsive artboards、Pencil sample board、visual QA evidence。
+- 在 Standard 之上补充 typography scale table、color role table、motion choreography、responsive artboards、Pencil handoff requirements 和 visual QA evidence。
 - 如果后续进入 technical design / implementation，还要补充 registry boundary、component contract matrix、state ownership、token delivery 和 visual verification plan。
 - 复杂或复用组件必须输出 `01-spec/design/components/<component-name>.contract.md`，使用 `contracts/component-contract.template.md`。
 
 ````md
-Reference Selection:
+Reference Selection (external reference only; otherwise `N/A`):
 - UI type:
 - Stack:
 - Selected needs:
@@ -942,4 +965,13 @@ Extracted Reference Patterns:
 | Source | Pattern | Adopt | Adapt | Avoid |
 |---|---|---|---|---|
 | | | | | |
+
+Pencil Handoff Requirements (only when `.pen` / prototype evidence is requested):
+- Target file: `01-spec/ui-mockup.pen`
+- Target artboards:
+  - name / route / viewport / state / primary work surface:
+- Required token groups: color / typography / spacing / radius_shadow / motion
+- Component contracts:
+- Asset reuse requirements:
+- Evidence required: variables synced / reusable components checked / screenshot exported / layout snapshot clean / persistence checked
 ````

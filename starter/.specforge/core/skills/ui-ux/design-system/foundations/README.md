@@ -4,7 +4,7 @@ Foundations 是设计语言的最小事实源。不要一上来写页面，先�
 
 | 文件 | 回答的问题 |
 |---|---|
-| `tokens.md` | CSS variables、Tailwind theme、Pencil variables 和语义 token |
+| `tokens.md` | CSS variables、Tailwind theme、Pencil variable hints 和语义 token |
 | `colors.md` | 色彩角色、状态色、对比度和品牌 / 业务语义 |
 | `typography.md` | 字体层级、数字、表格、标题和长文案规则 |
 | `spacing.md` | 栅格、密度、间距节奏和响应式断点 |
@@ -36,7 +36,7 @@ Foundations 必须一起选择，不要只选颜色。每次进入页面设计�
 | `references/advanced-interaction-source-index.md` | GSAP、Three.js、React Three Fiber、Drei、TresJS 的使用边界 |
 | `data/advanced-interaction-recipes.csv` | 高级交互 recipe、fallback、reduced motion 和验证方式 |
 
-这套配方必须写入 `Design Contract JSON.scan_manifest` 和 `Design Contract JSON.foundation_system`，其中 `source_basis` 至少记录 2 个来源的采用、改造和禁止复制项，并同步给 Pencil 原型。
+这套配方必须写入 `Design Contract JSON.scan_manifest` 和 `Design Contract JSON.foundation_system`，其中 `source_basis` 至少记录 2 个来源的采用、改造和禁止复制项；需要 `.pen` 或视觉证据时，同步输出 Pencil handoff requirements。
 
 ## 最小输出
 

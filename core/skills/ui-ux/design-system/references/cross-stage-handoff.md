@@ -395,11 +395,11 @@ Design Contract Summary:
 }
 ```
 
-JSON 字段必须符合 `contracts/design-contract.schema.json`。如果某字段不适用，填空数组或明确 N/A 文本，不要省略字段。
+JSON 字段必须符合 `contracts/design-contract.schema.json`。如果某个 required 字段不适用，填空数组或明确 N/A 文本，不要省略字段；但 optional 字段不要写非法占位。
 `human_confirmation.status` 只有用户明确选择时才能写 `confirmed`；低风险可逆默认写 `defaulted`，需要确认但未确认写 `pending`，不能把 Agent 推荐写成 confirmed。
 `scan_manifest.selected_data` 只记录 id；`scan_manifest.selection_rationale` 必须解释为什么选、拒绝了什么、替换风险和置信度，且每个 rationale id 必须与 selected_data 对齐。
-`reference_selection` 记录用户选择题、来源路由、复用边界、离线行为和禁止项；扫描记录写入 Reference Scan Manifest。它不是 design mode，也不能把网站名当风格名。
-`token_delivery_hint` 只是 design-system 给 `sf-tech-design` 的实现映射提示，不是最终工程决策；technical design 必须确认实际 CSS variables、Tailwind theme 和 Pencil variables 落点。
+`reference_selection` 记录用户选择题、来源路由、复用边界、离线行为和禁止项；扫描记录写入 Reference Scan Manifest。它不是 design mode，也不能把网站名当风格名。没有外部参考诉求时，Design Contract JSON 不写 `reference_selection`，并在 `scan_manifest.skipped_with_reason` 记录 `reference_selection: no external reference requested`。
+`token_delivery_hint` 只是 design-system 给 `sf-tech-design` 的实现映射提示，不是最终工程决策；technical design 必须确认实际 CSS variables、Tailwind theme 和 Pencil variable hints 落点。
 `visual_qa` 是 sf-verify 的机器可读 gate 来源；high severity issue 只能是 `fixed` 或 `accepted`，不能以 `pending` / `blocked` 进入 verify。
 `motion.layer_3_gsap` 不使用时写空数组；一旦使用，数组项必须包含 `effect`、`fallback` 和 `verification`。
 
@@ -416,7 +416,7 @@ JSON 字段必须符合 `contracts/design-contract.schema.json`。如果某字�
 - License / reuse boundary：未知 license、付费资源、商业素材、截图、图片、文案必须禁止复制。
 - Offline fallback：外部来源不可访问时，是否使用本地 source catalog。
 - Color system：palette_id、aesthetic_direction、semantic token mapping、usage rules、contrast / dark mode flags、source_url 和 license_note。
-- Foundation system：typography scale、spacing density、radius / shadow recipe、motion recipe 和 GSAP signature；这些必须映射到 CSS variables / Tailwind theme / Pencil variables。
+- Foundation system：typography scale、spacing density、radius / shadow recipe、motion recipe 和 GSAP signature；这些必须映射到 CSS variables / Tailwind theme / Pencil variable hints。
 - Visual calibration：如果存在用户反馈、截图诊断或 palette delta，implement 必须以校准后的 token / surface / motion 为准；不能回退到初版 palette 或默认 cyber / AI neon。
 - Product UI layout：主要使用者、业务对象、主要任务、layout archetype、primary work surface、KPI 可行动性、首屏空白预算和右侧栏职责。
 - Component source：现有组件、shadcn-vue primitive、自建 registry、项目 wrapper、domain component。
@@ -443,7 +443,7 @@ JSON 字段必须符合 `contracts/design-contract.schema.json`。如果某字�
 - React-only shadcn 资源必须通过 Vue translation contract。
 - Inspiration gallery 不进入代码实现。
 - 国内设计案例只影响 visual completion、information density、UX / IA，不复制资产。
-- 若实现与 Pencil 截图或 design contract 冲突，停止并回到 `sf-ui-design` 或 `sf-tech-design`，不要在代码里临场改风格。
+- 若实现与 Pencil handoff evidence 或 design contract 冲突，停止并回到 `sf-ui-design` 或 `sf-tech-design`，不要在代码里临场改风格。
 
 ## Verification checklist
 

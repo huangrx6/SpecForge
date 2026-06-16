@@ -1,11 +1,11 @@
 ---
 name: design-system
-description: SpecForge UI 设计规范 skill；用于可见体验、设计语言、Design Contract、组件契约、token、动效、视觉 QA 和跨阶段交接。凡涉及新页面、页面重构、后台 / 品牌页 / Web3 / AI / 大屏 / 移动 H5 / 组件系统、Pencil 原型、截图审查、去廉价感、动效或 shadcn-vue UI 落地时，都应使用本 skill。
+description: SpecForge UI 设计规范 skill；用于可见体验、设计语言、Design Contract、组件契约、token、动效、视觉 QA 和跨阶段交接。凡涉及新页面、页面重构、后台 / 品牌页 / Web3 / AI / 大屏 / 移动 H5 / 组件系统、Pencil handoff、截图审查、去廉价感、动效或 shadcn-vue UI 落地时，都应使用本 skill。
 ---
 
 # Design System Skill
 
-本 skill 是 SpecForge 的统一 UI 设计系统入口。不要把它拆成多个顶层 skill；颜色、字体、组件、动效、Pencil、视觉 QA 和实现提示必须汇总到同一个 Design Contract，避免后续阶段各读各的。
+本 skill 是 SpecForge 的统一 UI 设计系统入口。不要把它拆成多个顶层 skill；颜色、字体、组件、动效、Pencil handoff requirements、视觉 QA 和实现提示必须汇总到同一个 Design Contract，避免后续阶段各读各的。
 
 Reference Picker 是本 skill 的面向用户参考选择机制：用户只选择“组件封装、区块组合、后台模板、国内案例、动效、UX / IA”等需求，Agent 再自动路由到 shadcn 生态、国内设计案例、Awwwards / GSAP / Motion、Ant Design / Semi、Vue admin 模板等来源。不要让用户必须知道每个网站里有什么。
 
@@ -17,8 +17,8 @@ Reference Picker 是本 skill 的面向用户参考选择机制：用户只选�
 - 用户提到 shadcnblocks、shadcn.io templates、shadcn/ui blocks、21st.dev、站酷、UXUE、Awwwards、Crafted、MasterGo、Pixso、UI 中国、优设、Vue admin 模板等外部参考来源。
 - 用户说“多看一些好的网站”“参考一些模板”“参考国内 UI 案例”“参考 shadcn 组件”“参考优秀后台页面”等，但不知道怎么描述具体方向。
 - 用户希望以选择题方式确定参考目标，而不是手写专业提示词。
-- `sf-ui-design` 需要把截图、竞品、品牌素材、现有组件库或 Pencil 原型转成 `ui-design.md`。
-- `sf-tech-design`、`sf-tasking`、`sf-implement` 或 `sf-verify` 需要读取 token、组件、动效、视觉 QA、Pencil 变量或实现映射。
+- `sf-ui-design` 需要把截图、竞品、品牌素材、现有组件库或 Pencil 证据转成 `ui-design.md`。
+- `sf-tech-design`、`sf-tasking`、`sf-implement`、`sf-verify` 或 `pencil` 需要读取 token、组件、动效、视觉 QA、Pencil variable hints 或 prototype constraints。
 
 不调用的情况：纯后端、纯数据迁移、无 UI 表面的脚本任务；若只是文案或图标微调，用 `local-component` profile，不走完整设计系统。
 
@@ -64,6 +64,7 @@ Reference Picker 是本 skill 的面向用户参考选择机制：用户只选�
 - `contracts/component-contract.template.md`：复杂 / 复用组件独立契约模板。
 - `references/output-contract.md`：compact / standard / full 输出格式。
 - `references/cross-stage-handoff.md`：交给 `sf-tech-design`、`sf-tasking`、`sf-implement`、`sf-verify` 的读取规则。
+- `references/read-profiles.md#Pencil Handoff Add-on`：给 `pencil` skill 的画板、状态、token group、组件契约和证据要求。
 - `prompts/reference-picker.md`：把模糊外部参考诉求转成选择题。
 - `prompts/source-routing.md`：把用户选择路由到合适来源池。
 - `prompts/reference-extraction.md`：从外部来源抽取可复用 pattern。
@@ -73,7 +74,7 @@ Reference Picker 是本 skill 的面向用户参考选择机制：用户只选�
 Design Contract JSON 至少要让后续阶段稳定读取：
 
 - `scan_manifest.profile`、`selected_data`、`selection_rationale`
-- `reference_selection`
+- `reference_selection`（仅外部参考诉求时出现；无外部参考时省略）
 - `design_mode`、`human_confirmation`
 - `color_system`、`foundation_system`、`token_delivery_hint`
 - `component_strategy`、`shadcn_vue`
@@ -94,6 +95,7 @@ Design Contract JSON 至少要让后续阶段稳定读取：
 | 组件契约、shadcn-vue primitive / project wrapper 映射 | `01-spec/ui-design.md#Admin Component Contract` 和 `01-spec/design/components/*.contract.md` |
 | Product UI 主要使用者、业务对象、任务、布局模式、首屏工作表面和空白预算 | `01-spec/ui-design.md#Product UI Layout Audit` |
 | 视觉质量审查、修正动作、接受理由 | `01-spec/ui-design.md#Visual QA` 和 `Design Contract JSON.visual_qa` |
+| Pencil Handoff Requirements：目标 `.pen`、画板、状态、token group、组件契约和证据要求 | `01-spec/ui-design.md#Pencil Handoff Requirements` |
 | 跨阶段 token / wrapper / motion / verification hooks | `01-spec/ui-design.md#Design Contract Summary` |
 
 ## 工作原则
@@ -109,7 +111,7 @@ Design Contract JSON 至少要让后续阶段稳定读取：
 
 ## 阻断条件
 
-以下情况不允许进入 Pencil / technical design / implementation：
+以下情况不允许进入 Pencil handoff / technical design / implementation：
 
 - 没有选择 read profile，或小任务默认走 `full-system` 且没有升级理由。
 - 有外部参考诉求但没有 `reference_selection`、`Reference Source Routing`、`Reuse Boundary` 和 `forbidden`。
@@ -117,7 +119,7 @@ Design Contract JSON 至少要让后续阶段稳定读取：
 - 需要人工确认的审美方向、IA、首屏层级或核心流程仍是 `human_confirmation.status: "pending"`。
 - Agent 推荐被写成用户已确认；只有用户明确选择才能写 `confirmed`。
 - `selected_data` 只有 id，没有 `selection_rationale` 说明选择理由、拒绝项、风险和置信度。
-- 缺少 `token_delivery_hint`，导致 tech design 无法判断 CSS variables / Tailwind / Pencil 变量映射提示。
+- 缺少 `token_delivery_hint`，导致 tech design 无法判断 CSS variables / Tailwind / Pencil variable hints。
 - Product UI / Hybrid 缺少真实工作表面、状态矩阵或 `product_ui_quality`。
 - `visual_qa` 里 high severity issue 仍是 `pending` / `blocked`。
 - GSAP / Three.js 被使用但没有 fallback、reduced motion 和 verification。
@@ -130,9 +132,9 @@ Design Contract JSON 至少要让后续阶段稳定读取：
 - Design Contract JSON 符合 `contracts/design-contract.schema.json`，并同步 Markdown Summary。
 - 如果使用外部参考，用户选择题、来源路由、扫描记录、抽取 pattern、复用边界和禁止项都写入 `reference_selection`。
 - 用户提出外部参考时，`ui-design.md` 必须包含 Reference Selection 和 Reference Scan Manifest。
-- Design Contract JSON 必须包含 `reference_selection`，或明确 N/A 理由。
+- 使用外部参考时，Design Contract JSON 必须包含 object 形式的 `reference_selection`；没有外部参考时，Markdown 写 `Reference Selection: N/A`，JSON 不写 `reference_selection`，并在 `scan_manifest.skipped_with_reason` 说明。
 - 每个外部来源必须写清 adopt / adapt / avoid / reuse boundary。
 - 如果外部来源不可访问，必须记录 offline fallback，不允许假装已扫描。
 - Product UI 没有 empty dashboard skeleton、KPI wallpaper、blank framed content、card soup 或 primitive pile。
 - Brand Surface / Web3 / AI 页面避免默认 cyan + violet + rose + glow 模板，并有 signature、fallback 和 reduced motion。
-- 后续阶段能直接读取 token、组件、状态、动效、Pencil、Visual QA 和验证 hook，不需要重新猜设计意图。
+- 后续阶段能直接读取 token、组件、状态、动效、Pencil handoff requirements、Visual QA 和验证 hook，不需要重新猜设计意图。

@@ -22,7 +22,7 @@
 
 ## 0.11.9
 
-- Design Contract JSON 新增必填 `token_delivery_hint`，记录 CSS variables、Tailwind theme mapping、Pencil variables 和 notes，帮助 `sf-tech-design` 更快落地 token delivery。
+- Design Contract JSON 新增必填 `token_delivery_hint`，记录 CSS variables、Tailwind theme mapping、Pencil variable hints 和 notes，帮助 `sf-tech-design` 更快落地 token delivery。
 - `token_delivery_hint` 明确只是实现提示，不替代 `sf-tech-design` 的最终工程决策；`artifact-quality` 会检查 notes 是否表达 hint / technical-design 边界。
 - `output-contract.md`、`cross-stage-handoff.md` 和 `SKILL.md` 同步补充 token delivery hint 示例和交接说明。
 

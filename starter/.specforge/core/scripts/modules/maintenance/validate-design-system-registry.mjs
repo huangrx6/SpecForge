@@ -23,6 +23,13 @@ const referencePickerFiles = [
   "prompts/domestic-design-case-extraction.md",
 ];
 
+const deprecatedReferenceSelectionTerms = [
+  "visual_completion",
+  "domestic_design_case",
+  "industry_case",
+  "borrow_strength: expressive",
+];
+
 const criticalFiles = [
   "contracts/design-contract.schema.json",
   "contracts/reference-selection.schema.json",
@@ -404,6 +411,27 @@ function validateReferenceSelectionSchemas() {
   }
 }
 
+function validateReferenceSelectionTerminology() {
+  const docsToCheck = [
+    "SKILL.md",
+    "references/read-profiles.md",
+    "references/output-contract.md",
+    "references/design-system-orchestration.md",
+    "references/reference-picker.md",
+    "prompts/reference-picker.md",
+  ];
+  for (const file of docsToCheck) {
+    const fullPath = join(designRoot, file);
+    if (!existsSync(fullPath)) continue;
+    const content = read(fullPath);
+    for (const term of deprecatedReferenceSelectionTerms) {
+      if (content.includes(term)) {
+        errors.push(`design-system reference picker: deprecated enum term ${term} found in ${file}`);
+      }
+    }
+  }
+}
+
 function validateStarterMirror(registryFiles) {
   if (layout.kind !== "source" || !existsSync(starterDesignRoot)) return;
   const filesToCompare = [...new Set(["SKILL.md", ...registryFiles, ...referencePickerFiles])].sort((a, b) => a.localeCompare(b));
@@ -434,6 +462,7 @@ if (entry) {
   validateReferencePickerFiles(registryFiles);
   validateReferenceSourceCatalog();
   validateReferenceSelectionSchemas();
+  validateReferenceSelectionTerminology();
   validateStarterMirror(registryFiles);
 
   if (errors.length === 0) {

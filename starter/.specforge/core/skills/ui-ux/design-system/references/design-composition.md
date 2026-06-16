@@ -29,11 +29,11 @@ Composition Recipe 必须先读 `references/composition-source-index.md`。外�
 | 5 | Layout archetype | primary work surface、导航、滚动区 | 首屏无主任务 |
 | 6 | Component language | wrapper、variants、states、density | 直接堆 primitive |
 | 7 | Motion language | CSS / Motion / GSAP 层级、节奏和降级 | 装饰动效或完全无反馈 |
-| 8 | Prototype contract | Pencil token、组件复用、截图和布局检查 | 原型和 design contract 脱节 |
+| 8 | Prototype handoff | 目标画板、状态、token group、组件契约和证据要求 | 原型和 design contract 脱节 |
 
 ## 2. Composition Recipe
 
-设计方向必须落成一张组合配方表。没有这张表，不能进入 Pencil 原型。
+设计方向必须落成一张组合配方表。没有这张表，不能进入 Pencil handoff。
 
 | 字段 | 必填内容 | 示例 |
 | --- | --- | --- |
@@ -66,7 +66,7 @@ Agent 不应该每次从零发明配方。先从以下 recipe family 选一类�
 
 ## 3. Foundation Token Contract
 
-Design Contract JSON 必须包含 `foundation_system`。它不是装饰说明，而是实现和 Pencil 都要读取的源头。
+Design Contract JSON 必须包含 `foundation_system`。它不是装饰说明，而是实现和 Pencil handoff 都要读取的源头。
 
 ```json
 {
@@ -257,7 +257,7 @@ Composition Source Notes:
 - 高级感是否来自内容结构和细节纪律，而不是渐变、玻璃、阴影和大圆角？
 - 这个 Brand Surface 是否像默认 AI / cyber 模板？如果是，palette、材质或 signature 必须重做。
 - 动效是否能说明状态、空间关系、进度或品牌记忆？
-- Pencil 原型是否复用了同一套 tokens 和组件，而不是重新画一套？
+- Pencil handoff 是否明确同一套 token group、组件契约和证据要求，而不是让原型阶段重新猜？
 
 ## 13. 输出要求
 
@@ -286,4 +286,4 @@ Composition Source Notes:
 | | | | |
 ```
 
-如果本轮是 Product UI，还必须和 `Product UI Layout Audit` 一起输出；如果本轮进入 Pencil，必须把同一套 recipe 写入 Pencil handoff。
+如果本轮是 Product UI，还必须和 `Product UI Layout Audit` 一起输出；如果本轮需要 `.pen` 或视觉证据，必须把同一套 recipe 写入 Pencil handoff requirements。

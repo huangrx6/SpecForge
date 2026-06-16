@@ -22,7 +22,36 @@
 - `data/reference-source-catalog.csv`
 - `contracts/reference-selection.schema.json`
 
-Reference Picker 是 add-on，不会把 `local-component` 自动升级为 `full-system`。只有用户选择 `visual_completion`、`motion`、`domestic_design_case`、`industry_case` 或 `borrow_strength: expressive`，才考虑升级读取更多来源。
+Reference Picker 是 add-on，不会把 `local-component` 自动升级为 `full-system`。只有用户选择 `visual-completion`、`motion`、`domestic-ui-case`、`industry-case`，或 `borrow_strength: strong`，才考虑升级读取更多来源。
+
+## Pencil Handoff Add-on
+
+当用户要求 `.pen`、Pencil handoff、原型截图交付，或后续阶段需要视觉证据时，在当前 profile 基础上追加 `Pencil Handoff Requirements`。design-system 只输出 handoff requirements，不调用 Pencil 工具；实际创建、修改、截图、导出、布局快照和保存验证由 `core/skills/ui-ux/pencil` 执行。
+
+```md
+Pencil Handoff Requirements:
+- Target file: `01-spec/ui-mockup.pen`
+- Target artboards:
+  - name:
+  - route / page:
+  - viewport:
+  - state: default / loading / empty / error / permission
+  - primary work surface:
+- Required token groups:
+  - color
+  - typography
+  - spacing
+  - radius_shadow
+  - motion
+- Component contracts:
+- Asset reuse requirements:
+- Evidence required:
+  - variables synced
+  - reusable components checked
+  - screenshot exported
+  - layout snapshot clean
+  - persistence checked
+```
 
 ## Selection Rules
 
@@ -33,6 +62,7 @@ Reference Picker 是 add-on，不会把 `local-component` 自动升级为 `full-
 - `visual-calibration` 只处理修正；如果发现 design mode 本身错误，再升级到 `product-page` 或 `brand-surface`。
 - `full-system` 需要写清触发原因，例如新建设计系统、复杂 Hybrid、多阶段交付或多个 profile 同时成立。
 - 外部参考需求先写 `reference_selection`，再进入 design mode、palette、字体、动效和组件选择；不要把站点名当风格名。
+- 没有外部参考诉求时，Markdown 写 `Reference Selection: N/A`，Design Contract JSON 不写 `reference_selection`，并在 `scan_manifest.skipped_with_reason` 记录 `reference_selection: no external reference requested`。
 
 ## Required Contract Hooks
 
@@ -42,7 +72,7 @@ Reference Picker 是 add-on，不会把 `local-component` 自动升级为 `full-
 - `scan_manifest.scanned_files`
 - `scan_manifest.selected_data`
 - `scan_manifest.selection_rationale`
-- `reference_selection`（有外部参考诉求时必填）
+- `reference_selection`（有外部参考诉求时必填；没有外部参考时不要写入 JSON）
 - `human_confirmation`
 - `token_delivery_hint`
 - `visual_qa`
@@ -54,6 +84,7 @@ Reference Picker 是 add-on，不会把 `local-component` 自动升级为 `full-
 - 未写 profile。
 - 读取文件和 profile 不匹配，且没有升级理由。
 - 有外部参考诉求但缺 `reference_selection`、来源路由、复用边界或禁止项。
+- 没有外部参考诉求却在 JSON 中写 `"reference_selection": "N/A"`、`null` 或空字符串。
 - `selected_data` 与 `selection_rationale` id 不一致。
 - 需要用户确认的方向仍是 `pending`。
 - high severity `visual_qa` issue 仍是 `pending` / `blocked`。

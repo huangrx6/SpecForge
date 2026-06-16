@@ -15,7 +15,7 @@
 1. 先判断设计对象：Product UI / Brand Surface / Avatar-IP / Illustration / Empty State / Dashboard / Mobile H5。
 2. 从美学风格库推荐 2-3 个互斥方向；方向必须是审美气质，不是业务功能。
 3. 每个方向必须说明：感觉、适合对象、视觉语言、组件影响、动效倾向、风险、不适用场景。
-4. 用户选择后，再做 business translation：把审美方向翻译成 foundations、components、pages、prompts 和 Pencil 原型约束。
+4. 用户选择后，再做 business translation：把审美方向翻译成 foundations、components、pages、prompts 和 Pencil handoff constraints。
 5. 后台 / 政企 / 工具型产品可以使用克制审美，但仍要明确美学来源，例如“日式留白 + 极简科技风”，而不是只写“简洁高级”。
 
 ## Palette ID Mapping

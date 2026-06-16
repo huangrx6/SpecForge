@@ -1,6 +1,6 @@
 # Design System Orchestration
 
-本文件负责把 design-system 里的来源、颜色、字体、空间、材质、动效、组件、Pencil 和验证串成一条稳定链路。Agent 不允许一上来读取全量设计系统；必须先选择 profile，再按最短必读链路完成扫描清单和 Design Contract。
+本文件负责把 design-system 里的来源、颜色、字体、空间、材质、动效、组件、Pencil handoff requirements 和验证串成一条稳定链路。Agent 不允许一上来读取全量设计系统；必须先选择 profile，再按最短必读链路完成扫描清单和 Design Contract。
 
 外部参考选择必须先走 Reference Picker。用户只选择参考需求，Agent 再路由来源；不要让用户用“参考站酷品牌气质 / Awwwards 动效 / shadcnblocks dashboard”这类专业且模糊的话承担来源选择。
 
@@ -34,7 +34,7 @@
 | 4 | `references/reference-extraction-protocol.md` | 规定可抽取、必须转换、禁止复制和离线行为 |
 | 5 | `contracts/reference-selection.schema.json` | 约束 `Design Contract JSON.reference_selection` |
 
-Reference Picker 输出 `reference_selection`，它不替代 `design_mode`。后续仍必须继续做 mode routing、Composition Recipe、Product UI Layout Audit、Visual QA 和 Design Contract JSON。
+Reference Picker 输出 `reference_selection`，它不替代 `design_mode`。后续仍必须继续做 mode routing、Composition Recipe、Product UI Layout Audit、Visual QA 和 Design Contract JSON。没有外部参考诉求时，Markdown 写 `Reference Selection: N/A`，Design Contract JSON 不写 `reference_selection`，并在 `scan_manifest.skipped_with_reason` 记录 `reference_selection: no external reference requested`。
 
 ## 3. Full-System 扫描顺序
 
@@ -52,7 +52,7 @@ Reference Picker 输出 `reference_selection`，它不替代 `design_mode`。后
 | 8 | 页面与组件 | `references/product-ui-layout-quality.md`、`references/layout-archetypes.md`、`references/component-system.md`、组件契约 | layout、component strategy、state matrix | 避免卡片汤、空壳 Dashboard、primitive pile |
 | 9 | 视觉审查 | `references/visual-qa-detectors.md`、`references/design-review-rubric.md` | fail signal、fix / accepted reason | 把“垃圾设计”变成可修复检查 |
 | 10 | 视觉校准 | `references/visual-calibration.md` | 用户反馈 / 截图诊断、palette delta、修正状态 | 防止实现后仍像 AI 模板或默认审美 |
-| 11 | 输出交接 | `references/output-contract.md`、`references/cross-stage-handoff.md`、`contracts/design-contract.schema.json` | Markdown Summary、Design Contract JSON、Pencil handoff | 后续阶段不再凭自然语言猜 |
+| 11 | 输出交接 | `references/output-contract.md`、`references/cross-stage-handoff.md`、`contracts/design-contract.schema.json` | Markdown Summary、Design Contract JSON、Pencil handoff requirements | 后续阶段不再凭自然语言猜 |
 
 ## 4. Design Mode 扫描矩阵
 
@@ -70,7 +70,7 @@ Reference Picker 输出 `reference_selection`，它不替代 `design_mode`。后
 
 ```text
 profile
-  -> reference_selection / N/A
+  -> reference_selection omitted unless external reference requested
   -> source_routing / N/A
   -> extracted_patterns / N/A
   -> design_mode
@@ -264,7 +264,7 @@ JSON 中同步写入：
 
 ## 9. 阻断条件
 
-以下情况必须退回补设计，不允许进入 Pencil / implement：
+以下情况必须退回补设计，不允许进入 Pencil handoff / implement：
 
 - 用户要求外部参考但没有 `reference_selection`、来源路由、扫描记录、复用边界和禁止项。
 - 用户提供外部参考，但没有 Reference Selection。
