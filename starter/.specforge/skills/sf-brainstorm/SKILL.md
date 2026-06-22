@@ -164,7 +164,7 @@ C) 不确定 → 先按 B 设计，留扩展点
    - `research-heavy`：当前事实、依赖版本、AI 供应商、价格、法规、安全或竞品证据会影响方向时使用；它可以由 `light` / `deep` 自动升级而来。
    - 如果 `brief.md#Brainstorm 决策` 已写 `Execution profile`，优先沿用；为空时再由 `Brainstorm mode` 和事实风险推导并回写。
    - 模式来源见 `sf-intake` 的“Brainstorm 分流规则”和 `core/artifacts/templates/brief.md#Brainstorm 决策`。
-3. 读取 `.specforge/core/skills/brainstorm/SKILL.md`，再由根入口路由到 read profiles、discussion protocol、case study protocol、output contract 和必要子技能。
+3. 读取 `.specforge/core/skills/brainstorm/SKILL.md`，再由根入口路由到 `brainstorm-playbook.md`、`output-contract.md`、案例来源目录和必要子技能。
 4. 根据根入口选出的 profile，确定本轮是 `single-decision / guided-options / workshop`，并按 Expose -> Ask -> Record 循环推进。
 5. 需要当前事实时先查证；技术类优先官方资料，并记录日期。
 6. 需要外部事实、版本、依赖、价格、竞品、漏洞、法规或 AI provider 资料时，读取 `.specforge/core/skills/brainstorm/research-source/SKILL.md`，按其来源索引和证据契约查证，并在 `brainstorm.md#当前事实与研究证据` 记录搜索计划、URL、日期、结论和置信度。

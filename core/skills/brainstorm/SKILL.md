@@ -13,9 +13,7 @@ description: SpecForge Brainstorm 能力包根入口。用于模糊产品、UI�
 brainstorm/
 ├── SKILL.md                       # 根入口：路由、读取顺序、停止条件
 ├── references/
-│   ├── read-profiles.md           # profile、case study depth、discussion depth
-│   ├── case-study-protocol.md     # 案例侦察协议
-│   ├── discussion-protocol.md     # 多轮讨论协议
+│   ├── brainstorm-playbook.md     # 执行总纲：profile、案例侦察、讨论协议、完整编排
 │   └── output-contract.md         # brainstorm.md 输出合同
 ├── data/
 │   └── case-source-catalog.csv    # 案例来源目录
@@ -34,11 +32,10 @@ brainstorm/
 ## 读取顺序
 
 1. 先读本文件。
-2. 读 `references/read-profiles.md`，选择 `Brainstorm profile`、`Case study depth`、`Discussion depth`。
-3. 读 `references/discussion-protocol.md`，确定多轮探讨节奏和确认记录方式。
+2. 读 `references/brainstorm-playbook.md`，选择 `Brainstorm profile`、`Case study depth`、`Discussion depth`，并确定多轮探讨节奏。
 4. 按 profile 读取子技能：
    - 问题不清：`problem-framing/SKILL.md`
-   - 需要案例：`references/case-study-protocol.md`、`data/case-source-catalog.csv`、`case-study-scout/SKILL.md`
+   - 需要案例：`data/case-source-catalog.csv`、`case-study-scout/SKILL.md`
    - 需要当前事实：`research-source/SKILL.md` 及其 references
    - 需要发散：`divergent-thinking/SKILL.md`
    - 需要跨域机制：`analogy-thinking/SKILL.md`
@@ -51,13 +48,13 @@ brainstorm/
 
 | Profile | 何时使用 | 必读 |
 |---|---|---|
-| `clarify-light` | 只需快速确认 1-2 个低风险取舍 | read profiles、discussion protocol、problem framing、decision matrix、output contract |
-| `product-discovery` | MVP、用户、功能池、产品方向不清 | case study protocol、case-study-scout、divergent thinking、critic review、decision matrix |
+| `clarify-light` | 只需快速确认 1-2 个低风险取舍 | playbook、problem framing、decision matrix、output contract |
+| `product-discovery` | MVP、用户、功能池、产品方向不清 | playbook、case-study-scout、divergent thinking、critic review、decision matrix |
 | `experience-exploration` | 管理端、Dashboard、官网、品牌页、AI 工具或用户要求高级案例 | case catalog、case-study-scout、divergent thinking、analogy、scenario、decision matrix |
-| `technical-decision` | 技术栈、依赖、AI provider、部署、成本、安全取舍 | research-source、critic review、decision matrix、discussion protocol |
+| `technical-decision` | 技术栈、依赖、AI provider、部署、成本、安全取舍 | playbook、research-source、critic review、decision matrix |
 | `research-heavy` | 竞品、价格、法规、AI 能力或来源冲突影响方向 | research-source、case-study-scout、critic review、decision matrix |
 
-Profile 权威细节在 `references/read-profiles.md`；本表只做入口导航。
+Profile、案例深度、讨论深度和完整编排的权威细节在 `references/brainstorm-playbook.md`；本表只做入口导航。
 
 ## 输出合同
 
@@ -74,7 +71,7 @@ Profile 权威细节在 `references/read-profiles.md`；本表只做入口导航
 ## 停止条件
 
 - 未选择 profile。
-- 有案例诉求但未读取 `case-study-protocol.md` / `case-source-catalog.csv` / `case-study-scout`。
+- 有案例诉求但未读取 `brainstorm-playbook.md` / `case-source-catalog.csv` / `case-study-scout`。
 - 有事实诉求但未读取 `research-source`。
 - 没有讨论轨迹，或用户确认 / 授权默认 / Agent 推荐 / pending 混在一起。
 - 方案不是互斥路线，只有一个“综合最优”大方案。

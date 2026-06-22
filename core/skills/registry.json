@@ -692,13 +692,7 @@
         "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/brainstorm",
         "files": [
           {
-            "path": "references/read-profiles.md"
-          },
-          {
-            "path": "references/case-study-protocol.md"
-          },
-          {
-            "path": "references/discussion-protocol.md"
+            "path": "references/brainstorm-playbook.md"
           },
           {
             "path": "references/output-contract.md"

@@ -59,9 +59,7 @@
 Brainstorm 控制层：
 
 - `brainstorm/SKILL.md`：Brainstorm 能力包根入口。所有内部子技能和 reference 都从这里路由。
-- `brainstorm/references/read-profiles.md`：profile、case study depth、discussion depth 和读取路径。
-- `brainstorm/references/case-study-protocol.md`：案例来源 family、观察清单、机制拆解和禁止复制边界。
-- `brainstorm/references/discussion-protocol.md`：多轮探讨、单问协议、讨论轨迹和收敛条件。
+- `brainstorm/references/brainstorm-playbook.md`：执行总纲，统一维护 profile、case study depth、discussion depth、案例协议、多轮讨论和读取路径。
 - `brainstorm/references/output-contract.md`：brainstorm.md 输出合同、条件 section、handoff 和停止条件。
 - `brainstorm/data/case-source-catalog.csv`：案例来源目录、适用场景、复用策略和 avoid 规则。
 

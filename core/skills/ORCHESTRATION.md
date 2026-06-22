@@ -63,9 +63,9 @@
 
 ### Brainstorm
 
-- Brainstorm 不是单纯事实查证；默认先读 `brainstorm/SKILL.md` 作为能力包根入口，再由它读取 `brainstorm/references/read-profiles.md` 选择 profile，并按 profile 决定是否进入案例侦察、事实查证、发散、类比、模拟、批判、矩阵、输出和行动计划。
+- Brainstorm 不是单纯事实查证；默认先读 `brainstorm/SKILL.md` 作为能力包根入口，再由它读取 `brainstorm/references/brainstorm-playbook.md` 选择 profile、case study depth 和 discussion depth，并按 profile 决定是否进入案例侦察、事实查证、发散、类比、模拟、批判、矩阵、输出和行动计划。
 - 先确定 `Brainstorm profile`、`Case study depth` 和 `Discussion depth`，再读取子 skill，避免 light brainstorm 被迫填满 deep artifact，或 deep brainstorm 只读一个资料查询 skill。
-- 多轮探讨按 `brainstorm/references/discussion-protocol.md` 执行：Expose -> Ask -> Record，每轮只问一个会改变方向的问题，并记录讨论轨迹。
+- 多轮探讨按 `brainstorm/references/brainstorm-playbook.md#Discussion Protocol` 执行：Expose -> Ask -> Record，每轮只问一个会改变方向的问题，并记录讨论轨迹。
 - 输出前按 `brainstorm/references/output-contract.md` 检查 Always Output、Conditional Output、Stop Conditions 和 Cross-stage Handoff。
 
 | Profile | 必读子 skill | 可选子 skill | 输出要求 |
@@ -78,7 +78,7 @@
 - 标准联动顺序：
   1. `problem-framing`：请求含糊、目标/范围/用户不清时必读。
   2. `research-source`：当前事实、版本、价格、竞品、AI provider、法规、漏洞或依赖会影响取舍时必读。
-  3. `case-study-scout`：用户给出优秀案例、要求更高级 / 不模板化，或当前方向涉及产品体验、管理端、网站、AI 工具、工作流时读取；先读 `brainstorm/references/case-study-protocol.md` 和 `brainstorm/data/case-source-catalog.csv`。
+  3. `case-study-scout`：用户给出优秀案例、要求更高级 / 不模板化，或当前方向涉及产品体验、管理端、网站、AI 工具、工作流时读取；先读 `brainstorm/references/brainstorm-playbook.md#Case Study Protocol` 和 `brainstorm/data/case-source-catalog.csv`。
   4. `divergent-thinking`：需要 2 个以上候选方向或用户要求“帮我想想”时必读。
   5. `analogy-thinking`：候选方案同质化、需要差异化机制或跨行业借鉴时读取。
   6. `scenario-simulation`：方案会进入产品/流程/工程落地前，用场景、失败路径和边界条件压测。
