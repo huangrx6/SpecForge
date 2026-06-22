@@ -1,11 +1,11 @@
 ---
 name: code-intelligence
-description: SpecForge 代码智能能力包。用于任何阶段需要使用 Wiki-first、CodeGraph、MCP / SCIP provider、Repomix、bootstrap map 或 rg 来定位现有系统范围、调用链、影响面、受影响测试、图谱事实和 Wiki 回写候选时必读；不要只在 sf-steering 中使用。
+description: SpecForge 跨阶段代码智能能力包。用于任何阶段需要 Wiki-first 定位现有代码范围、选择 CodeGraph / MCP / SCIP / Repomix / rg、检查 provider freshness、归一 graph_facts、分析影响面 / affected tests 或生成 Wiki 回写候选时必读；不要只在 sf-steering 中使用。
 ---
 
 # 代码智能
 
-本 skill 是 SpecForge 的代码智能能力包。它封装 CodeGraph、codebase-memory-mcp、CodeGraphContext、Repomix、bootstrap map 和 `rg` 的使用规则。
+本 skill 是 SpecForge 的跨阶段代码智能能力包。它不负责“把仓库全读一遍”，而是把已有 Wiki、bounded context、provider 健康、图谱查询、`rg` fallback、影响面和 Wiki 回写候选统一成可追溯证据。
 
 它不属于某一个阶段。它服务于：
 
@@ -27,21 +27,20 @@ description: SpecForge 代码智能能力包。用于任何阶段需要使用 Wi
 4. **Freshness required**：使用图谱结果前必须确认 provider ready、index clean，或处理 pending sync / stale 提示。
 5. **Graph facts normalized**：所有 provider 事实先归一为 `graph_facts[]`。
 6. **Stage bounded**：普通阶段不得重新全仓扫描；只围绕当前 work item 的模块、符号、API 或 changed files 查询。
+7. **Script aligned**：`codebase-index.mjs`、`graph-freshness.mjs`、`graph-impact.mjs`、`wiki-refresh-plan.mjs` 是机器入口；skill 文档必须解释这些输出怎么进入 artifact。
 
 ## 读取路由
 
 | 场景 | 必读 |
 |---|---|
-| 判断 provider 是否可用、CodeGraph 是否接入 Agent、项目是否初始化 | `foundations/provider-lifecycle.md` |
-| 进入技术设计、实现、审查、验证前检查索引新鲜度 | `foundations/freshness-policy.md` |
-| 需要把 provider 输出写入 report、technical design、review 或 Wiki | `foundations/graph-facts-contract.md`、`transforms/codegraph-to-graph-facts.md` |
-| 日常 work item 只想定位现有模块 / API / 数据范围 | `foundations/wiki-first-context.md`、`references/provider-selection.md` |
-| 使用 CodeGraph MCP / CLI | `references/codegraph-usage.md` |
-| 根据 changed files 找影响面或受影响测试 | `references/affected-tests.md`、`transforms/diff-to-impact.md` |
-| 判断各阶段如何接入 | `references/stage-integration.md` |
-| 准备 Wiki 回写 | `transforms/graph-facts-to-wiki.md` |
-| 准备技术设计影响面 | `transforms/graph-facts-to-technical-design.md` |
-| 审查代码智能使用是否跑偏 | `references/anti-patterns.md` |
+| 判断是否需要代码智能、如何从 Wiki 建 bounded context、如何选扫描模式 | `references/workflow-playbook.md` |
+| provider 生命周期、CodeGraph MCP / CLI、freshness、sync 和安装 / 初始化边界 | `references/provider-and-freshness.md` |
+| provider / bootstrap / rg 事实如何归一成 `graph_facts[]`，以及置信度边界 | `references/graph-facts-contract.md` |
+| 根据 changed files / symbol 找影响面、受影响测试、fallback 和回归范围 | `references/impact-and-affected-tests.md` |
+| 各阶段读取什么、写到哪里、哪些结论只能低置信 | `references/stage-integration.md` |
+| diff 后如何生成 Wiki 回写候选，如何把 facts 写进 Wiki / technical design | `references/wiki-and-output-contract.md` |
+| 常见误用、质量检查和修复顺序 | `references/quality-guide.md` |
+| 需要生成查询计划或 impact 表时的输出模板 | `references/query-prompts.md` |
 
 ## 机器入口
 

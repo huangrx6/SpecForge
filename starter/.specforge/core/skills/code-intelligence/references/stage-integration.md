@@ -1,5 +1,7 @@
 # Stage Integration
 
+跨阶段使用代码智能时，先按 `workflow-playbook.md` 建 bounded context，再按阶段把输出写入对应 artifact。普通阶段不得把 provider 结果直接升级成需求或长期 Wiki 事实。
+
 ## sf-steering
 
 建立或刷新长期 Wiki：
@@ -13,6 +15,7 @@
 7. `wiki-quality`
 
 `sf-steering` 只负责项目画像和 Wiki 回写，不内置所有 provider 细节。
+检测到 CodeGraph 或需要 graph provider 时，优先读取 `provider-and-freshness.md` 和 `graph-facts-contract.md`。
 
 ## sf-intake
 
@@ -23,6 +26,8 @@
 3. Wiki 缺失或过期时，使用 change-focused 查询定位入口。
 4. 只把结果写成 brief 的 code context。
 5. 如果确认 Wiki 过期，路由 `sf-steering`。
+
+不要在 intake 生成全量项目画像。
 
 ## sf-requirements
 
@@ -47,6 +52,7 @@ CodeGraph 结果只能进入 current fact / existing behavior / pending evidence
 6. 归一 `graph_facts[]`。
 
 写入 Architecture Contract、Impact Analysis、Affected Modules、Affected Tests 和 Implementation Handoff。
+低置信 fallback 必须标为候选，不能写成已确认架构事实。
 
 ## sf-tasking
 
@@ -71,6 +77,7 @@ CodeGraph 结果只能进入 current fact / existing behavior / pending evidence
 - pending sync 时等待或 sync。
 - MCP 提示 stale file 时直接读取当前文件。
 - implementation report 写 touched symbols、graph freshness、affected area。
+如果实现发现 graph facts 与真实代码冲突，report 必须记录冲突并退回 code-intelligence / steering 补证。
 
 ## sf-code-review
 
@@ -87,6 +94,7 @@ node .specforge/core/scripts/graph-impact.mjs --from-git --json
 - affected tests 是否运行。
 - changed-files 与 graph impact 是否匹配。
 - impact 是否暴露 API / data / job / auth 风险。
+provider 不 ready 时可以用低置信 fallback，但 finding / verification note 必须说明置信度边界。
 
 ## sf-verify
 
@@ -95,6 +103,7 @@ node .specforge/core/scripts/graph-impact.mjs --from-git --json
 - code-review 有 affected tests：优先运行。
 - UI / route 受影响：跑对应 Playwright。
 - API / data / job 受影响：跑 contract / integration / runtime smoke。
+affected tests 只是候选；verification report 必须记录实际运行、跳过理由或补证计划。
 
 ## sf-wiki / sf-close
 
@@ -104,4 +113,4 @@ node .specforge/core/scripts/graph-impact.mjs --from-git --json
 - verification passed。
 - diff 改变长期 API、数据、权限、配置、任务、运行或架构边界。
 - `wiki-refresh-plan --from-diff --json` 返回需要更新。
-
+只写长期事实，不写 provider 原始输出；无法确认的事实写入风险或阻断原因。

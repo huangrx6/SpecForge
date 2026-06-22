@@ -102,10 +102,10 @@ node .specforge/core/scripts/wiki-quality.mjs --mode steering
 
 `sf-steering` 不再内置全部 CodeGraph 细节。检测到 `codegraph` CLI、用户明确启用 CodeGraph，或扫描模式需要 graph provider 时，按顺序读取：
 
-1. `.specforge/core/skills/code-intelligence/foundations/provider-lifecycle.md`
-2. `.specforge/core/skills/code-intelligence/foundations/freshness-policy.md`
-3. `.specforge/core/skills/code-intelligence/references/codegraph-usage.md`
-4. `.specforge/core/skills/code-intelligence/foundations/graph-facts-contract.md`
+1. `.specforge/core/skills/code-intelligence/references/workflow-playbook.md`
+2. `.specforge/core/skills/code-intelligence/references/provider-and-freshness.md`
+3. `.specforge/core/skills/code-intelligence/references/graph-facts-contract.md`
+4. `.specforge/core/skills/code-intelligence/references/wiki-and-output-contract.md`
 
 Steering 只负责项目画像和 Wiki 回写；provider 的安装 / 接入 / 初始化 / 同步 / query / affected tests 规则由 code-intelligence 能力包统一维护。
 

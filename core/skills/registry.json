@@ -239,7 +239,7 @@
       "category": "code-intelligence",
       "localPath": "code-intelligence",
       "name": "code-intelligence",
-      "role": "SpecForge 跨阶段代码智能能力包：用 Wiki-first、CodeGraph、MCP / SCIP provider、Repomix、bootstrap map 和 rg 定位现有系统范围、调用链、影响面、受影响测试、图谱事实和 Wiki 回写候选。",
+      "role": "SpecForge 跨阶段代码智能主能力包：用 Wiki-first、bounded context、CodeGraph / MCP / SCIP / Repomix / rg、provider freshness、graph_facts、impact / affected tests 和 Wiki 回写候选支撑现有代码事实。",
       "trust": "SpecForge 本地维护，结合 CodeGraph 官方文档、Wiki-first 上下文策略和 graph_facts 归一化契约沉淀",
       "risk": "低",
       "source": {
@@ -249,43 +249,28 @@
         "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/code-intelligence",
         "files": [
           {
-            "path": "foundations/provider-lifecycle.md"
+            "path": "references/workflow-playbook.md"
           },
           {
-            "path": "foundations/freshness-policy.md"
+            "path": "references/provider-and-freshness.md"
           },
           {
-            "path": "foundations/graph-facts-contract.md"
+            "path": "references/graph-facts-contract.md"
           },
           {
-            "path": "foundations/wiki-first-context.md"
-          },
-          {
-            "path": "references/codegraph-usage.md"
-          },
-          {
-            "path": "references/provider-selection.md"
-          },
-          {
-            "path": "references/affected-tests.md"
+            "path": "references/impact-and-affected-tests.md"
           },
           {
             "path": "references/stage-integration.md"
           },
           {
-            "path": "references/anti-patterns.md"
+            "path": "references/wiki-and-output-contract.md"
           },
           {
-            "path": "transforms/codegraph-to-graph-facts.md"
+            "path": "references/quality-guide.md"
           },
           {
-            "path": "transforms/diff-to-impact.md"
-          },
-          {
-            "path": "transforms/graph-facts-to-wiki.md"
-          },
-          {
-            "path": "transforms/graph-facts-to-technical-design.md"
+            "path": "references/query-prompts.md"
           },
           {
             "path": "contracts/graph-fact.schema.json"
@@ -295,12 +280,6 @@
           },
           {
             "path": "contracts/impact-report.schema.json"
-          },
-          {
-            "path": "prompts/graph-query-plan.md"
-          },
-          {
-            "path": "prompts/impact-analysis.md"
           }
         ]
       },
