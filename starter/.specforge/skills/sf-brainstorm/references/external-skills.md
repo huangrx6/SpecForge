@@ -4,7 +4,7 @@
 
 ## 读取原则
 
-1. 先读 `sf-brainstorm/SKILL.md` 和 `.specforge/skills/sf-brainstorm/stages/brainstorm/SKILL.md`，再决定是否读取参考 skill。
+1. 先读 `sf-brainstorm/SKILL.md`、`.specforge/skills/sf-brainstorm/stages/brainstorm/SKILL.md` 和 `.specforge/core/skills/brainstorm/SKILL.md`，再决定是否读取参考 skill。
 2. Brainstorm 包内 skill 可以组成链路使用；跨到产品、设计、验证等外部参考时，默认最多再选择 1 个最相关的外部 skill。`product` / `prd` 是 SpecForge 本地能力包，不计入外部 skill 预算。
 3. 先读目标 skill 的 `SKILL.md`；只有问题落到具体子领域时，才读 `references/` 或 `rules/` 下的相关文件。
 4. 参考 skill 输出先转成 `问题重构 / 事实证据 / 优秀案例与机制拆解 / 发散方向 / 类比迁移 / 场景模拟 / 方案对比 / 批判质疑 / 评估矩阵 / 用户确认记录 / 下一步行动 / 后续阶段输入`，不能原样复制模板标题或结论。
@@ -17,9 +17,9 @@
 | Execution profile | 默认读取 | 条件触发 | 单轮预算 |
 |---|---|---|---|
 | `skip` | 无 | 无 | 0 |
-| `light` | `problem-framing`；需要排序时读 `decision-matrix` | 事实会改变推荐时读 `research-source`；用户给案例或体验方向影响推荐时读 `case-study-scout`；输出容易散时读 `output-shaping` | 最多新增 2 个子 skill |
-| `deep` | `problem-framing`、`case-study-scout`、`divergent-thinking`、`critic-review`、`decision-matrix` | 按需读 `analogy-thinking`、`scenario-simulation`、`research-source`、`execution-planning` | 最多新增 2 个子 skill；需要更多先说明原因 |
-| `research-heavy` | `problem-framing`、`research-source` | 产品 / 体验案例会影响取舍时读 `case-study-scout`；证据足以形成候选后读 `decision-matrix`；需要失败路径压测时读 `scenario-simulation` | 最多新增 2 个子 skill；不足以推荐时升级 research |
+| `light` | `brainstorm` 根入口；需要排序时读 `decision-matrix` | 事实会改变推荐时读 `research-source`；用户给案例或体验方向影响推荐时读 `case-study-scout`；输出容易散时读 `output-shaping` | 最多新增 2 个子 skill |
+| `deep` | `brainstorm` 根入口、`case-study-scout`、`divergent-thinking`、`critic-review`、`decision-matrix` | 按需读 `analogy-thinking`、`scenario-simulation`、`research-source`、`execution-planning` | 最多新增 2 个子 skill；需要更多先说明原因 |
+| `research-heavy` | `brainstorm` 根入口、`research-source` | 产品 / 体验案例会影响取舍时读 `case-study-scout`；证据足以形成候选后读 `decision-matrix`；需要失败路径压测时读 `scenario-simulation` | 最多新增 2 个子 skill；不足以推荐时升级 research |
 
 ## Brainstorm 包内链路
 

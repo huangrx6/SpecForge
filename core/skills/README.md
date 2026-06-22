@@ -38,6 +38,7 @@
 | `pencil` | `ui-ux/pencil` | Pencil MCP 原型读写、组件复用、tokens、布局检查、截图导出和设计转代码参考 | `01-spec/ui-design.md`、`.pen` 源文件、导出截图、前端实现备注 |
 | `design-system` | `ui-ux/design-system` | 用户研究、信息架构、设计模式路由、设计语言、Composition Recipe、专业色阶、foundation_system、机器可读 Design Contract、组件规范、页面模式、shadcn-vue 映射、动效 / GSAP 边界和视觉 QA 审查 | `00-intake/brainstorm.md`、`01-spec/ui-design.md`、`01-spec/design/components/*.contract.md`、Pencil 输入、前端组件契约 |
 | `pencil` | `ui-ux/pencil` | SpecForge 本地 Pencil 原型能力；把已确认 Design Contract JSON、foundation_system、组件契约和视觉 QA 规则落到 `.pen`、Pencil variables、截图和布局证据 | `01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/`、`01-spec/ui-design.md#Wireframe / Prototype Evidence` |
+| `brainstorm` | `brainstorm` | Brainstorm 能力包根入口，负责 profile、案例、事实、讨论和输出合同编排 | `00-intake/brainstorm.md`、`00-intake/brief.md` |
 | `problem-framing` | `brainstorm/problem-framing` | 模糊请求的问题重构、目标澄清、约束和必须确认问题 | `00-intake/brainstorm.md#问题重构`、`#问题地图` |
 | `research-source` | `brainstorm/research-source` | 当前事实查证、来源选择、证据表、版本依赖关系和未查证项 | `00-intake/brainstorm.md#当前事实与研究证据` |
 | `case-study-scout` | `brainstorm/case-study-scout` | 优秀案例侦察、竞品 / 模板站 / 作品站机制拆解和反模板化路线 | `00-intake/brainstorm.md#优秀案例与机制拆解` |
@@ -57,6 +58,7 @@
 
 Brainstorm 控制层：
 
+- `brainstorm/SKILL.md`：Brainstorm 能力包根入口。所有内部子技能和 reference 都从这里路由。
 - `brainstorm/references/read-profiles.md`：profile、case study depth、discussion depth 和读取路径。
 - `brainstorm/references/case-study-protocol.md`：案例来源 family、观察清单、机制拆解和禁止复制边界。
 - `brainstorm/references/discussion-protocol.md`：多轮探讨、单问协议、讨论轨迹和收敛条件。

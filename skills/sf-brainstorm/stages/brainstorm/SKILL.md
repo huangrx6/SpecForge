@@ -15,7 +15,8 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续产品需求�
 - 可选：`00-intake/prd.md`、`01-spec/requirements.md`、`01-spec/ui-design.md`、`01-spec/technical-design.md`。
 - 相关 `.specforge/wiki/` 长期事实。
 - 当前可靠外部资料；技术类优先官方文档，产品/竞品类记录来源和访问日期。
-- `.specforge/core/skills/brainstorm/references/read-profiles.md`（每次先读，用于选择 profile、case study depth、discussion depth 和最短读取链路）。
+- `.specforge/core/skills/brainstorm/SKILL.md`（Brainstorm 能力包根入口；必须先读它，再由它路由到控制文件和子技能）。
+- `.specforge/core/skills/brainstorm/references/read-profiles.md`（由根入口读取，用于选择 profile、case study depth、discussion depth 和最短读取链路）。
 - `.specforge/core/skills/brainstorm/references/discussion-protocol.md`（用于多轮探讨、单问协议、授权默认和讨论轨迹）。
 - `.specforge/core/skills/brainstorm/references/output-contract.md`（用于落档合同、条件 section、handoff 和停止条件）。
 - `.specforge/core/skills/ORCHESTRATION.md`（需要参考 skill 时，用于选择 skill、读取 reference 和归一化输出）。
@@ -46,7 +47,7 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续产品需求�
 
 ## 控制层读取
 
-预算用于控制上下文和避免“为了完整而完整”。先读 `references/read-profiles.md`，选择 `clarify-light / product-discovery / experience-exploration / technical-decision / research-heavy`，再读取该 profile 的最短链路。
+预算用于控制上下文和避免“为了完整而完整”。先读 `.specforge/core/skills/brainstorm/SKILL.md`，再由根入口读取 `references/read-profiles.md`，选择 `clarify-light / product-discovery / experience-exploration / technical-decision / research-heavy`，并读取该 profile 的最短链路。
 
 `read-profiles.md` 是 profile 权威；本文件只执行它。实际读取超过 profile 必读链路 2 个以上文件时，必须在 `brainstorm.md#执行配置` 说明升级原因、预期输出和被跳过内容。
 
@@ -70,7 +71,7 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续产品需求�
    - 涉及事实争议、依赖版本、AI provider、价格、法规、安全或竞品取舍时，将执行 profile 记为 `research-heavy`，即使 brief 原始模式是 `light`。
    - 在 `brainstorm.md#执行配置` 记录：`Brainstorm mode`、`Execution profile`、`Brainstorm profile`、`Case study depth`、`Discussion depth`、`Package skills used`、`External references used`、`Sections marked N/A`。
    - 模式来源见 `sf-intake` 的“Brainstorm 分流规则”和 `core/artifacts/templates/brief.md#Brainstorm 决策`。
-   - 读取 `.specforge/core/skills/brainstorm/references/read-profiles.md`，用 profile 路由决定本轮读取范围；不要跳过控制层。
+   - 读取 `.specforge/core/skills/brainstorm/SKILL.md`，用根入口和 profile 路由决定本轮读取范围；不要直接从零散子技能开始。
    - 读取 `.specforge/core/skills/brainstorm/references/discussion-protocol.md`，用 `Expose -> Ask -> Record` 循环安排多轮探讨。
 1. **框定问题和事实输入。**
    - 请求、目标用户、成功标准、约束或真实冲突不清楚时，先读取 `.specforge/core/skills/brainstorm/problem-framing/SKILL.md`。

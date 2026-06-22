@@ -678,6 +678,49 @@
       ]
     },
     {
+      "id": "brainstorm",
+      "category": "brainstorm",
+      "localPath": "brainstorm",
+      "name": "brainstorm",
+      "role": "Brainstorm 能力包根入口与 progressive disclosure 控制层",
+      "trust": "SpecForge 本地维护，面向 sf-brainstorm 的 profile 路由、案例侦察、事实查证、多轮讨论和输出合同编排",
+      "risk": "低",
+      "source": {
+        "type": "local-authored",
+        "repo": "SpecForge",
+        "path": "core/skills/brainstorm/SKILL.md",
+        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/brainstorm",
+        "files": [
+          {
+            "path": "references/read-profiles.md"
+          },
+          {
+            "path": "references/case-study-protocol.md"
+          },
+          {
+            "path": "references/discussion-protocol.md"
+          },
+          {
+            "path": "references/output-contract.md"
+          },
+          {
+            "path": "data/case-source-catalog.csv"
+          }
+        ]
+      },
+      "trigger": "当 sf-brainstorm 需要系统化处理模糊产品、UI、AI、技术、管理端、网站、工作流或范围取舍时，先使用本根入口选择 profile 和读取路径。",
+      "normalizeTo": [
+        "00-intake/brainstorm.md",
+        "00-intake/brief.md"
+      ],
+      "doNotUseFor": [
+        "跳过 sf-brainstorm 入口直接执行下游阶段",
+        "替代用户确认",
+        "把子技能输出原样复制进 artifact",
+        "把案例灵感写成事实证据"
+      ]
+    },
+    {
       "id": "problem-framing",
       "category": "brainstorm",
       "localPath": "brainstorm/problem-framing",

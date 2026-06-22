@@ -15,6 +15,7 @@
 | `pencil` | `ui-ux/pencil` | UI Design | Pencil `.pen` 原型读写、组件复用、tokens、截图导出、布局检查和设计转代码参考 | `01-spec/ui-design.md`、`01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/` |
 | `design-system` | `ui-ux/design-system` | Brainstorm / UI Design / Technical Design | 用户研究、信息架构、设计模式路由、设计语言、Composition Recipe、专业色阶、foundation_system、机器可读 Design Contract、组件规范、页面模式、shadcn-vue 映射、动效 / GSAP 边界和视觉 QA 审查 | `00-intake/brainstorm.md`、`01-spec/ui-design.md`、`01-spec/design/components/*.contract.md`、Pencil 输入、前端组件契约 |
 | `pencil` | `ui-ux/pencil` | UI Design / Implementation | 本地 Pencil 原型落地，把已确认 Design Contract JSON、foundation_system 和组件契约同步到 `.pen` variables、组件复用、截图和布局证据 | `01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/`、`01-spec/ui-design.md#Wireframe / Prototype Evidence` |
+| `brainstorm` | `brainstorm` | Brainstorm | Brainstorm 能力包根入口；负责 profile 路由、progressive disclosure、案例 / 事实 / 讨论 / 输出合同编排 | `00-intake/brainstorm.md`、`00-intake/brief.md` |
 | `problem-framing` | `brainstorm/problem-framing` | Brainstorm | 把模糊请求重构为目标、受众、约束、假设和必须确认问题 | `00-intake/brainstorm.md#问题重构`、`#问题地图` |
 | `research-source` | `brainstorm/research-source` | Brainstorm / Research | 当前事实查证、来源选择、证据表、置信度和未查证项 | `00-intake/brainstorm.md#当前事实与研究证据` |
 | `case-study-scout` | `brainstorm/case-study-scout` | Brainstorm | 按 read profile、case-study protocol 和 source catalog 查询优秀案例、拆解可迁移机制、避免模板化方案和形成体验 / 产品机制路线 | `00-intake/brainstorm.md#优秀案例与机制拆解`、`#方案对比` |
@@ -62,7 +63,7 @@
 
 ### Brainstorm
 
-- Brainstorm 不是单纯事实查证；默认先读 `brainstorm/references/read-profiles.md` 选择 profile，再用 `problem-framing` 明确问题，并按 profile 决定是否进入案例侦察、事实查证、发散、类比、模拟、批判、矩阵、输出和行动计划。
+- Brainstorm 不是单纯事实查证；默认先读 `brainstorm/SKILL.md` 作为能力包根入口，再由它读取 `brainstorm/references/read-profiles.md` 选择 profile，并按 profile 决定是否进入案例侦察、事实查证、发散、类比、模拟、批判、矩阵、输出和行动计划。
 - 先确定 `Brainstorm profile`、`Case study depth` 和 `Discussion depth`，再读取子 skill，避免 light brainstorm 被迫填满 deep artifact，或 deep brainstorm 只读一个资料查询 skill。
 - 多轮探讨按 `brainstorm/references/discussion-protocol.md` 执行：Expose -> Ask -> Record，每轮只问一个会改变方向的问题，并记录讨论轨迹。
 - 输出前按 `brainstorm/references/output-contract.md` 检查 Always Output、Conditional Output、Stop Conditions 和 Cross-stage Handoff。
