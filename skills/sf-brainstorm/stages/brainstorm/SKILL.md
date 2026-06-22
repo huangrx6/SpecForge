@@ -1,6 +1,6 @@
 ---
 name: brainstorm
-description: SpecForge 内部 brainstorm 阶段技能。用于在 intake、产品需求文档、需求规格、界面设计或技术设计前后，对模糊方向做用户参与式发散、研究、取舍和确认。
+description: SpecForge 内部 brainstorm 阶段技能。用于在 intake、产品需求文档、需求规格、界面设计或技术设计前后，对模糊方向做用户参与式发散、优秀案例侦察、事实研究、多轮探讨、取舍和确认。
 ---
 
 # Brainstorm Skill
@@ -17,10 +17,12 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续产品需求�
 - 当前可靠外部资料；技术类优先官方文档，产品/竞品类记录来源和访问日期。
 - `.specforge/core/skills/ORCHESTRATION.md`（需要参考 skill 时，用于选择 skill、读取 reference 和归一化输出）。
 - `.specforge/core/skills/brainstorm/research-source/SKILL.md`（需要外部事实、版本、竞品、价格、漏洞、法规或 AI provider 资料时，用于搜索来源和证据记录）。
+- `.specforge/core/skills/brainstorm/case-study-scout/SKILL.md`（需要优秀案例、竞品、模板站、作品站、截图或高级交互 / 视觉 / 工作流机制参考时，用于查询案例和拆解可迁移机制）。
 
 ## 触发
 
 - 模糊产品想法、页面体验、AI 能力、运营后台、多角色流程、审批/权限/数据生命周期。
+- 用户给出网站、模板站、优秀案例、竞品、截图或要求“高级一点 / 不要模板化 / 多找案例 / 多探讨方向”。
 - 产品需求文档或需求规格前缺少最小可行版本、用户角色、成功标准、非目标或功能候选池。
 - UI design 前缺少信息架构、关键任务、状态矩阵或交互风格方向。
 - `instructions.mjs` 给出 `ui-direction-unconfirmed` blocker。
@@ -34,7 +36,7 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续产品需求�
 
 需要参考 skill 时，先读 `.specforge/core/skills/ORCHESTRATION.md`，再选择最相关的 skill 和最小必要 reference。
 
-1. 参考输出先提取为 `问题重构 / 事实证据 / 发散方向 / 类比迁移 / 场景模拟 / 批判质疑 / 评估矩阵 / 候选方案 / 风险提示 / 验收问题 / 下一步行动 / 后续阶段输入`。
+1. 参考输出先提取为 `问题重构 / 事实证据 / 优秀案例与机制拆解 / 发散方向 / 类比迁移 / 场景模拟 / 批判质疑 / 评估矩阵 / 候选方案 / 风险提示 / 验收问题 / 下一步行动 / 后续阶段输入`。
 2. 再并入问题地图：会改变方向的放入 `[必须确认]`；只影响后续细化的写入对应下游阶段输入。
 3. 不把参考 skill 的角色设定、产品需求文档、故事、审查清单、测试建议或技术推荐写成已确认，除非用户明确确认。
 4. 用户确认后，立即写入对应确认状态或真实 confirmed marker。
@@ -46,9 +48,9 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续产品需求�
 | Execution profile | 默认读取 | 条件触发 | 不读时的记录 |
 |---|---|---|---|
 | `skip` | 无 | 无 | 写跳过理由和下一步路由 |
-| `light` | `problem-framing`；需要排序时读 `decision-matrix` | 只有事实会改变推荐时读 `research-source`；只有输出会变散时读 `output-shaping` | 未使用的类比、场景、研究 section 写 `N/A + 理由` |
-| `deep` | `problem-framing`、`divergent-thinking`、`critic-review`、`decision-matrix` | 按需读 `analogy-thinking`、`scenario-simulation`、`research-source`、`execution-planning` | 说明未读子 skill 不影响推荐可信度 |
-| `research-heavy` | `problem-framing`、`research-source` | 证据足以形成候选后才读 `decision-matrix`；需要失败路径压测时读 `scenario-simulation` | 不足以推荐时写 `unclear`、未查证项和升级条件 |
+| `light` | `problem-framing`；需要排序时读 `decision-matrix` | 只有事实会改变推荐时读 `research-source`；用户给出案例或体验方向会影响推荐时读 `case-study-scout`；只有输出会变散时读 `output-shaping` | 未使用的案例、类比、场景、研究 section 写 `N/A + 理由` |
+| `deep` | `problem-framing`、`case-study-scout`、`divergent-thinking`、`critic-review`、`decision-matrix` | 按需读 `analogy-thinking`、`scenario-simulation`、`research-source`、`execution-planning` | 说明未读子 skill 不影响推荐可信度；有 UI / 产品体验时不能省略案例机制拆解 |
+| `research-heavy` | `problem-framing`、`research-source` | 案例会影响产品 / 体验取舍时读 `case-study-scout`；证据足以形成候选后才读 `decision-matrix`；需要失败路径压测时读 `scenario-simulation` | 不足以推荐时写 `unclear`、未查证项和升级条件 |
 
 ## 过程
 
@@ -77,17 +79,23 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续产品需求�
    - 版本依赖关系只作为 brainstorm 风险和交接；最终锁版本、依赖确认、兼容策略和验证方案交给 `sf-tech-design`。
    - 不需要外部研究时写明 `跳过理由：[具体原因]`，不允许只写“无需外部研究”。
    - 需要参考 skill 时，按 `.specforge/core/skills/ORCHESTRATION.md` 选择并读取；输出必须按“参考 Skill 归一化”处理。
-3. **建立问题地图。**
+3. **侦察优秀案例和可迁移机制。**
+   - 用户提供案例、截图、模板站、竞品或要求更高级 / 不模板化时，必须读取 `.specforge/core/skills/brainstorm/case-study-scout/SKILL.md`。
+   - 产品体验、管理端、数据看板、AI 工具、网站、品牌页、内容工具或工作流方向会影响后续设计 / 实现时，默认读取 `case-study-scout`；跳过必须写具体理由。
+   - 不能只列案例名。必须记录案例池、URL 或截图路径、访问日期、值得看的点、可迁移机制、不能照搬点和证据状态。
+   - 至少形成 2 条互斥机制路线，并写清成本、风险和后续验证；不要把所有优秀案例特点堆成一个不可落地的大方案。
+   - 如果案例声明涉及具体功能、价格、发布状态、性能、安全或法规，交给 `research-source` 查证，不能让案例侦察替代事实查证。
+4. **建立问题地图。**
    - 建立问题地图：`[已明确]`、`[必须确认]`、`[可安全默认]`。
    - 若对某项是否“明显最优”存在任何不确定，强制划入 `[必须确认]`。
    - 将所有 `[必须确认]` 按以下维度排序：核心目标/范围 > 体验方向 > 数据与安全 > 集成与依赖 > 交付验收。
-4. **Phase 1 发散。**
+5. **Phase 1 发散。**
    - 仅 `deep` 必填；`light` 可写 N/A 和理由。
    - 需要发散时读取 `.specforge/core/skills/brainstorm/divergent-thinking/SKILL.md`；候选方案同质化或需要差异化机制时，再读取 `.specforge/core/skills/brainstorm/analogy-thinking/SKILL.md`。
-   - 从五个维度列出可能性，不先筛选：用户目标、解法可能性、技术路线、风险未知、不做什么。
+   - 从六个维度列出可能性，不先筛选：用户目标、解法可能性、案例机制路线、技术路线、风险未知、不做什么。
    - 给用户看发散清单，询问是否有遗漏的重要方向。
-   - 给用户前先自检：至少一个反直觉方案；考虑做更少或不做；技术路线至少两条；明确最大未知风险。
-5. **Phase 2 聚焦。**
+   - 给用户前先自检：至少一个反直觉方案；至少一个来自案例机制但经过本项目适配的方案；考虑做更少或不做；技术路线至少两条；明确最大未知风险。
+6. **Phase 2 聚焦。**
    - `deep` profile 给出方案前，读取 `.specforge/core/skills/brainstorm/scenario-simulation/SKILL.md`，用关键场景、失败路径和边界条件压测候选。
    - `light` / `research-heavy` profile 只有当场景、失败路径或边界条件会改变推荐时才读取 `scenario-simulation`；否则在 `执行配置` 标记 `场景模拟: N/A + 理由`。
    - 推荐方案前，读取 `.specforge/core/skills/brainstorm/critic-review/SKILL.md`，暴露最弱假设、反例、可删范围和验证点。
@@ -95,7 +103,7 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续产品需求�
    - 给出 2-3 个互斥方案或最小可行版本组合。
    - 每个方案必须包含：用户价值、实现成本、主要风险、适用场景、放弃代价。
    - 方案之间必须真的不同，不能只是同一方案的措辞变化。
-6. **收敛取舍（Socratic 逐问协议）。**
+7. **收敛取舍（Socratic 逐问协议）。**
 
    **铁律：每次只问一个问题。用户回答之前不得提出下一个问题。**
 
@@ -128,11 +136,11 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续产品需求�
    - 工程工具链：`Tooling Decision Status: confirmed` 或真实 `[TOOLING DECISION CONFIRMED]`；用户授权默认写 `Tooling Decision Status: delegated_default`；沿用现有栈写 `Tooling Decision Status: existing_stack`。
 
    用户未确认前，不能把推荐项写成 approved。
-7. **每轮落档同步。**
+8. **每轮落档同步。**
    - 每轮结束都更新阶段记录；不要只在最终收敛时才回忆写入。
    - Embedded 模式写入 `00-intake/brainstorm.md` 并同步 `00-intake/brief.md`。
    - Standalone / Lightweight 模式写入 `specforge-import-ready.md` 格式内容。
-8. **收敛落档。**
+9. **收敛落档。**
    - 写入前读取 `.specforge/core/skills/brainstorm/output-shaping/SKILL.md`，选择适合本轮的输出形态。
    - 需要进入产品需求文档、需求规格、界面设计、技术设计、研究或验证阶段时，读取 `.specforge/core/skills/brainstorm/execution-planning/SKILL.md`，写清交接、负责人、输入产物和验证入口。
    - 写入 `00-intake/brainstorm.md`。
@@ -163,6 +171,12 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续产品需求�
   - 涉及依赖 / SDK / runtime / package manager 时，必须写版本依赖关系表：`依赖 / 技术 | 当前 / 候选版本 | 关系类型 | 约束来源 | 影响 | 交接`。
   - 必须写覆盖度说明：已达到 quick / standard / dependency / high-stakes 哪个查证深度，缺口是什么。
   - 未查证项必须列 checklist：`- [ ] 问题描述 → 待查来源`。
+- 优秀案例与机制拆解。
+  - 必须先写侦察问题：本轮找什么、不找什么。
+  - 必须写案例池：`案例 | 类型 | 来源 / URL | 访问日期 | 值得看的点 | 可迁移机制 | 不能照搬 | 证据状态`。
+  - 必须写机制路线：`路线 | 来自哪些案例 | 适合当前项目的原因 | 成本 | 风险 | 后续验证`。
+  - 必须写反模板化提醒：当前最容易落入的套路、应避免的视觉 / 交互、可以尝试的差异化机制。
+  - 无需案例侦察时写 `N/A + 具体理由`，不能留空。
 - 问题地图：已明确 / 必须确认 / 可安全默认，且必须确认项带优先级。
 - 发散方向池：保守 / 标准 / 激进 / 实验 / 反直觉方向。
 - 类比迁移：类比来源、可迁移机制、调整方式和风险。

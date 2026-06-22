@@ -744,6 +744,33 @@
       ]
     },
     {
+      "id": "case-study-scout",
+      "category": "brainstorm",
+      "localPath": "brainstorm/case-study-scout",
+      "name": "case-study-scout",
+      "role": "brainstorm 优秀案例侦察与机制拆解",
+      "trust": "SpecForge 本地维护，面向优秀案例、竞品、模板站、作品站和交互模式的可迁移机制提取",
+      "risk": "低",
+      "source": {
+        "type": "local-authored",
+        "repo": "SpecForge",
+        "path": "core/skills/brainstorm/case-study-scout/SKILL.md",
+        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/brainstorm/case-study-scout"
+      },
+      "trigger": "当 sf-brainstorm 需要参考优秀案例、竞品、模板站、作品站、官网、截图或高级交互 / 视觉 / 工作流机制，并避免模板化方案时使用。",
+      "normalizeTo": [
+        "00-intake/brainstorm.md#优秀案例与机制拆解",
+        "00-intake/brainstorm.md#方案选项",
+        "00-intake/brainstorm.md#参考 Skill 使用记录"
+      ],
+      "doNotUseFor": [
+        "替代用户确认",
+        "复制竞品文案、品牌资产、专有交互或代码",
+        "替代 research-source 的事实查证",
+        "把灵感案例写成已批准方案"
+      ]
+    },
+    {
       "id": "divergent-thinking",
       "category": "brainstorm",
       "localPath": "brainstorm/divergent-thinking",

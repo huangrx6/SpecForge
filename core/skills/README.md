@@ -40,6 +40,7 @@
 | `pencil` | `ui-ux/pencil` | SpecForge 本地 Pencil 原型能力；把已确认 Design Contract JSON、foundation_system、组件契约和视觉 QA 规则落到 `.pen`、Pencil variables、截图和布局证据 | `01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/`、`01-spec/ui-design.md#Wireframe / Prototype Evidence` |
 | `problem-framing` | `brainstorm/problem-framing` | 模糊请求的问题重构、目标澄清、约束和必须确认问题 | `00-intake/brainstorm.md#问题重构`、`#问题地图` |
 | `research-source` | `brainstorm/research-source` | 当前事实查证、来源选择、证据表、版本依赖关系和未查证项 | `00-intake/brainstorm.md#当前事实与研究证据` |
+| `case-study-scout` | `brainstorm/case-study-scout` | 优秀案例侦察、竞品 / 模板站 / 作品站机制拆解和反模板化路线 | `00-intake/brainstorm.md#优秀案例与机制拆解` |
 | `divergent-thinking` | `brainstorm/divergent-thinking` | 多角度发散候选方向，包含保守、标准、激进、实验和反直觉方案 | `00-intake/brainstorm.md#发散方向池` |
 | `analogy-thinking` | `brainstorm/analogy-thinking` | 从其他产品、行业、系统迁移可用机制 | `00-intake/brainstorm.md#类比迁移` |
 | `scenario-simulation` | `brainstorm/scenario-simulation` | 用真实场景、失败路径和执行上下文检验方案 | `00-intake/brainstorm.md#场景模拟` |

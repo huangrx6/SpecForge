@@ -7,18 +7,19 @@
 1. 先读 `sf-brainstorm/SKILL.md` 和 `.specforge/skills/sf-brainstorm/stages/brainstorm/SKILL.md`，再决定是否读取参考 skill。
 2. Brainstorm 包内 skill 可以组成链路使用；跨到产品、设计、验证等外部参考时，默认最多再选择 1 个最相关的外部 skill。`product` / `prd` 是 SpecForge 本地能力包，不计入外部 skill 预算。
 3. 先读目标 skill 的 `SKILL.md`；只有问题落到具体子领域时，才读 `references/` 或 `rules/` 下的相关文件。
-4. 参考 skill 输出先转成 `问题重构 / 事实证据 / 发散方向 / 类比迁移 / 场景模拟 / 方案对比 / 批判质疑 / 评估矩阵 / 用户确认记录 / 下一步行动 / 后续阶段输入`，不能原样复制模板标题或结论。
+4. 参考 skill 输出先转成 `问题重构 / 事实证据 / 优秀案例与机制拆解 / 发散方向 / 类比迁移 / 场景模拟 / 方案对比 / 批判质疑 / 评估矩阵 / 用户确认记录 / 下一步行动 / 后续阶段输入`，不能原样复制模板标题或结论。
 5. 涉及当前事实、版本、法规、价格、竞品、安全或漏洞时，必须另行查可靠来源；参考 skill 不提供事实背书，除非它明确要求实际联网查证并记录来源。
 6. 查证外部事实时优先读取 `.specforge/core/skills/brainstorm/research-source/SKILL.md`，把搜索计划、来源、日期、结论和置信度写入 `brainstorm.md#当前事实与研究证据`。
+7. 查找优秀案例、竞品、模板站、作品站、官网或交互参考时优先读取 `.specforge/core/skills/brainstorm/case-study-scout/SKILL.md`，把案例池、可迁移机制、不能照搬点和反模板化提醒写入 `brainstorm.md#优秀案例与机制拆解`。
 
 ## 子 Skill 调用预算
 
 | Execution profile | 默认读取 | 条件触发 | 单轮预算 |
 |---|---|---|---|
 | `skip` | 无 | 无 | 0 |
-| `light` | `problem-framing`；需要排序时读 `decision-matrix` | 事实会改变推荐时读 `research-source`；输出容易散时读 `output-shaping` | 最多新增 2 个子 skill |
-| `deep` | `problem-framing`、`divergent-thinking`、`critic-review`、`decision-matrix` | 按需读 `analogy-thinking`、`scenario-simulation`、`research-source`、`execution-planning` | 最多新增 2 个子 skill；需要更多先说明原因 |
-| `research-heavy` | `problem-framing`、`research-source` | 证据足以形成候选后读 `decision-matrix`；需要失败路径压测时读 `scenario-simulation` | 最多新增 2 个子 skill；不足以推荐时升级 research |
+| `light` | `problem-framing`；需要排序时读 `decision-matrix` | 事实会改变推荐时读 `research-source`；用户给案例或体验方向影响推荐时读 `case-study-scout`；输出容易散时读 `output-shaping` | 最多新增 2 个子 skill |
+| `deep` | `problem-framing`、`case-study-scout`、`divergent-thinking`、`critic-review`、`decision-matrix` | 按需读 `analogy-thinking`、`scenario-simulation`、`research-source`、`execution-planning` | 最多新增 2 个子 skill；需要更多先说明原因 |
+| `research-heavy` | `problem-framing`、`research-source` | 产品 / 体验案例会影响取舍时读 `case-study-scout`；证据足以形成候选后读 `decision-matrix`；需要失败路径压测时读 `scenario-simulation` | 最多新增 2 个子 skill；不足以推荐时升级 research |
 
 ## Brainstorm 包内链路
 
@@ -27,14 +28,15 @@
 | Profile | 何时使用 | 必读子 skill | 可选子 skill | 输出约束 |
 |---|---|---|---|---|
 | `skip` | brief 已确认无需 brainstorm | 无 | 无 | 只写跳过理由和下一步路由 |
-| `light` | 低风险取舍、用户只需要快速比较 | `problem-framing`、`divergent-thinking`、`critic-review`、`decision-matrix`、`output-shaping` | `research-source`、`execution-planning` | 未使用 section 写 `N/A + 理由` |
-| `deep` | 方案空间不清、会影响产品/体验/技术方向 | `problem-framing`、`divergent-thinking`、`scenario-simulation`、`critic-review`、`decision-matrix`、`output-shaping`、`execution-planning` | `research-source`、`analogy-thinking` | 必须保留完整取舍链路 |
-| `research-heavy` | 当前事实、版本、价格、法规、安全、竞品或 AI provider 证据影响方向 | `problem-framing`、`research-source`、`critic-review`、`decision-matrix`、`execution-planning` | `divergent-thinking`、`scenario-simulation`、`analogy-thinking` | 必须记录覆盖度、未查证项和是否升级 `sf-discovery` research |
+| `light` | 低风险取舍、用户只需要快速比较 | `problem-framing`、`divergent-thinking`、`critic-review`、`decision-matrix`、`output-shaping` | `research-source`、`case-study-scout`、`execution-planning` | 未使用 section 写 `N/A + 理由` |
+| `deep` | 方案空间不清、会影响产品/体验/技术方向 | `problem-framing`、`case-study-scout`、`divergent-thinking`、`scenario-simulation`、`critic-review`、`decision-matrix`、`output-shaping`、`execution-planning` | `research-source`、`analogy-thinking` | 必须保留完整取舍链路；有 UI / 产品体验时必须保留案例机制拆解 |
+| `research-heavy` | 当前事实、版本、价格、法规、安全、竞品或 AI provider 证据影响方向 | `problem-framing`、`research-source`、`critic-review`、`decision-matrix`、`execution-planning` | `case-study-scout`、`divergent-thinking`、`scenario-simulation`、`analogy-thinking` | 必须记录覆盖度、未查证项和是否升级 `sf-discovery` research |
 
 | 触发问题 | 优先参考 | 按需读取的 reference | 提取为 | 归一化到 |
 |---|---|---|---|---|
 | 用户问题、目标用户、约束、成功标准或真实冲突不清楚 | `problem-framing` | `SKILL.md` | 问题重构、目标、约束、假设、必须确认问题 | `brainstorm.md#问题重构`、`#问题地图` |
 | 当前事实、版本、价格、依赖、竞品、AI provider、漏洞或法规会影响取舍 | `research-source` | `SKILL.md`；按需读 `references/research-protocol.md`、`references/source-index.md`、`references/evidence-contract.md`、`references/dependency-version-map.md` | 搜索问题、本地事实、来源类型、证据表、版本依赖关系、置信度、未查证项 | `brainstorm.md#当前事实与研究证据`、`#问题地图`、`#方案对比` |
+| 用户给出优秀案例 / 模板站 / 竞品 / 截图，或产品、管理端、网站、AI 工具、工作流体验需要跳出模板化 | `case-study-scout` | `SKILL.md` | 案例池、URL / 截图路径、访问日期、可迁移机制、不能照搬点、机制路线、反模板化提醒 | `brainstorm.md#优秀案例与机制拆解`、`#方案对比`、后续 `ui-design.md` / `prd.md` 输入 |
 | 需要多个候选方向，或当前方案过早收敛 | `divergent-thinking` | `SKILL.md` | 保守、标准、激进、实验、反直觉方向 | `brainstorm.md#发散方向池` |
 | 方案同质化，需要跨产品、行业或系统迁移机制 | `analogy-thinking` | `SKILL.md` | 类比来源、可迁移机制、调整方式、风险 | `brainstorm.md#类比迁移` |
 | 方案需要放进真实使用流程、失败路径或边界场景里检验 | `scenario-simulation` | `SKILL.md` | 关键场景、用户动作、系统响应、失败点、补救策略 | `brainstorm.md#场景模拟` |
@@ -49,7 +51,7 @@
 |---|---|---|---|---|
 | 产品目标、最小可行版本、功能候选、机会、假设压力测试或优先级不清楚 | `product` | `SKILL.md`；按需读 `references/output-contract.md`、`references/prioritization-methods.md`、`references/experiment-design.md` | 目标结果、机会图、功能池、最小可行版本建议、实验、产品需求文档交接 | `brainstorm.md#问题地图`、`#方案对比`、`brief.md#功能候选池`、后续 `prd.md` 输入 |
 | 需要外部机会树视角补机会或功能优先级方法 | `opportunity-solution-tree` | `SKILL.md`；按需读 `references/brainstorm-ideas-new.md`、`references/brainstorm-ideas-existing.md`、`references/analyze-feature-requests.md`、`references/prioritize-features.md`、`references/prioritization-frameworks.md` | 用户机会、候选方向、关键假设、实验、取舍问题、优先级线索 | 先归一化到 `product` 产物，再写入 `brainstorm.md` / `prd.md` 输入 |
-| 体验方向、目标用户、用户旅程、信息架构、交互风格、可访问性或美学方向不清楚 | `design-system` | 先读 `SKILL.md`；再按需读 `references/creative-direction.md`、`references/design-composition.md`、`references/product-ui-signature-patterns.md`、`references/visual-qa-detectors.md` | 体验方向候选、用户旅程风险、信息架构问题、可访问性约束、美学方向候选 | `brainstorm.md#问题地图`、`#方案对比`、`#参考 Skill 使用记录`、后续 `ui-design.md` 输入 |
+| 体验方向、目标用户、用户旅程、信息架构、交互风格、可访问性或美学方向不清楚 | `design-system` | 先读 `SKILL.md`；再按需读 `references/creative-direction.md`、`references/design-composition.md`、`references/product-ui-signature-patterns.md`、`references/visual-qa-detectors.md` | 体验方向候选、用户旅程风险、信息架构问题、可访问性约束、美学方向候选 | `brainstorm.md#问题地图`、`#优秀案例与机制拆解`、`#方案对比`、`#参考 Skill 使用记录`、后续 `ui-design.md` 输入 |
 | 官网、落地页、作品集、品牌页或重设计的视觉方向容易模板化 | `design-taste-frontend` | `SKILL.md`；只在需要时读取其参考资料 | 品牌表层的视觉气质、版式候选、动效边界、反模板化风险 | `brainstorm.md#界面与体验方向确认`、后续 `ui-design.md#视觉风格简报` |
 | 管理端采用 shadcn/ui，但需要判断组件封装、注册表候选或避免基础组件拼装 | shadcn 官方 skill / shadcn 注册表参考 | 官方 shadcn skill、`npx shadcn@latest docs/search/view` 输出；按需参考 `shadcn-component-discovery` / `shadcn-component-review` | 基础组件选择、注册表候选、管理端组件契约、组件审查点 | `brainstorm.md#技术路线确认`、`#界面与体验方向确认`、后续 `ui-design.md` 和 `technical_design.md` 输入 |
 | 用户故事、验收口径、边界条件会影响方案取舍 | `user-stories` | `SKILL.md` | 用户故事候选、验收问题、边界/异常问题 | `brainstorm.md#问题地图`、后续 `requirements.md` 输入 |
@@ -74,7 +76,7 @@
 
 | Skill | 读取内容 | 提取结果 | 归一化到 | 不能替代的确认 |
 |---|---|---|---|---|
-| problem-framing / research-source / divergent-thinking / analogy-thinking / scenario-simulation / critic-review / decision-matrix / output-shaping / execution-planning / external skill | `SKILL.md` / 具体参考路径 | 简短列出 2-5 条 | 问题重构 / 事实证据 / 发散方向 / 类比 / 场景 / 批判 / 矩阵 / 下一步 / 下游输入 | 用户确认最小可行版本 / 界面方向 / 技术路线 / 依赖 / 工具链 / 验收口径 |
+| problem-framing / research-source / case-study-scout / divergent-thinking / analogy-thinking / scenario-simulation / critic-review / decision-matrix / output-shaping / execution-planning / external skill | `SKILL.md` / 具体参考路径 | 简短列出 2-5 条 | 问题重构 / 事实证据 / 优秀案例与机制拆解 / 发散方向 / 类比 / 场景 / 批判 / 矩阵 / 下一步 / 下游输入 | 用户确认最小可行版本 / 界面方向 / 技术路线 / 依赖 / 工具链 / 验收口径 |
 
 ## 禁止事项
 

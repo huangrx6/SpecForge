@@ -17,6 +17,7 @@
 | `pencil` | `ui-ux/pencil` | UI Design / Implementation | 本地 Pencil 原型落地，把已确认 Design Contract JSON、foundation_system 和组件契约同步到 `.pen` variables、组件复用、截图和布局证据 | `01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/`、`01-spec/ui-design.md#Wireframe / Prototype Evidence` |
 | `problem-framing` | `brainstorm/problem-framing` | Brainstorm | 把模糊请求重构为目标、受众、约束、假设和必须确认问题 | `00-intake/brainstorm.md#问题重构`、`#问题地图` |
 | `research-source` | `brainstorm/research-source` | Brainstorm / Research | 当前事实查证、来源选择、证据表、置信度和未查证项 | `00-intake/brainstorm.md#当前事实与研究证据` |
+| `case-study-scout` | `brainstorm/case-study-scout` | Brainstorm | 查询优秀案例、拆解可迁移机制、避免模板化方案和形成体验 / 产品机制路线 | `00-intake/brainstorm.md#优秀案例与机制拆解`、`#方案对比` |
 | `divergent-thinking` | `brainstorm/divergent-thinking` | Brainstorm | 从多种视角发散候选方向，避免过早收敛 | `00-intake/brainstorm.md#发散方向池` |
 | `analogy-thinking` | `brainstorm/analogy-thinking` | Brainstorm | 从其他产品、行业或系统迁移机制，形成差异化选项 | `00-intake/brainstorm.md#类比迁移` |
 | `scenario-simulation` | `brainstorm/scenario-simulation` | Brainstorm | 用真实使用场景、失败路径和边界条件压测方案 | `00-intake/brainstorm.md#场景模拟` |
@@ -67,25 +68,27 @@
 | Profile | 必读子 skill | 可选子 skill | 输出要求 |
 |---|---|---|---|
 | `skip` | 无 | 无 | 写明跳过理由和下一步路由 |
-| `light` | `problem-framing`、`divergent-thinking`、`critic-review`、`decision-matrix`、`output-shaping` | `research-source`、`execution-planning` | 允许未使用 section 写 `N/A + 理由` |
-| `deep` | `problem-framing`、`divergent-thinking`、`scenario-simulation`、`critic-review`、`decision-matrix`、`output-shaping`、`execution-planning` | `research-source`、`analogy-thinking` | 必须留下完整取舍链路 |
-| `research-heavy` | `problem-framing`、`research-source`、`critic-review`、`decision-matrix`、`execution-planning` | `divergent-thinking`、`scenario-simulation`、`analogy-thinking` | 必须记录证据覆盖度、未查证项和是否升级 `sf-discovery` research |
+| `light` | `problem-framing`、`divergent-thinking`、`critic-review`、`decision-matrix`、`output-shaping` | `research-source`、`case-study-scout`、`execution-planning` | 允许未使用 section 写 `N/A + 理由` |
+| `deep` | `problem-framing`、`case-study-scout`、`divergent-thinking`、`scenario-simulation`、`critic-review`、`decision-matrix`、`output-shaping`、`execution-planning` | `research-source`、`analogy-thinking` | 必须留下完整取舍链路；有 UI / 产品体验时必须有案例机制拆解 |
+| `research-heavy` | `problem-framing`、`research-source`、`critic-review`、`decision-matrix`、`execution-planning` | `case-study-scout`、`divergent-thinking`、`scenario-simulation`、`analogy-thinking` | 必须记录证据覆盖度、未查证项和是否升级 `sf-discovery` research |
 
 - 标准联动顺序：
   1. `problem-framing`：请求含糊、目标/范围/用户不清时必读。
   2. `research-source`：当前事实、版本、价格、竞品、AI provider、法规、漏洞或依赖会影响取舍时必读。
-  3. `divergent-thinking`：需要 2 个以上候选方向或用户要求“帮我想想”时必读。
-  4. `analogy-thinking`：候选方案同质化、需要差异化机制或跨行业借鉴时读取。
-  5. `scenario-simulation`：方案会进入产品/流程/工程落地前，用场景、失败路径和边界条件压测。
-  6. `critic-review`：推荐方案出现前，检查假设、过度设计、反例和可删除范围。
-  7. `decision-matrix`：需要排序、推荐或用户授权默认时读取。
-  8. `output-shaping`：把输出固定为想法池、方案矩阵、最小可行版本路线图、风险清单或行动表。
-  9. `execution-planning`：收敛后写清下一步路由、handoff 和验证入口。
+  3. `case-study-scout`：用户给出优秀案例、要求更高级 / 不模板化，或当前方向涉及产品体验、管理端、网站、AI 工具、工作流时读取。
+  4. `divergent-thinking`：需要 2 个以上候选方向或用户要求“帮我想想”时必读。
+  5. `analogy-thinking`：候选方案同质化、需要差异化机制或跨行业借鉴时读取。
+  6. `scenario-simulation`：方案会进入产品/流程/工程落地前，用场景、失败路径和边界条件压测。
+  7. `critic-review`：推荐方案出现前，检查假设、过度设计、反例和可删除范围。
+  8. `decision-matrix`：需要排序、推荐或用户授权默认时读取。
+  9. `output-shaping`：把输出固定为想法池、方案矩阵、最小可行版本路线图、风险清单或行动表。
+  10. `execution-planning`：收敛后写清下一步路由、handoff 和验证入口。
 - 按本节判断是否还需参考 `product`、`prd`、`opportunity-solution-tree`、`design-system`、`user-stories`、`create-prd` 或 `playwright-skill`。
 - 先读目标 skill 的 `SKILL.md`；只有问题落到具体子领域时，才读 `references/` 或 `rules/` 下的相关文件。
 - `product` 是产品发现主能力包；`opportunity-solution-tree` 的 references 只在需要外部 OST 视角时读取：新产品点子、存量产品点子、需求 triage、功能优先级或优先级框架。
 - 参考 skill 输出必须先归一化成 SpecForge 问题地图、方案对比、用户确认记录或后续阶段输入；不得把外部模板原样写进 `brainstorm.md`。
 - 当前事实、版本、依赖、价格、竞品、AI provider、漏洞、法规或浏览器兼容性会影响取舍时，先参考 `research-source`，再把证据表写入 `brainstorm.md#当前事实与研究证据`。
+- 优秀案例、作品站、模板站或竞品会影响体验 / 产品机制时，先参考 `case-study-scout`，再把案例池、可迁移机制和不能照搬点写入 `brainstorm.md#优秀案例与机制拆解`。
 - 用户确认 UI / 视觉 / 体验方向、技术路线、依赖、工具链或验收口径后，必须写入对应 confirmed 状态；未确认时只能写 pending 和 `[NEEDS ... DECISION]`。
 
 ### Requirements
