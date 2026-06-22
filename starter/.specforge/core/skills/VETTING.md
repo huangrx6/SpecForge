@@ -18,7 +18,7 @@
 | `decision-matrix` | SpecForge local-authored | 0 | 可能把主观评分伪装成客观事实 | 分数必须附理由和置信度，不能替代用户取舍 |
 | `output-shaping` | SpecForge local-authored | 0 | 可能为了格式完整而填充无证据内容 | 只控制输出结构，缺失项必须写 unknown / pending |
 | `execution-planning` | SpecForge local-authored | 0 | 可能把行动计划误写成已批准任务 | 只作为 handoff 和下一步路由，不能替代 tasks 或 gate |
-| `code-review` | SpecForge local-authored | 16 | 可能被误用为直接改代码或绕过 `sf-code-review` | 只作为本地 code review 主能力包，产出必须落到 `04-code-review/code-review-v1.md` 并由 `sf-code-review` 更新 gate |
+| `code-review` | SpecForge local-authored | 5 | 可能被误用为直接改代码或绕过 `sf-code-review` | 只作为本地 code review 主能力包，产出必须落到 `04-code-review/code-review-v1.md` 并由 `sf-code-review` 更新 gate |
 | `test-engineering` | SpecForge local-authored | 32 | 可能把测试计划替代真实验证，或错误处理登录态 / 证据 | 只作为测试工程能力包，必须把 TC / PW / runtime / auth / evidence 落到 verification artifact 并由 `sf-verify` 执行 gate |
 | `pencil` | `chiroro-jr/skills` | 8 | 依赖 Pencil MCP，且 upstream 引用未托管的 `frontend-design` | 本地裁剪为读取已确认 UI 方向和 SpecForge 设计标准，只用于 Pencil 原型、截图证据和设计转代码参考 |
 | `playwright-skill` | `lackeyjb/playwright-skill` | 4 | 浏览器自动化可能接触敏感数据 | 只在受控测试环境做 E2E 证据 |

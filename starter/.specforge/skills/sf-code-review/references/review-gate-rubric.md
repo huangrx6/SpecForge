@@ -4,7 +4,7 @@
 
 ## 主能力包
 
-每次 code_review gate 前先读取 `.specforge/core/skills/quality/code-review/SKILL.md`，再按风险读取其 foundations、checklists 和 references。不要读取或恢复外部代码审查 skill。
+每次 code_review gate 前先读取 `.specforge/core/skills/quality/code-review/SKILL.md`，再按风险读取其 `references/review-playbook.md`、`references/risk-checklists.md`、`references/output-contract.md` 和 `references/quality-guide.md`。不要读取或恢复外部代码审查 skill。
 
 ## Review 顺序
 

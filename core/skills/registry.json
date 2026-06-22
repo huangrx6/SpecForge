@@ -330,7 +330,7 @@
       "category": "quality",
       "localPath": "quality/code-review",
       "name": "code-review",
-      "role": "SpecForge 本地代码审查能力包：对照 approved spec、tasks、implementation report、changed files、真实 diff 和验证证据，审查实现是否满足规格、工程规则、安全边界和 gate 条件。",
+      "role": "SpecForge 本地代码审查能力包：对照 approved spec、tasks、implementation report、changed files、真实 diff 和验证证据，审查实现是否满足规格、工程规则、安全边界和 gate 条件；内部规则收束在 references/review-playbook.md、risk-checklists.md、quality-guide.md",
       "trust": "SpecForge 本地维护",
       "risk": "低",
       "source": {
@@ -340,46 +340,16 @@
         "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/quality/code-review",
         "files": [
           {
-            "path": "foundations/review-boundary.md"
+            "path": "references/review-playbook.md"
           },
           {
-            "path": "foundations/finding-severity.md"
-          },
-          {
-            "path": "foundations/diff-triage.md"
-          },
-          {
-            "path": "foundations/spec-compliance.md"
-          },
-          {
-            "path": "checklists/security-auth-data.md"
-          },
-          {
-            "path": "checklists/correctness-error-handling.md"
-          },
-          {
-            "path": "checklists/api-contract.md"
-          },
-          {
-            "path": "checklists/data-migration.md"
-          },
-          {
-            "path": "checklists/concurrency-idempotency.md"
-          },
-          {
-            "path": "checklists/ui-state-a11y.md"
-          },
-          {
-            "path": "checklists/dependency-env-config.md"
-          },
-          {
-            "path": "checklists/tests-evidence.md"
+            "path": "references/risk-checklists.md"
           },
           {
             "path": "references/output-contract.md"
           },
           {
-            "path": "references/anti-patterns.md"
+            "path": "references/quality-guide.md"
           },
           {
             "path": "contracts/code-review-finding.schema.json"

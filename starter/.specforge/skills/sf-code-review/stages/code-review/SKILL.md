@@ -61,7 +61,7 @@ description: SpecForge 内部代码审查技能。用于 implementation 完成�
 6. **再做 Code Quality / Risk Review**
    - 只在 spec compliance 没有阻断偏离后，继续审查工程质量、安全、可维护性和测试证据。
    - 按 `.specforge/core/skills/quality/code-review/SKILL.md` 的 risk checklist 和 output contract 组织审查。
-   - 需要补充检查视角时，只读取 `.specforge/core/skills/quality/code-review/checklists/*.md` 中与真实 diff 风险相关的文件。
+   - 需要补充检查视角时，只读取 `.specforge/core/skills/quality/code-review/references/risk-checklists.md` 中与真实 diff 风险相关的 section。
    - 不调用、不读取、不恢复任何外部 review agent 或已删除的外部代码审查 skill 目录；finding 必须绑定文件 / 行号 / 影响 / 修复方向。
 7. **对照 technical-design 影响面**
    - `yes` 影响面必须有对应代码 / 配置 / 文档变更和验证证据；若实现阶段决定不做，必须在 implementation report 中写明偏离、风险和退回路径。

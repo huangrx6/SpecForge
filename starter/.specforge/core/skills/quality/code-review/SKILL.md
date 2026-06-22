@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: SpecForge 本地代码审查主能力包。用于 sf-code-review 执行 code_review gate 前，对照 approved spec、tasks、implementation report、changed-files、真实 git diff 和验证证据审查实现是否可批准。
+description: SpecForge 本地代码审查主能力包。用于 sf-code-review 执行 code_review gate 前，对照 approved spec、tasks、implementation report、changed-files、真实 git diff 和验证证据审查实现是否可批准；每次使用前读取本入口，并按风险读取 references。
 ---
 
 # Code Review
@@ -40,17 +40,10 @@ description: SpecForge 本地代码审查主能力包。用于 sf-code-review �
 
 | 需要判断 | 读取 |
 | --- | --- |
-| 阶段边界、不能做什么 | `foundations/review-boundary.md` |
-| finding 等级和 gate 影响 | `foundations/finding-severity.md` |
-| diff / changed-files / report 三向对账 | `foundations/diff-triage.md` |
-| approved spec 是否被实现 | `foundations/spec-compliance.md` |
-| 安全、权限、数据风险 | `checklists/security-auth-data.md` |
-| 正确性、错误处理、并发、幂等 | `checklists/correctness-error-handling.md`、`checklists/concurrency-idempotency.md` |
-| API、迁移、配置、依赖 | `checklists/api-contract.md`、`checklists/data-migration.md`、`checklists/dependency-env-config.md` |
-| UI 状态和可访问性 | `checklists/ui-state-a11y.md` |
-| 测试和证据完整性 | `checklists/tests-evidence.md` |
+| 阶段边界、finding 分级、diff 对账、spec compliance | `references/review-playbook.md` |
+| 安全、权限、数据、正确性、API、迁移、配置、UI、测试等风险 | `references/risk-checklists.md` |
 | 输出结构 | `references/output-contract.md` |
-| 常见失败 | `references/anti-patterns.md` |
+| 常见失败和修正顺序 | `references/quality-guide.md` |
 
 ## 核心流程
 
@@ -61,7 +54,7 @@ description: SpecForge 本地代码审查主能力包。用于 sf-code-review �
 5. 做 spec compliance review：先查规格偏离，再查工程质量。
 6. 对 architecture / implementation handoff / operability 承诺做对账。
 7. 按风险清单审查安全、权限、数据、API、UI、配置、依赖、并发、错误处理和证据。
-8. 按 `finding-severity.md` 分级 finding。
+8. 按 `references/review-playbook.md#Finding Severity` 分级 finding。
 9. 写 `04-code-review/code-review-v1.md`。
 10. 输出 gate decision：`APPROVED`、`REQUEST_CHANGES` 或 `REJECTED`。
 

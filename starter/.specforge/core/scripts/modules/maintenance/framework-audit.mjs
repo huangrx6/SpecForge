@@ -708,11 +708,10 @@ function productSystemIssues() {
 function codeReviewSkillIssues() {
   const required = [
     "core/skills/quality/code-review/SKILL.md",
-    "core/skills/quality/code-review/foundations/review-boundary.md",
-    "core/skills/quality/code-review/foundations/finding-severity.md",
-    "core/skills/quality/code-review/foundations/diff-triage.md",
-    "core/skills/quality/code-review/foundations/spec-compliance.md",
+    "core/skills/quality/code-review/references/review-playbook.md",
+    "core/skills/quality/code-review/references/risk-checklists.md",
     "core/skills/quality/code-review/references/output-contract.md",
+    "core/skills/quality/code-review/references/quality-guide.md",
     "core/skills/quality/code-review/contracts/code-review-finding.schema.json",
   ];
   const issues = required

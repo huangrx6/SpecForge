@@ -88,7 +88,7 @@ node .specforge/core/scripts/create-artifact.mjs code_review
 
 ### D. 本地 `code-review` 主能力
 
-`sf-code-review` 仍是唯一 code_review gate 入口。每次审查先读取 `.specforge/core/skills/quality/code-review/SKILL.md`；需要补充安全、性能、正确性、可维护性或测试覆盖检查维度时，只读取本地 `quality/code-review/checklists/*.md`。
+`sf-code-review` 仍是唯一 code_review gate 入口。每次审查先读取 `.specforge/core/skills/quality/code-review/SKILL.md`；需要补充安全、性能、正确性、可维护性或测试覆盖检查维度时，只读取本地 `quality/code-review/references/risk-checklists.md` 的相关 section。
 
 - 不调用任何外部 review agent。
 - 不读取已删除的外部代码审查 skill 目录；仓库不再托管该能力。
