@@ -14,7 +14,7 @@
 | `gates` | `gate.mjs` | 更新 gate 状态并触发 hook |
 | `reporting` | `render-work-report.mjs`, `workflow-package.mjs`, `handoff-summary.mjs`, `traceability-summary.mjs` | 生成 HTML / review package / handoff / traceability 摘要 |
 | `code-intelligence` | `codebase-map.mjs`, `codebase-index.mjs` | 存量项目代码画像、provider 检测、CodeGraph / Repomix 编排计划 |
-| `maintenance` | `doctor.mjs`, `self-test.mjs`, `framework-audit.mjs`, `sync-starter.mjs`, `update-skills.mjs`, `validate-structure.mjs`, `validate-skills.mjs`, `validate-external-skills.mjs` | 仓库健康、框架自审计、starter 同步、skill 更新和结构校验 |
+| `maintenance` | `doctor.mjs`, `self-test.mjs`, `framework-audit.mjs`, `sync-starter.mjs`, `upgrade-runtime.mjs`, `update-skills.mjs`, `validate-structure.mjs`, `validate-skills.mjs`, `validate-external-skills.mjs` | 仓库健康、框架自审计、starter 同步、项目运行时升级、skill 更新和结构校验 |
 | `archive` | `archive-work.mjs` | work item 归档和 registry 更新 |
 
 ## 根入口规则

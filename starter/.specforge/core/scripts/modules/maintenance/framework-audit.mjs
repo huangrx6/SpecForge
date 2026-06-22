@@ -861,6 +861,7 @@ function scriptModuleIssues() {
       "self-test.mjs",
       "framework-audit.mjs",
       ...(layout.kind === "source" ? ["sync-starter.mjs"] : []),
+      "upgrade-runtime.mjs",
       "update-skills.mjs",
       "validate-structure.mjs",
       "validate-skills.mjs",

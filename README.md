@@ -115,46 +115,38 @@ flowchart LR
 | 核心母本 | `core/` | SpecForge 运行时源码、模板、标准和验证脚本 |
 | Starter 快照 | `starter/.specforge/` | 初始化业务项目时复制进去的 `.specforge` 基线 |
 
+## 使用时先区分三件事
+
+SpecForge 同时包含 Agent 技能、项目内运行时和源码母本。排查问题或升级版本时，先确认你要更新的是哪一层。
+
+| 你要做什么 | 更新对象 | 推荐命令 | 会保留什么 |
+|---|---|---|---|
+| 让 Agent 获得最新 `sf-*` 能力 | 全局 Agent Skills | `npx skills add https://github.com/huangrx6/SpecForge --skill "*" --agent codex --global` | 不改任何业务项目 |
+| 给业务项目接入 SpecForge | 当前项目 `.specforge/` | `npx github:huangrx6/SpecForge init --dir .` | 已存在 `.specforge/` 默认不覆盖 |
+| 升级已经接入的业务项目 | 当前项目 `.specforge/` runtime | `npx github:huangrx6/SpecForge upgrade --dir .` | 保留 wiki、work、registry、project、本地 hooks |
+| 维护 SpecForge 源码仓库 | `core/`、`skills/`、`starter/` | `npm run sync:starter` + 校验脚本 | 保持 starter 与源码母本一致 |
+
 ## 快速开始
 
-### 1. 从 GitHub 安装 Agent Skills
+### 1. 安装或更新 Agent Skills
 
-SpecForge 遵循 `skills` CLI 的官方安装模式。你可以直接从 GitHub 仓库安装：
+先把 `sf-*` 技能安装到 Agent。更新技能时也重复执行这条命令：
 
 ```bash
 npx skills add https://github.com/huangrx6/SpecForge --skill "*" --agent codex --global
 ```
 
-如果你想让安装器交互式选择 Agent，也可以省略 `--agent codex`：
+如果你想让安装器交互式选择 Agent，可以省略 `--agent codex`：
 
 ```bash
 npx skills add https://github.com/huangrx6/SpecForge --skill "*" --global
 ```
 
-安装完成后，在 Agent 技能列表中应该能看到：
-
-- `sf-router`
-- `sf-intake`
-- `sf-brainstorm`
-- `sf-prd`
-- `sf-requirements`
-- `sf-ui-design`
-- `sf-tech-design`
-- `sf-tasking`
-- `sf-spec-review`
-- `sf-implement`
-- `sf-code-review`
-- `sf-verify`
-- `sf-wiki`
-- `sf-close`
-- `sf-work`
-- `sf-doctor`
-- `sf-onboard`
-- `sf-steering`
+安装完成后，Agent 技能列表中应该能看到 `sf-router`、`sf-intake`、`sf-requirements`、`sf-ui-design`、`sf-tech-design`、`sf-implement`、`sf-verify`、`sf-close`、`sf-onboard`、`sf-steering` 等入口。
 
 ### 2. 初始化业务项目
 
-在业务项目根目录执行：
+进入业务项目根目录，初始化项目内 runtime：
 
 ```bash
 npx github:huangrx6/SpecForge init --dir .
@@ -174,49 +166,54 @@ npx github:huangrx6/SpecForge init --dir .
 └── work/
 ```
 
-初始化后会自动运行 doctor 检查。如果项目已经有 `.specforge/`，CLI 默认不会覆盖。需要迁移已有项目时，建议让 Agent 使用 `sf-onboard`，而不是直接 `--force`。
+初始化后会自动运行 doctor。项目已经存在 `.specforge/` 时，CLI 默认不会覆盖；需要迁移或识别旧结构时，让 Agent 使用 `sf-onboard`。
 
-### 3. 检查状态
+### 3. 升级已接入项目
+
+当 SpecForge 发布新版本后，已接入项目不要重新 `init --force`。用 upgrade 刷新项目内 runtime：
 
 ```bash
-node .specforge/core/scripts/workflow-audit.mjs
-node .specforge/core/scripts/workflow-health.mjs
-node .specforge/core/scripts/quality-suite.mjs
-node .specforge/core/scripts/artifact-quality.mjs
-node .specforge/core/scripts/closure-quality.mjs
-node .specforge/core/scripts/source-quality.mjs
-node .specforge/core/scripts/wiki-quality.mjs
-node .specforge/core/scripts/stage-contract.mjs --overview
-node .specforge/core/scripts/stage-contract.mjs
+npx github:huangrx6/SpecForge upgrade --dir .
+```
+
+先预览变更：
+
+```bash
+npx github:huangrx6/SpecForge upgrade --dir . --dry-run
+```
+
+升级会刷新 `.specforge/core/`、`.specforge/skills/`、`manifest.yaml` 等运行时资产，同时保留项目事实：
+
+- `.specforge/wiki/`
+- `.specforge/work/`
+- `.specforge/registry.yaml`
+- `.specforge/project.yaml`
+- `.specforge/hooks/local/`
+- 已存在的 `.specforge/AGENTS.md`
+
+升级后默认运行 doctor。如需迁移建议、旧结构识别或 steering 路由，仍优先使用 `sf-onboard`。
+
+### 4. 检查状态
+
+日常只需要从这几个入口开始：
+
+| 场景 | 命令 |
+|---|---|
+| 看项目是否健康 | `npx github:huangrx6/SpecForge doctor --dir .` |
+| 看当前 work item 状态和下一步 | `npx github:huangrx6/SpecForge roadmap --dir .` |
+| 看工作流、gate、证据是否连贯 | `npx github:huangrx6/SpecForge audit --dir .` |
+| 看质量总表 | `npx github:huangrx6/SpecForge quality-suite --dir .` |
+| 打包交付材料 | `npx github:huangrx6/SpecForge package --dir .` |
+
+在已经初始化的项目里，也可以直接运行本地脚本，例如：
+
+```bash
 node .specforge/core/scripts/doctor.mjs
-node .specforge/core/scripts/decision-brief.mjs
-node .specforge/core/scripts/decision-quality.mjs
-node .specforge/core/scripts/evidence-summary.mjs
-node .specforge/core/scripts/implementation-quality.mjs
-node .specforge/core/scripts/workflow-package.mjs
+node .specforge/core/scripts/stage-contract.mjs --overview
+node .specforge/core/scripts/quality-suite.mjs
 ```
 
-或：
-
-```bash
-npx github:huangrx6/SpecForge audit --dir .
-npx github:huangrx6/SpecForge health --dir .
-npx github:huangrx6/SpecForge quality-suite --dir .
-npx github:huangrx6/SpecForge quality --dir .
-npx github:huangrx6/SpecForge closure-quality --dir .
-npx github:huangrx6/SpecForge source-quality --dir .
-npx github:huangrx6/SpecForge wiki-quality --dir .
-npx github:huangrx6/SpecForge roadmap --dir .
-npx github:huangrx6/SpecForge contract --dir .
-npx github:huangrx6/SpecForge doctor --dir .
-npx github:huangrx6/SpecForge decision-brief --dir .
-npx github:huangrx6/SpecForge decision-quality --dir .
-npx github:huangrx6/SpecForge evidence --dir .
-npx github:huangrx6/SpecForge implementation-quality --dir .
-npx github:huangrx6/SpecForge package --dir .
-```
-
-### 4. 在 Agent 中开始使用
+### 5. 在 Agent 中开始使用
 
 最简单的入口是告诉 Agent：
 
@@ -263,6 +260,14 @@ npm exec --yes \
 ```
 
 这种方式不依赖 npm registry 发布，只依赖 Git 仓库地址和 tag / branch。
+
+已接入项目升级内部版本时，用同一个 tag / branch 执行 upgrade：
+
+```bash
+npm exec --yes \
+  --package=git+ssh://git@git.company.com/team/specforge.git#v0.3.0-company.1 \
+  -- specforge upgrade --dir .
+```
 
 ## 日常工作流
 
@@ -450,69 +455,56 @@ node .specforge/core/scripts/gate.mjs code_review REQUEST_CHANGES
 
 ## 常用脚本
 
-在已经初始化的业务项目中：
+### 业务项目常用入口
 
-```bash
-node .specforge/core/scripts/workflow-audit.mjs
-node .specforge/core/scripts/workflow-health.mjs
-node .specforge/core/scripts/quality-suite.mjs
-node .specforge/core/scripts/artifact-quality.mjs
-node .specforge/core/scripts/closure-quality.mjs
-node .specforge/core/scripts/source-quality.mjs
-node .specforge/core/scripts/wiki-quality.mjs
-node .specforge/core/scripts/stage-contract.mjs --overview
-node .specforge/core/scripts/stage-contract.mjs
-node .specforge/core/scripts/doctor.mjs
-node .specforge/core/scripts/status.mjs
-node .specforge/core/scripts/instructions.mjs
-node .specforge/core/scripts/decision-checkpoints.mjs
-node .specforge/core/scripts/decision-brief.mjs
-node .specforge/core/scripts/decision-quality.mjs
-node .specforge/core/scripts/evidence-summary.mjs
-node .specforge/core/scripts/source-quality.mjs
-node .specforge/core/scripts/implementation-quality.mjs
-node .specforge/core/scripts/traceability-summary.mjs
-node .specforge/core/scripts/create-work.mjs --workflow feature "新增审批记录导出"
-node .specforge/core/scripts/create-artifact.mjs requirements
-node .specforge/core/scripts/render-work-report.mjs
-node .specforge/core/scripts/handoff-summary.mjs --output <work-item>/07-report/handoff.md
-node .specforge/core/scripts/workflow-package.mjs
-node .specforge/core/scripts/closure-quality.mjs
-node .specforge/core/scripts/gate-preflight.mjs verification APPROVED --evidence 05-verification/report.md
-node .specforge/core/scripts/gate.mjs verification APPROVED --evidence 05-verification/report.md
-node .specforge/core/scripts/sync-wiki.mjs
-node .specforge/core/scripts/wiki-quality.mjs
-```
+| 脚本 | CLI 别名 | 作用 |
+|---|---|---|
+| `doctor.mjs` | `specforge doctor --dir .` | 检查 `.specforge/` 结构、脚本、manifest、starter 自测和运行时健康 |
+| `stage-contract.mjs --overview` | `specforge roadmap --dir .` | 看当前 work item、下一步、退出标准、人工确认点和质量热点 |
+| `workflow-audit.mjs` | `specforge audit --dir .` | 审计 workflow、gate、artifact、evidence、traceability 是否连贯 |
+| `workflow-health.mjs` | `specforge health --dir .` | 生成阶段感知健康分 |
+| `quality-suite.mjs` | `specforge quality-suite --dir .` | 汇总 artifact、decision、source、implementation、wiki、closure 等质量项 |
+| `workflow-package.mjs` | `specforge package --dir .` | 打包当前工作项的交付材料 |
+| `upgrade-runtime.mjs` | `specforge upgrade --dir .` | 升级已接入项目的 `.specforge` runtime，同时保留项目事实 |
 
-`render-work-report.mjs` 生成的 HTML 首屏是 Action Board：先给当前状态、下一步、最高优先级、质量总态、复制命令和阅读顺序；随后用 Current Focus 呈现当前 artifact 的退出标准、必须证明项、人工确认点和质量热点，再把完整 artifact 摘要、Quality Suite、traceability、gate 和长表放在下方。Decision Brief 区会生成可复制给人工确认的消息。Markdown artifact 仍然是事实源。
+### 创建、报告和 Gate
 
-`quality-suite.mjs` 是日常推进的阶段感知质量总入口。它总是检查 artifact 可读性、决策闭环和 traceability；到达或出现对应产物后再自动启用 source、implementation、verification evidence、wiki、closure 检查。这样用户和 Agent 可以先看一个 PASS / WARN / FAIL 总表，再按 Recommended Commands 下钻专项脚本。
+| 场景 | 命令 |
+|---|---|
+| 创建工作项 | `node .specforge/core/scripts/create-work.mjs --workflow feature "新增审批记录导出"` |
+| 创建当前阶段 artifact | `node .specforge/core/scripts/create-artifact.mjs requirements` |
+| 生成 HTML 阅读报告 | `node .specforge/core/scripts/render-work-report.mjs` |
+| 生成交接摘要 | `node .specforge/core/scripts/handoff-summary.mjs --output <work-item>/07-report/handoff.md` |
+| 审批前检查 | `node .specforge/core/scripts/gate-preflight.mjs verification APPROVED --evidence 05-verification/report.md` |
+| 更新 gate 状态 | `node .specforge/core/scripts/gate.mjs verification APPROVED --evidence 05-verification/report.md` |
+| 同步 Wiki | `node .specforge/core/scripts/sync-wiki.mjs` |
 
-`workflow-health.mjs` 会把 `quality-suite.mjs` 中 source、implementation、evidence、wiki、closure 等阶段感知质量缺口纳入 `quality_suite` 维度和健康分；artifact、decision、traceability 已有独立维度，不重复扣分。
+### 专项质量检查
 
-`stage-contract.mjs --overview` / `specforge roadmap --dir .` 是流程导航层。输出会先给当前 work item、健康度和 Quality Suite，再用 Current Focus 聚焦当前 artifact 的状态、退出标准、必须证明的事项、人工确认点和质量热点，最后再展开完整 roadmap 表格。这样日常推进先看一屏即可知道下一步，不需要先读完整规格包。
+| 脚本 | 检查重点 |
+|---|---|
+| `artifact-quality.mjs` | requirements、UI design、technical design、tasks 等 artifact 是否满足合同字段和可实现性要求 |
+| `source-quality.mjs` | research 来源池、技术版本事实、官方基准和来源权威度 |
+| `decision-quality.mjs` | 人工确认、delegated default、deferred decision 是否闭环 |
+| `implementation-quality.mjs` | tasks、implementation report、changed-files 和真实 git diff 是否一致 |
+| `closure-quality.mjs` | release、rollback、观察点、回滚触发条件和风险来源 |
+| `wiki-quality.mjs` | Wiki frontmatter、索引引用、占位内容、重复 current 项和命名规范 |
 
-`source-quality.mjs` 检查 `research.md` 的来源池和 `technical-design.md` 的版本事实 / 官方基准记录。缺少研究来源或权威度分级是 `FAIL`；轶事、过期、未知来源以及技术版本事实缺日期 / 来源是 `WARN`。`gate-preflight spec_review APPROVED` 会自动执行同类检查。
+`quality-suite.mjs` 是日常推进的总入口。它会先给 PASS / WARN / FAIL 总表，再提示需要下钻的专项脚本。
 
-`decision-quality.mjs` 检查人工确认记录是否闭环：open decision 会 `FAIL`；`delegated_default` 必须有默认理由、风险影响和回退 / 重新验证触发条件；`manual-confirmed` / `deferred` 必须有 owner、影响和重新验证触发条件。所有 `gate-preflight <gate> APPROVED` 都会自动执行同类检查。
+`render-work-report.mjs` 生成的 HTML 首屏是 Action Board：先给当前状态、下一步、最高优先级、质量总态、复制命令和阅读顺序；随后用 Current Focus 呈现当前 artifact 的退出标准、必须证明项、人工确认点和质量热点。Markdown artifact 仍然是事实源。
 
-`implementation-quality.mjs` 检查 `tasks.md`、`03-implementation/report.md`、`03-implementation/changed-files.md` 和真实 `git diff/status` 是否一致。缺 task 核心字段、完成任务缺证据、真实 diff 未登记、changed-files 缺任务或验证方式会 `FAIL`；`gate-preflight code_review APPROVED` 会自动执行同类检查。
+### 源码仓库维护脚本
 
-`closure-quality.mjs` 检查 `release.md` / `rollback.md` 是否真正覆盖发布结论、影响范围、发布前检查、观察点、回滚触发条件、风险来源和补偿措施。它不替代 `doctor` 和 `archive-work --dry-run`，而是在归档前提前暴露空模板和 release / rollback 断链。
-
-`wiki-quality.mjs` 检查 `.specforge/wiki/` 的 frontmatter、`00-index.md` 引用、重复 current 项、日期 / 版本化命名和模板占位；`gate-preflight wiki_sync APPROVED` 会自动执行同类检查。结构性问题是 `FAIL`，内容薄或占位偏多是 `WARN`，需要在 wiki-sync evidence 中说明是否接受。
-
-在 SpecForge 源码仓库中：
-
-```bash
-npm run validate
-npm run validate:skills
-npm run validate:external-skills
-npm run check:starter
-npm run doctor
-npm run sync:starter
-npm pack --dry-run
-```
+| 命令 | 何时运行 |
+|---|---|
+| `npm run sync:starter` | 修改 `core/`、`core/starter.manifest.json` 或 starter 相关资产后 |
+| `npm run check:starter` | 检查 starter 快照是否与 manifest 和源码母本一致 |
+| `npm run validate` | 检查 SpecForge 源码结构 |
+| `npm run validate:skills` | 检查 `skills/` 技能入口 |
+| `npm run validate:external-skills` | 检查外部技能引用 |
+| `npm run doctor` | 运行源码仓库自身健康检查 |
+| `npm pack --dry-run` | 发布前检查 npm 包内容 |
 
 ## 目录说明
 
@@ -606,31 +598,19 @@ SpecForge 包含 `sf-ui-design`，用于在需求进入实现前形成：
 
 ## 维护 SpecForge 本身
 
-修改源码仓库时，注意三个事实源：
+修改源码仓库时，先确认改动属于哪一层：
 
-| 修改什么 | 母本 |
-|---|---|
-| 项目运行时脚本 / 标准 / 模板 | `core/` |
-| 业务项目初始化快照 | `core/starter.manifest.json` + `starter/.specforge/` |
-| Agent 技能入口 | `skills/` |
+| 修改内容 | 母本 | 同步要求 |
+|---|---|---|
+| 项目运行时脚本、标准、模板 | `core/` | 运行 `npm run sync:starter` |
+| 初始化到业务项目的快照清单 | `core/starter.manifest.json` | 运行 `npm run sync:starter` 和 `npm run check:starter` |
+| Agent 技能入口 | `skills/` | 运行 `npm run validate:skills` |
+| README、资产、发布说明 | 仓库根目录 | 按改动范围运行相关校验 |
 
-如果修改了 `core/` 或 `core/starter.manifest.json`，运行：
+推荐维护流程：
 
 ```bash
 npm run sync:starter
-npm run check:starter
-```
-
-如果修改了技能，运行：
-
-```bash
-npm run validate:skills
-npm run validate
-```
-
-提交前建议完整检查：
-
-```bash
 npm run validate
 npm run validate:skills
 npm run validate:external-skills
@@ -638,6 +618,30 @@ npm run check:starter
 npm run doctor
 git diff --check
 npm pack --dry-run
+```
+
+发布或推送新版本后，下游项目按两步更新：
+
+```bash
+npx skills add https://github.com/huangrx6/SpecForge --skill "*" --agent codex --global
+npx github:huangrx6/SpecForge upgrade --dir .
+```
+
+第一条更新 Agent 全局技能；第二条更新当前业务项目里的 `.specforge` runtime。已经存在的项目知识和工作项不会被 upgrade 覆盖。
+
+upgrade 默认保护：
+
+- `.specforge/wiki/`
+- `.specforge/work/`
+- `.specforge/registry.yaml`
+- `.specforge/project.yaml`
+- `.specforge/hooks/local/`
+- 已存在的 `.specforge/AGENTS.md`
+
+如果需要先确认会改哪些文件：
+
+```bash
+npx github:huangrx6/SpecForge upgrade --dir . --dry-run
 ```
 
 ## 安全提醒
@@ -668,7 +672,13 @@ SpecForge 自身也遵循这个原则：所有高风险动作都应该有清晰�
 
 ### 已有 `.specforge/` 怎么升级？
 
-优先使用 `sf-onboard` 做迁移感知的接入或升级。不要随便 `--force` 覆盖，除非你确认旧数据不需要保留。
+常规升级用：
+
+```bash
+npx github:huangrx6/SpecForge upgrade --dir .
+```
+
+需要迁移感知、旧结构识别、补 wiki/steering 建议时，用 `sf-onboard`。不要随便 `init --force` 覆盖，除非你确认旧数据不需要保留。
 
 ### 可以放到公司内部 Git 吗？
 

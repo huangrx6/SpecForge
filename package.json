@@ -34,7 +34,8 @@
     "check:starter": "node core/scripts/sync-starter.mjs --check",
     "install:skills": "npx skills add .",
     "skill:add": "npx skills add .",
-    "init": "node cli/specforge.mjs init"
+    "init": "node cli/specforge.mjs init",
+    "upgrade": "node cli/specforge.mjs upgrade"
   },
   "license": "MIT",
   "description": "SpecForge: repository-native Spec-Driven Development workflow for AI agents.",

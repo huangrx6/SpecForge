@@ -997,6 +997,59 @@ function testProjectInitDoctorSmoke() {
   }
 }
 
+function testProjectUpgradePreservesProjectFacts() {
+  if (layout.kind !== "source") return;
+
+  const target = mkdtempSync(join(tmpdir(), "specforge-upgrade-smoke-"));
+  try {
+    const init = spawnSync(process.execPath, ["cli/specforge.mjs", "init", "--dir", target], {
+      cwd: root,
+      encoding: "utf8",
+      maxBuffer: 10 * 1024 * 1024,
+    });
+    assert.equal(init.status, 0, `specforge init for upgrade smoke failed\n${init.stderr ?? ""}`);
+
+    const registry = "active:\n  - id: keep-me\n    title: Keep\n    type: FEATURE\n    status: INTAKE\n    path: .specforge/work/active/keep-me\nblocked: []\narchive: []\n";
+    const wiki = "---\ntitle: Custom Wiki\nkind: index\nowner: Team\nlast_updated: 2026-06-22\nsource_work: human\nstatus: current\n---\n\n# Custom Wiki\n";
+    const project = "name: custom-project\nprofile: custom\n";
+    const agents = "# Custom Agents\n\nKeep local instructions.\n";
+
+    writeFixture(`${target}/.specforge/registry.yaml`, registry);
+    writeFixture(`${target}/.specforge/wiki/00-index.md`, wiki);
+    writeFixture(`${target}/.specforge/project.yaml`, project);
+    writeFixture(`${target}/.specforge/AGENTS.md`, agents);
+    writeFixture(`${target}/.specforge/core/scripts/doctor.mjs`, "#!/usr/bin/env node\nthrow new Error('old runtime');\n");
+
+    const dryRun = spawnSync(process.execPath, ["cli/specforge.mjs", "upgrade", "--dir", target, "--dry-run", "--json"], {
+      cwd: root,
+      encoding: "utf8",
+      maxBuffer: 10 * 1024 * 1024,
+    });
+    assert.equal(dryRun.status, 0, `specforge upgrade dry-run failed\n${dryRun.stderr ?? ""}`);
+    assert.equal(readFileSync(`${target}/.specforge/core/scripts/doctor.mjs`, "utf8").includes("old runtime"), true);
+
+    const upgrade = spawnSync(process.execPath, ["cli/specforge.mjs", "upgrade", "--dir", target, "--skip-doctor"], {
+      cwd: root,
+      encoding: "utf8",
+      maxBuffer: 10 * 1024 * 1024,
+    });
+    assert.equal(
+      upgrade.status,
+      0,
+      `specforge upgrade smoke failed\nERROR: ${upgrade.error?.message ?? "none"}\nSTDOUT:\n${upgrade.stdout ?? ""}\nSTDERR:\n${upgrade.stderr ?? ""}`,
+    );
+
+    assert.equal(readFileSync(`${target}/.specforge/registry.yaml`, "utf8"), registry);
+    assert.equal(readFileSync(`${target}/.specforge/wiki/00-index.md`, "utf8"), wiki);
+    assert.equal(readFileSync(`${target}/.specforge/project.yaml`, "utf8"), project);
+    assert.equal(readFileSync(`${target}/.specforge/AGENTS.md`, "utf8"), agents);
+    assert.equal(readFileSync(`${target}/.specforge/core/scripts/doctor.mjs`, "utf8").includes("old runtime"), false);
+    assert.equal(existsSync(`${target}/.specforge/core/scripts/upgrade-runtime.mjs`), true);
+  } finally {
+    rmSync(target, { recursive: true, force: true });
+  }
+}
+
 testRegistrySingleActiveRemoval();
 testRegistryKeepsOtherActiveEntries();
 testArchiveAppend();
@@ -1015,5 +1068,6 @@ testArtifactQualityProfiles();
 testTechnicalDesignContractQuality();
 testUiDesignContractQuality();
 testProjectInitDoctorSmoke();
+testProjectUpgradePreservesProjectFacts();
 
 console.log("SpecForge self-test passed.");

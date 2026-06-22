@@ -275,6 +275,10 @@
       "to": "core/scripts/update-skills.mjs"
     },
     {
+      "from": "scripts/upgrade-runtime.mjs",
+      "to": "core/scripts/upgrade-runtime.mjs"
+    },
+    {
       "from": "scripts/validate-external-skills.mjs",
       "to": "core/scripts/validate-external-skills.mjs"
     },

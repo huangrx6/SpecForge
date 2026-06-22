@@ -13,6 +13,7 @@ function usage() {
 
 Usage:
   specforge init [--dir <path>] [--force]
+  specforge upgrade [--dir <path>] [--dry-run] [--skip-doctor] [--json]
   specforge doctor [--dir <path>]
   specforge audit [--dir <path>] [--work-item <id>] [--output <path>] [--json]
   specforge health [--dir <path>] [--work-item <id>] [--json]
@@ -38,6 +39,8 @@ Usage:
 Examples:
   npx skills add https://github.com/huangrx6/SpecForge --skill '*' --agent codex --global
   npx github:huangrx6/SpecForge init --dir .
+  npx github:huangrx6/SpecForge upgrade --dir .
+  npx github:huangrx6/SpecForge upgrade --dir . --dry-run
   npm exec --yes --package=git+ssh://git@git.company.com/team/specforge.git#v0.3.0-company.1 -- specforge init --dir .
   npx github:huangrx6/SpecForge doctor --dir .
   npx github:huangrx6/SpecForge audit --dir .
@@ -108,6 +111,28 @@ function initProject() {
     stdio: "inherit",
   });
   process.exit(result.status ?? 1);
+}
+
+function upgradeProject() {
+  const targetDir = resolve(option("--dir", "."));
+  const target = join(targetDir, ".specforge");
+  const upgrader = join(packageRoot, "core/scripts/upgrade-runtime.mjs");
+  if (!existsSync(upgrader)) {
+    console.error(`Missing runtime upgrader: ${upgrader}`);
+    process.exit(1);
+  }
+  if (!existsSync(target)) {
+    console.error(`Missing .specforge directory: ${target}`);
+    console.error("Run specforge init first, or run sf-onboard inside your AI tool for migration-aware onboarding.");
+    process.exit(1);
+  }
+  const extraArgs = ["--target", target];
+  if (args.includes("--dry-run")) extraArgs.push("--dry-run");
+  if (args.includes("--check")) extraArgs.push("--check");
+  if (args.includes("--skip-doctor")) extraArgs.push("--skip-doctor");
+  if (args.includes("--no-doctor")) extraArgs.push("--no-doctor");
+  if (args.includes("--json")) extraArgs.push("--json");
+  runNode(upgrader, extraArgs, packageRoot);
 }
 
 function doctor() {
@@ -451,6 +476,8 @@ const [command] = args;
 
 if (command === "init") {
   initProject();
+} else if (command === "upgrade") {
+  upgradeProject();
 } else if (command === "doctor") {
   doctor();
 } else if (command === "audit") {

@@ -11,7 +11,7 @@
 | reporting | `reporting/` | `render-work-report.mjs`, `workflow-package.mjs`, `handoff-summary.mjs`, `traceability-summary.mjs` |
 | code-intelligence | `code-intelligence/` | `codebase-map.mjs`, `codebase-index.mjs`, `graph-freshness.mjs`, `graph-impact.mjs`, `wiki-refresh-plan.mjs` |
 | wiki | `wiki/` | `wiki-update-plan.mjs`, `wiki-hydrate.mjs` |
-| maintenance | `maintenance/` | `doctor.mjs`, `self-test.mjs`, `framework-audit.mjs`, `sync-starter.mjs`, `update-skills.mjs`, `validate-structure.mjs`, `validate-skills.mjs`, `validate-external-skills.mjs`, `validate-design-system-registry.mjs` |
+| maintenance | `maintenance/` | `doctor.mjs`, `self-test.mjs`, `framework-audit.mjs`, `sync-starter.mjs`, `upgrade-runtime.mjs`, `update-skills.mjs`, `validate-structure.mjs`, `validate-skills.mjs`, `validate-external-skills.mjs`, `validate-design-system-registry.mjs` |
 | archive | `archive/` | `archive-work.mjs` |
 
 ## 结构规则

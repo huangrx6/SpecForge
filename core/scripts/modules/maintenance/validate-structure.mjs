@@ -214,6 +214,7 @@ const sourceRequiredPaths = [
   "core/scripts/workflow-health.mjs",
   "core/scripts/workflow-package.mjs",
   "core/scripts/sync-starter.mjs",
+  "core/scripts/upgrade-runtime.mjs",
   "core/scripts/update-skills.mjs",
   "core/scripts/validate-external-skills.mjs",
   "core/scripts/validate-design-system-registry.mjs",

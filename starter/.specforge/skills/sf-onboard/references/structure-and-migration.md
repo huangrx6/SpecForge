@@ -96,6 +96,13 @@ starter/.specforge/
 npx github:huangrx6/SpecForge init --dir .
 ```
 
+升级已接入项目时使用 GitHub 版 CLI：
+
+```bash
+npx github:huangrx6/SpecForge upgrade --dir .
+npx github:huangrx6/SpecForge upgrade --dir . --dry-run
+```
+
 公司内部仓库使用 `npm exec --package` 指向内部地址，并固定 tag：
 
 ```bash
@@ -117,6 +124,15 @@ node core/scripts/sync-starter.mjs --check
 
 `.specforge/wiki/`、`.specforge/work/`、`.specforge/hooks/local/` 和 `.specforge/registry.yaml` 属于项目事实或动态证据，不会从源码仓库原样同步到 starter。
 
+业务项目升级时，`specforge upgrade` 只刷新 starter manifest 覆盖的运行时资产，保留项目事实。默认保护：
+
+- `.specforge/wiki/`
+- `.specforge/work/`
+- `.specforge/registry.yaml`
+- `.specforge/project.yaml`
+- `.specforge/hooks/local/`
+- 已存在的 `.specforge/AGENTS.md`
+
 ## 覆盖规则
 
 | 已存在内容 | onboard 行为 |
@@ -124,6 +140,9 @@ node core/scripts/sync-starter.mjs --check
 | `.specforge/wiki/` | 保留，不覆盖长期项目知识 |
 | `.specforge/work/` | 保留，不覆盖 active / archive evidence |
 | `.specforge/registry.yaml` | 保留，不重建索引 |
+| `.specforge/project.yaml` | 保留项目 profile、wiki 和 work 配置 |
+| `.specforge/AGENTS.md` | 已存在时保留项目本地 Agent 约束；缺失时可由 starter 补齐 |
+| `.specforge/hooks/local/` | 保留项目自定义 hook |
 | `.specforge/core/standards/` | 可用 starter 补齐或刷新稳定规则 |
 | `.specforge/core/artifacts/templates/` | 可用 starter 补齐或刷新模板 |
 | `.specforge/core/scripts/` | 可用 starter 补齐或刷新工具脚本 |

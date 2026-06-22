@@ -9,7 +9,7 @@ description: 将新仓库或已有仓库接入 SpecForge；初始化唯一项目
 
 开始 onboard 前，先确认当前目录是要接入 SpecForge 的业务项目根。若当前在 `frontend/`、`backend/` 等子目录，先回到仓库根；不要在子目录里初始化 `.specforge/`，除非用户明确说明该子目录就是独立项目。
 
-`sf-onboard` 只做三件事：搭骨架、识别存量项目、报告迁移建议。骨架完成后其他 `sf-*` 技能才能运行；已有代码的项目应先进入 `sf-steering` 建立 wiki 基线，再处理新需求或 bug。
+`sf-onboard` 只做四件事：搭骨架、升级已有 `.specforge/` 运行时、识别存量项目、报告迁移建议。骨架完成后其他 `sf-*` 技能才能运行；已有代码的项目应先进入 `sf-steering` 建立 wiki 基线，再处理新需求或 bug。
 
 ## 必读
 
@@ -23,7 +23,7 @@ description: 将新仓库或已有仓库接入 SpecForge；初始化唯一项目
 - 不创建根 `specs/`、根 `scripts/`，也不强制修改业务项目 `package.json`。
 - 初始化素材来自 CLI 生成的唯一 starter 快照：GitHub 发行包中的 `starter/.specforge/`。
 - 项目内命令直接运行 `node .specforge/core/scripts/<name>.mjs`。
-- 已有 `.specforge/wiki/`、`.specforge/work/`、`.specforge/registry.yaml` 不覆盖。
+- 已有 `.specforge/wiki/`、`.specforge/work/`、`.specforge/registry.yaml`、`.specforge/project.yaml`、`.specforge/hooks/local/` 和已有 `.specforge/AGENTS.md` 不覆盖。
 - 已有业务代码的项目，onboard 后不直接开始需求实现；先运行 `codebase-index.mjs` 并路由到 `sf-steering`。
 
 ## 执行序列
@@ -56,11 +56,22 @@ node cli/specforge.mjs init --dir /path/to/project
 
 ### C. 已有 `.specforge/` 路径
 
-1. 只补齐缺失 core/starter 资产。
-2. 保留现有 `.specforge/wiki/`、`.specforge/work/`、`.specforge/registry.yaml`。
-3. 运行 `node .specforge/core/scripts/doctor.mjs`。
-4. 运行 `node .specforge/core/scripts/codebase-index.mjs --json`。
-5. 如果仓库已有业务代码，输出下一步为 `sf-steering`，先建立项目画像。
+1. 优先执行官方升级命令刷新运行时：
+
+```bash
+npx github:huangrx6/SpecForge upgrade --dir .
+```
+
+2. 如果用户要求先看影响，先执行：
+
+```bash
+npx github:huangrx6/SpecForge upgrade --dir . --dry-run
+```
+
+3. 保留现有 `.specforge/wiki/`、`.specforge/work/`、`.specforge/registry.yaml`、`.specforge/project.yaml`、`.specforge/hooks/local/` 和已有 `.specforge/AGENTS.md`。
+4. 运行 `node .specforge/core/scripts/doctor.mjs`。
+5. 运行 `node .specforge/core/scripts/codebase-index.mjs --json`。
+6. 如果仓库已有业务代码，输出下一步为 `sf-steering`，先建立项目画像。
 
 ### D. 迁移路径
 
@@ -77,7 +88,7 @@ node cli/specforge.mjs init --dir /path/to/project
 | 当前目录不是业务项目根 | 停止：先切到项目根或请用户确认 |
 | 用户要求安装 AI 工具技能 | 参考 `references/structure-and-migration.md#技能安装`，但不要混入业务项目初始化 |
 | `.specforge/` 不存在 | 执行新接入路径 |
-| `.specforge/` 存在但 core 缺失或过期 | 补齐后 doctor |
+| `.specforge/` 存在但 core 缺失或过期 | 执行 `specforge upgrade --dir .` 后 doctor |
 | 已有业务代码且 wiki 为空或明显不足 | 完成 onboard 后路由 `sf-steering` |
 | 存在旧版 `specs/` / 根 `scripts/` | 只给迁移建议；低置信度先问用户 |
 
