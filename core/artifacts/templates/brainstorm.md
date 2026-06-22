@@ -16,7 +16,7 @@
 | Brainstorm profile | clarify-light / product-discovery / experience-exploration / technical-decision / research-heavy |
 | Case study depth | none / quick / standard / deep |
 | Discussion depth | single-decision / guided-options / workshop |
-| Package skills used | |
+| Package references used | |
 | External references used | |
 | Sections marked N/A | |
 

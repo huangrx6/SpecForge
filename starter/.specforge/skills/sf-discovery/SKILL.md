@@ -32,7 +32,7 @@ description: 对新请求执行深度探索、缺陷根因分析或预研；用�
 
 ## 参考 Skill 联动
 
-需要外部事实、版本、价格、法规、漏洞、竞品或 SDK / provider 资料时，按需读取 `.specforge/core/skills/brainstorm/research-source/SKILL.md`。
+需要外部事实、版本、价格、法规、漏洞、竞品或 SDK / provider 资料时，按需读取 `.specforge/core/skills/brainstorm/references/research-source.md`。
 
 - `research-source` 只提供本地事实读取、来源选择、证据契约、版本关系、冲突处理和覆盖度检查；复杂 PoC / 实验仍由 discovery research 执行。
 - 研究结论必须写入 `01-spec/research.md` 或 `00-intake/brief.md`，并保留来源、日期、置信度、覆盖度和未解决问题。

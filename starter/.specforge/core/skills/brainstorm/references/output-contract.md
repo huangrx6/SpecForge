@@ -37,7 +37,7 @@
 | Brainstorm profile | clarify-light / product-discovery / experience-exploration / technical-decision / research-heavy |
 | Case study depth | none / quick / standard / deep |
 | Discussion depth | single-decision / guided-options / workshop |
-| Package skills used | 实际读取的 brainstorm 子 skill |
+| Package references used | 实际读取的 brainstorm reference / section |
 | External references used | 外部 skill / URL / 截图 / source family |
 | Sections marked N/A | section + 具体理由 |
 

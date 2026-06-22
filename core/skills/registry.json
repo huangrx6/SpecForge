@@ -682,8 +682,8 @@
       "category": "brainstorm",
       "localPath": "brainstorm",
       "name": "brainstorm",
-      "role": "Brainstorm 能力包根入口与 progressive disclosure 控制层",
-      "trust": "SpecForge 本地维护，面向 sf-brainstorm 的 profile 路由、案例侦察、事实查证、多轮讨论和输出合同编排",
+      "role": "Brainstorm 能力包根入口与 progressive disclosure 控制层；内部方法收束在 references/methods.md 和 references/research-source.md",
+      "trust": "SpecForge 本地维护，面向 sf-brainstorm 的 profile 路由、案例侦察、事实查证、多轮讨论、方法编排和输出合同",
       "risk": "低",
       "source": {
         "type": "local-authored",
@@ -693,6 +693,12 @@
         "files": [
           {
             "path": "references/brainstorm-playbook.md"
+          },
+          {
+            "path": "references/methods.md"
+          },
+          {
+            "path": "references/research-source.md"
           },
           {
             "path": "references/output-contract.md"
@@ -710,275 +716,8 @@
       "doNotUseFor": [
         "跳过 sf-brainstorm 入口直接执行下游阶段",
         "替代用户确认",
-        "把子技能输出原样复制进 artifact",
+        "把 methods / research-source 输出原样复制进 artifact",
         "把案例灵感写成事实证据"
-      ]
-    },
-    {
-      "id": "problem-framing",
-      "category": "brainstorm",
-      "localPath": "brainstorm/problem-framing",
-      "name": "problem-framing",
-      "role": "brainstorm 问题重构与目标澄清",
-      "trust": "SpecForge 本地维护，面向模糊请求的问题空间建模",
-      "risk": "低",
-      "source": {
-        "type": "local-authored",
-        "repo": "SpecForge",
-        "path": "core/skills/brainstorm/problem-framing/SKILL.md",
-        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/brainstorm/problem-framing"
-      },
-      "trigger": "当 sf-brainstorm 需要把一句模糊请求重构为目标、用户、痛点、约束、成功标准、非目标和必须确认问题时使用。",
-      "normalizeTo": [
-        "00-intake/brainstorm.md#问题重构",
-        "00-intake/brainstorm.md#问题地图"
-      ],
-      "doNotUseFor": [
-        "替代用户确认",
-        "直接生成方案",
-        "把 agent 假设写成已明确事实"
-      ]
-    },
-    {
-      "id": "research-source",
-      "category": "brainstorm",
-      "localPath": "brainstorm/research-source",
-      "name": "research-source",
-      "role": "brainstorm 当前事实与来源证据查证",
-      "trust": "SpecForge 本地维护，面向 brainstorm 取舍的本地事实、来源索引、证据契约和版本关系检查",
-      "risk": "低",
-      "source": {
-        "type": "local-authored",
-        "repo": "SpecForge",
-        "path": "core/skills/brainstorm/research-source/SKILL.md",
-        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/brainstorm/research-source",
-        "files": [
-          {
-            "path": "references/research-protocol.md"
-          },
-          {
-            "path": "references/source-index.md"
-          },
-          {
-            "path": "references/evidence-contract.md"
-          },
-          {
-            "path": "references/dependency-version-map.md"
-          }
-        ]
-      },
-      "trigger": "当 sf-brainstorm 中当前事实、版本、依赖、价格、竞品、AI provider、漏洞、法规或浏览器兼容性会影响范围、技术路线或成本取舍时使用。",
-      "normalizeTo": [
-        "00-intake/brainstorm.md#当前事实与研究证据",
-        "00-intake/brainstorm.md#问题地图",
-        "00-intake/brainstorm.md#方案选项"
-      ],
-      "doNotUseFor": [
-        "替代用户确认",
-        "替代 discovery research 的实验或长篇综合",
-        "替代实际联网查证或项目实测",
-        "把社区观点写成当前事实"
-      ]
-    },
-    {
-      "id": "case-study-scout",
-      "category": "brainstorm",
-      "localPath": "brainstorm/case-study-scout",
-      "name": "case-study-scout",
-      "role": "brainstorm 优秀案例侦察与机制拆解",
-      "trust": "SpecForge 本地维护，面向优秀案例、竞品、模板站、作品站和交互模式的可迁移机制提取",
-      "risk": "低",
-      "source": {
-        "type": "local-authored",
-        "repo": "SpecForge",
-        "path": "core/skills/brainstorm/case-study-scout/SKILL.md",
-        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/brainstorm/case-study-scout"
-      },
-      "trigger": "当 sf-brainstorm 需要参考优秀案例、竞品、模板站、作品站、官网、截图或高级交互 / 视觉 / 工作流机制，并避免模板化方案时使用。",
-      "normalizeTo": [
-        "00-intake/brainstorm.md#优秀案例与机制拆解",
-        "00-intake/brainstorm.md#方案选项",
-        "00-intake/brainstorm.md#参考 Skill 使用记录"
-      ],
-      "doNotUseFor": [
-        "替代用户确认",
-        "复制竞品文案、品牌资产、专有交互或代码",
-        "替代 research-source 的事实查证",
-        "把灵感案例写成已批准方案"
-      ]
-    },
-    {
-      "id": "divergent-thinking",
-      "category": "brainstorm",
-      "localPath": "brainstorm/divergent-thinking",
-      "name": "divergent-thinking",
-      "role": "brainstorm 多角度发散生成",
-      "trust": "SpecForge 本地维护，面向方案池生成和多视角创意扩展",
-      "risk": "低",
-      "source": {
-        "type": "local-authored",
-        "repo": "SpecForge",
-        "path": "core/skills/brainstorm/divergent-thinking/SKILL.md",
-        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/brainstorm/divergent-thinking"
-      },
-      "trigger": "当 sf-brainstorm 已完成基本问题重构，需要保守、标准、激进、实验、反直觉或多视角候选方向时使用。",
-      "normalizeTo": [
-        "00-intake/brainstorm.md#发散方向池",
-        "00-intake/brainstorm.md#方案选项"
-      ],
-      "doNotUseFor": [
-        "替代事实查证",
-        "替代收敛评估",
-        "生成只有措辞差异的假方案"
-      ]
-    },
-    {
-      "id": "analogy-thinking",
-      "category": "brainstorm",
-      "localPath": "brainstorm/analogy-thinking",
-      "name": "analogy-thinking",
-      "role": "brainstorm 类比迁移",
-      "trust": "SpecForge 本地维护，面向跨行业、跨产品和跨系统模式迁移",
-      "risk": "低",
-      "source": {
-        "type": "local-authored",
-        "repo": "SpecForge",
-        "path": "core/skills/brainstorm/analogy-thinking/SKILL.md",
-        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/brainstorm/analogy-thinking"
-      },
-      "trigger": "当直接发散变窄、用户要求更高级/差异化/不常规方向，或需要从其他产品、行业、系统迁移机制时使用。",
-      "normalizeTo": [
-        "00-intake/brainstorm.md#类比迁移",
-        "00-intake/brainstorm.md#方案选项"
-      ],
-      "doNotUseFor": [
-        "把类比对象当事实证据",
-        "复制品牌或专有流程",
-        "替代用户确认"
-      ]
-    },
-    {
-      "id": "scenario-simulation",
-      "category": "brainstorm",
-      "localPath": "brainstorm/scenario-simulation",
-      "name": "scenario-simulation",
-      "role": "brainstorm 场景模拟",
-      "trust": "SpecForge 本地维护，面向候选方案的使用场景、失败路径和上下文适配检查",
-      "risk": "低",
-      "source": {
-        "type": "local-authored",
-        "repo": "SpecForge",
-        "path": "core/skills/brainstorm/scenario-simulation/SKILL.md",
-        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/brainstorm/scenario-simulation"
-      },
-      "trigger": "当候选方案需要放进真实用户输入、流程、边界、失败或执行 handoff 场景中验证时使用。",
-      "normalizeTo": [
-        "00-intake/brainstorm.md#场景模拟",
-        "00-intake/brainstorm.md#问题地图"
-      ],
-      "doNotUseFor": [
-        "替代真实用户验证",
-        "替代实现测试",
-        "把模拟结果写成已发生事实"
-      ]
-    },
-    {
-      "id": "critic-review",
-      "category": "brainstorm",
-      "localPath": "brainstorm/critic-review",
-      "name": "critic-review",
-      "role": "brainstorm 反方质疑与复杂度压缩",
-      "trust": "SpecForge 本地维护，面向候选方案的假设、风险、简化和反驳检查",
-      "risk": "低",
-      "source": {
-        "type": "local-authored",
-        "repo": "SpecForge",
-        "path": "core/skills/brainstorm/critic-review/SKILL.md",
-        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/brainstorm/critic-review"
-      },
-      "trigger": "当已有候选方案，需要检查哪里可能不成立、是否过度设计、是否有更简单做法、维护/安全/用户价值风险时使用。",
-      "normalizeTo": [
-        "00-intake/brainstorm.md#批判质疑",
-        "00-intake/brainstorm.md#问题地图"
-      ],
-      "doNotUseFor": [
-        "否定用户偏好本身",
-        "替代事实查证",
-        "把可简化方案直接 reject"
-      ]
-    },
-    {
-      "id": "decision-matrix",
-      "category": "brainstorm",
-      "localPath": "brainstorm/decision-matrix",
-      "name": "decision-matrix",
-      "role": "brainstorm 方案收敛评估",
-      "trust": "SpecForge 本地维护，面向价值、成本、风险、落地性和可扩展性评分",
-      "risk": "低",
-      "source": {
-        "type": "local-authored",
-        "repo": "SpecForge",
-        "path": "core/skills/brainstorm/decision-matrix/SKILL.md",
-        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/brainstorm/decision-matrix"
-      },
-      "trigger": "当 brainstorm 有多个方向，需要按价值、成本、新颖度、风险、落地性、可扩展性和置信度排序并形成推荐时使用。",
-      "normalizeTo": [
-        "00-intake/brainstorm.md#方案评估矩阵",
-        "00-intake/brainstorm.md#推荐方案"
-      ],
-      "doNotUseFor": [
-        "把评分当用户批准",
-        "隐藏关键取舍",
-        "用总分掩盖缺失事实"
-      ]
-    },
-    {
-      "id": "output-shaping",
-      "category": "brainstorm",
-      "localPath": "brainstorm/output-shaping",
-      "name": "output-shaping",
-      "role": "brainstorm 输出结构选择",
-      "trust": "SpecForge 本地维护，面向 brainstorm 产物格式控制和阅读顺序",
-      "risk": "低",
-      "source": {
-        "type": "local-authored",
-        "repo": "SpecForge",
-        "path": "core/skills/brainstorm/output-shaping/SKILL.md",
-        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/brainstorm/output-shaping"
-      },
-      "trigger": "当 brainstorm 需要选择想法池、方向矩阵、方案对比、优先级排序、最小可行版本路线图、风险清单、行动计划或问题清单等输出格式时使用。",
-      "normalizeTo": [
-        "00-intake/brainstorm.md"
-      ],
-      "doNotUseFor": [
-        "替代内容判断",
-        "用模板堆满轻量 brainstorm",
-        "把用户决策埋在段落中"
-      ]
-    },
-    {
-      "id": "execution-planning",
-      "category": "brainstorm",
-      "localPath": "brainstorm/execution-planning",
-      "name": "execution-planning",
-      "role": "brainstorm 下一步行动与阶段路由",
-      "trust": "SpecForge 本地维护，面向推荐方向后的最小可行版本路线和下游阶段交接",
-      "risk": "低",
-      "source": {
-        "type": "local-authored",
-        "repo": "SpecForge",
-        "path": "core/skills/brainstorm/execution-planning/SKILL.md",
-        "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/brainstorm/execution-planning"
-      },
-      "trigger": "当 brainstorm 已有推荐或用户确认方向，需要转成下一步行动、最小可行版本路线图、验证问题和产品需求文档、需求规格、界面设计、技术设计或探索阶段交接时使用。",
-      "normalizeTo": [
-        "00-intake/brainstorm.md#下一步行动",
-        "00-intake/brief.md#下一步"
-      ],
-      "doNotUseFor": [
-        "替代 tasking",
-        "在方向未确认时写实现任务",
-        "替代下游产品需求文档、需求规格或设计阶段"
       ]
     },
     {

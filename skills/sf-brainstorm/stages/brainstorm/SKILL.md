@@ -15,12 +15,12 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续产品需求�
 - 可选：`00-intake/prd.md`、`01-spec/requirements.md`、`01-spec/ui-design.md`、`01-spec/technical-design.md`。
 - 相关 `.specforge/wiki/` 长期事实。
 - 当前可靠外部资料；技术类优先官方文档，产品/竞品类记录来源和访问日期。
-- `.specforge/core/skills/brainstorm/SKILL.md`（Brainstorm 能力包根入口；必须先读它，再由它路由到控制文件和子技能）。
+- `.specforge/core/skills/brainstorm/SKILL.md`（Brainstorm 能力包根入口；必须先读它，再由它路由到 references 和 data）。
 - `.specforge/core/skills/brainstorm/references/brainstorm-playbook.md`（由根入口读取，用于选择 profile、case study depth、discussion depth、案例侦察协议、多轮讨论协议和最短读取链路）。
 - `.specforge/core/skills/brainstorm/references/output-contract.md`（用于落档合同、条件 section、handoff 和停止条件）。
+- `.specforge/core/skills/brainstorm/references/methods.md`（用于问题重构、发散、类比、场景模拟、批判质疑、方案矩阵、输出塑形和行动规划）。
+- `.specforge/core/skills/brainstorm/references/research-source.md`（需要外部事实、版本、竞品、价格、漏洞、法规或 AI provider 资料时，用于搜索来源和证据记录）。
 - `.specforge/core/skills/ORCHESTRATION.md`（需要参考 skill 时，用于选择 skill、读取 reference 和归一化输出）。
-- `.specforge/core/skills/brainstorm/research-source/SKILL.md`（需要外部事实、版本、竞品、价格、漏洞、法规或 AI provider 资料时，用于搜索来源和证据记录）。
-- `.specforge/core/skills/brainstorm/case-study-scout/SKILL.md`（需要优秀案例、竞品、模板站、作品站、截图或高级交互 / 视觉 / 工作流机制参考时，用于查询案例和拆解可迁移机制）。
 
 ## 触发
 
@@ -55,7 +55,7 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续产品需求�
 - `Brainstorm profile`
 - `Case study depth`
 - `Discussion depth`
-- `Package skills used`
+- `Package references used`
 - `External references used`
 - `Sections marked N/A`
 
@@ -68,15 +68,15 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续产品需求�
    - `light` 时执行框定、候选和收敛，但不做五维全量发散。
    - `deep` 时必须先做 Phase 1 发散，再做 Phase 2 聚焦。
    - 涉及事实争议、依赖版本、AI provider、价格、法规、安全或竞品取舍时，将执行 profile 记为 `research-heavy`，即使 brief 原始模式是 `light`。
-   - 在 `brainstorm.md#执行配置` 记录：`Brainstorm mode`、`Execution profile`、`Brainstorm profile`、`Case study depth`、`Discussion depth`、`Package skills used`、`External references used`、`Sections marked N/A`。
+   - 在 `brainstorm.md#执行配置` 记录：`Brainstorm mode`、`Execution profile`、`Brainstorm profile`、`Case study depth`、`Discussion depth`、`Package references used`、`External references used`、`Sections marked N/A`。
    - 模式来源见 `sf-intake` 的“Brainstorm 分流规则”和 `core/artifacts/templates/brief.md#Brainstorm 决策`。
-   - 读取 `.specforge/core/skills/brainstorm/SKILL.md`，用根入口和 profile 路由决定本轮读取范围；不要直接从零散子技能开始。
+   - 读取 `.specforge/core/skills/brainstorm/SKILL.md`，用根入口和 profile 路由决定本轮读取范围；不要直接从零散方法开始。
    - 读取 `.specforge/core/skills/brainstorm/references/brainstorm-playbook.md`，用 `Expose -> Ask -> Record` 循环安排多轮探讨。
 1. **框定问题和事实输入。**
-   - 请求、目标用户、成功标准、约束或真实冲突不清楚时，先读取 `.specforge/core/skills/brainstorm/problem-framing/SKILL.md`。
+   - 请求、目标用户、成功标准、约束或真实冲突不清楚时，先读取 `.specforge/core/skills/brainstorm/references/methods.md#Problem Framing`。
    - 写清用户目标、目标用户、业务结果、约束和当前已知事实。
 2. **补足当前事实和外部参考。**
-   - 需要外部事实时先读取 `.specforge/core/skills/brainstorm/research-source/SKILL.md`，再按其 `references/source-index.md` 和 `references/evidence-contract.md` 查证，不凭旧知识拍板。
+   - 需要外部事实时先读取 `.specforge/core/skills/brainstorm/references/research-source.md`，按其中的 source index、evidence contract 和 dependency version map 查证，不凭旧知识拍板。
    - 以下情况必须调用 `research-source`，不允许跳过：
      - 涉及具体版本号、依赖兼容性、API 限制：查官方文档 + GitHub releases / package changelog。
      - 涉及新引入的库或工具：查 npmjs / GitHub Issues / releases / 已知 bug。
@@ -89,9 +89,9 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续产品需求�
    - 不需要外部研究时写明 `跳过理由：[具体原因]`，不允许只写“无需外部研究”。
    - 需要参考 skill 时，按 `.specforge/core/skills/ORCHESTRATION.md` 选择并读取；输出必须按“参考 Skill 归一化”处理。
 3. **侦察优秀案例和可迁移机制。**
-   - 先读取 `.specforge/core/skills/brainstorm/references/brainstorm-playbook.md#Case Study Protocol` 和 `.specforge/core/skills/brainstorm/data/case-source-catalog.csv`，再执行 `case-study-scout`。
-   - 用户提供案例、截图、模板站、竞品或要求更高级 / 不模板化时，必须读取 `.specforge/core/skills/brainstorm/case-study-scout/SKILL.md`。
-   - 产品体验、管理端、数据看板、AI 工具、网站、品牌页、内容工具或工作流方向会影响后续设计 / 实现时，默认读取 `case-study-scout`；跳过必须写具体理由。
+   - 先读取 `.specforge/core/skills/brainstorm/references/brainstorm-playbook.md#Case Study Protocol` 和 `.specforge/core/skills/brainstorm/data/case-source-catalog.csv`。
+   - 用户提供案例、截图、模板站、竞品或要求更高级 / 不模板化时，必须执行 `.specforge/core/skills/brainstorm/references/brainstorm-playbook.md#Case Study Protocol`。
+   - 产品体验、管理端、数据看板、AI 工具、网站、品牌页、内容工具或工作流方向会影响后续设计 / 实现时，默认执行 Case Study Protocol；跳过必须写具体理由。
    - 不能只列案例名。必须记录案例池、URL 或截图路径、访问日期、值得看的点、可迁移机制、不能照搬点和证据状态。
    - 至少形成 2 条互斥机制路线，并写清成本、风险和后续验证；不要把所有优秀案例特点堆成一个不可落地的大方案。
    - 如果案例声明涉及具体功能、价格、发布状态、性能、安全或法规，交给 `research-source` 查证，不能让案例侦察替代事实查证。
@@ -101,15 +101,15 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续产品需求�
    - 将所有 `[必须确认]` 按以下维度排序：核心目标/范围 > 体验方向 > 数据与安全 > 集成与依赖 > 交付验收。
 5. **Phase 1 发散。**
    - 仅 `deep` 必填；`light` 可写 N/A 和理由。
-   - 需要发散时读取 `.specforge/core/skills/brainstorm/divergent-thinking/SKILL.md`；候选方案同质化或需要差异化机制时，再读取 `.specforge/core/skills/brainstorm/analogy-thinking/SKILL.md`。
+   - 需要发散时读取 `.specforge/core/skills/brainstorm/references/methods.md#Divergent Thinking`；候选方案同质化或需要差异化机制时，再读取 `methods.md#Analogy Thinking`。
    - 从六个维度列出可能性，不先筛选：用户目标、解法可能性、案例机制路线、技术路线、风险未知、不做什么。
    - 给用户看发散清单，询问是否有遗漏的重要方向。
    - 给用户前先自检：至少一个反直觉方案；至少一个来自案例机制但经过本项目适配的方案；考虑做更少或不做；技术路线至少两条；明确最大未知风险。
 6. **Phase 2 聚焦。**
-   - `deep` profile 给出方案前，读取 `.specforge/core/skills/brainstorm/scenario-simulation/SKILL.md`，用关键场景、失败路径和边界条件压测候选。
-   - `light` / `research-heavy` profile 只有当场景、失败路径或边界条件会改变推荐时才读取 `scenario-simulation`；否则在 `执行配置` 标记 `场景模拟: N/A + 理由`。
-   - 推荐方案前，读取 `.specforge/core/skills/brainstorm/critic-review/SKILL.md`，暴露最弱假设、反例、可删范围和验证点。
-   - 需要排序、推荐或用户授权默认时，读取 `.specforge/core/skills/brainstorm/decision-matrix/SKILL.md`，把取舍写成矩阵而不是散文判断。
+   - `deep` profile 给出方案前，读取 `.specforge/core/skills/brainstorm/references/methods.md#Scenario Simulation`，用关键场景、失败路径和边界条件压测候选。
+   - `light` / `research-heavy` profile 只有当场景、失败路径或边界条件会改变推荐时才读取 `methods.md#Scenario Simulation`；否则在 `执行配置` 标记 `场景模拟: N/A + 理由`。
+   - 推荐方案前，读取 `.specforge/core/skills/brainstorm/references/methods.md#Critic Review`，暴露最弱假设、反例、可删范围和验证点。
+   - 需要排序、推荐或用户授权默认时，读取 `.specforge/core/skills/brainstorm/references/methods.md#Decision Matrix`，把取舍写成矩阵而不是散文判断。
    - 给出 2-3 个互斥方案或最小可行版本组合。
    - 每个方案必须包含：用户价值、实现成本、主要风险、适用场景、放弃代价。
    - 方案之间必须真的不同，不能只是同一方案的措辞变化。
@@ -153,8 +153,8 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续产品需求�
    - Standalone / Lightweight 模式写入 `specforge-import-ready.md` 格式内容。
 9. **收敛落档。**
    - 写入前读取 `.specforge/core/skills/brainstorm/references/output-contract.md`，检查 Always Output、Conditional Output、Stop Conditions 和 Cross-stage Handoff。
-   - 写入前读取 `.specforge/core/skills/brainstorm/output-shaping/SKILL.md`，选择适合本轮的输出形态。
-   - 需要进入产品需求文档、需求规格、界面设计、技术设计、研究或验证阶段时，读取 `.specforge/core/skills/brainstorm/execution-planning/SKILL.md`，写清交接、负责人、输入产物和验证入口。
+   - 写入前读取 `.specforge/core/skills/brainstorm/references/methods.md#Output Shaping`，选择适合本轮的输出形态。
+   - 需要进入产品需求文档、需求规格、界面设计、技术设计、研究或验证阶段时，读取 `.specforge/core/skills/brainstorm/references/methods.md#Execution Planning`，写清交接、负责人、输入产物和验证入口。
    - 写入 `00-intake/brainstorm.md`。
    - 更新 `00-intake/brief.md` 的澄清记录、功能候选池、用户选择、产品需求文档决策和下一步路由。
    - 如果来自产品需求文档、需求规格、界面设计或技术设计的返工，标明 `Return to` 和需要修改的 artifact。
@@ -173,7 +173,7 @@ Brainstorm 是 graph 外的协作收敛阶段。它服务于后续产品需求�
 
 ## `brainstorm.md` 必含内容
 
-- 执行配置：Brainstorm mode、Execution profile、Brainstorm profile、Case study depth、Discussion depth、Package skills used、External references used、N/A section reason。
+- 执行配置：Brainstorm mode、Execution profile、Brainstorm profile、Case study depth、Discussion depth、Package references used、External references used、N/A section reason。
 - 问题框架。
 - 问题重构：原始表述、重写后的问题、核心冲突、成功标准、必须确认项。
 - 当前事实和研究证据。

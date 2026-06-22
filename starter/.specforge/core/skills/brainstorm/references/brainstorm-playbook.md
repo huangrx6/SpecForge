@@ -2,7 +2,7 @@
 
 本文件是 Brainstorm 能力包的执行总纲。它合并 profile routing、案例侦察协议、多轮讨论协议和完整编排规则，解决“读了很多文件但仍不知道怎么做”的问题。
 
-使用原则：先用本文件决定本轮怎么跑，再读取必要子 skill；不要把所有子 skill 平铺读取，也不要只凭直觉回答。
+使用原则：先用本文件决定本轮怎么跑，再读取必要 reference 或 section；不要把所有方法平铺读取，也不要只凭直觉回答。
 
 ## 1. Execution Model
 
@@ -20,7 +20,7 @@ Brainstorm 的目标不是生成更多想法，而是把模糊空间收束为：
 2. 选择 `Brainstorm profile`。
 3. 选择 `Case study depth`。
 4. 选择 `Discussion depth`。
-5. 按最短链路读取子 skill。
+5. 按最短链路读取 reference section。
 6. 需要事实时查证；需要体验参考时侦察案例。
 7. 发散候选路线。
 8. 用场景、批判和矩阵压测。
@@ -31,19 +31,19 @@ Brainstorm 的目标不是生成更多想法，而是把模糊空间收束为：
 
 | Profile | 输入信号 | 必读文件 | 可选追加 | 输出深度 |
 |---|---|---|---|---|
-| `clarify-light` | 用户只需要快速想清楚 1-2 个取舍；范围低风险；无明显外部案例诉求 | `problem-framing/SKILL.md`、`decision-matrix/SKILL.md`、`references/output-contract.md` | `case-study-scout` 仅当用户给案例或体验方向会影响推荐；`research-source` 仅当事实会改变取舍 | compact |
-| `product-discovery` | 新产品能力、AI 功能、后台工具、跨角色流程、MVP 不清 | `problem-framing/SKILL.md`、`case-study-scout/SKILL.md`、`divergent-thinking/SKILL.md`、`critic-review/SKILL.md`、`decision-matrix/SKILL.md`、`references/output-contract.md` | `research-source`、`scenario-simulation`、`execution-planning`、`product` | standard |
-| `experience-exploration` | 管理端、Dashboard、官网、品牌页、作品页、H5、AI 工具；用户明确要高级案例、不模板化或给参考站 | `data/case-source-catalog.csv`、`case-study-scout/SKILL.md`、`divergent-thinking/SKILL.md`、`analogy-thinking/SKILL.md`、`scenario-simulation/SKILL.md`、`decision-matrix/SKILL.md`、`references/output-contract.md` | `design-system`、`design-taste-frontend`、`research-source` | full |
-| `technical-decision` | 技术栈、依赖、AI provider、部署、成本、安全、版本兼容需要取舍 | `problem-framing/SKILL.md`、`research-source/SKILL.md`、`critic-review/SKILL.md`、`decision-matrix/SKILL.md`、`references/output-contract.md` | `case-study-scout` 仅当工具产品体验或竞品机制会影响决策；`sf-discovery` research | standard |
-| `research-heavy` | 竞品 / 价格 / 法规 / AI 能力 / 市场定位 / 公开资料冲突会影响方向 | `research-source/SKILL.md`、`case-study-scout/SKILL.md`、`critic-review/SKILL.md`、`decision-matrix/SKILL.md`、`references/output-contract.md` | `sf-discovery` research、`scenario-simulation` | standard / full |
+| `clarify-light` | 用户只需要快速想清楚 1-2 个取舍；范围低风险；无明显外部案例诉求 | `references/methods.md#Problem Framing`、`#Decision Matrix`、`references/output-contract.md` | `Case Study Protocol` 仅当用户给案例或体验方向会影响推荐；`references/research-source.md` 仅当事实会改变取舍 | compact |
+| `product-discovery` | 新产品能力、AI 功能、后台工具、跨角色流程、MVP 不清 | `references/methods.md#Problem Framing`、`#Divergent Thinking`、`#Critic Review`、`#Decision Matrix`、`references/output-contract.md` | `references/research-source.md`、`#Scenario Simulation`、`#Execution Planning`、`product` | standard |
+| `experience-exploration` | 管理端、Dashboard、官网、品牌页、作品页、H5、AI 工具；用户明确要高级案例、不模板化或给参考站 | `Case Study Protocol`、`data/case-source-catalog.csv`、`references/methods.md#Divergent Thinking`、`#Analogy Thinking`、`#Scenario Simulation`、`#Decision Matrix`、`references/output-contract.md` | `design-system`、`design-taste-frontend`、`references/research-source.md` | full |
+| `technical-decision` | 技术栈、依赖、AI provider、部署、成本、安全、版本兼容需要取舍 | `references/methods.md#Problem Framing`、`references/research-source.md`、`#Critic Review`、`#Decision Matrix`、`references/output-contract.md` | `Case Study Protocol` 仅当工具产品体验或竞品机制会影响决策；`sf-discovery` research | standard |
+| `research-heavy` | 竞品 / 价格 / 法规 / AI 能力 / 市场定位 / 公开资料冲突会影响方向 | `references/research-source.md`、`Case Study Protocol`、`references/methods.md#Critic Review`、`#Decision Matrix`、`references/output-contract.md` | `sf-discovery` research、`#Scenario Simulation` | standard / full |
 
 Selection rules：
 
-- 先选 profile，再决定读哪些子 skill；不要从“我想回答什么”倒推 profile。
+- 先选 profile，再决定读哪些 reference section；不要从“我想回答什么”倒推 profile。
 - 用户给 URL、截图、模板站、竞品、作品站或说“多查询优秀案例”时，至少走 `product-discovery`。
 - 涉及 UI、体验、品牌、管理端、Dashboard、工作台、AI 工具或“感觉”时，升级为 `experience-exploration`。
-- 管理后台不是只走技术取舍。只要用户关心效率、布局、工作流、视觉层级或交互签名，必须使用 `experience-exploration` 或追加 `case-study-scout`。
-- 事实查证和案例侦察不同：价格、版本、功能声明、法规、安全走 `research-source`；交互机制、信息架构、视觉节奏、工作流组织走 `case-study-scout`。
+- 管理后台不是只走技术取舍。只要用户关心效率、布局、工作流、视觉层级或交互签名，必须使用 `experience-exploration` 或追加 `Case Study Protocol`。
+- 事实查证和案例侦察不同：价格、版本、功能声明、法规、安全走 `references/research-source.md`；交互机制、信息架构、视觉节奏、工作流组织走 `Case Study Protocol`。
 - `clarify-light` 也必须输出 N/A 理由，不能空着“优秀案例与机制拆解”。
 
 ## 3. Case Study Protocol
@@ -155,7 +155,7 @@ Escalation：
 - 案例事实冲突、价格 / 功能 / 发布状态影响决策 -> 交给 `research-source`。
 - 需要真实交互截图、滚动、响应式观察 -> 使用浏览器 / Playwright 工具，记录 viewport 和访问结果。
 - 案例要求生成图片、3D、视频或复杂素材 -> 输出 asset prompt、目标目录、fallback，不在 brainstorm 阶段实现。
-- 机制路线涉及大工程成本 -> 在 `decision-matrix` 降低落地性或升级 `sf-discovery` research / spike。
+- 机制路线涉及大工程成本 -> 在 `methods.md#Decision Matrix` 降低落地性或升级 `sf-discovery` research / spike。
 
 ## 4. Discussion Protocol
 
@@ -228,16 +228,16 @@ Option quality：
 完整链路：
 
 1. 选择 profile、case study depth、discussion depth。
-2. 读取 `problem-framing`，重构目标、受众、约束和必须确认问题。
-3. 需要案例时读取 `data/case-source-catalog.csv` 和 `case-study-scout`。
-4. 需要事实时读取 `research-source` 和其 references。
-5. 用 `divergent-thinking` 生成候选。
-6. 候选同质化或需要差异化时用 `analogy-thinking`。
-7. 方案要落地前用 `scenario-simulation` 压测关键场景、失败路径和边界。
-8. 推荐前用 `critic-review` 暴露最弱假设、反例和可删范围。
-9. 用 `decision-matrix` 排序、推荐或记录授权默认。
+2. 读取 `methods.md#Problem Framing`，重构目标、受众、约束和必须确认问题。
+3. 需要案例时读取 `Case Study Protocol` 和 `data/case-source-catalog.csv`。
+4. 需要事实时读取 `references/research-source.md`。
+5. 用 `references/methods.md#Divergent Thinking` 生成候选。
+6. 候选同质化或需要差异化时用 `#Analogy Thinking`。
+7. 方案要落地前用 `#Scenario Simulation` 压测关键场景、失败路径和边界。
+8. 推荐前用 `#Critic Review` 暴露最弱假设、反例和可删范围。
+9. 用 `#Decision Matrix` 排序、推荐或记录授权默认。
 10. 输出前读取 `references/output-contract.md`。
-11. 需要交接时读取 `output-shaping` 和 `execution-planning`。
+11. 需要交接时读取 `references/methods.md#Output Shaping` 和 `#Execution Planning`。
 
 ## 6. Stop Signals
 

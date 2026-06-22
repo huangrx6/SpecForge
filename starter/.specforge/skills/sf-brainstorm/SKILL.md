@@ -33,34 +33,28 @@ description: 对模糊产品想法、界面、AI、技术方向或范围取舍�
 - 有 UI 方向时读取 `.specforge/core/standards/design.md`。
 - 有技术选型或依赖版本问题时读取 `.specforge/core/standards/engineering.md`。
 - `.specforge/core/skills/ORCHESTRATION.md`：参考能力的总编排规则。
-- `.specforge/core/skills/brainstorm/SKILL.md`：Brainstorm 能力包根入口。必须先读它，再按 profile 读取 references、data 和子技能。
+- `.specforge/core/skills/brainstorm/SKILL.md`：Brainstorm 能力包根入口。必须先读它，再按 profile 读取 references 和 data。
 - `references/external-skills.md`：本 skill 的参考 skill 选择表、读取深度和归一化格式。
 
 ## 参考 Skill 联动
 
-先读取 `.specforge/core/skills/ORCHESTRATION.md` 和 `.specforge/core/skills/brainstorm/SKILL.md`。Brainstorm 能力包根入口负责选择 profile、读取控制文件和子技能；本 skill 目录下的 `references/external-skills.md` 只负责跨能力包参考选择。
+先读取 `.specforge/core/skills/ORCHESTRATION.md` 和 `.specforge/core/skills/brainstorm/SKILL.md`。Brainstorm 能力包根入口负责选择 profile、读取 reference section 和 data；本 skill 目录下的 `references/external-skills.md` 只负责跨能力包参考选择。
 
-常见参考包括：
+常见 Brainstorm 包内 reference 包括：
 
-- `problem-framing`：问题重构、目标、受众、约束、假设和必须确认问题。
-- `case-study-scout`：查询优秀案例、竞品、模板站或作品站，拆解可迁移机制和不能照搬点。
-- `divergent-thinking`：多角度发散候选方向，避免过早收敛。
-- `analogy-thinking`：从其他产品、行业或系统迁移可用机制。
-- `scenario-simulation`：把方案放进真实使用流程、失败路径和边界场景里压测。
-- `critic-review`：反方质疑、假设检查、过度设计压缩和风险暴露。
-- `decision-matrix`：按价值、成本、风险、落地性、可扩展性和置信度收敛排序。
-- `output-shaping`：控制头脑风暴输出形态，避免自由散文式结论。
-- `execution-planning`：把推荐方向转成下一步行动、交接和验证入口。
+- `brainstorm-playbook.md`：profile、案例侦察协议、多轮讨论和完整编排。
+- `methods.md`：问题重构、发散、类比、场景模拟、批判质疑、方案矩阵、输出塑形和行动规划。
+- `research-source.md`：当前事实查证、来源优先级、证据表、版本关系和未查证项。
+- `output-contract.md`：落档合同、条件 section、handoff 和停止条件。
 - `product`：产品目标、用户机会、最小可行版本推荐、候选方向、实验和优先级取舍。
 - `opportunity-solution-tree`：外部 OST 参考；只补机会树、实验和优先级视角。
 - `design-system`：体验方向、美学方向、用户旅程、信息架构、交互、可访问性和后续 UI design 输入。
-- `research-source`：当前事实查证、来源优先级、证据表和未查证项。
 - `user-stories`：用户故事、验收口径和边界条件。
 - `prd`：产品需求文档交接检查、非目标、产品决策门禁和需求阶段交接。
 - `create-prd`：外部产品需求文档参考；只补 8 段式产品需求文档、非目标和版本分期覆盖。
 - `playwright-skill`：只在 brainstorm 需要提前识别验证风险时参考，正式执行仍交给后续阶段。
 
-参考 skill 的输出必须先归一化为 `问题地图 / 优秀案例与机制拆解 / 方案对比 / 用户确认记录 / 后续阶段输入`。它不能替代用户确认，也不能原样落入 `brainstorm.md`；事实类结论必须按 `research-source` 的证据契约记录来源，案例类结论必须按 `case-study-scout` 的案例池和机制路线记录来源、不能照搬点和成本风险。
+参考 skill 的输出必须先归一化为 `问题地图 / 优秀案例与机制拆解 / 方案对比 / 用户确认记录 / 后续阶段输入`。它不能替代用户确认，也不能原样落入 `brainstorm.md`；事实类结论必须按 `research-source.md` 的证据契约记录来源，案例类结论必须按 `brainstorm-playbook.md#Case Study Protocol` 的案例池和机制路线记录来源、不能照搬点和成本风险。
 
 ## 何时使用
 
@@ -164,12 +158,12 @@ C) 不确定 → 先按 B 设计，留扩展点
    - `research-heavy`：当前事实、依赖版本、AI 供应商、价格、法规、安全或竞品证据会影响方向时使用；它可以由 `light` / `deep` 自动升级而来。
    - 如果 `brief.md#Brainstorm 决策` 已写 `Execution profile`，优先沿用；为空时再由 `Brainstorm mode` 和事实风险推导并回写。
    - 模式来源见 `sf-intake` 的“Brainstorm 分流规则”和 `core/artifacts/templates/brief.md#Brainstorm 决策`。
-3. 读取 `.specforge/core/skills/brainstorm/SKILL.md`，再由根入口路由到 `brainstorm-playbook.md`、`output-contract.md`、案例来源目录和必要子技能。
+3. 读取 `.specforge/core/skills/brainstorm/SKILL.md`，再由根入口路由到 `brainstorm-playbook.md`、`methods.md`、`research-source.md`、`output-contract.md` 和案例来源目录。
 4. 根据根入口选出的 profile，确定本轮是 `single-decision / guided-options / workshop`，并按 Expose -> Ask -> Record 循环推进。
 5. 需要当前事实时先查证；技术类优先官方资料，并记录日期。
-6. 需要外部事实、版本、依赖、价格、竞品、漏洞、法规或 AI provider 资料时，读取 `.specforge/core/skills/brainstorm/research-source/SKILL.md`，按其来源索引和证据契约查证，并在 `brainstorm.md#当前事实与研究证据` 记录搜索计划、URL、日期、结论和置信度。
+6. 需要外部事实、版本、依赖、价格、竞品、漏洞、法规或 AI provider 资料时，读取 `.specforge/core/skills/brainstorm/references/research-source.md`，按其来源索引和证据契约查证，并在 `brainstorm.md#当前事实与研究证据` 记录搜索计划、URL、日期、结论和置信度。
    - 新增 / 替换依赖、SDK、插件、组件库、测试库、运行时或包管理器时，还要记录版本依赖关系表，作为后续 `sf-tech-design` 当前版本事实和依赖确认输入。
-7. 需要优秀案例、竞品、模板站、作品站、官网、截图或高级交互 / 视觉 / 工作流机制时，通过 `.specforge/core/skills/brainstorm/SKILL.md` 路由读取案例协议、案例来源目录和 `case-study-scout`。
+7. 需要优秀案例、竞品、模板站、作品站、官网、截图或高级交互 / 视觉 / 工作流机制时，通过 `.specforge/core/skills/brainstorm/SKILL.md` 路由读取案例协议和案例来源目录。
 8. 需要参考 skill 时，按 `references/external-skills.md` 选择并读取最小必要内容；Brainstorm 包内 skill 可以按问题重构、案例侦察、事实查证、发散、类比、场景、批判、矩阵、输出和行动计划串联使用，且不计入“最多 1 个外部辅助”的限制。
 9. 建立问题地图：`[已明确] / [必须确认] / [可安全默认]`。
 10. 按固定维度排序 `[必须确认]`：核心目标/范围 > 体验方向 > 数据与安全 > 集成与依赖 > 交付验收。
