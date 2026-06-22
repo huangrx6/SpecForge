@@ -579,7 +579,7 @@
       "category": "ui-ux",
       "localPath": "ui-ux/design-system",
       "name": "design-system",
-      "role": "设计模式路由、Reference Picker、外部设计来源路由、shadcn / 国内 UI / 国际案例来源抽取、来源复用边界、Reference Scan Manifest、设计组合配方、设计语言、机器可读契约、组件规范、页面模式、shadcn-vue 映射、Pencil 交接和视觉 QA 审查",
+      "role": "设计模式路由、Creative Direction、Reference Picker、Live Reference Evidence、外部设计来源路由、Asset Manifest、Product UI signature、Interaction Signature、shadcn / 国内 UI / 国际案例来源抽取、来源复用边界、Reference Scan Manifest、设计组合配方、设计语言、机器可读契约、组件规范、页面模式、shadcn-vue 映射、Pencil 交接和视觉 QA 审查",
       "trust": "SpecForge 本地维护，结合 shadcn-vue、设计系统、可访问性和 Product UI 实践沉淀",
       "risk": "低",
       "source": {
@@ -592,88 +592,7 @@
             "path": "changelog.md"
           },
           {
-            "path": "components/avatar.md"
-          },
-          {
-            "path": "components/breadcrumb.md"
-          },
-          {
-            "path": "components/button.md"
-          },
-          {
-            "path": "components/card.md"
-          },
-          {
-            "path": "components/chart.md"
-          },
-          {
-            "path": "components/command-palette.md"
-          },
-          {
-            "path": "components/date-picker.md"
-          },
-          {
-            "path": "components/dialog.md"
-          },
-          {
-            "path": "components/drawer.md"
-          },
-          {
-            "path": "components/empty-state.md"
-          },
-          {
-            "path": "components/filter-bar.md"
-          },
-          {
-            "path": "components/form.md"
-          },
-          {
-            "path": "components/input.md"
-          },
-          {
-            "path": "components/layout-shell.md"
-          },
-          {
-            "path": "components/menu.md"
-          },
-          {
-            "path": "components/navbar.md"
-          },
-          {
-            "path": "components/pagination.md"
-          },
-          {
-            "path": "components/README.md"
-          },
-          {
-            "path": "components/select-combobox.md"
-          },
-          {
-            "path": "components/skeleton-progress.md"
-          },
-          {
-            "path": "components/status-badge.md"
-          },
-          {
-            "path": "components/stepper.md"
-          },
-          {
-            "path": "components/table.md"
-          },
-          {
-            "path": "components/tabs.md"
-          },
-          {
-            "path": "components/toast.md"
-          },
-          {
-            "path": "components/tooltip-popover.md"
-          },
-          {
-            "path": "components/upload.md"
-          },
-          {
-            "path": "contracts/color-palette.schema.json"
+            "path": "components/component-system.md"
           },
           {
             "path": "contracts/component-contract.template.md"
@@ -682,282 +601,63 @@
             "path": "contracts/design-contract.schema.json"
           },
           {
-            "path": "contracts/reference-selection.schema.json"
-          },
-          {
-            "path": "contracts/selected-data.schema.json"
-          },
-          {
-            "path": "contracts/visual-qa.schema.json"
-          },
-          {
-            "path": "data/advanced-interaction-recipes.csv"
-          },
-          {
-            "path": "data/aesthetic-palette-candidates.csv"
+            "path": "data/foundation-recipes.csv"
           },
           {
             "path": "data/aesthetic-palettes.csv"
           },
           {
-            "path": "data/chart-palettes.csv"
-          },
-          {
-            "path": "data/font-pairing-recipes.csv"
-          },
-          {
-            "path": "data/motion-recipes.csv"
-          },
-          {
-            "path": "data/radius-shadow-recipes.csv"
+            "path": "data/color-support.csv"
           },
           {
             "path": "data/reference-source-catalog.csv"
           },
           {
-            "path": "data/spacing-density-scales.csv"
+            "path": "foundations/foundation-system.md"
           },
           {
-            "path": "data/type-scales.csv"
-          },
-          {
-            "path": "data/ui-color-scales.csv"
-          },
-          {
-            "path": "foundations/accessibility.md"
-          },
-          {
-            "path": "foundations/colors.md"
-          },
-          {
-            "path": "foundations/content.md"
-          },
-          {
-            "path": "foundations/data-visualization.md"
-          },
-          {
-            "path": "foundations/density.md"
-          },
-          {
-            "path": "foundations/iconography.md"
-          },
-          {
-            "path": "foundations/motion.md"
-          },
-          {
-            "path": "foundations/radius-shadow.md"
-          },
-          {
-            "path": "foundations/README.md"
-          },
-          {
-            "path": "foundations/responsive.md"
-          },
-          {
-            "path": "foundations/spacing.md"
-          },
-          {
-            "path": "foundations/tokens.md"
-          },
-          {
-            "path": "foundations/typography.md"
-          },
-          {
-            "path": "pages/ai-assistant.md"
-          },
-          {
-            "path": "pages/async-job-import-export.md"
-          },
-          {
-            "path": "pages/brand-surface.md"
-          },
-          {
-            "path": "pages/dashboard.md"
-          },
-          {
-            "path": "pages/form-flow.md"
-          },
-          {
-            "path": "pages/list-detail.md"
-          },
-          {
-            "path": "pages/live-room.md"
-          },
-          {
-            "path": "pages/login.md"
-          },
-          {
-            "path": "pages/member.md"
-          },
-          {
-            "path": "pages/mobile-h5.md"
-          },
-          {
-            "path": "pages/permission-management.md"
-          },
-          {
-            "path": "pages/settings.md"
-          },
-          {
-            "path": "prompts/aesthetic-selection.md"
-          },
-          {
-            "path": "prompts/anti-cheapness-review.md"
-          },
-          {
-            "path": "prompts/design-language.md"
-          },
-          {
-            "path": "prompts/design-md-extraction.md"
-          },
-          {
-            "path": "prompts/domestic-design-case-extraction.md"
-          },
-          {
-            "path": "prompts/motion-design.md"
-          },
-          {
-            "path": "prompts/reference-extraction.md"
-          },
-          {
-            "path": "prompts/reference-picker.md"
-          },
-          {
-            "path": "prompts/sample-board.md"
-          },
-          {
-            "path": "prompts/shadcn-resource-audit.md"
-          },
-          {
-            "path": "prompts/shadcn-vue-implementation.md"
-          },
-          {
-            "path": "prompts/source-routing.md"
-          },
-          {
-            "path": "prompts/taste-critique.md"
-          },
-          {
-            "path": "prompts/ui-generation.md"
-          },
-          {
-            "path": "prompts/visual-qa.md"
-          },
-          {
-            "path": "references/advanced-interaction-source-index.md"
-          },
-          {
-            "path": "references/aesthetic-directions.md"
-          },
-          {
-            "path": "references/bad-case.md"
-          },
-          {
-            "path": "references/color-system.md"
-          },
-          {
-            "path": "references/component-system.md"
-          },
-          {
-            "path": "references/composition-source-index.md"
-          },
-          {
-            "path": "references/cross-stage-handoff.md"
+            "path": "references/creative-direction.md"
           },
           {
             "path": "references/design-composition.md"
           },
           {
-            "path": "references/design-intelligence.md"
-          },
-          {
-            "path": "references/design-md-extraction.md"
-          },
-          {
-            "path": "references/design-mode-routing.md"
-          },
-          {
-            "path": "references/design-review-rubric.md"
-          },
-          {
-            "path": "references/design-system-orchestration.md"
-          },
-          {
-            "path": "references/external-sources.md"
-          },
-          {
-            "path": "references/font-source-index.md"
-          },
-          {
-            "path": "references/good-case.md"
-          },
-          {
-            "path": "references/layout-archetypes.md"
-          },
-          {
-            "path": "references/motion-gsap.md"
+            "path": "references/motion-block-library.md"
           },
           {
             "path": "references/output-contract.md"
           },
           {
-            "path": "references/palette-source-index.md"
-          },
-          {
-            "path": "references/palette-usage-rules.md"
-          },
-          {
-            "path": "references/pc-business-system.md"
-          },
-          {
-            "path": "references/product-ui-layout-quality.md"
+            "path": "references/product-ui-signature-patterns.md"
           },
           {
             "path": "references/read-profiles.md"
           },
           {
-            "path": "references/reference-extraction-protocol.md"
-          },
-          {
-            "path": "references/reference-picker.md"
-          },
-          {
-            "path": "references/reference-source-routing.md"
-          },
-          {
-            "path": "references/sample-board-template.md"
-          },
-          {
-            "path": "references/shadcn-vue.md"
-          },
-          {
-            "path": "references/tailwind-v4.md"
-          },
-          {
-            "path": "references/taste-review.md"
-          },
-          {
-            "path": "references/ui-toolchain.md"
-          },
-          {
-            "path": "references/ux-research-ia.md"
-          },
-          {
-            "path": "references/visual-calibration.md"
+            "path": "references/reference-workflow.md"
           },
           {
             "path": "references/visual-qa-detectors.md"
           }
         ]
       },
-      "trigger": "当 sf-ui-design 需要判断 Product UI / Brand Surface / Hybrid 模式、提炼设计语言、建立专业色阶和 foundation_system、生成机器可读 Design Contract、选择组件模式、生成 shadcn-vue 组件契约、设计页面模式、定义 Pencil 原型交接、引入动效 / GSAP 边界或执行视觉 QA 审查时使用；当用户提到 shadcnblocks、shadcn.io、21st.dev、站酷、UXUE、Awwwards、Crafted、MasterGo、Pixso、国内 UI 案例、好网站、模板参考或要求以选择题确定设计参考时使用。",
+      "trigger": "当 sf-ui-design 需要判断 Product UI / Brand Surface / Hybrid 模式、提炼 Creative Direction、打破老套后台壳、调研外部网站 / 模板 / 截图、生成素材 brief、建立专业色阶和 foundation_system、生成机器可读 Design Contract、选择组件模式、生成 shadcn-vue 组件契约、设计页面模式、定义 Pencil 原型交接、引入动效 / GSAP / Three.js 边界或执行视觉 QA 审查时使用；当用户提到 shadcnblocks、shadcn.io、21st.dev、站酷、UXUE、Awwwards、Crafted、MasterGo、Pixso、国内 UI 案例、好网站、模板参考、Fauna Robotics、CRAV、粒子动效、滚动交互、视差动画、素材提示词或要求以选择题确定设计参考时使用。",
       "normalizeTo": [
         "01-spec/ui-design.md#Visual Style Brief",
+        "01-spec/ui-design.md#Creative Direction",
         "01-spec/ui-design.md#Design Contract Summary",
         "01-spec/ui-design.md#Reference Selection",
+        "01-spec/ui-design.md#Reference Evidence",
         "01-spec/ui-design.md#Reference Scan Manifest",
         "01-spec/ui-design.md#Extracted Reference Patterns",
+        "01-spec/ui-design.md#Asset Manifest",
+        "01-spec/ui-design.md#Product UI Signature",
+        "01-spec/ui-design.md#Interaction Signature",
         "Design Contract JSON.reference_selection",
+        "Design Contract JSON.creative_direction",
+        "Design Contract JSON.reference_evidence",
+        "Design Contract JSON.asset_manifest",
+        "Design Contract JSON.interaction_signature",
         "01-spec/ui-design.md#管理端 / shadcn 组件封装契约",
         "01-spec/design/components/<component-name>.contract.md",
         "01-spec/ui-design.md#Interaction State Matrix",

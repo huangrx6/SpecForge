@@ -32,11 +32,16 @@ const selectionRationaleMap = [
 ];
 const highSeverityVisualDetectors = new Set([
   "Generic SaaS shell",
+  "Default admin shell",
   "Color-only design",
   "Empty dashboard skeleton",
   "KPI wallpaper",
   "Blank framed content",
   "Todo list without workflow",
+  "Missing creative direction",
+  "Reference claim without evidence",
+  "Assetless brand surface",
+  "Decorative motion signature",
   "Card soup",
   "Fake premium gradient",
   "Default AI neon",
@@ -455,11 +460,15 @@ function paletteIds() {
   return new Set(lines.slice(1).map((line) => line.split(",")[0]?.trim()).filter(Boolean));
 }
 
-function designDataIds(fileName) {
-  const path = `${layout.runtime}/skills/ui-ux/design-system/data/${fileName}`;
+function foundationRecipeIds(recipeType) {
+  const path = `${layout.runtime}/skills/ui-ux/design-system/data/foundation-recipes.csv`;
   if (!exists(path)) return new Set();
   const lines = readText(path).split(/\r?\n/).filter((line) => line.trim());
-  return new Set(lines.slice(1).map((line) => line.split(",")[0]?.trim()).filter(Boolean));
+  return new Set(lines.slice(1)
+    .map((line) => line.split(","))
+    .filter((cells) => cells[0]?.trim() === recipeType)
+    .map((cells) => cells[1]?.trim())
+    .filter(Boolean));
 }
 
 function addMissingFields(issues, object, fields, outputPath, owner, code = "design-contract-field-missing") {
@@ -469,7 +478,7 @@ function addMissingFields(issues, object, fields, outputPath, owner, code = "des
       severity: "FAIL",
       code,
       message: `${outputPath} 的 ${owner} 缺少字段：${missing.join(", ")}。`,
-      fix: "按 design-contract.schema.json 补齐字段；不适用时填空数组或明确 N/A 文本，不要省略字段。",
+      fix: "按 design-contract.schema.json 补齐字段；schema required 字段写可消费值。条件字段不适用时不要声明对应 workflow / 字段，并在 scan_manifest.skipped_with_reason 说明。",
     });
   }
 }
@@ -732,7 +741,7 @@ function lintDesignScanManifest(issues, scanManifest, outputPath) {
       severity: "FAIL",
       code: "design-contract-scan-manifest-missing",
       message: `${outputPath} 缺少 scan_manifest。`,
-      fix: "按 design-system-orchestration.md 输出扫描过的文件、选择的数据 id 和跳过理由。",
+      fix: "按 read-profiles.md 的 full-system orchestration 与 output-contract.md 输出扫描过的文件、选择的数据 id 和跳过理由。",
     });
     return;
   }
@@ -751,15 +760,13 @@ function lintDesignScanManifest(issues, scanManifest, outputPath) {
       severity: "FAIL",
       code: "design-contract-scanned-files-empty",
       message: `${outputPath} 的 scan_manifest.scanned_files 为空。`,
-      fix: "记录至少 design-system-orchestration、design-mode-routing、font-source-index 和 design-composition 的扫描结果。",
+      fix: "记录至少 read-profiles 和 design-composition 的扫描结果。",
     });
   }
 
   const scannedPaths = new Set((scanManifest.scanned_files ?? []).map((entry) => entry?.path).filter(Boolean));
   for (const requiredPath of [
-    "references/design-system-orchestration.md",
-    "references/design-mode-routing.md",
-    "references/font-source-index.md",
+    "references/read-profiles.md",
     "references/design-composition.md",
   ]) {
     if (!scannedPaths.has(requiredPath)) {
@@ -767,7 +774,7 @@ function lintDesignScanManifest(issues, scanManifest, outputPath) {
         severity: "FAIL",
         code: "design-contract-required-scan-missing",
         message: `${outputPath} 的 scan_manifest.scanned_files 缺少 ${requiredPath}。`,
-        fix: "按 orchestration 链路记录该文件的用途、状态和结论；不适用也要写 skipped 与理由。",
+        fix: "按 read-profiles.md 的 profile / full-system 链路记录该文件的用途、状态和结论；不适用也要写 skipped 与理由。",
       });
     }
   }
@@ -785,32 +792,32 @@ function lintDesignScanManifest(issues, scanManifest, outputPath) {
   ], outputPath, "scan_manifest.selected_data");
 
   const idSources = [
-    ["font_pairing_id", "font-pairing-recipes.csv"],
-    ["type_scale_id", "type-scales.csv"],
-    ["spacing_density_id", "spacing-density-scales.csv"],
-    ["radius_shadow_recipe_id", "radius-shadow-recipes.csv"],
-    ["motion_recipe_id", "motion-recipes.csv"],
-    ["advanced_interaction_recipe_id", "advanced-interaction-recipes.csv"],
+    ["font_pairing_id", "font_pairing"],
+    ["type_scale_id", "type_scale"],
+    ["spacing_density_id", "spacing_density"],
+    ["radius_shadow_recipe_id", "radius_shadow"],
+    ["motion_recipe_id", "motion"],
+    ["advanced_interaction_recipe_id", "advanced_interaction"],
   ];
-  for (const [field, fileName] of idSources) {
+  for (const [field, recipeType] of idSources) {
     const value = String(selected?.[field] ?? "").trim();
     if (!isMeaningfulCell(value)) {
       issues.push({
         severity: "FAIL",
         code: "design-contract-selected-data-missing",
         message: `${outputPath} 的 scan_manifest.selected_data.${field} 缺失或仍像占位。`,
-        fix: `从 data/${fileName} 选择一个 id；不使用高级交互时写 none-product-ui 或明确 N/A recipe。`,
+        fix: `从 data/foundation-recipes.csv 的 recipe_type=${recipeType} 选择一个 id；不使用高级交互时写 none-product-ui 或明确 N/A recipe。`,
       });
       continue;
     }
     if (/^N\/A$/i.test(value)) continue;
-    const ids = designDataIds(fileName);
+    const ids = foundationRecipeIds(recipeType);
     if (ids.size > 0 && !ids.has(value)) {
       issues.push({
         severity: "FAIL",
         code: "design-contract-selected-data-unknown",
-        message: `${outputPath} 的 ${field} 不存在于 ${fileName}：${value}。`,
-        fix: `改用 data/${fileName} 中存在的 id，或先把新 recipe 记录进数据表。`,
+        message: `${outputPath} 的 ${field} 不存在于 foundation-recipes.csv#${recipeType}：${value}。`,
+        fix: `改用 data/foundation-recipes.csv 中 recipe_type=${recipeType} 的现有 id，或先把新 recipe 记录进数据表。`,
       });
     }
   }
@@ -830,7 +837,7 @@ function lintReferenceSelectionContract(issues, contract, outputPath) {
         severity: "FAIL",
         code: "design-contract-reference-selection-invalid",
         message: `${outputPath} 的 reference_selection 必须是 object，不能是 N/A、null、空字符串或数组。`,
-        fix: "无外部参考时省略 reference_selection；有外部参考时按 reference-selection.schema.json 补齐 object。",
+        fix: "无外部参考时省略 reference_selection；有外部参考时按 design-contract.schema.json#/$defs/referenceSelection 补齐 object。",
       });
       return;
     }
@@ -844,15 +851,15 @@ function lintReferenceSelectionContract(issues, contract, outputPath) {
       "design-contract-reference-selection-field-missing",
     );
 
-    addEnumArrayIssues(issues, referenceSelection.ui_type, referenceUiTypeValues, outputPath, "reference_selection.ui_type", "ui_type 必须使用 reference-selection.schema.json 中的稳定枚举。");
-    addEnumArrayIssues(issues, referenceSelection.stack, referenceStackValues, outputPath, "reference_selection.stack", "stack 必须使用 reference-selection.schema.json 中的稳定枚举。");
-    addEnumArrayIssues(issues, referenceSelection.selected_needs, referenceNeedValues, outputPath, "reference_selection.selected_needs", "selected_needs 必须使用 reference-selection.schema.json 中的稳定枚举。");
+    addEnumArrayIssues(issues, referenceSelection.ui_type, referenceUiTypeValues, outputPath, "reference_selection.ui_type", "ui_type 必须使用 design-contract.schema.json#/$defs/referenceSelection 中的稳定枚举。");
+    addEnumArrayIssues(issues, referenceSelection.stack, referenceStackValues, outputPath, "reference_selection.stack", "stack 必须使用 design-contract.schema.json#/$defs/referenceSelection 中的稳定枚举。");
+    addEnumArrayIssues(issues, referenceSelection.selected_needs, referenceNeedValues, outputPath, "reference_selection.selected_needs", "selected_needs 必须使用 design-contract.schema.json#/$defs/referenceSelection 中的稳定枚举。");
     addEnumValueIssue(issues, referenceSelection.borrow_strength, referenceBorrowStrengthValues, outputPath, "reference_selection.borrow_strength", "borrow_strength 只能写 conservative / moderate / strong / review-only。");
     if (Object.prototype.hasOwnProperty.call(referenceSelection, "admin_modules")) {
-      addEnumArrayIssues(issues, referenceSelection.admin_modules, referenceAdminModuleValues, outputPath, "reference_selection.admin_modules", "admin_modules 必须使用 reference-selection.schema.json 中的稳定枚举。");
+      addEnumArrayIssues(issues, referenceSelection.admin_modules, referenceAdminModuleValues, outputPath, "reference_selection.admin_modules", "admin_modules 必须使用 design-contract.schema.json#/$defs/referenceSelection 中的稳定枚举。");
     }
     if (Object.prototype.hasOwnProperty.call(referenceSelection, "visual_direction")) {
-      addEnumArrayIssues(issues, referenceSelection.visual_direction, referenceVisualDirectionValues, outputPath, "reference_selection.visual_direction", "visual_direction 必须使用 reference-selection.schema.json 中的稳定枚举。");
+      addEnumArrayIssues(issues, referenceSelection.visual_direction, referenceVisualDirectionValues, outputPath, "reference_selection.visual_direction", "visual_direction 必须使用 design-contract.schema.json#/$defs/referenceSelection 中的稳定枚举。");
     }
 
     if (!Array.isArray(referenceSelection.source_routing)) {
@@ -860,7 +867,7 @@ function lintReferenceSelectionContract(issues, contract, outputPath) {
         severity: "FAIL",
         code: "design-contract-reference-selection-array-invalid",
         message: `${outputPath} 的 reference_selection.source_routing 必须是数组。`,
-        fix: "source_routing 按 reference-selection.schema.json 写成数组；无外部来源时省略 reference_selection。",
+        fix: "source_routing 按 design-contract.schema.json#/$defs/referenceSelection 写成数组；无外部来源时省略 reference_selection。",
       });
     } else {
       for (const [index, route] of referenceSelection.source_routing.entries()) {
@@ -882,7 +889,7 @@ function lintReferenceSelectionContract(issues, contract, outputPath) {
           `reference_selection.source_routing[${index}]`,
           "design-contract-reference-source-routing-field-missing",
         );
-        addEnumValueIssue(issues, route.reuse_mode, referenceReuseModeValues, outputPath, `reference_selection.source_routing[${index}].reuse_mode`, "reuse_mode 必须使用 reference-selection.schema.json 中的稳定枚举。");
+        addEnumValueIssue(issues, route.reuse_mode, referenceReuseModeValues, outputPath, `reference_selection.source_routing[${index}].reuse_mode`, "reuse_mode 必须使用 design-contract.schema.json#/$defs/referenceSelection 中的稳定枚举。");
       }
     }
 
@@ -939,6 +946,235 @@ function lintReferenceSelectionContract(issues, contract, outputPath) {
       });
     }
   }
+}
+
+function hasDesignWorkflow(contract, key) {
+  return Array.isArray(contract.scan_manifest?.workflow) && contract.scan_manifest.workflow.includes(key);
+}
+
+function hasOwnContractField(contract, key) {
+  return Object.prototype.hasOwnProperty.call(contract ?? {}, key);
+}
+
+function lintCreativeDirectionContract(issues, contract, outputPath) {
+  const requiredByWorkflow = hasDesignWorkflow(contract, "creative_direction");
+  if (!requiredByWorkflow && !hasOwnContractField(contract, "creative_direction")) return;
+
+  const value = contract.creative_direction;
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-creative-direction-missing",
+      message: `${outputPath} 的 scan_manifest.workflow 声明了 creative_direction，但缺少 object 形式的 creative_direction。`,
+      fix: "按 creative-direction.md 输出 selected、why、alternatives、rejected_defaults 和 signature_carrier，先拒绝默认后台壳再定设计方向。",
+    });
+    return;
+  }
+
+  addMissingFields(
+    issues,
+    value,
+    ["selected", "why", "alternatives", "rejected_defaults", "signature_carrier"],
+    outputPath,
+    "creative_direction",
+    "design-contract-creative-direction-field-missing",
+  );
+  addMeaningfulFieldIssue(issues, value.selected, outputPath, "creative_direction.selected", "写入被采用的创意方向，不要只写 Product UI / 后台管理。");
+  addMeaningfulFieldIssue(issues, value.why, outputPath, "creative_direction.why", "写清该方向如何服务用户、业务对象和交互任务。");
+  addNonEmptyArrayIssue(issues, value.rejected_defaults, outputPath, "creative_direction.rejected_defaults", "列出至少一个被拒绝的默认套路，例如固定侧栏 + KPI 卡片 + 大表格。");
+  addNonEmptyArrayIssue(issues, value.alternatives, outputPath, "creative_direction.alternatives", "至少给一个互斥候选方向，避免单一路线自证合理。");
+
+  const carrier = String(value.signature_carrier ?? "").trim();
+  if (!["structure", "typography", "asset", "motion", "material", "interaction", "mixed"].includes(carrier)) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-creative-direction-carrier-invalid",
+      message: `${outputPath} 的 creative_direction.signature_carrier 非法：${carrier || "missing"}。`,
+      fix: "signature_carrier 只能写 structure / typography / asset / motion / material / interaction / mixed。",
+    });
+  }
+
+  for (const [index, alternative] of (Array.isArray(value.alternatives) ? value.alternatives : []).entries()) {
+    if (!alternative || typeof alternative !== "object" || Array.isArray(alternative)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-creative-direction-alternative-invalid",
+        message: `${outputPath} 的 creative_direction.alternatives[${index}] 不是对象。`,
+        fix: "每个 candidate 写成 { id, positioning, fit, risk }，方便用户确认或后续复盘。",
+      });
+      continue;
+    }
+    addMissingFields(
+      issues,
+      alternative,
+      ["id", "positioning", "fit", "risk"],
+      outputPath,
+      `creative_direction.alternatives[${index}]`,
+      "design-contract-creative-direction-alternative-field-missing",
+    );
+  }
+}
+
+function lintReferenceEvidenceContract(issues, contract, outputPath) {
+  const requiredByWorkflow = hasDesignWorkflow(contract, "live_reference");
+  if (!requiredByWorkflow && !hasOwnContractField(contract, "reference_evidence")) return;
+
+  const value = contract.reference_evidence;
+  if (!Array.isArray(value) || value.length === 0) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-reference-evidence-missing",
+      message: `${outputPath} 的 scan_manifest.workflow 声明了 live_reference，但 reference_evidence 缺失或为空。`,
+      fix: "记录每个外部网站 / 模板 / 截图的 access、viewport、observed、borrowed、rejected 和 confidence；无法访问也要写 offline-fallback。",
+    });
+    return;
+  }
+
+  for (const [index, entry] of value.entries()) {
+    if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-reference-evidence-entry-invalid",
+        message: `${outputPath} 的 reference_evidence[${index}] 不是对象。`,
+        fix: "每条 evidence 写成 { source, source_url?, access, viewport, observed, borrowed, rejected, confidence }。",
+      });
+      continue;
+    }
+    addMissingFields(
+      issues,
+      entry,
+      ["source", "access", "viewport", "observed", "borrowed", "rejected", "confidence"],
+      outputPath,
+      `reference_evidence[${index}]`,
+      "design-contract-reference-evidence-field-missing",
+    );
+    addMeaningfulFieldIssue(issues, entry.source, outputPath, `reference_evidence[${index}].source`, "写明具体来源，不要只写“优秀网站”。");
+    addMeaningfulFieldIssue(issues, entry.viewport, outputPath, `reference_evidence[${index}].viewport`, "记录观察视口，例如 desktop 1440px / mobile 390px。");
+    addNonEmptyArrayIssue(issues, entry.observed, outputPath, `reference_evidence[${index}].observed`, "记录实际观察到的布局、滚动、交互或视觉事实。");
+    const access = String(entry.access ?? "").trim();
+    if (!["catalog", "static", "scroll", "interactive", "comparative", "offline-fallback"].includes(access)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-reference-evidence-access-invalid",
+        message: `${outputPath} 的 reference_evidence[${index}].access 非法：${access || "missing"}。`,
+        fix: "access 只能写 catalog / static / scroll / interactive / comparative / offline-fallback。",
+      });
+    }
+    const confidence = String(entry.confidence ?? "").trim();
+    if (!selectionConfidenceValues.has(confidence)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-reference-evidence-confidence-invalid",
+        message: `${outputPath} 的 reference_evidence[${index}].confidence 非法：${confidence || "missing"}。`,
+        fix: "confidence 只能写 confirmed / likely / unclear。",
+      });
+    }
+  }
+}
+
+function lintAssetManifestContract(issues, contract, outputPath) {
+  const requiredByWorkflow = hasDesignWorkflow(contract, "asset_brief");
+  if (!requiredByWorkflow && !hasOwnContractField(contract, "asset_manifest")) return;
+
+  const value = contract.asset_manifest;
+  if (!Array.isArray(value) || value.length === 0) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-asset-manifest-missing",
+      message: `${outputPath} 的 scan_manifest.workflow 声明了 asset_brief，但 asset_manifest 缺失或为空。`,
+      fix: "按 motion-block-library.md#Asset Brief Add-on 写入每个图片、3D、纹理、视频或图标素材的目标路径、用途、生成提示词/来源、落位和许可说明。",
+    });
+    return;
+  }
+
+  for (const [index, entry] of value.entries()) {
+    if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-asset-manifest-entry-invalid",
+        message: `${outputPath} 的 asset_manifest[${index}] 不是对象。`,
+        fix: "每条 asset 写成 { kind, target_path, purpose, prompt_or_source, placement, required, license_note }。",
+      });
+      continue;
+    }
+    addMissingFields(
+      issues,
+      entry,
+      ["kind", "target_path", "purpose", "prompt_or_source", "placement", "required", "license_note"],
+      outputPath,
+      `asset_manifest[${index}]`,
+      "design-contract-asset-manifest-field-missing",
+    );
+    for (const field of ["target_path", "purpose", "prompt_or_source", "placement", "license_note"]) {
+      addMeaningfulFieldIssue(issues, entry[field], outputPath, `asset_manifest[${index}].${field}`, "素材 brief 必须能直接交给生成工具或实现阶段，不要留空占位。");
+    }
+    const kind = String(entry.kind ?? "").trim();
+    if (!["image", "illustration", "icon", "3d-model", "video", "texture", "lottie", "audio"].includes(kind)) {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-asset-kind-invalid",
+        message: `${outputPath} 的 asset_manifest[${index}].kind 非法：${kind || "missing"}。`,
+        fix: "kind 只能写 image / illustration / icon / 3d-model / video / texture / lottie / audio。",
+      });
+    }
+    if (typeof entry.required !== "boolean") {
+      issues.push({
+        severity: "FAIL",
+        code: "design-contract-asset-required-invalid",
+        message: `${outputPath} 的 asset_manifest[${index}].required 必须是 boolean。`,
+        fix: "required 写 true / false，明确该素材是否阻断实现。",
+      });
+    }
+  }
+}
+
+function lintInteractionSignatureContract(issues, contract, outputPath) {
+  const advancedId = String(contract.scan_manifest?.selected_data?.advanced_interaction_recipe_id ?? "").trim();
+  const selectedAdvancedInteraction = isMeaningfulCell(advancedId)
+    && !/^(N\/A|none|none-product-ui|no-advanced-interaction)$/i.test(advancedId);
+  const hasGsapEntries = Array.isArray(contract.motion?.layer_3_gsap) && contract.motion.layer_3_gsap.length > 0;
+  const requiredByWorkflow = hasDesignWorkflow(contract, "interaction_signature") || selectedAdvancedInteraction || hasGsapEntries;
+  if (!requiredByWorkflow && !hasOwnContractField(contract, "interaction_signature")) return;
+
+  const value = contract.interaction_signature;
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-interaction-signature-missing",
+      message: `${outputPath} 声明了高级交互 / GSAP / signature motion，但缺少 object 形式的 interaction_signature。`,
+      fix: "按 motion-block-library.md 写 purpose、trigger、technique、motion_blocks、fallback 和 verification，证明动效服务任务而不是装饰。",
+    });
+    return;
+  }
+
+  addMissingFields(
+    issues,
+    value,
+    ["purpose", "trigger", "technique", "motion_blocks", "fallback", "verification"],
+    outputPath,
+    "interaction_signature",
+    "design-contract-interaction-signature-field-missing",
+  );
+  for (const field of ["purpose", "trigger", "fallback", "verification"]) {
+    addMeaningfulFieldIssue(issues, value[field], outputPath, `interaction_signature.${field}`, "高级交互必须写清任务目的、触发方式、降级和验证证据。");
+  }
+  addNonEmptyArrayIssue(issues, value.motion_blocks, outputPath, "interaction_signature.motion_blocks", "至少选择一个 motion block，避免只写“炫酷动效”。");
+  const technique = String(value.technique ?? "").trim();
+  if (!["css", "motion-vue", "gsap", "three", "canvas", "webgl", "mixed"].includes(technique)) {
+    issues.push({
+      severity: "FAIL",
+      code: "design-contract-interaction-technique-invalid",
+      message: `${outputPath} 的 interaction_signature.technique 非法：${technique || "missing"}。`,
+      fix: "technique 只能写 css / motion-vue / gsap / three / canvas / webgl / mixed。",
+    });
+  }
+}
+
+function lintDesignEnhancementContracts(issues, contract, outputPath) {
+  lintCreativeDirectionContract(issues, contract, outputPath);
+  lintReferenceEvidenceContract(issues, contract, outputPath);
+  lintAssetManifestContract(issues, contract, outputPath);
+  lintInteractionSignatureContract(issues, contract, outputPath);
 }
 
 function lintSelectionRationale(issues, selected, rationale, outputPath) {
@@ -1466,6 +1702,7 @@ function lintUiDesign(content, outputPath) {
 
   lintDesignScanManifest(issues, contract.scan_manifest, outputPath);
   lintReferenceSelectionContract(issues, contract, outputPath);
+  lintDesignEnhancementContracts(issues, contract, outputPath);
   lintHumanConfirmation(issues, contract.human_confirmation, outputPath);
 
   if (!designModeValues.has(contract.design_mode)) {

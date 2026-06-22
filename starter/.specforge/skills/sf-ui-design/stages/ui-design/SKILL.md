@@ -23,10 +23,10 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - 现有页面、组件库、设计系统、Pencil 文件、截图、参考产品或用户提供的设计资料
 - 需要操作 Pencil 时读取 `core/skills/ui-ux/pencil/SKILL.md`
 - 需要设计语言、Composition Recipe、去廉价感、shadcn-vue 映射、页面模式、样例板、动效 / GSAP 边界、UX 研究、IA、交互、微文案或可访问性检查时读取 `core/skills/ui-ux/design-system/SKILL.md`
-- 使用 design-system 时先读取 `core/skills/ui-ux/design-system/references/design-mode-routing.md`；交接后续阶段前输出 Design Contract Summary 的 Markdown 表和符合 `core/skills/ui-ux/design-system/contracts/design-contract.schema.json` 的 JSON block。
-- 配色必须读取 `core/skills/ui-ux/design-system/references/color-system.md`、`references/palette-source-index.md`、`references/palette-usage-rules.md`、`data/aesthetic-palettes.csv`、`data/ui-color-scales.csv` 和 `data/chart-palettes.csv`，并把 palette_id、semantic tokens、usage rules、accessibility、source_url、license_note、contrast checks 和 avoid rules 写入 Design Contract JSON。
+- 使用 design-system 时先读取 `core/skills/ui-ux/design-system/references/read-profiles.md#Design Mode Routing`；交接后续阶段前输出 Design Contract Summary 的 Markdown 表和符合 `core/skills/ui-ux/design-system/contracts/design-contract.schema.json` 的 JSON block。
+- 配色必须读取 `core/skills/ui-ux/design-system/foundations/foundation-system.md#Color System`、`data/aesthetic-palettes.csv` 和 `data/color-support.csv`，并把 palette_id、semantic tokens、usage rules、accessibility、source_url、license_note、contrast checks 和 avoid rules 写入 Design Contract JSON。
 - 字体、字号、间距、圆角、阴影、动效和 GSAP signature 必须读取 `core/skills/ui-ux/design-system/references/design-composition.md` 和 foundation 数据表，并写入 Design Contract JSON 的 `foundation_system`。
-- 做视觉质量审查时优先读取项目设计系统、已确认 UI 方向和 `core/skills/ui-ux/design-system/references/ux-research-ia.md`；不再内置 `web-design-guidelines`
+- 做视觉质量审查时优先读取项目设计系统、已确认 UI 方向和 `core/skills/ui-ux/design-system/references/reference-workflow.md#UX / IA Add-on`；不再内置 `web-design-guidelines`
 
 ## 写入
 
@@ -53,11 +53,11 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - **判断 UI 影响**：检查页面、组件、路由、视觉状态、角色视图、响应式、可访问性和用户操作流。
 - 无 UI 影响时写 N/A、跳过理由和验证方式；不要继续生成风格或原型。
 - **提取用户画像**：从 `prd.md`、`brainstorm.md` 或 `requirements.md` 中提取目标用户画像（Persona），确认用户的目标、痛点和行为模式。
-- **按需补齐 UX 证据**：如果用户画像、信息架构、交互流程、微文案、可访问性或视觉层级证据不足，读取 `core/skills/ui-ux/design-system/references/ux-research-ia.md`，并归一化为本文件内容。
+- **按需补齐 UX 证据**：如果用户画像、信息架构、交互流程、微文案、可访问性或视觉层级证据不足，读取 `core/skills/ui-ux/design-system/references/reference-workflow.md#UX / IA Add-on`，并归一化为本文件内容。
 - **竞品与参考分析**：若有现有设计系统、品牌手册、页面、Pencil、Figma、截图或参考产品，提取可执行规则：布局、导航、密度、色彩、字体、表格、表单、反馈、空态和错误态。不要只贴链接；每个参考都要写"采用什么、不采用什么、如何落地"。
 - **PC 业务系统模板**：若产品是后台 / 管理系统 / 数据表格系统，或用户明确给出 PC 端 UI 规范，读取 `pc-ui-design-spec.md`，在 Visual Style Brief 中写入设计系统来源和核心 token；后续 Pencil、HTML/CSS、前端实现都不得擅自改这些数值。
 - **shadcn 管理端模式**：若实现层采用 shadcn/ui，把 shadcn 视为 primitive / registry / theming 层；在 UI design 中定义 App Shell、Resource Page、Entity Table、Detail/Form、State Feedback 和 Ops Pattern 的封装契约。
-- **design-system 工具链**：若需要设计语言或组件规范，读取 `design-system`，把 design intelligence、美学方向推荐、DESIGN.md extraction、Composition Recipe、foundations、组件契约、页面模式、样例板、动效 / GSAP 边界和去廉价感 review 归一化到 UI design。
+- **design-system 工具链**：若需要设计语言或组件规范，读取 `design-system`，把 Creative Direction、美学方向推荐、DESIGN.md extraction、Composition Recipe、foundations、组件契约、页面模式、样例板、动效 / GSAP 边界和去廉价感 review 归一化到 UI design。
 - **Design mode routing**：先判断 Product UI、Brand Surface、Hybrid、Avatar-IP 或 Empty State；后台、审批、数据表格和高频工作台默认 Product UI，不把品牌页视觉直接套到控件层。头像/IP 与空态同时适用时用 `scope: "both"`，不要把组合值写入 `design_mode`。
 - **Color system**：从 palette library 选完整色阶，按 Product UI / Brand Surface / Hybrid 的比例纪律映射 semantic tokens；不能只输出 background / surface / text / primary / accent 单点色。
 - **Foundation system**：从 type scale、spacing density、radius / shadow recipe、motion recipe 中选择一套组合配方；不能只有颜色，没有字体、空间、圆角阴影和动效。
@@ -74,7 +74,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - **定义滚动区域**：明确全局导航、页面头部、主内容、右侧辅助栏、表格和局部列表分别是 fixed / sticky / scroll / static；长页面不能让主导航被内容滚动带走。
 - **定义 HMW 问题**：用"如何能"框架将用户痛点转化为设计机会。
 - 用户未确认前，不调用 Pencil，不创建完整页面方案，不写"我将使用某某风格"作为既定事实。
-- 如果需要用户在多个体验方向中取舍，退回 brainstorm；`ux-research-ia.md` 在 UI design 中只用于细化已确认方向，不用于绕过确认。
+- 如果需要用户在多个体验方向中取舍，退回 brainstorm；UX / IA Add-on 在 UI design 中只用于细化已确认方向，不用于绕过确认。
 - 用户确认后，在上游 artifact 留下可检索标记：`[UI DECISION CONFIRMED]` 或 `UI Direction Status: confirmed`，并记录用户选择、放弃项和影响。
 - 用户暂不确认且 UI 风险低时，可以只写默认假设和待确认点；默认假设必须可逆，不能推进到 Pencil 原型。
 
@@ -83,7 +83,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 - **建立体验规格**：页面地图、入口出口、角色流程、主路径、异常路径。
 - **选择输出预算**：按 work item 风险写 compact / standard / full；不要为了小改生成难以审阅的完整设计报告。
 - **建立 Composition Recipe 和 foundations pack**：把确认方向写成 semantic tokens、typography scale、spacing density、radius / shadow recipe、motion recipe、GSAP signature、图标、文案、动效和可访问性底线。
-- **建立 taste critique**：检查这个方向是否可以套到任意同类产品；如果可以，必须替换 signature、布局、排版或色彩策略中的至少一项。
+- **建立 Visual QA**：检查这个方向是否可以套到任意同类产品；如果可以，必须替换 signature、布局、排版或色彩策略中的至少一项。
 - **写组件封装契约**：管理端必须说明哪些页面级、资源级和状态级组件由项目封装；避免每个页面重复散落基础 `Button`、`Card`、`Table`。
 - **写组件契约文件**：复杂或复用组件必须写入 `01-spec/design/components/<component-name>.contract.md`，覆盖 anatomy、variants、states、mapping、props、events、slots、motion 和 verification。
 - 页面 × 状态矩阵：default、loading、empty、error、permission、disabled、success、boundary、responsive、a11y。
@@ -143,7 +143,7 @@ description: SpecForge 内部 UI 设计技能。用于根据 requirements 生成
 
 - `ui-design.md` 能让 reviewer 判断 UI 是否满足需求。
 - 有 UI 变更时，存在用户画像提取、Visual Style Brief、页面地图、信息架构、用户流程、微文案、状态矩阵、Pencil `.pen`、导出截图、无障碍自查和视觉质量修正记录。
-- 需要设计系统时，存在 design intelligence、aesthetic direction、foundations pack、sample board、人工确认状态、组件契约、页面模式、taste critique 和 motion boundary。
+- 需要设计系统时，存在 Creative Direction、aesthetic direction、foundations pack、sample board、人工确认状态、组件契约、页面模式、Visual QA 和 motion boundary。
 - Design Contract Summary 同时包含 Markdown 表和 machine-readable JSON block。
 - Design Contract JSON 包含 `color_system`，且 palette 不只是单点 hex。
 - Design Contract JSON 包含 `foundation_system`，且 typography / spacing / radius_shadow / motion 都可映射到实现和 Pencil variables。

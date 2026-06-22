@@ -11,16 +11,9 @@ const designRoot = join(skillsRoot, designLocalPath);
 const starterDesignRoot = join(root, "starter/.specforge/core/skills", designLocalPath);
 
 const referencePickerFiles = [
-  "references/reference-picker.md",
-  "references/reference-source-routing.md",
-  "references/reference-extraction-protocol.md",
+  "references/reference-workflow.md",
   "data/reference-source-catalog.csv",
-  "contracts/reference-selection.schema.json",
-  "prompts/reference-picker.md",
-  "prompts/reference-extraction.md",
-  "prompts/source-routing.md",
-  "prompts/shadcn-resource-audit.md",
-  "prompts/domestic-design-case-extraction.md",
+  "contracts/design-contract.schema.json",
 ];
 
 const deprecatedReferenceSelectionTerms = [
@@ -32,36 +25,16 @@ const deprecatedReferenceSelectionTerms = [
 
 const criticalFiles = [
   "contracts/design-contract.schema.json",
-  "contracts/reference-selection.schema.json",
-  "contracts/selected-data.schema.json",
-  "contracts/visual-qa.schema.json",
-  "data/advanced-interaction-recipes.csv",
   "data/aesthetic-palettes.csv",
-  "data/font-pairing-recipes.csv",
-  "data/motion-recipes.csv",
-  "data/radius-shadow-recipes.csv",
+  "data/foundation-recipes.csv",
   "data/reference-source-catalog.csv",
-  "data/spacing-density-scales.csv",
-  "data/type-scales.csv",
-  "prompts/domestic-design-case-extraction.md",
-  "prompts/reference-extraction.md",
-  "prompts/reference-picker.md",
-  "prompts/shadcn-resource-audit.md",
-  "prompts/source-routing.md",
-  "references/advanced-interaction-source-index.md",
-  "references/color-system.md",
-  "references/composition-source-index.md",
+  "references/creative-direction.md",
   "references/design-composition.md",
-  "references/design-system-orchestration.md",
-  "references/font-source-index.md",
+  "references/motion-block-library.md",
   "references/output-contract.md",
-  "references/palette-source-index.md",
-  "references/product-ui-layout-quality.md",
+  "references/product-ui-signature-patterns.md",
   "references/read-profiles.md",
-  "references/reference-extraction-protocol.md",
-  "references/reference-picker.md",
-  "references/reference-source-routing.md",
-  "references/visual-calibration.md",
+  "references/reference-workflow.md",
   "references/visual-qa-detectors.md",
 ];
 
@@ -80,17 +53,6 @@ function safeJson(path, label) {
     errors.push(`${label}: invalid JSON (${error.message})`);
     return null;
   }
-}
-
-function stableStringify(value) {
-  if (Array.isArray(value)) return `[${value.map((item) => stableStringify(item)).join(",")}]`;
-  if (value && typeof value === "object") {
-    return `{${Object.keys(value)
-      .sort((a, b) => a.localeCompare(b))
-      .map((key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`)
-      .join(",")}}`;
-  }
-  return JSON.stringify(value);
 }
 
 function validateSchemaNode(node, label) {
@@ -316,7 +278,7 @@ function validateCriticalFiles(registryFiles) {
 function validateReferencedFiles(registryFiles) {
   const referenceSources = [
     join(designRoot, "SKILL.md"),
-    join(designRoot, "references/design-system-orchestration.md"),
+    join(designRoot, "references/read-profiles.md"),
   ];
   const referencedFiles = [...new Set(referenceSources.flatMap((file) => extractSupportReferences(file)))].sort((a, b) => a.localeCompare(b));
   for (const file of referencedFiles) {
@@ -375,16 +337,16 @@ function validateReferenceSourceCatalog() {
 }
 
 function validateReferenceSelectionSchemas() {
-  const referenceSchemaPath = join(designRoot, "contracts/reference-selection.schema.json");
   const designSchemaPath = join(designRoot, "contracts/design-contract.schema.json");
-  const referenceLabel = "core/skills/ui-ux/design-system/contracts/reference-selection.schema.json";
   const designLabel = "core/skills/ui-ux/design-system/contracts/design-contract.schema.json";
-  const referenceSchema = existsSync(referenceSchemaPath) ? validateJsonSchemaFile(referenceSchemaPath, referenceLabel) : null;
   const designSchema = existsSync(designSchemaPath) ? validateJsonSchemaFile(designSchemaPath, designLabel) : null;
-  if (!referenceSchema || !designSchema) return;
+  if (!designSchema) return;
 
   const referenceSelection = designSchema.properties?.reference_selection;
-  if (!referenceSelection) return;
+  if (!referenceSelection) {
+    errors.push(`${designLabel}: missing properties.reference_selection`);
+    return;
+  }
 
   const workflowEnum = designSchema.properties?.scan_manifest?.properties?.workflow?.items?.enum;
   if (Array.isArray(workflowEnum) && !workflowEnum.includes("reference")) {
@@ -400,14 +362,15 @@ function validateReferenceSelectionSchemas() {
     return;
   }
 
-  const standaloneShape = {
-    type: referenceSchema.type,
-    additionalProperties: referenceSchema.additionalProperties,
-    required: referenceSchema.required,
-    properties: referenceSchema.properties,
-  };
-  if (stableStringify(embedded) !== stableStringify(standaloneShape)) {
-    errors.push(`${designLabel}: reference_selection schema must match contracts/reference-selection.schema.json`);
+  const requiredFields = ["ui_type", "stack", "selected_needs", "borrow_strength", "source_routing", "reuse_boundary", "offline_behavior", "human_confirmation", "forbidden"];
+  const required = new Set(embedded.required ?? []);
+  for (const field of requiredFields) {
+    if (!embedded.properties?.[field]) {
+      errors.push(`${designLabel}: referenceSelection missing ${field}`);
+    }
+    if (!required.has(field)) {
+      errors.push(`${designLabel}: referenceSelection.required missing ${field}`);
+    }
   }
 }
 
@@ -416,9 +379,7 @@ function validateReferenceSelectionTerminology() {
     "SKILL.md",
     "references/read-profiles.md",
     "references/output-contract.md",
-    "references/design-system-orchestration.md",
-    "references/reference-picker.md",
-    "prompts/reference-picker.md",
+    "references/reference-workflow.md",
   ];
   for (const file of docsToCheck) {
     const fullPath = join(designRoot, file);

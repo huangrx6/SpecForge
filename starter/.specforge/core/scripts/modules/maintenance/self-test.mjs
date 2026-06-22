@@ -509,7 +509,12 @@ function testArtifactQualityProfiles() {
     );
 
     const passing = artifactQualitySummary(diagnosis);
-    assert.equal(passing.issues.some((issue) => issue.severity === "FAIL"), false);
+    const unexpectedFailures = passing.issues.filter((issue) => issue.severity === "FAIL");
+    assert.equal(
+      unexpectedFailures.length > 0,
+      false,
+      `Unexpected artifact quality failures:\n${JSON.stringify(unexpectedFailures, null, 2)}`,
+    );
   } finally {
     rmSync(base, { recursive: true, force: true });
   }
@@ -548,7 +553,12 @@ function testTechnicalDesignContractQuality() {
     );
 
     const passing = artifactQualitySummary(diagnosis);
-    assert.equal(passing.issues.some((issue) => issue.severity === "FAIL"), false);
+    const unexpectedFailures = passing.issues.filter((issue) => issue.severity === "FAIL");
+    assert.equal(
+      unexpectedFailures.length > 0,
+      false,
+      `Unexpected technical design quality failures:\n${JSON.stringify(unexpectedFailures, null, 2)}`,
+    );
   } finally {
     rmSync(base, { recursive: true, force: true });
   }
@@ -582,31 +592,44 @@ function testUiDesignContractQuality() {
 
     const contract = {
       scan_manifest: {
-        workflow: ["mode", "source", "font", "color", "composition", "advanced_interaction", "component", "qa", "output"],
+        profile: "product-page",
+        workflow: ["creative_direction", "mode", "source", "font", "color", "composition", "advanced_interaction", "product_ui_signature", "component", "qa", "output"],
         scanned_files: [
           {
-            path: "references/design-system-orchestration.md",
+            path: "references/read-profiles.md",
+            purpose: "控制面与读取路径裁剪",
+            status: "scanned",
+            finding: "Product UI 使用 creative direction + signature pattern，不展开全量参考库",
+          },
+          {
+            path: "references/read-profiles.md#Full-System Orchestration",
             purpose: "设计流程编排",
             status: "scanned",
             finding: "使用完整 Design Scan Manifest",
           },
           {
-            path: "references/design-mode-routing.md",
+            path: "references/read-profiles.md#Design Mode Routing",
             purpose: "模式路由",
             status: "scanned",
             finding: "Product UI",
           },
           {
-            path: "references/font-source-index.md",
-            purpose: "字体来源",
-            status: "scanned",
-            finding: "system-cn-ui",
-          },
-          {
             path: "references/design-composition.md",
             purpose: "组合配方",
             status: "scanned",
-            finding: "product-compact + compact + product-border-first",
+            finding: "system-cn-ui + product-compact + compact + product-border-first",
+          },
+          {
+            path: "references/creative-direction.md",
+            purpose: "创意方向",
+            status: "scanned",
+            finding: "先拒绝固定后台壳，再选择 split-panel evidence desk",
+          },
+          {
+            path: "references/product-ui-signature-patterns.md",
+            purpose: "Product UI signature",
+            status: "scanned",
+            finding: "采用 Object Inspector + Evidence Timeline 的混合工作台",
           },
         ],
         selected_data: {
@@ -619,15 +642,117 @@ function testUiDesignContractQuality() {
           motion_recipe_id: "product-crisp",
           advanced_interaction_recipe_id: "none-product-ui",
         },
+        selection_rationale: {
+          palette: {
+            id: "minimal-tech",
+            why: "Neutral surfaces plus restrained blue/teal accents support dense operational scanning.",
+            rejected: ["warm-editorial rejected because it weakens product-table hierarchy"],
+            risk: "Changing the palette can reduce contrast and make status accents compete with actions.",
+            confidence: "confirmed",
+          },
+          font_source: {
+            id: "system-cn-ui",
+            why: "System Chinese UI fonts keep text crisp in compact tables and avoid extra font loading.",
+            rejected: ["display-serif rejected because it is unsuitable for high-frequency admin workflows"],
+            risk: "Replacing the font source may change row height and table density.",
+            confidence: "confirmed",
+          },
+          font_pairing: {
+            id: "system-productive-cn",
+            why: "Productive system pairing keeps headings restrained and body copy readable in Chinese and English.",
+            rejected: ["marketing-display-pairing rejected because it over-emphasizes section titles"],
+            risk: "A decorative pairing could create overflow in filters, tabs, and table cells.",
+            confidence: "confirmed",
+          },
+          type_scale: {
+            id: "product-compact",
+            why: "Compact scale matches resource-management screens where comparison is more important than hero emphasis.",
+            rejected: ["editorial-large-scale rejected because it reduces first-screen data density"],
+            risk: "Larger scales can push filters and state evidence below the fold.",
+            confidence: "confirmed",
+          },
+          spacing_density: {
+            id: "compact",
+            why: "Compact spacing keeps table, filters, and detail panel visible together.",
+            rejected: ["comfortable-marketing-spacing rejected because it creates empty surface gaps"],
+            risk: "Increasing spacing may turn the work surface into a sparse dashboard shell.",
+            confidence: "confirmed",
+          },
+          radius_shadow: {
+            id: "product-border-first",
+            why: "Border-first surfaces separate dense regions without decorative card stacking.",
+            rejected: ["premium-shadow-stack rejected because it risks card-soup layout"],
+            risk: "Heavy shadows can make repeated panels look like floating cards.",
+            confidence: "confirmed",
+          },
+          motion: {
+            id: "product-crisp",
+            why: "Small state changes support feedback without distracting from table review.",
+            rejected: ["expressive-page-transitions rejected because they add motion noise"],
+            risk: "Replacing motion with large transitions can slow repeated review workflows.",
+            confidence: "confirmed",
+          },
+          advanced_interaction: {
+            id: "none-product-ui",
+            why: "The fixture validates a practical Product UI contract and does not need GSAP or 3D interaction.",
+            rejected: ["threejs-signature rejected because the workflow is table-centric"],
+            risk: "Adding advanced interaction would increase verification cost without improving the self-test contract.",
+            confidence: "confirmed",
+          },
+        },
         skipped_with_reason: [
           {
-            path: "references/advanced-interaction-source-index.md",
-            reason: "Product UI 高频后台不使用 GSAP / Three.js signature",
+            path: "reference_selection",
+            reason: "no external reference requested",
+          },
+          {
+            path: "references/reference-workflow.md#Live Evidence Protocol",
+            reason: "自测 fixture 不访问外部网站，只验证本地 Product UI 合同完整性",
+          },
+          {
+            path: "references/motion-block-library.md#Asset Brief Add-on",
+            reason: "Product UI 自测不需要生成图片、3D、视频或纹理素材",
+          },
+          {
+            path: "data/foundation-recipes.csv#advanced_interaction",
+            reason: "Product UI 高频后台选择 none-product-ui，不使用 GSAP / Three.js signature",
+          },
+          {
+            path: "references/motion-block-library.md",
+            reason: "advanced_interaction_recipe_id 为 none-product-ui，不需要 interaction_signature",
           },
         ],
       },
+      creative_direction: {
+        selected: "split-panel evidence desk",
+        why: "The Product UI centers on inspecting and resolving resource quality records, so the signature should be the relationship between table rows, detail evidence, and resolution actions rather than a generic dashboard shell.",
+        alternatives: [
+          {
+            id: "command-cockpit",
+            positioning: "Toolbar-led command center for fast bulk actions",
+            fit: "Useful when operators mostly batch-edit records",
+            risk: "May hide detailed evidence needed by the self-test fixture",
+          },
+          {
+            id: "anomaly-board",
+            positioning: "Grouped issue lanes with severity clustering",
+            fit: "Useful when triage order matters more than row comparison",
+            risk: "Can become a card board if records need dense table scanning",
+          },
+        ],
+        rejected_defaults: ["fixed sidebar + KPI cards + generic data table", "hero-like admin dashboard header"],
+        signature_carrier: "structure",
+      },
       design_mode: "Product UI",
       aesthetic_direction: "极简科技风",
+      human_confirmation: {
+        required: false,
+        reason: "Self-test uses a low-risk Product UI default to validate contract completeness.",
+        options_presented: ["compact-product-ui-default"],
+        selected: "compact-product-ui-default",
+        status: "defaulted",
+        default_reversibility: "Only the fixture contract is affected; no project IA, schema, permissions, or migration changes.",
+      },
       signature: {
         type: "structural",
         description: "Dense split-panel workflow with status-first table hierarchy.",
@@ -721,10 +846,41 @@ function testUiDesignContractQuality() {
         },
       },
       token_source: "existing",
+      token_delivery_hint: {
+        css_variables: ["--sf-bg", "--sf-surface", "--sf-text", "--sf-primary", "--sf-radius-panel", "--sf-duration-fast"],
+        tailwind_mapping: {
+          "colors.background": "var(--sf-bg)",
+          "colors.surface": "var(--sf-surface)",
+          "colors.primary": "var(--sf-primary)",
+          "borderRadius.panel": "var(--sf-radius-panel)",
+        },
+        pencil_variables: ["color.background", "color.surface", "color.text", "color.primary", "radius.panel", "motion.fast"],
+        notes: "Design-system token output is a hint; final CSS, Tailwind, and Pencil delivery remains owned by sf-tech-design.",
+      },
       component_strategy: "primitive + wrapper",
       shadcn_vue: {
         primitive_layer: ["Table", "Button"],
         project_wrapper_layer: ["ResourceTable"],
+      },
+      layout: {
+        navigation_decision: "left navigation plus compact toolbar filters",
+        layout_archetype: "Object Inspector + Evidence Timeline",
+        primary_work_surface: "resource table with split detail panel and inline status controls",
+        scroll_regions: ["main table scroll", "right evidence panel scroll"],
+        responsive_strategy: "desktop keeps table and inspector side by side; narrow viewport stacks filters, table, then evidence drawer",
+      },
+      state_matrix: {
+        required_states: ["default", "loading", "empty", "error", "permission", "success"],
+        owner: "sf-ui-design",
+      },
+      product_ui_quality: {
+        primary_user: "operations reviewer",
+        primary_object: "resource quality record",
+        primary_job: "scan, filter, inspect, and resolve resource quality issues",
+        kpi_actionability: "pass",
+        content_budget: "pass",
+        right_rail_purpose: "shows evidence, decision history, and next action for the selected record",
+        rejected_filler: ["decorative KPI wallpaper", "empty marketing hero", "nested card dashboard shell"],
       },
       motion: {
         layer_1_css: ["button active"],
@@ -732,6 +888,73 @@ function testUiDesignContractQuality() {
         layer_3_gsap: [],
         reduced_motion: "remove travel / keep opacity",
       },
+      visual_qa: [
+        {
+          detector: "Generic SaaS shell",
+          result: "ok",
+          severity: "high",
+          evidence: {
+            artifact: "ui-design self-test fixture",
+            viewport: "desktop 1440px",
+            region: "primary work surface",
+          },
+          fix: "not present after self-test review",
+          status: "fixed",
+          owner: "sf-ui-design",
+        },
+        {
+          detector: "Card soup",
+          result: "ok",
+          severity: "high",
+          evidence: {
+            artifact: "ui-design self-test fixture",
+            viewport: "desktop 1440px",
+            region: "content panels",
+          },
+          fix: "not present after self-test review",
+          status: "fixed",
+          owner: "sf-ui-design",
+        },
+        {
+          detector: "Fake premium gradient",
+          result: "ok",
+          severity: "high",
+          evidence: {
+            artifact: "ui-design self-test fixture",
+            viewport: "desktop 1440px",
+            region: "surface tokens",
+          },
+          fix: "not present after self-test review",
+          status: "fixed",
+          owner: "sf-ui-design",
+        },
+        {
+          detector: "Motion noise",
+          result: "ok",
+          severity: "high",
+          evidence: {
+            artifact: "ui-design self-test fixture",
+            viewport: "desktop 1440px",
+            region: "interaction states",
+          },
+          fix: "not present after self-test review",
+          status: "fixed",
+          owner: "sf-ui-design",
+        },
+        {
+          detector: "State missing",
+          result: "ok",
+          severity: "high",
+          evidence: {
+            artifact: "ui-design self-test fixture",
+            viewport: "desktop 1440px",
+            region: "state matrix",
+          },
+          fix: "not present after self-test review",
+          status: "fixed",
+          owner: "sf-ui-design",
+        },
+      ],
       verification_hooks: ["screenshot default/loading/empty/error/permission states"],
       anti_slop_rules: ["no card soup", "no fake premium gradient"],
     };
@@ -742,7 +965,12 @@ function testUiDesignContractQuality() {
     );
 
     const passing = artifactQualitySummary(diagnosis);
-    assert.equal(passing.issues.some((issue) => issue.severity === "FAIL"), false);
+    const unexpectedFailures = passing.issues.filter((issue) => issue.severity === "FAIL");
+    assert.equal(
+      unexpectedFailures.length > 0,
+      false,
+      `Unexpected UI design quality failures:\n${JSON.stringify(unexpectedFailures, null, 2)}`,
+    );
   } finally {
     rmSync(base, { recursive: true, force: true });
   }

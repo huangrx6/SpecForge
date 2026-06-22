@@ -22,8 +22,8 @@ description: 根据已批准的 SpecForge tasks 执行实现；用于 implementa
 - `.specforge/core/standards/engineering.md`
 - `.specforge/core/standards/ai-toolkit.md`
 - `.specforge/core/skills/code-intelligence/SKILL.md`：任务边界涉及现有模块、符号定位、调用链或修改后 freshness 检查时读取。
-- 需要实现 UI 时读取 `.specforge/core/standards/design.md`、`.specforge/core/skills/ui-ux/design-system/references/cross-stage-handoff.md` 和 `ui-design.md#Design Contract Summary`；若 `ui-design.md` 声明采用 PC 端业务系统规范，还要读取 `.specforge/core/standards/pc-ui-design-spec.md`。
-- UI 实现涉及 shadcn-vue、project wrapper、token、动效或组件状态时，按需读取 `.specforge/core/skills/ui-ux/design-system/references/component-system.md`、`references/shadcn-vue.md`、`foundations/tokens.md`、`foundations/motion.md` 和相关 `components/*.md`。
+- 需要实现 UI 时读取 `.specforge/core/standards/design.md`、`.specforge/core/skills/ui-ux/design-system/references/output-contract.md` 和 `ui-design.md#Design Contract Summary`；若 `ui-design.md` 声明采用 PC 端业务系统规范，还要读取 `.specforge/core/standards/pc-ui-design-spec.md`。
+- UI 实现涉及 shadcn-vue、project wrapper、token、动效或组件状态时，按需读取 `.specforge/core/skills/ui-ux/design-system/components/component-system.md`、`.specforge/core/skills/ui-ux/design-system/foundations/foundation-system.md` 和 `.specforge/core/skills/ui-ux/design-system/references/motion-block-library.md`。
 
 ## 启动扫描
 

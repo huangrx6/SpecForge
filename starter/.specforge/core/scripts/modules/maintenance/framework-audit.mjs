@@ -223,96 +223,21 @@ function designSystemIssues() {
   const required = [
     "core/skills/ui-ux/design-system/SKILL.md",
     "core/skills/ui-ux/design-system/contracts/design-contract.schema.json",
-    "core/skills/ui-ux/design-system/contracts/color-palette.schema.json",
     "core/skills/ui-ux/design-system/contracts/component-contract.template.md",
-    "core/skills/ui-ux/design-system/contracts/reference-selection.schema.json",
-    "core/skills/ui-ux/design-system/contracts/selected-data.schema.json",
-    "core/skills/ui-ux/design-system/contracts/visual-qa.schema.json",
     "core/skills/ui-ux/design-system/data/aesthetic-palettes.csv",
-    "core/skills/ui-ux/design-system/data/ui-color-scales.csv",
-    "core/skills/ui-ux/design-system/data/aesthetic-palette-candidates.csv",
-    "core/skills/ui-ux/design-system/data/chart-palettes.csv",
-    "core/skills/ui-ux/design-system/data/font-pairing-recipes.csv",
-    "core/skills/ui-ux/design-system/data/type-scales.csv",
-    "core/skills/ui-ux/design-system/data/spacing-density-scales.csv",
-    "core/skills/ui-ux/design-system/data/radius-shadow-recipes.csv",
-    "core/skills/ui-ux/design-system/data/motion-recipes.csv",
-    "core/skills/ui-ux/design-system/data/advanced-interaction-recipes.csv",
+    "core/skills/ui-ux/design-system/data/foundation-recipes.csv",
+    "core/skills/ui-ux/design-system/data/color-support.csv",
     "core/skills/ui-ux/design-system/data/reference-source-catalog.csv",
-    "core/skills/ui-ux/design-system/components/README.md",
-    "core/skills/ui-ux/design-system/foundations/README.md",
-    "core/skills/ui-ux/design-system/foundations/tokens.md",
-    "core/skills/ui-ux/design-system/foundations/colors.md",
-    "core/skills/ui-ux/design-system/foundations/typography.md",
-    "core/skills/ui-ux/design-system/foundations/spacing.md",
-    "core/skills/ui-ux/design-system/foundations/density.md",
-    "core/skills/ui-ux/design-system/foundations/motion.md",
-    "core/skills/ui-ux/design-system/foundations/accessibility.md",
-    "core/skills/ui-ux/design-system/foundations/iconography.md",
-    "core/skills/ui-ux/design-system/foundations/content.md",
-    "core/skills/ui-ux/design-system/foundations/responsive.md",
-    "core/skills/ui-ux/design-system/components/button.md",
-    "core/skills/ui-ux/design-system/components/card.md",
-    "core/skills/ui-ux/design-system/components/form.md",
-    "core/skills/ui-ux/design-system/components/input.md",
-    "core/skills/ui-ux/design-system/components/select-combobox.md",
-    "core/skills/ui-ux/design-system/components/table.md",
-    "core/skills/ui-ux/design-system/components/navbar.md",
-    "core/skills/ui-ux/design-system/components/dialog.md",
-    "core/skills/ui-ux/design-system/components/drawer.md",
-    "core/skills/ui-ux/design-system/components/command-palette.md",
-    "core/skills/ui-ux/design-system/components/upload.md",
-    "core/skills/ui-ux/design-system/components/tooltip-popover.md",
-    "core/skills/ui-ux/design-system/components/skeleton-progress.md",
-    "core/skills/ui-ux/design-system/pages/dashboard.md",
-    "core/skills/ui-ux/design-system/pages/live-room.md",
-    "core/skills/ui-ux/design-system/pages/member.md",
-    "core/skills/ui-ux/design-system/pages/mobile-h5.md",
-    "core/skills/ui-ux/design-system/pages/ai-assistant.md",
-    "core/skills/ui-ux/design-system/prompts/ui-generation.md",
-    "core/skills/ui-ux/design-system/prompts/design-language.md",
-    "core/skills/ui-ux/design-system/prompts/design-md-extraction.md",
-    "core/skills/ui-ux/design-system/prompts/aesthetic-selection.md",
-    "core/skills/ui-ux/design-system/prompts/sample-board.md",
-    "core/skills/ui-ux/design-system/prompts/anti-cheapness-review.md",
-    "core/skills/ui-ux/design-system/prompts/taste-critique.md",
-    "core/skills/ui-ux/design-system/prompts/visual-qa.md",
-    "core/skills/ui-ux/design-system/prompts/reference-picker.md",
-    "core/skills/ui-ux/design-system/prompts/source-routing.md",
-    "core/skills/ui-ux/design-system/prompts/reference-extraction.md",
-    "core/skills/ui-ux/design-system/prompts/shadcn-resource-audit.md",
-    "core/skills/ui-ux/design-system/prompts/domestic-design-case-extraction.md",
-    "core/skills/ui-ux/design-system/references/good-case.md",
-    "core/skills/ui-ux/design-system/references/bad-case.md",
-    "core/skills/ui-ux/design-system/references/design-mode-routing.md",
-    "core/skills/ui-ux/design-system/references/color-system.md",
-    "core/skills/ui-ux/design-system/references/palette-source-index.md",
-    "core/skills/ui-ux/design-system/references/palette-usage-rules.md",
+    "core/skills/ui-ux/design-system/components/component-system.md",
+    "core/skills/ui-ux/design-system/foundations/foundation-system.md",
+    "core/skills/ui-ux/design-system/references/creative-direction.md",
     "core/skills/ui-ux/design-system/references/visual-qa-detectors.md",
-    "core/skills/ui-ux/design-system/references/design-review-rubric.md",
-    "core/skills/ui-ux/design-system/references/aesthetic-directions.md",
-    "core/skills/ui-ux/design-system/references/component-system.md",
-    "core/skills/ui-ux/design-system/references/design-intelligence.md",
-    "core/skills/ui-ux/design-system/references/design-system-orchestration.md",
-    "core/skills/ui-ux/design-system/references/composition-source-index.md",
-    "core/skills/ui-ux/design-system/references/font-source-index.md",
     "core/skills/ui-ux/design-system/references/design-composition.md",
-    "core/skills/ui-ux/design-system/references/advanced-interaction-source-index.md",
-    "core/skills/ui-ux/design-system/references/ux-research-ia.md",
-    "core/skills/ui-ux/design-system/references/design-md-extraction.md",
-    "core/skills/ui-ux/design-system/references/taste-review.md",
-    "core/skills/ui-ux/design-system/references/layout-archetypes.md",
-    "core/skills/ui-ux/design-system/references/product-ui-layout-quality.md",
+    "core/skills/ui-ux/design-system/references/motion-block-library.md",
+    "core/skills/ui-ux/design-system/references/product-ui-signature-patterns.md",
     "core/skills/ui-ux/design-system/references/read-profiles.md",
-    "core/skills/ui-ux/design-system/references/reference-picker.md",
-    "core/skills/ui-ux/design-system/references/reference-source-routing.md",
-    "core/skills/ui-ux/design-system/references/reference-extraction-protocol.md",
+    "core/skills/ui-ux/design-system/references/reference-workflow.md",
     "core/skills/ui-ux/design-system/references/output-contract.md",
-    "core/skills/ui-ux/design-system/references/cross-stage-handoff.md",
-    "core/skills/ui-ux/design-system/references/shadcn-vue.md",
-    "core/skills/ui-ux/design-system/references/sample-board-template.md",
-    "core/skills/ui-ux/design-system/references/motion-gsap.md",
-    "core/skills/ui-ux/design-system/references/ui-toolchain.md",
     "core/skills/ui-ux/design-system/changelog.md",
   ];
   issues.push(...required
@@ -322,7 +247,7 @@ function designSystemIssues() {
   const schemaPath = "core/skills/ui-ux/design-system/contracts/design-contract.schema.json";
   if (exists(schemaPath)) {
     const schema = read(schemaPath);
-    for (const marker of ['"Product UI"', '"Brand Surface"', '"Hybrid"', '"Avatar-IP"', '"Empty State"', '"allOf"', '"if"', '"then"', '"const"', '"reference_selection"', '"ui_type"', '"selected_needs"', '"borrow_strength"', '"source_routing"', '"reuse_boundary"', '"offline_behavior"', '"forbidden"', '"scan_manifest"', '"profile"', '"selected_data"', '"selection_rationale"', '"human_confirmation"', '"options_presented"', '"default_reversibility"', '"font_source_id"', '"font_pairing_id"', '"advanced_interaction_recipe_id"', '"contrast_checks"', '"scope"', '"foundation_system"', '"source_basis"', '"typography"', '"spacing"', '"radius_shadow"', '"token_delivery_hint"', '"css_variables"', '"tailwind_mapping"', '"pencil_variables"', '"layout"', '"state_matrix"', '"primary_work_surface"', '"product_ui_quality"', '"visual_qa"', '"detector"', '"severity"', '"evidence"', '"owner"', '"layer_3_gsap"', '"fallback"', '"verification"']) {
+    for (const marker of ['"Product UI"', '"Brand Surface"', '"Hybrid"', '"Avatar-IP"', '"Empty State"', '"allOf"', '"if"', '"then"', '"const"', '"reference_selection"', '"creative_direction"', '"reference_evidence"', '"asset_manifest"', '"interaction_signature"', '"ui_type"', '"selected_needs"', '"borrow_strength"', '"source_routing"', '"reuse_boundary"', '"offline_behavior"', '"forbidden"', '"scan_manifest"', '"profile"', '"selected_data"', '"selection_rationale"', '"human_confirmation"', '"options_presented"', '"default_reversibility"', '"font_source_id"', '"font_pairing_id"', '"advanced_interaction_recipe_id"', '"contrast_checks"', '"scope"', '"foundation_system"', '"source_basis"', '"typography"', '"spacing"', '"radius_shadow"', '"token_delivery_hint"', '"css_variables"', '"tailwind_mapping"', '"pencil_variables"', '"layout"', '"state_matrix"', '"primary_work_surface"', '"product_ui_quality"', '"visual_qa"', '"detector"', '"severity"', '"evidence"', '"owner"', '"layer_3_gsap"', '"fallback"', '"verification"']) {
       if (!schema.includes(marker)) {
         issues.push(issue("FAIL", "design-contract-schema-marker-missing", `${schemaPath} must include ${marker}.`, schemaPath));
       }
@@ -332,23 +257,22 @@ function designSystemIssues() {
     }
   }
 
-  const colorSchemaPath = "core/skills/ui-ux/design-system/contracts/color-palette.schema.json";
-  if (exists(colorSchemaPath)) {
-    const schema = read(colorSchemaPath);
-    if (!schema.includes('"contrast_checks"')) {
-      issues.push(issue("FAIL", "color-palette-contrast-checks-missing", `${colorSchemaPath} must require contrast_checks.`, colorSchemaPath));
-    }
-    if (schema.includes('"Avatar-IP / Empty State"')) {
-      issues.push(issue("FAIL", "color-palette-combined-mode-enum", `${colorSchemaPath} must not allow combined design_mode enum values.`, colorSchemaPath));
-    }
-  }
-
   const componentTemplatePath = "core/skills/ui-ux/design-system/contracts/component-contract.template.md";
   if (exists(componentTemplatePath)) {
     const template = read(componentTemplatePath);
     for (const marker of ["## Trace", "Related REQ", "Related AC", "Related UI section", "Related design contract"]) {
       if (!template.includes(marker)) {
         issues.push(issue("FAIL", "component-contract-trace-marker-missing", `${componentTemplatePath} is missing ${marker}.`, componentTemplatePath));
+      }
+    }
+  }
+
+  const foundationRecipesPath = "core/skills/ui-ux/design-system/data/foundation-recipes.csv";
+  if (exists(foundationRecipesPath)) {
+    const body = read(foundationRecipesPath);
+    for (const marker of ["recipe_type", "font_pairing", "type_scale", "spacing_density", "radius_shadow", "motion", "advanced_interaction", "none-product-ui", "brand-hero-gsap", "three-product-viewer"]) {
+      if (!body.includes(marker)) {
+        issues.push(issue("FAIL", "foundation-recipes-marker-missing", `${foundationRecipesPath} must include ${marker}.`, foundationRecipesPath));
       }
     }
   }
@@ -414,33 +338,36 @@ function pencilSystemIssues() {
 
 function designSystemAestheticIssues() {
   const issues = [];
-  const path = "core/skills/ui-ux/design-system/references/aesthetic-directions.md";
-  if (!exists(path)) return [issue("FAIL", "missing-aesthetic-directions", `${path} is required.`, path)];
+  const path = "core/skills/ui-ux/design-system/references/creative-direction.md";
+  if (!exists(path)) return [issue("FAIL", "missing-creative-direction", `${path} is required.`, path)];
 
   const body = read(path);
   for (const section of [
-    "## 1. 简洁 / 高级类",
-    "## 2. 可爱 / 活泼类",
-    "## 3. 艺术 / 氛围类",
-    "## 4. 复古 / 怀旧类",
-    "## 5. 科技 / 未来类",
-    "## 6. 潮流 / 个性类",
-    "## 7. 自然 / 温柔类",
-    "## 8. 专业 / 可信类",
-    "## 9. 材质 / 3D 类",
-    "## 10. 插画 / 角色表现类",
-    "## 11. 图形 / 排版实验类",
-    "## 12. 地域 / 文化灵感类",
-    "## 13. 情绪 / 体验调性类",
-    "## Business translation patterns",
-    "## Mixing rules",
+    "## 5. Aesthetic Library",
+    "### Palette ID Mapping",
+    "### Direction Families",
+    "简洁 / 高级",
+    "可爱 / 活泼",
+    "艺术 / 氛围",
+    "复古 / 怀旧",
+    "科技 / 未来",
+    "潮流 / 个性",
+    "自然 / 温柔",
+    "专业 / 可信",
+    "材质 / 3D",
+    "插画 / 角色",
+    "图形 / 排版实验",
+    "地域 / 文化",
+    "情绪 / 体验调性",
+    "Business translation patterns",
+    "Mixing rules",
   ]) {
     if (!body.includes(section)) {
       issues.push(issue("FAIL", "aesthetic-style-family-missing", `${path} is missing ${section}.`, path));
     }
   }
 
-  for (const marker of ["Aesthetic direction", "Business translation", "不是业务页面模式库", "不要再把 `Operational Calm`"]) {
+  for (const marker of ["Aesthetic direction", "Business translation", "审美方向是画面气质", "不要把 `Operational Calm`"]) {
     if (!body.includes(marker)) {
       issues.push(issue("FAIL", "aesthetic-business-boundary-missing", `${path} must distinguish aesthetic style from business translation.`, path));
     }
@@ -512,14 +439,15 @@ function designSystemPaletteIssues() {
     }
   }
 
-  for (const supportPath of [
-    "core/skills/ui-ux/design-system/data/ui-color-scales.csv",
-    "core/skills/ui-ux/design-system/data/aesthetic-palette-candidates.csv",
-    "core/skills/ui-ux/design-system/data/chart-palettes.csv",
-    "core/skills/ui-ux/design-system/references/palette-source-index.md",
-  ]) {
-    if (!exists(supportPath)) {
-      issues.push(issue("FAIL", "palette-source-file-missing", `${supportPath} is required by the palette source contract.`, supportPath));
+  const supportPath = "core/skills/ui-ux/design-system/data/color-support.csv";
+  if (!exists(supportPath)) {
+    issues.push(issue("FAIL", "palette-source-file-missing", `${supportPath} is required by the palette source contract.`, supportPath));
+  } else {
+    const supportBody = read(supportPath);
+    for (const marker of ["entry_type", "scale", "chart_palette", "Radix Colors", "ColorBrewer", "semantic_role"]) {
+      if (!supportBody.includes(marker)) {
+        issues.push(issue("FAIL", "palette-source-marker-missing", `${supportPath} must include ${marker}.`, supportPath));
+      }
     }
   }
   return issues;
@@ -527,9 +455,9 @@ function designSystemPaletteIssues() {
 
 function designSystemComponentDepthIssues() {
   const issues = [];
-  const directory = absolute("core/skills/ui-ux/design-system/components");
-  if (!existsSync(directory)) {
-    return [issue("FAIL", "missing-component-directory", "design-system components directory is required.", "core/skills/ui-ux/design-system/components")];
+  const path = "core/skills/ui-ux/design-system/components/component-system.md";
+  if (!exists(path)) {
+    return [issue("FAIL", "missing-component-families", "design-system component families file is required.", path)];
   }
 
   const requiredSections = [
@@ -543,18 +471,19 @@ function designSystemComponentDepthIssues() {
     "## Anti-patterns",
   ];
 
-  for (const entry of readdirSync(directory, { withFileTypes: true })) {
-    if (!entry.isFile() || !entry.name.endsWith(".md") || entry.name === "README.md") continue;
-    const path = `core/skills/ui-ux/design-system/components/${entry.name}`;
-    const body = read(path);
-    for (const section of requiredSections) {
-      if (!body.includes(section)) {
-        issues.push(issue("FAIL", "component-contract-section-missing", `${path} is missing ${section}.`, path));
-      }
+  const body = read(path);
+  for (const section of requiredSections) {
+    if (!body.includes(section)) {
+      issues.push(issue("FAIL", "component-contract-section-missing", `${path} is missing ${section}.`, path));
     }
-    if (!body.includes("Primitive") || !body.includes("Companions") || !body.includes("Project wrappers")) {
-      issues.push(issue("FAIL", "component-shadcn-mapping-incomplete", `${path} must map primitives, companions, and project wrappers.`, path));
+  }
+  for (const family of ["App shell", "Data work", "Form flow", "Command / AI", "Mobile / H5"]) {
+    if (!body.includes(family)) {
+      issues.push(issue("FAIL", "component-family-missing", `${path} is missing ${family}.`, path));
     }
+  }
+  if (!body.includes("Primitive") || !body.includes("Companions") || !body.includes("Project wrappers")) {
+    issues.push(issue("FAIL", "component-shadcn-mapping-incomplete", `${path} must map primitives, companions, and project wrappers.`, path));
   }
 
   return issues;

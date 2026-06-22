@@ -27,7 +27,7 @@ description: 生成或更新 SpecForge work item 的 technical_design；用于 r
 - `.specforge/core/standards/ai-toolkit.md`：阶段质量条、输出预算、依赖确认、source-of-truth 和证据分级。
 - `.specforge/core/skills/code-intelligence/SKILL.md`：当技术设计需要现有模块入口、调用链、影响面、受影响测试、provider freshness 或 `graph_facts[]` 时读取；优先用 Wiki bounded context，再局部查询 provider。
 - `.specforge/core/profiles/README.md`：技术选型维度、数据库选择矩阵和 profile selection 写法。
-- 前端 / UI 会影响组件架构、token、组件库、registry、动效依赖或可视验证时，读取 `.specforge/core/skills/ui-ux/design-system/SKILL.md` 和 `.specforge/core/skills/ui-ux/design-system/references/cross-stage-handoff.md`；再按需读 `references/shadcn-vue.md`、`references/component-system.md`、`references/ui-toolchain.md`、`foundations/tokens.md`、`foundations/motion.md`。
+- 前端 / UI 会影响组件架构、token、组件库、registry、动效依赖或可视验证时，读取 `.specforge/core/skills/ui-ux/design-system/SKILL.md`、`.specforge/core/skills/ui-ux/design-system/references/read-profiles.md#Full-System Orchestration`、`.specforge/core/skills/ui-ux/design-system/references/output-contract.md`；再按需读 `.specforge/core/skills/ui-ux/design-system/components/component-system.md`、`.specforge/core/skills/ui-ux/design-system/foundations/foundation-system.md`、`.specforge/core/skills/ui-ux/design-system/references/motion-block-library.md`。
 
 ## 启动扫描
 

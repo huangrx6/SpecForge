@@ -14,9 +14,8 @@
 
 - `01-spec/requirements.md`
 - `01-spec/ui-design.md`（存在时，读取页面地图、状态矩阵、原型证据和 Design Contract Summary）
-- `.specforge/core/skills/ui-ux/design-system/references/cross-stage-handoff.md`
-- `.specforge/core/skills/ui-ux/design-system/references/component-system.md`
-- `.specforge/core/skills/ui-ux/design-system/references/shadcn-vue.md`（Vue / shadcn-vue 场景）
+- `.specforge/core/skills/ui-ux/design-system/references/output-contract.md`
+- `.specforge/core/skills/ui-ux/design-system/components/component-system.md`
 - `.specforge/core/profiles/README.md`
 - 已选或候选前端 profile，例如：
   - `.specforge/core/profiles/frontend/react-vite-tailwind-ts.md`
@@ -40,7 +39,7 @@
 - 说明哪些复用现有组件，哪些新增业务组件，哪些不新增抽象。
 - 对复杂表单、列表、批量操作、上传/下载、审批流等写清组件职责。
 - 承接 `ui-design.md#Design Contract Summary`：明确 primitive、companion、project wrapper、pattern component 和 domain component 的层级。
-- 使用 shadcn-vue 时，说明 primitive 只承担可访问基础交互；权限、加载、错误、空态、远程数据、审计和批量操作进入 project wrapper。
+- 使用 shadcn-vue 时，按 `.specforge/core/skills/ui-ux/design-system/components/component-system.md` 说明 primitive 只承担可访问基础交互；权限、加载、错误、空态、远程数据、审计和批量操作进入 project wrapper。
 - 需要跨项目复用时，评估是否建立 shadcn-vue custom registry；registry 只分发稳定 wrapper / hooks / pages，不分发一次性页面拼装。
 - 每个新增 project wrapper 必须说明 owner、props/events、状态职责、测试接缝和未来扩展点。
 

@@ -1,6 +1,6 @@
 # UI 设计流程与原型证据
 
-本文件只保存 UI 访谈、第三方 skill/reference 编排、Pencil 保存门禁、视觉 review 和质量标准。Design Mode 路由见 `design-mode-routing.md`；管理端组件契约见 `admin-product-ui-contracts.md`；PC 业务系统规范见 `pc-business-system-spec.md`。
+本文件只保存 UI 访谈、第三方 skill/reference 编排、Pencil 保存门禁、视觉 review 和质量标准。Design Mode 路由由 `.specforge/core/skills/ui-ux/design-system/references/read-profiles.md#Design Mode Routing` 维护；管理端组件契约由 `.specforge/core/skills/ui-ux/design-system/components/component-system.md#Admin Component Contract` 维护；PC 业务系统规范见 `.specforge/core/standards/pc-ui-design-spec.md`。
 
 ## UI 设计访谈
 
@@ -34,22 +34,20 @@ UI design 不是一上来画图。先判断哪些问题会改变页面结构、�
 
 | 参考输入 | 什么时候用 | 归一化到 |
 |---|---|---|
-| `design-system` | 用户画像、信息架构、交互流程、微文案、可访问性、视觉层级、设计语言、美学方向推荐、DESIGN.md extraction、Composition Recipe、foundations、组件契约、页面模式、shadcn-vue 映射、动效 / GSAP 边界或去廉价感审查 | UX rationale、IA、流程风险、a11y 约束、Design intelligence、Aesthetic Direction、Visual Style Brief、foundation_system、Admin Component Contract、Pencil variables、实现约束、视觉 review |
+| `design-system` | 用户画像、信息架构、交互流程、微文案、可访问性、视觉层级、设计语言、美学方向推荐、DESIGN.md extraction、Composition Recipe、foundations、组件契约、页面模式、shadcn-vue 映射、动效 / GSAP 边界或去廉价感审查 | UX rationale、IA、流程风险、a11y 约束、Creative Direction、Visual Style Brief、foundation_system、Admin Component Contract、Pencil variables、实现约束、Visual QA |
 | `pencil` | 需要创建、更新、读取、截图或检查 `.pen` | Pencil 原型证据、Design Contract token sync、截图、保存后重读校验 |
 | `design-taste-frontend` | landing、portfolio、品牌页、redesign 或公开展示页需要更强视觉判断 | Brand Surface 的气质、版式、动效边界、反模板化检查 |
-| `design-mode-routing.md` | 产品同时可能是后台、官网、展示页或混合场景，需要先判断设计方向 | Design Mode、读取顺序、风格和组件边界 |
-| shadcn 官方 skill / shadcn registry reference | 管理端实现层采用 shadcn/ui，或需要查组件、registry、theme、update 规则 | `admin-product-ui-contracts.md` 中的 primitive 选择、registry 候选、组件审查点、实现约束 |
-| `pc-business-system-spec.md` / `pc-ui-design-spec.md` | PC 端业务系统、运营后台、管理系统、数据表格系统，或用户明确提供该规范 | Visual Style Brief、设计系统来源、组件 token、Pencil 变量、HTML/CSS 实现约束 |
+| design-system `references/read-profiles.md#Design Mode Routing` | 产品同时可能是后台、官网、展示页、Avatar-IP、空态或混合场景，需要先判断设计方向 | Design Mode、读取顺序、风格和组件边界 |
+| shadcn 官方 skill / shadcn registry reference | 管理端实现层采用 shadcn/ui，或需要查组件、registry、theme、update 规则 | design-system `components/component-system.md#Admin Component Contract` 中的 primitive 选择、registry 候选、组件审查点、实现约束 |
+| `pc-ui-design-spec.md` | PC 端业务系统、运营后台、管理系统、数据表格系统，或用户明确提供该规范 | Visual Style Brief、设计系统来源、组件 token、Pencil 变量、HTML/CSS 实现约束 |
 | 用户提供的截图 / Figma / 参考产品 | 已有视觉倾向、品牌或竞品约束 | Visual Style Brief、采用 / 不采用、落地方式 |
 
 融合规则：
 
 - 只读取当前问题需要的 reference，不全量搬运外部 skill。
 - 第三方 persona、流程或模板只是候选，必须经过用户确认后才能写成 `[UI DECISION CONFIRMED]`。`design-system` 可以提供推荐方向，但不能替代人工视觉方向确认。
-- `design-system` 的 sample board 是人工感官确认材料：要写 2-3 个美学方向、样例描述、采用/不采用、推荐项和风险；不能只写“现代、简洁、高级”，也不能把 Operational Calm 这类业务模式当成美学。
-- `design-system` 的 design intelligence 是样例板前置条件：必须有 Subject、Audience、Single job、World material 和 Signature。
-- `design-system` 的 aesthetic directions 是人工选择入口：必须推荐 2-3 个互斥审美风格，并说明不适用场景；用户选择后再翻译为业务页面模式。
-- 用户选择方向后，组件契约必须从 `components/README.md`、`references/component-system.md` 和具体组件文件中提取，不允许只写 primitive 名称。
+- `design-system` 的 `references/creative-direction.md` 是人工感官确认材料：必须用 Subject、Audience、Single job、World material、Signature 和 Aesthetic Library 生成 2-3 个美学方向、样例描述、采用/不采用、推荐项和风险；不能只写“现代、简洁、高级”，也不能把 Operational Calm 这类业务模式当成美学。
+- 用户选择方向后，组件契约必须从 `components/component-system.md` 和具体组件契约模板中提取，不允许只写 primitive 名称。
 - DESIGN.md extraction 只抽取可执行设计规则，不复制外部品牌身份；输出必须包含 adopt / adapt / avoid。
 - 外部 skill 的内容要提取成 `体验方向候选 / 用户旅程风险 / 信息架构问题 / 可访问性约束 / 视觉 review 项`，不要原样复制模板标题。
 - 会影响方向的内容放入 `高影响未知`；只是后续 UI 设计细节的内容放入 `可安全默认` 或 `sf-ui-design` 输入。
@@ -57,22 +55,11 @@ UI design 不是一上来画图。先判断哪些问题会改变页面结构、�
 - 如果只是把已确认 UI 方向落成页面地图、状态矩阵和 Pencil 原型，不要再在 brainstorm 中写完整 UI design。
 - 涉及当前产品、竞品、法规、版本或安全事实时，第三方 skill 不能背书，必须另行查证或标为假设。
 
-## Design-system 工具链
+## Design-system 读取边界
 
-当 work item 有 UI 影响，且需要视觉语言、shadcn-vue、去廉价感、动效或页面模式时，按以下顺序使用 design-system：
+design-system 的读取顺序和 profile 裁剪由 `core/skills/ui-ux/design-system/SKILL.md` 与 `references/read-profiles.md` 维护；本文件不复制第二份工具链。`sf-ui-design` 只负责把 design-system 输出归一化到 `ui-design.md`、Design Contract JSON、组件契约、Pencil 变量和视觉 review 记录。
 
-1. 读取 `core/skills/ui-ux/design-system/SKILL.md`。
-2. 需要补齐用户、任务、IA、交互恢复、微文案或可访问性时，读取 `references/ux-research-ia.md`。
-3. 先读取 `references/design-intelligence.md`，形成 Subject、Audience、Single job、World material、Signature。
-4. 有参考网站 / 截图 / 品牌材料时，读取 `references/design-md-extraction.md` 和 `prompts/design-md-extraction.md`。
-5. 读取 `references/aesthetic-directions.md` 和 `prompts/aesthetic-selection.md`，形成 3-5 个可确认方向。
-6. 用户选择方向后，按场景读取 foundations：后台优先 density、spacing、typography、colors；H5 补 responsive、content；品牌或大屏补 motion、data visualization。
-7. 读取 `references/design-composition.md` 和 foundation 数据表，输出 Composition Recipe 和 `foundation_system`；颜色、字体、空间、圆角阴影、动效必须一起形成配方。
-8. 读取 `components/README.md`、`references/component-system.md`、相关 components、pages 和 `references/layout-archetypes.md`，形成项目级组件契约和页面模式。
-9. 使用 `prompts/sample-board.md` 输出选择后的样例板和组件约束。
-10. 使用 `prompts/taste-critique.md` 做反模板审查；需要修正时先修方向再进 Pencil。
-11. 用户确认后进入 Pencil；没有确认且风险高时停止。
-12. Pencil 截图后使用 `prompts/visual-qa.md`、`references/design-review-rubric.md` 和 `core/skills/ui-ux/pencil/references/pencil-quality-gate.md` 进行审查并修一轮。
+如果 design-system 输出需要用户选择方向，停在确认卡；如果只是把已确认方向落到页面地图、状态矩阵和 Pencil 原型，继续当前 UI design，不退回 brainstorm。
 
 ## Pencil 保存与重读门禁
 
@@ -96,16 +83,6 @@ Pencil 原型不是“调用过工具”就算完成，必须确认目标 `.pen`
 - 保存后重读校验：`pass / fail / N/A`。
 - 重读证据：节点 id、页面名称、`batch_get` 摘要或截图路径。
 - 空画布处理：`N/A / 已创建第一屏 / 阻断`。
-
-## Pencil 创建要点
-
-- 空 `.pen` / 空画布最多读取一次，确认空后立即创建第一屏。
-- 创建前读取 `pencil_get_variables` 和可复用组件；已有组件或变量时优先复用。
-- 创建前必须把 Design Contract JSON 的 `color_system` 和 `foundation_system` 同步为 Pencil variables；只同步颜色不算完成。
-- 分 section 创建和验证，避免整屏生成后才发现溢出。
-- 每个关键页面至少覆盖 default、loading、empty、error、permission / disabled、success、responsive、a11y 中适用状态。
-- 导出截图放入 `01-spec/ui-mockup-export/`，截图文件名应能看出页面和状态。
-- Pencil 只是正式原型通道，不替代 `ui-design.md` 的设计决策记录。
 
 ## 视觉质量 Review
 

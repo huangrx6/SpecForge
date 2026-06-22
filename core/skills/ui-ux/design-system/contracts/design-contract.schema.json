@@ -23,6 +23,14 @@
     "anti_slop_rules"
   ],
   "$defs": {
+    "hex": {
+      "type": "string",
+      "pattern": "^#[0-9A-Fa-f]{6}$"
+    },
+    "hexOrAlphaHex": {
+      "type": "string",
+      "pattern": "^#[0-9A-Fa-f]{6}(?:[0-9A-Fa-f]{2})?$"
+    },
     "selectionRationaleItem": {
       "type": "object",
       "additionalProperties": false,
@@ -280,6 +288,116 @@
           }
         }
       }
+    },
+    "creativeDirection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selected", "why", "alternatives", "rejected_defaults", "signature_carrier"],
+      "properties": {
+        "selected": { "type": "string", "minLength": 1 },
+        "why": { "type": "string", "minLength": 1 },
+        "alternatives": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "positioning", "fit", "risk"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "positioning": { "type": "string", "minLength": 1 },
+              "fit": { "type": "string", "minLength": 1 },
+              "risk": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "rejected_defaults": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "signature_carrier": {
+          "type": "string",
+          "enum": ["structure", "typography", "asset", "motion", "material", "interaction", "mixed"]
+        }
+      }
+    },
+    "referenceEvidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source", "access", "viewport", "observed", "borrowed", "rejected", "confidence"],
+        "properties": {
+          "source": { "type": "string", "minLength": 1 },
+          "source_url": { "type": "string" },
+          "access": {
+            "type": "string",
+            "enum": ["catalog", "static", "scroll", "interactive", "comparative", "offline-fallback"]
+          },
+          "viewport": { "type": "string", "minLength": 1 },
+          "observed": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "borrowed": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "rejected": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "confidence": {
+            "type": "string",
+            "enum": ["confirmed", "likely", "unclear"]
+          }
+        }
+      }
+    },
+    "assetManifest": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "target_path", "purpose", "prompt_or_source", "placement", "required", "license_note"],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": ["image", "illustration", "icon", "3d-model", "video", "texture", "lottie", "audio"]
+          },
+          "target_path": { "type": "string", "minLength": 1 },
+          "purpose": { "type": "string", "minLength": 1 },
+          "prompt_or_source": { "type": "string", "minLength": 1 },
+          "placement": { "type": "string", "minLength": 1 },
+          "required": { "type": "boolean" },
+          "license_note": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "interactionSignature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["purpose", "trigger", "technique", "motion_blocks", "fallback", "verification"],
+      "properties": {
+        "purpose": { "type": "string", "minLength": 1 },
+        "trigger": { "type": "string", "minLength": 1 },
+        "technique": {
+          "type": "string",
+          "enum": ["css", "motion-vue", "gsap", "three", "canvas", "webgl", "mixed"]
+        },
+        "motion_blocks": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "fallback": { "type": "string", "minLength": 1 },
+        "verification": { "type": "string", "minLength": 1 },
+        "reduced_motion": { "type": "string" }
+      }
     }
   },
   "allOf": [
@@ -443,6 +561,22 @@
       "description": "Optional for backward compatibility. Required by the design-system process whenever external reference sources were handled; recommended whenever scan_manifest.workflow contains \"reference\".",
       "$ref": "#/$defs/referenceSelection"
     },
+    "creative_direction": {
+      "description": "Optional for backward compatibility. Required by the design-system process for non-local design work to prevent default admin shells and stale visual directions.",
+      "$ref": "#/$defs/creativeDirection"
+    },
+    "reference_evidence": {
+      "description": "Optional for backward compatibility. Required when scan_manifest.workflow contains live_reference or external site/template evidence was evaluated.",
+      "$ref": "#/$defs/referenceEvidence"
+    },
+    "asset_manifest": {
+      "description": "Optional for backward compatibility. Required when custom images, 3D, texture, video, Lottie, icons or other generated assets are needed.",
+      "$ref": "#/$defs/assetManifest"
+    },
+    "interaction_signature": {
+      "description": "Optional for backward compatibility. Required when the design uses a signature motion / GSAP / Three.js / canvas interaction beyond normal Product UI feedback.",
+      "$ref": "#/$defs/interactionSignature"
+    },
     "scan_manifest": {
       "type": "object",
       "additionalProperties": false,
@@ -464,14 +598,19 @@
           "items": {
             "type": "string",
             "enum": [
+              "creative_direction",
               "mode",
               "reference",
+              "live_reference",
               "intelligence",
               "source",
               "font",
               "color",
               "composition",
+              "asset_brief",
               "advanced_interaction",
+              "interaction_signature",
+              "product_ui_signature",
               "component",
               "qa",
               "calibration",
@@ -657,8 +796,11 @@
         "license_note"
       ],
       "properties": {
-        "palette_id": { "type": "string" },
-        "aesthetic_direction": { "type": "string" },
+        "palette_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "aesthetic_direction": { "type": "string", "minLength": 1 },
         "design_mode": {
           "type": "string",
           "enum": ["Product UI", "Brand Surface", "Hybrid", "Avatar-IP", "Empty State"]
@@ -682,22 +824,22 @@
             "chart"
           ],
           "properties": {
-            "background": { "type": "string" },
-            "surface": { "type": "string" },
-            "surface_muted": { "type": "string" },
-            "text": { "type": "string" },
-            "text_muted": { "type": "string" },
-            "primary": { "type": "string" },
-            "secondary": { "type": "string" },
-            "accent": { "type": "string" },
-            "border": { "type": "string" },
-            "success": { "type": "string" },
-            "warning": { "type": "string" },
-            "danger": { "type": "string" },
+            "background": { "$ref": "#/$defs/hex" },
+            "surface": { "$ref": "#/$defs/hexOrAlphaHex" },
+            "surface_muted": { "$ref": "#/$defs/hexOrAlphaHex" },
+            "text": { "$ref": "#/$defs/hex" },
+            "text_muted": { "$ref": "#/$defs/hex" },
+            "primary": { "$ref": "#/$defs/hex" },
+            "secondary": { "$ref": "#/$defs/hexOrAlphaHex" },
+            "accent": { "$ref": "#/$defs/hex" },
+            "border": { "$ref": "#/$defs/hexOrAlphaHex" },
+            "success": { "$ref": "#/$defs/hex" },
+            "warning": { "$ref": "#/$defs/hex" },
+            "danger": { "$ref": "#/$defs/hex" },
             "chart": {
               "type": "array",
               "minItems": 3,
-              "items": { "type": "string" }
+              "items": { "$ref": "#/$defs/hex" }
             }
           }
         },
@@ -706,9 +848,9 @@
           "additionalProperties": false,
           "required": ["primary_usage", "accent_usage", "background_usage", "avoid"],
           "properties": {
-            "primary_usage": { "type": "string" },
-            "accent_usage": { "type": "string" },
-            "background_usage": { "type": "string" },
+            "primary_usage": { "type": "string", "minLength": 1 },
+            "accent_usage": { "type": "string", "minLength": 1 },
+            "background_usage": { "type": "string", "minLength": 1 },
             "avoid": {
               "type": "array",
               "items": { "type": "string" }
@@ -729,8 +871,8 @@
                 "additionalProperties": false,
                 "required": ["pair", "ratio", "status"],
                 "properties": {
-                  "pair": { "type": "string" },
-                  "ratio": { "type": "string" },
+                  "pair": { "type": "string", "minLength": 1 },
+                  "ratio": { "type": "string", "minLength": 1 },
                   "status": {
                     "type": "string",
                     "enum": ["pass", "fail", "not-checked"]
@@ -740,9 +882,9 @@
             }
           }
         },
-        "source": { "type": "string" },
+        "source": { "type": "string", "minLength": 1 },
         "source_url": { "type": "string" },
-        "license_note": { "type": "string" }
+        "license_note": { "type": "string", "minLength": 1 }
       }
     },
     "foundation_system": {
