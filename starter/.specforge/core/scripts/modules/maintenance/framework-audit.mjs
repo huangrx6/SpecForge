@@ -493,18 +493,12 @@ function requirementsSystemIssues() {
   const issues = [];
   const required = [
     "core/skills/requirements/SKILL.md",
-    "core/skills/requirements/foundations/behavior-contract.md",
-    "core/skills/requirements/transforms/source-to-requirements.md",
-    "core/skills/requirements/references/anti-patterns.md",
-    "core/skills/requirements/prompts/acceptance-criteria.md",
-    "core/skills/requirements/patterns/role-permission.md",
-    "core/skills/requirements/patterns/workflow-state.md",
-    "core/skills/requirements/patterns/data-file.md",
-    "core/skills/requirements/patterns/ai-quality.md",
-    "core/skills/requirements/patterns/ui-impact.md",
-    "core/skills/requirements/patterns/integration-api.md",
-    "core/skills/requirements/patterns/ops-runtime.md",
-    "core/skills/requirements/patterns/runtime-ops.md",
+    "core/skills/requirements/references/behavior-contract.md",
+    "core/skills/requirements/references/source-translation.md",
+    "core/skills/requirements/references/coverage-patterns.md",
+    "core/skills/requirements/references/output-contract.md",
+    "core/skills/requirements/references/handoff-and-authoring.md",
+    "core/skills/requirements/references/quality-guide.md",
   ];
 
   for (const path of required) {
@@ -513,10 +507,10 @@ function requirementsSystemIssues() {
     }
   }
 
-  const behaviorPath = "core/skills/requirements/foundations/behavior-contract.md";
+  const behaviorPath = "core/skills/requirements/references/behavior-contract.md";
   if (exists(behaviorPath)) {
     const body = read(behaviorPath);
-    for (const marker of ["## 1. Confirmation Boundary", "## 2. Requirement Language", "## 3. Testability", "## 4. Traceability", "## 5. Examples"]) {
+    for (const marker of ["## 1. Confirmation Boundary", "## 2. Requirement Language", "## 3. Testability", "## 4. Traceability", "## 5. NFR Taxonomy", "## 6. Examples"]) {
       if (!body.includes(marker)) {
         issues.push(issue("FAIL", "requirements-behavior-marker-missing", `${behaviorPath} is missing ${marker}.`, behaviorPath));
       }
@@ -528,9 +522,22 @@ function requirementsSystemIssues() {
     "core/skills/requirements/foundations/requirement-language.md",
     "core/skills/requirements/foundations/testability.md",
     "core/skills/requirements/foundations/traceability.md",
+    "core/skills/requirements/foundations/behavior-contract.md",
+    "core/skills/requirements/foundations/nfr-taxonomy.md",
+    "core/skills/requirements/transforms/source-to-requirements.md",
+    "core/skills/requirements/transforms/prd-to-requirements.md",
+    "core/skills/requirements/transforms/brainstorm-to-requirements.md",
+    "core/skills/requirements/transforms/research-to-requirements.md",
+    "core/skills/requirements/transforms/gap-to-requirements.md",
+    "core/skills/requirements/prompts/requirements-interview.md",
+    "core/skills/requirements/prompts/acceptance-criteria.md",
+    "core/skills/requirements/prompts/ambiguity-review.md",
+    "core/skills/requirements/references/anti-patterns.md",
+    "core/skills/requirements/references/cross-stage-handoff.md",
+    "core/skills/requirements/references/quality-rubric.md",
   ]) {
     if (exists(removed)) {
-      issues.push(issue("FAIL", "requirements-merged-foundation-present", `${removed} has been merged into behavior-contract.md and must be removed.`, removed));
+      issues.push(issue("FAIL", "requirements-merged-file-present", `${removed} has been merged into requirements references and must be removed.`, removed));
     }
   }
 
@@ -547,52 +554,44 @@ function requirementsSystemIssues() {
   const registryPath = "core/skills/registry.json";
   if (exists(registryPath)) {
     const registry = read(registryPath);
-    for (const marker of ['"path": "foundations/behavior-contract.md"', '"path": "foundations/nfr-taxonomy.md"']) {
+    for (const marker of ['"path": "references/behavior-contract.md"', '"path": "references/source-translation.md"', '"path": "references/coverage-patterns.md"', '"path": "references/quality-guide.md"']) {
       if (!registry.includes(marker)) {
         issues.push(issue("FAIL", "requirements-registry-core-foundation-missing", `${registryPath} must include ${marker}.`, registryPath));
       }
     }
-    for (const removed of ["confirmation-boundary.md", "requirement-language.md", "testability.md", "traceability.md"]) {
+    for (const removed of ["confirmation-boundary.md", "requirement-language.md", "testability.md", "traceability.md", "foundations/behavior-contract.md", "foundations/nfr-taxonomy.md", "transforms/source-to-requirements.md", "patterns/role-permission.md", "prompts/acceptance-criteria.md"]) {
       if (registry.includes(removed)) {
         issues.push(issue("FAIL", "requirements-registry-removed-foundation-present", `${registryPath} must not reference removed foundation file ${removed}.`, registryPath));
       }
     }
   }
 
-  const transformPath = "core/skills/requirements/transforms/source-to-requirements.md";
+  const transformPath = "core/skills/requirements/references/source-translation.md";
   if (exists(transformPath)) {
     const body = read(transformPath);
-    for (const marker of ["样例 1", "样例 2", "样例 3", "样例 4", "样例 5", "修写动作"]) {
+    for (const marker of ["## PRD To Requirements", "## Brainstorm To Requirements", "## Research To Requirements", "## Gap To Requirements", "样例 1", "样例 2", "样例 3", "样例 4", "样例 5", "修写动作"]) {
       if (!body.includes(marker)) {
         issues.push(issue("FAIL", "requirements-transform-example-missing", `${transformPath} is missing ${marker}.`, transformPath));
       }
     }
   }
 
-  const antiPath = "core/skills/requirements/references/anti-patterns.md";
+  const antiPath = "core/skills/requirements/references/quality-guide.md";
   if (exists(antiPath)) {
     const body = read(antiPath);
-    for (const marker of ["Severity", "Fail signal", "为什么危险", "自动修正动作", "修正流程", "修正示例", "P0", "P1", "P2"]) {
+    for (const marker of ["Artifact Quality 对齐", "Severity", "Fail signal", "为什么危险", "自动修正动作", "修正流程", "修正示例", "P0", "P1", "P2"]) {
       if (!body.includes(marker)) {
         issues.push(issue("FAIL", "requirements-anti-pattern-fixer-missing", `${antiPath} is missing ${marker}.`, antiPath));
       }
     }
   }
 
-  for (const path of [
-    "core/skills/requirements/patterns/role-permission.md",
-    "core/skills/requirements/patterns/workflow-state.md",
-    "core/skills/requirements/patterns/data-file.md",
-    "core/skills/requirements/patterns/ai-quality.md",
-    "core/skills/requirements/patterns/ui-impact.md",
-    "core/skills/requirements/patterns/integration-api.md",
-    "core/skills/requirements/patterns/ops-runtime.md",
-  ]) {
-    if (!exists(path)) continue;
-    const body = read(path);
-    for (const marker of ["## 什么时候使用", "## 必须问清", "## REQ", "## AC", "## 常见漏项"]) {
+  const patternsPath = "core/skills/requirements/references/coverage-patterns.md";
+  if (exists(patternsPath)) {
+    const body = read(patternsPath);
+    for (const marker of ["## role-permission", "## workflow-state", "## data-file", "## ai-quality", "## ui-impact", "## integration-api", "## runtime-ops", "### 什么时候使用", "### 必须问清", "### REQ", "### AC", "### 常见漏项"]) {
       if (!body.includes(marker)) {
-        issues.push(issue("FAIL", "requirements-pattern-section-missing", `${path} is missing ${marker}.`, path));
+        issues.push(issue("FAIL", "requirements-pattern-section-missing", `${patternsPath} is missing ${marker}.`, patternsPath));
       }
     }
   }

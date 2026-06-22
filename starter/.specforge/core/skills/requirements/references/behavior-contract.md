@@ -1,11 +1,11 @@
 # Behavior Contract
 
-本文件定义 requirements 的核心行为契约：什么上游输入能进入 MUST / SHALL，如何写成可测试行为，如何验收，如何追踪到下游。它把 confirmation boundary、requirement language、testability 和 traceability 合并成一个可执行 playbook。
+本文件定义 requirements 的核心行为契约：什么上游输入能进入 MUST / SHALL，如何写成可测试行为，如何验收，如何追踪到下游，以及什么 NFR 才能进入需求规格。
 
 ## 1. Confirmation Boundary
 
 | 确认类型 | 含义 | 可进入 MUST / SHALL | requirements 处理 |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `user-confirmed` | 用户明确选择、确认、批准或修正后的结论 | yes | 可写入 REQ / AC / NFR / non-goal |
 | `delegated-default` | 用户授权 Agent 按推荐默认执行 | yes, with risk note | 可写入 REQ，但要记录默认理由、风险和回退点 |
 | `agent-recommendation` | Agent 推荐，用户未确认 | no | 只能写入候选、pending 或待确认问题 |
@@ -13,7 +13,7 @@
 | `existing-stack` | 代码库、wiki 或已批准规格证明的现有约束 | yes, as constraint | 写约束或 NFR，保留来源 |
 | `not-required` | 已确认不需要 | no | 写入非目标、明确延后或 N/A 理由 |
 
-### Confirmation Rules
+规则：
 
 - `user-confirmed` 和 `delegated-default` 可以进入需求正文。
 - `agent-recommendation` 不能写成 `THE SYSTEM SHALL...`。
@@ -26,21 +26,21 @@
 requirements 描述系统外部可观察行为，可以使用 RFC 2119 语义和 EARS 句式，但不要把实现方案写成需求。
 
 | Level | 语义 | 使用方式 |
-|---|---|---|
+| --- | --- | --- |
 | MUST / SHALL | 必须实现，否则需求不满足 | 只用于用户确认、授权默认或当前事实约束 |
 | MUST NOT / SHALL NOT | 明确禁止 | 用于安全、非目标、越界行为和合规边界 |
 | SHOULD | 强推荐，但可有理由偏离 | 偏离必须记录影响和 owner |
 | MAY | 可选能力 | 不能作为 MVP 必须项 |
 
 | EARS 类型 | 句式 | 用途 |
-|---|---|---|
+| --- | --- | --- |
 | Event-driven | `WHEN <event>, THE SYSTEM SHALL <response>.` | 用户动作、系统事件、外部回调 |
 | State-driven | `WHILE <state>, THE SYSTEM SHALL <response>.` | 权限、任务状态、连接状态 |
 | Conditional | `IF <condition>, THE SYSTEM SHALL <response>.` | 异常、边界、feature flag |
 | Ubiquitous | `THE SYSTEM SHALL <response>.` | 总是成立的行为 |
 | Optional | `WHERE <feature>, THE SYSTEM SHALL <response>.` | 仅在能力启用时成立 |
 
-### Language Rules
+语言规则：
 
 - 写触发、条件、系统响应和可观察结果。
 - 不写组件、接口、数据库、类名、文件路径、缓存、队列、SDK 或任务拆分。
@@ -53,13 +53,13 @@ requirements 描述系统外部可观察行为，可以使用 RFC 2119 语义和
 每条 MUST / SHALL 需求至少要能被一个 AC 证明。AC 不是愿望清单，而是可观察结果。
 
 | 字段 | 要求 |
-|---|---|
+| --- | --- |
 | Given | 系统初始状态、数据、角色或前置条件 |
 | When | 用户动作、外部事件或系统触发 |
 | Then | 可观察输出：UI 状态、消息、文件、API 响应、审计记录、任务状态 |
 | 验证方式 | automated / manual / inspection / analysis / contract / E2E |
 
-### Coverage Rules
+覆盖规则：
 
 - 核心流程必须覆盖正常路径。
 - 适用时补失败路径、空状态、边界值、权限差异和重新验证触发条件。
@@ -76,7 +76,7 @@ source decision / fact -> REQ-* -> AC-* -> UI / technical / task / verification
 ```
 
 | Source | 可转成 |
-|---|---|
+| --- | --- |
 | user-confirmed MVP | REQ / AC |
 | delegated-default | REQ / AC + risk note |
 | PRD acceptance seed | AC draft，需转写 |
@@ -85,7 +85,7 @@ source decision / fact -> REQ-* -> AC-* -> UI / technical / task / verification
 | agent-recommendation | pending / candidate only |
 | non-goal / deferred | Out of Scope |
 
-### Trace Rules
+Trace rules:
 
 - 每个 REQ 要能追到 source。
 - 每个 MUST / SHALL REQ 要能追到 AC。
@@ -93,7 +93,29 @@ source decision / fact -> REQ-* -> AC-* -> UI / technical / task / verification
 - 每个 high-impact source item 要映射到 REQ / AC / NFR / Out of Scope / Pending / Deferred 之一。
 - 下游新增行为必须能追回 requirements；追不回说明范围漂移。
 
-## 5. Examples
+## 5. NFR Taxonomy
+
+NFR 不是泛泛的“性能好、安全高”。它必须有触发条件、阈值、验证方式和下游 owner。
+
+| 类型 | 常见触发 | 写法 |
+| --- | --- | --- |
+| Performance | 响应时间、吞吐、并发、批处理 | 写阈值、样本规模和验证方式 |
+| Security | 权限、敏感数据、审计、导出 | 写禁止行为、角色差异和审计证据 |
+| Reliability | 重试、失败恢复、幂等、任务状态 | 写失败响应和恢复路径 |
+| Compatibility | 浏览器、设备、运行时、文件格式 | 写支持矩阵和 fallback |
+| Observability | 日志、指标、告警、审计 | 写事件、字段、可见位置 |
+| Accessibility | 键盘、语义、对比度、读屏 | 写可检查标准和关键路径 |
+| Data quality | AI 质量、导入校验、去重、口径 | 写阈值、人工复核和异常处理 |
+
+NFR 输出：
+
+```md
+| ID | 类型 | 约束 | 来源 | 验证方式 | 触发下游 |
+| --- | --- | --- | --- | --- | --- |
+| NFR-001 | Security | THE SYSTEM SHALL record an audit event when... | source | inspection / automated | technical_design / verification |
+```
+
+## 6. Examples
 
 ### Example 1: PRD User Story -> REQ / AC
 
@@ -113,27 +135,14 @@ REQ-001 系统支持业务到期提醒。
 Good:
 
 ```md
-| REQ-001 | MUST | WHEN a customer manager opens the reminder page, THE SYSTEM SHALL display contracts expiring within the configured reminder window. | prd.md:user story | AC-001 |
+| REQ-001 | MUST | WHEN a customer manager opens the reminder page, THE SYSTEM SHALL display contracts expiring within the configured reminder window. | prd.md:user story | user-confirmed | AC-001 |
 ```
 
 ```md
 | AC-001 | Given 客户经理存在可见客户数据 | When 打开业务到期提醒页面 | Then 系统展示客户名称、业务名称、到期时间、剩余天数和联系状态 | E2E |
 ```
 
-Trace:
-
-```md
-| prd.md#用户故事:到期提醒 | REQ-001 | AC-001 | ui_design / technical_design / tasking / verification | ready |
-```
-
 ### Example 2: Agent Recommendation -> Pending
-
-Source:
-
-```md
-Agent recommendation: 默认加入短信提醒，提高触达率。
-用户未确认。
-```
 
 Bad:
 
@@ -149,40 +158,17 @@ Good:
 
 ### Example 3: Research Fact -> NFR
 
-Source:
-
 ```md
-research.md: provider rate limit confirmed as 60 requests/minute.
-确认类型：existing-stack / confirmed research
-```
-
-Good:
-
-```md
-| NFR-001 | Reliability | THE SYSTEM SHALL throttle outbound provider requests so normal operation does not exceed the confirmed provider limit of 60 requests per minute. | research.md | contract / inspection |
+| NFR-001 | Reliability | THE SYSTEM SHALL throttle outbound provider requests so normal operation does not exceed the confirmed provider limit of 60 requests per minute. | research.md | contract / inspection | technical_design / verification |
 ```
 
 ### Example 4: Deferred Item -> Out of Scope
-
-Source:
-
-```md
-brainstorm.md#明确延后：本期不做跨组织数据共享。
-```
-
-Good:
 
 ```md
 | OOS-001 | 本期不支持跨组织共享客户数据。 | deferred | 后续触发条件：用户确认多组织协作版本 |
 ```
 
 ### Example 5: UI Note -> UI Handoff
-
-Source:
-
-```md
-PRD note: 希望提醒列表有明显的红色过期标识。
-```
 
 Bad:
 
@@ -193,7 +179,7 @@ REQ-003 MUST: THE SYSTEM SHALL use a red badge component for overdue contracts.
 Good:
 
 ```md
-| REQ-003 | MUST | WHEN a contract is overdue, THE SYSTEM SHALL expose an overdue state distinct from upcoming and normal contracts. | prd.md:ui note | AC-003 |
+| REQ-003 | MUST | WHEN a contract is overdue, THE SYSTEM SHALL expose an overdue state distinct from upcoming and normal contracts. | prd.md:ui note | user-confirmed | AC-003 |
 ```
 
 ```md

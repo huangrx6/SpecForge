@@ -58,7 +58,7 @@
       "category": "requirements",
       "localPath": "requirements",
       "name": "requirements",
-      "role": "需求规格行为契约、确认边界、来源转译、需求 / 验收标准追踪和下游交接主能力包",
+      "role": "Requirements 行为契约主能力包：把 brief / brainstorm / PRD / research / gap / wiki 当前事实转成可测试 REQ / AC / NFR / 边界 / 影响面 / 下游 handoff。",
       "trust": "SpecForge 本地维护，结合 ISO/IEC/IEEE 29148、RFC 2119、EARS、Gherkin 和 SpecForge 阶段链路沉淀",
       "risk": "低",
       "source": {
@@ -68,70 +68,22 @@
         "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/requirements",
         "files": [
           {
-            "path": "foundations/behavior-contract.md"
+            "path": "references/behavior-contract.md"
           },
           {
-            "path": "foundations/nfr-taxonomy.md"
+            "path": "references/source-translation.md"
           },
           {
-            "path": "transforms/source-to-requirements.md"
-          },
-          {
-            "path": "transforms/prd-to-requirements.md"
-          },
-          {
-            "path": "transforms/brainstorm-to-requirements.md"
-          },
-          {
-            "path": "transforms/research-to-requirements.md"
-          },
-          {
-            "path": "transforms/gap-to-requirements.md"
-          },
-          {
-            "path": "patterns/role-permission.md"
-          },
-          {
-            "path": "patterns/workflow-state.md"
-          },
-          {
-            "path": "patterns/data-file.md"
-          },
-          {
-            "path": "patterns/ai-quality.md"
-          },
-          {
-            "path": "patterns/ui-impact.md"
-          },
-          {
-            "path": "patterns/integration-api.md"
-          },
-          {
-            "path": "patterns/ops-runtime.md"
-          },
-          {
-            "path": "patterns/runtime-ops.md"
+            "path": "references/coverage-patterns.md"
           },
           {
             "path": "references/output-contract.md"
           },
           {
-            "path": "references/cross-stage-handoff.md"
+            "path": "references/handoff-and-authoring.md"
           },
           {
-            "path": "references/quality-rubric.md"
-          },
-          {
-            "path": "references/anti-patterns.md"
-          },
-          {
-            "path": "prompts/requirements-interview.md"
-          },
-          {
-            "path": "prompts/acceptance-criteria.md"
-          },
-          {
-            "path": "prompts/ambiguity-review.md"
+            "path": "references/quality-guide.md"
           }
         ]
       },

@@ -1,11 +1,11 @@
 ---
 name: requirements
-description: SpecForge requirements 混合型能力包。用于把已确认的产品意图、brainstorm 决策、PRD、research、gap report 和 wiki 事实转成可测试、可追踪、可交给 UI / technical design / tasking / verification 的行为契约。
+description: SpecForge requirements 主能力包。用于把 brief、brainstorm、PRD、research、gap report、wiki 当前事实和用户确认转成可测试、可追踪、可交给 UI / technical design / tasking / verification 的 REQ / AC / NFR / 边界 / handoff 行为契约。
 ---
 
 # Requirements System Skill
 
-本 skill 负责 requirements 的“行为契约层”。它不是 PRD、不是技术设计、不是 backlog 工具；它把上游已确认的产品意图、范围边界、研究事实和风险，转成可测试、可追踪、可审查、可交接的系统行为规格。
+本 skill 负责 requirements 的“行为契约层”。它不是 PRD、不是技术设计、不是 backlog 工具；它把上游已确认的产品意图、范围边界、研究事实、既有系统约束和风险，转成可测试、可追踪、可审查、可交接的系统行为规格。
 
 核心定位：产品输入进来，工程可执行输出出去。
 
@@ -20,24 +20,21 @@ description: SpecForge requirements 混合型能力包。用于把已确认的�
 ## 读取顺序
 
 1. 先读 `references/output-contract.md`，确认 compact / standard / full 输出 profile 和 `requirements.md` 的固定结构。
-2. 读取 `foundations/behavior-contract.md`，一次性建立 confirmation boundary、requirement language、testability 和 traceability。
-3. 读取 `transforms/source-to-requirements.md`，把 brief / brainstorm / PRD / research / gap 输入转成 REQ / AC / NFR / non-goal / pending，并参考 before / after 样例。
-4. 需要验收标准时读 `prompts/acceptance-criteria.md`，把验收种子转成 Given / When / Then / verification method。
-5. 需要按场景补覆盖时，按触发读取 `patterns/*.md`；优先读取与需求风险匹配的 1-3 个 pattern，不要全量加载。
-6. 写入前读 `references/cross-stage-handoff.md`，建立 Source -> REQ -> AC -> downstream trace。
-7. NFR 边界不清时读 `foundations/nfr-taxonomy.md`，避免把产品指标、技术方案或不可验证目标写成 NFR。
-8. 写完后读 `references/quality-rubric.md` 和 `references/anti-patterns.md`，做需求质量审查。
+2. 读取 `references/behavior-contract.md`，建立 confirmation boundary、requirement language、testability、traceability 和 NFR 边界。
+3. 读取 `references/source-translation.md`，把 brief / brainstorm / PRD / research / gap / wiki 输入转成 REQ / AC / NFR / Out of Scope / Pending / Deferred。
+4. 按需求风险读取 `references/coverage-patterns.md` 的相关 pattern：role-permission、workflow-state、data-file、ai-quality、ui-impact、integration-api、runtime-ops。
+5. 写入前读 `references/handoff-and-authoring.md`，建立 Source -> REQ -> AC -> downstream trace，并使用访谈 / 验收标准 / ambiguity review 模板。
+6. 写完后读 `references/quality-guide.md`，按 artifact-quality 和 anti-pattern fixer 做需求质量审查。
 
 ## 能力地图
 
 | 能力 | 作用 | 产出 |
 |---|---|---|
 | Behavior contract | 判断哪些上游输入可进入需求，并规范 MUST / SHOULD / MAY、EARS、AC 和 trace | `上游确认输入`、`REQ-*`、`AC-*`、trace |
-| Source transform | PRD / brainstorm / research / gap 转译 | `Source -> Requirement 转译` |
-| Acceptance design | 验收种子转 Given / When / Then | `AC-*` |
-| Scenario patterns | 权限、状态、数据、AI、UI、集成、运维覆盖 | 行为覆盖矩阵 / NFR |
-| Quality review | 用 anti-pattern fixer 检查歧义、不可测试、范围蔓延、实现细节 | Spec Quality Gate |
-| Handoff | 给 UI / technical / tasks / verification 交接 | Downstream Handoff |
+| Source translation | PRD / brainstorm / research / gap / wiki 转译 | `Source -> Requirement 转译` |
+| Coverage patterns | 权限、状态、数据、AI、UI、集成、运行时覆盖 | Applied Requirement Patterns、行为覆盖矩阵、NFR |
+| Handoff and authoring | 验收标准、访谈、下游交接和歧义检查 | `AC-*`、Downstream Handoff、未决问题 |
+| Quality review | 用 artifact-quality 对齐规则和 anti-pattern fixer 检查歧义、不可测试、范围蔓延、实现细节 | Spec Quality Gate |
 
 ## 输出到 SpecForge
 
@@ -66,3 +63,4 @@ description: SpecForge requirements 混合型能力包。用于把已确认的�
 - 验收标准描述初始状态、触发动作、可观察结果和验证方式。
 - 影响面 flags 能决定是否进入 UI design、technical design、tasks 和 verification。
 - Downstream Handoff 足以让后续阶段不用重新发明行为。
+- `node .specforge/core/scripts/artifact-quality.mjs` 的 requirements FAIL 已清零；WARN 已修复或写入 Spec Quality Gate。

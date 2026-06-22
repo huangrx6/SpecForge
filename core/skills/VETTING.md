@@ -6,7 +6,7 @@
 
 | Skill | 来源 | 支撑文件 | 主要风险 | 结论 |
 |---|---:|---:|---|---|
-| `requirements` | SpecForge local-authored | 24 | 可能把确认边界规则当成用户已确认范围 | 只作为 requirements 行为契约、来源转译、REQ / AC 追踪和下游 handoff 主能力包 |
+| `requirements` | SpecForge local-authored | 6 | 可能把确认边界规则当成用户已确认范围，或把产品 / 设计 / 技术方案误写成需求 | 只作为 requirements 行为契约、来源转译、REQ / AC / NFR、覆盖 pattern、质量修复和下游 handoff 主能力包 |
 | `user-stories` | `phuryn/pm-skills` | 0 | 可能带入 Sprint / backlog 表达 | 只保留 3C、INVEST 和验收标准补充方法 |
 | `design-system` | SpecForge local-authored | 58 | 可能把设计规则当成已确认 UI 方向，或把 Brand Surface 审美误套到 Product UI | 只作为设计模式路由、设计语言、专业色阶、机器可读契约、组件契约、动效、页面模式和视觉 QA 参考，必须归一化到 UI artifact 或组件契约 |
 | `problem-framing` | SpecForge local-authored | 0 | 可能把 agent 对问题的重述当成用户原意 | 只作为问题重构和必须确认项发现，用户确认前不能写成 approved |

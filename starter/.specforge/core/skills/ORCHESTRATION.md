@@ -8,7 +8,7 @@
 |---|---|---|---|---|
 | `product` | `product` | 头脑风暴 / 产品需求文档 | SpecForge 产品发现、机会建模、功能取舍、实验设计和最小可行版本推荐主能力包 | `00-intake/brainstorm.md`、`00-intake/brief.md`、`00-intake/prd.md` |
 | `prd` | `prd` | 产品需求文档 | SpecForge 产品需求文档决策主能力包，连接简报、头脑风暴、产品发现和预研到需求阶段 | `00-intake/prd.md` |
-| `requirements` | `requirements` | Requirements | 行为契约、确认边界、来源转译、REQ / AC 追踪、NFR 和下游 handoff 主能力包 | `01-spec/requirements.md` |
+| `requirements` | `requirements` | Requirements | 行为契约主能力包；把 brief / brainstorm / PRD / research / gap / wiki 当前事实转成可测试 REQ / AC / NFR / 边界 / 影响面 / 下游 handoff | `01-spec/requirements.md` |
 | `user-stories` | `requirements/user-stories` | Requirements | 用户故事、3C、INVEST、验收标准和可测试性补充参考 | `01-spec/requirements.md` |
 | `pencil` | `ui-ux/pencil` | UI Design | Pencil `.pen` 原型读写、组件复用、tokens、截图导出、布局检查和设计转代码参考 | `01-spec/ui-design.md`、`01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/` |
 | `design-system` | `ui-ux/design-system` | Brainstorm / UI Design / Technical Design | 用户研究、信息架构、设计模式路由、设计语言、Composition Recipe、专业色阶、foundation_system、机器可读 Design Contract、组件规范、页面模式、shadcn-vue 映射、动效 / GSAP 边界和视觉 QA 审查 | `00-intake/brainstorm.md`、`01-spec/ui-design.md`、`01-spec/design/components/*.contract.md`、Pencil 输入、前端组件契约 |
