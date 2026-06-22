@@ -53,7 +53,7 @@
 
 ## 本地能力包与外部参考编排
 
-`core/skills/prd` 是产品需求文档决策主能力包，`core/skills/product` 是产品发现、机会建模和最小可行版本推荐主能力包。`core/skills/prd/references/external-prd-reference.md` 和外部 `opportunity-solution-tree` 只能作为参考视角，不能替代本地能力包、SpecForge 产物模板或用户确认。
+`core/skills/prd` 是产品需求文档决策主能力包，`core/skills/product` 是产品发现、机会建模和最小可行版本推荐主能力包。`core/skills/prd/references/external-prd-reference.md` 和 `core/skills/product/references/external-ost-reference.md` 只能作为参考视角，不能替代本地能力包、SpecForge 产物模板或用户确认。
 
 先按 `.specforge/core/skills/ORCHESTRATION.md` 选择能力包和写回目标，再用 `registry.json` 确认来源、风险和 `doNotUseFor`。
 
@@ -62,7 +62,7 @@
 | `prd` | 本地主能力包 | 每次写 `00-intake/prd.md` 前必读 | 产品决策摘要、范围与最小可行版本决策、产品决策门禁、交接给需求阶段 |
 | `product` | 本地主能力包 | 问题空间还散、用户给的是方案而不是问题、候选功能过多或需要最小可行版本取舍 | 目标结果、机会图、功能池、最小可行版本建议、实验、产品需求文档交接 |
 | `external-prd-reference.md` | 外部参考归一化 | 上下文较完整，但需要 8 段式产品需求文档结构视角来检查背景、目标、范围、假设和版本分期 | 背景与目标结果、范围与最小可行版本决策、路线图与版本切分 |
-| `opportunity-solution-tree` | 外部参考 | 需要外部机会树视角补机会、实验和优先级方法 | 机会图、候选功能池、实验 / 验证计划 |
+| `external-ost-reference.md` | 外部参考归一化 | 需要外部机会树视角补机会、实验和优先级方法 | 机会图、候选功能池、实验 / 验证计划 |
 
 归一化规则：
 

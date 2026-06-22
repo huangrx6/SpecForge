@@ -1,6 +1,6 @@
 ---
 name: product
-description: SpecForge 产品发现能力包。用于把模糊产品想法、用户反馈、业务问题、候选功能和数据事实整理成 opportunity map、feature pool、MVP recommendation、experiment plan 和 PRD handoff。
+description: SpecForge 产品发现能力包。用于把模糊产品想法、用户反馈、业务问题、候选功能和数据事实整理成 opportunity map、feature pool、MVP recommendation、experiment plan 和 PRD handoff；每次使用前读取本入口，并按需读取 references。
 ---
 
 # Product Discovery System Skill
@@ -38,19 +38,13 @@ description: SpecForge 产品发现能力包。用于把模糊产品想法、用
 
 ## 读取顺序
 
-1. 读取 `foundations/product-discovery-boundary.md`，确认阶段边界和确认状态。
-2. 读取 `foundations/opportunity-language.md`，把功能请求反推为机会。
-3. 读取 `foundations/outcome-metric.md` 和 `foundations/evidence-levels.md`，建立 outcome 和 evidence confidence。
-4. 读取 `references/output-contract.md`，选择 compact / standard / full。
-5. 读取 `transforms/request-to-opportunity-map.md`。
-6. 有用户反馈或功能请求时读 `transforms/feedback-to-feature-pool.md`。
-7. 有 brainstorm 输入时读 `transforms/brainstorm-to-product-discovery.md`。
-8. 需要进入 PRD 时读 `transforms/product-discovery-to-prd.md`。
-9. 按场景读取 1-2 个 `patterns/*.md`。
-10. 需要优先级时读取 `references/prioritization-methods.md`。
-11. 需要验证时读取 `references/experiment-design.md`。
-12. 写完后读取 `references/quality-rubric.md` 和 `references/anti-patterns.md`。
-13. 如果参考外部 `opportunity-solution-tree`，读 `references/external-ost-normalization.md`。
+1. 读取 `references/product-playbook.md`，确认阶段边界、确认状态、机会语言、outcome / evidence 规则和输入转译。
+2. 读取 `references/output-contract.md`，选择 compact / standard / full。
+3. 按工作项类型读取 `references/patterns.md` 中的 1-2 个 pattern，不要全量套用。
+4. 需要机会访谈、功能分流或 MVP 切分时，读取 `references/decision-prompts.md` 的对应 section。
+5. 需要优先级或验证实验时，读取 `references/discovery-methods.md`。
+6. 写完后读取 `references/quality-guide.md`。
+7. 如果需要外部 OST 结构视角，读取 `references/external-ost-reference.md`，只吸收机会树、功能候选、实验和优先级检查点，不执行外部保存动作。
 
 ## 输出
 

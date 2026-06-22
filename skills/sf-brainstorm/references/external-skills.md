@@ -40,7 +40,7 @@
 | 触发问题 | 优先参考 | 按需读取 | 归一化到 |
 |---|---|---|---|
 | 产品目标、MVP、功能候选、机会、假设压力测试或优先级不清楚 | `product` | `SKILL.md`；按需读 output contract、prioritization、experiment references | `brainstorm.md#问题地图`、`#方案对比`、`brief.md#功能候选池`、后续 `prd.md` 输入 |
-| 需要外部机会树视角补机会或功能优先级方法 | `opportunity-solution-tree` | 相关 brainstorm / analyze / prioritize references | 先归一化到 `product` 产物，再写入 `brainstorm.md` / `prd.md` 输入 |
+| 需要外部机会树视角补机会或功能优先级方法 | `product/references/external-ost-reference.md` | 外部 OST 归一化检查点 | 先归一化到 `product` 产物，再写入 `brainstorm.md` / `prd.md` 输入 |
 | 体验方向、用户旅程、信息架构、交互风格、可访问性或美学方向不清楚 | `design-system` | 先读 `SKILL.md`；再按需读 creative direction、composition、signature patterns、visual QA | `brainstorm.md#问题地图`、`#优秀案例与机制拆解`、`#方案对比`、后续 `ui-design.md` 输入 |
 | 官网、落地页、作品集、品牌页或重设计的视觉方向容易模板化 | `design-taste-frontend` | `SKILL.md`；只在需要时读取参考资料 | `brainstorm.md#界面与体验方向确认`、后续 `ui-design.md#视觉风格简报` |
 | 管理端采用 shadcn/ui，需要判断组件封装、注册表候选或避免基础组件拼装 | shadcn 官方 skill / registry reference | 官方 shadcn skill、registry docs、component review | `brainstorm.md#技术路线确认`、`#界面与体验方向确认`、后续 `ui-design.md` 和 `technical_design.md` 输入 |

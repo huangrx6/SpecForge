@@ -186,8 +186,8 @@
       "category": "product",
       "localPath": "product",
       "name": "product",
-      "role": "SpecForge 产品发现、机会建模、功能取舍和最小可行版本切分主能力包",
-      "trust": "SpecForge 本地维护，连接模糊请求、用户反馈、头脑风暴和产品需求文档",
+      "role": "SpecForge 产品发现、机会建模、功能取舍、实验设计和最小可行版本切分主能力包；内部规则收束在 references/product-playbook.md、patterns.md、decision-prompts.md、discovery-methods.md、quality-guide.md",
+      "trust": "SpecForge 本地维护，连接模糊请求、用户反馈、头脑风暴、产品需求文档和外部 OST 参考",
       "risk": "低",
       "source": {
         "type": "local-authored",
@@ -196,73 +196,28 @@
         "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/product",
         "files": [
           {
-            "path": "foundations/product-discovery-boundary.md"
-          },
-          {
-            "path": "foundations/opportunity-language.md"
-          },
-          {
-            "path": "foundations/outcome-metric.md"
-          },
-          {
-            "path": "foundations/evidence-levels.md"
-          },
-          {
-            "path": "transforms/request-to-opportunity-map.md"
-          },
-          {
-            "path": "transforms/feedback-to-feature-pool.md"
-          },
-          {
-            "path": "transforms/brainstorm-to-product-discovery.md"
-          },
-          {
-            "path": "transforms/product-discovery-to-prd.md"
-          },
-          {
-            "path": "patterns/b2b-operator-data-product.md"
-          },
-          {
-            "path": "patterns/ai-agent-product.md"
-          },
-          {
-            "path": "patterns/dashboard-analytics.md"
-          },
-          {
-            "path": "patterns/workflow-ops.md"
-          },
-          {
-            "path": "patterns/internal-platform.md"
+            "path": "references/product-playbook.md"
           },
           {
             "path": "references/output-contract.md"
           },
           {
-            "path": "references/prioritization-methods.md"
+            "path": "references/patterns.md"
           },
           {
-            "path": "references/experiment-design.md"
+            "path": "references/decision-prompts.md"
           },
           {
-            "path": "references/quality-rubric.md"
+            "path": "references/discovery-methods.md"
           },
           {
-            "path": "references/anti-patterns.md"
+            "path": "references/quality-guide.md"
           },
           {
-            "path": "references/external-ost-normalization.md"
+            "path": "references/external-ost-reference.md"
           },
           {
             "path": "contracts/product-discovery.schema.json"
-          },
-          {
-            "path": "prompts/opportunity-interview.md"
-          },
-          {
-            "path": "prompts/feature-triage.md"
-          },
-          {
-            "path": "prompts/mvp-slicing.md"
           }
         ]
       },
@@ -275,62 +230,8 @@
       "doNotUseFor": [
         "替代产品需求文档、需求规格、界面设计或技术设计",
         "替用户确认最小可行版本",
-        "伪造用户研究、基线、RICE 或机会评分"
-      ]
-    },
-    {
-      "id": "opportunity-solution-tree",
-      "category": "product",
-      "localPath": "product/opportunity-solution-tree",
-      "name": "opportunity-solution-tree",
-      "role": "产品发现、机会树和功能优先级参考",
-      "trust": "高星社区来源，MIT 许可，已做静态审查",
-      "risk": "低",
-      "source": {
-        "type": "github-raw",
-        "repo": "phuryn/pm-skills",
-        "path": "pm-product-discovery/skills/opportunity-solution-tree/SKILL.md",
-        "url": "https://github.com/phuryn/pm-skills/tree/main/pm-product-discovery/skills/opportunity-solution-tree",
-        "rawUrl": "https://raw.githubusercontent.com/phuryn/pm-skills/main/pm-product-discovery/skills/opportunity-solution-tree/SKILL.md",
-        "files": [
-          {
-            "path": "references/brainstorm-ideas-new.md",
-            "rawUrl": "https://raw.githubusercontent.com/phuryn/pm-skills/main/pm-product-discovery/skills/brainstorm-ideas-new/SKILL.md"
-          },
-          {
-            "path": "references/brainstorm-ideas-existing.md",
-            "rawUrl": "https://raw.githubusercontent.com/phuryn/pm-skills/main/pm-product-discovery/skills/brainstorm-ideas-existing/SKILL.md"
-          },
-          {
-            "path": "references/analyze-feature-requests.md",
-            "rawUrl": "https://raw.githubusercontent.com/phuryn/pm-skills/main/pm-product-discovery/skills/analyze-feature-requests/SKILL.md"
-          },
-          {
-            "path": "references/prioritize-features.md",
-            "rawUrl": "https://raw.githubusercontent.com/phuryn/pm-skills/main/pm-product-discovery/skills/prioritize-features/SKILL.md"
-          },
-          {
-            "path": "references/prioritization-frameworks.md",
-            "rawUrl": "https://raw.githubusercontent.com/phuryn/pm-skills/main/pm-execution/skills/prioritization-frameworks/SKILL.md"
-          }
-        ]
-      },
-      "trigger": "当 sf-brainstorm 或 sf-prd 需要从“用户机会 / 问题”出发，而不是直接堆功能时参考；用于机会树、假设、实验、功能候选、需求分流和优先级取舍。",
-      "normalizeTo": [
-        "00-intake/brainstorm.md#问题地图",
-        "00-intake/brainstorm.md#方案对比",
-        "00-intake/prd.md#范围与最小可行版本决策",
-        "00-intake/brief.md#功能候选池"
-      ],
-      "doNotUseFor": [
-        "替代 core/skills/product/SKILL.md",
-        "替代用户确认最小可行版本或产品方向",
-        "把客户提出的功能直接当解决方案",
-        "在没有研究证据时伪造机会评分",
-        "自动决定最小可行版本",
-        "把方案候选写成已确认需求",
-        "替代产品需求文档或需求规格",
-        "替代 sf-requirements 或技术设计"
+        "伪造用户研究、基线、RICE 或机会评分",
+        "执行外部 OST 参考的文件保存动作"
       ]
     },
     {

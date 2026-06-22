@@ -62,7 +62,7 @@ node .specforge/core/scripts/doctor.mjs
 
 1. 按 `.specforge/core/skills/prd/references/output-contract.md` 和 `references/prd-authoring-guide.md#产品需求文档深度` 选择 `prd-lite / prd-standard / prd-deep`。
 2. 如果问题空间、机会、候选功能或最小可行版本切分不清楚，先读取 `.specforge/core/skills/product/SKILL.md`，输出机会图、功能池、最小可行版本建议和产品需求文档交接。
-3. 如需外部参考，按 `references/prd-authoring-guide.md#本地能力包与外部参考编排` 选择 `references/external-prd-reference.md` 或 `opportunity-solution-tree`；它们只能作为参考，不能替代本地 `prd` / `product`。
+3. 如需外部参考，按 `references/prd-authoring-guide.md#本地能力包与外部参考编排` 选择 `references/external-prd-reference.md` 或 `product/references/external-ost-reference.md`；它们只能作为参考，不能替代本地 `prd` / `product`。
 4. 第三方输出只作为候选和检查视角，必须归一化到 SpecForge 产品需求文档结构。
 
 ### C. 裁剪候选和写产品需求文档

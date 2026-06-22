@@ -47,7 +47,7 @@ description: 对模糊产品想法、界面、AI、技术方向或范围取舍�
 - `research-source.md`：当前事实查证、来源优先级、证据表、版本关系和未查证项。
 - `output-contract.md`：落档合同、条件 section、handoff 和停止条件。
 - `product`：产品目标、用户机会、最小可行版本推荐、候选方向、实验和优先级取舍。
-- `opportunity-solution-tree`：外部 OST 参考；只补机会树、实验和优先级视角。
+- `product/references/external-ost-reference.md`：外部 OST 参考；只补机会树、实验和优先级视角。
 - `design-system`：体验方向、美学方向、用户旅程、信息架构、交互、可访问性和后续 UI design 输入。
 - `user-stories`：用户故事、验收口径和边界条件。
 - `prd`：产品需求文档交接检查、非目标、产品决策门禁和需求阶段交接。

@@ -656,29 +656,14 @@ function productSystemIssues() {
   const issues = [];
   const required = [
     "core/skills/product/SKILL.md",
-    "core/skills/product/foundations/product-discovery-boundary.md",
-    "core/skills/product/foundations/opportunity-language.md",
-    "core/skills/product/foundations/outcome-metric.md",
-    "core/skills/product/foundations/evidence-levels.md",
-    "core/skills/product/transforms/request-to-opportunity-map.md",
-    "core/skills/product/transforms/feedback-to-feature-pool.md",
-    "core/skills/product/transforms/brainstorm-to-product-discovery.md",
-    "core/skills/product/transforms/product-discovery-to-prd.md",
-    "core/skills/product/patterns/b2b-operator-data-product.md",
-    "core/skills/product/patterns/ai-agent-product.md",
-    "core/skills/product/patterns/dashboard-analytics.md",
-    "core/skills/product/patterns/workflow-ops.md",
-    "core/skills/product/patterns/internal-platform.md",
+    "core/skills/product/references/product-playbook.md",
+    "core/skills/product/references/patterns.md",
+    "core/skills/product/references/decision-prompts.md",
+    "core/skills/product/references/discovery-methods.md",
     "core/skills/product/references/output-contract.md",
-    "core/skills/product/references/prioritization-methods.md",
-    "core/skills/product/references/experiment-design.md",
-    "core/skills/product/references/quality-rubric.md",
-    "core/skills/product/references/anti-patterns.md",
-    "core/skills/product/references/external-ost-normalization.md",
+    "core/skills/product/references/quality-guide.md",
+    "core/skills/product/references/external-ost-reference.md",
     "core/skills/product/contracts/product-discovery.schema.json",
-    "core/skills/product/prompts/opportunity-interview.md",
-    "core/skills/product/prompts/feature-triage.md",
-    "core/skills/product/prompts/mvp-slicing.md",
   ];
 
   for (const path of required) {
@@ -707,12 +692,12 @@ function productSystemIssues() {
     }
   }
 
-  const antiPath = "core/skills/product/references/anti-patterns.md";
-  if (exists(antiPath)) {
-    const body = read(antiPath);
+  const qualityPath = "core/skills/product/references/quality-guide.md";
+  if (exists(qualityPath)) {
+    const body = read(qualityPath);
     for (const marker of ["Feature-first discovery", "Fake score", "MVP as recommendation", "PRD leakage"]) {
       if (!body.includes(marker)) {
-        issues.push(issue("FAIL", "product-anti-pattern-marker-missing", `${antiPath} is missing ${marker}.`, antiPath));
+        issues.push(issue("FAIL", "product-quality-guide-marker-missing", `${qualityPath} is missing ${marker}.`, qualityPath));
       }
     }
   }

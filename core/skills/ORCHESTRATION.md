@@ -7,7 +7,6 @@
 | Skill | 本地路径 | 阶段 | 作用 | 归一化目标 |
 |---|---|---|---|---|
 | `product` | `product` | 头脑风暴 / 产品需求文档 | SpecForge 产品发现、机会建模、功能取舍、实验设计和最小可行版本推荐主能力包 | `00-intake/brainstorm.md`、`00-intake/brief.md`、`00-intake/prd.md` |
-| `opportunity-solution-tree` | `product/opportunity-solution-tree` | 头脑风暴 / 产品需求文档 | 外部机会树参考；只补机会树、实验和优先级视角 | `00-intake/brainstorm.md`、`00-intake/brief.md`、`00-intake/prd.md` |
 | `prd` | `prd` | 产品需求文档 | SpecForge 产品需求文档决策主能力包，连接简报、头脑风暴、产品发现和预研到需求阶段 | `00-intake/prd.md` |
 | `requirements` | `requirements` | Requirements | 行为契约、确认边界、来源转译、REQ / AC 追踪、NFR 和下游 handoff 主能力包 | `01-spec/requirements.md` |
 | `user-stories` | `requirements/user-stories` | Requirements | 用户故事、3C、INVEST、验收标准和可测试性补充参考 | `01-spec/requirements.md` |
@@ -46,7 +45,7 @@
 
 - 需求模糊、用户还没确认最小可行版本、功能候选过多或方案空间不清时，先读取 `product`，建立机会图、功能池、最小可行版本建议、实验和产品需求文档交接。
 - 每次写 `00-intake/prd.md` 前先读取 `prd`，按产品决策边界、决策状态、输出契约和需求阶段交接生成 SpecForge 产品需求文档。
-- `opportunity-solution-tree` 和 `prd/references/external-prd-reference.md` 只作为外部参考视角；需要时先读本地 `product` / `prd`，再读取外部参考并归一化。
+- `product/references/external-ost-reference.md` 和 `prd/references/external-prd-reference.md` 只作为外部参考视角；需要时先读本地 `product` / `prd`，再读取外部参考并归一化。
 - 产品需求文档中只保留目标用户、问题、范围、非目标、最小可行版本决策、成功标准、开放问题和下游交接。
 - 不把技术架构、任务拆分、外部模板标题或第三方保存路径直接写进产品需求文档。
 - 产品发现不直接写完整产品需求文档；产品需求文档不直接写需求 / 验收编号；需求阶段才负责可测试行为。
@@ -76,9 +75,9 @@
   8. `methods.md#Decision Matrix`：需要排序、推荐或用户授权默认时读取。
   9. `methods.md#Output Shaping`：把输出固定为想法池、方案矩阵、最小可行版本路线图、风险清单或行动表。
   10. `methods.md#Execution Planning`：收敛后写清下一步路由、handoff 和验证入口。
-- 按本节判断是否还需参考 `product`、`prd`、`opportunity-solution-tree`、`design-system`、`user-stories`、`external-prd-reference` 或 `playwright-skill`。
+- 按本节判断是否还需参考 `product`、`prd`、`external-ost-reference`、`design-system`、`user-stories`、`external-prd-reference` 或 `playwright-skill`。
 - 先读目标 skill 的 `SKILL.md`；只有问题落到具体子领域时，才读 `references/` 或 `rules/` 下的相关文件。
-- `product` 是产品发现主能力包；`opportunity-solution-tree` 的 references 只在需要外部 OST 视角时读取：新产品点子、存量产品点子、需求 triage、功能优先级或优先级框架。
+- `product` 是产品发现主能力包；`product/references/external-ost-reference.md` 只在需要外部 OST 视角时读取：新产品点子、存量产品点子、需求 triage、功能优先级或优先级框架。
 - 参考 skill 输出必须先归一化成 SpecForge 问题地图、方案对比、用户确认记录或后续阶段输入；不得把外部模板原样写进 `brainstorm.md`。
 - 当前事实、版本、依赖、价格、竞品、AI provider、漏洞、法规或浏览器兼容性会影响取舍时，先参考 `brainstorm/references/research-source.md`，再把证据表写入 `brainstorm.md#当前事实与研究证据`。
 - 优秀案例、作品站、模板站或竞品会影响体验 / 产品机制时，先参考 `brainstorm/references/brainstorm-playbook.md#Case Study Protocol` 和 `brainstorm/data/case-source-catalog.csv`，再把案例池、可迁移机制和不能照搬点写入 `brainstorm.md#优秀案例与机制拆解`。
@@ -145,7 +144,7 @@
 以下能力不再作为内置第三方 skill 快照维护：
 
 - `web-design-guidelines`。
-- `product-brainstorming`、`to-prd`、`user-story-writing`，已由本地 `product` / `prd` / `requirements` 主能力包承接；`opportunity-solution-tree`、`external-prd-reference`、`user-stories` 只保留为外部参考视角。
+- `product-brainstorming`、`to-prd`、`user-story-writing`，已由本地 `product` / `prd` / `requirements` 主能力包承接；`external-ost-reference`、`external-prd-reference`、`user-stories` 只保留为外部参考视角。
 - Figma 创建 / 还原 / 设计系统规则。
 - getdesign、design-md、frontend-design 等多路 UI 生成或风格提取。
 - 独立竞品研究、用户研究、write-spec、write-a-prd。
