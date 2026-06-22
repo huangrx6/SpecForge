@@ -17,7 +17,7 @@
 | `pencil` | `ui-ux/pencil` | UI Design / Implementation | 本地 Pencil 原型落地，把已确认 Design Contract JSON、foundation_system 和组件契约同步到 `.pen` variables、组件复用、截图和布局证据 | `01-spec/ui-mockup.pen`、`01-spec/ui-mockup-export/`、`01-spec/ui-design.md#Wireframe / Prototype Evidence` |
 | `problem-framing` | `brainstorm/problem-framing` | Brainstorm | 把模糊请求重构为目标、受众、约束、假设和必须确认问题 | `00-intake/brainstorm.md#问题重构`、`#问题地图` |
 | `research-source` | `brainstorm/research-source` | Brainstorm / Research | 当前事实查证、来源选择、证据表、置信度和未查证项 | `00-intake/brainstorm.md#当前事实与研究证据` |
-| `case-study-scout` | `brainstorm/case-study-scout` | Brainstorm | 查询优秀案例、拆解可迁移机制、避免模板化方案和形成体验 / 产品机制路线 | `00-intake/brainstorm.md#优秀案例与机制拆解`、`#方案对比` |
+| `case-study-scout` | `brainstorm/case-study-scout` | Brainstorm | 按 read profile、case-study protocol 和 source catalog 查询优秀案例、拆解可迁移机制、避免模板化方案和形成体验 / 产品机制路线 | `00-intake/brainstorm.md#优秀案例与机制拆解`、`#方案对比` |
 | `divergent-thinking` | `brainstorm/divergent-thinking` | Brainstorm | 从多种视角发散候选方向，避免过早收敛 | `00-intake/brainstorm.md#发散方向池` |
 | `analogy-thinking` | `brainstorm/analogy-thinking` | Brainstorm | 从其他产品、行业或系统迁移机制，形成差异化选项 | `00-intake/brainstorm.md#类比迁移` |
 | `scenario-simulation` | `brainstorm/scenario-simulation` | Brainstorm | 用真实使用场景、失败路径和边界条件压测方案 | `00-intake/brainstorm.md#场景模拟` |
@@ -62,8 +62,10 @@
 
 ### Brainstorm
 
-- Brainstorm 不是单纯事实查证；默认先用 `problem-framing` 明确问题，再按风险决定是否进入事实查证、发散、类比、模拟、批判、矩阵、输出和行动计划。
-- 先确定执行 profile，再读取子 skill，避免 light brainstorm 被迫填满 deep artifact，或 deep brainstorm 只读一个资料查询 skill。
+- Brainstorm 不是单纯事实查证；默认先读 `brainstorm/references/read-profiles.md` 选择 profile，再用 `problem-framing` 明确问题，并按 profile 决定是否进入案例侦察、事实查证、发散、类比、模拟、批判、矩阵、输出和行动计划。
+- 先确定 `Brainstorm profile`、`Case study depth` 和 `Discussion depth`，再读取子 skill，避免 light brainstorm 被迫填满 deep artifact，或 deep brainstorm 只读一个资料查询 skill。
+- 多轮探讨按 `brainstorm/references/discussion-protocol.md` 执行：Expose -> Ask -> Record，每轮只问一个会改变方向的问题，并记录讨论轨迹。
+- 输出前按 `brainstorm/references/output-contract.md` 检查 Always Output、Conditional Output、Stop Conditions 和 Cross-stage Handoff。
 
 | Profile | 必读子 skill | 可选子 skill | 输出要求 |
 |---|---|---|---|
@@ -75,7 +77,7 @@
 - 标准联动顺序：
   1. `problem-framing`：请求含糊、目标/范围/用户不清时必读。
   2. `research-source`：当前事实、版本、价格、竞品、AI provider、法规、漏洞或依赖会影响取舍时必读。
-  3. `case-study-scout`：用户给出优秀案例、要求更高级 / 不模板化，或当前方向涉及产品体验、管理端、网站、AI 工具、工作流时读取。
+  3. `case-study-scout`：用户给出优秀案例、要求更高级 / 不模板化，或当前方向涉及产品体验、管理端、网站、AI 工具、工作流时读取；先读 `brainstorm/references/case-study-protocol.md` 和 `brainstorm/data/case-source-catalog.csv`。
   4. `divergent-thinking`：需要 2 个以上候选方向或用户要求“帮我想想”时必读。
   5. `analogy-thinking`：候选方案同质化、需要差异化机制或跨行业借鉴时读取。
   6. `scenario-simulation`：方案会进入产品/流程/工程落地前，用场景、失败路径和边界条件压测。

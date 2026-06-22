@@ -13,6 +13,9 @@
 | --- | --- |
 | Brainstorm mode | skip / light / deep |
 | Execution profile | skip / light / deep / research-heavy |
+| Brainstorm profile | clarify-light / product-discovery / experience-exploration / technical-decision / research-heavy |
+| Case study depth | none / quick / standard / deep |
+| Discussion depth | single-decision / guided-options / workshop |
 | Package skills used | |
 | External references used | |
 | Sections marked N/A | |
@@ -120,6 +123,11 @@
 | 问题 | 用户选择 / 授权 | 确认类型 | 对后续产物的影响 |
 | --- | --- | --- | --- |
 | | | user-confirmed / delegated-default / agent-recommendation / pending | |
+
+## 讨论轨迹
+| 轮次 | 展示给用户的判断 | 问题 | 选项 | 用户回答 | 记录结果 |
+| --- | --- | --- | --- | --- | --- |
+| | | | | | user-confirmed / delegated-default / pending |
 
 ## 参考 Skill 使用记录
 | Skill | 读取内容 | 提取结果 | 归一化到 | 不能替代的确认 |

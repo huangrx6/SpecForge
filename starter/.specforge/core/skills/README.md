@@ -55,6 +55,14 @@
 
 ## 触发纪律
 
+Brainstorm 控制层：
+
+- `brainstorm/references/read-profiles.md`：profile、case study depth、discussion depth 和读取路径。
+- `brainstorm/references/case-study-protocol.md`：案例来源 family、观察清单、机制拆解和禁止复制边界。
+- `brainstorm/references/discussion-protocol.md`：多轮探讨、单问协议、讨论轨迹和收敛条件。
+- `brainstorm/references/output-contract.md`：brainstorm.md 输出合同、条件 section、handoff 和停止条件。
+- `brainstorm/data/case-source-catalog.csv`：案例来源目录、适用场景、复用策略和 avoid 规则。
+
 - 不在每个阶段默认加载参考 skill。
 - 写产品需求文档时每次先读本地 `prd` 主能力包；问题空间、机会或最小可行版本取舍不清时读本地 `product`。`opportunity-solution-tree` / `create-prd` 只作为外部参考。
 - Requirements 默认先读 `requirements` 主能力包；只有故事、验收或 INVEST 视角不足时再参考 `user-stories`。

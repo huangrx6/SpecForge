@@ -33,13 +33,16 @@ description: 对模糊产品想法、界面、AI、技术方向或范围取舍�
 - 有 UI 方向时读取 `.specforge/core/standards/design.md`。
 - 有技术选型或依赖版本问题时读取 `.specforge/core/standards/engineering.md`。
 - `.specforge/core/skills/ORCHESTRATION.md`：参考能力的总编排规则。
+- `.specforge/core/skills/brainstorm/references/read-profiles.md`：brainstorm profile、案例深度、讨论深度和读取路径控制面。
+- `.specforge/core/skills/brainstorm/references/discussion-protocol.md`：多轮探讨、单问协议、确认记录和收敛规则。
+- `.specforge/core/skills/brainstorm/references/output-contract.md`：`brainstorm.md` 必填 section、条件 section、cross-stage handoff 和停止条件。
 - `references/external-skills.md`：本 skill 的参考 skill 选择表、读取深度和归一化格式。
 - `.specforge/core/skills/brainstorm/research-source/SKILL.md`：当前事实查证、来源选择、证据表和未查证项记录。
 - `.specforge/core/skills/brainstorm/case-study-scout/SKILL.md`：优秀案例侦察、机制拆解、反模板化路线和案例证据记录。
 
 ## 参考 Skill 联动
 
-先读取 `.specforge/core/skills/ORCHESTRATION.md`。当本轮 brainstorm 需要辅助方法卡或事实查证契约时，再读取本 skill 目录下的 `references/external-skills.md`，按其中的选择表决定使用哪个 skill、读到什么深度、归一化到哪里。
+先读取 `.specforge/core/skills/ORCHESTRATION.md` 和 `.specforge/core/skills/brainstorm/references/read-profiles.md`。当本轮 brainstorm 需要辅助方法卡、案例侦察或事实查证契约时，再读取本 skill 目录下的 `references/external-skills.md`，按其中的选择表决定使用哪个 skill、读到什么深度、归一化到哪里。
 
 常见参考包括：
 
@@ -165,13 +168,16 @@ C) 不确定 → 先按 B 设计，留扩展点
    - `research-heavy`：当前事实、依赖版本、AI 供应商、价格、法规、安全或竞品证据会影响方向时使用；它可以由 `light` / `deep` 自动升级而来。
    - 如果 `brief.md#Brainstorm 决策` 已写 `Execution profile`，优先沿用；为空时再由 `Brainstorm mode` 和事实风险推导并回写。
    - 模式来源见 `sf-intake` 的“Brainstorm 分流规则”和 `core/artifacts/templates/brief.md#Brainstorm 决策`。
-3. 需要当前事实时先查证；技术类优先官方资料，并记录日期。
-4. 需要外部事实、版本、依赖、价格、竞品、漏洞、法规或 AI provider 资料时，读取 `.specforge/core/skills/brainstorm/research-source/SKILL.md`，按其来源索引和证据契约查证，并在 `brainstorm.md#当前事实与研究证据` 记录搜索计划、URL、日期、结论和置信度。
+3. 读取 `.specforge/core/skills/brainstorm/references/read-profiles.md`，选择 `clarify-light / product-discovery / experience-exploration / technical-decision / research-heavy`，并写入 `brainstorm.md#执行配置`。
+4. 读取 `.specforge/core/skills/brainstorm/references/discussion-protocol.md`，确定本轮是 `single-decision / guided-options / workshop`，并按 Expose -> Ask -> Record 循环推进。
+5. 需要当前事实时先查证；技术类优先官方资料，并记录日期。
+6. 需要外部事实、版本、依赖、价格、竞品、漏洞、法规或 AI provider 资料时，读取 `.specforge/core/skills/brainstorm/research-source/SKILL.md`，按其来源索引和证据契约查证，并在 `brainstorm.md#当前事实与研究证据` 记录搜索计划、URL、日期、结论和置信度。
    - 新增 / 替换依赖、SDK、插件、组件库、测试库、运行时或包管理器时，还要记录版本依赖关系表，作为后续 `sf-tech-design` 当前版本事实和依赖确认输入。
-5. 需要参考 skill 时，按 `references/external-skills.md` 选择并读取最小必要内容；Brainstorm 包内 skill 可以按问题重构、案例侦察、事实查证、发散、类比、场景、批判、矩阵、输出和行动计划串联使用，且不计入“最多 1 个外部辅助”的限制。
-6. 建立问题地图：`[已明确] / [必须确认] / [可安全默认]`。
-7. 按固定维度排序 `[必须确认]`：核心目标/范围 > 体验方向 > 数据与安全 > 集成与依赖 > 交付验收。
-8. 写明输出预算：小型取舍只保留 1 个问题和 2-3 个选项；复杂取舍才展开方案对比和研究证据。
+7. 需要优秀案例、竞品、模板站、作品站、官网、截图或高级交互 / 视觉 / 工作流机制时，读取 `.specforge/core/skills/brainstorm/references/case-study-protocol.md`、`data/case-source-catalog.csv` 和 `case-study-scout/SKILL.md`。
+8. 需要参考 skill 时，按 `references/external-skills.md` 选择并读取最小必要内容；Brainstorm 包内 skill 可以按问题重构、案例侦察、事实查证、发散、类比、场景、批判、矩阵、输出和行动计划串联使用，且不计入“最多 1 个外部辅助”的限制。
+9. 建立问题地图：`[已明确] / [必须确认] / [可安全默认]`。
+10. 按固定维度排序 `[必须确认]`：核心目标/范围 > 体验方向 > 数据与安全 > 集成与依赖 > 交付验收。
+11. 写明输出预算：小型取舍只保留 1 个问题和 2-3 个选项；复杂取舍才展开方案对比、案例机制、研究证据和讨论轨迹。
 
 ### B. 每轮对话循环
 

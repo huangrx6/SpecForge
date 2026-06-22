@@ -21,6 +21,16 @@ description: Brainstorm 包内的优秀案例侦察 skill。用于产品、管�
 - 现有 `brief.md`、`brainstorm.md`、可选 `prd.md` / `requirements.md` / `ui-design.md`。
 - 用户提供的网址、截图、模板站、作品站、竞品或关键词。
 - 可用时的浏览器截图、公开页面、官方案例页、作品集、Award / gallery 页面和产品官网。
+- `.specforge/core/skills/brainstorm/references/case-study-protocol.md`：来源 family、搜索计划、观察清单、机制提取和禁止复制边界。
+- `.specforge/core/skills/brainstorm/data/case-source-catalog.csv`：常用案例来源目录、适用场景、复用策略和 avoid 规则。
+
+## 读取顺序
+
+1. 读取 `.specforge/core/skills/brainstorm/references/case-study-protocol.md`，确定 source family、观察清单和机制路线要求。
+2. 读取 `.specforge/core/skills/brainstorm/data/case-source-catalog.csv`，选择直接竞品、相邻产品、优秀作品 / 模式库和设计系统来源；不要只选一种来源。
+3. 读取当前 `brief.md` / `brainstorm.md` / 用户输入，确定本轮 case study depth：`quick / standard / deep`。
+4. 执行搜索和观察；能打开页面时记录 URL、访问日期、viewport / 页面状态；不能访问时记录 `inaccessible` 和替代来源。
+5. 输出案例池、机制路线和反模板化提醒。
 
 ## 搜索策略
 
@@ -37,7 +47,7 @@ description: Brainstorm 包内的优秀案例侦察 skill。用于产品、管�
 ## 侦察流程
 
 1. **明确侦察问题**：写清本次要找什么，不使用“找一些好看的案例”这种空问题。
-2. **设定案例池配额**：默认至少 5 个候选案例；`light` 可 3 个；`deep` / 品牌页 / 高级交互至少 6 个；同质案例超过 2 个要换来源。
+2. **设定案例池配额**：按 `read-profiles.md#Case Study Depth` 执行；`quick` 至少 3 个，`standard` 至少 5 个，`deep` 至少 6-8 个。同质案例超过 2 个要换来源。
 3. **多源查询**：组合用户给定网址、同类竞品、优秀作品站、组件/模式库、行业案例。涉及当前事实时，记录访问日期。
 4. **看整体体验**：只看截图不够；能访问页面时观察首屏、滚动、状态变化、交互入口、移动端适配和加载感知。
 5. **拆机制，不抄外观**：每个案例必须提取可迁移机制和不能照搬点。
