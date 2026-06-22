@@ -1,6 +1,6 @@
 ---
 name: prd
-description: SpecForge 产品需求文档决策能力包。用于把简报、头脑风暴、产品发现、预研、知识库事实和用户确认转成 00-intake/prd.md；每次 sf-prd 写产品需求文档前都应读取。
+description: SpecForge 产品需求文档决策能力包。用于把简报、头脑风暴、产品发现、预研、知识库事实和用户确认转成 00-intake/prd.md；每次 sf-prd 写产品需求文档前都应读取，并按 profile 读取 references。
 ---
 
 # 产品需求文档系统能力
@@ -44,18 +44,12 @@ description: SpecForge 产品需求文档决策能力包。用于把简报、头
 
 ## 读取顺序
 
-1. 读取 `foundations/product-decision-boundary.md` 和 `foundations/decision-status.md`，确认产品需求文档阶段边界和能否进入需求阶段。
+1. 读取 `references/prd-playbook.md`，确认阶段边界、决策状态、PRD 语言、假设台账和输入转译规则。
 2. 读取 `references/output-contract.md`，选择 `prd-lite / prd-standard / prd-deep`。
-3. 读取 `foundations/prd-language.md`，保证产品需求文档写产品决策，不写实现方案。
-4. 读取 `foundations/assumption-ledger.md`，区分已确认、授权默认、假设、待确认和需要预研。
-5. 按输入读取转译文件：
-   - `transforms/brief-to-prd.md`
-   - `transforms/brainstorm-to-prd.md`
-   - `transforms/product-discovery-to-prd.md`
-   - `transforms/research-to-prd.md`
-6. 按工作项类型读取 1-3 个 `patterns/*.md`，不要全量加载。
-7. 写完后读取 `references/quality-rubric.md` 和 `references/anti-patterns.md`。
-8. 如果参考外部 `create-prd`，先读 `references/external-prd-skill-normalization.md`，只吸收结构视角，不执行外部保存动作。
+3. 按工作项类型读取 `references/patterns.md` 中的 1-3 个 pattern，不要全量套用。
+4. 需要产品访谈、MVP 切分或开放问题审查时，读取 `references/decision-prompts.md` 的对应 section。
+5. 写完后读取 `references/quality-guide.md`。
+6. 如果需要外部 PRD 结构视角，读取 `references/external-prd-reference.md`，只吸收结构检查点，不执行外部保存动作。
 
 ## 执行流程
 

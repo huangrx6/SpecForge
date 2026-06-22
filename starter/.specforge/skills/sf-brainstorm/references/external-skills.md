@@ -45,7 +45,7 @@
 | 官网、落地页、作品集、品牌页或重设计的视觉方向容易模板化 | `design-taste-frontend` | `SKILL.md`；只在需要时读取参考资料 | `brainstorm.md#界面与体验方向确认`、后续 `ui-design.md#视觉风格简报` |
 | 管理端采用 shadcn/ui，需要判断组件封装、注册表候选或避免基础组件拼装 | shadcn 官方 skill / registry reference | 官方 shadcn skill、registry docs、component review | `brainstorm.md#技术路线确认`、`#界面与体验方向确认`、后续 `ui-design.md` 和 `technical_design.md` 输入 |
 | 用户故事、验收口径、边界条件会影响方案取舍 | `user-stories` | `SKILL.md` | `brainstorm.md#问题地图`、后续 `requirements.md` 输入 |
-| 产品需求文档信息已经足够，需要判断是否进入产品需求文档合成 | `prd` | `SKILL.md`；按需读 output contract 和 product decision boundary | `prd.md` 输入，不直接写 brainstorm 结论 |
+| 产品需求文档信息已经足够，需要判断是否进入产品需求文档合成 | `prd` | `SKILL.md`；按需读 output contract 和 PRD playbook | `prd.md` 输入，不直接写 brainstorm 结论 |
 | 验证路径、浏览器流程、角色操作是否可证明 | `playwright-skill` | `SKILL.md`；需要脚本细节时读 API reference | 后续 `test-cases.md` / `verification-report.md` 输入 |
 
 ## 升级 sf-discovery Research

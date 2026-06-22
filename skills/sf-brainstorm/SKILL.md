@@ -51,7 +51,7 @@ description: 对模糊产品想法、界面、AI、技术方向或范围取舍�
 - `design-system`：体验方向、美学方向、用户旅程、信息架构、交互、可访问性和后续 UI design 输入。
 - `user-stories`：用户故事、验收口径和边界条件。
 - `prd`：产品需求文档交接检查、非目标、产品决策门禁和需求阶段交接。
-- `create-prd`：外部产品需求文档参考；只补 8 段式产品需求文档、非目标和版本分期覆盖。
+- `external-prd-reference`：外部产品需求文档参考归一化；只补 8 段式产品需求文档、非目标和版本分期覆盖。
 - `playwright-skill`：只在 brainstorm 需要提前识别验证风险时参考，正式执行仍交给后续阶段。
 
 参考 skill 的输出必须先归一化为 `问题地图 / 优秀案例与机制拆解 / 方案对比 / 用户确认记录 / 后续阶段输入`。它不能替代用户确认，也不能原样落入 `brainstorm.md`；事实类结论必须按 `research-source.md` 的证据契约记录来源，案例类结论必须按 `brainstorm-playbook.md#Case Study Protocol` 的案例池和机制路线记录来源、不能照搬点和成本风险。

@@ -18,7 +18,7 @@
 | 目录 | 归属 | Skill |
 |---|---|---|
 | `product/` | 产品发现、机会树、方案取舍 | `product`, `opportunity-solution-tree` |
-| `prd/` | 产品需求文档决策、最小可行版本、非目标和需求阶段交接 | `prd`, `create-prd` |
+| `prd/` | 产品需求文档决策、最小可行版本、非目标和需求阶段交接 | `prd` |
 | `requirements/` | 行为契约、确认边界、转译、用户故事、验收标准和可测试性 | `requirements`, `user-stories` |
 | `ui-ux/` | UX 研究、设计语言、Pencil 原型、设计转代码参考 | `design-system`, `pencil` |
 | `brainstorm/` | 问题重构、事实查证、案例侦察、发散、类比、场景模拟、批判、评估、输出和行动计划 | `brainstorm` |
@@ -32,7 +32,6 @@
 | `product` | `product` | 产品发现、机会建模、功能取舍、实验设计和最小可行版本推荐主能力包 | `00-intake/brainstorm.md`、`00-intake/brief.md`、`00-intake/prd.md` |
 | `opportunity-solution-tree` | `product/opportunity-solution-tree` | 外部 OST 参考；只补机会树、功能候选、假设、实验和优先级视角 | `00-intake/brainstorm.md`、`00-intake/brief.md`、`00-intake/prd.md` |
 | `prd` | `prd` | 产品需求文档决策主能力包，连接简报、头脑风暴、产品发现和预研到需求阶段 | `00-intake/prd.md` |
-| `create-prd` | `prd/create-prd` | 外部产品需求文档参考；只借鉴背景、目标、范围、假设和版本结构 | `00-intake/prd.md` |
 | `requirements` | `requirements` | Requirements 行为契约、确认边界、来源转译、REQ / AC 追踪、NFR 和下游 handoff 主能力包 | `01-spec/requirements.md` |
 | `user-stories` | `requirements/user-stories` | 用户故事、3C / INVEST 和验收标准补充参考 | `01-spec/requirements.md` |
 | `pencil` | `ui-ux/pencil` | Pencil MCP 原型读写、组件复用、tokens、布局检查、截图导出和设计转代码参考 | `01-spec/ui-design.md`、`.pen` 源文件、导出截图、前端实现备注 |
@@ -56,7 +55,7 @@ Brainstorm 控制层：
 - `brainstorm/data/case-source-catalog.csv`：案例来源目录、适用场景、复用策略和 avoid 规则。
 
 - 不在每个阶段默认加载参考 skill。
-- 写产品需求文档时每次先读本地 `prd` 主能力包；问题空间、机会或最小可行版本取舍不清时读本地 `product`。`opportunity-solution-tree` / `create-prd` 只作为外部参考。
+- 写产品需求文档时每次先读本地 `prd` 主能力包；问题空间、机会或最小可行版本取舍不清时读本地 `product`。`opportunity-solution-tree` / `prd/references/external-prd-reference.md` 只作为外部参考。
 - Requirements 默认先读 `requirements` 主能力包；只有故事、验收或 INVEST 视角不足时再参考 `user-stories`。
 - UI 正式原型固定为 Pencil；其他工具只能作为用户显式提供的外部输入。
 - UI 方向确认后，先用 `design-system` 判断 Product UI / Brand Surface / Hybrid 模式，再收敛 Composition Recipe、palette 色阶、foundation_system、组件契约、Design Contract JSON 和页面模式，再进入本地 `pencil` 原型。

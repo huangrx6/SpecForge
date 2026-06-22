@@ -604,28 +604,13 @@ function prdSystemIssues() {
   const issues = [];
   const required = [
     "core/skills/prd/SKILL.md",
-    "core/skills/prd/foundations/product-decision-boundary.md",
-    "core/skills/prd/foundations/prd-language.md",
-    "core/skills/prd/foundations/assumption-ledger.md",
-    "core/skills/prd/foundations/decision-status.md",
-    "core/skills/prd/transforms/brief-to-prd.md",
-    "core/skills/prd/transforms/brainstorm-to-prd.md",
-    "core/skills/prd/transforms/research-to-prd.md",
-    "core/skills/prd/transforms/product-discovery-to-prd.md",
-    "core/skills/prd/patterns/b2b-operator-data-product.md",
-    "core/skills/prd/patterns/ai-feature.md",
-    "core/skills/prd/patterns/workflow-approval.md",
-    "core/skills/prd/patterns/dashboard-report.md",
-    "core/skills/prd/patterns/internal-tool.md",
-    "core/skills/prd/patterns/integration-platform.md",
+    "core/skills/prd/references/prd-playbook.md",
+    "core/skills/prd/references/patterns.md",
+    "core/skills/prd/references/decision-prompts.md",
     "core/skills/prd/references/output-contract.md",
-    "core/skills/prd/references/quality-rubric.md",
-    "core/skills/prd/references/anti-patterns.md",
-    "core/skills/prd/references/external-prd-skill-normalization.md",
+    "core/skills/prd/references/quality-guide.md",
+    "core/skills/prd/references/external-prd-reference.md",
     "core/skills/prd/contracts/prd-decision.schema.json",
-    "core/skills/prd/prompts/product-interview.md",
-    "core/skills/prd/prompts/mvp-slicing.md",
-    "core/skills/prd/prompts/open-question-review.md",
   ];
 
   for (const path of required) {
@@ -654,12 +639,12 @@ function prdSystemIssues() {
     }
   }
 
-  const antiPath = "core/skills/prd/references/anti-patterns.md";
-  if (exists(antiPath)) {
-    const body = read(antiPath);
+  const qualityPath = "core/skills/prd/references/quality-guide.md";
+  if (exists(qualityPath)) {
+    const body = read(qualityPath);
     for (const marker of ["建议冒充决策", "需求泄漏", "指标表演", "修正顺序"]) {
       if (!body.includes(marker)) {
-        issues.push(issue("FAIL", "prd-anti-pattern-marker-missing", `${antiPath} is missing ${marker}.`, antiPath));
+        issues.push(issue("FAIL", "prd-quality-guide-marker-missing", `${qualityPath} is missing ${marker}.`, qualityPath));
       }
     }
   }

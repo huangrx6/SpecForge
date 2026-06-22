@@ -7,8 +7,8 @@
       "category": "prd",
       "localPath": "prd",
       "name": "prd",
-      "role": "SpecForge 产品需求文档决策主能力包",
-      "trust": "SpecForge 本地维护，连接简报、头脑风暴、产品发现和预研到需求阶段",
+      "role": "SpecForge 产品需求文档决策主能力包；内部规则收束在 references/prd-playbook.md、patterns.md、decision-prompts.md、quality-guide.md",
+      "trust": "SpecForge 本地维护，连接简报、头脑风暴、产品发现、预研、外部 PRD 参考和需求阶段",
       "risk": "低",
       "source": {
         "type": "local-authored",
@@ -17,70 +17,25 @@
         "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/prd",
         "files": [
           {
-            "path": "foundations/product-decision-boundary.md"
-          },
-          {
-            "path": "foundations/prd-language.md"
-          },
-          {
-            "path": "foundations/assumption-ledger.md"
-          },
-          {
-            "path": "foundations/decision-status.md"
-          },
-          {
-            "path": "transforms/brief-to-prd.md"
-          },
-          {
-            "path": "transforms/brainstorm-to-prd.md"
-          },
-          {
-            "path": "transforms/research-to-prd.md"
-          },
-          {
-            "path": "transforms/product-discovery-to-prd.md"
-          },
-          {
-            "path": "patterns/b2b-operator-data-product.md"
-          },
-          {
-            "path": "patterns/ai-feature.md"
-          },
-          {
-            "path": "patterns/workflow-approval.md"
-          },
-          {
-            "path": "patterns/dashboard-report.md"
-          },
-          {
-            "path": "patterns/internal-tool.md"
-          },
-          {
-            "path": "patterns/integration-platform.md"
+            "path": "references/prd-playbook.md"
           },
           {
             "path": "references/output-contract.md"
           },
           {
-            "path": "references/quality-rubric.md"
+            "path": "references/patterns.md"
           },
           {
-            "path": "references/anti-patterns.md"
+            "path": "references/decision-prompts.md"
           },
           {
-            "path": "references/external-prd-skill-normalization.md"
+            "path": "references/quality-guide.md"
+          },
+          {
+            "path": "references/external-prd-reference.md"
           },
           {
             "path": "contracts/prd-decision.schema.json"
-          },
-          {
-            "path": "prompts/product-interview.md"
-          },
-          {
-            "path": "prompts/mvp-slicing.md"
-          },
-          {
-            "path": "prompts/open-question-review.md"
           }
         ]
       },
@@ -95,39 +50,7 @@
         "替代 sf-requirements 的需求 / 验收 / 非功能需求",
         "写接口 / 数据库 / 界面 / 技术设计",
         "替用户批准最小可行版本",
-        "执行外部 create-prd 的文件保存动作"
-      ]
-    },
-    {
-      "id": "create-prd",
-      "category": "prd",
-      "localPath": "prd/create-prd",
-      "name": "create-prd",
-      "role": "产品需求文档合成参考",
-      "trust": "高星社区来源，MIT 许可，已做静态审查",
-      "risk": "低",
-      "source": {
-        "type": "github-raw",
-        "repo": "phuryn/pm-skills",
-        "path": "pm-execution/skills/create-prd/SKILL.md",
-        "url": "https://github.com/phuryn/pm-skills/tree/main/pm-execution/skills/create-prd",
-        "rawUrl": "https://raw.githubusercontent.com/phuryn/pm-skills/main/pm-execution/skills/create-prd/SKILL.md"
-      },
-      "trigger": "当 sf-prd 需要把已确认的问题、目标用户、价值主张、功能范围和发布计划整理成产品需求文档时参考；重点借鉴 8 段式产品需求文档、目标和非目标、成功指标、假设和版本分期。",
-      "normalizeTo": [
-        "00-intake/prd.md#产品决策摘要",
-        "00-intake/prd.md#背景与目标结果",
-        "00-intake/prd.md#范围与最小可行版本决策",
-        "00-intake/prd.md#交接给需求阶段"
-      ],
-      "doNotUseFor": [
-        "替代 core/skills/prd/SKILL.md",
-        "替代 sf-prd 模板",
-        "自动保存外部产品需求文档文件到任意路径",
-        "直接决定最小可行版本",
-        "直接进入需求阶段",
-        "把技术小节扩写成技术设计",
-        "跳过用户确认产品范围和非目标"
+        "执行外部 PRD 参考的文件保存动作"
       ]
     },
     {

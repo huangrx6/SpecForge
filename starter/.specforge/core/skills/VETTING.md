@@ -6,7 +6,6 @@
 
 | Skill | 来源 | 支撑文件 | 主要风险 | 结论 |
 |---|---:|---:|---|---|
-| `create-prd` | `phuryn/pm-skills` | 0 | 可能保存到外部建议文件名或把 Technology 扩成技术方案 | 只作为 PRD 结构参考，归一化到 SpecForge PRD |
 | `requirements` | SpecForge local-authored | 24 | 可能把确认边界规则当成用户已确认范围 | 只作为 requirements 行为契约、来源转译、REQ / AC 追踪和下游 handoff 主能力包 |
 | `user-stories` | `phuryn/pm-skills` | 0 | 可能带入 Sprint / backlog 表达 | 只保留 3C、INVEST 和验收标准补充方法 |
 | `opportunity-solution-tree` | `phuryn/pm-skills` | 5 | 可能把缺少证据的分数写成事实 | 只作为机会树、功能候选、实验和优先级方法，结论必须等用户确认 |
@@ -31,11 +30,13 @@
 |---|---|
 | 来源 | GitHub `phuryn/pm-skills` |
 | 仓库状态 | 11632 stars、1377 forks、MIT、默认分支 `main`、最近 pushed `2026-05-20` |
-| 审查文件 | `create-prd`、`user-stories`、`opportunity-solution-tree` 以及 opportunity references：`brainstorm-ideas-new`、`brainstorm-ideas-existing`、`analyze-feature-requests`、`prioritize-features`、`prioritization-frameworks` |
+| 审查文件 | `user-stories`、`opportunity-solution-tree`、历史 `create-prd` 快照以及 opportunity references：`brainstorm-ideas-new`、`brainstorm-ideas-existing`、`analyze-feature-requests`、`prioritize-features`、`prioritization-frameworks` |
 | 红旗 | 未发现凭据读取、系统文件修改、base64、eval/exec、sudo、未知 curl/wget、cookie 导出 |
 | 风险等级 | 低 |
 | 采用方式 | 替换旧的 `product-brainstorming`、`to-prd`、`user-story-writing`；删除 `web-design-guidelines` |
 | 使用边界 | 只作为 PM 方法卡，所有输出必须归一化到 SpecForge artifact，不能执行其“save as markdown”或外部投递动作 |
+
+`create-prd` 不再作为独立本地 skill 托管；已归并到 `prd/references/external-prd-reference.md`，仅保留外部结构检查视角。
 
 ## 审查步骤
 

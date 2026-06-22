@@ -18,7 +18,7 @@ description: 生成或更新产品需求文档；用于产品型工作项、AI �
 ## 必读
 
 - `.specforge/core/skills/prd/SKILL.md`：SpecForge 产品需求文档决策主能力包，定义阶段边界、决策状态、输出结构、转译规则、模式、质量审查和需求阶段交接。
-- `.specforge/core/skills/prd/foundations/product-decision-boundary.md`：产品需求文档可以决定什么、不能决定什么，以及进入需求阶段的最小条件。
+- `.specforge/core/skills/prd/references/prd-playbook.md`：产品需求文档可以决定什么、不能决定什么、决策状态、PRD 语言、假设台账和输入转译规则。
 - `.specforge/core/skills/prd/references/output-contract.md`：`prd-lite / prd-standard / prd-deep` 输出契约和标准产品需求文档结构。
 - `.specforge/core/skills/product/SKILL.md`：当问题空间、机会、候选功能或最小可行版本切分不清楚时，使用本地产品发现能力包。
 - `references/prd-authoring-guide.md`：产品需求文档深度、本地能力包与外部参考编排、访谈镜头、模板和质量标准。
@@ -62,7 +62,7 @@ node .specforge/core/scripts/doctor.mjs
 
 1. 按 `.specforge/core/skills/prd/references/output-contract.md` 和 `references/prd-authoring-guide.md#产品需求文档深度` 选择 `prd-lite / prd-standard / prd-deep`。
 2. 如果问题空间、机会、候选功能或最小可行版本切分不清楚，先读取 `.specforge/core/skills/product/SKILL.md`，输出机会图、功能池、最小可行版本建议和产品需求文档交接。
-3. 如需外部参考，按 `references/prd-authoring-guide.md#本地能力包与外部参考编排` 选择 `create-prd` 或 `opportunity-solution-tree`；它们只能作为参考，不能替代本地 `prd` / `product`。
+3. 如需外部参考，按 `references/prd-authoring-guide.md#本地能力包与外部参考编排` 选择 `references/external-prd-reference.md` 或 `opportunity-solution-tree`；它们只能作为参考，不能替代本地 `prd` / `product`。
 4. 第三方输出只作为候选和检查视角，必须归一化到 SpecForge 产品需求文档结构。
 
 ### C. 裁剪候选和写产品需求文档
