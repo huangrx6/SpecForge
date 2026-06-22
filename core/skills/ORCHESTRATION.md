@@ -17,7 +17,7 @@
 | `brainstorm` | `brainstorm` | Brainstorm | 根入口 + playbook + methods + research-source；负责问题重构、案例侦察、事实查证、发散、类比、场景、批判、矩阵、输出和行动交接 | `00-intake/brainstorm.md`、`00-intake/brief.md` |
 | `code-intelligence` | `code-intelligence` | 全阶段 | Wiki-first 代码智能主能力包；封装 CodeGraph、MCP / SCIP provider、Repomix、bootstrap map、`rg`、freshness、impact、affected tests 和 graph facts 归一化 | `00-intake/brief.md`、`01-spec/requirements.md`、`01-spec/technical-design.md`、`01-spec/tasks.md`、`03-implementation/report.md`、`04-code-review/code-review-v1.md`、`05-verification/report.md`、`.specforge/wiki/*.md` |
 | `code-review` | `quality/code-review` | Code Review | SpecForge 本地代码审查主能力包；diff、spec、tasks、implementation report、changed-files 和证据对账 | `04-code-review/code-review-v1.md` |
-| `test-engineering` | `quality/test-engineering` | Verification | 测试用例、测试代码、项目启动、登录态、Playwright 浏览器验证和证据归档 | `05-verification/test-plan.md`、`05-verification/test-cases.md`、`05-verification/test-engineering/`、`05-verification/report.md`、`05-verification/evidence/` |
+| `test-engineering` | `quality/test-engineering` | Verification | 从规格、任务、UI、技术风险和审查结论生成 TC/PW、runtime/auth/automation 计划、Playwright 浏览器验证和证据归档 | `05-verification/test-plan.md`、`05-verification/test-cases.md`、`05-verification/test-engineering/`、`05-verification/report.md`、`05-verification/evidence/` |
 | `playwright-skill` | `quality/playwright-skill` | Verification | 外部浏览器 E2E、真实点击输入、角色流程、截图和响应式证据参考 | `05-verification/test-cases.md`、`05-verification/report.md`、`05-verification/evidence/` |
 
 ## 按需外部参考

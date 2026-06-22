@@ -103,3 +103,59 @@ XMind、白板和脑图只能作为测试空间草图，不能成为唯一事实
 | Item | Reason | Owner | Revalidation trigger |
 | --- | --- | --- | --- |
 ```
+
+## `05-verification/test-cases.md` 必填结构
+
+`test-case-quality.mjs` 依赖固定标题和表格列解析。不要改标题编号。
+
+### 1.1 Test Design Artifacts
+
+| Artifact | Format | Path | Derived Cases | Export Path | Status |
+| --- | --- | --- | --- | --- | --- |
+| 测试设计树 | markdown/json/xmind/whiteboard | `05-verification/test-engineering/test-design-tree.md` | TC-001, PW-001 | `05-verification/test-engineering/test-design-tree.json` | ready / exported / planned / N/A |
+
+### 1.2 Test Engineering Artifacts
+
+| Artifact | Path | Purpose | Status |
+| --- | --- | --- | --- |
+| Runtime runbook | `05-verification/test-engineering/runtime-runbook.md` | 启动、健康检查、日志和清理 | ready / planned / N/A |
+| Auth plan | `05-verification/test-engineering/auth-plan.md` | 登录态、账号来源和敏感数据处理 | ready / planned / N/A |
+| Automation plan | `05-verification/test-engineering/automation-plan.md` | 单元 / 集成 / contract / Playwright 命令 | ready / planned / N/A |
+| Playwright flows | `05-verification/test-engineering/playwright-flows.md` | 浏览器流程、locator、截图和 trace | ready / planned / N/A |
+
+### 2. Test Case Matrix
+
+| ID | Type | Source | Preconditions | Steps | Assertions | Evidence Required | Evidence Strength Target | Automation | Risk |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| TC-001 | e2e | REQ-001 | seeded user exists | open dashboard, submit form | success toast and new row visible | screenshot, trace | proven | Playwright `tests/e2e/...` | high |
+
+`Evidence Strength Target` 只能使用：`claimed` / `observed` / `proven` / `mocked` / `manual-confirmed` / `deferred` / `missing`。
+
+### 3. Playwright Cases
+
+| ID | Flow | Role | Data | Steps | Assertions | States | Evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| PW-001 | 创建并提交审批 | admin | seeded record | goto, fill, submit | toast, row state, network success | success/error/permission | `05-verification/evidence/run-001/trace.zip` |
+
+### 3.1 Auth And Runtime
+
+| Item | Strategy | Source | Sensitive Data Handling | Cleanup |
+| --- | --- | --- | --- | --- |
+| auth | storage-state | test account from env | storage file gitignored, no token in logs | delete `.auth` after run |
+| runtime | local dev server | package scripts | env from `.env.example`, secrets redacted | stop dev server |
+
+### 3.2 Evidence Manifest
+
+| Run ID | Command | Related | Evidence Path | Strength |
+| --- | --- | --- | --- | --- |
+| run-001 | `npx playwright test tests/e2e/create.spec.ts --trace retain-on-failure` | TC-001, PW-001 | `05-verification/evidence/run-001/` | proven |
+
+## Verification Report 对账
+
+`05-verification/report.md` 应包含：
+
+- `## 3.1 测试用例索引`：列出全部 `TC-*`。
+- `### Playwright E2E 用例与执行`：列出全部 `PW-*`、命令、结果、证据路径。
+- warning / deferred / manual-confirmed 的 owner、impact、revalidation trigger。
+
+如果 report 缺少 TC/PW 索引，质量脚本会给出追踪 warning。

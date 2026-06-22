@@ -749,14 +749,15 @@ function codeReviewSkillIssues() {
 function testEngineeringIssues() {
   const required = [
     "core/skills/quality/test-engineering/SKILL.md",
-    "core/skills/quality/test-engineering/foundations/evidence-strength.md",
-    "core/skills/quality/test-engineering/foundations/test-data-auth.md",
-    "core/skills/quality/test-engineering/patterns/authenticated-browser-flow.md",
-    "core/skills/quality/test-engineering/patterns/runtime-smoke.md",
-    "core/skills/quality/test-engineering/patterns/unit-test-authoring.md",
+    "core/skills/quality/test-engineering/references/workflow-playbook.md",
     "core/skills/quality/test-engineering/references/output-contract.md",
-    "core/skills/quality/test-engineering/references/playwright-execution-contract.md",
+    "core/skills/quality/test-engineering/references/runtime-auth-evidence.md",
+    "core/skills/quality/test-engineering/references/verification-patterns.md",
+    "core/skills/quality/test-engineering/references/locator-contract.md",
+    "core/skills/quality/test-engineering/references/quality-repair-guide.md",
+    "core/skills/quality/test-engineering/references/authoring-prompts.md",
     "core/skills/quality/test-engineering/contracts/test-case.schema.json",
+    "core/skills/quality/test-engineering/contracts/test-plan.schema.json",
     "core/skills/quality/test-engineering/contracts/playwright-flow.schema.json",
   ];
   const issues = required
@@ -766,14 +767,14 @@ function testEngineeringIssues() {
   const skillPath = "core/skills/quality/test-engineering/SKILL.md";
   if (exists(skillPath)) {
     const body = read(skillPath);
-    for (const marker of ["测试工程主能力包", "auth strategy", "runtime runbook", "Playwright", "evidence"]) {
+    for (const marker of ["测试工程主能力包", "auth strategy", "runtime runbook", "Playwright", "evidence", "test-case-quality.mjs"]) {
       if (!body.includes(marker)) issues.push(issue("FAIL", "test-engineering-marker-missing", `${skillPath} is missing ${marker}.`, skillPath));
     }
   }
   const outputPath = "core/skills/quality/test-engineering/references/output-contract.md";
   if (exists(outputPath)) {
     const body = read(outputPath);
-    for (const marker of ["Test Design Tree Rules", "Automation Matrix", "XMind / 白板导出规则"]) {
+    for (const marker of ["Test Design Tree Rules", "Automation Matrix", "XMind / 白板导出规则", "## `05-verification/test-cases.md` 必填结构"]) {
       if (!body.includes(marker)) {
         issues.push(issue("FAIL", "test-engineering-absorbed-test-design-marker-missing", `${outputPath} is missing ${marker}.`, outputPath));
       }

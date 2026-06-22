@@ -565,7 +565,7 @@
       "category": "quality",
       "localPath": "quality/test-engineering",
       "name": "test-engineering",
-      "role": "测试用例、测试代码、项目启动、Playwright 浏览器验证和证据归档能力包",
+      "role": "测试工程主能力包：把规格、任务、UI、技术风险和审查结论转成可解析 TC/PW、runtime/auth/automation 计划和可归档证据",
       "trust": "SpecForge 本地维护，面向 sf-verify 的测试工程、自动化执行和证据分级",
       "risk": "低",
       "source": {
@@ -575,79 +575,25 @@
         "url": "https://github.com/huangrx6/SpecForge/tree/main/core/skills/quality/test-engineering",
         "files": [
           {
-            "path": "foundations/test-boundary.md"
-          },
-          {
-            "path": "foundations/evidence-strength.md"
-          },
-          {
-            "path": "foundations/test-data-auth.md"
-          },
-          {
-            "path": "foundations/test-isolation.md"
-          },
-          {
-            "path": "foundations/flakiness-control.md"
-          },
-          {
-            "path": "transforms/spec-to-test-plan.md"
-          },
-          {
-            "path": "transforms/requirements-to-test-cases.md"
-          },
-          {
-            "path": "transforms/ui-design-to-playwright.md"
-          },
-          {
-            "path": "transforms/technical-design-to-runtime-checks.md"
-          },
-          {
-            "path": "transforms/code-review-to-regression-tests.md"
-          },
-          {
-            "path": "patterns/unit-test-authoring.md"
-          },
-          {
-            "path": "patterns/api-contract-test.md"
-          },
-          {
-            "path": "patterns/data-permission-test.md"
-          },
-          {
-            "path": "patterns/authenticated-browser-flow.md"
-          },
-          {
-            "path": "patterns/playwright-journey.md"
-          },
-          {
-            "path": "patterns/upload-download-flow.md"
-          },
-          {
-            "path": "patterns/dashboard-table-flow.md"
-          },
-          {
-            "path": "patterns/ai-agent-flow.md"
-          },
-          {
-            "path": "patterns/runtime-smoke.md"
+            "path": "references/workflow-playbook.md"
           },
           {
             "path": "references/output-contract.md"
           },
           {
-            "path": "references/playwright-execution-contract.md"
+            "path": "references/runtime-auth-evidence.md"
           },
           {
-            "path": "references/project-startup-contract.md"
+            "path": "references/verification-patterns.md"
           },
           {
             "path": "references/locator-contract.md"
           },
           {
-            "path": "references/evidence-contract.md"
+            "path": "references/quality-repair-guide.md"
           },
           {
-            "path": "references/anti-patterns.md"
+            "path": "references/authoring-prompts.md"
           },
           {
             "path": "contracts/test-case.schema.json"
@@ -657,22 +603,10 @@
           },
           {
             "path": "contracts/playwright-flow.schema.json"
-          },
-          {
-            "path": "prompts/test-case-authoring.md"
-          },
-          {
-            "path": "prompts/unit-test-generation.md"
-          },
-          {
-            "path": "prompts/playwright-flow-generation.md"
-          },
-          {
-            "path": "prompts/failure-triage.md"
           }
         ]
       },
-      "trigger": "sf-verify 需要生成测试用例、自动化测试、启动项目、浏览器测试、登录态方案或验证证据时必读。",
+      "trigger": "sf-verify 需要把规格、任务、UI、技术风险或 code review notes 转成 TC/PW、自动化测试、项目启动、浏览器流程、登录态方案或验证证据时必读。",
       "normalizeTo": [
         "05-verification/test-plan.md",
         "05-verification/test-cases.md",
