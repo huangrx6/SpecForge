@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/huangrx6-specforge-badge.png)](https://mseep.ai/app/huangrx6-specforge)
+
 # SpecForge
 
 ![SpecForge workflow hero](assets/specforge-workflow-hero.png)
